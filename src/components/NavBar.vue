@@ -35,7 +35,7 @@
             <span>Tools</span>
           </div>
         </div>
-        <div class="navbar-buttonWrapper desktop" @click="openProfile" data-cyId="openProfile">
+        <div class="navbar-buttonWrapper desktop" @click="openProfile" data-cyId="editProfile">
           <button class="navbar-iconWrapper profile-icon full-opacity-on-hover" />
           <div class="navbar-iconText">
             <span>Profile</span>
@@ -77,7 +77,7 @@
           <div class="navbar-iconWrapper tools-mobile-icon" />
           <span class="nav-mobile-button-text">Tools</span>
         </button>
-        <button class="nav-mobile-button" data-cyId="navbar-openProfile" @click="openProfile">
+        <button class="nav-mobile-button" data-cyId="navbar-editProfile" @click="openProfile">
           <div class="navbar-iconWrapper profile-mobile-icon" />
           <span class="nav-mobile-button-text">Edit Profile</span>
         </button>
