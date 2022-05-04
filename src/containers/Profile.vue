@@ -153,6 +153,7 @@ export default defineComponent({
     submitOnboarding() {
       this.clearTransferCreditIfGraduate();
       setAppOnboardingData(this.name, this.onboarding);
+      this.changed = false;
       this.$emit('onboard');
     },
     updateBasic(
