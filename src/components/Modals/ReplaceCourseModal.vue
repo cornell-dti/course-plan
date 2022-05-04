@@ -39,6 +39,7 @@
     <div v-if="selectedCourse != null">
       <!-- if a course is selected -->
       <selected-requirement-editor
+        :deleteSemYear="0"
         :key="courseSelectorKey"
         :editMode="editMode"
         :selectedRequirementID="selectedRequirementID"

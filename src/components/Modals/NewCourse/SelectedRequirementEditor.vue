@@ -36,7 +36,11 @@ export type RequirementWithID = { readonly id: string; readonly name: string };
 export default defineComponent({
   components: { RequirementsDropdown, SelectSemesterReplace },
   props: {
-    deleteSemSeason: { type: String as PropType<FirestoreSemesterSeason>, required: true },
+    deleteSemSeason: {
+      type: String as PropType<FirestoreSemesterSeason>,
+      required: false,
+      default: '',
+    },
     deleteSemYear: { type: Number, required: true },
     editMode: { type: Boolean, required: true },
     selectedRequirementID: { type: String, required: true },
