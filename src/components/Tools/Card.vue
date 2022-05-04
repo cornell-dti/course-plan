@@ -1,10 +1,10 @@
 <template>
   <div class="card" :style="cssVars" :class="{ 'card--collapsed': isCollapsed }">
     <div class="card-top">
-      <button class="card-minspacer">
+      <div class="card-minspacer">
         <img v-if="!isCollapsed" src="@/assets/images/minimize.svg" alt="minimize card" />
         <img v-else src="@/assets/images/expand.svg" alt="expand card" />
-      </button>
+      </div>
       <div class="card-name">{{ name }}</div>
       <button class="card-minimize" @click="collapse">
         <img v-if="!isCollapsed" src="@/assets/images/minimize.svg" alt="minimize card" />
