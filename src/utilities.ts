@@ -203,10 +203,5 @@ export const isCourseTaken = (
 // Converts a FirestoreSemesterCourse or CourseTaken to the first applicable CornellCourseRosterCourse
 export const convertCourseToCourseRoster = (
   course: FirestoreSemesterCourse | CourseTaken
-): CornellCourseRosterCourse => {
-  let uniqueID = isCourseTaken(course) ? course.uniqueId : course.uniqueID;
-  if (typeof uniqueID === 'string') {
-    uniqueID = parseInt(uniqueID, 10);
-  }
-  return fullCoursesJson[uniqueID][0];
-};
+): CornellCourseRosterCourse =>
+  fullCoursesJson[isCourseTaken(course) ? course.courseId : course.crseId][0];
