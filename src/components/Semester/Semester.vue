@@ -20,6 +20,7 @@
       :selectedCourse="conflictCourse"
       :courseConflicts="courseConflicts"
       :selfCheckRequirements="selfCheckRequirements"
+      :isEditingRequirements="false"
       @resolve-conflicts="handleConflictsResolved"
       @remove-course="deleteCourseWithoutModal"
     />

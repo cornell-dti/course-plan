@@ -70,6 +70,10 @@ export default defineComponent({
       type: Object as PropType<readonly RequirementWithIDSourceType[]>,
       required: true,
     },
+    isEditingRequirements: {
+      type: Boolean,
+      required: true,
+    },
   },
   data() {
     // convert the set of conflicts and self-check reqs to a list of dicts, where each dict is a mapping of req options to bools representing if they are selected
@@ -108,6 +112,10 @@ export default defineComponent({
       selectedReqsPerConflict.push(singleConflictMap);
       numSelfChecksPerConflict.push(numSelfChecks);
     });
+
+    if (this.isEditingRequirements) {
+      this.setRequirementsCurrentlyFulfilled(selectedReqsPerConflict);
+    }
 
     return {
       selectedReqsPerConflict,
@@ -218,6 +226,27 @@ export default defineComponent({
       });
 
       return [...conflictReqIds, ...selectableReqIdsInConflict];
+    },
+    // set requirements to true or false based on what options a course has already been assigned to
+    // for courses being edited.
+    setRequirementsCurrentlyFulfilled(selectedReqsPerConflict: Map<string, boolean>[]) {
+      const uniqueID = isCourseTaken(this.selectedCourse)
+        ? this.selectedCourse.uniqueId
+        : this.selectedCourse.uniqueID;
+
+      const existingConstraintViolations = store.state.courseToRequirementsInConstraintViolations.get(
+        uniqueID
+      );
+
+      // convert conflicts to a 1d list.
+      const listOfConflicts = Array.from(existingConstraintViolations ?? new Set()).flat();
+
+      // select any reqs in conflict in the list, deselct otherwise.
+      selectedReqsPerConflict.forEach(conflict => {
+        conflict.forEach((_, req) => {
+          conflict.set(req, listOfConflicts.includes(req));
+        });
+      });
     },
   },
 });

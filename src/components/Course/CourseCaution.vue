@@ -6,6 +6,7 @@
       :selectedCourse="course"
       :courseConflicts="courseConflicts"
       :selfCheckRequirements="selfCheckRequirements"
+      :isEditingRequirements="true"
       @resolve-conflicts="handleConflictsResolved"
     />
     <course-base-tooltip
