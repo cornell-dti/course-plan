@@ -57,7 +57,7 @@
     </div>
     <profile-confirmation
       @close-modal="closeConfirmation"
-      v-if="this.isConfirmOpen"
+      v-if="isConfirmOpen"
       @submit-onboarding="submitOnboarding"
     />
   </div>
