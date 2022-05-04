@@ -17,7 +17,6 @@
           :isDisplayingRequirementsMobile="requirementsIsDisplayedMobile"
           @openPlan="openPlan"
           @openTools="openTools"
-          @editProfile="editProfile"
           @openProfile="openProfile"
           @toggleRequirementsMobile="toggleRequirementsMobile"
         />

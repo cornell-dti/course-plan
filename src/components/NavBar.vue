@@ -110,7 +110,7 @@ export default defineComponent({
   props: {
     isDisplayingRequirementsMobile: { type: Boolean, required: true },
   },
-  emits: ['openPlan', 'openTools', 'editProfile', 'toggleRequirementsMobile', 'openProfile'],
+  emits: ['openPlan', 'openTools', 'toggleRequirementsMobile', 'openProfile'],
   data() {
     return {
       menuOpen: false,
@@ -139,7 +139,6 @@ export default defineComponent({
     },
     editProfile() {
       this.menuOpen = false;
-      this.$emit('editProfile');
     },
     openProfile() {
       this.menuOpen = false;

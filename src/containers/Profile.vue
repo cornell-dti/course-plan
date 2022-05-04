@@ -226,7 +226,6 @@ export default defineComponent({
     right: 753px;
     top: 40px;
 
-    font-family: 'Proxima Nova';
     font-style: normal;
     font-weight: 700;
     font-size: 40px;

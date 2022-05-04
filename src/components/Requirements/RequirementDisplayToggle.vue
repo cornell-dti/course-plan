@@ -29,6 +29,8 @@
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
 import DropDownArrow from '@/components/DropDownArrow.vue';
+import { fulfillmentProgressString } from '@/requirements/requirement-frontend-utils';
+import featureFlagCheckers from '@/feature-flags';
 
 export default defineComponent({
   components: { DropDownArrow },
@@ -40,21 +42,31 @@ export default defineComponent({
   emits: ['on-toggle'],
   computed: {
     requirementFulfillmentProgress(): string {
-      const {
-        requirement,
-        fulfillment: { safeMinCountFulfilled, minCountRequired, additionalRequirements },
-      } = this.requirementFulfillment;
+      const { requirement, fulfillment } = this.requirementFulfillment;
       if (requirement.fulfilledBy === 'self-check') return 'self check';
-      if (additionalRequirements == null) {
-        return `${safeMinCountFulfilled}/${minCountRequired} ${this.requirementFulfillment.fulfillment.fulfilledBy}`;
+      if (fulfillment.additionalRequirements == null) {
+        return fulfillmentProgressString(fulfillment);
       }
-      const additionalRequirementsList = Object.values(additionalRequirements);
+      const additionalRequirementsList = Object.values(fulfillment.additionalRequirements);
+
       // Compute progress string x/y requirements fulfilled.
       // We also need to include the main requirement into consideration.
-      let totalFulfilledRequirements = safeMinCountFulfilled >= minCountRequired ? 1 : 0;
+
+      let totalFulfilledRequirements =
+        fulfillment.safeMinCountFulfilled >= fulfillment.minCountRequired ? 1 : 0;
+      let dangerouslyFulfilledCount =
+        fulfillment.dangerousMinCountFulfilled >= fulfillment.minCountRequired ? 1 : 0;
+
       const totalRequirementsCount = 1 + additionalRequirementsList.length;
       for (let i = 0; i < additionalRequirementsList.length; i += 1) {
         const additionalRequirementProgress = additionalRequirementsList[i];
+        if (
+          additionalRequirementProgress.dangerousMinCountFulfilled >=
+          additionalRequirementProgress.minCountRequired
+        ) {
+          dangerouslyFulfilledCount += 1;
+        }
+
         if (
           additionalRequirementProgress.safeMinCountFulfilled >=
           additionalRequirementProgress.minCountRequired
@@ -62,7 +74,11 @@ export default defineComponent({
           totalFulfilledRequirements += 1;
         }
       }
-      return `${totalFulfilledRequirements}/${totalRequirementsCount} requirements`;
+
+      // count anything that fulfills requirement, including dangerous fulfillments
+      return featureFlagCheckers.isRequirementConflictsEnabled()
+        ? `${dangerouslyFulfilledCount}/${totalRequirementsCount} requirements`
+        : `${totalFulfilledRequirements}/${totalRequirementsCount} requirements`;
     },
   },
 });

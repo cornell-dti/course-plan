@@ -4,10 +4,9 @@
     content-class="content-course"
     :rightButtonText="rightButtonText"
     :rightButtonIsHighlighted="!conflictsFullyResolved"
-    @modal-closed="closeCurrentModal"
-    @right-button-clicked="addItem"
+    @modal-closed="removeCourseAndCloseModal"
+    @right-button-clicked="addCourse"
   >
-    <!-- TODO @willespencer factor out selected course? -->
     <div class="courseConflict-text">Selected Course</div>
     <div class="selected-course" data-cyId="courseConflict-selectedCourse">
       {{ selectedCourse.code }}:
@@ -27,8 +26,14 @@
 
     <div v-for="index in numTotalConflicts" :key="index" class="courseConflict-conflict">
       <div v-if="numTotalConflicts > 1">{{ `${index}. Choose only one requirement:` }}</div>
-      <single-conflict-editor :conflictNumber="index" @conflict-changed="handleChangedConflict" />
-      <div v-if="index === 1" class="courseConflict-warning">
+      <single-conflict-editor
+        :checkedReqs="selectedReqsPerConflict[index - 1]"
+        :conflictNumber="index"
+        :numSelfChecks="numSelfChecksPerConflict[index - 1]"
+        :selectedCourse="selectedCourse"
+        @conflict-changed="handleChangedConflict"
+      />
+      <div v-if="shouldShowSelectableWarning(index)" class="courseConflict-warning">
         <span>*Requirements with</span>
         <img class="warning-icon" src="@/assets/images/warning.svg" alt="warning icon" />
         <span>are broad so check carefully before selecting them</span>
@@ -42,24 +47,66 @@
 import { PropType, defineComponent } from 'vue';
 import TeleportModal from '@/components/Modals/TeleportModal.vue';
 import SingleConflictEditor from '@/components/Modals/NewCourse/SingleConflictEditor.vue';
+import { getConstraintViolationsForSingleCourse } from '@/requirements/requirement-constraints-utils';
+import { allowCourseDoubleCountingBetweenRequirements } from '@/requirements/requirement-frontend-utils';
+import store from '@/store';
 
 export default defineComponent({
   components: { TeleportModal, SingleConflictEditor },
   emits: {
     'close-course-modal': () => true,
-    'add-course': (course: CornellCourseRosterCourse, choice: FirestoreCourseOptInOptOutChoices) =>
-      typeof course === 'object' && typeof choice === 'object',
+    'resolve-conflicts': (course: FirestoreSemesterCourse) => typeof course === 'object',
+    'remove-course': (uniqueID: number) => typeof uniqueID === 'number',
   },
   props: {
     selectedCourse: { type: Object as PropType<FirestoreSemesterCourse>, required: true },
+    courseConflicts: { type: Object as PropType<Set<string[]>>, required: true },
+    selfCheckRequirements: {
+      type: Object as PropType<readonly RequirementWithIDSourceType[]>,
+      required: true,
+    },
   },
   data() {
-    // TODO @willespencer remove hardcoded initial list of reqs
+    // convert the set of conflicts and self-check reqs to a list of dicts, where each dict is a mapping of req options to bools representing if they are selected
+    // includes self checks only if in conflict with the other reqs in group
+    const selectedReqsPerConflict: Map<string, boolean>[] = [];
+    const numSelfChecksPerConflict: number[] = [];
+
+    const selectableReqIds: string[] = [];
+    this.selfCheckRequirements.forEach(singleSelfCheckReq => {
+      selectableReqIds.push(singleSelfCheckReq.id);
+    });
+
+    this.courseConflicts.forEach(singleConflictList => {
+      const conflictReqIds: string[] = [];
+      const singleConflictMap = new Map<string, boolean>();
+      singleConflictList.forEach(req => {
+        singleConflictMap.set(req, true);
+        conflictReqIds.push(req);
+      });
+
+      const reqsInConflict = this.getReqsInConflict(
+        this.selectedCourse.uniqueID,
+        conflictReqIds,
+        selectableReqIds
+      );
+
+      // filter out self checks that are not in conflict with the other reqs
+      let numSelfChecks = 0;
+      this.selfCheckRequirements.forEach(singleSelfCheckReq => {
+        if (reqsInConflict.includes(singleSelfCheckReq.id)) {
+          singleConflictMap.set(singleSelfCheckReq.id, false);
+          numSelfChecks += 1;
+        }
+      });
+
+      selectedReqsPerConflict.push(singleConflictMap);
+      numSelfChecksPerConflict.push(numSelfChecks);
+    });
+
     return {
-      selectedReqsPerConflict: [
-        ['req1', 'req2', 'selectableReq1'],
-        ['req1', 'req2', 'selectableReq1'],
-      ],
+      selectedReqsPerConflict,
+      numSelfChecksPerConflict,
       hasUnresolvedConflicts: true,
       hasUnselectedConflicts: false,
     };
@@ -87,15 +134,17 @@ export default defineComponent({
     closeCurrentModal() {
       this.$emit('close-course-modal');
     },
-    addItem() {
-      this.addCourse();
+    removeCourseAndCloseModal() {
+      this.closeCurrentModal();
+      this.$emit('remove-course', this.selectedCourse.uniqueID);
     },
     addCourse() {
-      // TODO @willespencer handle what happens when conflicts are saved or resolved
       this.closeCurrentModal();
+      this.$emit('resolve-conflicts', this.selectedCourse);
     },
-    handleChangedConflict(selectedReqs: string[], index: number) {
-      this.selectedReqsPerConflict[index - 1] = selectedReqs;
+    handleChangedConflict(selectedReq: string, index: number) {
+      const conflict = this.selectedReqsPerConflict[index - 1];
+      conflict.set(selectedReq, !conflict.get(selectedReq));
       this.updateConflictStatus();
     },
     // conflicts exist for each list of reqs in selectedReqsPerConflict if number of reqs selected != 1
@@ -104,16 +153,55 @@ export default defineComponent({
       let unresolved = false;
       let unselected = false;
       for (let i = 0; i < this.selectedReqsPerConflict.length; i += 1) {
-        if (this.selectedReqsPerConflict[i].length > 1) {
+        const conflict = this.selectedReqsPerConflict[i];
+        const numReqsSelected = this.countNumberReqsSelected(conflict);
+        if (numReqsSelected > 1) {
           unresolved = true;
         }
 
-        if (this.selectedReqsPerConflict[i].length === 0) {
+        if (numReqsSelected === 0) {
           unselected = true;
         }
       }
       this.hasUnresolvedConflicts = unresolved;
       this.hasUnselectedConflicts = unselected;
+    },
+    // count number of reqs selected for a conflict (i.e. set to true in the map)
+    countNumberReqsSelected(conflict: Map<string, boolean>) {
+      return Array.from(conflict.values()).filter(Boolean).length;
+    },
+    // only show the selectable req warning under the first req group, and only if there are selectable reqs
+    shouldShowSelectableWarning(index: number): boolean {
+      const maxNumSelfChecks = Math.max(...this.numSelfChecksPerConflict);
+      return index === 1 && maxNumSelfChecks > 0;
+    },
+    // determine if each selectable req in selectableReqIds is in conflict with the reqs in conflictReqIds,
+    // based on course with uniqueID.
+    // return the list of conflictReqIds + selectableReqIds in conflict.
+    getReqsInConflict(
+      uniqueID: string | number,
+      conflictReqIds: string[],
+      selectableReqIds: string[]
+    ): string[] {
+      const selectableReqIdsInConflict: string[] = [];
+      selectableReqIds.forEach(selectableReqId => {
+        const constraintViolations = getConstraintViolationsForSingleCourse(
+          { uniqueId: uniqueID },
+          [...conflictReqIds, selectableReqId],
+          (reqA, reqB) =>
+            allowCourseDoubleCountingBetweenRequirements(
+              store.state.userRequirementsMap[reqA],
+              store.state.userRequirementsMap[reqB]
+            )
+        );
+
+        // if selectable req is not in conflict with conflictReqIds, it will be missing from requirementsThatDoNotAllowDoubleCounting
+        if (constraintViolations.requirementsThatDoNotAllowDoubleCounting.has(selectableReqId)) {
+          selectableReqIdsInConflict.push(selectableReqId);
+        }
+      });
+
+      return [...conflictReqIds, ...selectableReqIdsInConflict];
     },
   },
 });

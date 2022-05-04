@@ -5,19 +5,11 @@ const inequalityRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'Inequality Core Course',
     description:
-      'This course introduces students to contemporary debates and controversies' +
-      ' about inequality. Learn how and why inequality varies across time and space,' +
-      ' and learn to identify how inequality is generated and maintained. Offered every fall semester.',
+      'This course reviews contemporary approaches to understanding social' +
+      ' inequality and the processes by which it comes to be seen as legitimate,' +
+      ' natural, or desirable. Offered every spring semester.',
     source: 'https://inequality.cornell.edu/minor-overview-and-requirements',
-    checker: includesWithSubRequirements([
-      'SOC 2220',
-      'DSOC 2220',
-      'PAM 2220',
-      'ILROB 2220',
-      'PHIL 1950',
-      'AMST 2225',
-      'GOVT 2225',
-    ]),
+    checker: includesWithSubRequirements(['PAM 2208', 'SOC 2208', 'DSOC 2090']),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
     slotNames: ['Course'],
@@ -27,9 +19,13 @@ const inequalityRequirements: readonly CollegeOrMajorRequirement[] = [
     description: 'An Overview Course',
     source: 'https://inequality.cornell.edu/minor-overview-and-requirements',
     checker: includesWithSubRequirements([
-      'PAM 2208',
-      'SOC 2208',
-      'DSOC 2090',
+      'SOC 2220',
+      'DSOC 2220',
+      'PAM 2220',
+      'ILROB 2220',
+      'PHIL 1950',
+      'AMST 2225',
+      'GOVT 2225',
       'DSOC 3700',
       'SOC 3710',
       'PAM 3370',
@@ -45,11 +41,11 @@ const inequalityRequirements: readonly CollegeOrMajorRequirement[] = [
     slotNames: ['Course'],
   },
   {
-    name: 'Four Elective Courses',
+    name: 'Inequality Electives',
     description:
-      'Four electives chosen from the full list of elective courses.' +
+      'Four electives chosen from the full list of elective courses. ' +
       'If enrolled in the Health Equity Track, two of those four electives must ' +
-      'be electives labelled with the indicated health-equity focus. The other two' +
+      'be electives labelled with the indicated health-equity focus. The other two ' +
       'can be chosen from the broader list and can include other health-equity courses.',
     source: 'https://inequality.cornell.edu/minor-overview-and-requirements',
     checker: includesWithSubRequirements([
