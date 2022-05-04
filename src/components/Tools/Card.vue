@@ -69,7 +69,7 @@ export default defineComponent({
   border-width: 0;
   align-items: center;
   background-color: $white;
-  margin: 0 80px 40px 5px;
+  margin: 0 5rem 2.5rem 0.25rem;
 
   &--collapsed {
     height: 50px;
@@ -100,7 +100,7 @@ export default defineComponent({
   }
 
   &-content {
-    margin: 14px 32px 14px 32px;
+    margin: 0.875rem 2rem 0.875rem 2rem;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -119,8 +119,8 @@ export default defineComponent({
   }
 
   &-minimize {
-    margin-right: 32px;
-    margin-left: 32px;
+    margin-right: 2rem;
+    margin-left: 2rem;
     padding: 0;
   }
 

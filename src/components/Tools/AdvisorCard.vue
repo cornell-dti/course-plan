@@ -77,7 +77,7 @@ export default defineComponent({
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    margin: 0 24px 0 24px;
+    margin: 0 1.5rem 0 1.5rem;
   }
 
   &-info {
@@ -85,14 +85,14 @@ export default defineComponent({
     color: #3d3d3d;
     align-self: center;
     justify-self: start;
-    margin-left: 5px;
-    margin-right: 5px;
+    margin-left: 0.25rem;
+    margin-right: 0.25rem;
   }
   &-row {
     display: grid;
     grid-template-columns: 20% 40% 40%;
     justify-content: space-evenly;
-    margin: 7px 0 7px 0;
+    margin: 0.375rem 0 0.375rem 0;
   }
   &-heading {
     &-content {
@@ -122,7 +122,7 @@ export default defineComponent({
     align-items: center;
 
     &-icon {
-      margin-left: 5px;
+      margin-left: 0.25rem;
     }
   }
 
