@@ -275,7 +275,7 @@ export default defineComponent({
 
   &-selectedButton {
     margin: 0 0 50px 0;
-    font-family: 'Proxima Nova';
+    font-family: 'ProximaNova';
     font-style: normal;
     font-weight: bold;
     font-size: 18px;
@@ -291,7 +291,7 @@ export default defineComponent({
 
   &-button {
     margin: 0 0 50px 0;
-    font-family: 'Proxima Nova';
+    font-family: 'ProximaNova';
     font-style: normal;
     font-weight: 400;
     font-size: 18px;
