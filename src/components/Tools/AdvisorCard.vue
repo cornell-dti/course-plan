@@ -113,10 +113,11 @@ export default defineComponent({
     grid-column-start: 3;
     grid-column-end: 3;
     color: #3d3d3d;
+    text-decoration: underline;
     &:hover,
     &:focus,
     &:active {
-      color: #7e7e7e;
+      color: $yuxuanBlue;
     }
     display: flex;
     align-items: center;
