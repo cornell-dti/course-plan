@@ -15,8 +15,8 @@ export const lastNameRange = (startLetter: string, endLetter: string): AdvisorCh
   user: FirestoreUserName
 ): boolean => {
   if (user.lastName) {
-    const lastInitial = user.lastName.charAt(0);
-    return lastInitial >= startLetter && lastInitial <= endLetter;
+    const lastInitial = user.lastName.trim().charAt(0).toLowerCase();
+    return lastInitial >= startLetter.toLowerCase() && lastInitial <= endLetter.toLowerCase();
   }
   return true;
 };
@@ -37,9 +37,9 @@ export const lastNameRanges = (range: [string, string][]): AdvisorChecker => (
   user: FirestoreUserName
 ): boolean => {
   if (user.lastName) {
-    const lastInitial = user.lastName.charAt(0);
+    const lastInitial = user.lastName.trim().charAt(0).toLowerCase();
     for (const [start, end] of range) {
-      if (lastInitial >= start && lastInitial <= end) {
+      if (lastInitial >= start.toLowerCase() && lastInitial <= end.toLowerCase()) {
         return true;
       }
     }
