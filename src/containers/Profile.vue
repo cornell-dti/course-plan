@@ -155,12 +155,12 @@ export default defineComponent({
       }
       if (this.isInvalidGraduationSemester) {
         return (
-          'Your graduation semester cannot come before your entrance semester. Please select a ' +
-          'graduation semester after ' +
-          this.onboarding.entranceSem +
-          ' ' +
-          this.onboarding.entranceYear +
-          '.'
+          `${'Your graduation semester cannot come before your entrance semester. Please select a ' +
+          'graduation semester after '}${ 
+          this.onboarding.entranceSem 
+          } ${ 
+          this.onboarding.entranceYear 
+          }.`
         );
       }
       if (this.isInvalidMajorMinorGradError) {
