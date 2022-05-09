@@ -69,6 +69,13 @@ import OnboardingBasic from '@/components/Modals/Onboarding/OnboardingBasic.vue'
 import OnboardingTransfer from '@/components/Modals/Onboarding/OnboardingTransfer.vue';
 import { setAppOnboardingData } from '@/global-firestore-data';
 import ProfileConfirmation from '@/components/Modals/ProfileConfirmation.vue';
+import {
+  getMajorFullName,
+  getMinorFullName,
+  getGradFullName,
+  computeGradYears,
+  SeasonOrdinal,
+} from '@/utilities';
 import store from '@/store';
 
 const placeholderText = 'Select one';
@@ -86,15 +93,45 @@ export default defineComponent({
     return {
       currentPage: 1,
       name: { ...this.userName },
-      onboarding: { ...this.onboardingData },
+      onboarding: {
+        ...this.onboardingData,
+        gradYear:
+          this.onboardingData.gradYear in computeGradYears(this.onboardingData.entranceYear)
+            ? this.onboardingData.gradYear
+            : '',
+      },
       changed: false,
       isConfirmOpen: false,
     };
   },
   computed: {
     // Display error if a required field is empty
+    isInvalidGraduationSemester(): boolean {
+      const { gradYear } = this.onboarding;
+      const { entranceYear } = this.onboarding;
+      if (gradYear !== '' && entranceYear !== '') {
+        if (this.onboarding.entranceSem && this.onboarding.gradSem && gradYear === entranceYear) {
+          return (
+            SeasonOrdinal[this.onboarding.gradSem] < SeasonOrdinal[this.onboarding.entranceSem]
+          );
+        }
+        return gradYear < entranceYear;
+      }
+      return false;
+    },
+    isInvalidMajorMinorGradError(): boolean {
+      return (
+        this.onboarding.major
+          .map(getMajorFullName)
+          .some((majorFullName: string) => majorFullName === '') ||
+        this.onboarding.minor
+          .map(getMinorFullName)
+          .some((minorFullName: string) => minorFullName === '') ||
+        (this.onboarding.grad ? getGradFullName(this.onboarding.grad) === '' : false)
+      );
+    },
     isError(): boolean {
-      if (!this.changed) {
+      if (!this.changed || this.isInvalidGraduationSemester || this.isInvalidMajorMinorGradError) {
         return true;
       }
       return (
@@ -115,6 +152,22 @@ export default defineComponent({
     errorText(): string {
       if (!this.changed) {
         return '';
+      }
+      if (this.isInvalidGraduationSemester) {
+        return (
+          'Your graduation semester cannot come before your entrance semester. Please select a ' +
+          'graduation semester after ' +
+          this.onboarding.entranceSem +
+          ' ' +
+          this.onboarding.entranceYear +
+          '.'
+        );
+      }
+      if (this.isInvalidMajorMinorGradError) {
+        return (
+          'Invalid major, minor, or graduate program. Delete the placeholder major, minor, or program' +
+          'and try again.'
+        );
       }
       const messages = [];
       if (this.onboarding.college === '' && this.onboarding.grad === '') {
@@ -279,14 +332,11 @@ export default defineComponent({
     font-style: normal;
     font-weight: bold;
     font-size: 18px;
-    line-height: 18px;
+    line-height: 30px;
     display: flex;
     align-items: center;
     color: #000000;
-    text-decoration: underline;
-    text-decoration-color: $emGreen;
-    text-decoration-thickness: 2px;
-    text-underline-offset: 11px;
+    border-bottom: 3px solid $emGreen;
   }
 
   &-button {
