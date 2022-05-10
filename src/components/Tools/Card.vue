@@ -69,7 +69,7 @@ export default defineComponent({
   border-width: 0;
   align-items: center;
   background-color: $white;
-  margin: 0 5rem 2.5rem 0.25rem;
+  margin: 0 0 2.5rem 0.25rem;
 
   &--collapsed {
     height: 50px;
