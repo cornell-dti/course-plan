@@ -32,6 +32,7 @@ import epRequirements from './majors/ep';
 import fashionDesignRequirements from './majors/fsad';
 import foodSciRequirements from './majors/foodsci';
 import governmentRequirements from './majors/govt';
+import hbhsRequirements from './majors/hbhs';
 import hdRequirements from './majors/hd';
 import hotelAdminRequirements from './majors/hadm';
 import historyRequirements from './majors/hist';
@@ -239,6 +240,11 @@ const json: RequirementsJson = {
       name: 'Hotel Administration',
       schools: ['BU'],
       requirements: hotelAdminRequirements,
+    },
+    HBHS: {
+      name: 'Human Biology, Health, and Society',
+      schools: ['HE'],
+      requirements: hbhsRequirements,
     },
     HD: {
       name: 'Human Development',
