@@ -29,7 +29,7 @@
         :checkedReqs="selectedReqsPerConflict[index - 1]"
         :selectableRequirements="selectableRequirements"
         :conflictNumber="index"
-        :selectedCourse="selectedCourse"
+        :selectedCourseUniqueId="courseUniqueId"
         @conflict-changed="handleChangedConflict"
       />
       <div v-if="shouldShowSelectableWarning(index)" class="courseConflict-warning">

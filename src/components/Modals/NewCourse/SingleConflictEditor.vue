@@ -28,7 +28,7 @@ import { getReqColor } from '@/utilities';
 
 export default defineComponent({
   props: {
-    selectedCourse: { type: Object as PropType<FirestoreSemesterCourse>, required: true },
+    selectedCourseUniqueId: { type: [String, Number], required: true },
     checkedReqs: { type: Object as PropType<Map<string, boolean>>, required: true },
     conflictNumber: { type: Number, required: true },
     selectableRequirements: {
@@ -47,13 +47,13 @@ export default defineComponent({
       // edit the requirements assigned to the course when editor changed
       if (this.isReqSelectable(reqName)) {
         toggleRequirementChoice(
-          this.selectedCourse.uniqueID,
+          this.selectedCourseUniqueId,
           store.state.userRequirementsMap[reqName].id,
           'acknowledgedCheckerWarningOptIn'
         );
       } else {
         toggleRequirementChoice(
-          this.selectedCourse.uniqueID,
+          this.selectedCourseUniqueId,
           store.state.userRequirementsMap[reqName].id,
           'optOut'
         );
