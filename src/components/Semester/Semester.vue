@@ -451,10 +451,10 @@ export default defineComponent({
         }
       }
     },
-    handleConflictsResolved(course: FirestoreSemesterCourse) {
+    handleConflictsResolved(course: FirestoreSemesterCourse | CourseTaken) {
       this.openConfirmationModal(`Added ${course.code} to ${this.season} ${this.year}`);
     },
-    deleteCourseWithoutModal(uniqueID: number) {
+    deleteCourseWithoutModal(uniqueID: string | number) {
       deleteCourseFromSemester(this.year, this.season, uniqueID, this.$gtag);
     },
     deleteCourse(courseCode: string, uniqueID: number) {

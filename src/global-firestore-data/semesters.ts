@@ -110,7 +110,7 @@ export const addCourseToSemester = (
 export const deleteCourseFromSemester = (
   year: number,
   season: FirestoreSemesterSeason,
-  courseUniqueID: number,
+  courseUniqueID: string | number,
   gtag?: GTag
 ): void => {
   GTagEvent(gtag, 'delete-course');
