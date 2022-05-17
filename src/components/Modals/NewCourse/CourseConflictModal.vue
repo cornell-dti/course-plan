@@ -49,7 +49,7 @@ import SingleConflictEditor from '@/components/Modals/NewCourse/SingleConflictEd
 import { getConstraintViolationsForSingleCourse } from '@/requirements/requirement-constraints-utils';
 import { allowCourseDoubleCountingBetweenRequirements } from '@/requirements/requirement-frontend-utils';
 import store from '@/store';
-import { isCourseTaken } from '@/utilities';
+import { convertCourseToCourseRoster, isCourseTaken } from '@/utilities';
 
 export default defineComponent({
   components: { TeleportModal, SingleConflictEditor },
@@ -161,7 +161,9 @@ export default defineComponent({
     },
     courseName(): string {
       if (isCourseTaken(this.selectedCourse)) {
-        return this.selectedCourse.code;
+        return `${this.selectedCourse.code} ${
+          convertCourseToCourseRoster(this.selectedCourse).titleLong
+        }`;
       }
       return `${this.selectedCourse.code} ${this.selectedCourse.name}`;
     },
