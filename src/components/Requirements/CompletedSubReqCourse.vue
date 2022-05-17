@@ -18,7 +18,7 @@
           <span v-else class="completed-reqCourses-course-heading-check"
             ><img src="@/assets/images/checkmark-green.svg" alt="checkmark"
           /></span>
-          {{ slotName }}
+          <span class="completed-reqCourses-course-heading-name">{{ slotName }}</span>
         </div>
         <button class="reqCourse-button" @click="onDeleteModalOpen">Delete ></button>
       </div>
@@ -163,6 +163,10 @@ export default defineComponent({
           font-size: 14px;
           line-height: 17px;
           color: $lightPlaceholderGray;
+          display: flex;
+        }
+        &-name {
+          padding-left: 5px;
         }
       }
       &-object {
