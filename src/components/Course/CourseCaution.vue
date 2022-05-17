@@ -5,7 +5,7 @@
       @close-course-modal="closeConflictModal"
       :selectedCourse="course"
       :courseConflicts="courseConflicts"
-      :selfCheckRequirements="selfCheckRequirements"
+      :selectableRequirements="selectableRequirements"
       :relatedRequirements="relatedRequirements"
       :isEditingRequirements="true"
       @resolve-conflicts="handleConflictsResolved"
@@ -164,7 +164,7 @@ export default defineComponent({
     return {
       isConflictModalOpen: false,
       courseConflicts,
-      selfCheckRequirements: selfChecks,
+      selectableRequirements: selfChecks,
       relatedRequirements: relatedReqs,
     };
   },

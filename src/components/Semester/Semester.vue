@@ -19,7 +19,7 @@
       v-if="isConflictModalOpen"
       :selectedCourse="conflictCourse"
       :courseConflicts="courseConflicts"
-      :selfCheckRequirements="selfCheckRequirements"
+      :selectableRequirements="selectableRequirements"
       :relatedRequirements="[]"
       :isEditingRequirements="false"
       @resolve-conflicts="handleConflictsResolved"
@@ -210,7 +210,7 @@ export default defineComponent({
       isSemesterMinimized: false,
       conflictCourse: {} as FirestoreSemesterCourse,
       courseConflicts: new Set<string[]>(),
-      selfCheckRequirements: [] as readonly RequirementWithIDSourceType[],
+      selectableRequirements: [] as readonly RequirementWithIDSourceType[],
 
       seasonImg: {
         Fall: fall,
@@ -379,11 +379,11 @@ export default defineComponent({
     openConflictModal(
       course: FirestoreSemesterCourse,
       conflicts: Set<string[]>,
-      selfCheckRequirements: readonly RequirementWithIDSourceType[]
+      selectableRequirements: readonly RequirementWithIDSourceType[]
     ) {
       this.conflictCourse = course;
       this.courseConflicts = conflicts;
-      this.selfCheckRequirements = selfCheckRequirements;
+      this.selectableRequirements = selectableRequirements;
       this.isConflictModalOpen = !this.isConflictModalOpen;
     },
     closeConflictModal() {

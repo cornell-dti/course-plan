@@ -27,8 +27,8 @@
       <div v-if="numTotalConflicts > 1">{{ `${index}. Choose only one requirement:` }}</div>
       <single-conflict-editor
         :checkedReqs="selectedReqsPerConflict[index - 1]"
+        :selectableRequirements="selectableRequirements"
         :conflictNumber="index"
-        :numSelfChecks="numSelfChecksPerConflict[index - 1]"
         :selectedCourse="selectedCourse"
         @conflict-changed="handleChangedConflict"
       />
@@ -66,7 +66,7 @@ export default defineComponent({
       required: true,
     },
     courseConflicts: { type: Object as PropType<Set<string[]>>, required: true },
-    selfCheckRequirements: {
+    selectableRequirements: {
       type: Object as PropType<readonly RequirementWithIDSourceType[]>,
       required: true,
     },
@@ -80,14 +80,14 @@ export default defineComponent({
     },
   },
   data() {
-    // convert the set of conflicts and self-check reqs to a list of dicts, where each dict is a mapping of req options to bools representing if they are selected
-    // includes self checks only if in conflict with the other reqs in group
+    // convert the set of conflicts and selectable/related reqs to a list of dicts, where each dict is a mapping of req options to bools representing if they are selected
+    // includes selectable checks and related reqs only if in conflict with the other reqs in group
     const selectedReqsPerConflict: Map<string, boolean>[] = [];
-    const numSelfChecksPerConflict: number[] = [];
+    const numSelectableReqsPerConflict: number[] = [];
 
     const selectableReqIds: string[] = [];
-    this.selfCheckRequirements.forEach(singleSelfCheckReq => {
-      selectableReqIds.push(singleSelfCheckReq.id);
+    this.selectableRequirements.forEach(singleSelectableReq => {
+      selectableReqIds.push(singleSelectableReq.id);
     });
 
     const relatedReqIds: string[] = [];
@@ -117,17 +117,17 @@ export default defineComponent({
         }
       });
 
-      // filter out self checks that are not in conflict with the other reqs
-      let numSelfChecks = 0;
-      this.selfCheckRequirements.forEach(singleSelfCheckReq => {
-        if (reqsInConflict.includes(singleSelfCheckReq.id)) {
-          singleConflictMap.set(singleSelfCheckReq.id, false);
-          numSelfChecks += 1;
+      // filter out selectable reqs that are not in conflict with the other reqs
+      let numSelectableReqs = 0;
+      this.selectableRequirements.forEach(singleSelectableReq => {
+        if (reqsInConflict.includes(singleSelectableReq.id)) {
+          singleConflictMap.set(singleSelectableReq.id, false);
+          numSelectableReqs += 1;
         }
       });
 
       selectedReqsPerConflict.push(singleConflictMap);
-      numSelfChecksPerConflict.push(numSelfChecks);
+      numSelectableReqsPerConflict.push(numSelectableReqs);
     });
 
     if (this.isEditingRequirements) {
@@ -136,7 +136,7 @@ export default defineComponent({
 
     return {
       selectedReqsPerConflict,
-      numSelfChecksPerConflict,
+      numSelectableReqsPerConflict,
       hasUnresolvedConflicts: true,
       hasUnselectedConflicts: false,
     };
@@ -213,12 +213,12 @@ export default defineComponent({
     },
     // only show the selectable req warning under the first req group, and only if there are selectable reqs
     shouldShowSelectableWarning(index: number): boolean {
-      const maxNumSelfChecks = Math.max(...this.numSelfChecksPerConflict);
-      return index === 1 && maxNumSelfChecks > 0;
+      const maxNumSelectable = Math.max(...this.numSelectableReqsPerConflict);
+      return index === 1 && maxNumSelectable > 0;
     },
-    // determine if each selectable req in selectableReqIds is in conflict with the reqs in conflictReqIds,
+    // determine if each selectable req or related req is in conflict with the reqs in conflictReqIds,
     // based on course with uniqueID.
-    // return the list of conflictReqIds + selectableReqIds in conflict.
+    // return the list of conflictReqIds + selectableReqIds + relatedReqIds in conflict.
     getReqsInConflict(
       uniqueID: string | number,
       conflictReqIds: string[],
@@ -255,7 +255,7 @@ export default defineComponent({
             )
         );
 
-        // if selectable req is not in conflict with conflictReqIds, it will be missing from requirementsThatDoNotAllowDoubleCounting
+        // if related req is not in conflict with conflictReqIds, it will be missing from requirementsThatDoNotAllowDoubleCounting
         if (constraintViolations.requirementsThatDoNotAllowDoubleCounting.has(relatedReqId)) {
           relatedReqIdsInConflict.push(relatedReqId);
         }

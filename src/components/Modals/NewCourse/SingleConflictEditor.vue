@@ -1,18 +1,9 @@
 <template>
   <div>
     <div class="conflictEditor-reqs">
-      <div
-        class="conflictEditor-req"
-        v-for="([reqName, bool], index) in checkedReqs"
-        :key="reqName"
-      >
-        <input
-          type="checkbox"
-          :id="reqName"
-          :checked="bool"
-          @change="checkOrUncheckReq(reqName, index)"
-        />
-        <label v-if="!isReqSelfCheck(index)" :for="reqName" class="conflictEditor-label">{{
+      <div class="conflictEditor-req" v-for="[reqName, bool] in checkedReqs" :key="reqName">
+        <input type="checkbox" :id="reqName" :checked="bool" @change="checkOrUncheckReq(reqName)" />
+        <label v-if="!isReqSelectable(reqName)" :for="reqName" class="conflictEditor-label">{{
           getDisplayName(reqName)
         }}</label>
         <label v-else :for="reqName" class="conflictEditor-label">
@@ -40,18 +31,21 @@ export default defineComponent({
     selectedCourse: { type: Object as PropType<FirestoreSemesterCourse>, required: true },
     checkedReqs: { type: Object as PropType<Map<string, boolean>>, required: true },
     conflictNumber: { type: Number, required: true },
-    numSelfChecks: { type: Number, required: true },
+    selectableRequirements: {
+      type: Object as PropType<readonly RequirementWithIDSourceType[]>,
+      required: true,
+    },
   },
   emits: {
     'conflict-changed': (reqName: string, conflictNum: number) =>
       typeof reqName === 'string' && typeof conflictNum === 'number',
   },
   methods: {
-    checkOrUncheckReq(reqName: string, index: string) {
+    checkOrUncheckReq(reqName: string) {
       this.$emit('conflict-changed', reqName, this.conflictNumber);
 
       // edit the requirements assigned to the course when editor changed
-      if (this.isReqSelfCheck(index)) {
+      if (this.isReqSelectable(reqName)) {
         toggleRequirementChoice(
           this.selectedCourse.uniqueID,
           store.state.userRequirementsMap[reqName].id,
@@ -65,9 +59,9 @@ export default defineComponent({
         );
       }
     },
-    // req is self check if index has numSelfChecks or fewer reqs until it reaches the end of the list
-    isReqSelfCheck(index: string) {
-      return parseInt(index, 10) >= this.checkedReqs.size - this.numSelfChecks;
+    // req is self check if present in selectableRequirements list
+    isReqSelectable(reqName: string) {
+      return this.selectableRequirements.filter(req => req.id === reqName).length > 0;
     },
     getDisplayName(reqId: string) {
       return store.state.userRequirementsMap[reqId].name;
