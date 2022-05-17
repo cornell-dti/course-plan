@@ -6,6 +6,7 @@
       :selectedCourse="course"
       :courseConflicts="courseConflicts"
       :selfCheckRequirements="selfCheckRequirements"
+      :relatedRequirements="relatedRequirements"
       :isEditingRequirements="true"
       @resolve-conflicts="handleConflictsResolved"
     />
@@ -145,8 +146,10 @@ export default defineComponent({
       store.state.courseToRequirementsInConstraintViolations.get(uniqueID) ?? new Set();
 
     let selfChecks: readonly RequirementWithIDSourceType[] = [];
+    let relatedReqs: readonly RequirementWithIDSourceType[] = [];
+
     if (!isPlaceholderCourse(this.course)) {
-      const { selfCheckRequirements } = getRelatedUnfulfilledRequirements(
+      const { relatedRequirements, selfCheckRequirements } = getRelatedUnfulfilledRequirements(
         convertCourseToCourseRoster(this.course),
         store.state.groupedRequirementFulfillmentReport,
         store.state.onboardingData,
@@ -155,12 +158,14 @@ export default defineComponent({
         store.state.userRequirementsMap
       );
       selfChecks = selfCheckRequirements;
+      relatedReqs = relatedRequirements;
     }
 
     return {
       isConflictModalOpen: false,
       courseConflicts,
       selfCheckRequirements: selfChecks,
+      relatedRequirements: relatedReqs,
     };
   },
   computed: {

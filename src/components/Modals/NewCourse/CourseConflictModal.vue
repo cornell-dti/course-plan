@@ -70,6 +70,10 @@ export default defineComponent({
       type: Object as PropType<readonly RequirementWithIDSourceType[]>,
       required: true,
     },
+    relatedRequirements: {
+      type: Object as PropType<readonly RequirementWithIDSourceType[]>,
+      required: true,
+    },
     isEditingRequirements: {
       type: Boolean,
       required: true,
@@ -86,6 +90,11 @@ export default defineComponent({
       selectableReqIds.push(singleSelfCheckReq.id);
     });
 
+    const relatedReqIds: string[] = [];
+    this.relatedRequirements.forEach(singleRelatedReq => {
+      relatedReqIds.push(singleRelatedReq.id);
+    });
+
     this.courseConflicts.forEach(singleConflictList => {
       const conflictReqIds: string[] = [];
       const singleConflictMap = new Map<string, boolean>();
@@ -97,8 +106,16 @@ export default defineComponent({
       const reqsInConflict = this.getReqsInConflict(
         this.courseUniqueId,
         conflictReqIds,
-        selectableReqIds
+        selectableReqIds,
+        relatedReqIds
       );
+
+      // filter in related reqs that are not currently in conflict but could be
+      this.relatedRequirements.forEach(singleReq => {
+        if (reqsInConflict.includes(singleReq.id)) {
+          singleConflictMap.set(singleReq.id, false);
+        }
+      });
 
       // filter out self checks that are not in conflict with the other reqs
       let numSelfChecks = 0;
@@ -205,9 +222,11 @@ export default defineComponent({
     getReqsInConflict(
       uniqueID: string | number,
       conflictReqIds: string[],
-      selectableReqIds: string[]
+      selectableReqIds: string[],
+      relatedReqIds: string[]
     ): string[] {
       const selectableReqIdsInConflict: string[] = [];
+      const relatedReqIdsInConflict: string[] = [];
       selectableReqIds.forEach(selectableReqId => {
         const constraintViolations = getConstraintViolationsForSingleCourse(
           { uniqueId: uniqueID },
@@ -225,7 +244,24 @@ export default defineComponent({
         }
       });
 
-      return [...conflictReqIds, ...selectableReqIdsInConflict];
+      relatedReqIds.forEach(relatedReqId => {
+        const constraintViolations = getConstraintViolationsForSingleCourse(
+          { uniqueId: uniqueID },
+          [...conflictReqIds, relatedReqId],
+          (reqA, reqB) =>
+            allowCourseDoubleCountingBetweenRequirements(
+              store.state.userRequirementsMap[reqA],
+              store.state.userRequirementsMap[reqB]
+            )
+        );
+
+        // if selectable req is not in conflict with conflictReqIds, it will be missing from requirementsThatDoNotAllowDoubleCounting
+        if (constraintViolations.requirementsThatDoNotAllowDoubleCounting.has(relatedReqId)) {
+          relatedReqIdsInConflict.push(relatedReqId);
+        }
+      });
+
+      return [...conflictReqIds, ...relatedReqIdsInConflict, ...selectableReqIdsInConflict];
     },
     // set requirements to true or false based on what options a course has already been assigned to
     // for courses being edited.
