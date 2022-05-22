@@ -145,31 +145,11 @@ export default defineComponent({
     isCompactView: { type: Boolean, required: true },
   },
   data() {
-    const uniqueID = isCourseTaken(this.course) ? this.course.uniqueId : this.course.uniqueID;
-    const courseConflicts =
-      store.state.courseToRequirementsInConstraintViolations.get(uniqueID) ?? new Set();
-
-    let selfChecks: readonly RequirementWithIDSourceType[] = [];
-    let relatedReqs: readonly RequirementWithIDSourceType[] = [];
-
-    if (!isPlaceholderCourse(this.course)) {
-      const { relatedRequirements, selfCheckRequirements } = getRelatedUnfulfilledRequirements(
-        convertCourseToCourseRoster(this.course),
-        store.state.groupedRequirementFulfillmentReport,
-        store.state.onboardingData,
-        store.state.toggleableRequirementChoices,
-        store.state.overriddenFulfillmentChoices,
-        store.state.userRequirementsMap
-      );
-      selfChecks = selfCheckRequirements;
-      relatedReqs = relatedRequirements;
-    }
-
     return {
       isConflictModalOpen: false,
-      courseConflicts,
-      selectableRequirements: selfChecks,
-      relatedRequirements: relatedReqs,
+      courseConflicts: new Set() as Set<string[]>,
+      selectableRequirements: [] as readonly RequirementWithIDSourceType[],
+      relatedRequirements: [] as readonly RequirementWithIDSourceType[],
     };
   },
   computed: {
@@ -230,6 +210,23 @@ export default defineComponent({
       return `${n}${suffix}`;
     },
     openConflictModal() {
+      const uniqueID = isCourseTaken(this.course) ? this.course.uniqueId : this.course.uniqueID;
+      this.courseConflicts =
+        store.state.courseToRequirementsInConstraintViolations.get(uniqueID) ?? new Set();
+
+      if (!isPlaceholderCourse(this.course)) {
+        const { relatedRequirements, selfCheckRequirements } = getRelatedUnfulfilledRequirements(
+          convertCourseToCourseRoster(this.course),
+          store.state.groupedRequirementFulfillmentReport,
+          store.state.onboardingData,
+          store.state.toggleableRequirementChoices,
+          store.state.overriddenFulfillmentChoices,
+          store.state.userRequirementsMap
+        );
+        this.selectableRequirements = selfCheckRequirements;
+        this.relatedRequirements = relatedRequirements;
+      }
+
       this.isConflictModalOpen = true;
       this.$emit('open-conflict-modal');
     },
