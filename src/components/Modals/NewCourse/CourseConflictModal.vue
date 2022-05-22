@@ -5,7 +5,7 @@
     :rightButtonText="rightButtonText"
     :rightButtonIsHighlighted="!conflictsFullyResolved"
     @modal-closed="removeCourseAndCloseModal"
-    @right-button-clicked="addCourse"
+    @right-button-clicked="resolveConflicts"
   >
     <div class="courseConflict-text">Selected Course</div>
     <div class="selected-course" data-cyId="courseConflict-selectedCourse">
@@ -29,7 +29,6 @@
         :checkedReqs="selectedReqsPerConflict[index - 1]"
         :selectableRequirements="selectableRequirements"
         :conflictNumber="index"
-        :selectedCourseUniqueId="courseUniqueId"
         @conflict-changed="handleChangedConflict"
       />
       <div v-if="shouldShowSelectableWarning(index)" class="courseConflict-warning">
@@ -50,6 +49,7 @@ import { getConstraintViolationsForSingleCourse } from '@/requirements/requireme
 import { allowCourseDoubleCountingBetweenRequirements } from '@/requirements/requirement-frontend-utils';
 import store from '@/store';
 import { convertCourseToCourseRoster, isCourseTaken } from '@/utilities';
+import { toggleRequirementChoice } from '@/global-firestore-data';
 
 export default defineComponent({
   components: { TeleportModal, SingleConflictEditor },
@@ -134,7 +134,10 @@ export default defineComponent({
       this.setRequirementsCurrentlyFulfilled(selectedReqsPerConflict);
     }
 
+    const originalReqsPerConflict = selectedReqsPerConflict.map(conflict => new Map(conflict));
+
     return {
+      originalReqsPerConflict,
       selectedReqsPerConflict,
       numSelectableReqsPerConflict,
       hasUnresolvedConflicts: true,
@@ -181,9 +184,35 @@ export default defineComponent({
       this.closeCurrentModal();
       this.$emit('remove-course', this.courseUniqueId);
     },
-    addCourse() {
+    resolveConflicts() {
+      // edit the requirements assigned to the course when editor saved on reqs with changes made
+      for (let i = 0; i < this.selectedReqsPerConflict.length; i += 1) {
+        const conflict = this.selectedReqsPerConflict[i];
+        const originalConflict = this.originalReqsPerConflict[i];
+
+        conflict.forEach((selected, reqName) => {
+          if (this.isReqSelectable(reqName) && selected !== originalConflict.get(reqName)) {
+            toggleRequirementChoice(
+              this.courseUniqueId,
+              store.state.userRequirementsMap[reqName].id,
+              'acknowledgedCheckerWarningOptIn'
+            );
+          } else if (selected !== originalConflict.get(reqName)) {
+            toggleRequirementChoice(
+              this.courseUniqueId,
+              store.state.userRequirementsMap[reqName].id,
+              'optOut'
+            );
+          }
+        });
+      }
+
       this.closeCurrentModal();
       this.$emit('resolve-conflicts', this.selectedCourse);
+    },
+    // req is self check if present in selectableRequirements list
+    isReqSelectable(reqName: string) {
+      return this.selectableRequirements.filter(req => req.id === reqName).length > 0;
     },
     handleChangedConflict(selectedReq: string, index: number) {
       const conflict = this.selectedReqsPerConflict[index - 1];

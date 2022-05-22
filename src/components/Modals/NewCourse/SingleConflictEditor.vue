@@ -22,13 +22,11 @@
 
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
-import { toggleRequirementChoice } from '@/global-firestore-data';
 import store from '@/store';
 import { getReqColor } from '@/utilities';
 
 export default defineComponent({
   props: {
-    selectedCourseUniqueId: { type: [String, Number], required: true },
     checkedReqs: { type: Object as PropType<Map<string, boolean>>, required: true },
     conflictNumber: { type: Number, required: true },
     selectableRequirements: {
@@ -43,21 +41,6 @@ export default defineComponent({
   methods: {
     checkOrUncheckReq(reqName: string) {
       this.$emit('conflict-changed', reqName, this.conflictNumber);
-
-      // edit the requirements assigned to the course when editor changed
-      if (this.isReqSelectable(reqName)) {
-        toggleRequirementChoice(
-          this.selectedCourseUniqueId,
-          store.state.userRequirementsMap[reqName].id,
-          'acknowledgedCheckerWarningOptIn'
-        );
-      } else {
-        toggleRequirementChoice(
-          this.selectedCourseUniqueId,
-          store.state.userRequirementsMap[reqName].id,
-          'optOut'
-        );
-      }
     },
     // req is self check if present in selectableRequirements list
     isReqSelectable(reqName: string) {

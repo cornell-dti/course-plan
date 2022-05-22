@@ -8,7 +8,6 @@
       :selectableRequirements="selectableRequirements"
       :relatedRequirements="relatedRequirements"
       :isEditingRequirements="true"
-      @resolve-conflicts="handleConflictsResolved"
     />
     <course-base-tooltip
       v-if="hasCourseCautions"
@@ -233,9 +232,6 @@ export default defineComponent({
     closeConflictModal() {
       this.isConflictModalOpen = false;
       this.$emit('close-conflict-modal');
-    },
-    handleConflictsResolved() {
-      // TODO handle resolved conflicts
     },
   },
 });
