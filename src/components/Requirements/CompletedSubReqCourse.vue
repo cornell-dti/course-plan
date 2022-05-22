@@ -166,7 +166,7 @@ export default defineComponent({
           display: flex;
         }
         &-name {
-          padding-left: 5px;
+          margin-left: 5px;
         }
       }
       &-object {

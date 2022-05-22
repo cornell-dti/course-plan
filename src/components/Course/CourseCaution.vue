@@ -130,6 +130,10 @@ const getCourseCautions = (
 
 export default defineComponent({
   components: { CourseBaseTooltip, CourseConflictModal },
+  emits: {
+    'close-conflict-modal': () => true,
+    'open-conflict-modal': () => true,
+  },
   props: {
     course: {
       type: Object as PropType<
@@ -227,9 +231,11 @@ export default defineComponent({
     },
     openConflictModal() {
       this.isConflictModalOpen = true;
+      this.$emit('open-conflict-modal');
     },
     closeConflictModal() {
       this.isConflictModalOpen = false;
+      this.$emit('close-conflict-modal');
     },
     handleConflictsResolved() {
       // TODO handle resolved conflicts
