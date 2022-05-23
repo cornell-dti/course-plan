@@ -6,15 +6,13 @@ type FeatureFlagName =
   | 'APIBFulfillment'
   | 'Case'
   | 'RequirementDebugger'
-  | 'ToggleRequirementsBarBtn'
-  | 'Tools';
+  | 'ToggleRequirementsBarBtn';
 /* | 'AddYourFeatureFlagNameHere' */
 const featureFlagCheckers: FeatureFlagCheckers = registerFeatureFlagChecker(
   'APIBFulfillment',
   'Case',
   'RequirementDebugger',
-  'ToggleRequirementsBarBtn',
-  'Tools'
+  'ToggleRequirementsBarBtn'
   /* 'AddYourFeatureFlagNameHere' */
 );
 export default featureFlagCheckers;

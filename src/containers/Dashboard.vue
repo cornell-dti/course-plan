@@ -3,7 +3,7 @@
     <onboarding
       class="dashboard-onboarding"
       v-if="isOnboarding"
-      :isEditingProfile="isEditingProfile"
+      :isEditingProfile="false"
       :userName="userName"
       :onboardingData="onboardingData"
       @onboard="endOnboarding"
@@ -148,7 +148,6 @@ export default defineComponent({
       compactVal: false,
       showSideBar: true,
       isOnboarding: false,
-      isEditingProfile: false,
       isTablet: window.innerWidth <= mediumBreakpointPixels,
       isMobile: window.innerWidth <= smallBreakpointPixels,
       requirementsIsDisplayedMobile: false,
@@ -222,7 +221,7 @@ export default defineComponent({
     },
 
     endOnboarding() {
-      if (!this.isMobile && !this.isEditingProfile) {
+      if (!this.isMobile) {
         this.welcomeHidden = true;
       }
       this.loaded = true;
@@ -251,18 +250,9 @@ export default defineComponent({
       this.isProfileOpen = false;
     },
 
-    editProfile() {
-      this.isEditingProfile = true;
-      this.startOnboarding();
-    },
-
     openProfile() {
-      if (featureFlagCheckers.isToolsEnabled()) {
-        this.isProfileOpen = true;
-        this.showToolsPage = false;
-      } else {
-        this.editProfile();
-      }
+      this.isProfileOpen = true;
+      this.showToolsPage = false;
     },
 
     closeWelcome() {
