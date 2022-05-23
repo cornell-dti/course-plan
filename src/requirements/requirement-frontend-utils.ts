@@ -534,12 +534,9 @@ export function getRelatedRequirementIdsForCourseOptOut(
 export function fulfillmentProgressString({
   fulfilledBy,
   dangerousMinCountFulfilled,
-  safeMinCountFulfilled,
   minCountRequired,
 }: MixedRequirementFulfillmentStatistics) {
-  return featureFlagCheckers.isRequirementConflictsEnabled()
-    ? `${dangerousMinCountFulfilled}/${minCountRequired} ${fulfilledBy}`
-    : `${safeMinCountFulfilled}/${minCountRequired} ${fulfilledBy}`;
+  return `${dangerousMinCountFulfilled}/${minCountRequired} ${fulfilledBy}`;
 }
 
 export function getRelatedUnfulfilledRequirements(

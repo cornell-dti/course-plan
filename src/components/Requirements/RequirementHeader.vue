@@ -141,7 +141,6 @@
           aria-valuemax="100"
         ></div>
         <div
-          v-if="conflictsEnabled"
           class="progress-bar progress-bar--warning"
           :style="{ width: dangerousProgressWidth }"
           role="progressbar"
@@ -229,9 +228,6 @@ export default defineComponent({
     },
   },
   computed: {
-    conflictsEnabled(): boolean {
-      return featureFlagCheckers.isRequirementConflictsEnabled();
-    },
     // number of fully fulfilled requirements, including those with courses that have conflicts
     // note pure self-checks are never fulfilled
     requirementDangerouslyFulfilled(): number {
@@ -239,16 +235,7 @@ export default defineComponent({
       this.req.reqs.forEach(req => {
         [req.fulfillment, ...Object.values(req.fulfillment.additionalRequirements ?? {})].forEach(
           reqOrNestedReq => {
-            if (
-              reqOrNestedReq.dangerousMinCountFulfilled >= reqOrNestedReq.minCountRequired &&
-              !this.conflictsEnabled
-            ) {
-              fulfilled += 1;
-            }
-            if (
-              reqOrNestedReq.safeMinCountFulfilled >= reqOrNestedReq.minCountRequired &&
-              this.conflictsEnabled
-            ) {
+            if (reqOrNestedReq.dangerousMinCountFulfilled >= reqOrNestedReq.minCountRequired) {
               fulfilled += 1;
             }
           }
@@ -314,9 +301,7 @@ export default defineComponent({
       return ((diff / this.requirementTotalRequired) * 100).toFixed(1);
     },
     numberConflicts(): number {
-      return this.conflictsEnabled
-        ? this.totalDangerousRequirementProgress - this.totalSafeRequirementProgress
-        : 0;
+      return this.totalDangerousRequirementProgress - this.totalSafeRequirementProgress;
     },
     numberConflictsRounded(): number {
       return Math.ceil(this.numberConflicts);

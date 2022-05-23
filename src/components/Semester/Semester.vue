@@ -170,8 +170,6 @@ import {
   getRelatedUnfulfilledRequirements,
 } from '@/requirements/requirement-frontend-utils';
 
-import featureFlagCheckers from '@/feature-flags';
-
 type ComponentRef = { $el: HTMLDivElement };
 
 export default defineComponent({
@@ -341,9 +339,6 @@ export default defineComponent({
       }
       return `${credits.toString()} credits`;
     },
-    handleRequirementConflicts(): boolean {
-      return featureFlagCheckers.isRequirementConflictsEnabled();
-    },
   },
   methods: {
     isPlaceholderCourse,
@@ -415,38 +410,35 @@ export default defineComponent({
       this.openConfirmationModal(`Added ${courseCode} to ${this.season} ${this.year}`);
     },
     selectCourse(data: CornellCourseRosterCourse) {
-      // only perform operations if the gatekeep is true
-      if (this.handleRequirementConflicts) {
-        const newCourse = cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData(data);
+      const newCourse = cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData(data);
 
-        // set choice to nothing (no opting out, no opting in)
-        const choice: FirestoreCourseOptInOptOutChoices = {
-          optOut: [],
-          acknowledgedCheckerWarningOptIn: [],
-          arbitraryOptIn: {},
-        };
+      // set choice to nothing (no opting out, no opting in)
+      const choice: FirestoreCourseOptInOptOutChoices = {
+        optOut: [],
+        acknowledgedCheckerWarningOptIn: [],
+        arbitraryOptIn: {},
+      };
 
-        // add the course to the semeser (with no choice made)
-        addCourseToSemester(this.year, this.season, newCourse, () => choice, this.$gtag);
-        this.closeCourseModal();
+      // add the course to the semeser (with no choice made)
+      addCourseToSemester(this.year, this.season, newCourse, () => choice, this.$gtag);
+      this.closeCourseModal();
 
-        const conflicts = store.state.courseToRequirementsInConstraintViolations.get(
-          newCourse.uniqueID
-        );
+      const conflicts = store.state.courseToRequirementsInConstraintViolations.get(
+        newCourse.uniqueID
+      );
 
-        const { selfCheckRequirements } = getRelatedUnfulfilledRequirements(
-          data,
-          store.state.groupedRequirementFulfillmentReport,
-          store.state.onboardingData,
-          store.state.toggleableRequirementChoices,
-          store.state.overriddenFulfillmentChoices,
-          store.state.userRequirementsMap
-        );
+      const { selfCheckRequirements } = getRelatedUnfulfilledRequirements(
+        data,
+        store.state.groupedRequirementFulfillmentReport,
+        store.state.onboardingData,
+        store.state.toggleableRequirementChoices,
+        store.state.overriddenFulfillmentChoices,
+        store.state.userRequirementsMap
+      );
 
-        // only open conflict modal if conflicts exist
-        if (conflicts && conflicts.size > 0) {
-          this.openConflictModal(newCourse, conflicts, selfCheckRequirements);
-        }
+      // only open conflict modal if conflicts exist
+      if (conflicts && conflicts.size > 0) {
+        this.openConflictModal(newCourse, conflicts, selfCheckRequirements);
       }
     },
     handleConflictsResolved(course: FirestoreSemesterCourse) {
