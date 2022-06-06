@@ -47,7 +47,7 @@ it('Check accessibility of the requirements sidebar', () => {
   // open all dropdowns in the sidebar
   cy.get('[data-cyId=requirements-viewMore]').click({ multiple: true });
   cy.get('[data-cyId=requirements-showCompleted]').click({ multiple: true });
-  cy.get('[data-cyId=requirements-displayToggle]').click({ multiple: true });
+  cy.get('[data-cyId=requirements-displayToggle]').click({ multiple: true, force: true });
 
   cy.checkA11y('[data-cyId=reqsSidebar]');
 });
