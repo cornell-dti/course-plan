@@ -1,3 +1,5 @@
+import { doc, setDoc, updateDoc } from 'firebase/firestore';
+
 import { SWIM_TEST_CODE } from '@/requirements/data/constants';
 import { onboardingDataCollection } from '../firebase-frontend-config';
 import store from '../store';
@@ -8,7 +10,7 @@ export const setAppOnboardingData = (
   onboarding: AppOnboardingData
 ): void => {
   setUsernameData(name);
-  onboardingDataCollection.doc(store.state.currentFirebaseUser.email).set({
+  setDoc(doc(onboardingDataCollection, store.state.currentFirebaseUser.email), {
     gradYear: onboarding.gradYear,
     gradSem: onboarding.gradSem,
     entranceYear: onboarding.entranceYear,
@@ -23,13 +25,13 @@ export const setAppOnboardingData = (
 };
 
 const setTookSwim = (tookSwim: 'yes' | 'no'): void => {
-  onboardingDataCollection.doc(store.state.currentFirebaseUser.email).update({
+  updateDoc(doc(onboardingDataCollection, store.state.currentFirebaseUser.email), {
     tookSwim,
   });
 };
 
 const setExams = (exam: FirestoreAPIBExam[]) => {
-  onboardingDataCollection.doc(store.state.currentFirebaseUser.email).update({
+  updateDoc(doc(onboardingDataCollection, store.state.currentFirebaseUser.email), {
     exam,
   });
 };

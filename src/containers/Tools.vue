@@ -56,8 +56,9 @@ export default {
   }
 
   &-cards {
-    display: flex-start;
+    display: flex;
     flex-wrap: wrap;
+    justify-content: start;
   }
 
   &-card {

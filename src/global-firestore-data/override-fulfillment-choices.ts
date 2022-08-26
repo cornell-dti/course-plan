@@ -1,3 +1,5 @@
+import { doc, setDoc } from 'firebase/firestore';
+
 import { overriddenFulfillmentChoicesCollection } from '../firebase-frontend-config';
 import store from '../store';
 
@@ -5,7 +7,7 @@ export const updateRequirementChoice = (
   courseUniqueID: string | number,
   choiceUpdater: (choice: FirestoreCourseOptInOptOutChoices) => FirestoreCourseOptInOptOutChoices
 ): void => {
-  overriddenFulfillmentChoicesCollection.doc(store.state.currentFirebaseUser.email).set({
+  setDoc(doc(overriddenFulfillmentChoicesCollection, store.state.currentFirebaseUser.email), {
     ...store.state.overriddenFulfillmentChoices,
     [courseUniqueID]: choiceUpdater(
       store.state.overriddenFulfillmentChoices[courseUniqueID] || {
@@ -44,9 +46,10 @@ export const updateRequirementChoices = (
     oldChoices: FirestoreOverriddenFulfillmentChoices
   ) => FirestoreOverriddenFulfillmentChoices
 ): void => {
-  overriddenFulfillmentChoicesCollection
-    .doc(store.state.currentFirebaseUser.email)
-    .set(updater(store.state.overriddenFulfillmentChoices));
+  setDoc(
+    doc(overriddenFulfillmentChoicesCollection, store.state.currentFirebaseUser.email),
+    updater(store.state.overriddenFulfillmentChoices)
+  );
 };
 
 export const deleteCourseFromRequirementChoices = (courseUniqueID: string | number): void =>
@@ -56,13 +59,12 @@ export const deleteCoursesFromRequirementChoices = (
   courseUniqueIds: readonly (string | number)[]
 ): void => {
   const courseUniqueIdStrings = new Set(courseUniqueIds.map(uniqueId => uniqueId.toString()));
-  overriddenFulfillmentChoicesCollection
-    .doc(store.state.currentFirebaseUser.email)
-    .set(
-      Object.fromEntries(
-        Object.entries(store.state.overriddenFulfillmentChoices).filter(
-          ([uniqueId]) => !courseUniqueIdStrings.has(uniqueId)
-        )
+  setDoc(
+    doc(overriddenFulfillmentChoicesCollection, store.state.currentFirebaseUser.email),
+    Object.fromEntries(
+      Object.entries(store.state.overriddenFulfillmentChoices).filter(
+        ([uniqueId]) => !courseUniqueIdStrings.has(uniqueId)
       )
-    );
+    )
+  );
 };
