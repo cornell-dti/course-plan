@@ -101,7 +101,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { getAuth, signOut } from "firebase/auth";
+import { getAuth, signOut } from 'firebase/auth';
 import { GTagEvent } from '@/gtag';
 import { clickOutside } from '@/utilities';
 import featureFlagCheckers from '@/feature-flags';
@@ -125,8 +125,7 @@ export default defineComponent({
     logout() {
       GTagEvent(this.$gtag, 'logout');
       const auth = getAuth();
-      signOut(auth)
-        .then(() => window.location.reload());
+      signOut(auth).then(() => window.location.reload());
     },
     openPlan() {
       this.menuOpen = false;

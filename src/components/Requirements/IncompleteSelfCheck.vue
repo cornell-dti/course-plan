@@ -94,7 +94,9 @@ export default defineComponent({
           }
 
           const currentlyMatchedRequirements = store.state.safeRequirementFulfillmentGraph.getConnectedRequirementsFromCourse(
-            { uniqueId: course.uniqueID }
+            {
+              uniqueId: course.uniqueID,
+            }
           );
           if (currentlyMatchedRequirements.includes(this.subReqId)) {
             // If the course is already matched to the current requirement, do not add to choices.

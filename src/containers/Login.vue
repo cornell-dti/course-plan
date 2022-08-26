@@ -145,7 +145,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 
 import CustomFooter from '@/components/Footer.vue';
 

@@ -164,7 +164,12 @@ type Data = {
 
 // This section will be revisited when we try to make first-time tooltips
 const tour = introJs().start();
-tour.setOptions({'exitOnEsc': false, 'doneLabel': 'Next', 'nextLabel': 'Next', 'exitOnOverlayClick': false});
+tour.setOptions({
+  exitOnEsc: false,
+  doneLabel: 'Next',
+  nextLabel: 'Next',
+  exitOnOverlayClick: false,
+});
 
 // show 24 courses per page of the see all menu
 const maxSeeAllCoursesPerPage = 24;
