@@ -211,7 +211,6 @@ export default defineComponent({
   box-shadow: none;
 }
 .row {
-  display: flex;
   margin: 0;
 }
 .row > div {
