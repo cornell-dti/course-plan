@@ -18,7 +18,7 @@ import TeleportModal from '@/components/Modals/TeleportModal.vue';
 
 export default defineComponent({
   components: { TeleportModal },
-  emits: { 'close-modal': () => true, 'submit-onboarding': () => false },
+  emits: { 'close-modal': () => true, 'submit-onboarding': () => true },
   methods: {
     closeConfirmationModal() {
       this.$emit('close-modal');
