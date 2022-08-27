@@ -26,7 +26,7 @@
   "dependencies": {
     "@types/intro.js": "^3.0.0",
     "bootstrap": "^4.6.0",
-    "bootstrap-vue": "^2.21.2",
+    "bootstrap-vue": "^2.22.0",
     "core-js": "^3.6.5",
     "cypress-axe": "^0.14.0",
     "cypress-firebase": "^2.2.2",
