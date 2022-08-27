@@ -38,7 +38,6 @@
     "vue": "^3.2.19",
     "vue-gtag-next": "^1.14.0",
     "vue-router": "^4.0.6",
-    "vue2-collapse": "^1.0.15",
     "vuedraggable": "^4.0.0",
     "vuex": "^4.0.2"
   },
