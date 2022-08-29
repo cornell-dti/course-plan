@@ -7,11 +7,11 @@
  * From root, run: `npm run ts-node -- src/admin-copy-user-data.ts <FROM_ENV>/<FROM_USER> <TO_ENV>/<TO_USER>`
  * FROM_ENV and TO_ENV should be either "dev" or "prod"
  * EXAMPLE: `npm run ts-node -- src/admin-copy-user-data.ts prod/noschiff.dev@gmail.com dev/nps39@cornell.edu`
+ * npm run ts-node -- src/admin-copy-user-data.ts dev/noschiff.dev@gmail.com dev/noschiff.dev@gmail.com
  */
 
-import { initializeApp } from 'firebase-admin/app';
+import { cert, initializeApp } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
-import { credential } from 'firebase-admin';
 
 const collections = [
   'user-name',
@@ -32,7 +32,7 @@ if (process.env[2] && process.env[3]) {
   let toDb;
   if (FROM_ENV === 'dev' || TO_ENV === 'dev') {
     const dev = initializeApp({
-      credential: credential.cert('XserviceAccountDev.json'),
+      credential: cert('serviceAccount.json'),
       databaseURL: 'https://cornelldti-courseplan-dev.firebaseio.com',
     });
     const devDb = getFirestore(dev);
@@ -42,7 +42,7 @@ if (process.env[2] && process.env[3]) {
 
   if (FROM_ENV === 'prod' || TO_ENV === 'prod') {
     const prod = initializeApp({
-      credential: credential.cert('XserviceAccountProd.json'),
+      credential: cert('serviceAccountProd.json'),
       databaseURL: 'https://cornell-courseplan.firebaseio.com',
     });
     const prodDb = getFirestore(prod);
