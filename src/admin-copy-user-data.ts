@@ -1,27 +1,17 @@
-/* eslint-disable no-await-in-loop */
+/* eslint-disable no-await-in-loop,no-console */
 /**
+ * TPM ONLY SCRIPT! BE CAREFUL COPYING TO PROD
  * Script to copy data from one user on production or dev to another user on dev.
  * Requires service accounts for database
  *
- * From root, run: `npm run ts-node -- src/admin-copy-user-data.ts`
+ * From root, run: `npm run ts-node -- src/admin-copy-user-data.ts <FROM_ENV>/<FROM_USER> <TO_ENV>/<TO_USER>`
+ * FROM_ENV and TO_ENV should be either "dev" or "prod"
+ * EXAMPLE: `npm run ts-node -- src/admin-copy-user-data.ts prod/noschiff.dev@gmail.com dev/nps39@cornell.edu`
  */
 
 import { initializeApp } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
 import { credential } from 'firebase-admin';
-
-const dev = initializeApp({
-  credential: credential.cert('serviceAccountDev.json'),
-  databaseURL: 'https://cornelldti-courseplan-dev.firebaseio.com',
-});
-
-const prod = initializeApp({
-  credential: credential.cert('serviceAccountProd.json'),
-  databaseURL: 'https://cornell-courseplan.firebaseio.com',
-});
-
-const FROM = 'amm487@cornell.edu';
-const TO = 'noschiff.dev@gmail.com';
 
 const collections = [
   'user-name',
@@ -34,20 +24,43 @@ const collections = [
   'user-onboarding-data',
 ];
 
-const devDb = getFirestore(dev);
-const prodDb = getFirestore(prod);
+if (process.env[2] && process.env[3]) {
+  const [FROM, FROM_ENV] = process.env[2].split('/');
+  const [TO, TO_ENV] = process.env[2].split('/');
 
-const execute = async (): Promise<string[]> => {
+  let fromDb;
+  let toDb;
+  if (FROM_ENV === 'dev' || TO_ENV === 'dev') {
+    const dev = initializeApp({
+      credential: credential.cert('XserviceAccountDev.json'),
+      databaseURL: 'https://cornelldti-courseplan-dev.firebaseio.com',
+    });
+    const devDb = getFirestore(dev);
+    if (FROM_ENV === 'dev') fromDb = devDb;
+    if (TO_ENV === 'dev') toDb = devDb;
+  }
+
+  if (FROM_ENV === 'prod' || TO_ENV === 'prod') {
+    const prod = initializeApp({
+      credential: credential.cert('XserviceAccountProd.json'),
+      databaseURL: 'https://cornell-courseplan.firebaseio.com',
+    });
+    const prodDb = getFirestore(prod);
+    if (FROM_ENV === 'prod') fromDb = prodDb;
+    if (TO_ENV === 'prod') toDb = prodDb;
+  }
+
   const copied = [];
-  for (const collection of collections) {
-    const get = (await devDb.collection(collection).doc(FROM).get()).data();
-    if (get) {
-      const result = await prodDb.collection(collection).doc(TO).set(get);
-      if (result) copied.push(collection);
+  if (fromDb && toDb) {
+    for (const collection of collections) {
+      const get = (await fromDb.collection(collection).doc(FROM).get()).data();
+      if (get) {
+        const result = await toDb.collection(collection).doc(TO).set(get);
+        if (result) copied.push(collection);
+      }
     }
   }
-  return copied;
-};
-
-// eslint-disable-next-line no-console
-execute().then(result => console.log(`Copied: ${result}`));
+  console.log(`Copied: ${copied}`);
+} else {
+  throw new Error('Refer to the documentation to correctly run this script.');
+}
