@@ -62,6 +62,9 @@ export default defineComponent({
     courseTaken: { type: Object as PropType<CourseTaken>, required: true },
     reqDesc: { type: String, required: true },
   },
+  mounted() {
+    console.log(this.courseTaken);
+  },
   data: () => ({
     replaceModalVisible: false,
     deleteModalVisible: false,
