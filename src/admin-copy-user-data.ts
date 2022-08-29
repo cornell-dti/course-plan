@@ -24,10 +24,19 @@ const collections = [
   'user-onboarding-data',
 ];
 
-if (process.env[2] && process.env[3]) {
-  const [FROM, FROM_ENV] = process.env[2].split('/');
-  const [TO, TO_ENV] = process.env[2].split('/');
+const fromArg = process.argv[2];
+const toArg = process.argv[3];
+if (fromArg && toArg) {
+  const [FROM_ENV, FROM] = fromArg.split('/');
+  const [TO_ENV, TO] = toArg.split('/');
+  execute(FROM, FROM_ENV, TO, TO_ENV).then(copied =>
+    console.log(`Copied: [${copied}] from ${fromArg} to ${toArg}`)
+  );
+} else {
+  throw new Error('Refer to the documentation to correctly run this script.');
+}
 
+async function execute(FROM: string, FROM_ENV: string, TO: string, TO_ENV: string) {
   let fromDb;
   let toDb;
   if (FROM_ENV === 'dev' || TO_ENV === 'dev') {
@@ -60,7 +69,5 @@ if (process.env[2] && process.env[3]) {
       }
     }
   }
-  console.log(`Copied: ${copied}`);
-} else {
-  throw new Error('Refer to the documentation to correctly run this script.');
+  return copied;
 }
