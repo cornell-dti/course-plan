@@ -125,10 +125,8 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
             (course.catalogDistr?.includes('LA') || course.catalogDistr?.includes('LAD')) ?? false,
           ...engineeringLiberalArtsDistributions
             .filter(it => it !== 'LA' && it !== 'LAD')
-            .map(
-              distribution =>
-                (course: Course): boolean =>
-                  course.catalogDistr?.includes(distribution) ?? false
+            .map(distribution => (course: Course): boolean =>
+              course.catalogDistr?.includes(distribution) ?? false
             ),
         ],
         fulfilledBy: 'courses',
