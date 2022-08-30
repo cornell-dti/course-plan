@@ -1,12 +1,15 @@
+import { doc, setDoc } from 'firebase/firestore';
+
 import { toggleableRequirementChoicesCollection } from '../firebase-frontend-config';
 import store from '../store';
 
 const editToggleableRequirementChoices = (
   toggleableRequirementChoices: AppToggleableRequirementChoices
 ): void => {
-  toggleableRequirementChoicesCollection
-    .doc(store.state.currentFirebaseUser.email)
-    .set(toggleableRequirementChoices);
+  setDoc(
+    doc(toggleableRequirementChoicesCollection, store.state.currentFirebaseUser.email),
+    toggleableRequirementChoices
+  );
 };
 
 const chooseToggleableRequirementOption = (requirementID: string, option: string): void => {

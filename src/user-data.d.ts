@@ -41,30 +41,28 @@ type FirestoreSemester = {
 };
 
 type FirestoreCollegeOrMajorOrMinor = { readonly acronym: string };
-type FirestoreAPIBExam = {
-  readonly type: 'AP' | 'IB';
-  readonly score: number;
-  readonly subject: string;
-};
 
 /** Represents the name of an exam a student can take for transfer credit */
 type TransferExamType = 'AP' | 'IB' | 'CASE';
 
 type FirestoreTransferExam = {
   readonly examType: TransferExamType;
-  readonly score: number;
   readonly subject: string;
+  readonly score: number | string;
+  readonly type?: TransferExamType; // TODO @bshen migrate away
 };
 
 type FirestoreCollegeMajorMinorOrGrad = { readonly acronym: string };
 type FirestoreOnboardingUserData = {
   readonly gradYear: string;
+  readonly gradSem: FirestoreSemesterSeason | '';
   readonly entranceYear: string;
+  readonly entranceSem: FirestoreSemesterSeason | '';
   readonly colleges: readonly FirestoreCollegeMajorMinorOrGrad[];
   readonly majors: readonly FirestoreCollegeMajorMinorOrGrad[];
   readonly minors: readonly FirestoreCollegeMajorMinorOrGrad[];
   readonly gradPrograms: readonly FirestoreCollegeMajorMinorOrGrad[];
-  readonly exam: readonly FirestoreAPIBExam[];
+  readonly exam: readonly FirestoreTransferExam[];
   readonly tookSwim: 'yes' | 'no';
 };
 
@@ -175,14 +173,14 @@ interface CornellCourseRosterCourseFullDetail extends CornellCourseRosterCourse 
 // college and grad are optional fields: grad can be undefined if the user hasn't selected a grad program, and college can be undefined if the user has only selected a grad program.
 type AppOnboardingData = {
   readonly gradYear: string;
-  readonly gradSem?: FirestoreSemesterSeason;
+  readonly gradSem: FirestoreSemesterSeason | '';
   readonly entranceYear: string;
-  readonly entranceSem?: FirestoreSemesterSeason;
+  readonly entranceSem: FirestoreSemesterSeason | '';
   readonly college?: string;
   readonly major: readonly string[];
   readonly minor: readonly string[];
   readonly grad?: string;
-  readonly exam: readonly FirestoreAPIBExam[];
+  readonly exam: readonly FirestoreTransferExam[];
   readonly tookSwim: 'yes' | 'no';
 };
 

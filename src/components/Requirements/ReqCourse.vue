@@ -1,6 +1,10 @@
 <template>
   <div
-    :class="{ 'reqcourse--min': compact, completedReqCourse: isCompletedReqCourse }"
+    :class="{
+      'reqcourse--min': compact,
+      completedReqCourse: isCompletedReqCourse,
+      conflict: isConflict,
+    }"
     class="reqcourse"
     :style="borderColorCSSvar"
   >
@@ -38,6 +42,7 @@ export default defineComponent({
     courseCode: { type: String, required: true },
     isCompletedReqCourse: { type: Boolean, required: true },
     compact: { type: Boolean, required: true },
+    isConflict: { type: Boolean, required: true },
   },
   computed: {
     borderColorCSSvar(): CSSProperties {
@@ -141,5 +146,10 @@ export default defineComponent({
 .completedReqCourse {
   border: 1px solid;
   border-color: var(--border-color);
+}
+
+.conflict {
+  border: 1px solid $conflictWarning;
+  border-radius: 0.5rem;
 }
 </style>

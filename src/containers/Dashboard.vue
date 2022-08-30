@@ -13,15 +13,17 @@
       <div class="dashboard-menus">
         <nav-bar
           class="dashboard-nav"
+          data-cyId="navbar"
           :isDisplayingRequirementsMobile="requirementsIsDisplayedMobile"
           @openPlan="openPlan"
           @openTools="openTools"
-          @editProfile="editProfile"
+          @openProfile="openProfile"
           @toggleRequirementsMobile="toggleRequirementsMobile"
         />
         <requirement-side-bar
           class="dashboard-reqs"
-          v-if="loaded && !showToolsPage"
+          data-cyId="reqsSidebar"
+          v-if="loaded && !showToolsPage && !isProfileOpen"
           :isMobile="isTablet"
           :isDisplayingMobile="requirementsIsDisplayedMobile"
           :isMinimized="requirementsIsMinimized"
@@ -30,14 +32,16 @@
           @showTourEndWindow="showTourEnd"
         />
         <bottom-bar
-          v-if="!(isTablet && requirementsIsDisplayedMobile) && !showToolsPage"
+          v-if="!(isTablet && requirementsIsDisplayedMobile) && !showToolsPage && !isProfileOpen"
           :isNavbarWide="requirementsIsMinimized"
           :isExpanded="bottomBarIsExpanded"
           :maxBottomBarTabs="maxBottomBarTabs"
         />
       </div>
       <semester-view
-        v-if="loaded && !(isTablet && requirementsIsDisplayedMobile) && !showToolsPage"
+        v-if="
+          loaded && !(isTablet && requirementsIsDisplayedMobile) && !showToolsPage && !isProfileOpen
+        "
         ref="semesterview"
         :compact="compactVal"
         :startTour="startTour"
@@ -47,6 +51,12 @@
         @compact-updated="compactUpdated"
       />
       <tools-container class="toolsPage" v-if="showToolsPage" />
+      <profile-editor
+        class="profilePage"
+        :onboardingData="onboardingData"
+        :userName="userName"
+        v-if="isProfileOpen"
+      />
     </div>
     <tour-window
       title="Welcome to CoursePlan!"
@@ -81,6 +91,8 @@ import NavBar from '@/components/NavBar.vue';
 import Onboarding from '@/components/Modals/Onboarding/Onboarding.vue';
 import TourWindow from '@/components/Modals/TourWindow.vue';
 import ToolsContainer from '@/containers/Tools.vue';
+import ProfileEditor from '@/containers/Profile.vue';
+import featureFlagCheckers from '@/feature-flags';
 
 import store, { initializeFirestoreListeners } from '@/store';
 import { immutableBottomBarState } from '@/components/BottomBar/BottomBarState';
@@ -128,6 +140,7 @@ export default defineComponent({
     SemesterView,
     TourWindow,
     ToolsContainer,
+    ProfileEditor,
   },
   data() {
     return {
@@ -145,6 +158,7 @@ export default defineComponent({
       startTour: false,
       showTourEndWindow: false,
       showToolsPage: false,
+      isProfileOpen: false,
     };
   },
   computed: {
@@ -229,15 +243,26 @@ export default defineComponent({
 
     openPlan() {
       this.showToolsPage = false;
+      this.isProfileOpen = false;
     },
 
     openTools() {
       this.showToolsPage = true;
+      this.isProfileOpen = false;
     },
 
     editProfile() {
       this.isEditingProfile = true;
       this.startOnboarding();
+    },
+
+    openProfile() {
+      if (featureFlagCheckers.isToolsEnabled()) {
+        this.isProfileOpen = true;
+        this.showToolsPage = false;
+      } else {
+        this.editProfile();
+      }
     },
 
     closeWelcome() {
@@ -286,6 +311,10 @@ export default defineComponent({
 }
 
 .toolsPage {
+  width: 100%;
+}
+
+.profilePage {
   width: 100%;
 }
 

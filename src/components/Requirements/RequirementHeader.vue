@@ -132,22 +132,36 @@
           class="progress-bar"
           :style="{
             'background-color': `#${getReqColor(req.groupName, onboardingData)}`,
-            width: progressWidth,
+            width: safeProgressWidth,
           }"
           role="progressbar"
-          aria-label="Requirements Progress"
-          :aria-valuenow="progressWidthValue"
+          aria-label="Requirements Safe Progress"
+          :aria-valuenow="safeProgressWidthValue"
+          aria-valuemin="0"
+          aria-valuemax="100"
+        ></div>
+        <div
+          v-if="conflictsEnabled"
+          class="progress-bar progress-bar--warning"
+          :style="{ width: dangerousProgressWidth }"
+          role="progressbar"
+          aria-label="Requirements Conflict Progress"
+          :aria-valuenow="dangerousProgressWidthValue"
           aria-valuemin="0"
           aria-valuemax="100"
         ></div>
       </div>
 
-      <p class="progress-text">
+      <div class="progress-text">
+        <progress-bar-caution
+          class="caution"
+          :numConflicts="numberConflictsRounded"
+        ></progress-bar-caution>
         <span class="progress-text-credits"
-          >{{ requirementFulfilled }}/{{ requirementTotalRequired }}</span
+          >{{ requirementDangerouslyFulfilled }}/{{ requirementTotalRequired }}</span
         >
         <span class="progress-text-text"> Total Requirements Inputted on Schedule</span>
-      </p>
+      </div>
 
       <!--View more college requirements -->
       <button
@@ -181,6 +195,7 @@
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
 import DropDownArrow from '@/components/DropDownArrow.vue';
+import ProgressBarCaution from '@/components/Requirements/ProgressBarCaution.vue';
 import {
   getCollegeFullName,
   getMajorFullName,
@@ -188,9 +203,10 @@ import {
   getGradFullName,
   getReqColor,
 } from '@/utilities';
+import featureFlagCheckers from '@/feature-flags';
 
 export default defineComponent({
-  components: { DropDownArrow },
+  components: { DropDownArrow, ProgressBarCaution },
   props: {
     reqIndex: { type: Number, required: true },
     displayDetails: { type: Boolean, required: true },
@@ -213,14 +229,28 @@ export default defineComponent({
     },
   },
   computed: {
-    // number of fully fulfilled requirements, note pure self-checks are never fulfilled
-    requirementFulfilled(): number {
+    conflictsEnabled(): boolean {
+      return featureFlagCheckers.isRequirementConflictsEnabled();
+    },
+    // number of fully fulfilled requirements, including those with courses that have conflicts
+    // note pure self-checks are never fulfilled
+    requirementDangerouslyFulfilled(): number {
       let fulfilled = 0;
       this.req.reqs.forEach(req => {
         [req.fulfillment, ...Object.values(req.fulfillment.additionalRequirements ?? {})].forEach(
           reqOrNestedReq => {
-            if (reqOrNestedReq.safeMinCountFulfilled >= reqOrNestedReq.minCountRequired)
+            if (
+              reqOrNestedReq.dangerousMinCountFulfilled >= reqOrNestedReq.minCountRequired &&
+              !this.conflictsEnabled
+            ) {
               fulfilled += 1;
+            }
+            if (
+              reqOrNestedReq.safeMinCountFulfilled >= reqOrNestedReq.minCountRequired &&
+              this.conflictsEnabled
+            ) {
+              fulfilled += 1;
+            }
           }
         );
       });
@@ -235,8 +265,8 @@ export default defineComponent({
       });
       return totalRequired;
     },
-    // the sum of the progress of each requirement (outside of pure self-check), maxed out at 1
-    totalRequirementProgress(): number {
+    // the sum of the progress of each requirement (outside of pure self-check), maxed out at 1, excluding conflicts
+    totalSafeRequirementProgress(): number {
       let fulfilled = 0;
       this.req.reqs.forEach(req => {
         [req.fulfillment, ...Object.values(req.fulfillment.additionalRequirements ?? {})].forEach(
@@ -251,12 +281,45 @@ export default defineComponent({
       });
       return fulfilled;
     },
-    // the sum of the progress of each requirement, divided by number of requirements
-    progressWidth(): string {
-      return `${(this.totalRequirementProgress / this.requirementTotalRequired) * 100}%`;
+    // sum of the progress of each requirement, including requirements fulfilled dangerously, maxed out at 1
+    totalDangerousRequirementProgress(): number {
+      let fulfilled = 0;
+      this.req.reqs.forEach(req => {
+        [req.fulfillment, ...Object.values(req.fulfillment.additionalRequirements ?? {})].forEach(
+          reqOrNestedReq => {
+            if (reqOrNestedReq.dangerousMinCountFulfilled >= reqOrNestedReq.minCountRequired) {
+              fulfilled += 1;
+            } else {
+              fulfilled +=
+                reqOrNestedReq.dangerousMinCountFulfilled / reqOrNestedReq.minCountRequired;
+            }
+          }
+        );
+      });
+      return fulfilled;
     },
-    progressWidthValue(): string {
-      return ((this.totalRequirementProgress / this.requirementTotalRequired) * 100).toFixed(1);
+    // the sum of the progress of each requirement, divided by number of requirements
+    safeProgressWidth(): string {
+      return `${(this.totalSafeRequirementProgress / this.requirementTotalRequired) * 100}%`;
+    },
+    dangerousProgressWidth(): string {
+      const diff = this.numberConflicts;
+      return `${(diff / this.requirementTotalRequired) * 100}%`;
+    },
+    safeProgressWidthValue(): string {
+      return ((this.totalSafeRequirementProgress / this.requirementTotalRequired) * 100).toFixed(1);
+    },
+    dangerousProgressWidthValue(): string {
+      const diff = this.numberConflicts;
+      return ((diff / this.requirementTotalRequired) * 100).toFixed(1);
+    },
+    numberConflicts(): number {
+      return this.conflictsEnabled
+        ? this.totalDangerousRequirementProgress - this.totalSafeRequirementProgress
+        : 0;
+    },
+    numberConflictsRounded(): number {
+      return Math.ceil(this.numberConflicts);
     },
   },
   methods: {
@@ -342,6 +405,12 @@ export default defineComponent({
 .progress {
   border-radius: 1rem;
   height: 10px;
+
+  &-bar {
+    &--warning {
+      background-color: $conflictWarning;
+    }
+  }
 }
 .top {
   margin: 1.5rem 0 1rem 0;
@@ -373,11 +442,12 @@ button.active {
 .progress-text {
   margin: 0.3125rem 0 0 0;
   font-size: 12px;
-  line-height: 12px;
   color: $darkGray;
+  display: flex;
 
   &-credits {
     font-weight: bold;
+    margin-right: 0.2rem;
   }
   &-text {
     font-weight: normal;
@@ -417,5 +487,10 @@ button.view {
   div:first-child {
     justify-content: flex-start;
   }
+}
+
+.caution {
+  padding-top: 1px;
+  margin-right: 0.2rem;
 }
 </style>

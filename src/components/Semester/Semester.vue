@@ -10,8 +10,18 @@
   >
     <new-course-modal
       @close-course-modal="closeCourseModal"
+      @select-course="selectCourse"
       v-if="isCourseModalOpen"
       @add-course="addCourse"
+    />
+    <course-conflict-modal
+      @close-course-modal="closeConflictModal"
+      v-if="isConflictModalOpen"
+      :selectedCourse="conflictCourse"
+      :courseConflicts="courseConflicts"
+      :selfCheckRequirements="selfCheckRequirements"
+      @resolve-conflicts="handleConflictsResolved"
+      @remove-course="deleteCourseWithoutModal"
     />
     <confirmation :text="confirmationText" v-if="isConfirmationOpen" />
     <delete-semester
@@ -131,6 +141,7 @@ import draggable from 'vuedraggable';
 import Course from '@/components/Course/Course.vue';
 import Placeholder from '@/components/Course/Placeholder.vue';
 import NewCourseModal from '@/components/Modals/NewCourse/NewCourseModal.vue';
+import CourseConflictModal from '@/components/Modals/NewCourse/CourseConflictModal.vue';
 import Confirmation from '@/components/Modals/Confirmation.vue';
 import SemesterMenu from '@/components/Modals/SemesterMenu.vue';
 import DeleteSemester from '@/components/Modals/DeleteSemester.vue';
@@ -154,7 +165,12 @@ import {
   updateRequirementChoices,
 } from '@/global-firestore-data';
 import store, { updateSubjectColorData } from '@/store';
-import { getRelatedRequirementIdsForCourseOptOut } from '@/requirements/requirement-frontend-utils';
+import {
+  getRelatedRequirementIdsForCourseOptOut,
+  getRelatedUnfulfilledRequirements,
+} from '@/requirements/requirement-frontend-utils';
+
+import featureFlagCheckers from '@/feature-flags';
 
 type ComponentRef = { $el: HTMLDivElement };
 
@@ -168,6 +184,7 @@ export default defineComponent({
     EditSemester,
     ClearSemester,
     NewCourseModal,
+    CourseConflictModal,
     SemesterMenu,
     Placeholder,
   },
@@ -187,7 +204,11 @@ export default defineComponent({
       isShadowCounter: 0,
       isDraggedFrom: false,
       isCourseModalOpen: false,
+      isConflictModalOpen: false,
       isSemesterMinimized: false,
+      conflictCourse: {} as FirestoreSemesterCourse,
+      courseConflicts: new Set<string[]>(),
+      selfCheckRequirements: [] as readonly RequirementWithIDSourceType[],
 
       seasonImg: {
         Fall: fall,
@@ -320,6 +341,9 @@ export default defineComponent({
       }
       return `${credits.toString()} credits`;
     },
+    handleRequirementConflicts(): boolean {
+      return featureFlagCheckers.isRequirementConflictsEnabled();
+    },
   },
   methods: {
     isPlaceholderCourse,
@@ -350,6 +374,19 @@ export default defineComponent({
     closeCourseModal() {
       this.isCourseModalOpen = false;
     },
+    openConflictModal(
+      course: FirestoreSemesterCourse,
+      conflicts: Set<string[]>,
+      selfCheckRequirements: readonly RequirementWithIDSourceType[]
+    ) {
+      this.conflictCourse = course;
+      this.courseConflicts = conflicts;
+      this.selfCheckRequirements = selfCheckRequirements;
+      this.isConflictModalOpen = !this.isConflictModalOpen;
+    },
+    closeConflictModal() {
+      this.isConflictModalOpen = false;
+    },
     openSemesterModal() {
       // Delete confirmation for the use case of adding multiple semesters consecutively
       this.closeConfirmationModal();
@@ -368,6 +405,7 @@ export default defineComponent({
     closeConfirmationModal() {
       this.isConfirmationOpen = false;
     },
+    // TODO @willespencer refactor the below methods after gatekeep removed (to only 1 method)
     addCourse(data: CornellCourseRosterCourse, choice: FirestoreCourseOptInOptOutChoices) {
       const newCourse = cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData(data);
       // Since the course is new, we know the old choice does not exist.
@@ -375,6 +413,47 @@ export default defineComponent({
 
       const courseCode = `${data.subject} ${data.catalogNbr}`;
       this.openConfirmationModal(`Added ${courseCode} to ${this.season} ${this.year}`);
+    },
+    selectCourse(data: CornellCourseRosterCourse) {
+      // only perform operations if the gatekeep is true
+      if (this.handleRequirementConflicts) {
+        const newCourse = cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData(data);
+
+        // set choice to nothing (no opting out, no opting in)
+        const choice: FirestoreCourseOptInOptOutChoices = {
+          optOut: [],
+          acknowledgedCheckerWarningOptIn: [],
+          arbitraryOptIn: {},
+        };
+
+        // add the course to the semeser (with no choice made)
+        addCourseToSemester(this.year, this.season, newCourse, () => choice, this.$gtag);
+        this.closeCourseModal();
+
+        const conflicts = store.state.courseToRequirementsInConstraintViolations.get(
+          newCourse.uniqueID
+        );
+
+        const { selfCheckRequirements } = getRelatedUnfulfilledRequirements(
+          data,
+          store.state.groupedRequirementFulfillmentReport,
+          store.state.onboardingData,
+          store.state.toggleableRequirementChoices,
+          store.state.overriddenFulfillmentChoices,
+          store.state.userRequirementsMap
+        );
+
+        // only open conflict modal if conflicts exist
+        if (conflicts && conflicts.size > 0) {
+          this.openConflictModal(newCourse, conflicts, selfCheckRequirements);
+        }
+      }
+    },
+    handleConflictsResolved(course: FirestoreSemesterCourse) {
+      this.openConfirmationModal(`Added ${course.code} to ${this.season} ${this.year}`);
+    },
+    deleteCourseWithoutModal(uniqueID: number) {
+      deleteCourseFromSemester(this.year, this.season, uniqueID, this.$gtag);
     },
     deleteCourse(courseCode: string, uniqueID: number) {
       deleteCourseFromSemester(this.year, this.season, uniqueID, this.$gtag);

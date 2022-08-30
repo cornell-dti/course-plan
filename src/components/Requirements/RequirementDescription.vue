@@ -39,6 +39,7 @@
 
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
+import { fulfillmentProgressString } from '@/requirements/requirement-frontend-utils';
 
 /** Show compound requirement for toggle or description */
 export default defineComponent({
@@ -66,19 +67,9 @@ export default defineComponent({
       const currentVisibleNestedRequirementStatistics = (this.requirementFulfillment.fulfillment
         .additionalRequirements || {})[this.choice];
       if (currentVisibleNestedRequirementStatistics != null) {
-        const {
-          safeMinCountFulfilled,
-          minCountRequired,
-          fulfilledBy,
-        } = currentVisibleNestedRequirementStatistics;
-        return `${safeMinCountFulfilled}/${minCountRequired} ${fulfilledBy}`;
+        return fulfillmentProgressString(currentVisibleNestedRequirementStatistics);
       }
-      const {
-        safeMinCountFulfilled,
-        minCountRequired,
-        fulfilledBy,
-      } = this.requirementFulfillment.fulfillment;
-      return `${safeMinCountFulfilled}/${minCountRequired} ${fulfilledBy}`;
+      return fulfillmentProgressString(this.requirementFulfillment.fulfillment);
     },
   },
 });
