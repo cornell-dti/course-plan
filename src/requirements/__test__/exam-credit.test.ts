@@ -1,14 +1,11 @@
-import userDataToExamCourses, {
-  ExamsTaken,
-  examsTakenToExamCourses,
-} from '../requirement-exam-utils';
+import userDataToExamCourses, { examsTakenToExamCourses } from '../requirement-exam-utils';
 import { NO_FULFILLMENTS_COURSE_ID } from '../data/constants';
 
 /**
  * Tests for examsTakenToExamCourses
  */
 it('Exam is converted to correct course', () => {
-  const exams: ExamsTaken = [
+  const exams: FirestoreTransferExam[] = [
     {
       examType: 'AP',
       subject: 'Computer Science A',
@@ -26,7 +23,7 @@ it('Exam is converted to correct course', () => {
 });
 
 it('Exam score is too low', () => {
-  const exams: ExamsTaken = [
+  const exams: FirestoreTransferExam[] = [
     {
       examType: 'AP',
       subject: 'Computer Science A',
@@ -44,7 +41,7 @@ it('Exam score is too low', () => {
 });
 
 it('Two exams are converted to the correct courses', () => {
-  const exams: ExamsTaken = [
+  const exams: FirestoreTransferExam[] = [
     {
       examType: 'AP',
       subject: 'Computer Science A',
@@ -73,7 +70,7 @@ it('Exam is converted to correct course', () => {
     entranceSem: 'Fall',
     college: 'EN',
     major: [],
-    exam: [{ type: 'AP', score: 5, subject: 'Computer Science A' }],
+    exam: [{ examType: 'AP', score: 5, subject: 'Computer Science A' }],
     minor: [],
     tookSwim: 'no',
   };
