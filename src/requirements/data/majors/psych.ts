@@ -102,17 +102,11 @@ const psychRequirements: readonly CollegeOrMajorRequirement[] = [
         'PSYCH 4840',
         'PSYCH 4850',
         'PSYCH 4910',
-      ],
-      ['PSYCH 1101', 'PSYCH 1650', 'PSYCH 1990', 'PSYCH 2500', 'PSYCH 4700', 'PSYCH 4710']
+      ]
     ),
     fulfilledBy: 'courses',
-    perSlotMinCount: [1, 1, 1, 0],
-    slotNames: [
-      'Perception, cognition and development (PCD)',
-      'Behavioral and evolutionary neuroscience (BEN)',
-      'Social and personality psychology (S&P)',
-      'Other courses',
-    ],
+    perSlotMinCount: [1, 1, 1],
+    slotNames: ['PCD', 'BEN', 'S&P'],
   },
   {
     name: 'Independent Study and Field Work',
