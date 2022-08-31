@@ -16,6 +16,7 @@ const psychRequirements: readonly CollegeOrMajorRequirement[] = [
     fulfilledBy: 'credits',
     perSlotMinCount: [40],
     allowCourseDoubleCounting: true,
+    disallowTransferCredit: true,
   },
   {
     name: 'Statistics Requirements',
