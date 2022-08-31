@@ -304,8 +304,8 @@ const json: RequirementsJson = {
       requirements: physRequirements,
     },
     PSYCH: {
-      name:'Psychology',
-      schools:['AS1','AS2'],
+      name: 'Psychology',
+      schools: ['AS1', 'AS2'],
       requirements: psychRequirements,
     },
     SPAN: {
