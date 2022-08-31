@@ -1,16 +1,13 @@
-import { Course, CollegeOrMajorRequirement } from '../../types';
-import {
-  includesWithSubRequirements,
-  includesWithSingleRequirement,
-  courseMatchesCodeOptions,
-  ifCodeMatch,
-} from '../checkers-common';
+import { CollegeOrMajorRequirement } from '../../types';
+import { includesWithSubRequirements, includesWithSingleRequirement } from '../checkers-common';
 
 const psychRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'Credit Requirements',
     description:
-      'A total of 40 credits in psychology (including prerequisites), from which students majoring in psychology are expected to choose, in consultation with their advisors, a range of courses that covers the basic processes in psychology.',
+      'A total of 40 credits in psychology (including prerequisites), ' +
+      'from which students majoring in psychology are expected to choose, in consultation with their advisors, ' +
+      'a range of courses that covers the basic processes in psychology.',
     source: 'https://psychology.cornell.edu/major',
     checker: includesWithSingleRequirement('PSYCH ****'),
     fulfilledBy: 'credits',
@@ -45,7 +42,8 @@ const psychRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'General Requirements',
     description:
-      'Unless otherwise approved by the advisor, all Psychology students should take at least one course in each of the following three areas of psychology.',
+      'Unless otherwise approved by the advisor, all Psychology students should take ' +
+      'at least one course in each of the following three areas of psychology.',
     source: 'https://psychology.cornell.edu/major',
     checker: includesWithSubRequirements(
       [
@@ -119,7 +117,8 @@ const psychRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'Independent Study and Field Work',
     description:
-      'Students are encouraged to take independent study or field work. Up to 12 of these credits may be counted towards the major.',
+      'Students are encouraged to take independent study or field work. ' +
+      'Up to 12 of these credits may be counted towards the major.',
     source: 'https://psychology.cornell.edu/major',
     checker: includesWithSubRequirements(['PSYCH 4700', 'PSYCH 4710']),
     fulfilledBy: 'courses',
