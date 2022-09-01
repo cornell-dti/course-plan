@@ -43,7 +43,7 @@ it('Check accessibility of the requirements sidebar', () => {
   cy.get('[data-cyId=requirements-showCompleted]').click({ multiple: true });
   cy.get('[data-cyId=requirements-displayToggle]').click({ multiple: true });
 
-  cy.checkA11y('[data-cyId=reqsSidebar]', null, null, true);
+  cy.checkA11y('[data-cyId=reqsSidebar]');
 });
 
 it('Check accessibility of the bottom bar', () => {

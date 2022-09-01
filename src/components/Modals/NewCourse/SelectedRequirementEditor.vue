@@ -1,55 +1,19 @@
 <template>
   <div>
-    <div
-      v-if="
-        editMode ? automaticallyFulfilledRequirements.length > 0 : chosenRequirementText.length > 0
-      "
-    >
-      <div class="newCourse-title">
-        This class automatically fulfills the following requirement(s):
-      </div>
-      <div class="newCourse-requirements-container">
-        <div class="newCourse-requirements" data-cyId="newCourse-requirements">
-          {{ editMode ? automaticallyFulfilledRequirements.join(', ') : chosenRequirementText }}
-        </div>
-      </div>
+    <div class="newCourse-text">
+      {{ 'Add this class to the following semester' }}
     </div>
-    <div v-else class="newCourse-requirements-container newCourse-requirements">
-      This class does not automatically fulfill any requirements.
-    </div>
+    <select-semester-replace
+      :currentSemesters="semesters"
+      :isEdit="true"
+      :year="deleteSemYear"
+      :season="deleteSemSeason"
+      @duplicateSemester="disableButton"
+      @updateSemProps="updateSemProps"
+    />
     <div v-if="nonAutoRequirements.length > 0">
-      <div v-if="!editMode">
-        <div class="newCourse-title">
-          This class could potentially fulfill the following requirement(s):
-        </div>
-        <div class="newCourse-title">
-          <strong class="newCourse-name">
-            {{
-              nonAutoRequirementsTextArray
-                .filter(it => !it.selected)
-                .map(it => it.name)
-                .join(', ')
-            }}
-          </strong>
-        </div>
-      </div>
+      <div v-if="!editMode"></div>
       <div v-else>
-        <div v-if="selectedRequirementName === ''" class="newCourse-title">
-          {{
-            selectedRequirementName === ''
-              ? 'This class could potentially fulfill the following requirement(s):'
-              : ''
-          }}
-        </div>
-        <div v-else>
-          Instead of <span class="newCourse-requirements">{{ selectedRequirementName }}</span
-          >, this class could potentially fulfill the following requirement(s):
-        </div>
-        <div v-if="potentialRequirements.length > 0" class="warning">
-          <img class="warning-icon" src="@/assets/images/warning.svg" alt="warning icon" />
-          We cannot accurately check the requirements marked with the warning icon, so double check
-          before selecting.
-        </div>
         <requirements-dropdown
           :relatedRequirements="relatedRequirements"
           :potentialRequirements="potentialRequirements"
@@ -57,28 +21,27 @@
           @on-selected-change="toggleSelectRequirement"
         />
       </div>
-      <button
-        v-if="!editMode"
-        class="newCourse-link"
-        @click="toggleEditMode()"
-        @keyup.enter="toggleEditMode()"
-        data-cyId="newCourse-link"
-      >
-        Select Requirements
-      </button>
     </div>
   </div>
 </template>
-
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
 import { GTagEvent } from '@/gtag';
 import RequirementsDropdown from '@/components/Modals/NewCourse/RequirementsDropdown.vue';
+import SelectSemesterReplace from '@/components/Modals/SelectSemesterReplace.vue';
+import store from '@/store';
 
 export type RequirementWithID = { readonly id: string; readonly name: string };
+
 export default defineComponent({
-  components: { RequirementsDropdown },
+  components: { RequirementsDropdown, SelectSemesterReplace },
   props: {
+    deleteSemSeason: {
+      type: String as PropType<FirestoreSemesterSeason>,
+      required: false,
+      default: '',
+    },
+    deleteSemYear: { type: Number, required: true },
     editMode: { type: Boolean, required: true },
     selectedRequirementID: { type: String, required: true },
     automaticallyFulfilledRequirements: {
@@ -100,7 +63,17 @@ export default defineComponent({
     'on-selected-change': (id: string) => typeof id === 'string',
     'edit-mode': () => true,
   },
+  data() {
+    return {
+      isDisabled: false,
+      season: '',
+      year: '',
+    };
+  },
   computed: {
+    semesters(): readonly FirestoreSemester[] {
+      return store.state.semesters;
+    },
     chosenRequirementText(): string {
       if (this.selectedRequirementID === '') {
         return this.automaticallyFulfilledRequirements.join(', ');
@@ -137,6 +110,13 @@ export default defineComponent({
       GTagEvent(this.$gtag, 'add-modal-edit-requirements');
       this.$emit('edit-mode');
     },
+    disableButton(bool: boolean) {
+      this.isDisabled = bool;
+    },
+    updateSemProps(season: string, year: number) {
+      this.season = season;
+      this.year = String(year);
+    },
   },
 });
 </script>
@@ -144,6 +124,11 @@ export default defineComponent({
 <style scoped lang="scss">
 @import '@/assets/scss/_variables.scss';
 .newCourse {
+  &-text {
+    font-size: 14px;
+    line-height: 30px;
+    color: $lightPlaceholderGray;
+  }
   &-name {
     position: relative;
     border-radius: 11px;
