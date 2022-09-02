@@ -18,21 +18,21 @@
       This class does not automatically fulfill any requirements.
     </div>
     <div v-if="nonAutoRequirements.length > 0">
-        <div v-if="!editMode">
-            <div class="newCourse-title">
-            This class could potentially fulfill the following requirement(s):
-            </div>
-            <div class="newCourse-title">
-            <strong class="newCourse-name">
-                {{
-                nonAutoRequirementsTextArray
-                    .filter(it => !it.selected)
-                    .map(it => it.name)
-                    .join(', ')
-                }}
-            </strong>
-            </div>
+      <div v-if="!editMode">
+        <div class="newCourse-title">
+          This class could potentially fulfill the following requirement(s):
         </div>
+        <div class="newCourse-title">
+          <strong class="newCourse-name">
+            {{
+              nonAutoRequirementsTextArray
+                .filter(it => !it.selected)
+                .map(it => it.name)
+                .join(', ')
+            }}
+          </strong>
+        </div>
+      </div>
       <div v-else>
         <div v-if="selectedRequirementName === ''" class="newCourse-title">
           {{

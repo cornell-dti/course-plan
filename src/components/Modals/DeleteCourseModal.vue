@@ -10,8 +10,8 @@
     :rightButtonIsDisabled="false"
   >
     <div v-if="isTransferCredit" class="text-width">
-      Are you sure you want to remove <b>reqName</b> from the
-      <b>{{ reqDesc }} Requirement?</b> This will delete the selected transfer credit.
+      Are you sure you want to remove <b>reqName</b> from the <b>{{ reqDesc }} Requirement?</b> This
+      will delete the selected transfer credit.
       <br />
       Transfer credits can be re-added in your Profile.
     </div>
@@ -54,7 +54,7 @@ export default defineComponent({
 <style lang="scss">
 @import '@/assets/scss/_variables.scss';
 .bold-remove-text {
-  font-weight: bold
+  font-weight: bold;
 }
 
 .content-reset {
