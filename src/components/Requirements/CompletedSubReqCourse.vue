@@ -67,6 +67,7 @@ export default defineComponent({
   props: {
     slotName: { type: String, required: true },
     courseTaken: { type: Object as PropType<CourseTaken>, required: true },
+    reqDesc: { type: String, required: true },
   },
   data: () => ({
     replaceModalVisible: false,
