@@ -85,17 +85,17 @@ async function execute(
     // this should always be true
     for (const collection of collections) {
       const fromDoc = fromDb.collection(collection).doc(fromUser);
-      const get = (await fromDoc.get()).data();
-      if (get) {
+      const dataToCopy = (await fromDoc.get()).data();
+      if (dataToCopy) {
         const toDoc = toDb.collection(collection).doc(toUser);
         if (doCopy) {
-          const result = await toDoc.set(get);
+          const result = await toDoc.set(dataToCopy);
           if (result) copied.push(collection);
         } else {
           copied.push(
             `PREVIEW: copy from ${fromEnv}/${fromDoc.path} to ${toEnv}/${
               toDoc.path
-            }: ${JSON.stringify(get)}`
+            }: ${JSON.stringify(dataToCopy)}`
           );
         }
       }
