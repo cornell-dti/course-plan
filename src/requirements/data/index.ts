@@ -5,10 +5,9 @@ import aapRequirements from './colleges/ar';
 import casPreFA2020Requirements from './colleges/asPreFA2020';
 import casFA2020Requirements from './colleges/asFA2020';
 import businessRequirements from './colleges/bu';
-import engineeringRequirements from './colleges/en';
+import engineeringRequirements, { engineeringAdvisors } from './colleges/en';
 import humanEcologyRequirements from './colleges/he';
 import ilrRequirements from './colleges/il';
-
 import aemRequirements from './majors/aem';
 import asRequirements from './majors/as';
 import astroRequrements from './majors/astro';
@@ -21,7 +20,7 @@ import chemERequirements from './majors/chemE';
 import civilRequirements from './majors/ce';
 import commRequirements from './majors/comm';
 import crpRequirements from './majors/crp';
-import csRequirements from './majors/cs';
+import csRequirements, { csAdvisors } from './majors/cs';
 import deaRequirements from './majors/dea';
 import easRequirements from './majors/eas';
 import economicsRequirements from './majors/econ';
@@ -30,6 +29,7 @@ import essRequirements from './majors/ess';
 import englishRequirements from './majors/engl';
 import envEngineeringRequirements from './majors/envE';
 import epRequirements from './majors/ep';
+import fashionDesignRequirements from './majors/fsad';
 import foodSciRequirements from './majors/foodsci';
 import governmentRequirements from './majors/govt';
 import hdRequirements from './majors/hd';
@@ -47,7 +47,6 @@ import pamRequirements from './majors/pam';
 import physRequirements from './majors/phys';
 import spanishRequirements from './majors/spanish';
 import stsRequirements from './majors/sts';
-
 import aerospaceMinorRequirements from './minors/aerospace';
 import appliedMathMinorRequirements from './minors/applied-math';
 import buMinorRequirements from './minors/bu';
@@ -58,6 +57,7 @@ import deaMinorRequirements from './minors/dea';
 import eceMinorRequirements from './minors/ece';
 import hpMinorRequirements from './minors/hp';
 import hdMinorRequirements from './minors/hd';
+import inequalityRequirements from './minors/ineq';
 import infoENMinorRequirements from './minors/infoEN';
 import lingMinorRequirements from './minors/ling';
 import mathMinorRequirements from './minors/math';
@@ -99,6 +99,7 @@ const json: RequirementsJson = {
     EN: {
       name: 'Engineering',
       requirements: engineeringRequirements,
+      advisors: engineeringAdvisors,
     },
     HE: {
       name: 'Human Ecology',
@@ -179,6 +180,7 @@ const json: RequirementsJson = {
       schools: ['EN', 'AS1', 'AS2'],
       requirements: csRequirements,
       specializations: [MATH2940, CHEM2080],
+      advisors: csAdvisors,
     },
     DEA: {
       name: 'Design and Environmental Analysis',
@@ -219,6 +221,11 @@ const json: RequirementsJson = {
       name: 'Engineering Physics',
       schools: ['EN'],
       requirements: epRequirements,
+    },
+    FSAD: {
+      name: 'Fashion Design',
+      schools: ['HE'],
+      requirements: fashionDesignRequirements,
     },
     FDSC: {
       name: 'Food Science',
@@ -356,6 +363,11 @@ const json: RequirementsJson = {
       name: 'Human Development',
       schools: ['HE'],
       requirements: hdMinorRequirements,
+    },
+    INEQ: {
+      name: 'Inequality Studies',
+      schools: ['AS1', 'AS2'],
+      requirements: inequalityRequirements,
     },
     ISST: {
       name: 'Information Science [Engineering]',

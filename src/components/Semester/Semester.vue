@@ -18,6 +18,10 @@
       @close-course-modal="closeConflictModal"
       v-if="isConflictModalOpen"
       :selectedCourse="conflictCourse"
+      :courseConflicts="courseConflicts"
+      :selfCheckRequirements="selfCheckRequirements"
+      @resolve-conflicts="handleConflictsResolved"
+      @remove-course="deleteCourseWithoutModal"
     />
     <confirmation :text="confirmationText" v-if="isConfirmationOpen" />
     <delete-semester
@@ -161,7 +165,11 @@ import {
   updateRequirementChoices,
 } from '@/global-firestore-data';
 import store, { updateSubjectColorData } from '@/store';
-import { getRelatedRequirementIdsForCourseOptOut } from '@/requirements/requirement-frontend-utils';
+import {
+  getRelatedRequirementIdsForCourseOptOut,
+  getRelatedUnfulfilledRequirements,
+} from '@/requirements/requirement-frontend-utils';
+
 import featureFlagCheckers from '@/feature-flags';
 
 type ComponentRef = { $el: HTMLDivElement };
@@ -199,6 +207,8 @@ export default defineComponent({
       isConflictModalOpen: false,
       isSemesterMinimized: false,
       conflictCourse: {} as FirestoreSemesterCourse,
+      courseConflicts: new Set<string[]>(),
+      selfCheckRequirements: [] as readonly RequirementWithIDSourceType[],
 
       seasonImg: {
         Fall: fall,
@@ -364,8 +374,14 @@ export default defineComponent({
     closeCourseModal() {
       this.isCourseModalOpen = false;
     },
-    openConflictModal(course: FirestoreSemesterCourse) {
+    openConflictModal(
+      course: FirestoreSemesterCourse,
+      conflicts: Set<string[]>,
+      selfCheckRequirements: readonly RequirementWithIDSourceType[]
+    ) {
       this.conflictCourse = course;
+      this.courseConflicts = conflicts;
+      this.selfCheckRequirements = selfCheckRequirements;
       this.isConflictModalOpen = !this.isConflictModalOpen;
     },
     closeConflictModal() {
@@ -389,7 +405,7 @@ export default defineComponent({
     closeConfirmationModal() {
       this.isConfirmationOpen = false;
     },
-    // TODO @willespencer refactor the below methods after gatekeep removed (only 1 method)
+    // TODO @willespencer refactor the below methods after gatekeep removed (to only 1 method)
     addCourse(data: CornellCourseRosterCourse, choice: FirestoreCourseOptInOptOutChoices) {
       const newCourse = cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData(data);
       // Since the course is new, we know the old choice does not exist.
@@ -399,16 +415,45 @@ export default defineComponent({
       this.openConfirmationModal(`Added ${courseCode} to ${this.season} ${this.year}`);
     },
     selectCourse(data: CornellCourseRosterCourse) {
-      // TODO @willespencer handle opening conflict modal better: should not happen if no conflicts
-      // TODO @willespencer add the course to semester, add confirmation modal
-
       // only perform operations if the gatekeep is true
       if (this.handleRequirementConflicts) {
         const newCourse = cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData(data);
 
+        // set choice to nothing (no opting out, no opting in)
+        const choice: FirestoreCourseOptInOptOutChoices = {
+          optOut: [],
+          acknowledgedCheckerWarningOptIn: [],
+          arbitraryOptIn: {},
+        };
+
+        // add the course to the semeser (with no choice made)
+        addCourseToSemester(this.year, this.season, newCourse, () => choice, this.$gtag);
         this.closeCourseModal();
-        this.openConflictModal(newCourse);
+
+        const conflicts = store.state.courseToRequirementsInConstraintViolations.get(
+          newCourse.uniqueID
+        );
+
+        const { selfCheckRequirements } = getRelatedUnfulfilledRequirements(
+          data,
+          store.state.groupedRequirementFulfillmentReport,
+          store.state.onboardingData,
+          store.state.toggleableRequirementChoices,
+          store.state.overriddenFulfillmentChoices,
+          store.state.userRequirementsMap
+        );
+
+        // only open conflict modal if conflicts exist
+        if (conflicts && conflicts.size > 0) {
+          this.openConflictModal(newCourse, conflicts, selfCheckRequirements);
+        }
       }
+    },
+    handleConflictsResolved(course: FirestoreSemesterCourse) {
+      this.openConfirmationModal(`Added ${course.code} to ${this.season} ${this.year}`);
+    },
+    deleteCourseWithoutModal(uniqueID: number) {
+      deleteCourseFromSemester(this.year, this.season, uniqueID, this.$gtag);
     },
     deleteCourse(courseCode: string, uniqueID: number) {
       deleteCourseFromSemester(this.year, this.season, uniqueID, this.$gtag);

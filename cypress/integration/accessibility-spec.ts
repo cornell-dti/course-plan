@@ -38,10 +38,16 @@ it('Check navbar accessibility', () => {
 // Check the accessibility of the requirements sidebar with all toggles fully open
 // Note that the selector in checkA11y ensures only the sidebar is inspected
 it('Check accessibility of the requirements sidebar', () => {
+  // Note that there must a completed requirement (i.e. swim test)
+  cy.get('[data-cyId=semester-addCourse]').click();
+  cy.get('[data-cyId=newCourse-dropdown]').type('PE 1100');
+  cy.get('[data-cyId=newCourse-searchResult]').first().click();
+  cy.get('[data-cyId=modal-button]').click();
+
   // open all dropdowns in the sidebar
   cy.get('[data-cyId=requirements-viewMore]').click({ multiple: true });
   cy.get('[data-cyId=requirements-showCompleted]').click({ multiple: true });
-  cy.get('[data-cyId=requirements-displayToggle]').click({ multiple: true });
+  cy.get('[data-cyId=requirements-displayToggle]').click({ multiple: true, force: true });
 
   cy.checkA11y('[data-cyId=reqsSidebar]', null, null, true);
 });

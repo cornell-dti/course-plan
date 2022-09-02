@@ -15,7 +15,12 @@
       <div class="separator"></div>
       <div class="completed-reqCourses-course-heading-wrapper">
         <div class="completed-reqCourses-course-heading-course">
-          <span class="completed-reqCourses-course-heading-check"
+          <course-caution
+            v-if="isCourseConflict(courseTaken.uniqueId)"
+            :course="courseTaken"
+            :isCompactView="false"
+          />
+          <span v-else class="completed-reqCourses-course-heading-check"
             ><img src="@/assets/images/checkmark-green.svg" alt="checkmark"
           /></span>
           {{ slotName }}
@@ -28,6 +33,7 @@
           :courseCode="courseTaken.code"
           :compact="true"
           :isCompletedReqCourse="true"
+          :isConflict="isCourseConflict(courseTaken.uniqueId)"
           class="completed-reqCourses-course-object"
         />
         <div class="completed-reqCourses-course-object-semester">in {{ semesterLabel }}</div>
@@ -49,21 +55,18 @@ import ReqCourse from '@/components/Requirements/ReqCourse.vue';
 import SlotMenu from '@/components/Modals/SlotMenu.vue';
 import DeleteCourseModal from '@/components/Modals/DeleteCourseModal.vue';
 import ReplaceCourseModal from '@/components/Modals/ReplaceCourseModal.vue';
-import store from '@/store';
+import CourseCaution from '@/components/Course/CourseCaution.vue';
+import store, { isCourseConflict } from '@/store';
 import { deleteCourseFromSemesters, deleteTransferCredit } from '@/global-firestore-data';
 import { getCurrentSeason, getCurrentYear, clickOutside } from '@/utilities';
 
 const transferCreditColor = 'DA4A4A'; // Arbitrary color for transfer credit
 
 export default defineComponent({
-  components: { ReqCourse, DeleteCourseModal, ReplaceCourseModal, SlotMenu },
+  components: { ReqCourse, DeleteCourseModal, ReplaceCourseModal, SlotMenu, CourseCaution },
   props: {
     slotName: { type: String, required: true },
     courseTaken: { type: Object as PropType<CourseTaken>, required: true },
-    reqDesc: { type: String, required: true },
-  },
-  mounted() {
-    console.log(this.courseTaken);
   },
   data: () => ({
     replaceModalVisible: false,
@@ -136,6 +139,7 @@ export default defineComponent({
     closeSlotMenu() {
       this.slotMenuOpen = false;
     },
+    isCourseConflict,
   },
   directives: {
     'click-outside': clickOutside,

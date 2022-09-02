@@ -53,10 +53,10 @@
           >
           <div class="onboarding-selectWrapper">
             <onboarding-basic-single-dropdown
-              :availableChoices="semesters"
+              :availableChoices="entranceYears"
               :choice="entranceYear"
               :cannotBeRemoved="true"
-              :scrollBottomToElement="2020"
+              :scrollBottomToElement="suggestedEntranceSem"
               @on-select="selectEntranceYear"
             />
           </div>
@@ -86,10 +86,10 @@
           >
           <div class="onboarding-selectWrapper">
             <onboarding-basic-single-dropdown
-              :availableChoices="semesters"
+              :availableChoices="gradYears"
               :choice="gradYear"
               :cannotBeRemoved="true"
-              :scrollBottomToElement="2024"
+              :scrollBottomToElement="suggestedGradSem"
               @on-select="selectGraduationYear"
             />
           </div>
@@ -178,7 +178,13 @@
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
 import reqsData from '@/requirements/typed-requirement-json';
-import { clickOutside, getCollegeFullName, getCurrentYear, yearRange } from '@/utilities';
+import {
+  clickOutside,
+  getCurrentYear,
+  getCollegeFullName,
+  computeGradYears,
+  computeEntranceYears,
+} from '@/utilities';
 import OnboardingBasicMultiDropdown from './OnboardingBasicMultiDropdown.vue';
 import OnboardingBasicSingleDropdown from './OnboardingBasicSingleDropdown.vue';
 
@@ -263,6 +269,10 @@ export default defineComponent({
     'click-outside': clickOutside,
   },
   computed: {
+    entranceYears: computeEntranceYears,
+    gradYears(): Readonly<Record<string, string>> {
+      return computeGradYears(this.entranceYear);
+    },
     colleges(): Readonly<Record<string, string>> {
       const base = Object.entries(reqsData.college)
         .filter(college => !college[0].startsWith('AS'))
@@ -299,14 +309,11 @@ export default defineComponent({
         Object.entries(reqsData.grad).map(([key, { name }]) => [key, name])
       );
     },
-    semesters(): Readonly<Record<string, string>> {
-      const semsDict: Record<string, string> = {};
-      const curYear = getCurrentYear();
-      for (let i = -yearRange; i <= yearRange; i += 1) {
-        const yr = String(curYear + i);
-        semsDict[yr] = yr;
-      }
-      return semsDict;
+    suggestedEntranceSem(): Readonly<number> {
+      return getCurrentYear();
+    },
+    suggestedGradSem(): Readonly<number> {
+      return parseInt(this.entranceYear, 10) + 4;
     },
     seasons(): Readonly<Record<string, string>> {
       return {
@@ -367,12 +374,20 @@ export default defineComponent({
         }
       }
     },
+    // Clear graduation year if a new entrance year is selected and the graduation year is no longer in the dropdown
+    clearGradYearIfIllegal() {
+      const gradYear = parseInt(this.gradYear, 10);
+      if (!(gradYear in computeGradYears(this.entranceYear))) {
+        this.gradYear = '';
+      }
+    },
     selectGraduationYear(year: string) {
       this.gradYear = year;
       this.updateBasic();
     },
     selectEntranceYear(year: string) {
       this.entranceYear = year;
+      this.clearGradYearIfIllegal();
       this.updateBasic();
     },
     selectGraduationSem(season: string) {

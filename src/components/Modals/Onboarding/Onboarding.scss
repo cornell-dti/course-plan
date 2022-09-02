@@ -527,9 +527,22 @@ input {
   &-transferCreditDescription {
     font-size: 14px;
     color: $secondaryGray;
+    margin-top: 1rem;
     a {
       color: $yuxuanBlue;
     }
+  }
+
+  &-transferCreditWarning {
+    color: $warning;
+    margin-top: 1.5rem;
+  }
+
+  &-warningIcon {
+    float: left;
+    margin: 0.125rem 0.25rem 0 0;
+    width: 14px;
+    height: 14px;
   }
 
   &-transferCredits {

@@ -1,5 +1,12 @@
 <template>
-  <div :class="{ 'course--min': compact, active: active }" class="course">
+  <div
+    :class="{
+      'course--min': compact,
+      conflict: isCourseConflict(courseObj.uniqueID),
+      active: active,
+    }"
+    class="course"
+  >
     <edit-color
       :editedColor="editedColor"
       @color-course="colorCourse"
@@ -7,7 +14,13 @@
       @close-edit-color="closeEditColorModal"
       v-if="isEditColorOpen"
     />
-    <div class="course-color" :style="cssVars" :class="{ 'course-color--active': active }">
+    <div
+      class="course-color"
+      :style="cssVars"
+      :class="{
+        'course-color--active': active,
+      }"
+    >
       <img src="@/assets/images/dots/sixDots.svg" alt="" />
     </div>
     <div class="course-content" @click="courseOnClick()">
@@ -58,6 +71,7 @@ import {
 } from '@/components/BottomBar/BottomBarState';
 import { clickOutside } from '@/utilities';
 import EditColor from '../Modals/EditColor.vue';
+import { isCourseConflict } from '@/store';
 
 export default defineComponent({
   components: { CourseCaution, CourseMenu, EditColor },
@@ -157,6 +171,7 @@ export default defineComponent({
       this.$emit('edit-course-credit', credit, this.courseObj.uniqueID);
       this.closeMenuIfOpen();
     },
+    isCourseConflict,
   },
   directives: {
     'click-outside': clickOutside,
@@ -289,6 +304,12 @@ export default defineComponent({
     justify-content: space-around;
     margin: 0.5rem;
   }
+}
+
+.conflict {
+  border: 1px solid rgba($conflictWarning, 0.5);
+  border-radius: 8px;
+  box-shadow: 1px 1px 5px rgba($conflictWarning, 0.5);
 }
 
 .active {

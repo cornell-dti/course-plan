@@ -1,3 +1,5 @@
+import { doc, updateDoc } from 'firebase/firestore';
+
 import { semestersCollection } from '../firebase-frontend-config';
 import store from '../store';
 import { GTag, GTagEvent } from '../gtag';
@@ -14,7 +16,7 @@ export const editSemesters = (
 ): void => {
   const newSemesters = updater(store.state.semesters);
   store.commit('setSemesters', newSemesters);
-  semestersCollection.doc(store.state.currentFirebaseUser.email).update({
+  updateDoc(doc(semestersCollection, store.state.currentFirebaseUser.email), {
     semesters: newSemesters,
   });
 };
@@ -25,7 +27,7 @@ export const editSemesters = (
 export const setOrderByNewest = (orderByNewest: boolean): void => {
   if (orderByNewest === store.state.orderByNewest) return;
   store.commit('setOrderByNewest', orderByNewest);
-  semestersCollection.doc(store.state.currentFirebaseUser.email).update({
+  updateDoc(doc(semestersCollection, store.state.currentFirebaseUser.email), {
     orderByNewest,
   });
 };
