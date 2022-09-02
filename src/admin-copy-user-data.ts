@@ -29,16 +29,26 @@ const fromArg = process.argv[2];
 const toArg = process.argv[3];
 const executeArg = process.argv[4];
 
-if (fromArg && toArg && (executeArg === 'TRUE' || executeArg === 'FALSE')) {
+if (fromArg && toArg && executeArg) {
   const [FROM_ENV, FROM] = fromArg.split('/');
   const [TO_ENV, TO] = toArg.split('/');
-  const EXECUTE = executeArg === 'TRUE';
-  execute(FROM, FROM_ENV, TO, TO_ENV, EXECUTE).then(copied => {
-    if (EXECUTE) console.log(`Copied: [${copied}] from ${fromArg} to ${toArg}`);
-    else console.log(copied);
-  });
+  if (
+    (executeArg === 'TRUE' || executeArg === 'FALSE') &&
+    (FROM_ENV === 'prod' || FROM_ENV === 'dev') &&
+    (TO_ENV === 'prod' || TO_ENV === 'dev') &&
+    FROM &&
+    TO
+  ) {
+    const doCopy = executeArg === 'TRUE';
+    execute(FROM, FROM_ENV, TO, TO_ENV, doCopy).then(copied => {
+      if (doCopy) console.log(`Copied: [${copied}] from ${fromArg} to ${toArg}`);
+      else console.log(copied);
+    });
+  } else {
+    throw new Error('Refer to the documentation to correctly run this script.');
+  }
 } else {
-  throw new Error('Refer to the documentation to correctly run this script.');
+  throw new Error('Please include all required command line arguments.');
 }
 
 async function execute(
@@ -46,7 +56,7 @@ async function execute(
   FROM_ENV: string,
   TO: string,
   TO_ENV: string,
-  EXECUTE: boolean
+  doCopy: boolean
 ): Promise<string[]> {
   let fromDb;
   let toDb;
@@ -71,13 +81,13 @@ async function execute(
   }
 
   const copied = [];
-  if (fromDb && toDb) {
+  if (fromDb && toDb) { // this should always be true
     for (const collection of collections) {
       const fromDoc = fromDb.collection(collection).doc(FROM);
       const get = (await fromDoc.get()).data();
       if (get) {
         const toDoc = toDb.collection(collection).doc(TO);
-        if (EXECUTE) {
+        if (doCopy) {
           const result = await toDoc.set(get);
           if (result) copied.push(collection);
         } else {
