@@ -10,15 +10,15 @@
     :rightButtonIsDisabled="false"
   >
     <div v-if="isTransferCredit" class="text-width">
-      Are you sure you want to remove <strong>{{ reqName }}</strong> from the
-      <strong>{{ reqDesc }} Requirement?</strong> This will delete the selected transfer credit.
+      Are you sure you want to remove <b>reqName</b> from the
+      <b>{{ reqDesc }} Requirement?</b> This will delete the selected transfer credit.
       <br />
       Transfer credits can be re-added in your Profile.
     </div>
     <div v-else class="text-width">
       <!-- {{ editMode ? automaticallyFulfilledRequirements.join(', ') : chosenRequirementText }} -->
-      Are you sure you want to remove <strong>{{ reqName }}</strong> from the
-      <strong>{{ reqDesc }} Requirement?</strong>
+      Are you sure you want to remove <b>{{ reqName }}</b> from the
+      <b>{{ reqDesc }} Requirement?</b>
     </div>
   </teleport-modal>
 </template>
@@ -53,6 +53,9 @@ export default defineComponent({
 </script>
 <style lang="scss">
 @import '@/assets/scss/_variables.scss';
+.bold-remove-text {
+  font-weight: bold
+}
 
 .content-reset {
   width: 30.5em;
@@ -66,6 +69,11 @@ export default defineComponent({
   width: 28em;
   line-height: 17px;
   color: $lightPlaceholderGray;
+  b {
+    font-size: 1rem;
+    color: #4f4f4f;
+    font-weight: 900;
+  }
 }
 
 .modal {
