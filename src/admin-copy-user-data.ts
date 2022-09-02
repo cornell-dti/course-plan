@@ -2,11 +2,13 @@
 /**
  * TPM ONLY SCRIPT! BE CAREFUL COPYING TO PROD!
  * Script to copy data from one user on production or dev to another user on dev.
- * Requires service accounts for database
+ * Requires service accounts for database.
+ * serviceAccount.json (if using dev) and serviceAccountProd.json (if using prod) must be at the root.
  *
- * From root, run: `npm run ts-node -- src/admin-copy-user-data.ts <FROM_ENV>/<FROM_USER> <TO_ENV>/<TO_USER>`
+ * From root, run: `npm run ts-node -- src/admin-copy-user-data.ts <FROM_ENV>/<FROM_USER> <TO_ENV>/<TO_USER> <EXECUTE>`
  * FROM_ENV and TO_ENV should be either "dev" or "prod"
- * EXAMPLE: `npm run ts-node -- src/admin-copy-user-data.ts prod/noschiff.dev@gmail.com dev/nps39@cornell.edu`
+ * EXECUTE must be TRUE or FALSE. EXECUTE=FALSE will preview the changes, EXECUTE=TRUE will do the changes
+ * EXAMPLE: `npm run ts-node -- src/admin-copy-user-data.ts prod/noschiff.dev@gmail.com dev/nps39@cornell.edu TRUE`
  */
 
 import { cert, initializeApp } from 'firebase-admin/app';
@@ -25,13 +27,16 @@ const collections = [
 
 const fromArg = process.argv[2];
 const toArg = process.argv[3];
+const executeArg = process.argv[4];
 
-if (fromArg && toArg) {
+if (fromArg && toArg && (executeArg === 'TRUE' || executeArg === 'FALSE')) {
   const [FROM_ENV, FROM] = fromArg.split('/');
   const [TO_ENV, TO] = toArg.split('/');
-  execute(FROM, FROM_ENV, TO, TO_ENV).then(copied =>
-    console.log(`Copied: [${copied}] from ${fromArg} to ${toArg}`)
-  );
+  const EXECUTE = executeArg === 'TRUE';
+  execute(FROM, FROM_ENV, TO, TO_ENV, EXECUTE).then(copied => {
+    if (EXECUTE) console.log(`Copied: [${copied}] from ${fromArg} to ${toArg}`);
+    else console.log(copied);
+  });
 } else {
   throw new Error('Refer to the documentation to correctly run this script.');
 }
@@ -40,7 +45,8 @@ async function execute(
   FROM: string,
   FROM_ENV: string,
   TO: string,
-  TO_ENV: string
+  TO_ENV: string,
+  EXECUTE: boolean
 ): Promise<string[]> {
   let fromDb;
   let toDb;
@@ -67,10 +73,20 @@ async function execute(
   const copied = [];
   if (fromDb && toDb) {
     for (const collection of collections) {
-      const get = (await fromDb.collection(collection).doc(FROM).get()).data();
+      const fromDoc = fromDb.collection(collection).doc(FROM);
+      const get = (await fromDoc.get()).data();
       if (get) {
-        const result = await toDb.collection(collection).doc(TO).set(get);
-        if (result) copied.push(collection);
+        const toDoc = toDb.collection(collection).doc(TO);
+        if (EXECUTE) {
+          const result = await toDoc.set(get);
+          if (result) copied.push(collection);
+        } else {
+          copied.push(
+            `PREVIEW: copy from ${FROM_ENV}/${fromDoc.path} to ${TO_ENV}/${
+              toDoc.path
+            }: ${JSON.stringify(get)}`
+          );
+        }
       }
     }
   }
