@@ -53,9 +53,9 @@ if (fromArg && toArg && executeArg) {
 
 async function execute(
   FROM: string,
-  FROM_ENV: string,
+  FROM_ENV: 'prod' | 'dev',
   TO: string,
-  TO_ENV: string,
+  TO_ENV: 'prod' | 'dev',
   doCopy: boolean
 ): Promise<string[]> {
   let fromDb;
@@ -81,7 +81,8 @@ async function execute(
   }
 
   const copied = [];
-  if (fromDb && toDb) { // this should always be true
+  if (fromDb && toDb) {
+    // this should always be true
     for (const collection of collections) {
       const fromDoc = fromDb.collection(collection).doc(FROM);
       const get = (await fromDoc.get()).data();
