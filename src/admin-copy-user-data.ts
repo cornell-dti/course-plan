@@ -52,48 +52,48 @@ if (fromArg && toArg && executeArg) {
 }
 
 async function execute(
-  FROM: string,
-  FROM_ENV: 'prod' | 'dev',
-  TO: string,
-  TO_ENV: 'prod' | 'dev',
+  fromUser: string,
+  fromEnv: 'prod' | 'dev',
+  toUser: string,
+  toEnv: 'prod' | 'dev',
   doCopy: boolean
 ): Promise<string[]> {
   let fromDb;
   let toDb;
-  if (FROM_ENV === 'dev' || TO_ENV === 'dev') {
+  if (fromEnv === 'dev' || toEnv === 'dev') {
     const dev = initializeApp({
       credential: cert('serviceAccount.json'),
       databaseURL: 'https://cornelldti-courseplan-dev.firebaseio.com',
     });
     const devDb = getFirestore(dev);
-    if (FROM_ENV === 'dev') fromDb = devDb;
-    if (TO_ENV === 'dev') toDb = devDb;
+    if (fromEnv === 'dev') fromDb = devDb;
+    if (toEnv === 'dev') toDb = devDb;
   }
 
-  if (FROM_ENV === 'prod' || TO_ENV === 'prod') {
+  if (fromEnv === 'prod' || toEnv === 'prod') {
     const prod = initializeApp({
       credential: cert('serviceAccountProd.json'),
       databaseURL: 'https://cornell-courseplan.firebaseio.com',
     });
     const prodDb = getFirestore(prod);
-    if (FROM_ENV === 'prod') fromDb = prodDb;
-    if (TO_ENV === 'prod') toDb = prodDb;
+    if (fromEnv === 'prod') fromDb = prodDb;
+    if (toEnv === 'prod') toDb = prodDb;
   }
 
   const copied = [];
   if (fromDb && toDb) {
     // this should always be true
     for (const collection of collections) {
-      const fromDoc = fromDb.collection(collection).doc(FROM);
+      const fromDoc = fromDb.collection(collection).doc(fromUser);
       const get = (await fromDoc.get()).data();
       if (get) {
-        const toDoc = toDb.collection(collection).doc(TO);
+        const toDoc = toDb.collection(collection).doc(toUser);
         if (doCopy) {
           const result = await toDoc.set(get);
           if (result) copied.push(collection);
         } else {
           copied.push(
-            `PREVIEW: copy from ${FROM_ENV}/${fromDoc.path} to ${TO_ENV}/${
+            `PREVIEW: copy from ${fromEnv}/${fromDoc.path} to ${toEnv}/${
               toDoc.path
             }: ${JSON.stringify(get)}`
           );
