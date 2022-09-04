@@ -40,7 +40,13 @@ if (fromArg && toArg && executeArg) {
     TO
   ) {
     const doCopy = executeArg === 'TRUE';
-    execute(FROM, FROM_ENV, TO, TO_ENV, doCopy).then(copied => {
+    execute({
+      fromUser: FROM,
+      fromEnv: FROM_ENV,
+      toUser: TO,
+      toEnv: TO_ENV,
+      execute: doCopy,
+    }).then(copied => {
       if (doCopy) console.log(`Copied: [${copied}] from ${fromArg} to ${toArg}`);
       else console.log(copied);
     });
@@ -52,48 +58,50 @@ if (fromArg && toArg && executeArg) {
 }
 
 async function execute(
-  fromUser: string,
-  fromEnv: 'prod' | 'dev',
-  toUser: string,
-  toEnv: 'prod' | 'dev',
-  doCopy: boolean
+  options: Readonly<{
+    fromUser: string;
+    toUser: string;
+    fromEnv: 'prod' | 'dev';
+    toEnv: 'prod' | 'dev';
+    execute: boolean;
+  }>
 ): Promise<string[]> {
   let fromDb;
   let toDb;
-  if (fromEnv === 'dev' || toEnv === 'dev') {
+  if (options.fromEnv === 'dev' || options.toEnv === 'dev') {
     const dev = initializeApp({
       credential: cert('serviceAccount.json'),
       databaseURL: 'https://cornelldti-courseplan-dev.firebaseio.com',
     });
     const devDb = getFirestore(dev);
-    if (fromEnv === 'dev') fromDb = devDb;
-    if (toEnv === 'dev') toDb = devDb;
+    if (options.fromEnv === 'dev') fromDb = devDb;
+    if (options.toEnv === 'dev') toDb = devDb;
   }
 
-  if (fromEnv === 'prod' || toEnv === 'prod') {
+  if (options.fromEnv === 'prod' || options.toEnv === 'prod') {
     const prod = initializeApp({
       credential: cert('serviceAccountProd.json'),
       databaseURL: 'https://cornell-courseplan.firebaseio.com',
     });
     const prodDb = getFirestore(prod);
-    if (fromEnv === 'prod') fromDb = prodDb;
-    if (toEnv === 'prod') toDb = prodDb;
+    if (options.fromEnv === 'prod') fromDb = prodDb;
+    if (options.toEnv === 'prod') toDb = prodDb;
   }
 
   const copied = [];
   if (fromDb && toDb) {
     // this should always be true
     for (const collection of collections) {
-      const fromDoc = fromDb.collection(collection).doc(fromUser);
+      const fromDoc = fromDb.collection(collection).doc(options.fromUser);
       const dataToCopy = (await fromDoc.get()).data();
       if (dataToCopy) {
-        const toDoc = toDb.collection(collection).doc(toUser);
-        if (doCopy) {
+        const toDoc = toDb.collection(collection).doc(options.toUser);
+        if (options.execute) {
           const result = await toDoc.set(dataToCopy);
           if (result) copied.push(collection);
         } else {
           copied.push(
-            `PREVIEW: copy from ${fromEnv}/${fromDoc.path} to ${toEnv}/${
+            `PREVIEW: copy from ${options.fromEnv}/${fromDoc.path} to ${options.toEnv}/${
               toDoc.path
             }: ${JSON.stringify(dataToCopy)}`
           );
