@@ -5,14 +5,16 @@
  * Requires service accounts for database.
  * serviceAccount.json (if using dev) and serviceAccountProd.json (if using prod) must be at the root.
  *
- * From root, run: `npm run ts-node -- src/admin-copy-user-data.ts <FROM_ENV>/<FROM_USER> <TO_ENV>/<TO_USER> <EXECUTE>`
+ * From root, run: `npm run ts-node -- src/admin-copy-user-data.ts -f <FROM_ENV>/<FROM_USER> -t <TO_ENV>/<TO_USER> -e <EXECUTE>`
  * FROM_ENV and TO_ENV should be either "dev" or "prod"
- * EXECUTE must be TRUE or FALSE. EXECUTE=FALSE will preview the changes, EXECUTE=TRUE will do the changes
- * EXAMPLE: `npm run ts-node -- src/admin-copy-user-data.ts prod/noschiff.dev@gmail.com dev/nps39@cornell.edu TRUE`
+ * EXECUTE is an optional argument that is false by default. It can be only `true` or `false`.
+ *    EXECUTE=false will preview the changes, EXECUTE=true will do the changes
+ * EXAMPLE: `npm run ts-node -- src/admin-copy-user-data.ts -f prod/noschiff.dev@gmail.com -t dev/nps39@cornell.edu -e true`
  */
 
 import { cert, initializeApp } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
+import parseArgs from 'minimist';
 
 const collections = [
   'user-name',
@@ -25,29 +27,31 @@ const collections = [
   'user-onboarding-data',
 ];
 
-const fromArg = process.argv[2];
-const toArg = process.argv[3];
-const executeArg = process.argv[4];
+const args = parseArgs(process.argv, {
+  string: ['f', 't'],
+  boolean: ['e'],
+  alias: { from: 'f', to: 't', execute: 'e' },
+  default: { e: false },
+});
 
-if (fromArg && toArg && executeArg) {
-  const [FROM_ENV, FROM] = fromArg.split('/');
-  const [TO_ENV, TO] = toArg.split('/');
+if (args.from && args.to && 'execute' in args) {
+  const [FROM_ENV, FROM] = args.from.split('/');
+  const [TO_ENV, TO] = args.to.split('/');
   if (
-    (executeArg === 'TRUE' || executeArg === 'FALSE') &&
+    (args.execute === true || args.execute === false) &&
     (FROM_ENV === 'prod' || FROM_ENV === 'dev') &&
     (TO_ENV === 'prod' || TO_ENV === 'dev') &&
     FROM &&
     TO
   ) {
-    const doCopy = executeArg === 'TRUE';
     execute({
       fromUser: FROM,
       fromEnv: FROM_ENV,
       toUser: TO,
       toEnv: TO_ENV,
-      execute: doCopy,
+      execute: args.execute,
     }).then(copied => {
-      if (doCopy) console.log(`Copied: [${copied}] from ${fromArg} to ${toArg}`);
+      if (args.execute) console.log(`Copied: [${copied}] from ${args.from} to ${args.to}`);
       else console.log(copied);
     });
   } else {
