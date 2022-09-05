@@ -432,6 +432,7 @@ input {
       width: 380px;
     }
     &--columnFill {
+      margin: 5px;
       display: flex;
       flex-direction: column;
       width: 100%;
