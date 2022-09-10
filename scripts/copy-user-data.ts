@@ -1,15 +1,15 @@
 /* eslint-disable no-await-in-loop,no-console */
 /**
- * TPM ONLY SCRIPT! BE CAREFUL COPYING TO PROD!
+ * BE CAREFUL COPYING TO PROD!
  * Script to copy data from one user on production or dev to another user on dev.
  * Requires service accounts for database.
  * serviceAccount.json (if using dev) and serviceAccountProd.json (if using prod) must be at the root.
  *
- * From root, run: `npm run ts-node -- src/admin-copy-user-data.ts -f <FROM_ENV>/<FROM_USER> -t <TO_ENV>/<TO_USER> -e <EXECUTE>`
+ * From root, run: `npm run ts-node -- scripts/copy-user-data.ts -f <FROM_ENV>/<FROM_USER> -t <TO_ENV>/<TO_USER> -e <EXECUTE>`
  * FROM_ENV and TO_ENV should be either "dev" or "prod"
  * EXECUTE is an optional argument that is false by default. It can be only `true` or `false`.
  *    EXECUTE=false will preview the changes, EXECUTE=true will do the changes
- * EXAMPLE: `npm run ts-node -- src/admin-copy-user-data.ts -f prod/noschiff.dev@gmail.com -t dev/nps39@cornell.edu -e true`
+ * EXAMPLE: `npm run ts-node -- scripts/copy-user-data.ts -f prod/noschiff.dev@gmail.com -t dev/nps39@cornell.edu -e true`
  */
 
 import { cert, initializeApp } from 'firebase-admin/app';
