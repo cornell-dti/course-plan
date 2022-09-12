@@ -108,17 +108,6 @@ const psychRequirements: readonly CollegeOrMajorRequirement[] = [
     perSlotMinCount: [1, 1, 1],
     slotNames: ['PCD', 'BEN', 'S&P'],
   },
-  {
-    name: 'Independent Study and Field Work',
-    description:
-      'Students are encouraged to take independent study or field work. ' +
-      'Up to 12 of these credits may be counted towards the major.',
-    source: 'https://psychology.cornell.edu/major',
-    checker: includesWithSubRequirements(['PSYCH 4700', 'PSYCH 4710']),
-    fulfilledBy: 'courses',
-    perSlotMinCount: [0],
-    slotNames: ['Independent Study and Field Work'],
-  },
 ];
 
 export default psychRequirements;
