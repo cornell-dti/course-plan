@@ -27,6 +27,7 @@
     </div>
   </div>
 </template>
+
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
 import { GTagEvent } from '@/gtag';

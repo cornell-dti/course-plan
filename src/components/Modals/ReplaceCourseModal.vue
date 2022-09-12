@@ -66,7 +66,7 @@ import {
 } from '@/requirements/requirement-frontend-utils';
 
 export default defineComponent({
-  components: { CourseSelector, TeleportModal , ReplaceRequirementEditor },
+  components: { CourseSelector, TeleportModal, ReplaceRequirementEditor },
   emits: {
     'close-replace-course-modal': () => true,
     'select-course': (course: CornellCourseRosterCourse) => typeof course === 'object',
