@@ -36,6 +36,21 @@
       We can't check that this course correctly fulfills the requirement so check carefully before
       selecting.
     </div>
+    <div v-if="isInSchedule">
+      <!-- <div v-if="hasDuplicates == true">
+        <replace-requirement-duplicate-editor
+          :deleteSemYear="0"
+          :key="courseSelectorKey"
+          :editMode="editMode"
+          :selectedRequirementID="selectedRequirementID"
+          :automaticallyFulfilledRequirements="automaticallyFulfilledRequirements"
+          :relatedRequirements="relatedRequirements"
+          :potentialRequirements="selfCheckRequirements"
+          @on-selected-change="onSelectedChange"
+          @edit-mode="toggleEditMode"
+        />
+      </div> -->
+    </div>
     <div v-if="selectedCourse != null">
       <!-- if a course is selected -->
       <replace-requirement-editor
@@ -93,6 +108,25 @@ export default defineComponent({
     },
     rightButtonText(): string {
       return this.editMode ? 'Next' : 'Add';
+    },
+    numTimesInSchedule(): number {
+      let count = 0;
+      for (const semester of store.state.semesters) {
+        for (const course of semester.courses) {
+          if ('crseId' in course) {
+            if (this.selectedCourse?.crseId === course.crseId) {
+              count += 1;
+            }
+          }
+        }
+      }
+      return count;
+    },
+    isInSchedule(): boolean {
+      return this.numTimesInSchedule > 0;
+    },
+    hasDuplicates(): boolean {
+      return this.numTimesInSchedule > 1;
     },
   },
   methods: {
