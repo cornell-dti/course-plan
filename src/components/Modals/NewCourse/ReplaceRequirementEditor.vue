@@ -1,19 +1,5 @@
 <template>
   <div>
-    <div
-      v-if="
-        editMode ? automaticallyFulfilledRequirements.length > 0 : chosenRequirementText.length > 0
-      "
-    >
-      <div class="newCourse-title">
-        This class automatically fulfills the following requirement(s):
-      </div>
-      <div class="newCourse-requirements-container">
-        <div class="newCourse-requirements">
-          {{ editMode ? automaticallyFulfilledRequirements.join(', ') : chosenRequirementText }}
-        </div>
-      </div>
-    </div>
     <div>
       <div class="newCourse-title">Add this class to the following semester</div>
       <div class="newCourse-semester-edit">
@@ -39,7 +25,6 @@ export default defineComponent({
   components: { SelectSemester },
   data() {
     return {
-      selectedCourse: null as CornellCourseRosterCourse | null,
       courseSelectorKey: 0,
       season: '' as FirestoreSemesterSeason,
       year: 0,
