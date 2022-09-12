@@ -38,7 +38,7 @@
     </div>
     <div v-if="selectedCourse != null">
       <!-- if a course is selected -->
-      <selected-requirement-editor
+      <replace-requirement-editor
         :deleteSemYear="0"
         :key="courseSelectorKey"
         :editMode="editMode"
@@ -55,7 +55,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import SelectedRequirementEditor from '@/components/Modals/NewCourse/SelectedRequirementEditor.vue';
+import ReplaceRequirementEditor from './NewCourse/ReplaceRequirementEditor.vue';
 import TeleportModal from '@/components/Modals/TeleportModal.vue';
 import CourseSelector from '@/components/Modals/NewCourse/CourseSelector.vue';
 
@@ -66,7 +66,7 @@ import {
 } from '@/requirements/requirement-frontend-utils';
 
 export default defineComponent({
-  components: { CourseSelector, TeleportModal, SelectedRequirementEditor },
+  components: { CourseSelector, TeleportModal , ReplaceRequirementEditor },
   emits: {
     'close-replace-course-modal': () => true,
     'select-course': (course: CornellCourseRosterCourse) => typeof course === 'object',
