@@ -9,51 +9,53 @@
     @left-button-clicked="backOrCancel"
     @right-button-clicked="addItem"
   >
-    <div class="newCourse-text">
-      {{ selectedCourse === null ? 'Search Course Roster' : 'Selected Course' }}
-    </div>
-    <course-selector
-      v-if="selectedCourse === null"
-      search-box-class-name="newCourse-dropdown"
-      :key="courseSelectorKey"
-      placeholder='"CS 1110", "Multivariable Calculus", etc'
-      :autoFocus="true"
-      @on-escape="closeCurrentModal"
-      @on-select="selectCourse"
-      data-cyId="newCourse-dropdown"
-    />
-    <div v-else class="selected-course" data-cyId="newCourse-selectedCourse">
-      {{ selectedCourse.subject }} {{ selectedCourse.catalogNbr }}:
-      {{ selectedCourse.titleLong }}
-    </div>
-    <div class="newCourse-text" v-if="selectedCourse === null">
-      <img
-        class="requirement-checker-warning-icon"
-        src="/src/assets/images/warning.svg"
-        alt="warning icon"
-        data-v-74b2c930=""
+    <div v-if="selecting">
+      <div class="newCourse-text">
+        {{ 'Search Course Roster' }}
+      </div>
+      <course-selector
+        v-if="selectedCourse === null"
+        search-box-class-name="newCourse-dropdown"
+        :key="courseSelectorKey"
+        placeholder='"CS 1110", "Multivariable Calculus", etc'
+        :autoFocus="true"
+        @on-escape="closeCurrentModal"
+        @on-select="selectCourse"
+        data-cyId="newCourse-dropdown"
       />
-      We can't check that this course correctly fulfills the requirement so check carefully before
-      selecting.
-    </div>
-    <div v-if="isInSchedule">
-      <!-- <div v-if="hasDuplicates == true">
-        <replace-requirement-duplicate-editor
-          :deleteSemYear="0"
-          :key="courseSelectorKey"
-          :editMode="editMode"
-          :selectedRequirementID="selectedRequirementID"
-          :automaticallyFulfilledRequirements="automaticallyFulfilledRequirements"
-          :relatedRequirements="relatedRequirements"
-          :potentialRequirements="selfCheckRequirements"
-          @on-selected-change="onSelectedChange"
-          @edit-mode="toggleEditMode"
+      <div class="newCourse-text" v-if="selectedCourse === null">
+        <img
+          class="requirement-checker-warning-icon"
+          src="/src/assets/images/warning.svg"
+          alt="warning icon"
+          data-v-74b2c930=""
         />
-      </div> -->
+        We can't check that this course correctly fulfills the requirement so check carefully before
+        selecting.
+      </div>
     </div>
-    <div v-if="selectedCourse != null">
-      <!-- if a course is selected -->
+    <div v-else-if="needToAdd && selectedCourse != null">
+      <div class="newCourse-text">
+        {{ 'Selected Course' }}
+      </div>
+      <div class="selected-course" data-cyId="newCourse-selectedCourse">
+        {{ selectedCourse.subject }} {{ selectedCourse.catalogNbr }}:
+        {{ selectedCourse.titleLong }}
+      </div>
       <replace-requirement-editor
+        :deleteSemYear="0"
+        :key="courseSelectorKey"
+        :editMode="editMode"
+        :selectedRequirementID="selectedRequirementID"
+        :automaticallyFulfilledRequirements="automaticallyFulfilledRequirements"
+        :relatedRequirements="relatedRequirements"
+        :potentialRequirements="selfCheckRequirements"
+        @on-selected-change="onSelectedChange"
+        @edit-mode="toggleEditMode"
+      />
+    </div>
+    <div v-else-if="hasDuplicates && selectedCourse != null">
+      <replace-requirement-duplicate-editor
         :deleteSemYear="0"
         :key="courseSelectorKey"
         :editMode="editMode"
@@ -71,6 +73,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import ReplaceRequirementEditor from './NewCourse/ReplaceRequirementEditor.vue';
+import ReplaceRequirementDuplicateEditor from './NewCourse/ReplaceRequirementDuplicateEditor.vue';
 import TeleportModal from '@/components/Modals/TeleportModal.vue';
 import CourseSelector from '@/components/Modals/NewCourse/CourseSelector.vue';
 
@@ -81,7 +84,12 @@ import {
 } from '@/requirements/requirement-frontend-utils';
 
 export default defineComponent({
-  components: { CourseSelector, TeleportModal, ReplaceRequirementEditor },
+  components: {
+    CourseSelector,
+    TeleportModal,
+    ReplaceRequirementEditor,
+    ReplaceRequirementDuplicateEditor,
+  },
   emits: {
     'close-replace-course-modal': () => true,
     'select-course': (course: CornellCourseRosterCourse) => typeof course === 'object',
@@ -90,6 +98,7 @@ export default defineComponent({
   },
   data() {
     return {
+      selecting: true,
       selectedCourse: null as CornellCourseRosterCourse | null,
       selectedRequirementID: '',
       automaticallyFulfilledRequirements: [] as readonly string[],
@@ -99,6 +108,8 @@ export default defineComponent({
       editMode: false,
       courseSelectorKey: 0,
       isOpen: false,
+      hasDuplicates: false,
+      needToAdd: false,
     };
   },
   computed: {
@@ -122,18 +133,26 @@ export default defineComponent({
       }
       return count;
     },
-    isInSchedule(): boolean {
-      return this.numTimesInSchedule > 0;
-    },
-    hasDuplicates(): boolean {
-      return this.numTimesInSchedule > 1;
-    },
   },
   methods: {
+    handleAdd() {
+      this.selecting = false;
+      const count = this.numTimesInSchedule;
+      if (count === 0) {
+        console.log('None');
+        this.needToAdd = true;
+      } else if (count > 1) {
+        console.log('Has Duplicates.');
+        this.hasDuplicates = true;
+      } else {
+        console.log('One');
+      }
+    },
     selectCourse(result: CornellCourseRosterCourse) {
       this.selectedCourse = result;
       this.$emit('select-course', this.selectedCourse);
       this.getReqsRelatedToCourse(result);
+      this.handleAdd();
     },
     closeCurrentModal() {
       this.$emit('close-replace-course-modal');
