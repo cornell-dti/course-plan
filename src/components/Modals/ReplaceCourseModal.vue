@@ -136,13 +136,11 @@ export default defineComponent({
       this.selecting = false;
       const count = this.numTimesInSchedule;
       if (count === 0) {
-        console.log('None');
         this.needToAdd = true;
       } else if (count > 1) {
-        console.log('Has Duplicates.');
         this.hasDuplicates = true;
       } else {
-        console.log('One');
+        this.closeCurrentModal();
       }
     },
     selectCourse(result: CornellCourseRosterCourse) {
