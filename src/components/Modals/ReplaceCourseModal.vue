@@ -60,6 +60,7 @@
         :automaticallyFulfilledRequirements="automaticallyFulfilledRequirements"
         :relatedRequirements="relatedRequirements"
         :potentialRequirements="selfCheckRequirements"
+        :semestersTaken="semestersTaken"
         @on-selected-change="onSelectedChange"
         @edit-mode="toggleEditMode"
       />
@@ -107,6 +108,7 @@ export default defineComponent({
       isOpen: false,
       hasDuplicates: false,
       needToAdd: false,
+      semestersTaken: [] as FirestoreSemester[],
     };
   },
   computed: {
@@ -117,24 +119,23 @@ export default defineComponent({
     rightButtonText(): string {
       return this.editMode ? 'Next' : 'Add';
     },
-    numTimesInSchedule(): number {
-      let count = 0;
+  },
+  methods: {
+    numTimesInSchedule() {
       for (const semester of store.state.semesters) {
         for (const course of semester.courses) {
           if ('crseId' in course) {
             if (this.selectedCourse?.crseId === course.crseId) {
-              count += 1;
+              this.semestersTaken.push(semester)
             }
           }
         }
       }
-      return count;
     },
-  },
-  methods: {
     handleAdd() {
       this.selecting = false;
-      const count = this.numTimesInSchedule;
+      this.numTimesInSchedule();
+      const count = this.semestersTaken.length;
       if (count === 0) {
         this.needToAdd = true;
       } else if (count > 1) {

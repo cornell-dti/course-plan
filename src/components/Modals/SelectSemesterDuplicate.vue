@@ -6,7 +6,6 @@
           >Type</label
         >
         <div
-          :class="[{ duplicate: isDuplicate() }, { 'selectSemester-select': !isDuplicate() }]"
           class="position-relative"
           v-click-outside="closeSeasonDropdownIfOpen"
         >
@@ -32,18 +31,13 @@
           >
             <div
               :class="{ warning: isDuplicate }"
-              v-for="s in seasons"
+              v-for="s in semestersTakenList"
               :key="s[1]"
               class="selectSemester-dropdown-content-item"
               @click="selectSeason(s[1])"
               data-cyId="newSemester-seasonItem"
             >
-              <img
-                :src="s[0]"
-                class="selectSemester-dropdown-content-season"
-                :alt="`${s[1]} icon`"
-              />
-              {{ s[1] }}
+              {{ s }}
             </div>
           </div>
         </div>
@@ -56,11 +50,6 @@
 import { PropType, defineComponent } from 'vue';
 import { getCurrentSeason, getCurrentYear, clickOutside, entranceYearRange } from '@/utilities';
 import store from '@/store';
-
-import fall from '@/assets/images/fallEmoji.svg';
-import spring from '@/assets/images/springEmoji.svg';
-import winter from '@/assets/images/winterEmoji.svg';
-import summer from '@/assets/images/summerEmoji.svg';
 import { inactiveGray, yuxuanBlue, darkPlaceholderGray } from '@/assets/constants/scss-variables';
 
 type DisplayOption = {
@@ -72,7 +61,6 @@ type DisplayOption = {
 };
 
 type Data = {
-  readonly seasons: readonly (readonly [string, FirestoreSemesterSeason])[];
   readonly years: readonly number[];
   seasonText: string;
   yearText: number;
@@ -92,6 +80,7 @@ export default defineComponent({
     year: { type: Number, default: 0 },
     season: { type: String as PropType<FirestoreSemesterSeason>, default: '' },
     isCourseModelSelectingSemester: { type: Boolean, default: false },
+    semestersTaken: { type: Array as PropType<readonly FirestoreSemester[]>, required: true}
   },
   emits: {
     updateSemProps: (season: string, year: number): boolean =>
@@ -101,12 +90,6 @@ export default defineComponent({
   data(): Data {
     // years
     const currentYear = getCurrentYear();
-    const seasons: readonly (readonly [string, FirestoreSemesterSeason])[] = [
-      [fall, 'Fall'],
-      [spring, 'Spring'],
-      [summer, 'Summer'],
-      [winter, 'Winter'],
-    ] as const;
     const years = [];
     let startYear = currentYear - entranceYearRange;
     while (startYear <= currentYear + entranceYearRange) {
@@ -117,7 +100,6 @@ export default defineComponent({
     const placeholderColor = darkPlaceholderGray;
 
     return {
-      seasons,
       years,
       seasonText: '',
       yearText: 0,
@@ -162,6 +144,26 @@ export default defineComponent({
         : '2017';
       return Number(topYear);
     },
+
+    semestersTakenList(): string[] {
+      const semestersHash = new Map<string, number>();
+      const semestersTakenList: string[] = [];
+      for (const semester of this.semestersTaken) {
+        const {year, season} = semester;
+        const semesterString = `${season} ${year}`;
+        const val = semestersHash.get(semesterString);
+        let num = 0;
+        if (val === undefined){
+          semestersHash.set(semesterString, 1);
+        } else {
+          num = val + 1;
+          semestersHash.set(semesterString, num);
+        }
+        const fullSemesterString = num === 0? semesterString : `${semesterString} (#${num})`;
+        semestersTakenList.push(fullSemesterString);
+      }
+      return semestersTakenList;
+    }
   },
   directives: {
     'click-outside': clickOutside,
