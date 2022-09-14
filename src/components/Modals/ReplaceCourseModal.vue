@@ -9,10 +9,14 @@
     @left-button-clicked="backOrCancel"
     @right-button-clicked="addItem"
   >
+    <div class="newCourse-text">
+      {{ selecting ? 'Search Course Roster' : 'Selected Course' }}
+    </div>
+    <div v-if="selectedCourse != null" class="selected-course" data-cyId="newCourse-selectedCourse">
+      {{ selectedCourse.subject }} {{ selectedCourse.catalogNbr }}:
+      {{ selectedCourse.titleLong }}
+    </div>
     <div v-if="selecting">
-      <div class="newCourse-text">
-        {{ 'Search Course Roster' }}
-      </div>
       <course-selector
         v-if="selectedCourse === null"
         search-box-class-name="newCourse-dropdown"
@@ -35,13 +39,6 @@
       </div>
     </div>
     <div v-else-if="needToAdd && selectedCourse != null">
-      <div class="newCourse-text">
-        {{ 'Selected Course' }}
-      </div>
-      <div class="selected-course" data-cyId="newCourse-selectedCourse">
-        {{ selectedCourse.subject }} {{ selectedCourse.catalogNbr }}:
-        {{ selectedCourse.titleLong }}
-      </div>
       <replace-requirement-editor
         :deleteSemYear="0"
         :key="courseSelectorKey"
