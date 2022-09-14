@@ -224,6 +224,7 @@ export default defineComponent({
         } else {
           this.selectedCourse = null;
           this.courseSelectorKey += 1;
+          this.selecting = true;
         }
       } else {
         this.closeCurrentModal();
