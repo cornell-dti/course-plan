@@ -317,8 +317,7 @@ export default defineComponent({
       background-color: white;
       color: #757575;
 
-      &.season-wrapper,
-      &.year-wrapper {
+      &.season-wrapper{
         display: flex;
         flex-direction: row;
         width: 100%;
@@ -327,16 +326,14 @@ export default defineComponent({
         cursor: pointer;
       }
 
-      &.season-placeholder,
-      &.year-placeholder {
+      &.season-placeholder {
         margin-left: 7px;
         margin-top: 5px;
         margin-bottom: 5px;
-        width: 70%;
+        width: 100%;
       }
 
-      &.season-arrow,
-      &.year-arrow {
+      &.season-arrow {
         width: 6.24px;
         height: 6.24px;
         border-left: 6.24px solid transparent;
@@ -351,18 +348,6 @@ export default defineComponent({
         margin-right: 8.7px;
         margin-left: 5px;
       }
-
-      &.year-arrow {
-        margin-right: 9.17px;
-        margin-left: 17px;
-      }
-
-      &.year-placeholder {
-        width: 62px;
-        height: 16px;
-        left: 581px;
-        top: 188px;
-      }
     }
   }
 
@@ -372,17 +357,7 @@ export default defineComponent({
     background: #ffffff;
     box-shadow: -4px 4px 10px rgba(0, 0, 0, 0.25);
     border-radius: 0px 0px 7px 7px;
-
-    &.year-content {
-      z-index: 1;
-      width: 100%;
-
-      background: #ffffff;
-      box-shadow: -4px 4px 10px rgba(0, 0, 0, 0.25);
-
-      overflow-y: scroll;
-      overflow-x: hidden;
-    }
+    
     &-season {
       padding-left: 0px;
       padding-right: 10px;
