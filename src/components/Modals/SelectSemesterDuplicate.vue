@@ -317,7 +317,7 @@ export default defineComponent({
       background-color: white;
       color: #757575;
 
-      &.season-wrapper{
+      &.season-wrapper {
         display: flex;
         flex-direction: row;
         width: 100%;
@@ -357,7 +357,7 @@ export default defineComponent({
     background: #ffffff;
     box-shadow: -4px 4px 10px rgba(0, 0, 0, 0.25);
     border-radius: 0px 0px 7px 7px;
-    
+
     &-season {
       padding-left: 0px;
       padding-right: 10px;
