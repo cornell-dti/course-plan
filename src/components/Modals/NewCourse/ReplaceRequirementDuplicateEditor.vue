@@ -3,7 +3,7 @@
     <div>
       <div class="newCourse-title">Selected Semester</div>
       <div class="newCourse-semester-edit">
-        <select-semester
+        <select-semester-duplicate
           :season="season"
           :year="year"
           :isCourseModelSelectingSemester="true"
@@ -17,12 +17,12 @@
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
 import { GTagEvent } from '@/gtag';
-import SelectSemester from '@/components/Modals/SelectSemester.vue';
+import SelectSemesterDuplicate from '@/components/Modals/SelectSemesterDuplicate.vue';
 
 export type RequirementWithID = { readonly id: string; readonly name: string };
 
 export default defineComponent({
-  components: { SelectSemester },
+  components: { SelectSemesterDuplicate },
   data() {
     return {
       courseSelectorKey: 0,
@@ -100,6 +100,11 @@ export default defineComponent({
 <style scoped lang="scss">
 @import '@/assets/scss/_variables.scss';
 .newCourse {
+  &-semester {
+    &-edit {
+      width: 83%;
+    }
+  }
   &-name {
     position: relative;
     border-radius: 11px;
