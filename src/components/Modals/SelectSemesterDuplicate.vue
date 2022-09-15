@@ -15,7 +15,7 @@
               class="selectSemester-dropdown-placeholder season-placeholder"
               :style="{ color: displayOptions.semester.placeholderColor }"
             >
-              Select Semester
+              {{ semesterPlaceholder }}
             </div>
             <div
               class="selectSemester-dropdown-placeholder season-arrow"
@@ -64,10 +64,6 @@ type Data = {
 
 export default defineComponent({
   props: {
-    currentSemesters: {
-      type: Array as PropType<readonly FirestoreSemester[] | null>,
-      default: null,
-    },
     isEdit: { type: Boolean, default: false },
     isCourseModelSelectingSemester: { type: Boolean, default: false },
     semestersTaken: { type: Array as PropType<readonly FirestoreSemester[]>, required: true },
@@ -93,7 +89,7 @@ export default defineComponent({
   },
   computed: {
     semesterPlaceholder(): string {
-      return this.semesterText || 'Select';
+      return this.semesterText || 'Select Semester';
     },
     semestersTakenList(): string[] {
       const semestersHash = new Map<string, number>();
