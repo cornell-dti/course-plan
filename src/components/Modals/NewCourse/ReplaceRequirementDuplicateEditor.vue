@@ -34,7 +34,7 @@ export default defineComponent({
   props: {
     editMode: { type: Boolean, required: true },
     selectedRequirementID: { type: String, required: true },
-    semestersTaken: {type: Array as PropType<readonly FirestoreSemester[]>, required: true},
+    semestersTaken: { type: Array as PropType<readonly FirestoreSemester[]>, required: true },
     automaticallyFulfilledRequirements: {
       type: Array as PropType<readonly string[]>,
       required: true,

@@ -5,10 +5,7 @@
         <label v-if="!isCourseModelSelectingSemester" class="selectSemester-label" for="type"
           >Type</label
         >
-        <div
-          class="position-relative"
-          v-click-outside="closeSeasonDropdownIfOpen"
-        >
+        <div class="position-relative" v-click-outside="closeSeasonDropdownIfOpen">
           <div
             class="selectSemester-dropdown-placeholder season-wrapper"
             @click="showHideSeasonContent"
@@ -80,7 +77,7 @@ export default defineComponent({
     year: { type: Number, default: 0 },
     season: { type: String as PropType<FirestoreSemesterSeason>, default: '' },
     isCourseModelSelectingSemester: { type: Boolean, default: false },
-    semestersTaken: { type: Array as PropType<readonly FirestoreSemester[]>, required: true}
+    semestersTaken: { type: Array as PropType<readonly FirestoreSemester[]>, required: true },
   },
   emits: {
     updateSemProps: (season: string, year: number): boolean =>
@@ -149,21 +146,21 @@ export default defineComponent({
       const semestersHash = new Map<string, number>();
       const semestersTakenList: string[] = [];
       for (const semester of this.semestersTaken) {
-        const {year, season} = semester;
+        const { year, season } = semester;
         const semesterString = `${season} ${year}`;
         const val = semestersHash.get(semesterString);
         let num = 0;
-        if (val === undefined){
+        if (val === undefined) {
           semestersHash.set(semesterString, 1);
         } else {
           num = val + 1;
           semestersHash.set(semesterString, num);
         }
-        const fullSemesterString = num === 0? semesterString : `${semesterString} (#${num})`;
+        const fullSemesterString = num === 0 ? semesterString : `${semesterString} (#${num})`;
         semestersTakenList.push(fullSemesterString);
       }
       return semestersTakenList;
-    }
+    },
   },
   directives: {
     'click-outside': clickOutside,

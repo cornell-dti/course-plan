@@ -126,7 +126,7 @@ export default defineComponent({
         for (const course of semester.courses) {
           if ('crseId' in course) {
             if (this.selectedCourse?.crseId === course.crseId) {
-              this.semestersTaken.push(semester)
+              this.semestersTaken.push(semester);
             }
           }
         }
