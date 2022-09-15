@@ -5,33 +5,32 @@
         <label v-if="!isCourseModelSelectingSemester" class="selectSemester-label" for="type"
           >Type</label
         >
-        <div class="position-relative" v-click-outside="closeSeasonDropdownIfOpen">
+        <div class="position-relative" v-click-outside="closeSemesterDropdownIfOpen">
           <div
             class="selectSemester-dropdown-placeholder season-wrapper"
-            @click="showHideSeasonContent"
+            @click="showHideSemesterContent"
             data-cyId="newSemester-seasonWrapper"
           >
             <div
               class="selectSemester-dropdown-placeholder season-placeholder"
-              :style="{ color: displayOptions.season.placeholderColor }"
+              :style="{ color: displayOptions.semester.placeholderColor }"
             >
               Select Semester
             </div>
             <div
               class="selectSemester-dropdown-placeholder season-arrow"
-              :style="{ borderTopColor: displayOptions.season.arrowColor }"
+              :style="{ borderTopColor: displayOptions.semester.arrowColor }"
             ></div>
           </div>
           <div
             class="selectSemester-dropdown-content season-content position-absolute w-100"
-            v-if="displayOptions.season.shown"
+            v-if="displayOptions.semester.shown"
           >
             <div
-              :class="{ warning: isDuplicate }"
               v-for="s in semestersTakenList"
-              :key="s[1]"
+              :key="s"
               class="selectSemester-dropdown-content-item"
-              @click="selectSeason(s[1])"
+              @click="selectSemester(s)"
               data-cyId="newSemester-seasonItem"
             >
               {{ s }}
@@ -45,8 +44,7 @@
 
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
-import { getCurrentSeason, getCurrentYear, clickOutside, entranceYearRange } from '@/utilities';
-import store from '@/store';
+import { clickOutside } from '@/utilities';
 import { inactiveGray, yuxuanBlue, darkPlaceholderGray } from '@/assets/constants/scss-variables';
 
 type DisplayOption = {
@@ -58,12 +56,9 @@ type DisplayOption = {
 };
 
 type Data = {
-  readonly years: readonly number[];
-  seasonText: string;
-  yearText: number;
+  semesterText: string;
   readonly displayOptions: {
-    readonly year: DisplayOption;
-    readonly season: DisplayOption;
+    readonly semester: DisplayOption;
   };
 };
 
@@ -74,41 +69,19 @@ export default defineComponent({
       default: null,
     },
     isEdit: { type: Boolean, default: false },
-    year: { type: Number, default: 0 },
-    season: { type: String as PropType<FirestoreSemesterSeason>, default: '' },
     isCourseModelSelectingSemester: { type: Boolean, default: false },
     semestersTaken: { type: Array as PropType<readonly FirestoreSemester[]>, required: true },
   },
   emits: {
-    updateSemProps: (season: string, year: number): boolean =>
-      typeof season === 'string' && typeof year === 'number',
+    updateSemProps: (season: string): boolean => typeof season === 'string',
     duplicateSemester: (duplicate: boolean): boolean => typeof duplicate === 'boolean',
   },
   data(): Data {
-    // years
-    const currentYear = getCurrentYear();
-    const years = [];
-    let startYear = currentYear - entranceYearRange;
-    while (startYear <= currentYear + entranceYearRange) {
-      years.push(startYear);
-      startYear += 1;
-    }
-
     const placeholderColor = darkPlaceholderGray;
-
     return {
-      years,
-      seasonText: '',
-      yearText: 0,
+      semesterText: '',
       displayOptions: {
-        season: {
-          shown: false,
-          stopClose: false,
-          boxBorder: '',
-          arrowColor: '',
-          placeholderColor,
-        },
-        year: {
+        semester: {
           shown: false,
           stopClose: false,
           boxBorder: '',
@@ -119,29 +92,9 @@ export default defineComponent({
     };
   },
   computed: {
-    seasonPlaceholder(): string {
-      // set current season to winter in january, spring from february to may, summer from june to august, and fall from september to december
-      let defaultSeason: string = getCurrentSeason();
-      if (this.isCourseModelSelectingSemester) {
-        defaultSeason = 'Select';
-      }
-      return this.seasonText || this.season || defaultSeason;
+    semesterPlaceholder(): string {
+      return this.semesterText || 'Select';
     },
-    yearPlaceholder(): string {
-      let defaultYear = String(getCurrentYear());
-      if (this.isCourseModelSelectingSemester) {
-        defaultYear = 'Select';
-      }
-      return String(this.yearText || this.year || defaultYear);
-    },
-    // scroll the bottom of the year dropdown to 4 years after the user's entrance year, or the current year if undefined
-    scrollTopToElement(): number {
-      const topYear = store.state.onboardingData.entranceYear
-        ? store.state.onboardingData.entranceYear
-        : '2017';
-      return Number(topYear);
-    },
-
     semestersTakenList(): string[] {
       const semestersHash = new Map<string, number>();
       const semestersTakenList: string[] = [];
@@ -166,11 +119,11 @@ export default defineComponent({
     'click-outside': clickOutside,
   },
   mounted(): void {
-    this.$emit('updateSemProps', this.seasonPlaceholder, Number(this.yearPlaceholder));
+    this.$emit('updateSemProps', this.semesterPlaceholder);
   },
   methods: {
-    showHideContent(type: 'season' | 'year') {
-      const displayOptions = this.displayOptions[type];
+    showHideSemesterContent() {
+      const displayOptions = this.displayOptions.semester;
       const contentShown = displayOptions.shown;
       displayOptions.shown = !contentShown;
 
@@ -182,24 +135,9 @@ export default defineComponent({
         displayOptions.boxBorder = yuxuanBlue;
         displayOptions.arrowColor = yuxuanBlue;
       }
-
-      // scroll to the middle of the year div after visible (on the next tick)
-      if (!contentShown && type === 'year') {
-        this.$nextTick(() => {
-          (this.$refs[`year-ref-${this.scrollTopToElement}`] as Element).scrollIntoView({
-            behavior: 'auto',
-          });
-        });
-      }
     },
-    showHideSeasonContent() {
-      this.showHideContent('season');
-    },
-    showHideYearContent() {
-      this.showHideContent('year');
-    },
-    closeDropdownIfOpen(type: 'season' | 'year') {
-      const displayOptions = this.displayOptions[type];
+    closeSemesterDropdownIfOpen() {
+      const displayOptions = this.displayOptions.semester;
       if (displayOptions.stopClose) {
         displayOptions.stopClose = false;
       } else if (displayOptions.shown) {
@@ -208,54 +146,14 @@ export default defineComponent({
         displayOptions.arrowColor = inactiveGray;
       }
     },
-    closeSeasonDropdownIfOpen() {
-      this.closeDropdownIfOpen('season');
-    },
-    closeYearDropdownIfOpen() {
-      this.closeDropdownIfOpen('year');
-    },
-    selectOption(type: 'season' | 'year'): void {
-      const displayOptions = this.displayOptions[type];
+    selectSemester(semester: string) {
+      this.semesterText = semester;
+      const displayOptions = this.displayOptions.semester;
       displayOptions.shown = false;
       displayOptions.boxBorder = '#C4C4C4';
       displayOptions.arrowColor = '#C4C4C4';
       displayOptions.placeholderColor = '#757575';
-      this.$emit(
-        'updateSemProps',
-        this.seasonText || this.seasonPlaceholder,
-        this.yearText || Number(this.yearPlaceholder)
-      );
-    },
-    selectSeason(season: string) {
-      this.seasonText = season;
-      this.selectOption('season');
-    },
-    selectYear(year: number) {
-      this.yearText = year;
-      this.selectOption('year');
-    },
-    isDuplicate(): boolean {
-      let isDup = false;
-      const semesters = this.currentSemesters;
-      if (semesters != null) {
-        semesters.forEach(semester => {
-          if (
-            semester.year === Number(this.yearPlaceholder) &&
-            semester.season === this.seasonPlaceholder
-          ) {
-            if (
-              !this.isEdit ||
-              (this.isEdit &&
-                (Number(this.yearPlaceholder) !== this.year ||
-                  this.seasonPlaceholder !== this.season))
-            ) {
-              isDup = true;
-            }
-          }
-        });
-      }
-      this.$emit('duplicateSemester', isDup);
-      return isDup;
+      this.$emit('updateSemProps', this.semesterText || this.semesterPlaceholder);
     },
   },
 });

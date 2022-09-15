@@ -121,7 +121,7 @@ export default defineComponent({
     },
   },
   methods: {
-    numTimesInSchedule() {
+    getSemestersTaken() {
       for (const semester of store.state.semesters) {
         for (const course of semester.courses) {
           if ('crseId' in course) {
@@ -134,7 +134,7 @@ export default defineComponent({
     },
     handleAdd() {
       this.selecting = false;
-      this.numTimesInSchedule();
+      this.getSemestersTaken();
       const count = this.semestersTaken.length;
       if (count === 0) {
         this.needToAdd = true;
@@ -220,6 +220,7 @@ export default defineComponent({
         } else {
           this.selectedCourse = null;
           this.courseSelectorKey += 1;
+          this.semestersTaken = [];
           this.selecting = true;
         }
       } else {

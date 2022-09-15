@@ -5,7 +5,6 @@
       <div class="newCourse-semester-edit">
         <select-semester-duplicate
           :season="season"
-          :year="year"
           :isCourseModelSelectingSemester="true"
           :semestersTaken="semestersTaken"
           @updateSemProps="updateSemProps"
@@ -28,7 +27,6 @@ export default defineComponent({
     return {
       courseSelectorKey: 0,
       season: '' as FirestoreSemesterSeason,
-      year: 0,
     };
   },
   props: {
@@ -91,9 +89,8 @@ export default defineComponent({
       GTagEvent(this.$gtag, 'add-modal-edit-requirements');
       this.$emit('edit-mode');
     },
-    updateSemProps(season: string, year: number) {
+    updateSemProps(season: string) {
       this.season = season as FirestoreSemesterSeason;
-      this.year = year;
     },
   },
 });
