@@ -1,6 +1,7 @@
 <template>
   <div>
     <div>
+      <!-- Add new course to a semester -->
       <div class="newCourse-title">Add this class to the following semester</div>
       <div class="newCourse-semester-edit">
         <select-semester

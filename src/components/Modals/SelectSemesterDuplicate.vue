@@ -11,6 +11,7 @@
             @click="showHideSemesterContent"
             data-cyId="newSemester-seasonWrapper"
           >
+            <!-- text to display in dropdown -->
             <div
               class="selectSemester-dropdown-placeholder season-placeholder"
               :style="{ color: displayOptions.semester.placeholderColor }"
@@ -26,6 +27,7 @@
             class="selectSemester-dropdown-content season-content position-absolute w-100"
             v-if="displayOptions.semester.shown"
           >
+            <!-- show the list of semesters course shows up in -->
             <div
               v-for="s in semestersTakenList"
               :key="s"
@@ -88,6 +90,7 @@ export default defineComponent({
     };
   },
   computed: {
+    // shows the semester taken or 'Select Semester'
     semesterPlaceholder(): string {
       return this.semesterText || 'Select Semester';
     },

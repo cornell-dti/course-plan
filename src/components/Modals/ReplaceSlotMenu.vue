@@ -7,6 +7,7 @@
     :hasCustomPosition="true"
     :position="position"
   >
+    <!-- Replace slot menu for unselected course -->
     <button class="slotMenu-section full-opacity-on-hover" @click="openReplaceSlotModal">
       <div class="slotMenu-row">
         <div class="slotMenu-left">

@@ -16,6 +16,7 @@
       {{ selectedCourse.subject }} {{ selectedCourse.catalogNbr }}:
       {{ selectedCourse.titleLong }}
     </div>
+    <!-- show search bar if still selecting -->
     <div v-if="selecting">
       <course-selector
         v-if="selectedCourse === null"
@@ -38,6 +39,7 @@
         selecting.
       </div>
     </div>
+    <!-- show add modal -->
     <div v-else-if="needToAdd && selectedCourse != null">
       <replace-requirement-editor
         :deleteSemYear="0"
@@ -51,6 +53,7 @@
         @edit-mode="toggleEditMode"
       />
     </div>
+    <!-- show duplicate modal -->
     <div v-else-if="hasDuplicates && selectedCourse != null">
       <replace-requirement-duplicate-editor
         :deleteSemYear="0"
@@ -121,6 +124,7 @@ export default defineComponent({
     },
   },
   methods: {
+    // gets the semesters that the selected course exists in
     getSemestersTaken() {
       for (const semester of store.state.semesters) {
         for (const course of semester.courses) {
@@ -132,14 +136,18 @@ export default defineComponent({
         }
       }
     },
+    // handles the add button
     handleAdd() {
       this.selecting = false;
       this.getSemestersTaken();
       const count = this.semestersTaken.length;
+      // opens the add modal if the course does not exist
       if (count === 0) {
         this.needToAdd = true;
+        // opens the duplicates modal if the course exists 2+ times
       } else if (count > 1) {
         this.hasDuplicates = true;
+        // closes the modal if the course exists exactly once
       } else {
         this.closeCurrentModal();
       }

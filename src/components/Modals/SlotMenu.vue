@@ -8,6 +8,7 @@
     :position="position"
   >
     <button class="slotMenu-section full-opacity-on-hover" @click="openReplaceSlotModal">
+      <!-- Replace slot menu item for selected course -->
       <div class="slotMenu-row">
         <div class="slotMenu-left">
           <img
@@ -20,6 +21,7 @@
       </div>
     </button>
     <button class="slotMenu-section full-opacity-on-hover" @click="openDeleteSlotModal">
+      <!-- Remove slot menu item for selected course -->
       <div class="slotMenu-row">
         <div class="slotMenu-left">
           <img
