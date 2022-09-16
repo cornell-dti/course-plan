@@ -84,6 +84,11 @@ import {
   getRelatedUnfulfilledRequirements,
 } from '@/requirements/requirement-frontend-utils';
 
+/**
+ * Modal to replace course requirement, opens the modal to add course if none
+ * of that course exists, else opens the modal to resolve duplicates of the
+ * course if it exists, else closes the modal if one of that course exists
+ */
 export default defineComponent({
   components: {
     CourseSelector,

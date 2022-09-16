@@ -19,6 +19,9 @@ import SelectSemesterDuplicate from '@/components/Modals/SelectSemesterDuplicate
 
 export type RequirementWithID = { readonly id: string; readonly name: string };
 
+/**
+ * Modal to resolve duplicates of the same course
+ */
 export default defineComponent({
   components: { SelectSemesterDuplicate },
   data() {

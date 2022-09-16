@@ -63,7 +63,10 @@ type Data = {
     readonly semester: DisplayOption;
   };
 };
-
+/**
+ * Dropdown bar to resolve duplicates of the same course with the list of
+ * semesters that this course exists in
+ */
 export default defineComponent({
   props: {
     isEdit: { type: Boolean, default: false },

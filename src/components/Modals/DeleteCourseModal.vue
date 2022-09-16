@@ -26,6 +26,9 @@
 import { defineComponent } from 'vue';
 import TeleportModal from '@/components/Modals/TeleportModal.vue';
 
+/**
+ * Opens the modal to remove a course
+ */
 export default defineComponent({
   components: { TeleportModal },
   props: {

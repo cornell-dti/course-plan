@@ -40,6 +40,10 @@
 import { PropType, defineComponent } from 'vue';
 import TeleportModal from '@/components/Modals/TeleportModal.vue';
 
+/**
+ * Replace and remove slot menu items on the slot menu that opens from selecting
+ * the gear icon for a complete subrequirement
+ */
 export default defineComponent({
   components: { TeleportModal },
   props: {

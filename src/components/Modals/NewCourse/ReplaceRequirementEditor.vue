@@ -22,6 +22,9 @@ import SelectSemester from '@/components/Modals/SelectSemester.vue';
 
 export type RequirementWithID = { readonly id: string; readonly name: string };
 
+/**
+ * Opens the modal to add a course to a requirement
+ */
 export default defineComponent({
   components: { SelectSemester },
   data() {
