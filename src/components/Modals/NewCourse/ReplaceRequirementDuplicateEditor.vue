@@ -101,63 +101,11 @@ export default defineComponent({
       width: 83%;
     }
   }
-  &-name {
-    position: relative;
-    border-radius: 11px;
-    font-size: 14px;
-    line-height: 14px;
-    color: $darkGray;
-  }
   &-title {
     font-size: 14px;
     line-height: 17px;
     color: $lightPlaceholderGray;
     margin-bottom: 6px;
-  }
-  &-requirements {
-    font-style: normal;
-    font-weight: 600;
-    font-size: 14px;
-    line-height: 14px;
-    color: $emGreen;
-    &-container {
-      display: flex;
-      flex-direction: row;
-      margin-bottom: 10px;
-    }
-    &-edit {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      flex-wrap: wrap;
-    }
-  }
-  &-link {
-    padding: 0;
-    background-color: $white;
-    border: none;
-    font-style: normal;
-    font-weight: 600;
-    font-size: 14px;
-    line-height: 14px;
-    color: $yuxuanBlue;
-    cursor: pointer;
-    &:hover {
-      text-decoration-line: underline;
-      color: $yuxuanBlue;
-    }
-  }
-}
-.warning {
-  color: $warning;
-  font-size: 14px;
-  line-height: 17px;
-  margin-bottom: 8px;
-  &-icon {
-    float: left;
-    margin: 0.125rem 0.25rem 0 0;
-    width: 14px;
-    height: 14px;
   }
 }
 </style>

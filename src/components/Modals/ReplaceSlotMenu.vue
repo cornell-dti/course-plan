@@ -93,9 +93,6 @@ export default defineComponent({
     display: flex;
     flex-direction: row;
   }
-  &-remove {
-    color: black;
-  }
   &-replace {
     color: black;
   }

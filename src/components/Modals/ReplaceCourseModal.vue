@@ -267,20 +267,6 @@ export default defineComponent({
       color: $darkPlaceholderGray;
     }
   }
-  &-name {
-    position: relative;
-    border-radius: 11px;
-    font-weight: 600;
-    font-size: 14px;
-    line-height: 14px;
-    color: $darkGray;
-  }
-  &-title {
-    font-size: 14px;
-    line-height: 17px;
-    color: $lightPlaceholderGray;
-    margin-bottom: 6px;
-  }
 }
 
 .selected-course {
