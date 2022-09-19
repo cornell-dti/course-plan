@@ -35,20 +35,20 @@ const args = parseArgs(process.argv, {
 });
 
 if (args.from && args.to && 'execute' in args) {
-  const [FROM_ENV, FROM] = args.from.split('/');
-  const [TO_ENV, TO] = args.to.split('/');
+  const [sourceEnv, sourceDoc] = args.from.split('/');
+  const [targetEnv, targetDoc] = args.to.split('/');
   if (
     (args.execute === true || args.execute === false) &&
-    (FROM_ENV === 'prod' || FROM_ENV === 'dev') &&
-    (TO_ENV === 'prod' || TO_ENV === 'dev') &&
-    FROM &&
-    TO
+    (sourceEnv === 'prod' || sourceEnv === 'dev') &&
+    (targetEnv === 'prod' || targetEnv === 'dev') &&
+    sourceDoc &&
+    targetDoc
   ) {
     execute({
-      fromUser: FROM,
-      fromEnv: FROM_ENV,
-      toUser: TO,
-      toEnv: TO_ENV,
+      fromUser: sourceDoc,
+      fromEnv: sourceEnv,
+      toUser: targetDoc,
+      toEnv: targetEnv,
       execute: args.execute,
     }).then(copied => {
       if (args.execute) console.log(`Copied: [${copied}] from ${args.from} to ${args.to}`);
