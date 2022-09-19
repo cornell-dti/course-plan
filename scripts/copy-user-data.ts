@@ -4,17 +4,19 @@
  * Script to copy data from one user on production or dev to another user on dev.
  * Requires service accounts for database.
  * serviceAccount.json (if using dev) and serviceAccountProd.json (if using prod) must be at the root.
+ * The output will be the data written or to be written to the target.
  *
- * From root, run: `npm run ts-node -- scripts/copy-user-data.ts -f <FROM_ENV>/<FROM_USER> -t <TO_ENV>/<TO_USER> -e <EXECUTE>`
+ * From root, run: `npm run ts-node -- scripts/copy-user-data.ts -f <FROM_ENV>/<FROM_USER> -t <TO_ENV>/<TO_USER> -o <OUTPUT>`
+ * To execute the script, include `--execute` at the end of the command
  * FROM_ENV and TO_ENV should be either "dev" or "prod"
- * EXECUTE is an optional argument that is false by default. It can be only `true` or `false`.
- *    EXECUTE=false will preview the changes, EXECUTE=true will do the changes
- * EXAMPLE: `npm run ts-node -- scripts/copy-user-data.ts -f prod/noschiff.dev@gmail.com -t dev/nps39@cornell.edu -e true`
+ * OUTPUT is an optional argument to specify the JSON file to write the log to. If left empty, the script will write to the console.
+ * EXAMPLE: `npm run ts-node -- scripts/copy-user-data.ts -f prod/noschiff.dev@gmail.com -t dev/nps39@cornell.edu -o "log.json" --execute`
  */
 
 import { cert, initializeApp } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
 import parseArgs from 'minimist';
+import { writeFileSync } from 'fs';
 
 const collections = [
   'user-name',
@@ -28,13 +30,13 @@ const collections = [
 ];
 
 const args = parseArgs(process.argv, {
-  string: ['f', 't'],
-  boolean: ['e'],
-  alias: { from: 'f', to: 't', execute: 'e' },
-  default: { e: false },
+  string: ['f', 't', 'o'],
+  boolean: true,
+  alias: { from: 'f', to: 't', output: 'o' },
+  default: { e: false, execute: false, output: '' },
 });
 
-if (args.from && args.to && 'execute' in args) {
+if (args.from && args.to && 'execute' in args && 'output' in args) {
   const [sourceEnv, sourceDoc] = args.from.split('/');
   const [targetEnv, targetDoc] = args.to.split('/');
   if (
@@ -50,9 +52,9 @@ if (args.from && args.to && 'execute' in args) {
       toUser: targetDoc,
       toEnv: targetEnv,
       execute: args.execute,
-    }).then(copied => {
-      if (args.execute) console.log(`Copied: [${copied}] from ${args.from} to ${args.to}`);
-      else console.log(copied);
+      output: args.output,
+    }).then(() => {
+      console.log('Done');
     });
   } else {
     throw new Error('Refer to the documentation to correctly run this script.');
@@ -68,8 +70,9 @@ async function execute(
     fromEnv: 'prod' | 'dev';
     toEnv: 'prod' | 'dev';
     execute: boolean;
+    output: string;
   }>
-): Promise<string[]> {
+): Promise<void> {
   let fromDb;
   let toDb;
   if (options.fromEnv === 'dev' || options.toEnv === 'dev') {
@@ -92,7 +95,7 @@ async function execute(
     if (options.toEnv === 'prod') toDb = prodDb;
   }
 
-  const copied = [];
+  const log: { source: { [key: string]: unknown } } = { source: {} };
   if (fromDb && toDb) {
     // this should always be true
     for (const collection of collections) {
@@ -100,18 +103,21 @@ async function execute(
       const dataToCopy = (await fromDoc.get()).data();
       if (dataToCopy) {
         const toDoc = toDb.collection(collection).doc(options.toUser);
+        let doLog = true;
         if (options.execute) {
           const result = await toDoc.set(dataToCopy);
-          if (result) copied.push(collection);
-        } else {
-          copied.push(
-            `PREVIEW: copy from ${options.fromEnv}/${fromDoc.path} to ${options.toEnv}/${
-              toDoc.path
-            }: ${JSON.stringify(dataToCopy)}`
-          );
+          if (!result) doLog = false;
+        }
+        if (doLog) {
+          log.source[`${options.fromEnv}/${fromDoc.path}`] = dataToCopy;
         }
       }
     }
+
+    if (!options.output) {
+      console.log(JSON.stringify(log));
+    } else {
+      writeFileSync(options.output, JSON.stringify(log));
+    }
   }
-  return copied;
 }
