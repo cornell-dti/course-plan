@@ -3,6 +3,7 @@ import { examSubjects } from '../requirement-exam-utils';
 const examIds = [
   ...examSubjects.AP.map(subject => `AP ${subject}`),
   ...examSubjects.IB.map(subject => `IB ${subject}`),
+  // ...examSubjects.CASE.map(subject => `CASE ${subject}`),
 ].sort((a, b) => a.localeCompare(b));
 
 it('ID of the exams are unchanged.', () => {

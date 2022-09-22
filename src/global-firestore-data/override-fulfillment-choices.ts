@@ -1,3 +1,5 @@
+import { doc, setDoc } from 'firebase/firestore';
+
 import { overriddenFulfillmentChoicesCollection } from '../firebase-frontend-config';
 import store from '../store';
 
@@ -6,9 +8,10 @@ export const updateRequirementChoices = (
     oldChoices: FirestoreOverriddenFulfillmentChoices
   ) => FirestoreOverriddenFulfillmentChoices
 ): void => {
-  overriddenFulfillmentChoicesCollection
-    .doc(store.state.currentFirebaseUser.email)
-    .set(updater(store.state.overriddenFulfillmentChoices));
+  setDoc(
+    doc(overriddenFulfillmentChoicesCollection, store.state.currentFirebaseUser.email),
+    updater(store.state.overriddenFulfillmentChoices)
+  );
 };
 
 export const updateRequirementChoice = (

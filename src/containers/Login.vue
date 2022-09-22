@@ -145,12 +145,11 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import firebase from 'firebase/app';
+import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 
 import CustomFooter from '@/components/Footer.vue';
 
 import { GTagLoginEvent } from '@/gtag';
-import * as fb from '@/firebase-frontend-config';
 import store from '@/store';
 import { checkNotNull } from '@/utilities';
 
@@ -181,9 +180,9 @@ export default defineComponent({
   methods: {
     socialLogin() {
       this.performingRequest = true;
-      const provider = new firebase.auth.GoogleAuthProvider();
-      fb.auth
-        .signInWithPopup(provider)
+      const provider = new GoogleAuthProvider();
+      const auth = getAuth();
+      signInWithPopup(auth, provider)
         .then(user => {
           if (user == null || user.user == null) {
             return;

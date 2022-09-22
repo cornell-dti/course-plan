@@ -13,11 +13,11 @@
           :fillColor="isCompleted ? '#979797CC' : '#979797'"
           :isSubReq="true"
         />
-      </div>
-      <div class="requirement-name-container">
-        <p class="requirement-name-text">
-          <span>{{ requirementFulfillment.requirement.name }}</span>
-        </p>
+        <div class="requirement-name-container">
+          <p class="requirement-name-text">
+            <span>{{ requirementFulfillment.requirement.name }}</span>
+          </p>
+        </div>
       </div>
     </div>
     <div class="col requirement-progress text-right">
