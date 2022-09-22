@@ -1,6 +1,6 @@
 <template>
   <teleport-modal
-    title="Warning: Possibly Unsaved Changes"
+    title="Warning: Unsaved Changes"
     leftButtonText="Go Back"
     rightButtonText="Continue"
     content-class="content-clear"
@@ -9,7 +9,7 @@
     @right-button-clicked="confirmLeaveProfilePage"
   >
     <span
-      >There may be unsaved changes in your profile! Please make sure your changes are saved before
+      >There are unsaved changes in your profile! Please make sure your changes are saved before
       leaving!</span
     >
   </teleport-modal>
