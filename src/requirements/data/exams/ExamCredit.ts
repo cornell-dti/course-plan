@@ -1,19 +1,37 @@
 import { FWS_COURSE_ID } from '../constants';
 
 /**
- * Describes how exams can be converted to a representation understood by CoursePlan.
- * If the user takes an exam, our algorithm determines the best fulfillment option for the user's score.
- * There can be multiple exam fulfillments (for different minimum scores) associated with a single exam.
+ * Describes how AP/IB/CASE exams can be converted to a representation understood by CoursePlan.
  */
-export type ExamFulfillment = {
+export type ExamFulfillmentBase = {
   readonly courseId: number;
   readonly courseEquivalents?: Record<string, number[]>;
-  readonly minimumScore: number;
   readonly credits: number;
   readonly majorsExcluded?: string[];
 };
-export type ExamFulfillments = Record<string, ExamFulfillment[]>;
-export type ExamData = Record<'AP' | 'IB', ExamFulfillments>;
+
+/**
+ * If the user takes an AP/IB exam, our algorithm determines the best fulfillment option for the user's score.
+ * There can be multiple exam fulfillments (for different minimum scores) associated with a single exam.
+ */
+export type ExamFulfillmentWithMinimumScore = ExamFulfillmentBase & {
+  readonly minimumScore: number;
+};
+
+/**
+ * If the user takes a CASE exam, it's possible that there there is Pass or Q/Q+/Q++ scoring.
+ */
+export type ExamFulfillmentWithCustomScoring = ExamFulfillmentBase & {
+  readonly score: string;
+};
+
+export type ExamFulfillments<T extends ExamFulfillmentBase> = Record<string, T[]>;
+
+export type ExamData = {
+  AP: ExamFulfillments<ExamFulfillmentWithMinimumScore>;
+  IB: ExamFulfillments<ExamFulfillmentWithMinimumScore>;
+  CASE: ExamFulfillments<ExamFulfillmentWithCustomScoring>;
+};
 
 // If the user's college is not in the keys of courseEquivalents, their college is generalized to OTHER_COLLEGES
 export const OTHER_COLLEGES = 'OTHER_COLLEGES';
@@ -270,7 +288,7 @@ const examData: ExamData = {
     ],
     Chemistry: [
       {
-        courseId: 202,
+        courseId: 201,
         courseEquivalents: {
           [OTHER_COLLEGES]: [351265], // CHEM 2070
           EN: [359187], // CHEM 2090
@@ -281,7 +299,7 @@ const examData: ExamData = {
     ],
     'Computer Science': [
       {
-        courseId: 203,
+        courseId: 202,
         courseEquivalents: {
           [OTHER_COLLEGES]: [358526], // CS 1110
         },
@@ -291,7 +309,7 @@ const examData: ExamData = {
     ],
     Economics: [
       {
-        courseId: 204,
+        courseId: 203,
         courseEquivalents: {
           [OTHER_COLLEGES]: [350025, 350038], // ECON 1110, ECON 1120
         },
@@ -301,7 +319,7 @@ const examData: ExamData = {
     ],
     'English Literature A': [
       {
-        courseId: 205,
+        courseId: 204,
         courseEquivalents: {
           [OTHER_COLLEGES]: [FWS_COURSE_ID], // FWS
         },
@@ -311,7 +329,7 @@ const examData: ExamData = {
     ],
     'English Language and Literature': [
       {
-        courseId: 206,
+        courseId: 205,
         courseEquivalents: {
           [OTHER_COLLEGES]: [FWS_COURSE_ID], // FWS
         },
@@ -321,7 +339,7 @@ const examData: ExamData = {
     ],
     Mathematics: [
       {
-        courseId: 207,
+        courseId: 206,
         courseEquivalents: {
           [OTHER_COLLEGES]: [352111, 352116], // MATH 1106, MATH 1110
         },
@@ -331,7 +349,7 @@ const examData: ExamData = {
     ],
     'Physical Science': [
       {
-        courseId: 208,
+        courseId: 207,
         courseEquivalents: {
           [OTHER_COLLEGES]: [351265, 355142], // CHEM 2070, PHYS 1101
         },
@@ -341,13 +359,61 @@ const examData: ExamData = {
     ],
     Physics: [
       {
-        courseId: 209,
+        courseId: 208,
         courseEquivalents: {
           [OTHER_COLLEGES]: [355142, 355197], // PHYS 1101, PHYS 2207
           EN: [355146], // PHYS 1112
         },
         minimumScore: 6,
         credits: 4,
+      },
+    ],
+  },
+  CASE: {
+    French: [
+      {
+        courseId: 301,
+        courseEquivalents: {
+          [OTHER_COLLEGES]: [370328, 355146],
+        },
+        credits: 3,
+        score: 'Q',
+      },
+      {
+        courseId: 302,
+        courseEquivalents: {
+          [OTHER_COLLEGES]: [],
+        },
+        credits: 4,
+        score: 'Q+',
+      },
+      {
+        courseId: 303,
+        courseEquivalents: {
+          [OTHER_COLLEGES]: [],
+        },
+        credits: 4,
+        score: 'Q++',
+      },
+    ],
+    'MATH 1910': [
+      {
+        courseId: 304,
+        courseEquivalents: {
+          EN: [352255],
+        },
+        credits: 4,
+        score: 'Pass',
+      },
+    ],
+    'PHYS 1112': [
+      {
+        courseId: 305,
+        courseEquivalents: {
+          EN: [355146],
+        },
+        credits: 4,
+        score: 'Pass',
       },
     ],
   },
