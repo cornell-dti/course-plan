@@ -97,19 +97,21 @@ export default defineComponent({
     semesterPlaceholder(): string {
       return this.semesterText || 'Select Semester';
     },
+    // creates a map to keep track of how many times a particular class was taken
+    // in order to display the correct number for the dropdown menu (eg. Spring 2023 (#2))
+    // loops over the semesters taken to create each of the dropdown items
     semestersTakenList(): string[] {
-      const semestersHash = new Map<string, number>();
+      const semestersMap = new Map<string, number>();
       const semestersTakenList: string[] = [];
-      for (const semester of this.semestersTaken) {
-        const { year, season } = semester;
+      for (const { year, season } of this.semestersTaken) {
         const semesterString = `${season} ${year}`;
-        const val = semestersHash.get(semesterString);
+        const timesTaken = semestersMap.get(semesterString);
         let num = 0;
-        if (val === undefined) {
-          semestersHash.set(semesterString, 1);
+        if (timesTaken === undefined) {
+          semestersMap.set(semesterString, 1);
         } else {
-          num = val + 1;
-          semestersHash.set(semesterString, num);
+          num = timesTaken + 1;
+          semestersMap.set(semesterString, num);
         }
         const fullSemesterString = num === 0 ? semesterString : `${semesterString} (#${num})`;
         semestersTakenList.push(fullSemesterString);

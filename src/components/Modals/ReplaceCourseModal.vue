@@ -146,14 +146,11 @@ export default defineComponent({
       this.selecting = false;
       this.getSemestersTaken();
       const count = this.semestersTaken.length;
-      // opens the add modal if the course does not exist
-      if (count === 0) {
+      if (count === 0) { // opens the add modal if the course does not exist
         this.needToAdd = true;
-        // opens the duplicates modal if the course exists 2+ times
-      } else if (count > 1) {
+      } else if (count > 1) { // opens the duplicates modal if the course exists 2+ times
         this.hasDuplicates = true;
-        // closes the modal if the course exists exactly once
-      } else {
+      } else { // closes the modal if the course exists exactly once
         this.closeCurrentModal();
       }
     },

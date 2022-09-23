@@ -19,8 +19,7 @@
 import { PropType, defineComponent } from 'vue';
 import { GTagEvent } from '@/gtag';
 import SelectSemester from '@/components/Modals/SelectSemester.vue';
-
-export type RequirementWithID = { readonly id: string; readonly name: string };
+import { RequirementWithID } from '@/components/Modals/NewCourse/SelectedRequirementEditor.vue'
 
 /**
  * Opens the modal to add a course to a requirement
@@ -43,12 +42,12 @@ export default defineComponent({
     },
     // self check requirements
     potentialRequirements: {
-      type: Array as PropType<readonly { readonly id: string; readonly name: string }[]>,
+      type: Array as PropType<readonly RequirementWithID[]>,
       required: true,
     },
     // all the other ones that don't allow double counting
     relatedRequirements: {
-      type: Array as PropType<readonly { readonly id: string; readonly name: string }[]>,
+      type: Array as PropType<readonly RequirementWithID[]>,
       required: true,
     },
   },

@@ -16,8 +16,7 @@
 import { PropType, defineComponent } from 'vue';
 import { GTagEvent } from '@/gtag';
 import SelectSemesterDuplicate from '@/components/Modals/SelectSemesterDuplicate.vue';
-
-export type RequirementWithID = { readonly id: string; readonly name: string };
+import { RequirementWithID } from '@/components/Modals/NewCourse/SelectedRequirementEditor.vue'
 
 /**
  * Modal to resolve duplicates of the same course
@@ -39,12 +38,12 @@ export default defineComponent({
     },
     // self check requirements
     potentialRequirements: {
-      type: Array as PropType<readonly { readonly id: string; readonly name: string }[]>,
+      type: Array as PropType<readonly RequirementWithID[]>,
       required: true,
     },
     // all the other ones that don't allow double counting
     relatedRequirements: {
-      type: Array as PropType<readonly { readonly id: string; readonly name: string }[]>,
+      type: Array as PropType<readonly RequirementWithID[]>,
       required: true,
     },
   },
