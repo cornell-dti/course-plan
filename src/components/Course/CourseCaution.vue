@@ -217,7 +217,6 @@ export default defineComponent({
         const { relatedRequirements, selfCheckRequirements } = getRelatedUnfulfilledRequirements(
           convertCourseToCourseRoster(this.course),
           store.state.groupedRequirementFulfillmentReport,
-          store.state.onboardingData,
           store.state.toggleableRequirementChoices,
           store.state.overriddenFulfillmentChoices,
           store.state.userRequirementsMap
