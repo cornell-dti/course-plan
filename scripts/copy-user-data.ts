@@ -115,9 +115,9 @@ async function execute(
     }
 
     if (!options.output) {
-      console.log(JSON.stringify(log));
+      console.log(JSON.stringify(log, undefined, 2));
     } else {
-      writeFileSync(options.output, JSON.stringify(log));
+      writeFileSync(options.output, JSON.stringify(log, undefined, 2));
     }
   }
 }
