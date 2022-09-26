@@ -53,13 +53,13 @@ export default function buildRequirementFulfillmentGraphFromUserData(
           [
             uniqueId,
             {
-              optIn: Array.from(
-                new Set([
+              optIn: [
+                ...new Set([
                   ...Object.keys(choice.arbitraryOptIn),
                   ...choice.acknowledgedCheckerWarningOptIn,
-                ])
-              ),
-              optOut: choice.optOut,
+                ]),
+              ],
+              optOut: [...new Set(choice.optOut)],
             },
           ],
         ];

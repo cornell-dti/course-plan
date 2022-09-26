@@ -164,13 +164,10 @@ import {
   addCourseToSemester,
   deleteCourseFromSemester,
   deleteAllCoursesFromSemester,
-  updateRequirementChoices,
+  addAcknowledgedCheckerWarningOptIn,
 } from '@/global-firestore-data';
 import store, { updateSubjectColorData } from '@/store';
-import {
-  getRelatedRequirementIdsForCourseOptOut,
-  getRelatedUnfulfilledRequirements,
-} from '@/requirements/requirement-frontend-utils';
+import { getRelatedUnfulfilledRequirements } from '@/requirements/requirement-frontend-utils';
 
 import featureFlagCheckers from '@/feature-flags';
 
@@ -285,35 +282,6 @@ export default defineComponent({
             courses,
           })
         );
-        updateRequirementChoices(oldChoices => {
-          const choices = { ...oldChoices };
-          newCourses.forEach(({ uniqueID, requirementID, crseId }) => {
-            if (requirementID == null) {
-              // In this case, it's not a course from requirement bar
-              return;
-            }
-            const choice = choices[uniqueID] || {
-              arbitraryOptIn: {},
-              acknowledgedCheckerWarningOptIn: [],
-              optOut: [],
-            };
-            // We know the requirement must be dragged from requirements without warnings,
-            // because only those courses provide suggested courses.
-            // As a result, `acknowledgedCheckerWarningOptIn` is irrelevant and we only need to update
-            // the `optOut` field.
-            // Below, we find all the requirements it can possibly match,
-            // and only remove the requirementID since that's the one we should keep.
-            const optOut = getRelatedRequirementIdsForCourseOptOut(
-              crseId,
-              requirementID,
-              store.state.groupedRequirementFulfillmentReport,
-              store.state.toggleableRequirementChoices,
-              store.state.userRequirementsMap
-            );
-            choices[uniqueID] = { ...choice, optOut };
-          });
-          return choices;
-        });
       },
     },
     // Add space for a course if there is a "shadow" of it, decrease if it is from the current sem
@@ -408,10 +376,12 @@ export default defineComponent({
       this.isConfirmationOpen = false;
     },
     // TODO @willespencer refactor the below methods after gatekeep removed (to only 1 method)
-    addCourse(data: CornellCourseRosterCourse, choice: FirestoreCourseOptInOptOutChoices) {
+    addCourse(data: CornellCourseRosterCourse, selectableReqId: string) {
       const newCourse = cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData(data);
-      // Since the course is new, we know the old choice does not exist.
-      addCourseToSemester(this.year, this.season, newCourse, () => choice, this.$gtag);
+      if (selectableReqId) {
+        addAcknowledgedCheckerWarningOptIn(newCourse.uniqueID, selectableReqId);
+      }
+      addCourseToSemester(this.year, this.season, newCourse, this.$gtag);
 
       const courseCode = `${data.subject} ${data.catalogNbr}`;
       this.openConfirmationModal(`Added ${courseCode} to ${this.season} ${this.year}`);
@@ -421,15 +391,7 @@ export default defineComponent({
       if (this.handleRequirementConflicts) {
         const newCourse = cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData(data);
 
-        // set choice to nothing (no opting out, no opting in)
-        const choice: FirestoreCourseOptInOptOutChoices = {
-          optOut: [],
-          acknowledgedCheckerWarningOptIn: [],
-          arbitraryOptIn: {},
-        };
-
-        // add the course to the semeser (with no choice made)
-        addCourseToSemester(this.year, this.season, newCourse, () => choice, this.$gtag);
+        addCourseToSemester(this.year, this.season, newCourse, this.$gtag);
         this.closeCourseModal();
 
         const conflicts = store.state.courseToRequirementsInConstraintViolations.get(
@@ -439,7 +401,6 @@ export default defineComponent({
         const { selfCheckRequirements } = getRelatedUnfulfilledRequirements(
           data,
           store.state.groupedRequirementFulfillmentReport,
-          store.state.onboardingData,
           store.state.toggleableRequirementChoices,
           store.state.overriddenFulfillmentChoices,
           store.state.userRequirementsMap

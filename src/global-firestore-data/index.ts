@@ -26,10 +26,14 @@ export {
 } from './semesters';
 export { default as chooseToggleableRequirementOption } from './toggleable-requirement-choices';
 export {
+  updateRequirementChoices,
   updateRequirementChoice,
   toggleRequirementChoice,
-  updateRequirementChoices,
+  deleteCoursesFromRequirementChoices,
   deleteCourseFromRequirementChoices,
+  addOptOut,
+  addAcknowledgedCheckerWarningOptIn,
+  addArbitraryOptIn,
 } from './override-fulfillment-choices';
 
 export { default as retrieveAnalytics } from './analytics';

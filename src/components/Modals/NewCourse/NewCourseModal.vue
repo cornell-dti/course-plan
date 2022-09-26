@@ -49,18 +49,15 @@ import TeleportModal from '@/components/Modals/TeleportModal.vue';
 import CourseSelector from '@/components/Modals/NewCourse/CourseSelector.vue';
 
 import store from '@/store';
-import {
-  getRelatedRequirementIdsForCourseOptOut,
-  getRelatedUnfulfilledRequirements,
-} from '@/requirements/requirement-frontend-utils';
+import { getRelatedUnfulfilledRequirements } from '@/requirements/requirement-frontend-utils';
 
 export default defineComponent({
   components: { CourseSelector, TeleportModal, SelectedRequirementEditor },
   emits: {
     'close-course-modal': () => true,
     'select-course': (course: CornellCourseRosterCourse) => typeof course === 'object',
-    'add-course': (course: CornellCourseRosterCourse, choice: FirestoreCourseOptInOptOutChoices) =>
-      typeof course === 'object' && typeof choice === 'object',
+    'add-course': (course: CornellCourseRosterCourse, selectableReqId: string) =>
+      typeof course === 'object' && typeof selectableReqId === 'string',
   },
   data() {
     return {
@@ -101,7 +98,6 @@ export default defineComponent({
       } = getRelatedUnfulfilledRequirements(
         selectedCourse,
         store.state.groupedRequirementFulfillmentReport,
-        store.state.onboardingData,
         store.state.toggleableRequirementChoices,
         store.state.overriddenFulfillmentChoices,
         store.state.userRequirementsMap
@@ -134,20 +130,7 @@ export default defineComponent({
     },
     addCourse() {
       if (this.selectedCourse == null) return;
-      this.$emit('add-course', this.selectedCourse, {
-        optOut: getRelatedRequirementIdsForCourseOptOut(
-          this.selectedCourse.crseId,
-          this.selectedRequirementID,
-          store.state.groupedRequirementFulfillmentReport,
-          store.state.toggleableRequirementChoices,
-          store.state.userRequirementsMap
-        ),
-        // Only include the selected requirement from opt-in.
-        acknowledgedCheckerWarningOptIn: this.selfCheckRequirements
-          .filter(it => it.id === this.selectedRequirementID)
-          .map(it => it.id),
-        arbitraryOptIn: {},
-      });
+      this.$emit('add-course', this.selectedCourse, this.selectedRequirementID);
       this.closeCurrentModal();
     },
     onSelectedChange(selected: string) {
