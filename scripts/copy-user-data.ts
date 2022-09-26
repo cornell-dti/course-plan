@@ -1,6 +1,6 @@
 /* eslint-disable no-await-in-loop,no-console */
 /**
- * BE CAREFUL COPYING TO PROD!
+ * BE CAREFUL WHEN COPYING TO PROD!
  * Script to copy data from one user on production or dev to another user on dev.
  * Requires service accounts for database.
  * serviceAccount.json (if using dev) and serviceAccountProd.json (if using prod) must be at the root.
@@ -10,7 +10,7 @@
  * To execute the script, include `--execute` at the end of the command
  * FROM_ENV and TO_ENV should be either "dev" or "prod"
  * OUTPUT is an optional argument to specify the JSON file to write the log to. If left empty, the script will write to the console.
- * EXAMPLE: `npm run ts-node -- scripts/copy-user-data.ts -f prod/noschiff.dev@gmail.com -t dev/nps39@cornell.edu -o "log.json" --execute`
+ * EXAMPLE: `npm run ts-node -- scripts/copy-user-data.ts -f dev/dummyaccount -t dev/newdummyaccount -o "log.json"`
  */
 
 import { cert, initializeApp } from 'firebase-admin/app';
