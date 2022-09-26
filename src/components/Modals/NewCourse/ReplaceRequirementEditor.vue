@@ -19,7 +19,7 @@
 import { PropType, defineComponent } from 'vue';
 import { GTagEvent } from '@/gtag';
 import SelectSemester from '@/components/Modals/SelectSemester.vue';
-import { RequirementWithID } from '@/components/Modals/NewCourse/SelectedRequirementEditor.vue'
+import { RequirementWithID } from '@/components/Modals/NewCourse/SelectedRequirementEditor.vue';
 
 /**
  * Opens the modal to add a course to a requirement

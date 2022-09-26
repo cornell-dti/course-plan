@@ -16,7 +16,7 @@
 import { PropType, defineComponent } from 'vue';
 import { GTagEvent } from '@/gtag';
 import SelectSemesterDuplicate from '@/components/Modals/SelectSemesterDuplicate.vue';
-import { RequirementWithID } from '@/components/Modals/NewCourse/SelectedRequirementEditor.vue'
+import { RequirementWithID } from '@/components/Modals/NewCourse/SelectedRequirementEditor.vue';
 
 /**
  * Modal to resolve duplicates of the same course
@@ -101,10 +101,10 @@ export default defineComponent({
     }
   }
   &-title {
-    font-size: 14px;
-    line-height: 17px;
+    font-size: 0.9rem;
+    line-height: 1rem;
     color: $lightPlaceholderGray;
-    margin-bottom: 6px;
+    margin-bottom: 0.3rem;
   }
 }
 </style>

@@ -84,6 +84,10 @@ import {
   getRelatedUnfulfilledRequirements,
 } from '@/requirements/requirement-frontend-utils';
 
+const leftButtonState = {
+  Back: 'Back',
+  Cancel: 'Cancel',
+} as const;
 /**
  * Modal to replace course requirement, opens the modal to add course if none
  * of that course exists, else opens the modal to resolve duplicates of the
@@ -121,8 +125,8 @@ export default defineComponent({
   },
   computed: {
     leftButtonText(): string {
-      if (this.selectedCourse == null && !this.editMode) return 'Cancel';
-      return 'Back';
+      if (this.selectedCourse == null && !this.editMode) return leftButtonState.Cancel;
+      return leftButtonState.Back;
     },
     rightButtonText(): string {
       return this.editMode ? 'Next' : 'Add';
@@ -146,11 +150,14 @@ export default defineComponent({
       this.selecting = false;
       this.getSemestersTaken();
       const count = this.semestersTaken.length;
-      if (count === 0) { // opens the add modal if the course does not exist
+      if (count === 0) {
+        // opens the add modal if the course does not exist
         this.needToAdd = true;
-      } else if (count > 1) { // opens the duplicates modal if the course exists 2+ times
+      } else if (count > 1) {
+        // opens the duplicates modal if the course exists 2+ times
         this.hasDuplicates = true;
-      } else { // closes the modal if the course exists exactly once
+      } else {
+        // closes the modal if the course exists exactly once
         this.closeCurrentModal();
       }
     },
@@ -180,15 +187,14 @@ export default defineComponent({
         automaticallyFulfilledRequirements.map(({ id }) => id)
       );
 
+      const reqFilter = (req: RequirementWithIDSourceType) =>
+        !automaticallyFulfilledRequirementIds.has(req.id);
+
       this.automaticallyFulfilledRequirements = automaticallyFulfilledRequirements.map(
         ({ name }) => name
       );
-      this.relatedRequirements = relatedRequirements.filter(
-        req => !automaticallyFulfilledRequirementIds.has(req.id)
-      );
-      this.selfCheckRequirements = selfCheckRequirements.filter(
-        req => !automaticallyFulfilledRequirementIds.has(req.id)
-      );
+      this.relatedRequirements = relatedRequirements.filter(reqFilter);
+      this.selfCheckRequirements = selfCheckRequirements.filter(reqFilter);
       if (this.relatedRequirements.length > 0) {
         this.selectedRequirementID = this.relatedRequirements[0].id;
       } else {
@@ -224,12 +230,12 @@ export default defineComponent({
       this.selectedRequirementID = selected;
     },
     backOrCancel() {
-      if (this.leftButtonText === 'Back') {
+      if (this.leftButtonText === leftButtonState.Back) {
         if (this.editMode) {
           this.editMode = false;
         } else {
           this.selectedCourse = null;
-          this.courseSelectorKey += 1;
+          this.courseSelectorKey += 1; // courseSelectorKey counts the number of times the courseSelector has been open
           this.semestersTaken = [];
           this.selecting = true;
         }
