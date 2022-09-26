@@ -1,12 +1,8 @@
 import { Course, CollegeOrMajorRequirement } from '../../types';
 
 import {
-  ifCodeMatch,
   courseMatchesCodeOptions,
-  includesWithSingleRequirement,
   includesWithSubRequirements,
-  courseIsForeignLang,
-  courseMeetsCreditMinimum,
 } from '../checkers-common';
 
 const hbhsRequirements: readonly CollegeOrMajorRequirement[] = [
