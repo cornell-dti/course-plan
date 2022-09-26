@@ -3,7 +3,7 @@
  * BE CAREFUL WHEN COPYING TO PROD!
  * Script to copy data from one user on production or dev to another user on dev.
  * Requires service accounts for database.
- * serviceAccount.json (if using dev) and serviceAccountProd.json (if using prod) must be at the root.
+ * serviceAccountDev.json (if using dev) and serviceAccountProd.json (if using prod) must be at the root.
  * The output will be the data written or to be written to the target.
  *
  * From root, run: `npm run ts-node -- scripts/copy-user-data.ts -f <FROM_ENV>/<FROM_USER> -t <TO_ENV>/<TO_USER> -o <OUTPUT>`
@@ -76,20 +76,26 @@ async function execute(
   let fromDb;
   let toDb;
   if (options.fromEnv === 'dev' || options.toEnv === 'dev') {
-    const dev = initializeApp({
-      credential: cert('serviceAccount.json'),
-      databaseURL: 'https://cornelldti-courseplan-dev.firebaseio.com',
-    });
+    const dev = initializeApp(
+      {
+        credential: cert('serviceAccountDev.json'),
+        databaseURL: 'https://cornelldti-courseplan-dev.firebaseio.com',
+      },
+      'dev'
+    );
     const devDb = getFirestore(dev);
     if (options.fromEnv === 'dev') fromDb = devDb;
     if (options.toEnv === 'dev') toDb = devDb;
   }
 
   if (options.fromEnv === 'prod' || options.toEnv === 'prod') {
-    const prod = initializeApp({
-      credential: cert('serviceAccountProd.json'),
-      databaseURL: 'https://cornell-courseplan.firebaseio.com',
-    });
+    const prod = initializeApp(
+      {
+        credential: cert('serviceAccountProd.json'),
+        databaseURL: 'https://cornell-courseplan.firebaseio.com',
+      },
+      'prod'
+    );
     const prodDb = getFirestore(prod);
     if (options.fromEnv === 'prod') fromDb = prodDb;
     if (options.toEnv === 'prod') toDb = prodDb;
