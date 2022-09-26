@@ -17,6 +17,7 @@ export const editSemesters = (
   const newSemesters = updater(store.state.semesters);
   store.commit('setSemesters', newSemesters);
   updateDoc(doc(semestersCollection, store.state.currentFirebaseUser.email), {
+    plans: {1 : [newSemesters]},
     semesters: newSemesters,
   });
 };

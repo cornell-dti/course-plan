@@ -84,6 +84,7 @@ type FirestoreOverriddenFulfillmentChoices = {
 
 type FirestoreUserData = {
   readonly name: FirestoreUserName;
+  readonly plans?: Readonly<Record<int, readonlyFirestoreSemester[]>>;
   readonly semesters: readonlyFirestoreSemester[];
   readonly orderByNewest: boolean;
   readonly toggleableRequirementChoices: AppToggleableRequirementChoices;
