@@ -76,20 +76,26 @@ async function execute(
   let fromDb;
   let toDb;
   if (options.fromEnv === 'dev' || options.toEnv === 'dev') {
-    const dev = initializeApp({
-      credential: cert('serviceAccountDev.json'),
-      databaseURL: 'https://cornelldti-courseplan-dev.firebaseio.com',
-    });
+    const dev = initializeApp(
+      {
+        credential: cert('serviceAccountDev.json'),
+        databaseURL: 'https://cornelldti-courseplan-dev.firebaseio.com',
+      },
+      'dev'
+    );
     const devDb = getFirestore(dev);
     if (options.fromEnv === 'dev') fromDb = devDb;
     if (options.toEnv === 'dev') toDb = devDb;
   }
 
   if (options.fromEnv === 'prod' || options.toEnv === 'prod') {
-    const prod = initializeApp({
-      credential: cert('serviceAccountProd.json'),
-      databaseURL: 'https://cornell-courseplan.firebaseio.com',
-    });
+    const prod = initializeApp(
+      {
+        credential: cert('serviceAccountProd.json'),
+        databaseURL: 'https://cornell-courseplan.firebaseio.com',
+      },
+      'prod'
+    );
     const prodDb = getFirestore(prod);
     if (options.fromEnv === 'prod') fromDb = prodDb;
     if (options.toEnv === 'prod') toDb = prodDb;
