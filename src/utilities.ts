@@ -1,4 +1,4 @@
-import { fullCoursesArray } from './assets/courses/typed-full-courses';
+import { fullCoursesArray, fullCoursesJson } from './assets/courses/typed-full-courses';
 import requirementJSON from './requirements/typed-requirement-json';
 import { coursesColorSet } from './assets/constants/colors';
 
@@ -199,3 +199,9 @@ export const isPlaceholderCourse = (
 export const isCourseTaken = (
   element: FirestoreSemesterPlaceholder | FirestoreSemesterCourse | CourseTaken
 ): element is CourseTaken => !!(element as CourseTaken).uniqueId;
+
+// Converts a FirestoreSemesterCourse or CourseTaken to the first applicable CornellCourseRosterCourse
+export const convertCourseToCourseRoster = (
+  course: FirestoreSemesterCourse | CourseTaken
+): CornellCourseRosterCourse =>
+  fullCoursesJson[isCourseTaken(course) ? course.courseId : course.crseId][0];

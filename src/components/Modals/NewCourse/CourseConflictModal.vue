@@ -5,12 +5,11 @@
     :rightButtonText="rightButtonText"
     :rightButtonIsHighlighted="!conflictsFullyResolved"
     @modal-closed="removeCourseAndCloseModal"
-    @right-button-clicked="addCourse"
+    @right-button-clicked="resolveConflicts"
   >
     <div class="courseConflict-text">Selected Course</div>
     <div class="selected-course" data-cyId="courseConflict-selectedCourse">
-      {{ selectedCourse.code }}:
-      {{ selectedCourse.name }}
+      {{ courseName }}
     </div>
 
     <div class="courseConflict-description">
@@ -28,9 +27,8 @@
       <div v-if="numTotalConflicts > 1">{{ `${index}. Choose only one requirement:` }}</div>
       <single-conflict-editor
         :checkedReqs="selectedReqsPerConflict[index - 1]"
+        :selectableRequirements="selectableRequirements"
         :conflictNumber="index"
-        :numSelfChecks="numSelfChecksPerConflict[index - 1]"
-        :selectedCourse="selectedCourse"
         @conflict-changed="handleChangedConflict"
       />
       <div v-if="shouldShowSelectableWarning(index)" class="courseConflict-warning">
@@ -50,31 +48,51 @@ import SingleConflictEditor from '@/components/Modals/NewCourse/SingleConflictEd
 import { getConstraintViolationsForSingleCourse } from '@/requirements/requirement-constraints-utils';
 import { allowCourseDoubleCountingBetweenRequirements } from '@/requirements/requirement-frontend-utils';
 import store from '@/store';
+import { convertCourseToCourseRoster, isCourseTaken } from '@/utilities';
+import { toggleRequirementChoice } from '@/global-firestore-data';
 
 export default defineComponent({
   components: { TeleportModal, SingleConflictEditor },
   emits: {
     'close-course-modal': () => true,
-    'resolve-conflicts': (course: FirestoreSemesterCourse) => typeof course === 'object',
-    'remove-course': (uniqueID: number) => typeof uniqueID === 'number',
+    'resolve-conflicts': (course: FirestoreSemesterCourse | CourseTaken) =>
+      typeof course === 'object',
+    'remove-course': (uniqueID: string | number) =>
+      typeof uniqueID === 'number' || typeof uniqueID === 'string',
   },
   props: {
-    selectedCourse: { type: Object as PropType<FirestoreSemesterCourse>, required: true },
+    selectedCourse: {
+      type: Object as PropType<FirestoreSemesterCourse | CourseTaken>,
+      required: true,
+    },
     courseConflicts: { type: Object as PropType<Set<string[]>>, required: true },
-    selfCheckRequirements: {
+    selectableRequirements: {
       type: Object as PropType<readonly RequirementWithIDSourceType[]>,
+      required: true,
+    },
+    relatedRequirements: {
+      type: Object as PropType<readonly RequirementWithIDSourceType[]>,
+      required: true,
+    },
+    isEditingRequirements: {
+      type: Boolean,
       required: true,
     },
   },
   data() {
-    // convert the set of conflicts and self-check reqs to a list of dicts, where each dict is a mapping of req options to bools representing if they are selected
-    // includes self checks only if in conflict with the other reqs in group
+    // convert the set of conflicts and selectable/related reqs to a list of dicts, where each dict is a mapping of req options to bools representing if they are selected
+    // includes selectable checks and related reqs only if in conflict with the other reqs in group
     const selectedReqsPerConflict: Map<string, boolean>[] = [];
-    const numSelfChecksPerConflict: number[] = [];
+    const numSelectableReqsPerConflict: number[] = [];
 
     const selectableReqIds: string[] = [];
-    this.selfCheckRequirements.forEach(singleSelfCheckReq => {
-      selectableReqIds.push(singleSelfCheckReq.id);
+    this.selectableRequirements.forEach(singleSelectableReq => {
+      selectableReqIds.push(singleSelectableReq.id);
+    });
+
+    const relatedReqIds: string[] = [];
+    this.relatedRequirements.forEach(singleRelatedReq => {
+      relatedReqIds.push(singleRelatedReq.id);
     });
 
     this.courseConflicts.forEach(singleConflictList => {
@@ -86,27 +104,42 @@ export default defineComponent({
       });
 
       const reqsInConflict = this.getReqsInConflict(
-        this.selectedCourse.uniqueID,
+        this.courseUniqueId,
         conflictReqIds,
-        selectableReqIds
+        selectableReqIds,
+        relatedReqIds
       );
 
-      // filter out self checks that are not in conflict with the other reqs
-      let numSelfChecks = 0;
-      this.selfCheckRequirements.forEach(singleSelfCheckReq => {
-        if (reqsInConflict.includes(singleSelfCheckReq.id)) {
-          singleConflictMap.set(singleSelfCheckReq.id, false);
-          numSelfChecks += 1;
+      // filter in related reqs that are not currently in conflict but could be
+      this.relatedRequirements.forEach(singleReq => {
+        if (reqsInConflict.includes(singleReq.id)) {
+          singleConflictMap.set(singleReq.id, false);
+        }
+      });
+
+      // filter out selectable reqs that are not in conflict with the other reqs
+      let numSelectableReqs = 0;
+      this.selectableRequirements.forEach(singleSelectableReq => {
+        if (reqsInConflict.includes(singleSelectableReq.id)) {
+          singleConflictMap.set(singleSelectableReq.id, false);
+          numSelectableReqs += 1;
         }
       });
 
       selectedReqsPerConflict.push(singleConflictMap);
-      numSelfChecksPerConflict.push(numSelfChecks);
+      numSelectableReqsPerConflict.push(numSelectableReqs);
     });
 
+    if (this.isEditingRequirements) {
+      this.setRequirementsCurrentlyFulfilled(selectedReqsPerConflict);
+    }
+
+    const originalReqsPerConflict = selectedReqsPerConflict.map(conflict => new Map(conflict));
+
     return {
+      originalReqsPerConflict,
       selectedReqsPerConflict,
-      numSelfChecksPerConflict,
+      numSelectableReqsPerConflict,
       hasUnresolvedConflicts: true,
       hasUnselectedConflicts: false,
     };
@@ -129,6 +162,19 @@ export default defineComponent({
       }
       return 'Conflict: Please only choose one requirement';
     },
+    courseName(): string {
+      if (isCourseTaken(this.selectedCourse)) {
+        return `${this.selectedCourse.code} ${
+          convertCourseToCourseRoster(this.selectedCourse).titleLong
+        }`;
+      }
+      return `${this.selectedCourse.code} ${this.selectedCourse.name}`;
+    },
+    courseUniqueId(): string | number {
+      return isCourseTaken(this.selectedCourse)
+        ? this.selectedCourse.uniqueId
+        : this.selectedCourse.uniqueID;
+    },
   },
   methods: {
     closeCurrentModal() {
@@ -136,11 +182,37 @@ export default defineComponent({
     },
     removeCourseAndCloseModal() {
       this.closeCurrentModal();
-      this.$emit('remove-course', this.selectedCourse.uniqueID);
+      this.$emit('remove-course', this.courseUniqueId);
     },
-    addCourse() {
+    resolveConflicts() {
+      // edit the requirements assigned to the course when editor saved on reqs with changes made
+      for (let i = 0; i < this.selectedReqsPerConflict.length; i += 1) {
+        const conflict = this.selectedReqsPerConflict[i];
+        const originalConflict = this.originalReqsPerConflict[i];
+
+        conflict.forEach((selected, reqName) => {
+          if (this.isReqSelectable(reqName) && selected !== originalConflict.get(reqName)) {
+            toggleRequirementChoice(
+              this.courseUniqueId,
+              store.state.userRequirementsMap[reqName].id,
+              'acknowledgedCheckerWarningOptIn'
+            );
+          } else if (selected !== originalConflict.get(reqName)) {
+            toggleRequirementChoice(
+              this.courseUniqueId,
+              store.state.userRequirementsMap[reqName].id,
+              'optOut'
+            );
+          }
+        });
+      }
+
       this.closeCurrentModal();
       this.$emit('resolve-conflicts', this.selectedCourse);
+    },
+    // req is self check if present in selectableRequirements list
+    isReqSelectable(reqName: string) {
+      return this.selectableRequirements.filter(req => req.id === reqName).length > 0;
     },
     handleChangedConflict(selectedReq: string, index: number) {
       const conflict = this.selectedReqsPerConflict[index - 1];
@@ -172,18 +244,20 @@ export default defineComponent({
     },
     // only show the selectable req warning under the first req group, and only if there are selectable reqs
     shouldShowSelectableWarning(index: number): boolean {
-      const maxNumSelfChecks = Math.max(...this.numSelfChecksPerConflict);
-      return index === 1 && maxNumSelfChecks > 0;
+      const maxNumSelectable = Math.max(...this.numSelectableReqsPerConflict);
+      return index === 1 && maxNumSelectable > 0;
     },
-    // determine if each selectable req in selectableReqIds is in conflict with the reqs in conflictReqIds,
+    // determine if each selectable req or related req is in conflict with the reqs in conflictReqIds,
     // based on course with uniqueID.
-    // return the list of conflictReqIds + selectableReqIds in conflict.
+    // return the list of conflictReqIds + selectableReqIds + relatedReqIds in conflict.
     getReqsInConflict(
       uniqueID: string | number,
       conflictReqIds: string[],
-      selectableReqIds: string[]
+      selectableReqIds: string[],
+      relatedReqIds: string[]
     ): string[] {
       const selectableReqIdsInConflict: string[] = [];
+      const relatedReqIdsInConflict: string[] = [];
       selectableReqIds.forEach(selectableReqId => {
         const constraintViolations = getConstraintViolationsForSingleCourse(
           { uniqueId: uniqueID },
@@ -201,7 +275,45 @@ export default defineComponent({
         }
       });
 
-      return [...conflictReqIds, ...selectableReqIdsInConflict];
+      relatedReqIds.forEach(relatedReqId => {
+        const constraintViolations = getConstraintViolationsForSingleCourse(
+          { uniqueId: uniqueID },
+          [...conflictReqIds, relatedReqId],
+          (reqA, reqB) =>
+            allowCourseDoubleCountingBetweenRequirements(
+              store.state.userRequirementsMap[reqA],
+              store.state.userRequirementsMap[reqB]
+            )
+        );
+
+        // if related req is not in conflict with conflictReqIds, it will be missing from requirementsThatDoNotAllowDoubleCounting
+        if (constraintViolations.requirementsThatDoNotAllowDoubleCounting.has(relatedReqId)) {
+          relatedReqIdsInConflict.push(relatedReqId);
+        }
+      });
+
+      return [...conflictReqIds, ...relatedReqIdsInConflict, ...selectableReqIdsInConflict];
+    },
+    // set requirements to true or false based on what options a course has already been assigned to
+    // for courses being edited.
+    setRequirementsCurrentlyFulfilled(selectedReqsPerConflict: Map<string, boolean>[]) {
+      const uniqueID = isCourseTaken(this.selectedCourse)
+        ? this.selectedCourse.uniqueId
+        : this.selectedCourse.uniqueID;
+
+      const existingConstraintViolations = store.state.courseToRequirementsInConstraintViolations.get(
+        uniqueID
+      );
+
+      // convert conflicts to a 1d list.
+      const listOfConflicts = Array.from(existingConstraintViolations ?? new Set()).flat();
+
+      // select any reqs in conflict in the list, deselct otherwise.
+      selectedReqsPerConflict.forEach(conflict => {
+        conflict.forEach((_, req) => {
+          conflict.set(req, listOfConflicts.includes(req));
+        });
+      });
     },
   },
 });
