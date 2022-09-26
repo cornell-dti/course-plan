@@ -3,7 +3,7 @@
  * BE CAREFUL WHEN COPYING TO PROD!
  * Script to copy data from one user on production or dev to another user on dev.
  * Requires service accounts for database.
- * serviceAccount.json (if using dev) and serviceAccountProd.json (if using prod) must be at the root.
+ * serviceAccountDev.json (if using dev) and serviceAccountProd.json (if using prod) must be at the root.
  * The output will be the data written or to be written to the target.
  *
  * From root, run: `npm run ts-node -- scripts/copy-user-data.ts -f <FROM_ENV>/<FROM_USER> -t <TO_ENV>/<TO_USER> -o <OUTPUT>`
@@ -77,7 +77,7 @@ async function execute(
   let toDb;
   if (options.fromEnv === 'dev' || options.toEnv === 'dev') {
     const dev = initializeApp({
-      credential: cert('serviceAccount.json'),
+      credential: cert('serviceAccountDev.json'),
       databaseURL: 'https://cornelldti-courseplan-dev.firebaseio.com',
     });
     const devDb = getFirestore(dev);
