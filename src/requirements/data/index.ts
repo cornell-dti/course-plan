@@ -5,7 +5,7 @@ import aapRequirements from './colleges/ar';
 import casPreFA2020Requirements from './colleges/asPreFA2020';
 import casFA2020Requirements from './colleges/asFA2020';
 import businessRequirements from './colleges/bu';
-import engineeringRequirements from './colleges/en';
+import engineeringRequirements, { engineeringAdvisors } from './colleges/en';
 import humanEcologyRequirements from './colleges/he';
 import ilrRequirements from './colleges/il';
 import aemRequirements from './majors/aem';
@@ -20,7 +20,7 @@ import chemERequirements from './majors/chemE';
 import civilRequirements from './majors/ce';
 import commRequirements from './majors/comm';
 import crpRequirements from './majors/crp';
-import csRequirements from './majors/cs';
+import csRequirements, { csAdvisors } from './majors/cs';
 import deaRequirements from './majors/dea';
 import easRequirements from './majors/eas';
 import economicsRequirements from './majors/econ';
@@ -100,6 +100,7 @@ const json: RequirementsJson = {
     EN: {
       name: 'Engineering',
       requirements: engineeringRequirements,
+      advisors: engineeringAdvisors,
     },
     HE: {
       name: 'Human Ecology',
@@ -180,6 +181,7 @@ const json: RequirementsJson = {
       schools: ['EN', 'AS1', 'AS2'],
       requirements: csRequirements,
       specializations: [MATH2940, CHEM2080],
+      advisors: csAdvisors,
     },
     DEA: {
       name: 'Design and Environmental Analysis',

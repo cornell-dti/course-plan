@@ -5,6 +5,8 @@ import {
   courseMatchesCodeOptions,
   ifCodeMatch,
 } from '../checkers-common';
+import { AdvisorGroup } from '../../tools-types';
+import { lastNameRange } from '../../advisor-checkers';
 
 const csRequirements: readonly CollegeOrMajorRequirement[] = [
   {
@@ -168,3 +170,19 @@ const csRequirements: readonly CollegeOrMajorRequirement[] = [
 ];
 
 export default csRequirements;
+
+export const csAdvisors: AdvisorGroup = {
+  advisors: [
+    {
+      name: 'Nicole Roy',
+      email: 'nicole.roy@cornell.edu',
+      checker: lastNameRange('M', 'Z'),
+    },
+    {
+      name: 'Ryan Marchenese',
+      email: 'ryan.m@cornell.edu',
+      checker: lastNameRange('A', 'L'),
+    },
+  ],
+  source: 'https://www.cs.cornell.edu/undergrad/ustaff/contact-academic-advisor',
+};
