@@ -8,7 +8,7 @@ import { sortedSemesters } from '../utilities';
 import {
   deleteCourseFromRequirementChoices,
   deleteCoursesFromRequirementChoices,
-} from './override-fulfillment-choices';
+} from './overridden-fulfillment-choices';
 
 export const editSemesters = (
   updater: (oldSemesters: readonly FirestoreSemester[]) => readonly FirestoreSemester[]

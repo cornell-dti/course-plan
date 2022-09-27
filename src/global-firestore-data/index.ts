@@ -34,6 +34,6 @@ export {
   addOptOut,
   addAcknowledgedCheckerWarningOptIn,
   addArbitraryOptIn,
-} from './override-fulfillment-choices';
+} from './overridden-fulfillment-choices';
 
 export { default as retrieveAnalytics } from './analytics';
