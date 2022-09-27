@@ -23,7 +23,6 @@ const collections = [
   'user-semesters',
   'user-toggleable-requirement-choices',
   'user-overridden-fulfillment-choices',
-  'user-selectable-requirement-choices',
   'user-subject-colors',
   'user-unique-incrementer',
   'user-onboarding-data',

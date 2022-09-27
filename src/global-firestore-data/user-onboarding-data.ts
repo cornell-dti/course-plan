@@ -3,7 +3,7 @@ import { doc, setDoc, updateDoc } from 'firebase/firestore';
 import { SWIM_TEST_CODE } from '@/requirements/data/constants';
 import { onboardingDataCollection } from '../firebase-frontend-config';
 import store from '../store';
-import setUsernameData from './username-data';
+import setUsernameData from './user-name';
 
 export const setAppOnboardingData = (
   name: FirestoreUserName,
