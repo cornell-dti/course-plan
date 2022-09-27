@@ -1,4 +1,4 @@
-import { semesterEquals, getActiveSemesters } from '../semesters';
+import { semesterEquals, getActiveSemesters } from '../user-semesters';
 
 const semestersEqual = (
   expected: readonly FirestoreSemester[],
