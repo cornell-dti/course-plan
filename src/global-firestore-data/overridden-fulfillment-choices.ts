@@ -53,28 +53,6 @@ const removeArbitraryOptIns = (
   return newChoices;
 };
 
-export const toggleRequirementChoice = (
-  courseUniqueID: string | number,
-  requirementID: string,
-  relevantRequirementChoiceType: keyof FirestoreCourseOptInOptOutChoices
-): void =>
-  updateRequirementChoice(courseUniqueID, choice => {
-    switch (relevantRequirementChoiceType) {
-      case 'optOut':
-      case 'acknowledgedCheckerWarningOptIn': {
-        const oldList = choice[relevantRequirementChoiceType];
-        return {
-          ...choice,
-          [relevantRequirementChoiceType]: oldList.includes(requirementID)
-            ? oldList.filter(it => it !== requirementID)
-            : [...oldList, requirementID],
-        };
-      }
-      default:
-        return choice;
-    }
-  });
-
 export const deleteCoursesFromRequirementChoices = (
   courseUniqueIds: readonly (string | number)[]
 ): void => {
