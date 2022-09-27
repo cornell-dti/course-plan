@@ -49,7 +49,7 @@ import { getConstraintViolationsForSingleCourse } from '@/requirements/requireme
 import { allowCourseDoubleCountingBetweenRequirements } from '@/requirements/requirement-frontend-utils';
 import store from '@/store';
 import { convertCourseToCourseRoster, isCourseTaken } from '@/utilities';
-import { toggleRequirementChoice } from '@/global-firestore-data';
+import { resolveConflicts } from '@/global-firestore-data';
 
 export default defineComponent({
   components: { TeleportModal, SingleConflictEditor },
@@ -134,10 +134,7 @@ export default defineComponent({
       this.setRequirementsCurrentlyFulfilled(selectedReqsPerConflict);
     }
 
-    const originalReqsPerConflict = selectedReqsPerConflict.map(conflict => new Map(conflict));
-
     return {
-      originalReqsPerConflict,
       selectedReqsPerConflict,
       numSelectableReqsPerConflict,
       hasUnresolvedConflicts: true,
@@ -187,24 +184,24 @@ export default defineComponent({
     resolveConflicts() {
       // edit the requirements assigned to the course when editor saved on reqs with changes made
       for (let i = 0; i < this.selectedReqsPerConflict.length; i += 1) {
-        const conflict = this.selectedReqsPerConflict[i];
-        const originalConflict = this.originalReqsPerConflict[i];
+        const userChoices = Array.from(this.selectedReqsPerConflict[i].entries());
 
-        conflict.forEach((selected, reqName) => {
-          if (this.isReqSelectable(reqName) && selected !== originalConflict.get(reqName)) {
-            toggleRequirementChoice(
-              this.courseUniqueId,
-              store.state.userRequirementsMap[reqName].id,
-              'acknowledgedCheckerWarningOptIn'
-            );
-          } else if (selected !== originalConflict.get(reqName)) {
-            toggleRequirementChoice(
-              this.courseUniqueId,
-              store.state.userRequirementsMap[reqName].id,
-              'optOut'
-            );
-          }
-        });
+        const naturallyFulfilledRequirementIds = userChoices
+          .filter(([reqName, selected]) => selected && !this.isReqSelectable(reqName))
+          .map(([reqName]) => store.state.userRequirementsMap[reqName].id);
+        const arbitraryOptInRequirementIds = userChoices
+          .filter(([reqName, selected]) => selected && this.isReqSelectable(reqName))
+          .map(([reqName]) => store.state.userRequirementsMap[reqName].id);
+        const optOutRequirementIds = userChoices
+          .filter(([, selected]) => !selected)
+          .map(([reqName]) => store.state.userRequirementsMap[reqName].id);
+
+        resolveConflicts(
+          this.courseUniqueId,
+          naturallyFulfilledRequirementIds,
+          arbitraryOptInRequirementIds,
+          optOutRequirementIds
+        );
       }
 
       this.closeCurrentModal();
@@ -212,7 +209,7 @@ export default defineComponent({
     },
     // req is self check if present in selectableRequirements list
     isReqSelectable(reqName: string) {
-      return this.selectableRequirements.filter(req => req.id === reqName).length > 0;
+      return !!this.selectableRequirements.find(req => req.id === reqName);
     },
     handleChangedConflict(selectedReq: string, index: number) {
       const conflict = this.selectedReqsPerConflict[index - 1];

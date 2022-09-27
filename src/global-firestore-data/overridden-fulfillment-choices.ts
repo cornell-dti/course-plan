@@ -29,8 +29,11 @@ export const updateRequirementChoice = (
     ),
   }));
 
-const removeRequirementChoice = (choices: readonly string[], id: string) =>
-  choices.filter(choice => choice !== id);
+const removeRequirementChoice = (choices: readonly string[], requirementId: string) =>
+  choices.filter(choice => choice !== requirementId);
+
+const removeRequirementChoices = (choices: readonly string[], requirementIds: string[]) =>
+  choices.filter(choice => !requirementIds.includes(choice));
 
 const removeArbitraryOptIn = (
   choices: { readonly [requirement: string]: readonly string[] },
@@ -38,6 +41,15 @@ const removeArbitraryOptIn = (
 ) => {
   const newChoices = { ...choices };
   delete newChoices[requirementID];
+  return newChoices;
+};
+
+const removeArbitraryOptIns = (
+  choices: { readonly [requirement: string]: readonly string[] },
+  requirementIds: string[]
+) => {
+  const newChoices = { ...choices };
+  requirementIds.forEach(id => delete newChoices[id]);
   return newChoices;
 };
 
@@ -132,5 +144,41 @@ export const addArbitraryOptIn = (
         ...arbitraryOptIn,
         [requirementID]: [...new Set([...arbitraryOptIn[requirementID], slot])],
       },
+    })
+  );
+
+/**
+ * Precondition: the requirement id lists are disjoint
+ */
+export const resolveConflicts = (
+  courseUniqueID: string | number,
+  naturallyFulfilledRequirementIds: string[],
+  arbitraryOptInRequirementIds: string[],
+  optOutRequirementIds: string[]
+): void =>
+  updateRequirementChoice(
+    courseUniqueID,
+    ({ optOut, acknowledgedCheckerWarningOptIn, arbitraryOptIn }) => ({
+      // remove naturallyFulfilledRequirementIds and arbitraryOptInRequirementIds from opt-out
+      // add optOutRequirementIds to opt-out
+      optOut: [
+        ...new Set([
+          ...removeRequirementChoices(optOut, [
+            ...naturallyFulfilledRequirementIds,
+            ...arbitraryOptInRequirementIds,
+          ]),
+          ...optOutRequirementIds,
+        ]),
+      ],
+      // remove optOutRequirementIds from checker warning opt-in
+      // add arbitraryOptInRequirementIds to checker warning opt-in
+      acknowledgedCheckerWarningOptIn: [
+        ...new Set([
+          ...removeRequirementChoices(acknowledgedCheckerWarningOptIn, optOutRequirementIds),
+          ...arbitraryOptInRequirementIds,
+        ]),
+      ],
+      // remove optOutRequirementIds from arbitrary opt-in, since it contradicts any previous opt-in choices
+      arbitraryOptIn: removeArbitraryOptIns(arbitraryOptIn, optOutRequirementIds),
     })
   );
