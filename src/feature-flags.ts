@@ -5,6 +5,7 @@ const GateKeeperTogglers: Record<string, () => void> = {};
 type FeatureFlagName =
   | 'APIBFulfillment'
   | 'Case'
+  | 'OptInOptOut'
   | 'RequirementConflicts'
   | 'RequirementDebugger'
   | 'ToggleRequirementsBarBtn'
@@ -13,6 +14,7 @@ type FeatureFlagName =
 const featureFlagCheckers: FeatureFlagCheckers = registerFeatureFlagChecker(
   'APIBFulfillment',
   'Case',
+  'OptInOptOut',
   'RequirementConflicts',
   'RequirementDebugger',
   'ToggleRequirementsBarBtn',
