@@ -15,6 +15,7 @@
             class="slotMenu-icon"
             src="@/assets/images/replace.svg"
             alt="replace requirement swap icon"
+            data-cyId="replace-slot-item-complete"
           />
           <span class="slotMenu-replace">Replace</span>
         </div>
@@ -28,6 +29,7 @@
             class="slotMenu-icon"
             src="@/assets/images/trashcan.svg"
             alt="remove requirement trashcan icon"
+            data-cyId="remove-slot-item"
           />
           <span class="slotMenu-remove">Remove</span>
         </div>

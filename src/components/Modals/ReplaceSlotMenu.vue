@@ -15,6 +15,7 @@
             class="slotMenu-icon"
             src="@/assets/images/replace.svg"
             alt="replace requirement swap icon"
+            data-cyId="replace-slot-item-incomplete"
           />
           <span class="slotMenu-replace">Replace</span>
         </div>

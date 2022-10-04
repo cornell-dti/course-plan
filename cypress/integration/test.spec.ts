@@ -237,3 +237,134 @@ it('Minimize a semester', () => {
   cy.get('[data-cyId=semester-course]').should('be.visible');
   cy.get('[data-cyId=semester-addCourse]').should('be.visible');
 });
+
+it('Add CS 2110 w/gear', () => {
+  cy.get('[data-cyId=requirements-viewMore]').contains('View All Major Requirements').click();
+  cy.get('[data-cyId=requirements-displayToggle]').contains('Introductory Programming').click();
+  // click gear
+  cy.get('[data-cyId=gear-incomplete-subreq]').click();
+  // click replace
+  cy.get('[data-cyId=replace-slot-item-incomplete]').click();
+  // search for CS 2110
+  cy.get('[data-cyId=newCourse-dropdown]').type('CS 2110');
+  cy.get('[data-cyId=newCourse-searchResult]')
+    .contains('CS 2110: Object-Oriented Programming and Data Structures')
+    .click();
+  // click semester, select fall
+  cy.get('[data-cyId=newSemester-seasonWrapper]').click();
+  cy.get('[data-cyId=newSemester-seasonItem]').contains('Fall').click();
+  // click year, select 2022
+  cy.get('[data-cyId=newSemester-yearWrapper]').click();
+  cy.get('[data-cyId=newSemester-yearItem]').contains('2022').click();
+  // click add
+  cy.get('[data-cyId=modal-button').click();
+  cy.get('[data-cyId=courseCode]').contains('CS 2110');
+});
+
+it('Remove CS 2110 w/gear', () => {
+  // add CS 1110
+  // open side bar
+  cy.get('[data-cyId=requirements-displayToggle]').click();
+  // click gear
+  cy.get('[data-cyId=gear-complete-subreq]').click();
+  // click remove
+  cy.get('[data-cyId=remove-slot-item]').click();
+  // click yes
+  cy.get('[data-cyId=modal-button]').click();
+});
+
+it('Replace CS 3410 w/CS 3420 (none)', () => {
+  // add CS 3410
+  // open side bar
+  cy.get('[data-cyId=requirements-displayToggle]').click();
+  // click gear
+  cy.get('[data-cyId=gear-incomplete-subreq]').click();
+  // click replace
+  cy.get('[data-cyId=replace-slot-item-incomplete]').click();
+  // search for CS 1110
+  cy.get('[data-cyId=newCourse-dropdown]').type('CS 3410');
+  // click semester, select fall
+  cy.get('[data-cyId=semester-dropdown').eq(1).click();
+  // click year, select 2022
+  cy.get('[data-cyId=year-dropdown').eq(1).click();
+  // click add
+  cy.get('[data-cyId=add-button').click();
+  cy.get('[data-cyId=courseCode]').contains('CS 3410');
+
+  // open side bar
+  cy.get('[data-cyId=requirements-displayToggle]').click();
+  // click gear
+  cy.get('[data-cyId=gear-complete-subreq]').click();
+  // click replace
+  cy.get('[data-cyId=replace-slot-item-complete]').click();
+  // search for CS 3420
+  cy.get('[data-cyId=newCourse-dropdown]').type('CS 3420');
+  // click semester, select fall
+  cy.get('[data-cyId=semester-dropdown').eq(1).click();
+  // click year, select 2022
+  cy.get('[data-cyId=year-dropdown').eq(1).click();
+  // click add
+  cy.get('[data-cyId=add-button').click();
+  cy.get('[data-cyId=courseCode]').contains('CS 3420');
+});
+
+it('Replace CS 3410 w/CS 3420 (one)', () => {
+  // remove CS 3420
+  // open side bar
+  cy.get('[data-cyId=requirements-displayToggle]').click();
+  // click gear
+  cy.get('[data-cyId=gear-complete-subreq]').click();
+  // click remove
+  cy.get('[data-cyId=remove-slot-item]').click();
+  // click yes
+  cy.get('[data-cyId=modal-button]').click();
+
+  // add CS 3420
+  cy.get('[data-cyId=semester-addCourse]').click();
+  cy.get('[data-cyId=newCourse-dropdown]').type('CS 3420');
+  cy.get('[data-cyId=newCourse-searchResult]').first().click();
+
+  // open side bar
+  cy.get('[data-cyId=requirements-displayToggle]').click();
+  // click gear
+  cy.get('[data-cyId=gear-complete-subreq]').click();
+  // click replace
+  cy.get('[data-cyId=replace-slot-item-complete]').click();
+  // search for CS 3420
+  cy.get('[data-cyId=newCourse-dropdown]').type('CS 3420');
+});
+
+it('Replace CS 3410 w/CS 3420 (two)', () => {
+  // remove CS 3420
+  // open side bar
+  cy.get('[data-cyId=requirements-displayToggle]').click();
+  // click gear
+  cy.get('[data-cyId=gear-complete-subreq]').click();
+  // click remove
+  cy.get('[data-cyId=remove-slot-item]').click();
+  // click yes
+  cy.get('[data-cyId=modal-button]').click();
+
+  // add CS 3420
+  cy.get('[data-cyId=semester-addCourse]').click();
+  cy.get('[data-cyId=newCourse-dropdown]').type('CS 3420');
+  cy.get('[data-cyId=newCourse-searchResult]').first().click();
+
+  // add CS 3420
+  cy.get('[data-cyId=semester-addCourse]').click();
+  cy.get('[data-cyId=newCourse-dropdown]').type('CS 3420');
+  cy.get('[data-cyId=newCourse-searchResult]').first().click();
+
+  // open side bar
+  cy.get('[data-cyId=requirements-displayToggle]').click();
+  // click gear
+  cy.get('[data-cyId=gear-complete-subreq]').click();
+  // click replace
+  cy.get('[data-cyId=replace-slot-item-complete]').click();
+  // search for CS 3420
+  cy.get('[data-cyId=newCourse-dropdown]').type('CS 3420');
+  // select semester
+  cy.get('[data-cyId=duplicateClass-semester]').eq(1).click();
+  // click add
+  cy.get('[data-cyId=modal-button]').click();
+});

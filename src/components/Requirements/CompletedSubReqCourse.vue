@@ -25,7 +25,11 @@
           /></span>
           {{ slotName }}
         </div>
-        <button class="reqCourse-button" @click="openSlotMenu"></button>
+        <button
+          class="reqCourse-button"
+          @click="openSlotMenu"
+          data-cyId="gear-complete-subreq"
+        ></button>
       </div>
       <div class="completed-reqCourses-course-object-wrapper">
         <req-course

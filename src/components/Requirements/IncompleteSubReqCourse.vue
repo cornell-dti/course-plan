@@ -8,7 +8,11 @@
       <div class="separator"></div>
       <div class="draggable-requirements-heading">
         <div class="draggable-requirements-heading-label">{{ addCourseLabel }}</div>
-        <button class="reqCourse-button" @click="openReplaceSlotMenu"></button>
+        <button
+          class="reqCourse-button"
+          @click="openReplaceSlotMenu"
+          data-cyId="gear-incomplete-subreq"
+        ></button>
         <button
           v-if="showSeeAllLabel"
           class="draggable-requirements-heading-seeAll"

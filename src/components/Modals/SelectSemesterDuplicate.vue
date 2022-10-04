@@ -33,7 +33,7 @@
               :key="s"
               class="selectSemester-dropdown-content-item"
               @click="selectSemester(s)"
-              data-cyId="newSemester-seasonItem"
+              data-cyId="duplicateClass-semester"
             >
               {{ s }}
             </div>
