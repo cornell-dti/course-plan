@@ -183,8 +183,8 @@ export default defineComponent({
     },
     resolveConflicts() {
       // edit the requirements assigned to the course when editor saved on reqs with changes made
-      for (let i = 0; i < this.selectedReqsPerConflict.length; i += 1) {
-        const userChoices = Array.from(this.selectedReqsPerConflict[i].entries());
+      this.selectedReqsPerConflict.forEach(selectedReqs => {
+        const userChoices = Array.from(selectedReqs.entries());
 
         const naturallyFulfilledRequirementIds = userChoices
           .filter(([reqName, selected]) => selected && !this.isReqSelectable(reqName))
@@ -202,14 +202,13 @@ export default defineComponent({
           arbitraryOptInRequirementIds,
           optOutRequirementIds
         );
-      }
-
+      });
       this.closeCurrentModal();
       this.$emit('resolve-conflicts', this.selectedCourse);
     },
     // req is self check if present in selectableRequirements list
     isReqSelectable(reqName: string) {
-      return !!this.selectableRequirements.find(req => req.id === reqName);
+      return this.selectableRequirements.some(req => req.id === reqName);
     },
     handleChangedConflict(selectedReq: string, index: number) {
       const conflict = this.selectedReqsPerConflict[index - 1];
