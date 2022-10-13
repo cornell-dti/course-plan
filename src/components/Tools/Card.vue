@@ -61,7 +61,7 @@ export default defineComponent({
 
 .card {
   width: var(--w);
-  height: var(--h);
+  min-height: var(--h);
   box-sizing: border-box;
   box-shadow: 0 0 10px 4px $boxShadowGray;
   position: relative;
@@ -69,11 +69,10 @@ export default defineComponent({
   border-width: 0;
   align-items: center;
   background-color: $white;
-  margin: 0 0 2.5rem 0.25rem;
+  margin: 0;
 
   &--collapsed {
     height: 50px;
-    margin-bottom: calc(var(--h) - 50px + 40px);
   }
 
   &-top {
