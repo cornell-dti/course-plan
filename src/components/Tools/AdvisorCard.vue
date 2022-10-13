@@ -2,16 +2,16 @@
   <div class="advisors">
     <div class="advisors-content">
       <div class="advisors-heading-row">
-        <span class="advisors-info, advisors-heading-content">Type</span>
-        <span class="advisors-info, advisors-heading-content">Name</span>
-        <span class="advisors-info, advisors-heading-content">Email</span>
+        <span class="advisors-info advisors-heading-content">Type</span>
+        <span class="advisors-info advisors-heading-content">Name</span>
+        <span class="advisors-info advisors-heading-content">Email</span>
       </div>
       <div v-for="(advisor, index) in advisors" :key="index" class="advisors-row">
-        <span class="advisors-info,advisors-type"> {{ advisor.type }} </span>
-        <span class="advisors-info, advisors-name">
+        <span class="advisors-info advisors-type"> {{ advisor.type }} </span>
+        <span class="advisors-info advisors-name">
           {{ advisor.name }}
         </span>
-        <a class="advisors-info, advisors-email" :href="'mailto:' + advisor.email">
+        <a class="advisors-info advisors-email" :href="'mailto:' + advisor.email">
           {{ advisor.email }}
           <img
             class="advisors-email-icon"
@@ -85,25 +85,29 @@ export default defineComponent({
     color: #3d3d3d;
     align-self: center;
     justify-self: start;
-    margin-left: 0.25rem;
-    margin-right: 0.25rem;
+    //margin-left: 0.25rem;
+    //margin-right: 0.25rem;
   }
+
   &-row {
     display: grid;
     grid-template-columns: 20% 40% 40%;
     justify-content: space-evenly;
     margin: 0.375rem 0 0.375rem 0;
   }
+
   &-heading {
     &-content {
       font-weight: bold;
       color: black;
     }
+
     &-row {
       @extend .advisors-row;
       margin-top: 0;
     }
   }
+
   &-name {
     grid-column-start: 2;
     grid-column-end: 2;
@@ -114,11 +118,13 @@ export default defineComponent({
     grid-column-end: 3;
     color: #3d3d3d;
     text-decoration: underline;
+
     &:hover,
     &:focus,
     &:active {
       color: $yuxuanBlue;
     }
+
     display: flex;
     align-items: center;
 
