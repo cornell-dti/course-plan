@@ -72,6 +72,7 @@ export default defineComponent({
   margin: 0;
 
   &--collapsed {
+    min-height: 0;
     height: 50px;
   }
 
