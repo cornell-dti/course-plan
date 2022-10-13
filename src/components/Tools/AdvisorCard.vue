@@ -33,7 +33,7 @@ import getAdvisor from '@/requirements/tools-utilities';
 
 export default defineComponent({
   props: {
-    maxItems: { type: Number, required: false, default: 5 },
+    maxItems: { type: Number, required: false, default: undefined },
   },
   computed: {
     onboardingData(): AppOnboardingData {
@@ -43,7 +43,7 @@ export default defineComponent({
       return store.state.userName;
     },
     advisors(): AdvisorPackage[] {
-      return [
+      const packages = [
         ...(this.onboardingData.college
           ? getAdvisor(this.onboardingData.college, 'college', this.userInfo)
           : []),
@@ -53,7 +53,9 @@ export default defineComponent({
         ...this.onboardingData.minor
           .map(acronym => getAdvisor(acronym, 'minor', this.userInfo))
           .flat(),
-      ].slice(0, this.maxItems);
+      ];
+      if (this.maxItems !== undefined) return packages.slice(0, this.maxItems);
+      return packages;
     },
     advisorNames(): string[] {
       return this.advisors.map(x => x.name);
