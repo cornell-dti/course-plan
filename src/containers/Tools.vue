@@ -9,12 +9,18 @@
       </div>
     </div>
     <div class="toolsContainer-cards">
+      <card name="Progress Tracker" class="toolsContainer-card" id="progress"></card>
+
+      <card name="Export Schedule" class="toolsContainer-card" id="export" :desired-width="400">
+      </card>
+
       <card name="Contact Your Advisors" class="toolsContainer-card" id="advisors">
         <advisor-card></advisor-card>
       </card>
-      <!--      <card name="Another Card" class="toolsContainer-card" id="x" :desired-width="400">-->
-      <!--        <h1>This one has a smaller width than default!</h1>-->
-      <!--      </card>-->
+
+      <card name="Useful Links" class="toolsContainer-card" id="links" :desired-width="400">
+        <p>cornell.edu</p>
+      </card>
     </div>
   </div>
 </template>
@@ -56,13 +62,32 @@ export default {
   }
 
   &-cards {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-start;
-  }
+    display: grid;
+    grid-auto-columns: min-content;
+    //grid-auto-rows: min-content;
 
-  &-card {
-    //  CSS handled in Card component. Go there to adjust margins.
+    column-gap: 5rem;
+    row-gap: 3rem;
+
+    > :nth-child(1) {
+      grid-column: 1/2;
+      grid-row: 1/2;
+    }
+
+    > :nth-child(2) {
+      grid-column: 2/3;
+      grid-row: 1/2;
+    }
+
+    > :nth-child(3) {
+      grid-column: 1/2;
+      grid-row: 2/3;
+    }
+
+    > :nth-child(4) {
+      grid-column: 2/3;
+      grid-row: 2/3;
+    }
   }
 }
 </style>
