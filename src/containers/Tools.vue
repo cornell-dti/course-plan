@@ -9,16 +9,33 @@
       </div>
     </div>
     <div class="toolsContainer-cards">
-      <card name="Progress Tracker" class="toolsContainer-card" id="progress"></card>
+      <card
+        name="Progress Tracker"
+        class="toolsContainer-card"
+        id="progress"
+        :desired-height="100"
+      ></card>
 
-      <card name="Export Schedule" class="toolsContainer-card" id="export" :desired-width="400">
+      <card
+        name="Export Schedule"
+        class="toolsContainer-card"
+        id="export"
+        :desired-width="400"
+        :desired-height="100"
+      >
       </card>
 
       <card name="Contact Your Advisors" class="toolsContainer-card" id="advisors">
         <advisor-card></advisor-card>
       </card>
 
-      <card name="Useful Links" class="toolsContainer-card" id="links" :desired-width="400">
+      <card
+        name="Useful Links"
+        class="toolsContainer-card"
+        id="links"
+        :desired-width="400"
+        :desired-height="100"
+      >
         <p>cornell.edu</p>
       </card>
     </div>
