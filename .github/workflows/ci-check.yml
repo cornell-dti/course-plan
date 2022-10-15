@@ -12,7 +12,7 @@ jobs:
           node-version: '16'
           cache: 'npm'
       - name: NPM Clean Install
-        run: npm ci && cd functions && npm ci
+        run: npm ci
       - name: Run Prettier Check
         run: npm run format:check
       - name: Run Linter
@@ -31,7 +31,7 @@ jobs:
           node-version: '16'
           cache: 'npm'
       - name: NPM Install
-        run: npm install && cd functions && npm install
+        run: npm install
       - name: Check that package-lock.json has no changes
         run: exit $(git status --porcelain | wc -l)
   check-req-json:
