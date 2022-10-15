@@ -28,12 +28,12 @@ export { default as chooseToggleableRequirementOption } from './toggleable-requi
 export {
   updateRequirementChoices,
   updateRequirementChoice,
-  toggleRequirementChoice,
   deleteCoursesFromRequirementChoices,
   deleteCourseFromRequirementChoices,
   addOptOut,
   addAcknowledgedCheckerWarningOptIn,
   addArbitraryOptIn,
-} from './override-fulfillment-choices';
+  resolveConflicts,
+} from './overridden-fulfillment-choices';
 
 export { default as retrieveAnalytics } from './analytics';
