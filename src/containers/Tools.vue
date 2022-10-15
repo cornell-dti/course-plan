@@ -16,6 +16,10 @@
         :desired-height="100"
       ></card>
 
+      <card name="Contact Your Advisors" class="toolsContainer-card" id="advisors">
+        <advisor-card></advisor-card>
+      </card>
+
       <card
         name="Export Schedule"
         class="toolsContainer-card"
@@ -23,10 +27,6 @@
         :desired-width="400"
         :desired-height="100"
       >
-      </card>
-
-      <card name="Contact Your Advisors" class="toolsContainer-card" id="advisors">
-        <advisor-card></advisor-card>
       </card>
 
       <card
@@ -91,12 +91,12 @@ export default {
       grid-row: 1/2;
     }
 
-    > :nth-child(2) {
+    > :nth-child(3) {
       grid-column: 2/3;
       grid-row: 1/2;
     }
 
-    > :nth-child(3) {
+    > :nth-child(2) {
       grid-column: 1/2;
       grid-row: 2/3;
     }
@@ -104,6 +104,18 @@ export default {
     > :nth-child(4) {
       grid-column: 2/3;
       grid-row: 2/3;
+    }
+
+    @media only screen and (max-width: 1300px) {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+      > :nth-child(1) {
+        flex-grow: 1;
+      }
+      > :nth-child(2) {
+        flex-grow: 1;
+      }
     }
   }
 }
