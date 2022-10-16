@@ -47,12 +47,12 @@ export default defineComponent({
         ...(this.onboardingData.college
           ? getAdvisor(this.onboardingData.college, 'college', this.userInfo)
           : []),
-        ...this.onboardingData.major
-          .map(acronym => getAdvisor(acronym, 'major', this.userInfo))
-          .flat(),
-        ...this.onboardingData.minor
-          .map(acronym => getAdvisor(acronym, 'minor', this.userInfo))
-          .flat(),
+        ...this.onboardingData.major.flatMap(acronym =>
+          getAdvisor(acronym, 'major', this.userInfo)
+        ),
+        ...this.onboardingData.minor.flatMap(acronym =>
+          getAdvisor(acronym, 'minor', this.userInfo)
+        ),
       ].slice(0, this.maxItems);
     },
     advisorNames(): string[] {
