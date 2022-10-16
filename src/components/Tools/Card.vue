@@ -26,8 +26,8 @@ export default defineComponent({
   props: {
     id: { type: String, required: true },
     name: { type: String, required: true },
-    desiredWidth: { type: Number, required: false, default: 574 },
-    desiredHeight: { type: Number, required: false, default: 275 },
+    desiredWidth: { type: Number, required: false, default: 575 },
+    desiredHeight: { type: Number, required: false, default: 150 },
   },
 
   data() {
