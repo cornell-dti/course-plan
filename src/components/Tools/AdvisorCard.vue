@@ -11,7 +11,7 @@
         <span class="advisors-info advisors-name">
           {{ advisor.name }}
         </span>
-        <a class="advisors-info advisors-email" :href="'mailto:' + advisor.email">
+        <a class="advisors-info advisors-email" :href="`mailto:${advisor.email}`">
           {{ advisor.email }}
           <img
             class="advisors-email-icon"
