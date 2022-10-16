@@ -81,7 +81,6 @@ export default {
   &-cards {
     display: grid;
     grid-auto-columns: min-content;
-    //grid-auto-rows: min-content;
 
     column-gap: 5rem;
     row-gap: 3rem;

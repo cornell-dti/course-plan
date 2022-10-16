@@ -85,8 +85,6 @@ export default defineComponent({
     color: #3d3d3d;
     align-self: center;
     justify-self: start;
-    //margin-left: 0.25rem;
-    //margin-right: 0.25rem;
   }
 
   &-row {
