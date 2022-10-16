@@ -32,6 +32,15 @@ const getSubjects = async (semester: string): Promise<readonly string[]> => {
   }
 };
 
+const cleanString = (value: string | null) => {
+  if (value === null) return '';
+  return value.replace(/\u00a0/g, ' ');
+};
+
+const cleanMaybeString = (value: string | null | undefined): string | undefined => {
+  return value?.replace(/\u00a0/g, ' ') || undefined;
+};
+
 /** Throws away course object fields we don't need. Used for generate small-enough course json. */
 const courseFieldFilter = ({
   subject,
@@ -49,23 +58,23 @@ const courseFieldFilter = ({
   acadCareer,
   acadGroup,
 }: Course): Course => ({
-  subject,
+  subject: cleanString(subject),
   crseId,
-  catalogNbr,
-  titleLong,
+  catalogNbr: cleanString(catalogNbr),
+  titleLong: cleanString(titleLong),
   enrollGroups: enrollGroups.map(({ unitsMaximum, unitsMinimum }) => ({
     unitsMaximum,
     unitsMinimum,
   })),
-  catalogWhenOffered: catalogWhenOffered || undefined,
-  catalogBreadth: catalogBreadth || undefined,
-  catalogDistr: catalogDistr || undefined,
-  catalogComments: catalogComments || undefined,
-  catalogSatisfiesReq: catalogSatisfiesReq || undefined,
-  catalogCourseSubfield: catalogCourseSubfield || undefined,
-  catalogAttribute: catalogAttribute || undefined,
-  acadCareer,
-  acadGroup,
+  catalogWhenOffered: cleanMaybeString(catalogWhenOffered),
+  catalogBreadth: cleanMaybeString(catalogBreadth),
+  catalogDistr: cleanMaybeString(catalogDistr),
+  catalogComments: cleanMaybeString(catalogComments),
+  catalogSatisfiesReq: cleanMaybeString(catalogSatisfiesReq),
+  catalogCourseSubfield: cleanMaybeString(catalogCourseSubfield),
+  catalogAttribute: cleanMaybeString(catalogAttribute),
+  acadCareer: cleanString(acadCareer),
+  acadGroup: cleanString(acadGroup),
 });
 
 /** @returns a list of all course objects in a semester for a given subject. */
