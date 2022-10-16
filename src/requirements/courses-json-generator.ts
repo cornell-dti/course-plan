@@ -37,9 +37,8 @@ const cleanString = (value: string | null) => {
   return value.replace(/\u00a0/g, ' ');
 };
 
-const cleanMaybeString = (value: string | null | undefined): string | undefined => {
-  return value?.replace(/\u00a0/g, ' ') || undefined;
-};
+const cleanMaybeString = (value: string | null | undefined): string | undefined =>
+  value?.replace(/\u00a0/g, ' ') || undefined;
 
 /** Throws away course object fields we don't need. Used for generate small-enough course json. */
 const courseFieldFilter = ({
