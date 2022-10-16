@@ -11,18 +11,18 @@
     <div class="toolsContainer-cards">
       <card
         name="Progress Tracker"
-        class="toolsContainer-card"
+        class="toolsContainer-card-progress"
         id="progress"
         :desired-height="100"
       ></card>
 
-      <card name="Contact Your Advisors" class="toolsContainer-card" id="advisors">
+      <card name="Contact Your Advisors" class="toolsContainer-card-advisors" id="advisors">
         <advisor-card></advisor-card>
       </card>
 
       <card
         name="Export Schedule"
-        class="toolsContainer-card"
+        class="toolsContainer-card-export"
         id="export"
         :desired-width="400"
         :desired-height="100"
@@ -31,7 +31,7 @@
 
       <card
         name="Useful Links"
-        class="toolsContainer-card"
+        class="toolsContainer-card-links"
         id="links"
         :desired-width="400"
         :desired-height="100"
@@ -85,35 +85,44 @@ export default {
     column-gap: 5rem;
     row-gap: 3rem;
 
-    > :nth-child(1) {
+    @media only screen and (max-width: 1300px) {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+    }
+  }
+
+  &-card {
+    &-progress {
       grid-column: 1/2;
       grid-row: 1/2;
     }
 
-    > :nth-child(3) {
-      grid-column: 2/3;
-      grid-row: 1/2;
-    }
-
-    > :nth-child(2) {
+    &-advisors {
       grid-column: 1/2;
       grid-row: 2/3;
     }
 
-    > :nth-child(4) {
+    &-export {
+      grid-column: 2/3;
+      grid-row: 1/2;
+    }
+
+    &-links {
       grid-column: 2/3;
       grid-row: 2/3;
     }
 
     @media only screen and (max-width: 1300px) {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-around;
-      > :nth-child(1) {
+      &-progress {
         flex-grow: 1;
       }
-      > :nth-child(2) {
+      &-advisors {
         flex-grow: 1;
+      }
+      &-export {
+      }
+      &-links {
       }
     }
   }
