@@ -43,7 +43,7 @@ export default defineComponent({
       return store.state.userName;
     },
     advisors(): AdvisorPackage[] {
-      const packages = [
+      return [
         ...(this.onboardingData.college
           ? getAdvisor(this.onboardingData.college, 'college', this.userInfo)
           : []),
@@ -53,9 +53,7 @@ export default defineComponent({
         ...this.onboardingData.minor
           .map(acronym => getAdvisor(acronym, 'minor', this.userInfo))
           .flat(),
-      ];
-      if (this.maxItems !== undefined) return packages.slice(0, this.maxItems);
-      return packages;
+      ].slice(0, this.maxItems);
     },
     advisorNames(): string[] {
       return this.advisors.map(x => x.name);
