@@ -39,15 +39,11 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import store from '@/store';
-import { getCollegeFullName, getMajorFullName } from '@/utilities';
-import { AdvisorPackage } from '@/requirements/tools-types';
-import getAdvisor from '@/requirements/tools-utilities';
 import confetti from '@/assets/images/progress_tracker/confetti.svg';
 import fire from '@/assets/images/progress_tracker/fire.svg';
 import flex from '@/assets/images/progress_tracker/flex.svg';
 import hands from '@/assets/images/progress_tracker/hands_raised.svg';
 import star from '@/assets/images/progress_tracker/star.svg';
-import introJs from 'intro.js';
 
 export default defineComponent({
   data() {
@@ -82,11 +78,11 @@ export default defineComponent({
     };
   },
   methods: {
-    queryRequirements(): any {
-      this.requirements.forEach(req => {
-        let totalRequired = 0,
-          totalCompleted = 0;
-        req.reqs.forEach(req => {
+    queryRequirements(): void {
+      this.requirements.forEach(r => {
+        let totalRequired = 0;
+        let totalCompleted = 0;
+        r.reqs.forEach(req => {
           if (!(req.fulfillment.fulfilledBy === 'self-check')) {
             totalRequired += 1 + Object.values(req.fulfillment.additionalRequirements ?? {}).length;
           }
@@ -101,7 +97,7 @@ export default defineComponent({
             }
           );
         });
-        switch (req.groupName) {
+        switch (r.groupName) {
           case 'College':
             this.hasCollege = true;
             this.collegeRequirementCount.finished = totalCompleted;
@@ -117,7 +113,7 @@ export default defineComponent({
             this.minorRequirementCount.finished = totalCompleted;
             this.minorRequirementCount.needed = totalRequired;
             break;
-          case 'Grad':
+          default:
             this.hasGrad = true;
             this.gradRequirementCount.finished = totalCompleted;
             this.gradRequirementCount.needed = totalRequired;
@@ -126,12 +122,12 @@ export default defineComponent({
       });
     },
     sumRequirements(): number {
-      let totalRequired =
+      const totalRequired =
         this.collegeRequirementCount.needed +
         this.majorRequirementCount.needed +
         this.minorRequirementCount.needed +
         this.gradRequirementCount.needed;
-      let totalCompleted =
+      const totalCompleted =
         this.collegeRequirementCount.finished +
         this.majorRequirementCount.finished +
         this.minorRequirementCount.finished +
@@ -140,7 +136,7 @@ export default defineComponent({
     },
   },
   computed: {
-    progressValue(): String {
+    progressValue(): string {
       return 'transform: rotate(63deg)';
       // return 45 + 1.8 * this['progress-info'];
     },
@@ -153,20 +149,22 @@ export default defineComponent({
     },
     getImage(): string {
       this.queryRequirements();
-      let progress = this.sumRequirements();
+      const progress = this.sumRequirements();
       if (progress < 0.2) {
-        return this.progressImg['Hands'];
-      } else if (progress < 0.4) {
-        return this.progressImg['Flex'];
-      } else if (progress < 0.6) {
-        return this.progressImg['Star'];
-      } else if (progress < 0.8) {
-        return this.progressImg['Fire'];
+        return this.progressImg.Hands;
       }
-      return this.progressImg['Confetti'];
+      if (progress < 0.4) {
+        return this.progressImg.Flex;
+      }
+      if (progress < 0.6) {
+        return this.progressImg.Star;
+      }
+      if (progress < 0.8) {
+        return this.progressImg.Fire;
+      }
+      return this.progressImg.Confetti;
     },
     getProgressString(): string {
-      let progress = this.sumRequirements;
       return 'You are almost there!';
     },
   },
