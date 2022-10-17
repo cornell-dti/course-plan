@@ -49,7 +49,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import store from '@/store';
-import { setOrderByNewest } from '@/global-firestore-data/semesters';
+import { setOrderByNewest } from '@/global-firestore-data/user-semesters';
 import defaultSem from '@/assets/images/views/twoColumnSelected.svg';
 import compactSem from '@/assets/images/views/fourColumnSelected.svg';
 import newestArrow from '@/assets/images/views/newestArrow.svg';

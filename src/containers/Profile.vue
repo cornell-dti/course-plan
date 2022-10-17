@@ -238,7 +238,7 @@ export default defineComponent({
         this.updateTransfer([], 'no');
       }
     },
-    updateTransfer(exams: readonly FirestoreAPIBExam[], tookSwim: 'yes' | 'no') {
+    updateTransfer(exams: readonly FirestoreTransferExam[], tookSwim: 'yes' | 'no') {
       const userExams = exams.filter(
         ({ subject, score }) => score !== 0 && subject !== placeholderText
       );

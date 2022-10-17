@@ -9,15 +9,31 @@
       </div>
     </div>
     <div class="toolsContainer-cards">
-      <card name="Contact Your Advisors" class="toolsContainer-card" id="advisors">
+      <card name="Progress Tracker" class="toolsContainer-card-progress" id="progress"></card>
+
+      <card
+        name="Contact Your Advisors"
+        class="toolsContainer-card-advisors"
+        id="advisors"
+        :desired-height="275"
+      >
         <advisor-card></advisor-card>
       </card>
       <card name="Progress Tracker" class="toolsContainer-card" id="progress">
-        <progress-tracker :progress-info="10" />
+        <progress-tracker />
       </card>
-      <!--      <card name="Another Card" class="toolsContainer-card" id="x" :desired-width="400">-->
-      <!--        <h1>This one has a smaller width than default!</h1>-->
-      <!--      </card>-->
+
+      <card
+        name="Export Schedule"
+        class="toolsContainer-card-export"
+        id="export"
+        :desired-width="400"
+      >
+      </card>
+
+      <card name="Useful Links" class="toolsContainer-card-links" id="links" :desired-width="400">
+        <p>cornell.edu</p>
+      </card>
     </div>
   </div>
 </template>
@@ -60,14 +76,52 @@ export default {
   }
 
   &-cards {
-    display: flex;
-    flex-direction: column;
-    flex-wrap: wrap;
-    justify-content: flex-start;
+    display: grid;
+    grid-auto-columns: min-content;
+
+    column-gap: 5rem;
+    row-gap: 3rem;
+
+    @media only screen and (max-width: 1300px) {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+    }
   }
 
   &-card {
-    //  CSS handled in Card component. Go there to adjust margins.
+    &-progress {
+      grid-column: 1/2;
+      grid-row: 1/2;
+    }
+
+    &-advisors {
+      grid-column: 1/2;
+      grid-row: 2/3;
+    }
+
+    &-export {
+      grid-column: 2/3;
+      grid-row: 1/2;
+    }
+
+    &-links {
+      grid-column: 2/3;
+      grid-row: 2/3;
+    }
+
+    @media only screen and (max-width: 1300px) {
+      &-progress {
+        flex-grow: 1;
+      }
+      &-advisors {
+        flex-grow: 1;
+      }
+      &-export {
+      }
+      &-links {
+      }
+    }
   }
 }
 </style>

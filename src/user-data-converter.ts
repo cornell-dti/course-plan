@@ -154,6 +154,16 @@ export const createAppOnboardingData = (data: FirestoreOnboardingUserData): AppO
     'gradPrograms' in data && data.gradPrograms.length !== 0
       ? data.gradPrograms[0].acronym
       : undefined,
-  exam: 'exam' in data ? [...data.exam] : [],
+  // TODO @bshen migration script from type to examType
+  exam:
+    'exam' in data
+      ? [
+          ...data.exam.map(e => ({
+            ...e,
+            type: e.examType || e.type,
+            examType: e.type || e.examType,
+          })),
+        ]
+      : [],
   tookSwim: 'tookSwim' in data ? data.tookSwim : 'no',
 });

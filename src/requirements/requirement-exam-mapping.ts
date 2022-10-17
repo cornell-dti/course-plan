@@ -1,8 +1,4 @@
-import examData, {
-  OTHER_COLLEGES,
-  ExamFulfillment,
-  ExamFulfillments,
-} from './data/exams/ExamCredit';
+import examData, { ExamFulfillmentBase, OTHER_COLLEGES } from './data/exams/ExamCredit';
 import { colleges, College } from './data';
 
 // TODO @bshen try to refactor these types
@@ -43,8 +39,8 @@ type ExamRequirementsConditions = {
  *   ...
  * ]
  */
-const examFulfillmentList: ExamFulfillment[] = Object.values(examData)
-  .map((examFulfillments: ExamFulfillments) => Object.values(examFulfillments))
+const examFulfillmentList: ExamFulfillmentBase[] = Object.values(examData)
+  .map(examFulfillments => Object.values(examFulfillments))
   .flat(2);
 
 export const examCourseIds: Set<number> = new Set(
