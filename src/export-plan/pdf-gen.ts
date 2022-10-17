@@ -30,6 +30,8 @@ const headerFontSize = 10.5
 
 const grey = [117, 117, 117]
 
+const reqsToFilterOut = ["A&S Credits"]
+
 export const genPDF = (
 ): void => {
   // It can parse html:
@@ -116,8 +118,8 @@ export const genPDF = (
   lineColor: [216, 216, 216]},
       columnStyles: {
         0: {cellWidth: 266},
-        1: {cellWidth: 55},
-        2: {cellWidth: 195},
+        1: {cellWidth: 50},
+        2: {cellWidth: 200},
       },
       // didDrawPage: data => {
       //   data.
@@ -144,17 +146,26 @@ export const genPDF = (
           doc.line(data.cell.x + data.column.width, data.cell.y, data.cell.x, data.cell.y);
       }
 
-      // if (data.column.index == 2 && data.section == "body" && data.row.index >= 0) {
-      //   console.log(data.row.index)
-      //   groups[data.row.index].forEach((group, index) => {
+      tableHeight = data.cell.y + data.row.height - startct + rowHeight
 
-      //     // var xPos = data.cell.x + body[data.row.index][index].length * 3
-      //     // var yPos = data.cell.y + 1
-      //     var colour = colours[data.row.index][index]
+      if (data.column.index == 2 && data.section == "body" && data.row.index >= 0 && data.row.index < body.length) {
+        console.log(data.row.index)
+        var yPos = data.cell.y + 3
+        groups[data.row.index].forEach((group, index) => {
 
-      //     renderBubbles(doc, 10, 20, group, colour)
-      //   })
-      // }
+          var xPos = data.cell.x + doc.getTextWidth(body[data.row.index][2].split("\n")[index]) + 8
+          // data.cell.x + data.cell.contentHeight + 5
+          console.log(data.cell.text.length)
+          console.log(data.cell.contentWidth)
+          // console.log(body[data.row.index])
+          console.log(body[data.row.index][2].split("\n")[index])
+          
+          var colour = colours[data.row.index][index]
+
+          renderBubbles(doc, xPos, yPos, group, colour)
+          yPos += rowFontSize + 1.5
+        })
+      }
       }
     })
 
@@ -197,6 +208,7 @@ const trimEmptySems = (sems: readonly FirestoreSemester[]): readonly FirestoreSe
 
 const getFulfilledReqs = (course: FirestoreSemesterCourse): readonly [string[], string[], string[]] => {
   var reqsFulfilled = store.state.safeRequirementFulfillmentGraph.getConnectedRequirementsFromCourse({uniqueId: course.uniqueID})
+  reqsFulfilled = reqsFulfilled.filter(req => !(reqsToFilterOut.includes(store.state.userRequirementsMap[req].name)))
   return [reqsFulfilled.map(req => store.state.userRequirementsMap[req].name), 
   reqsFulfilled.map(req => 
     {switch(store.state.userRequirementsMap[req].sourceType) {
@@ -217,7 +229,8 @@ const getFulfilledReqs = (course: FirestoreSemesterCourse): readonly [string[], 
 
 const renderBubbles = (doc: jsPDF, xPos: number, yPos: number, text: string, colour: string) => {
   doc.setFillColor(colour)
-  doc.roundedRect(xPos, yPos, (text.length + 2) * 3, 12, 1, 1, "F")
+  const bubbleWidth =  8 + (text.length) * 5.5
+  doc.roundedRect(xPos, yPos, bubbleWidth, 11, 6, 6, "F")
   doc.setTextColor(256, 256, 256)
-  doc.text(text, xPos + 3, yPos + 1)
+  doc.text(text, xPos + bubbleWidth/2, yPos + 8.5, {align: "center"})
 }
