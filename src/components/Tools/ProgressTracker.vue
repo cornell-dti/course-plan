@@ -84,7 +84,6 @@ export default defineComponent({
   methods: {
     queryRequirements(): any {
       this.requirements.forEach(req => {
-        console.log(req);
         let totalRequired = 0,
           totalCompleted = 0;
         req.reqs.forEach(req => {
@@ -137,7 +136,6 @@ export default defineComponent({
         this.majorRequirementCount.finished +
         this.minorRequirementCount.finished +
         this.gradRequirementCount.finished;
-      console.log(totalCompleted, totalRequired);
       return totalCompleted / totalRequired;
     },
   },
