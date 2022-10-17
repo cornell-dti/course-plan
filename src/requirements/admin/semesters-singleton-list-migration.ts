@@ -3,31 +3,22 @@
 import { usernameCollection, semestersCollection } from '../../firebase-admin-config';
 
 /**
- * Perform migration of semester type to semester season
+ * Perform migration of semester to plans with a list of semesters
  */
-async function runOnUser(userEmail: string, runOnDB: boolean) {
-  const semesters = await semestersCollection
-    .doc(userEmail)
-    .get()
-    .then(it => {
-      const data = it.data();
-      return (data && data.semesters) || [];
-    });
+async function runOnUser(userEmail: string) {
+  const semestersDoc = await semestersCollection.doc(userEmail).get();
 
-  // TODO replace with new script
-  const plans = {1: semesters};
-  console.log(plans)
+  const semesters = semestersDoc.data()?.semesters ?? [];
 
-  if (runOnDB) {
-    await semestersCollection.doc(userEmail).update({ plans });
-  }
+  await semestersCollection.doc(userEmail).update({
+    plans: [{ semesters }],
+  });
 }
 
 async function main() {
   let userEmail = process.argv[2];
-  const runOnDB = process.argv.includes('--run-on-db');
-  if (userEmail != null && userEmail !== '--run-on-db') {
-    await runOnUser(userEmail, runOnDB);
+  if (userEmail != null) {
+    await runOnUser(userEmail);
     return;
   }
   const collection = await usernameCollection.get();
@@ -36,7 +27,7 @@ async function main() {
     console.group(`Running on ${userEmail}...`);
     // Intentionally await in a loop to have no interleaved console logs.
     // eslint-disable-next-line no-await-in-loop
-    await runOnUser(userEmail, runOnDB);
+    await runOnUser(userEmail);
     console.groupEnd();
   }
 }

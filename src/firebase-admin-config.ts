@@ -25,6 +25,7 @@ export const usernameCollection = db
   .withConverter(getTypedFirestoreDataConverter<FirestoreUserName>());
 
 export type SemesterDocumentData = {
+  plans?: ReadonlyArray<{ semesters: readonly FirestoreSemester[] }>;
   semesters: readonly FirestoreSemester[];
   orderByNewest: boolean;
 };

@@ -16,6 +16,7 @@ export const getTypedFirestoreDataConverter = <T>(): CommonFirestoreDataConverte
 });
 
 export type SemesterDocumentData = {
+  readonly plans?: ReadonlyArray<{ semesters: readonly FirestoreSemester[] }>;
   readonly semesters: readonly FirestoreSemester[];
   readonly orderByNewest: boolean;
 };
