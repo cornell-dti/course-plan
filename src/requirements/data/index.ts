@@ -77,41 +77,50 @@ const json: RequirementsJson = {
     UNI: {
       name: 'University',
       requirements: universityRequirements,
+      abbr: 'other',
     },
   },
   college: {
     AG: {
       name: 'Agriculture and Life Sciences',
       requirements: calsRequirements,
+      abbr: 'cals',
     },
     AR: {
       name: 'Architecture, Art and Planning',
       requirements: aapRequirements,
+      abbr: 'aap',
     },
     AS1: {
       name: 'Arts and Sciences [before Fall 2020]',
       requirements: casPreFA2020Requirements,
+      abbr: "a&s",
     },
     AS2: {
       name: 'Arts and Sciences [Fall 2020 and later]',
       requirements: casFA2020Requirements,
+      abbr: "a&s",
     },
     EN: {
       name: 'Engineering',
       requirements: engineeringRequirements,
       advisors: engineeringAdvisors,
+      abbr: "eng",
     },
     HE: {
       name: 'Human Ecology',
       requirements: humanEcologyRequirements,
+      abbr: "humec",
     },
     IL: {
       name: 'Industrial Labor Relations',
       requirements: ilrRequirements,
+      abbr: "ilr",
     },
     BU: {
       name: 'SC Johnson College of Business',
       requirements: businessRequirements,
+      abbr: "johnson",
     },
   },
   major: {
@@ -428,5 +437,6 @@ const json: RequirementsJson = {
 
 export const colleges = ['AG', 'AR', 'AS1', 'AS2', 'EN', 'HE', 'IL', 'BU'] as const;
 export type College = typeof colleges[number];
-
 export default json;
+
+export const getCollegeAbbr = (collegeCode: string) => json.college[collegeCode].abbr

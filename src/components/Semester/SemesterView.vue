@@ -60,6 +60,7 @@
     </div>
     <div class="semesterView-bot">
       <div class="semesterView-builtBy">
+        <button @click="submit">download me</button>
         Built with
         <img class="semesterView-heart" src="@/assets/images/redHeart.svg" alt="heart" />
         by
@@ -76,6 +77,7 @@ import { defineComponent } from 'vue';
 import Semester from '@/components/Semester/Semester.vue';
 import Confirmation from '@/components/Modals/Confirmation.vue';
 import NewSemesterModal from '@/components/Modals/NewSemesterModal.vue';
+import { genPDF} from '@/export-plan';
 
 import store from '@/store';
 import { GTagEvent } from '@/gtag';
@@ -118,6 +120,10 @@ export default defineComponent({
       return (
         this.semesters[0].year === semester.year && this.semesters[0].season === semester.season
       );
+    },
+    submit() {
+      console.log("hi");
+      genPDF();
     },
     toggleCompact(toggled: boolean) {
       if (toggled !== this.compact) {
