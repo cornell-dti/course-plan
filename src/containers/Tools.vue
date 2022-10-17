@@ -12,6 +12,9 @@
       <card name="Contact Your Advisors" class="toolsContainer-card" id="advisors">
         <advisor-card></advisor-card>
       </card>
+      <card name="Progress Tracker" class="toolsContainer-card" id="progress">
+        <progress-tracker :progress-info="10" />
+      </card>
       <!--      <card name="Another Card" class="toolsContainer-card" id="x" :desired-width="400">-->
       <!--        <h1>This one has a smaller width than default!</h1>-->
       <!--      </card>-->
@@ -22,9 +25,10 @@
 <script>
 import Card from '@/components/Tools/Card.vue';
 import AdvisorCard from '@/components/Tools/AdvisorCard.vue';
+import ProgressTracker from '@/components/Tools/ProgressTracker.vue';
 
 export default {
-  components: { AdvisorCard, Card },
+  components: { AdvisorCard, Card, ProgressTracker },
 };
 </script>
 
@@ -57,6 +61,7 @@ export default {
 
   &-cards {
     display: flex;
+    flex-direction: column;
     flex-wrap: wrap;
     justify-content: flex-start;
   }
