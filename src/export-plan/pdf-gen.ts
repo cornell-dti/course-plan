@@ -1,6 +1,3 @@
-import { collection, getDocs, limit, orderBy, query } from 'firebase/firestore';
-
-import { db } from '../firebase-frontend-config';
 import { jsPDF } from "jspdf";
 import autoTable from 'jspdf-autotable';
 import {
@@ -12,10 +9,7 @@ import {
 } from '../utilities';
 import store from '../store';
 import {addFonts} from './add-fonts';
-import { render } from '@vue/runtime-dom';
-import introJs from 'intro.js';
 import {getCollegeAbbr} from '@/requirements/data/index'
-import { cornellCourseRosterCourseDetailedInformationToPartialBottomCourseInformation } from '@/user-data-converter';
 import json from '@/assets/courses/full-courses.json';
 import decoratedRequirementJson from '@/requirements/typed-requirement-json';
 
@@ -34,10 +28,6 @@ const reqsToFilterOut = ["A&S Credits"]
 
 export const genPDF = (
 ): void => {
-  // It can parse html:
-  // <table id="my-table"><!-- ... --></table>
-  // autoTable(doc, { html: '#my-table' })
-
   const doc = new jsPDF({unit: "pt", format: "letter"})
 
   addFonts(doc)
@@ -84,24 +74,33 @@ export const genPDF = (
   // getFulfilledReqs(sems)
   for (var sem of sems) {
 
-    var tableHeight = rowHeight * (2 + sem.courses.length)
-    if (sem.courses.length == 0) tableHeight = rowHeight
+    var headerHeight = rowHeight * (2 + sem.courses.length)
+    if (sem.courses.length == 0) headerHeight = rowHeight
 
+    console.log(headerHeight)
+    var [body, groups, colours] =  getCourseRows(sem)
+
+    var estimatedHeight = estimateTableHeight(body)
+    if (estimatedHeight + startct + 35 > doc.internal.pageSize.height) {
+      doc.addPage()
+      startct = 70
+    }
+    
     doc.setFillColor(212, 229, 230)
-
-    console.log(tableHeight)
-    doc.roundedRect(tableX, startct - rowHeight, tableWidth, tableHeight, 4, 4, "F")
+    doc.roundedRect(tableX, startct - rowHeight, tableWidth, headerHeight, 4, 4, "F")
 
     doc.setFont("ProximaNova-Bold", "bold");
     doc.text(`${sem.season} ${sem.year}`, tableX + 10, startct - 6)
     doc.setFont("ProximaNova-Regular", "normal");
 
+    var tableHeight = rowHeight
+
+
     if (sem.courses.length > 0) {
-      var [body, groups, colours] =  getCourseRows(sem)
     autoTable(doc, {
       head: tableHeader,
       body: body,
-      margin: tableX,
+      margin: {left: tableX, bottom: 0},
       startY: startct,
       pageBreak: 'auto',
       tableWidth: tableWidth,
@@ -121,9 +120,6 @@ export const genPDF = (
         1: {cellWidth: 50},
         2: {cellWidth: 200},
       },
-      // didDrawPage: data => {
-      //   data.
-      // },
       didParseCell: data => {
         data.cell.styles.lineColor = [216, 216, 216]
         data.cell.styles.lineWidth = 0.5
@@ -233,4 +229,15 @@ const renderBubbles = (doc: jsPDF, xPos: number, yPos: number, text: string, col
   doc.roundedRect(xPos, yPos, bubbleWidth, 11, 6, 6, "F")
   doc.setTextColor(256, 256, 256)
   doc.text(text, xPos + bubbleWidth/2, yPos + 8.5, {align: "center"})
+}
+
+const estimateTableHeight = (body: string[][]): number => {
+  const courseCharPerLine = 50
+
+  var height = rowHeight * 2
+  body.forEach((row, index) => {
+    var numberOfLines = Math.max(row[0].length / courseCharPerLine, row[2].split('\n').length)
+    height += numberOfLines * (rowFontSize + 4)
+  })
+  return height
 }
