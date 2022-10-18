@@ -25,7 +25,9 @@ const reqsToFilterOut = ['A&S Credits'];
 
 const bubbleColourMap: Record<RequirementGroupType, (req?: string) => string> = {
   College: (req?: string) =>
-    req && store.state.userRequirementsMap[req].sourceSpecificName === 'UNI' ? '#1AA9A5' : '#4F7D91',
+    req && store.state.userRequirementsMap[req].sourceSpecificName === 'UNI'
+      ? '#1AA9A5'
+      : '#4F7D91',
   Grad: () => '#1E8481',
   Major: () => '#1E8481',
   Minor: () => '#145351',
@@ -52,19 +54,19 @@ export const genPDF = (): void => {
   doc.text('Entrance Date:', 354, 76);
   doc.text('Graduation Date:', 354, 93.2);
 
-  doc.text('college req', 365, 110)
-  doc.text('major req', 365, 127.5)
-  doc.text('minor req', 459, 110)
-  doc.text('other courses', 459, 127.5)
+  doc.text('college req', 365, 110);
+  doc.text('major req', 365, 127.5);
+  doc.text('minor req', 459, 110);
+  doc.text('other courses', 459, 127.5);
 
-  doc.setFillColor(bubbleColourMap.College())
-  doc.circle(357, 107, 3, 'F')
-  doc.setFillColor(bubbleColourMap.Major())
-  doc.circle(357, 124.5, 3, 'F')
-  doc.setFillColor(bubbleColourMap.Minor())
-  doc.circle(451, 107, 3, 'F')
-  doc.setFillColor('#1AA9A5')
-  doc.circle(451, 124.5, 3, 'F')
+  doc.setFillColor(bubbleColourMap.College());
+  doc.circle(357, 107, 3, 'F');
+  doc.setFillColor(bubbleColourMap.Major());
+  doc.circle(357, 124.5, 3, 'F');
+  doc.setFillColor(bubbleColourMap.Minor());
+  doc.circle(451, 107, 3, 'F');
+  doc.setFillColor('#1AA9A5');
+  doc.circle(451, 124.5, 3, 'F');
   doc.setTextColor(117, 117, 117);
 
   // TODO: include middle name
