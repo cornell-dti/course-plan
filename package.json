@@ -45,6 +45,7 @@
     "@babel/core": "^7.13.10",
     "@babel/preset-env": "^7.13.12",
     "@babel/preset-typescript": "^7.13.0",
+    "@tsconfig/node14": "^1.0.3",
     "@types/jest": "^26.0.21",
     "@types/minimist": "^1.2.2",
     "@types/node-fetch": "^2.5.8",
