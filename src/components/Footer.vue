@@ -23,7 +23,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { genPDF } from '@/export-plan';
+import genPDF from '@/export-plan';
 
 export default defineComponent({
   methods: {
@@ -32,7 +32,6 @@ export default defineComponent({
       return today.getFullYear();
     },
     submit() {
-      console.log('hi');
       genPDF();
     },
   },

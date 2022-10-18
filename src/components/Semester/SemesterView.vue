@@ -77,7 +77,7 @@ import { defineComponent } from 'vue';
 import Semester from '@/components/Semester/Semester.vue';
 import Confirmation from '@/components/Modals/Confirmation.vue';
 import NewSemesterModal from '@/components/Modals/NewSemesterModal.vue';
-import { genPDF } from '@/export-plan';
+import genPDF from '@/export-plan';
 
 import store from '@/store';
 import { GTagEvent } from '@/gtag';
@@ -122,7 +122,6 @@ export default defineComponent({
       );
     },
     submit() {
-      console.log('hi');
       genPDF();
     },
     toggleCompact(toggled: boolean) {

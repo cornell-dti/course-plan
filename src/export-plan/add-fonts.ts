@@ -12,3 +12,5 @@ export const addFonts = (doc: jsPDF) => {
   doc.addFileToVFS('ProximaNova-Bold-bold.ttf', font);
   doc.addFont('ProximaNova-Bold-bold.ttf', 'ProximaNova-Bold', 'bold');
 };
+
+export default addFonts;

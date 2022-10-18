@@ -98,15 +98,12 @@ export const genPDF = (): void => {
   let sems = sortedSemesters(store.state.semesters, false);
   sems = trimEmptySems(sems);
   const tableHeader = [['Courses', 'Credits', 'Requirements Fulfilled']];
-  console.log(doc.internal.pageSize.width);
-  console.log(sems);
   let startct = firstTableY;
 
   for (const sem of sems) {
     let headerHeight = rowHeight * (2 + sem.courses.length);
     if (sem.courses.length === 0) headerHeight = rowHeight;
 
-    console.log(headerHeight);
     const [body, groups, colours] = getCourseRows(sem);
 
     const estimatedHeight = estimateTableHeight(body);
@@ -122,25 +119,13 @@ export const genPDF = (): void => {
     doc.text(`${sem.season} ${sem.year}`, tableX + 20, startct - 6);
     doc.setFont('ProximaNova-Regular', 'normal');
 
-    let emojiPath: string;
-    switch (sem.season) {
-      case 'Fall': {
-        emojiPath = 'src/assets/images/pdf-gen/fall.png';
-        break;
-      }
-      case 'Spring': {
-        emojiPath = 'src/assets/images/pdf-gen/spring.png';
-        break;
-      }
-      case 'Summer': {
-        emojiPath = 'src/assets/images/pdf-gen/summer.png';
-        break;
-      }
-      case 'Winter': {
-        emojiPath = 'src/assets/images/pdf-gen/winter.png';
-        break;
-      }
-    }
+    const emojiPathMap = {
+      Fall: 'src/assets/images/pdf-gen/fall.png',
+      Spring: 'src/assets/images/pdf-gen/spring.png',
+      Summer: 'src/assets/images/pdf-gen/summer.png',
+      Winter: 'src/assets/images/pdf-gen/winter.png',
+    };
+    const emojiPath = emojiPathMap[sem.season];
     const emoji = new Image();
     emoji.src = emojiPath;
     doc.addImage(emoji, 'svg', tableX + 5, startct - 15.5, 12, 12);
@@ -207,18 +192,12 @@ export const genPDF = (): void => {
             data.row.index >= 0 &&
             data.row.index < body.length
           ) {
-            console.log(data.row.index);
             let yPos = data.cell.y + 3;
             groups[data.row.index].forEach((group, index) => {
               const xPos =
                 data.cell.x + doc.getTextWidth(body[data.row.index][2].split('\n')[index]) + 8;
-              console.log(data.cell.text.length);
-              console.log(data.cell.contentWidth);
-              // console.log(body[data.row.index])
-              console.log(body[data.row.index][2].split('\n')[index]);
 
               const colour = colours[data.row.index][index];
-
               renderBubbles(doc, xPos, yPos, group, colour);
               yPos += rowFontSize + 1.5;
             });
@@ -284,22 +263,20 @@ const getFulfilledReqs = (
   reqsFulfilled = reqsFulfilled.filter(
     req => !reqsToFilterOut.includes(store.state.userRequirementsMap[req].name)
   );
+
+  const bubbleTextMap = {
+    College: (req: string) =>
+      getCollegeAbbr(store.state.userRequirementsMap[req].sourceSpecificName),
+    Grad: () => 'grad',
+    Major: (req: string) => store.state.userRequirementsMap[req].sourceSpecificName.toLowerCase(),
+    Minor: (req: string) => store.state.userRequirementsMap[req].sourceSpecificName.toLowerCase(),
+  };
+
   return [
     reqsFulfilled.map(req => store.state.userRequirementsMap[req].name),
-    reqsFulfilled.map((req): string => {
-      switch (store.state.userRequirementsMap[req].sourceType) {
-        case 'College': {
-          return getCollegeAbbr(store.state.userRequirementsMap[req].sourceSpecificName);
-        }
-        case 'Grad': {
-          return 'grad';
-        }
-        case 'Major':
-        case 'Minor': {
-          return store.state.userRequirementsMap[req].sourceSpecificName.toLowerCase();
-        }
-      }
-    }),
+    reqsFulfilled.map((req): string =>
+      bubbleTextMap[store.state.userRequirementsMap[req].sourceType](req)
+    ),
     reqsFulfilled.map(req => {
       switch (store.state.userRequirementsMap[req].sourceType) {
         case 'College': {
@@ -340,3 +317,5 @@ const estimateTableHeight = (body: string[][]): number => {
   });
   return height;
 };
+
+export default genPDF;
