@@ -1,4 +1,4 @@
-import { jsPDF } from 'jspdf';
+import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import {
   getCollegeFullName,
@@ -119,7 +119,7 @@ export const genPDF = (): void => {
     doc.text(`${sem.season} ${sem.year}`, tableX + 20, startct - 6);
     doc.setFont('ProximaNova-Regular', 'normal');
 
-    const emojiPathMap = {
+    const emojiPathMap: Record<FirestoreSemesterSeason, string> = {
       Fall: 'src/assets/images/pdf-gen/fall.png',
       Spring: 'src/assets/images/pdf-gen/spring.png',
       Summer: 'src/assets/images/pdf-gen/summer.png',
@@ -264,7 +264,7 @@ const getFulfilledReqs = (
     req => !reqsToFilterOut.includes(store.state.userRequirementsMap[req].name)
   );
 
-  const bubbleTextMap = {
+  const bubbleTextMap: Record<RequirementGroupType, (req: string) => string> = {
     College: (req: string) =>
       getCollegeAbbr(store.state.userRequirementsMap[req].sourceSpecificName),
     Grad: () => 'grad',
@@ -272,30 +272,20 @@ const getFulfilledReqs = (
     Minor: (req: string) => store.state.userRequirementsMap[req].sourceSpecificName.toLowerCase(),
   };
 
+  const bubbleColourMap: Record<RequirementGroupType, (req: string) => string> = {
+    College: (req: string) =>
+      store.state.userRequirementsMap[req].sourceSpecificName === 'UNI' ? '#1AA9A5' : '#4F7D91',
+    Grad: () => '#1E8481',
+    Major: () => '#1E8481',
+    Minor: () => '#145351',
+  };
+
   return [
     reqsFulfilled.map(req => store.state.userRequirementsMap[req].name),
     reqsFulfilled.map((req): string =>
       bubbleTextMap[store.state.userRequirementsMap[req].sourceType](req)
     ),
-    reqsFulfilled.map(req => {
-      switch (store.state.userRequirementsMap[req].sourceType) {
-        case 'College': {
-          return store.state.userRequirementsMap[req].sourceSpecificName === 'UNI'
-            ? '#1AA9A5'
-            : '#4F7D91';
-        }
-        // using the same colours for major and grad reqs
-        case 'Grad':
-        case 'Major': {
-          return '#1E8481';
-        }
-        case 'Minor': {
-          return '#145351';
-        }
-        default:
-          return '';
-      }
-    }),
+    reqsFulfilled.map(req => bubbleColourMap[store.state.userRequirementsMap[req].sourceType](req)),
   ];
 };
 
