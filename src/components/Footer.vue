@@ -6,7 +6,7 @@
           Cornell DTI @ {{ getYear() }}</a
         >
       </div>
-      
+
       <div class="col-3">
         <p class="footer">
           <button @click="submit">download me</button>
@@ -23,7 +23,8 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { genPDF} from '@/export-plan';
+import { genPDF } from '@/export-plan';
+
 export default defineComponent({
   methods: {
     getYear() {
@@ -31,9 +32,9 @@ export default defineComponent({
       return today.getFullYear();
     },
     submit() {
-      console.log("hi");
+      console.log('hi');
       genPDF();
-    }
+    },
   },
 });
 </script>

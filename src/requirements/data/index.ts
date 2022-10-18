@@ -94,33 +94,33 @@ const json: RequirementsJson = {
     AS1: {
       name: 'Arts and Sciences [before Fall 2020]',
       requirements: casPreFA2020Requirements,
-      abbr: "a&s",
+      abbr: 'a&s',
     },
     AS2: {
       name: 'Arts and Sciences [Fall 2020 and later]',
       requirements: casFA2020Requirements,
-      abbr: "a&s",
+      abbr: 'a&s',
     },
     EN: {
       name: 'Engineering',
       requirements: engineeringRequirements,
       advisors: engineeringAdvisors,
-      abbr: "eng",
+      abbr: 'eng',
     },
     HE: {
       name: 'Human Ecology',
       requirements: humanEcologyRequirements,
-      abbr: "humec",
+      abbr: 'humec',
     },
     IL: {
       name: 'Industrial Labor Relations',
       requirements: ilrRequirements,
-      abbr: "ilr",
+      abbr: 'ilr',
     },
     BU: {
       name: 'SC Johnson College of Business',
       requirements: businessRequirements,
-      abbr: "johnson",
+      abbr: 'johnson',
     },
   },
   major: {
@@ -439,4 +439,4 @@ export const colleges = ['AG', 'AR', 'AS1', 'AS2', 'EN', 'HE', 'IL', 'BU'] as co
 export type College = typeof colleges[number];
 export default json;
 
-export const getCollegeAbbr = (collegeCode: string) => json.college[collegeCode].abbr
+export const getCollegeAbbr = (collegeCode: string) => json.college[collegeCode].abbr;

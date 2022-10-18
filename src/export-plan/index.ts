@@ -1,9 +1,5 @@
 /**
- * Put all functions that can use and change the firestore data here.
+ * The only needed export is the main function that generates the PDF
  */
-import store from '../store';
-
-import { cornellCourseRosterCourseToFirebaseSemesterCourse } from '../user-data-converter';
-
 
 export { genPDF } from './pdf-gen';
