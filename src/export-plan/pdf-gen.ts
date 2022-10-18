@@ -71,7 +71,6 @@ export const genPDF = (
   console.log(sems)
   var startct = firstTableY;
 
-  // getFulfilledReqs(sems)
   for (var sem of sems) {
 
     var headerHeight = rowHeight * (2 + sem.courses.length)
@@ -90,8 +89,28 @@ export const genPDF = (
     doc.roundedRect(tableX, startct - rowHeight, tableWidth, headerHeight, 4, 4, "F")
 
     doc.setFont("ProximaNova-Bold", "bold");
-    doc.text(`${sem.season} ${sem.year}`, tableX + 10, startct - 6)
+    doc.text(`${sem.season} ${sem.year}`, tableX + 20, startct - 6)
     doc.setFont("ProximaNova-Regular", "normal");
+
+
+    var emojiPath: string
+    switch (sem.season) {
+      case "Fall": {
+      emojiPath = "src/assets/images/pdf-gen/fall.png"
+      break}
+      case "Spring": {
+      emojiPath = "src/assets/images/pdf-gen/spring.png"
+    break}
+      case "Summer": {
+      emojiPath = "src/assets/images/pdf-gen/summer.png"
+    break}
+      case "Winter": {
+      emojiPath = "src/assets/images/pdf-gen/winter.png"
+    break}
+    }
+    let emoji = new Image()
+    emoji.src = emojiPath
+    doc.addImage(emoji, 'svg', tableX + 5, startct - 15.5, 12, 12)
 
     var tableHeight = rowHeight
 
@@ -104,12 +123,8 @@ export const genPDF = (
       startY: startct,
       pageBreak: 'auto',
       tableWidth: tableWidth,
-      // theme: 'grid',
       theme: undefined,
-      // tableLineColor: [255, 255, 255],
-      // tableLineWidth: 0.5,
-      styles: {fontSize: rowFontSize, font: 'ProximaNova-Regular', fillColor: [255, 255, 255], cellPadding: 2.94},
-      // bodyStyles: {lineColor: [0, 0, 0]},
+      styles: {fontSize: rowFontSize, font: 'ProximaNova-Regular', fillColor: [255, 255, 255], cellPadding: {top: 2.94, bottom: 2.94, left: 5, right: 5}},
       headStyles: {fontSize: headerFontSize, valign: 'middle',
       halign : 'center', fillColor: [255, 255, 255], textColor: 0,
     lineWidth: 0.5,
@@ -132,7 +147,6 @@ export const genPDF = (
      }
       },
       didDrawCell: data => {
-        // data.row.height = rowHeight
         if (data.row.index == sem.courses.length - 1) {
           doc.setDrawColor(216, 216, 216)
           doc.setLineWidth(.5);
@@ -150,7 +164,6 @@ export const genPDF = (
         groups[data.row.index].forEach((group, index) => {
 
           var xPos = data.cell.x + doc.getTextWidth(body[data.row.index][2].split("\n")[index]) + 8
-          // data.cell.x + data.cell.contentHeight + 5
           console.log(data.cell.text.length)
           console.log(data.cell.contentWidth)
           // console.log(body[data.row.index])
@@ -164,22 +177,30 @@ export const genPDF = (
       }
       }
     })
-
-    sem.courses.forEach((index, course) => {
-      // renderBubbles(index, course)
-    })
   }
 
     doc.setDrawColor(216, 216, 216)
     doc.setLineWidth(0.5)
     doc.roundedRect(tableX, startct - rowHeight, tableWidth, tableHeight, 4, 4)
     startct += tableHeight + tableGap;
+
+  
+}
+
+  const footerY = doc.internal.pageSize.height - 25
+  const footerX = (doc.internal.pageSize.width - doc.getTextWidth("downloaded from courseplan.io"))/2
+  doc.text("downloaded from ", footerX, footerY, {align: 'left'})
+  doc.textWithLink("courseplan.io", footerX + doc.getTextWidth("downloaded from "), footerY, {url: "https://courseplan.io"})
+  doc.setDrawColor(0)
+  doc.line(footerX + doc.getTextWidth("downloaded from "), footerY + 3, footerX + doc.getTextWidth("downloaded from courseplan.io"), footerY + 3)
+  const pdfName = `${store.state.userName.firstName}'s CoursePlan`
+  doc.save(pdfName)
     
   }
 
 
-  doc.save('table.pdf')
-};
+  
+
 
 
 
@@ -187,7 +208,7 @@ const getCourseRows = (sem: FirestoreSemester): [string[][], string[][], string[
   const filteredCourses = sem.courses.filter((course): course is FirestoreSemesterCourse => !isPlaceholderCourse(course))
   var rows = filteredCourses.map(course => {
     var [reqs, groups, colours] = getFulfilledReqs(course)
-    return [[course.name, course.credits.toString(), reqs.join("\n")], groups, colours]
+    return [[`${course.code}: ${course.name}`, course.credits.toString(), reqs.join("\n")], groups, colours]
   })
 
   return [rows.map(row => row[0]), rows.map(row => row[1]), rows.map(row => row[2])]
