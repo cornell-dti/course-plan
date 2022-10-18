@@ -23,7 +23,16 @@ const headerFontSize = 10.5;
 
 const reqsToFilterOut = ['A&S Credits'];
 
+const bubbleColourMap: Record<RequirementGroupType, (req?: string) => string> = {
+  College: (req?: string) =>
+    req && store.state.userRequirementsMap[req].sourceSpecificName === 'UNI' ? '#1AA9A5' : '#4F7D91',
+  Grad: () => '#1E8481',
+  Major: () => '#1E8481',
+  Minor: () => '#145351',
+};
+
 export const genPDF = (): void => {
+  /* eslint new-cap: "off" */
   const doc = new jsPDF({ unit: 'pt', format: 'letter' });
 
   addFonts(doc);
@@ -43,6 +52,19 @@ export const genPDF = (): void => {
   doc.text('Entrance Date:', 354, 76);
   doc.text('Graduation Date:', 354, 93.2);
 
+  doc.text('college req', 365, 110)
+  doc.text('major req', 365, 127.5)
+  doc.text('minor req', 459, 110)
+  doc.text('other courses', 459, 127.5)
+
+  doc.setFillColor(bubbleColourMap.College())
+  doc.circle(357, 107, 3, 'F')
+  doc.setFillColor(bubbleColourMap.Major())
+  doc.circle(357, 124.5, 3, 'F')
+  doc.setFillColor(bubbleColourMap.Minor())
+  doc.circle(451, 107, 3, 'F')
+  doc.setFillColor('#1AA9A5')
+  doc.circle(451, 124.5, 3, 'F')
   doc.setTextColor(117, 117, 117);
 
   // TODO: include middle name
@@ -84,12 +106,12 @@ export const genPDF = (): void => {
 
   doc.text(
     `${store.state.onboardingData.entranceSem} ${store.state.onboardingData.entranceYear}`.trim(),
-    452,
+    448,
     76
   );
   doc.text(
     `${store.state.onboardingData.gradSem} ${store.state.onboardingData.gradYear}`.trim(),
-    452,
+    448,
     93.2
   );
 
@@ -173,6 +195,7 @@ export const genPDF = (): void => {
             data.cell.styles.lineWidth = 0.5;
           }
         },
+        /* eslint no-loop-func: "off" */
         didDrawCell: data => {
           if (data.row.index === sem.courses.length - 1) {
             doc.setDrawColor(216, 216, 216);
@@ -270,14 +293,6 @@ const getFulfilledReqs = (
     Grad: () => 'grad',
     Major: (req: string) => store.state.userRequirementsMap[req].sourceSpecificName.toLowerCase(),
     Minor: (req: string) => store.state.userRequirementsMap[req].sourceSpecificName.toLowerCase(),
-  };
-
-  const bubbleColourMap: Record<RequirementGroupType, (req: string) => string> = {
-    College: (req: string) =>
-      store.state.userRequirementsMap[req].sourceSpecificName === 'UNI' ? '#1AA9A5' : '#4F7D91',
-    Grad: () => '#1E8481',
-    Major: () => '#1E8481',
-    Minor: () => '#145351',
   };
 
   return [
