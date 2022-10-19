@@ -17,16 +17,7 @@ import { cert, initializeApp } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
 import parseArgs from 'minimist';
 import { writeFileSync } from 'fs';
-
-const collections = [
-  'user-name',
-  'user-semesters',
-  'user-toggleable-requirement-choices',
-  'user-overridden-fulfillment-choices',
-  'user-subject-colors',
-  'user-unique-incrementer',
-  'user-onboarding-data',
-];
+import { firestoreCollectionNames } from './utils';
 
 const args = parseArgs(process.argv, {
   string: ['f', 't', 'o'],
@@ -103,7 +94,7 @@ async function execute(
   const log: { source: { [key: string]: unknown } } = { source: {} };
   if (fromDb && toDb) {
     // this should always be true
-    for (const collection of collections) {
+    for (const collection of firestoreCollectionNames) {
       const fromDoc = fromDb.collection(collection).doc(options.fromUser);
       const dataToCopy = (await fromDoc.get()).data();
       if (dataToCopy) {

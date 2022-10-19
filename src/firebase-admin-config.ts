@@ -24,13 +24,9 @@ export const usernameCollection = db
   .collection('user-name')
   .withConverter(getTypedFirestoreDataConverter<FirestoreUserName>());
 
-export type SemesterDocumentData = {
-  semesters: readonly FirestoreSemester[];
-  orderByNewest: boolean;
-};
 export const semestersCollection = db
   .collection('user-semesters')
-  .withConverter(getTypedFirestoreDataConverter<SemesterDocumentData>());
+  .withConverter(getTypedFirestoreDataConverter<FirestoreSemestersData>());
 
 export const toggleableRequirementChoicesCollection = db
   .collection('user-toggleable-requirement-choices')
@@ -44,10 +40,9 @@ export const subjectColorsCollection = db
   .collection('user-subject-colors')
   .withConverter(getTypedFirestoreDataConverter<Readonly<Record<string, string>>>());
 
-export type UniqueIncrementerDocumentData = { readonly uniqueIncrementer: number };
 export const uniqueIncrementerCollection = db
   .collection('user-unique-incrementer')
-  .withConverter(getTypedFirestoreDataConverter<UniqueIncrementerDocumentData>());
+  .withConverter(getTypedFirestoreDataConverter<FirestoreUniqueIncrementer>());
 
 export const onboardingDataCollection = db
   .collection('user-onboarding-data')

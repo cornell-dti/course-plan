@@ -14,9 +14,3 @@ export const getTypedFirestoreDataConverter = <T>(): CommonFirestoreDataConverte
     return userData;
   },
 });
-
-export type SemesterDocumentData = {
-  readonly semesters: readonly FirestoreSemester[];
-  readonly orderByNewest: boolean;
-};
-export type UniqueIncrementerDocumentData = { readonly uniqueIncrementer: number };

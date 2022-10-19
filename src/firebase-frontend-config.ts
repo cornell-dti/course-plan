@@ -2,11 +2,7 @@ import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { collection, getFirestore } from 'firebase/firestore';
 
-import {
-  getTypedFirestoreDataConverter,
-  SemesterDocumentData,
-  UniqueIncrementerDocumentData,
-} from './firebase-config-common';
+import { getTypedFirestoreDataConverter } from './firebase-config-common';
 
 let config;
 if (import.meta.env.VITE_FIREBASE_MODE === 'prod') {
@@ -44,7 +40,7 @@ export const usernameCollection = collection(db, 'user-name').withConverter(
 );
 
 export const semestersCollection = collection(db, 'user-semesters').withConverter(
-  getTypedFirestoreDataConverter<SemesterDocumentData>()
+  getTypedFirestoreDataConverter<FirestoreSemestersData>()
 );
 
 export const toggleableRequirementChoicesCollection = collection(
@@ -62,7 +58,7 @@ export const subjectColorsCollection = collection(db, 'user-subject-colors').wit
 );
 
 export const uniqueIncrementerCollection = collection(db, 'user-unique-incrementer').withConverter(
-  getTypedFirestoreDataConverter<UniqueIncrementerDocumentData>()
+  getTypedFirestoreDataConverter<FirestoreUniqueIncrementer>()
 );
 
 export const onboardingDataCollection = collection(db, 'user-onboarding-data').withConverter(
