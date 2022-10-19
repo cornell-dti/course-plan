@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { subjectColorsCollection } from '../../firebase-admin-config';
+import { subjectColorsCollection } from '../firebase-config';
 
 function migrateSubjectColor(subjectColors: Record<string, string>): Record<string, string> {
   const subjectsColorsCopy = { ...subjectColors };

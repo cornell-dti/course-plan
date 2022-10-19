@@ -2,7 +2,22 @@ import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { collection, getFirestore } from 'firebase/firestore';
 
-import { getTypedFirestoreDataConverter } from './firebase-config-common';
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type CommonDocumentData = { [field: string]: any };
+/** An interface for `FirestoreDataConverter` common to both frontend firebase and admin firebase. */
+export interface CommonFirestoreDataConverter<T> {
+  toFirestore(modelObject: T): CommonDocumentData;
+  fromFirestore(snapshot: { data(): CommonDocumentData }): T;
+}
+
+export const getTypedFirestoreDataConverter = <T>(): CommonFirestoreDataConverter<T> => ({
+  fromFirestore(snapshot) {
+    return snapshot.data() as T;
+  },
+  toFirestore(userData) {
+    return userData;
+  },
+});
 
 let config;
 if (import.meta.env.VITE_FIREBASE_MODE === 'prod') {

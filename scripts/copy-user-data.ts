@@ -13,11 +13,9 @@
  * EXAMPLE: `npm run ts-node -- scripts/copy-user-data.ts -f dev/dummyaccount -t dev/newdummyaccount -o "log.json"`
  */
 
-import { cert, initializeApp } from 'firebase-admin/app';
-import { getFirestore } from 'firebase-admin/firestore';
 import parseArgs from 'minimist';
 import { writeFileSync } from 'fs';
-import { firestoreCollectionNames } from './utils';
+import { database, prodDatabase, collectionNames } from './firebase-config';
 
 const args = parseArgs(process.argv, {
   string: ['f', 't', 'o'],
@@ -66,27 +64,13 @@ async function execute(
   let fromDb;
   let toDb;
   if (options.fromEnv === 'dev' || options.toEnv === 'dev') {
-    const dev = initializeApp(
-      {
-        credential: cert('serviceAccountDev.json'),
-        databaseURL: 'https://cornelldti-courseplan-dev.firebaseio.com',
-      },
-      'dev'
-    );
-    const devDb = getFirestore(dev);
+    const devDb = database;
     if (options.fromEnv === 'dev') fromDb = devDb;
     if (options.toEnv === 'dev') toDb = devDb;
   }
 
   if (options.fromEnv === 'prod' || options.toEnv === 'prod') {
-    const prod = initializeApp(
-      {
-        credential: cert('serviceAccountProd.json'),
-        databaseURL: 'https://cornell-courseplan.firebaseio.com',
-      },
-      'prod'
-    );
-    const prodDb = getFirestore(prod);
+    const prodDb = prodDatabase;
     if (options.fromEnv === 'prod') fromDb = prodDb;
     if (options.toEnv === 'prod') toDb = prodDb;
   }
@@ -94,7 +78,7 @@ async function execute(
   const log: { source: { [key: string]: unknown } } = { source: {} };
   if (fromDb && toDb) {
     // this should always be true
-    for (const collection of firestoreCollectionNames) {
+    for (const collection of collectionNames) {
       const fromDoc = fromDb.collection(collection).doc(options.fromUser);
       const dataToCopy = (await fromDoc.get()).data();
       if (dataToCopy) {

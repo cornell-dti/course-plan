@@ -4,7 +4,7 @@ import {
   semestersCollection,
   usernameCollection,
   trackUsersCollection,
-} from '../../firebase-admin-config';
+} from './firebase-config';
 
 const average = (array: readonly number[]) => array.reduce((a, b) => a + b) / array.length;
 function seasonToMonth(season: string) {
@@ -24,7 +24,7 @@ function seasonToMonth(season: string) {
 
 // true if a semester is an "old semester," i.e. if a semester on CoursePlan has already passed in real life
 // the idea is that old semesters and new semesters represent whether users are planning in the future or just uploading courses
-function isOld(semester: FirestoreSemester) {
+function isOld(semester) {
   const currentTime = new Date();
   const month = currentTime.getMonth() + 1;
   const year = currentTime.getFullYear();
@@ -95,9 +95,9 @@ function addYearToFrequencyDictionary(year: string, freqDict: Record<string, num
  */
 
 async function trackUsers() {
-  let nameData = {} as FirestoreTrackUsersNameData;
-  let semesterData = {} as FirestoreTrackUsersSemesterData;
-  let onboardingData = {} as FirestoreTrackUsersOnboardingData;
+  let nameData = {};
+  let semesterData = {};
+  let onboardingData = {};
 
   // set of all user emails that are in the usernameCollection (and thus finished onboarding)
   const userEmails = new Set();
@@ -253,7 +253,7 @@ async function trackUsers() {
   const date = new Date(Date.now());
   const docId = date.toISOString();
 
-  const outputData: FirestoreTrackUsersData = {
+  const outputData = {
     nameData,
     semesterData,
     onboardingData,
