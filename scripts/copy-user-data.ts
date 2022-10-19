@@ -15,7 +15,7 @@
 
 import parseArgs from 'minimist';
 import { writeFileSync } from 'fs';
-import { database, prodDatabase, collectionNames } from './firebase-config';
+import { getDevDb, getProdDb, userCollectionNames } from './firebase-config';
 
 const args = parseArgs(process.argv, {
   string: ['f', 't', 'o'],
@@ -64,13 +64,13 @@ async function execute(
   let fromDb;
   let toDb;
   if (options.fromEnv === 'dev' || options.toEnv === 'dev') {
-    const devDb = database;
+    const devDb = getDevDb();
     if (options.fromEnv === 'dev') fromDb = devDb;
     if (options.toEnv === 'dev') toDb = devDb;
   }
 
   if (options.fromEnv === 'prod' || options.toEnv === 'prod') {
-    const prodDb = prodDatabase;
+    const prodDb = getProdDb();
     if (options.fromEnv === 'prod') fromDb = prodDb;
     if (options.toEnv === 'prod') toDb = prodDb;
   }
@@ -78,7 +78,7 @@ async function execute(
   const log: { source: { [key: string]: unknown } } = { source: {} };
   if (fromDb && toDb) {
     // this should always be true
-    for (const collection of collectionNames) {
+    for (const collection of userCollectionNames) {
       const fromDoc = fromDb.collection(collection).doc(options.fromUser);
       const dataToCopy = (await fromDoc.get()).data();
       if (dataToCopy) {

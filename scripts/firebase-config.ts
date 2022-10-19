@@ -1,31 +1,45 @@
+import * as fs from 'fs';
+import * as path from 'path';
 import { cert, initializeApp } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
 
-const prodCredential = cert('serviceAccountProd.json');
-const prodDatabaseURL = 'https://cornell-courseplan.firebaseio.com';
+const SERVICE_ACCOUNT_PROD = 'serviceAccountProd.json';
+const SERVICE_ACCOUNT_DEV = 'serviceAccount.json';
+const DATABASE_URL_PROD = 'https://cornell-courseplan.firebaseio.com';
+const DATABASE_URL_DEV = 'https://cornelldti-courseplan-dev.firebaseio.com';
+const APP_NAME_PROD = 'prod';
+const APP_NAME_DEV = 'dev';
 
-const prodApp = initializeApp(
-  {
-    credential: prodCredential,
-    databaseURL: prodDatabaseURL,
-  },
-  'prod'
-);
+function getDatabase(serviceAccount: string, databaseURL: string, appName?: string) {
+  return () => {
+    const credential = cert(serviceAccount);
+    const app = initializeApp(
+      {
+        credential,
+        databaseURL,
+      },
+      appName
+    );
+    return getFirestore(app);
+  };
+}
 
-export const prodDatabase = getFirestore(prodApp);
+export const getProdDb = getDatabase(SERVICE_ACCOUNT_PROD, DATABASE_URL_PROD, APP_NAME_PROD);
+export const getDevDb = getDatabase(SERVICE_ACCOUNT_DEV, DATABASE_URL_DEV, APP_NAME_DEV);
 
-const credential = cert('serviceAccount.json');
-const databaseURL = 'https://cornelldti-courseplan-dev.firebaseio.com';
+const isProd = process.env.PROD === 'true';
 
-const app = initializeApp(
-  {
-    credential,
-    databaseURL,
-  },
-  'dev'
-);
+const serviceAccountFilename = isProd ? SERVICE_ACCOUNT_PROD : SERVICE_ACCOUNT_DEV;
+const serviceAccountUnparsed =
+  process.env.SERVICE_ACCOUNT ??
+  fs.readFileSync(path.join(__dirname, '..', serviceAccountFilename)).toString();
+const serviceAccount = JSON.parse(serviceAccountUnparsed);
 
-const userCollectionNames = {
+const databaseURL = isProd ? DATABASE_URL_PROD : DATABASE_URL_DEV;
+
+export const db = getDatabase(serviceAccount, databaseURL)();
+
+const userCollections = {
   name: 'user-name',
   semesters: 'user-semesters',
   toggleable: 'user-toggleable-requirement-choices',
@@ -34,18 +48,13 @@ const userCollectionNames = {
   unique: 'user-unique-incrementer',
   onboarding: 'user-onboarding-data',
 };
-export const collectionNames = Object.values(userCollectionNames);
+export const userCollectionNames = Object.values(userCollections);
 
-export const database = getFirestore(app);
-export const usernameCollection = database.collection(userCollectionNames.name);
-export const semestersCollection = database.collection(userCollectionNames.semesters);
-export const toggleableRequirementChoicesCollection = database.collection(
-  userCollectionNames.toggleable
-);
-export const overriddenFulfillmentChoicesCollection = database.collection(
-  userCollectionNames.overridden
-);
-export const subjectColorsCollection = database.collection(userCollectionNames.colors);
-export const uniqueIncrementerCollection = database.collection(userCollectionNames.unique);
-export const onboardingDataCollection = database.collection(userCollectionNames.onboarding);
-export const trackUsersCollection = database.collection('track-users');
+export const usernameCollection = db.collection(userCollections.name);
+export const semestersCollection = db.collection(userCollections.semesters);
+export const toggleableRequirementChoicesCollection = db.collection(userCollections.toggleable);
+export const overriddenFulfillmentChoicesCollection = db.collection(userCollections.overridden);
+export const subjectColorsCollection = db.collection(userCollections.colors);
+export const uniqueIncrementerCollection = db.collection(userCollections.unique);
+export const onboardingDataCollection = db.collection(userCollections.onboarding);
+export const trackUsersCollection = db.collection('track-users');
