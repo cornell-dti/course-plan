@@ -7,8 +7,6 @@ const SERVICE_ACCOUNT_PROD = 'serviceAccountProd.json';
 const SERVICE_ACCOUNT_DEV = 'serviceAccount.json';
 const DATABASE_URL_PROD = 'https://cornell-courseplan.firebaseio.com';
 const DATABASE_URL_DEV = 'https://cornelldti-courseplan-dev.firebaseio.com';
-const APP_NAME_PROD = 'prod';
-const APP_NAME_DEV = 'dev';
 
 function getDatabase(serviceAccount: string, databaseURL: string, appName?: string) {
   return () => {
@@ -24,8 +22,8 @@ function getDatabase(serviceAccount: string, databaseURL: string, appName?: stri
   };
 }
 
-export const getProdDb = getDatabase(SERVICE_ACCOUNT_PROD, DATABASE_URL_PROD, APP_NAME_PROD);
-export const getDevDb = getDatabase(SERVICE_ACCOUNT_DEV, DATABASE_URL_DEV, APP_NAME_DEV);
+export const getProdDb = getDatabase(SERVICE_ACCOUNT_PROD, DATABASE_URL_PROD, 'prod');
+export const getDevDb = getDatabase(SERVICE_ACCOUNT_DEV, DATABASE_URL_DEV, 'dev');
 
 const isProd = process.env.PROD === 'true';
 
