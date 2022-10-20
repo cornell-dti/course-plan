@@ -121,7 +121,7 @@ export const genPDF = (): void => {
 
   let sems = sortedSemesters(store.state.semesters, false);
   sems = trimEmptySems(sems);
-  const tableHeader = [['Courses', 'Credits', 'Requirements Fulfilled']];
+  const tableHeader = [['Course', 'Credits', 'Requirements Fulfilled']];
   let startct = firstTableY;
 
   for (const sem of sems) {
