@@ -30,7 +30,7 @@ const serviceAccount = JSON.parse(serviceAccountUnparsed);
 
 const databaseURL = isProd ? DATABASE_URL_PROD : DATABASE_URL_DEV;
 
-export const db = getDatabase(serviceAccount, databaseURL);
+const db = getDatabase(serviceAccount, databaseURL);
 
 const userCollections = {
   name: 'user-name',
