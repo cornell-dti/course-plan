@@ -15,7 +15,14 @@
 
 import parseArgs from 'minimist';
 import { writeFileSync } from 'fs';
-import { getDevDb, getProdDb, userCollectionNames } from './firebase-config';
+import {
+  DATABASE_URL_DEV,
+  DATABASE_URL_PROD,
+  SERVICE_ACCOUNT_DEV,
+  SERVICE_ACCOUNT_PROD,
+  getDatabase,
+  userCollectionNames,
+} from './firebase-config';
 
 const args = parseArgs(process.argv, {
   string: ['f', 't', 'o'],
@@ -64,13 +71,13 @@ async function execute(
   let fromDb;
   let toDb;
   if (options.fromEnv === 'dev' || options.toEnv === 'dev') {
-    const devDb = getDevDb();
+    const devDb = getDatabase(SERVICE_ACCOUNT_DEV, DATABASE_URL_DEV, 'dev');
     if (options.fromEnv === 'dev') fromDb = devDb;
     if (options.toEnv === 'dev') toDb = devDb;
   }
 
   if (options.fromEnv === 'prod' || options.toEnv === 'prod') {
-    const prodDb = getProdDb();
+    const prodDb = getDatabase(SERVICE_ACCOUNT_PROD, DATABASE_URL_PROD, 'prod');
     if (options.fromEnv === 'prod') fromDb = prodDb;
     if (options.toEnv === 'prod') toDb = prodDb;
   }

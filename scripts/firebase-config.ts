@@ -3,27 +3,22 @@ import * as path from 'path';
 import { cert, initializeApp } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
 
-const SERVICE_ACCOUNT_PROD = 'serviceAccountProd.json';
-const SERVICE_ACCOUNT_DEV = 'serviceAccount.json';
-const DATABASE_URL_PROD = 'https://cornell-courseplan.firebaseio.com';
-const DATABASE_URL_DEV = 'https://cornelldti-courseplan-dev.firebaseio.com';
+export const SERVICE_ACCOUNT_PROD = 'serviceAccountProd.json';
+export const SERVICE_ACCOUNT_DEV = 'serviceAccount.json';
+export const DATABASE_URL_PROD = 'https://cornell-courseplan.firebaseio.com';
+export const DATABASE_URL_DEV = 'https://cornelldti-courseplan-dev.firebaseio.com';
 
-function getDatabase(serviceAccount: string, databaseURL: string, appName?: string) {
-  return () => {
-    const credential = cert(serviceAccount);
-    const app = initializeApp(
-      {
-        credential,
-        databaseURL,
-      },
-      appName
-    );
-    return getFirestore(app);
-  };
-}
-
-export const getProdDb = getDatabase(SERVICE_ACCOUNT_PROD, DATABASE_URL_PROD, 'prod');
-export const getDevDb = getDatabase(SERVICE_ACCOUNT_DEV, DATABASE_URL_DEV, 'dev');
+export const getDatabase = (serviceAccount: string, databaseURL: string, appName?: string) => {
+  const credential = cert(serviceAccount);
+  const app = initializeApp(
+    {
+      credential,
+      databaseURL,
+    },
+    appName
+  );
+  return getFirestore(app);
+};
 
 const isProd = process.env.PROD === 'true';
 
@@ -35,7 +30,7 @@ const serviceAccount = JSON.parse(serviceAccountUnparsed);
 
 const databaseURL = isProd ? DATABASE_URL_PROD : DATABASE_URL_DEV;
 
-export const db = getDatabase(serviceAccount, databaseURL)();
+export const db = getDatabase(serviceAccount, databaseURL);
 
 const userCollections = {
   name: 'user-name',
