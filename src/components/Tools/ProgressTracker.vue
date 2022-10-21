@@ -48,13 +48,6 @@ import star from '@/assets/images/progress_tracker/star.svg';
 export default defineComponent({
   data() {
     return {
-      progressImg: {
-        Confetti: confetti,
-        Fire: fire,
-        Flex: flex,
-        Hands: hands,
-        Star: star,
-      },
       hasCollege: false,
       hasMajor: false,
       hasMinor: false,
@@ -83,7 +76,7 @@ export default defineComponent({
         let totalRequired = 0;
         let totalCompleted = 0;
         r.reqs.forEach(req => {
-          if (!(req.fulfillment.fulfilledBy === 'self-check')) {
+          if (req.fulfillment.fulfilledBy !== 'self-check') {
             totalRequired += 1 + Object.values(req.fulfillment.additionalRequirements ?? {}).length;
           }
           [req.fulfillment, ...Object.values(req.fulfillment.additionalRequirements ?? {})].forEach(
@@ -100,23 +93,23 @@ export default defineComponent({
         switch (r.groupName) {
           case 'College':
             this.hasCollege = true;
-            this.collegeRequirementCount.finished = totalCompleted;
-            this.collegeRequirementCount.needed = totalRequired;
+            this.collegeRequirementCount.finished = Math.round(totalCompleted * 10) / 10;
+            this.collegeRequirementCount.needed = Math.round(totalRequired * 10) / 10;
             break;
           case 'Major':
             this.hasMajor = true;
-            this.majorRequirementCount.finished = totalCompleted;
-            this.majorRequirementCount.needed = totalRequired;
+            this.majorRequirementCount.finished = Math.round(totalCompleted * 10) / 10;
+            this.majorRequirementCount.needed = Math.round(totalRequired * 10) / 10;
             break;
           case 'Minor':
             this.hasMinor = true;
-            this.minorRequirementCount.finished = totalCompleted;
-            this.minorRequirementCount.needed = totalRequired;
+            this.minorRequirementCount.finished = Math.round(totalCompleted * 10) / 10;
+            this.minorRequirementCount.needed = Math.round(totalRequired * 10) / 10;
             break;
-          default:
+          case 'Grad':
             this.hasGrad = true;
-            this.gradRequirementCount.finished = totalCompleted;
-            this.gradRequirementCount.needed = totalRequired;
+            this.gradRequirementCount.finished = Math.round(totalCompleted * 10) / 10;
+            this.gradRequirementCount.needed = Math.round(totalRequired * 10) / 10;
             break;
         }
       });
@@ -136,33 +129,25 @@ export default defineComponent({
     },
   },
   computed: {
-    progressValue(): string {
-      return 'transform: rotate(63deg)';
-      // return 45 + 1.8 * this['progress-info'];
-    },
     requirements(): readonly GroupedRequirementFulfillmentReport[] {
       return store.state.groupedRequirementFulfillmentReport;
-    },
-
-    getTransform(): string {
-      return 'transform: rotate(63deg)';
     },
     getImage(): string {
       this.queryRequirements();
       const progress = this.sumRequirements();
       if (progress < 0.2) {
-        return this.progressImg.Hands;
+        return hands;
       }
       if (progress < 0.4) {
-        return this.progressImg.Flex;
+        return flex;
       }
       if (progress < 0.6) {
-        return this.progressImg.Star;
+        return star;
       }
       if (progress < 0.8) {
-        return this.progressImg.Fire;
+        return fire;
       }
-      return this.progressImg.Confetti;
+      return confetti;
     },
     getProgressString(): string {
       return 'You are almost there!';
