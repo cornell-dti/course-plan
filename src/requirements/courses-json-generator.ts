@@ -32,7 +32,8 @@ const getSubjects = async (semester: string): Promise<readonly string[]> => {
   }
 };
 
-const cleanString = (value: string | null | undefined) => value?.replace(/\u00a0/g, ' ');
+const cleanString = (value: string | null | undefined) =>
+  value?.replace(/\u00a0/g, ' ') || undefined;
 
 /** Throws away course object fields we don't need. Used for generate small-enough course json. */
 const courseFieldFilter = ({
