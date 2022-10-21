@@ -1,0 +1,35 @@
+name: Update Courses Data
+on:
+  workflow_dispatch:
+    inputs:
+      semester:
+        description: 'Semester (eg. FA22)'     
+        required: true
+
+jobs:
+  update-courses:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+          cache: 'npm'
+      - name: NPM Clean Install
+        run: npm ci
+      - name: Generate Courses Json
+        run: npm run courses-gen
+      - name: Generate Requirements Json
+        run: npm run req-gen
+      - name: Create Pull Request
+        id: cpr
+        uses: peter-evans/create-pull-request@v4
+        with:
+          title: [Automated] Update Courses (${{ github.event.inputs.semester }})
+          commit-message: [Automated] Update Courses (${{ github.event.inputs.semester }})
+          committer: Cornell DTI GitHub Bot <admin@cornelldti.org>
+          branch: update-courses/${{ github.event.inputs.semester }}
+          delete-branch: true
+      - name: Log Pull Request URL
+        run: echo "Created pull request - ${{ steps.cpr.outputs.pull-request-url }}""

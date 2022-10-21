@@ -5,7 +5,7 @@ jobs:
   enforce-release-workflow:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v2
       - name: Print base ref and head ref
         run: |
           echo "Your head ref is ${{ github.head_ref }}."
@@ -18,7 +18,7 @@ jobs:
   warn-big-diff:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v2
       - uses: cornell-dti/big-diff-warning@master
         env:
           BOT_TOKEN: '${{ secrets.BOT_TOKEN }}'
