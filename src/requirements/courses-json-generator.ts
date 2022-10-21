@@ -32,13 +32,7 @@ const getSubjects = async (semester: string): Promise<readonly string[]> => {
   }
 };
 
-const cleanString = (value: string | null) => {
-  if (value === null) return '';
-  return value.replace(/\u00a0/g, ' ');
-};
-
-const cleanMaybeString = (value: string | null | undefined): string | undefined =>
-  value?.replace(/\u00a0/g, ' ') || undefined;
+const cleanString = (value: string | null | undefined) => value?.replace(/\u00a0/g, ' ');
 
 /** Throws away course object fields we don't need. Used for generate small-enough course json. */
 const courseFieldFilter = ({
@@ -57,23 +51,23 @@ const courseFieldFilter = ({
   acadCareer,
   acadGroup,
 }: Course): Course => ({
-  subject: cleanString(subject),
+  subject: cleanString(subject) || '',
   crseId,
-  catalogNbr: cleanString(catalogNbr),
-  titleLong: cleanString(titleLong),
+  catalogNbr: cleanString(catalogNbr) || '',
+  titleLong: cleanString(titleLong) || '',
   enrollGroups: enrollGroups.map(({ unitsMaximum, unitsMinimum }) => ({
     unitsMaximum,
     unitsMinimum,
   })),
-  catalogWhenOffered: cleanMaybeString(catalogWhenOffered),
-  catalogBreadth: cleanMaybeString(catalogBreadth),
-  catalogDistr: cleanMaybeString(catalogDistr),
-  catalogComments: cleanMaybeString(catalogComments),
-  catalogSatisfiesReq: cleanMaybeString(catalogSatisfiesReq),
-  catalogCourseSubfield: cleanMaybeString(catalogCourseSubfield),
-  catalogAttribute: cleanMaybeString(catalogAttribute),
-  acadCareer: cleanString(acadCareer),
-  acadGroup: cleanString(acadGroup),
+  catalogWhenOffered: cleanString(catalogWhenOffered),
+  catalogBreadth: cleanString(catalogBreadth),
+  catalogDistr: cleanString(catalogDistr),
+  catalogComments: cleanString(catalogComments),
+  catalogSatisfiesReq: cleanString(catalogSatisfiesReq),
+  catalogCourseSubfield: cleanString(catalogCourseSubfield),
+  catalogAttribute: cleanString(catalogAttribute),
+  acadCareer: cleanString(acadCareer) || '',
+  acadGroup: cleanString(acadGroup) || '',
 });
 
 /** @returns a list of all course objects in a semester for a given subject. */
