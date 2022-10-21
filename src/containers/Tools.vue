@@ -67,8 +67,6 @@ export default {
     color: #757575;
     padding-bottom: 30px;
     overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
   }
 
   &-cards {
@@ -81,7 +79,7 @@ export default {
     @media only screen and (max-width: 1300px) {
       display: flex;
       flex-wrap: wrap;
-      justify-content: space-around;
+      justify-content: flex-start;
     }
   }
 
