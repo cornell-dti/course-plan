@@ -9,8 +9,14 @@
       </div>
     </div>
     <div class="toolsContainer-cards">
-      <card name="Progress Tracker" class="toolsContainer-card-progress" id="progress"></card>
-
+      <card
+        name="Progress Tracker"
+        class="toolsContainer-card-progress"
+        id="progress"
+        :desired-height="275"
+      >
+        <progress-tracker />
+      </card>
       <card
         name="Contact Your Advisors"
         class="toolsContainer-card-advisors"
@@ -19,10 +25,6 @@
       >
         <advisor-card></advisor-card>
       </card>
-      <card name="Progress Tracker" class="toolsContainer-card" id="progress">
-        <progress-tracker />
-      </card>
-
       <card
         name="Export Schedule"
         class="toolsContainer-card-export"
