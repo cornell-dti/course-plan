@@ -32,7 +32,7 @@ const getSubjects = async (semester: string): Promise<readonly string[]> => {
   }
 };
 
-const cleanString = (value: string | null | undefined) =>
+const cleanField = (value: string | null | undefined) =>
   value?.replace(/\u00a0/g, ' ') || undefined;
 
 /** Throws away course object fields we don't need. Used for generate small-enough course json. */
@@ -52,23 +52,23 @@ const courseFieldFilter = ({
   acadCareer,
   acadGroup,
 }: Course): Course => ({
-  subject: cleanString(subject) || '',
+  subject: cleanField(subject) || '',
   crseId,
-  catalogNbr: cleanString(catalogNbr) || '',
-  titleLong: cleanString(titleLong) || '',
+  catalogNbr: cleanField(catalogNbr) || '',
+  titleLong: cleanField(titleLong) || '',
   enrollGroups: enrollGroups.map(({ unitsMaximum, unitsMinimum }) => ({
     unitsMaximum,
     unitsMinimum,
   })),
-  catalogWhenOffered: cleanString(catalogWhenOffered),
-  catalogBreadth: cleanString(catalogBreadth),
-  catalogDistr: cleanString(catalogDistr),
-  catalogComments: cleanString(catalogComments),
-  catalogSatisfiesReq: cleanString(catalogSatisfiesReq),
-  catalogCourseSubfield: cleanString(catalogCourseSubfield),
-  catalogAttribute: cleanString(catalogAttribute),
-  acadCareer: cleanString(acadCareer) || '',
-  acadGroup: cleanString(acadGroup) || '',
+  catalogWhenOffered: cleanField(catalogWhenOffered),
+  catalogBreadth: cleanField(catalogBreadth),
+  catalogDistr: cleanField(catalogDistr),
+  catalogComments: cleanField(catalogComments),
+  catalogSatisfiesReq: cleanField(catalogSatisfiesReq),
+  catalogCourseSubfield: cleanField(catalogCourseSubfield),
+  catalogAttribute: cleanField(catalogAttribute),
+  acadCareer: cleanField(acadCareer) || '',
+  acadGroup: cleanField(acadGroup) || '',
 });
 
 /** @returns a list of all course objects in a semester for a given subject. */
