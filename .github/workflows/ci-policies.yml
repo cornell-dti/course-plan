@@ -11,7 +11,7 @@ jobs:
           echo "Your head ref is ${{ github.head_ref }}."
           echo "Your base ref is ${{ github.base_ref }}."
       - name: Fail if try to push release from non-master branch
-        if: github.base_ref == 'beta-release' && github.head_ref != 'master'
+        if: (github.base_ref == 'beta-release' || github.base_ref == 'release') && github.head_ref != 'master'
         run: |
           echo "Head ref must be master for release. Everything should go through staging first!"
           exit 1

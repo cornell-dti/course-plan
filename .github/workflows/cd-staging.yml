@@ -1,4 +1,4 @@
-name: CD
+name: Deploy to Staging
 on:
   push:
     branches:
