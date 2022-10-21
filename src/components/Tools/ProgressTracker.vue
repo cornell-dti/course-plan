@@ -171,16 +171,16 @@ export default defineComponent({
     flex-grow: 2;
     margin: 0 0 0 0;
     position: relative;
-    margin-bottom: 4px;
+    margin-bottom: 0.25rem;
   }
 
   &-bar-container {
     position: relative;
-    margin: 4px;
+    margin: 0.25rem;
     float: left;
     text-align: center;
     flex-grow: 2;
-    margin-bottom: -100px;
+    margin-bottom: -6.25rem;
   }
 
   &-bar-overflow {
@@ -188,28 +188,28 @@ export default defineComponent({
     position: relative;
     overflow: hidden; /* Comment this line to understand the trick */
     width: 100%;
-    height: 75px; /* Half circle (overflow) */
-    margin-bottom: -45px; /* bring the numbers up */
+    height: 4.688rem; /* Half circle (overflow) */
+    margin-bottom: -2.813rem; /* bring the numbers up */
     z-index: 0;
   }
   &-bar {
     position: absolute;
     top: 0;
     left: 17%;
-    width: 150px;
-    height: 150px; /* full circle! */
+    width: 9.375rem;
+    height: 9.375rem; /* full circle! */
     border-radius: 50%;
     box-sizing: border-box;
     color: #ffffff;
     background-color: #ffffff;
-    border: 5px solid #eee; /* half gray, */
+    border: 0.313rem solid #eee; /* half gray, */
     border-bottom-color: #0bf; /* half azure */
     border-right-color: #0bf;
   }
 
   &-bar-caption {
-    height: 50px;
-    width: 50px;
+    height: 3.125rem;
+    width: 3.125rem;
     position: relative;
     z-index: 2;
   }
@@ -223,8 +223,8 @@ export default defineComponent({
     left: 25%;
     font-family: 'Proxima Nova';
     font-style: normal;
-    font-size: 14px;
-    line-height: 15px;
+    font-size: 0.875rem;
+    line-height: 0.938rem;
     /* identical to box height */
     text-align: center;
     color: #92c3e6;
@@ -234,15 +234,15 @@ export default defineComponent({
     font-family: 'Proxima Nova';
     font-style: normal;
     font-weight: 400;
-    font-size: 14px;
-    line-height: 17px;
+    font-size: 0.875rem;
+    line-height: 1rem;
     /* identical to box height */
     display: flex;
     align-items: center;
     letter-spacing: 0.01em;
     color: #000000;
-    margin-top: 10px;
-    margin-bottom: 10px;
+    margin-top: 0.625rem;
+    margin-bottom: 0.625rem;
   }
   &-text {
     display: flex;
