@@ -76,7 +76,7 @@ export const genPDF = (): void => {
   let programY = 110;
   if (store.state.onboardingData.grad) {
     doc.setTextColor(0);
-    doc.text('Grad Program:', 48, programY);
+    doc.text('Graduate:', 48, programY);
     doc.setTextColor(117, 117, 117);
     doc.text(getGradFullName(store.state.onboardingData.grad), 100.3, programY);
     programY += 17.5;
@@ -122,7 +122,7 @@ export const genPDF = (): void => {
   let sems = sortedSemesters(store.state.semesters, false);
   sems = trimEmptySems(sems);
   const tableHeader = [['Course', 'Credits', 'Requirements Fulfilled']];
-  let startct = firstTableY;
+  let startct = Math.max(firstTableY, programY + 20);
 
   for (const sem of sems) {
     let headerHeight = rowHeight * (2 + sem.courses.length);
