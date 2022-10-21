@@ -7,9 +7,7 @@ import { usernameCollection, semestersCollection } from '../../firebase-admin-co
  */
 async function runOnUser(userEmail: string) {
   const semestersDoc = await semestersCollection.doc(userEmail).get();
-
   const semesters = semestersDoc.data()?.semesters ?? [];
-
   await semestersCollection.doc(userEmail).update({
     plans: [{ semesters }],
   });
