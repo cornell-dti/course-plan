@@ -1,9 +1,6 @@
 import { Course, CollegeOrMajorRequirement } from '../../types';
 
-import {
-  courseMatchesCodeOptions,
-  includesWithSubRequirements,
-} from '../checkers-common';
+import { courseMatchesCodeOptions, includesWithSubRequirements } from '../checkers-common';
 
 const hbhsRequirements: readonly CollegeOrMajorRequirement[] = [
   {
