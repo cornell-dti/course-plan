@@ -103,19 +103,6 @@ export default {
       grid-column: 2/3;
       grid-row: 2/3;
     }
-
-    @media only screen and (max-width: 1300px) {
-      &-progress {
-        flex-grow: 1;
-      }
-      &-advisors {
-        flex-grow: 1;
-      }
-      &-export {
-      }
-      &-links {
-      }
-    }
   }
 }
 </style>
