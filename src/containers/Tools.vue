@@ -66,7 +66,7 @@ export default {
     column-gap: 5rem;
     row-gap: 3rem;
 
-    @media only screen and (max-width: 1300px) {
+    @media only screen and (max-width: 1250px) {
       display: flex;
       flex-wrap: wrap;
       justify-content: flex-start;
