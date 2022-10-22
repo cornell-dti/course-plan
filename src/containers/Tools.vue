@@ -18,7 +18,7 @@
       <card name="Export Schedule" class="toolsContainer-card-export" id="export"></card>
 
       <card name="Useful Links" class="toolsContainer-card-links" id="links">
-        <p>cornell.edu</p>
+        <useful-links></useful-links>
       </card>
     </div>
   </div>
@@ -27,9 +27,10 @@
 <script>
 import Card from '@/components/Tools/Card.vue';
 import AdvisorCard from '@/components/Tools/AdvisorCard.vue';
+import UsefulLinks from '@/components/Tools/UsefulLinks.vue';
 
 export default {
-  components: { AdvisorCard, Card },
+  components: { UsefulLinks, AdvisorCard, Card },
 };
 </script>
 
