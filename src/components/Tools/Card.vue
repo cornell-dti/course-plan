@@ -26,8 +26,6 @@ export default defineComponent({
   props: {
     id: { type: String, required: true },
     name: { type: String, required: true },
-    desiredWidth: { type: Number, required: false, default: 575 },
-    desiredHeight: { type: Number, required: false, default: 150 },
   },
 
   data() {
@@ -48,7 +46,6 @@ export default defineComponent({
   computed: {
     cssVars() {
       return {
-        '--w': `${this.desiredWidth}px`,
         '--h': `${this.desiredHeight}px`,
       };
     },
@@ -60,8 +57,6 @@ export default defineComponent({
 @import '@/assets/scss/_variables.scss';
 
 .card {
-  width: var(--w);
-  min-height: var(--h);
   box-sizing: border-box;
   box-shadow: 0 0 10px 4px $boxShadowGray;
   position: relative;
@@ -72,8 +67,8 @@ export default defineComponent({
   margin: 0;
 
   &--collapsed {
-    min-height: 0;
-    height: 50px;
+    min-height: 0 !important;
+    height: 50px !important;
   }
 
   &-top {

@@ -11,24 +11,13 @@
     <div class="toolsContainer-cards">
       <card name="Progress Tracker" class="toolsContainer-card-progress" id="progress"></card>
 
-      <card
-        name="Contact Your Advisors"
-        class="toolsContainer-card-advisors"
-        id="advisors"
-        :desired-height="275"
-      >
+      <card name="Contact Your Advisors" class="toolsContainer-card-advisors" id="advisors">
         <advisor-card></advisor-card>
       </card>
 
-      <card
-        name="Export Schedule"
-        class="toolsContainer-card-export"
-        id="export"
-        :desired-width="400"
-      >
-      </card>
+      <card name="Export Schedule" class="toolsContainer-card-export" id="export"></card>
 
-      <card name="Useful Links" class="toolsContainer-card-links" id="links" :desired-width="400">
+      <card name="Useful Links" class="toolsContainer-card-links" id="links">
         <p>cornell.edu</p>
       </card>
     </div>
@@ -87,21 +76,29 @@ export default {
     &-progress {
       grid-column: 1/2;
       grid-row: 1/2;
+      width: 600px;
+      height: min-content;
     }
 
     &-advisors {
       grid-column: 1/2;
       grid-row: 2/3;
+      width: 600px;
+      height: min-content;
     }
 
     &-export {
       grid-column: 2/3;
       grid-row: 1/2;
+      width: 300px;
+      height: min-content;
     }
 
     &-links {
       grid-column: 2/3;
       grid-row: 2/3;
+      width: 300px;
+      height: min-content;
     }
   }
 }
