@@ -1,4 +1,4 @@
-name: Update Courses Data
+name: Update Courses Data # TODO @bshen finish implementing this workflow
 on:
   workflow_dispatch:
     inputs:
@@ -18,10 +18,8 @@ jobs:
           cache: 'npm'
       - name: NPM Clean Install
         run: npm ci
-      - name: Generate Courses Json
-        run: npm run courses-gen
-      - name: Generate Requirements Json
-        run: npm run req-gen
+      - name: Generate Diff # TODO: replace this with update-courses script
+        run: echo "${{ github.event.inputs.semester }}" > update-courses.txt
       - name: Check Diff
         id: diff
         run: exit $(git status --porcelain | wc -l)
