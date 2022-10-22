@@ -146,8 +146,7 @@ async function trackUsers() {
         semesterCount += 1;
       });
 
-      const numSemesters = semesters.length;
-      if (newSemesterCount > 0 && numSemesters > 0) {
+      if (newSemesterCount > 0) {
         activeUsersCount += 1;
       }
 
