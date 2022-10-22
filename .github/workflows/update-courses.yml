@@ -22,6 +22,12 @@ jobs:
         run: npm run courses-gen
       - name: Generate Requirements Json
         run: npm run req-gen
+      - name: Check Diff
+        id: diff
+        run: exit $(git status --porcelain | wc -l)
+      - name: Log No Diff
+        if: ${{ failure() && steps.diff.conclusion == 'failure' }}
+        run: echo "Courses and requirements json are up to date."
       - name: Create Pull Request
         id: cpr
         uses: peter-evans/create-pull-request@v4
