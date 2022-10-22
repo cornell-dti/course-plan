@@ -17,8 +17,16 @@ export default defineComponent({
     list(): { link: string; title: string }[] {
       return [
         {
-          title: 'Google',
-          link: 'https://google.com',
+          title: 'Student Center',
+          link: 'https://studentcenter.cornell.edu/',
+        },
+        {
+          title: 'Course Catalog',
+          link: 'https://courses.cornell.edu/',
+        },
+        {
+          title: 'Cornell DTI',
+          link: 'https://www.cornelldti.org/',
         },
       ];
     },
