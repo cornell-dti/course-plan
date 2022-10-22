@@ -1,6 +1,6 @@
 import { doc, setDoc } from 'firebase/firestore';
 
-import { uniqueIncrementerCollection } from '../firebase-frontend-config';
+import { uniqueIncrementerCollection } from '../firebase-config';
 import store from '../store';
 
 const incrementUniqueID = (amount = 1): number => {

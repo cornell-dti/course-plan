@@ -1,7 +1,7 @@
 import { doc, setDoc, updateDoc } from 'firebase/firestore';
 
 import { SWIM_TEST_CODE } from '@/requirements/data/constants';
-import { onboardingDataCollection } from '../firebase-frontend-config';
+import { onboardingDataCollection } from '../firebase-config';
 import store from '../store';
 import setUsernameData from './user-name';
 

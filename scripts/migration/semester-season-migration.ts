@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 
-import { usernameCollection, semestersCollection } from '../../firebase-admin-config';
+import { usernameCollection, semestersCollection } from '../firebase-config';
 
 /**
  * Perform migration of semester type to semester season
