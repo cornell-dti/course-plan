@@ -6,7 +6,7 @@ import {
 } from '../checkers-common';
 import { AdvisorGroup } from '@/requirements/tools-types';
 
-const mechnicalEngineeringRequirements: readonly CollegeOrMajorRequirement[] = [
+const mechanicalEngineeringRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'Engineering Distriubtions',
     description: 'ENGRD 2020',
@@ -171,7 +171,7 @@ const mechnicalEngineeringRequirements: readonly CollegeOrMajorRequirement[] = [
   },
 ];
 
-export default mechnicalEngineeringRequirements;
+export default mechanicalEngineeringRequirements;
 
 export const mechanicalEngineeringAdvisors: AdvisorGroup = {
   advisors: [],

@@ -39,7 +39,7 @@ import infoRequirements, { infoAdvisors } from './majors/info';
 import isstRequirements, { isstAdvisors } from './majors/isst';
 import lingRequirements, { lingAdvisors } from './majors/ling';
 import mathRequirements, { mathAdvisors } from './majors/math';
-import mechnicalEngineeringRequirements, { mechanicalEngineeringAdvisors } from './majors/me';
+import mechanicalEngineeringRequirements, { mechanicalEngineeringAdvisors } from './majors/me';
 import mseRequirements, { mseAdvisors } from './majors/mse';
 import oldIsstRequirements from './majors/oldIsst';
 import orieRequirements, { orieAdvisors } from './majors/orie';
@@ -319,7 +319,7 @@ const json: RequirementsJson = {
     ME: {
       name: 'Mechanical Engineering',
       schools: ['EN'],
-      requirements: mechnicalEngineeringRequirements,
+      requirements: mechanicalEngineeringRequirements,
       advisors: mechanicalEngineeringAdvisors,
     },
     MSE: {
