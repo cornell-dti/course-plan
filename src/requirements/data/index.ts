@@ -361,7 +361,7 @@ const json: RequirementsJson = {
       requirements: eceMinorRequirements,
     },
     HP: {
-      name: 'Human Policy',
+      name: 'Health Policy',
       schools: ['HE'],
       requirements: hpMinorRequirements,
     },
