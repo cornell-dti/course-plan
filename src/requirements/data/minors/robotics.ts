@@ -1,5 +1,6 @@
 import { CollegeOrMajorRequirement } from '../../types';
 import { includesWithSingleRequirement } from '../checkers-common';
+import { AdvisorGroup } from '@/requirements/tools-types';
 
 const roboticsMinorRequirements: readonly CollegeOrMajorRequirement[] = [
   // TODO: can't handle major specific restrictions yet
@@ -99,3 +100,7 @@ const roboticsMinorRequirements: readonly CollegeOrMajorRequirement[] = [
 ];
 
 export default roboticsMinorRequirements;
+
+export const roboticsMinorAdvisors: AdvisorGroup = {
+  advisors: [],
+};

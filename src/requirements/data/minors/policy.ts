@@ -1,5 +1,6 @@
 import { CollegeOrMajorRequirement, Course } from '../../types';
 import { includesWithSingleRequirement, courseMatchesCodeOptions } from '../checkers-common';
+import { AdvisorGroup } from '@/requirements/tools-types';
 
 const policyMinorRequirements: readonly CollegeOrMajorRequirement[] = [
   {
@@ -37,3 +38,7 @@ const policyMinorRequirements: readonly CollegeOrMajorRequirement[] = [
 ];
 
 export default policyMinorRequirements;
+
+export const policyMinorAdvisors: AdvisorGroup = {
+  advisors: [],
+};

@@ -1,5 +1,6 @@
 import { CollegeOrMajorRequirement } from '../../types';
 import { includesWithSubRequirements } from '../checkers-common';
+import { AdvisorGroup } from '@/requirements/tools-types';
 
 const mpaRequirements: readonly CollegeOrMajorRequirement[] = [
   {
@@ -560,3 +561,7 @@ const mpaRequirements: readonly CollegeOrMajorRequirement[] = [
 ];
 
 export default mpaRequirements;
+
+export const mpaAdvisors: AdvisorGroup = {
+  advisors: [],
+};

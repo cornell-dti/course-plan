@@ -5,6 +5,7 @@ import {
   ifCodeMatch,
   courseMatchesCode,
 } from '../checkers-common';
+import { AdvisorGroup } from '@/requirements/tools-types';
 
 const csMinorRequirements: readonly CollegeOrMajorRequirement[] = [
   {
@@ -67,3 +68,7 @@ const csMinorRequirements: readonly CollegeOrMajorRequirement[] = [
 ];
 
 export default csMinorRequirements;
+
+export const csMinorAdvisors: AdvisorGroup = {
+  advisors: [],
+};

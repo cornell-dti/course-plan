@@ -48,28 +48,28 @@ import physRequirements, { physAdvisors } from './majors/phys';
 import spanishRequirements, { spanishAdvisors } from './majors/spanish';
 import psychRequirements, { psychAdvisors } from './majors/psych';
 import stsRequirements, { stsAdvisors } from './majors/sts';
-import aerospaceMinorRequirements from './minors/aerospace';
-import appliedMathMinorRequirements from './minors/applied-math';
-import buMinorRequirements from './minors/bu';
-import cogsciMinorRequirements from './minors/cogsci';
-import csMinorRequirements from './minors/cs';
-import dbmeMinorRequirements from './minors/dbme';
+import aerospaceMinorRequirements, { aerospaceMinorAdvisors } from './minors/aerospace';
+import appliedMathMinorRequirements, { appliedMathMinorAdvisors } from './minors/applied-math';
+import buMinorRequirements, { buMinorAdvisors } from './minors/bu';
+import cogsciMinorRequirements, { cogsciMinorAdvisors } from './minors/cogsci';
+import csMinorRequirements, { csMinorAdvisors } from './minors/cs';
+import dbmeMinorRequirements, { dbmeAdvisors } from './minors/dbme';
 import deaMinorRequirements from './minors/dea';
-import eceMinorRequirements from './minors/ece';
-import hpMinorRequirements from './minors/hp';
-import hdMinorRequirements from './minors/hd';
-import inequalityRequirements from './minors/ineq';
-import infoENMinorRequirements from './minors/infoEN';
-import lingMinorRequirements from './minors/ling';
-import mathMinorRequirements from './minors/math';
-import ormsMinorRequirements from './minors/orms';
-import policyMinorRequirements from './minors/policy';
-import psychMinorRequirements from './minors/psych';
-import roboticsMinorRequirements from './minors/robotics';
-import spanishMinorRequirements from './minors/spanish';
+import eceMinorRequirements, { eceMinorAdvisors } from './minors/ece';
+import hpMinorRequirements, { hpMinorAdvisors } from './minors/hp';
+import hdMinorRequirements, { hdMinorAdvisors } from './minors/hd';
+import inequalityRequirements, { inequalityAdvisors } from './minors/ineq';
+import infoENMinorRequirements, { infoENMinorAdvisors } from './minors/infoEN';
+import lingMinorRequirements, { lingMinorAdvisors } from './minors/ling';
+import mathMinorRequirements, { mathMinorAdvisors } from './minors/math';
+import ormsMinorRequirements, { ormsMinorAdvisors } from './minors/orms';
+import policyMinorRequirements, { policyMinorAdvisors } from './minors/policy';
+import psychMinorRequirements, { psychMinorAdvisors } from './minors/psych';
+import roboticsMinorRequirements, { roboticsMinorAdvisors } from './minors/robotics';
+import spanishMinorRequirements, { spanishMinorAdvisors } from './minors/spanish';
 
 // import mengCSRequirements from './grad/meng-cs';
-import mpaRequirements from './grad/mpa';
+import mpaRequirements, { mpaAdvisors } from './grad/mpa';
 
 import { MATH2940, CHEM2080 } from './specializations/en';
 
@@ -370,96 +370,115 @@ const json: RequirementsJson = {
       name: 'Aerospace Engineering',
       schools: ['EN'],
       requirements: aerospaceMinorRequirements,
+      advisors: aerospaceMinorAdvisors,
     },
     APPLIEDMATH: {
       name: 'Applied Mathematics',
       schools: ['EN'],
       requirements: appliedMathMinorRequirements,
+      advisors: appliedMathMinorAdvisors,
     },
     BU: {
       name: 'Business',
       schools: ['BU'],
       requirements: buMinorRequirements,
+      advisors: buMinorAdvisors,
     },
     COGSCI: {
       name: 'Cognitive Science',
       schools: ['AS1', 'AS2'],
       requirements: cogsciMinorRequirements,
+      advisors: cogsciMinorAdvisors,
     },
     CS: {
       name: 'Computer Science',
       schools: ['EN', 'AS1', 'AS2'],
       requirements: csMinorRequirements,
+      advisors: csMinorAdvisors,
     },
     DBME: {
       name: 'Dyson Business Minor for Engineers',
       schools: ['BU'],
       requirements: dbmeMinorRequirements,
+      advisors: dbmeAdvisors,
     },
     DEA: {
       name: 'Design and Environmental Analysis',
       schools: ['HE'],
       requirements: deaMinorRequirements,
+      advisors: deaAdvisors,
     },
     ECE: {
       name: 'Electrical and Computer Engineering',
       schools: ['EN'],
       requirements: eceMinorRequirements,
+      advisors: eceMinorAdvisors,
     },
     HP: {
       name: 'Health Policy',
       schools: ['HE'],
       requirements: hpMinorRequirements,
+      advisors: hpMinorAdvisors,
     },
     HD: {
       name: 'Human Development',
       schools: ['HE'],
       requirements: hdMinorRequirements,
+      advisors: hdMinorAdvisors,
     },
     INEQ: {
       name: 'Inequality Studies',
       schools: ['AS1', 'AS2'],
       requirements: inequalityRequirements,
+      advisors: inequalityAdvisors,
     },
     ISST: {
       name: 'Information Science [Engineering]',
       schools: ['EN'],
       requirements: infoENMinorRequirements,
+      advisors: infoENMinorAdvisors,
     },
     LING: {
       name: 'Linguistics',
       schools: ['AS1', 'AS2'],
       requirements: lingMinorRequirements,
+      advisors: lingMinorAdvisors,
     },
     MATH: {
       name: 'Mathematics',
       schools: ['AS1', 'AS2'],
       requirements: mathMinorRequirements,
+      advisors: mathMinorAdvisors,
     },
     ORMS: {
       name: 'Operations Research and Management Science',
       schools: ['EN'],
       requirements: ormsMinorRequirements,
+      advisors: ormsMinorAdvisors,
     },
     POLICY: {
       name: 'Public Policy',
       schools: ['AS1', 'AS2'],
       requirements: policyMinorRequirements,
+      advisors: policyMinorAdvisors,
     },
     PSYCH: {
       name: 'Psychology',
       schools: ['AS1', 'AS2'],
       requirements: psychMinorRequirements,
+      advisors: psychMinorAdvisors,
     },
     ROBOTICS: {
       name: 'Robotics',
       schools: ['EN'],
       requirements: roboticsMinorRequirements,
+      advisors: roboticsMinorAdvisors,
     },
     SPAN: {
       name: 'Spanish',
       schools: ['AS1', 'AS2'],
       requirements: spanishMinorRequirements,
+      advisors: spanishMinorAdvisors,
     },
   },
   grad: {
@@ -474,6 +493,7 @@ const json: RequirementsJson = {
       name: 'Master of Public Administration (MPA) Program',
       schools: ['HE'],
       requirements: mpaRequirements,
+      advisors: mpaAdvisors,
     },
   },
 };

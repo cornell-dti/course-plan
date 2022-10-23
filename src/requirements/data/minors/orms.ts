@@ -4,6 +4,7 @@ import {
   ifCodeMatch,
   includesWithSingleRequirement,
 } from '../checkers-common';
+import { AdvisorGroup } from '@/requirements/tools-types';
 
 const ormsMinorRequirements: readonly CollegeOrMajorRequirement[] = [
   {
@@ -52,3 +53,7 @@ const ormsMinorRequirements: readonly CollegeOrMajorRequirement[] = [
 ];
 
 export default ormsMinorRequirements;
+
+export const ormsMinorAdvisors: AdvisorGroup = {
+  advisors: [],
+};

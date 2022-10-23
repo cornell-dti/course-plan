@@ -7,6 +7,7 @@ import {
   includesWithSingleRequirement,
   courseMeetsCreditMinimum,
 } from '../checkers-common';
+import { AdvisorGroup } from '@/requirements/tools-types';
 
 const lingMinorRequirements: readonly CollegeOrMajorRequirement[] = [
   {
@@ -81,3 +82,7 @@ const lingMinorRequirements: readonly CollegeOrMajorRequirement[] = [
 ];
 
 export default lingMinorRequirements;
+
+export const lingMinorAdvisors: AdvisorGroup = {
+  advisors: [],
+};

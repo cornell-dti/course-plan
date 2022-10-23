@@ -1,5 +1,6 @@
 import { CollegeOrMajorRequirement } from '../../types';
 import { includesWithSingleRequirement } from '../checkers-common';
+import { AdvisorGroup } from '@/requirements/tools-types';
 
 const dbmeMinorRequirements: readonly CollegeOrMajorRequirement[] = [
   {
@@ -109,3 +110,7 @@ const dbmeMinorRequirements: readonly CollegeOrMajorRequirement[] = [
 ];
 
 export default dbmeMinorRequirements;
+
+export const dbmeAdvisors: AdvisorGroup = {
+  advisors: [],
+};
