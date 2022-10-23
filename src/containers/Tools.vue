@@ -11,25 +11,14 @@
     <div class="toolsContainer-cards">
       <card name="Progress Tracker" class="toolsContainer-card-progress" id="progress"></card>
 
-      <card
-        name="Contact Your Advisors"
-        class="toolsContainer-card-advisors"
-        id="advisors"
-        :desired-height="275"
-      >
+      <card name="Contact Your Advisors" class="toolsContainer-card-advisors" id="advisors">
         <advisor-card></advisor-card>
       </card>
 
-      <card
-        name="Export Schedule"
-        class="toolsContainer-card-export"
-        id="export"
-        :desired-width="400"
-      >
-      </card>
+      <card name="Export Schedule" class="toolsContainer-card-export" id="export"></card>
 
-      <card name="Useful Links" class="toolsContainer-card-links" id="links" :desired-width="400">
-        <p>cornell.edu</p>
+      <card name="Useful Links" class="toolsContainer-card-links" id="links">
+        <useful-links></useful-links>
       </card>
     </div>
   </div>
@@ -38,9 +27,10 @@
 <script>
 import Card from '@/components/Tools/Card.vue';
 import AdvisorCard from '@/components/Tools/AdvisorCard.vue';
+import UsefulLinks from '@/components/Tools/UsefulLinks.vue';
 
 export default {
-  components: { AdvisorCard, Card },
+  components: { UsefulLinks, AdvisorCard, Card },
 };
 </script>
 
@@ -67,8 +57,6 @@ export default {
     color: #757575;
     padding-bottom: 30px;
     overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
   }
 
   &-cards {
@@ -78,10 +66,10 @@ export default {
     column-gap: 5rem;
     row-gap: 3rem;
 
-    @media only screen and (max-width: 1300px) {
+    @media only screen and (max-width: 1250px) {
       display: flex;
       flex-wrap: wrap;
-      justify-content: space-around;
+      justify-content: flex-start;
     }
   }
 
@@ -89,34 +77,29 @@ export default {
     &-progress {
       grid-column: 1/2;
       grid-row: 1/2;
+      width: 600px;
+      height: min-content;
     }
 
     &-advisors {
       grid-column: 1/2;
       grid-row: 2/3;
+      width: 600px;
+      height: min-content;
     }
 
     &-export {
       grid-column: 2/3;
       grid-row: 1/2;
+      width: 300px;
+      height: min-content;
     }
 
     &-links {
       grid-column: 2/3;
       grid-row: 2/3;
-    }
-
-    @media only screen and (max-width: 1300px) {
-      &-progress {
-        flex-grow: 1;
-      }
-      &-advisors {
-        flex-grow: 1;
-      }
-      &-export {
-      }
-      &-links {
-      }
+      width: 300px;
+      height: min-content;
     }
   }
 }
