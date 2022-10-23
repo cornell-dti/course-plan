@@ -1,5 +1,5 @@
 <template>
-  <div class="card" :style="cssVars" :class="{ 'card--collapsed': isCollapsed }">
+  <div class="card" :class="{ 'card--collapsed': isCollapsed }">
     <div class="card-top">
       <div class="card-minspacer">
         <img v-if="!isCollapsed" src="@/assets/images/minimize.svg" alt="minimize card" />
@@ -41,13 +41,6 @@ export default defineComponent({
     collapse() {
       this.isCollapsed = !this.isCollapsed;
       localStorage.setItem(JSON.stringify(this.name), JSON.stringify(this.isCollapsed));
-    },
-  },
-  computed: {
-    cssVars() {
-      return {
-        '--h': `${this.desiredHeight}px`,
-      };
     },
   },
 });
