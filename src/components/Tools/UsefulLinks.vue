@@ -25,7 +25,7 @@ export default defineComponent({
           link: 'https://classes.cornell.edu/scheduler/',
         },
         {
-          title: 'Course Roster',
+          title: 'Class Roster',
           link: 'https://classes.cornell.edu/browse/',
         },
         {
