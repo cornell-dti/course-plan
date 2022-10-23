@@ -21,8 +21,12 @@ export default defineComponent({
           link: 'https://studentcenter.cornell.edu/',
         },
         {
-          title: 'Course Catalog',
-          link: 'https://courses.cornell.edu/',
+          title: 'Scheduler',
+          link: 'https://classes.cornell.edu/scheduler/',
+        },
+        {
+          title: 'Course Roster',
+          link: 'https://classes.cornell.edu/browse/',
         },
         {
           title: 'Cornell DTI',
