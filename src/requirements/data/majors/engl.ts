@@ -1,5 +1,6 @@
 import { Course, CollegeOrMajorRequirement } from '../../types';
 import { courseMatchesCodeOptions, ifCodeMatch } from '../checkers-common';
+import { AdvisorGroup } from '@/requirements/tools-types';
 
 const englishRequirements: readonly CollegeOrMajorRequirement[] = [
   {
@@ -86,3 +87,7 @@ const englishRequirements: readonly CollegeOrMajorRequirement[] = [
 ];
 
 export default englishRequirements;
+
+export const englishAdvisors: AdvisorGroup = {
+  advisors: [],
+};

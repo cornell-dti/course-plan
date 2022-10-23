@@ -1,5 +1,6 @@
 import { Course, CollegeOrMajorRequirement } from '../../types';
 import { includesWithSubRequirements, ifCodeMatch } from '../checkers-common';
+import { AdvisorGroup } from '@/requirements/tools-types';
 
 const epRequirements: readonly CollegeOrMajorRequirement[] = [
   {
@@ -106,3 +107,7 @@ const epRequirements: readonly CollegeOrMajorRequirement[] = [
 ];
 
 export default epRequirements;
+
+export const epAdvisors: AdvisorGroup = {
+  advisors: [],
+};

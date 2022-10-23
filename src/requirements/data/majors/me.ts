@@ -4,6 +4,7 @@ import {
   includesWithSingleRequirement,
   includesWithSubRequirements,
 } from '../checkers-common';
+import { AdvisorGroup } from '@/requirements/tools-types';
 
 const mechnicalEngineeringRequirements: readonly CollegeOrMajorRequirement[] = [
   {
@@ -171,3 +172,7 @@ const mechnicalEngineeringRequirements: readonly CollegeOrMajorRequirement[] = [
 ];
 
 export default mechnicalEngineeringRequirements;
+
+export const mechanicalEngineeringAdvisors: AdvisorGroup = {
+  advisors: [],
+};

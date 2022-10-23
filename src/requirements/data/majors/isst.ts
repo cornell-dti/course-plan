@@ -1,5 +1,6 @@
 import { CollegeOrMajorRequirement } from '../../types';
 import { includesWithSubRequirements, includesWithSingleRequirement } from '../checkers-common';
+import { AdvisorGroup } from '@/requirements/tools-types';
 
 const isstRequirements: readonly CollegeOrMajorRequirement[] = [
   {
@@ -498,3 +499,7 @@ const isstRequirements: readonly CollegeOrMajorRequirement[] = [
 ];
 
 export default isstRequirements;
+
+export const isstAdvisors: AdvisorGroup = {
+  advisors: [],
+};

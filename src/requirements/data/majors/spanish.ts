@@ -4,6 +4,7 @@ import {
   ifCodeMatch,
   courseMeetsCreditMinimum,
 } from '../checkers-common';
+import { AdvisorGroup } from '@/requirements/tools-types';
 
 const spanishRequirements: readonly CollegeOrMajorRequirement[] = [
   {
@@ -55,3 +56,7 @@ const spanishRequirements: readonly CollegeOrMajorRequirement[] = [
 ];
 
 export default spanishRequirements;
+
+export const spanishAdvisors: AdvisorGroup = {
+  advisors: [],
+};

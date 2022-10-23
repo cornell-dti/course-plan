@@ -4,6 +4,7 @@ import {
   includesWithSubRequirements,
   courseMatchesCodeOptions,
 } from '../checkers-common';
+import { AdvisorGroup } from '@/requirements/tools-types';
 
 const eceRequirements: readonly CollegeOrMajorRequirement[] = [
   {
@@ -170,3 +171,7 @@ const eceRequirements: readonly CollegeOrMajorRequirement[] = [
 ];
 
 export default eceRequirements;
+
+export const eceAdvisors: AdvisorGroup = {
+  advisors: [],
+};

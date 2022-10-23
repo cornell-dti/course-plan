@@ -1,10 +1,11 @@
 import { CollegeOrMajorRequirement } from '../../types';
 import { includesWithSubRequirements } from '../checkers-common';
+import { AdvisorGroup } from '@/requirements/tools-types';
 
 const astroRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'Introductory Physics Sequence',
-    description: `Three semesters of physics including: 
+    description: `Three semesters of physics including:
     PHYS 1112 or PHYS 1116, PHYS 2213 or PHYS 2217, and PHYS 2214 or PHYS 2218.`,
     source: 'https://courses.cornell.edu/preview_program.php?catoid=41&poid=19789',
     checker: includesWithSubRequirements(
@@ -18,7 +19,7 @@ const astroRequirements: readonly CollegeOrMajorRequirement[] = [
   },
   {
     name: 'Introductory Mathematics Sequence',
-    description: `Three semesters of math including: 
+    description: `Three semesters of math including:
     MATH 1910, MATH 1120, or MATH 1220, MATH 1920, MATH 2220, or MATH 2240, and MATH 2930, MATH 4710, or ASTRO 3340.`,
     source: 'https://courses.cornell.edu/preview_program.php?catoid=41&poid=19789',
     checker: includesWithSubRequirements(
@@ -36,7 +37,7 @@ const astroRequirements: readonly CollegeOrMajorRequirement[] = [
   },
   {
     name: 'Experimental or Data Analysis Course in Astronomy',
-    description: `One experimental or data analysis course in astronomy chosen from: 
+    description: `One experimental or data analysis course in astronomy chosen from:
     ASTRO 4410, ASTRO 3310, or ASTRO 3334.`,
     source: 'https://courses.cornell.edu/preview_program.php?catoid=41&poid=19789',
     checker: includesWithSubRequirements(['ASTRO 4410', 'ASTRO 3310', 'ASTRO 3334']),
@@ -91,3 +92,7 @@ const astroRequirements: readonly CollegeOrMajorRequirement[] = [
 ];
 
 export default astroRequirements;
+
+export const astroAdvisors: AdvisorGroup = {
+  advisors: [],
+};

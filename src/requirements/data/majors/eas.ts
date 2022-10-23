@@ -4,6 +4,7 @@ import {
   includesWithSingleRequirement,
   includesWithSubRequirements,
 } from '../checkers-common';
+import { AdvisorGroup } from '@/requirements/tools-types';
 
 const easRequirements: readonly CollegeOrMajorRequirement[] = [
   {
@@ -246,3 +247,7 @@ const easRequirements: readonly CollegeOrMajorRequirement[] = [
 ];
 
 export default easRequirements;
+
+export const easAdvisors: AdvisorGroup = {
+  advisors: [],
+};

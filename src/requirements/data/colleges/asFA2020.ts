@@ -1,5 +1,6 @@
 import { Course, CollegeOrMajorRequirement } from '../../types';
 import { courseIsFWS, ifCodeMatch, courseIsForeignLang } from '../checkers-common';
+import { AdvisorGroup } from '@/requirements/tools-types';
 
 const casFA2020Requirements: readonly CollegeOrMajorRequirement[] = [
   {
@@ -100,3 +101,7 @@ const casFA2020Requirements: readonly CollegeOrMajorRequirement[] = [
 ];
 
 export default casFA2020Requirements;
+
+export const casAdvisors: AdvisorGroup = {
+  advisors: [],
+};

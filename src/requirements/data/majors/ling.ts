@@ -8,6 +8,7 @@ import {
   courseMeetsCreditMinimum,
   courseHasAttribute,
 } from '../checkers-common';
+import { AdvisorGroup } from '@/requirements/tools-types';
 
 const lingRequirements: readonly CollegeOrMajorRequirement[] = [
   {
@@ -118,3 +119,7 @@ const lingRequirements: readonly CollegeOrMajorRequirement[] = [
 ];
 
 export default lingRequirements;
+
+export const lingAdvisors: AdvisorGroup = {
+  advisors: [],
+};

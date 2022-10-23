@@ -1,5 +1,6 @@
 import { CollegeOrMajorRequirement, Course } from '../../types';
 import { ifCodeMatch, includesWithSubRequirements } from '../checkers-common';
+import { AdvisorGroup } from '@/requirements/tools-types';
 
 const orieRequirements: readonly CollegeOrMajorRequirement[] = [
   {
@@ -79,3 +80,7 @@ const orieRequirements: readonly CollegeOrMajorRequirement[] = [
 ];
 
 export default orieRequirements;
+
+export const orieAdvisors: AdvisorGroup = {
+  advisors: [],
+};

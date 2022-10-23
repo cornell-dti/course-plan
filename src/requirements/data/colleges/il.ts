@@ -5,6 +5,7 @@ import {
   includesWithSingleRequirement,
   includesWithSubRequirements,
 } from '../checkers-common';
+import { AdvisorGroup } from '@/requirements/tools-types';
 
 const FLcourses: readonly string[] = [
   'ARAB',
@@ -706,3 +707,7 @@ const ilrRequirements: readonly CollegeOrMajorRequirement[] = [
   },
 ];
 export default ilrRequirements;
+
+export const ilrAdvisors: AdvisorGroup = {
+  advisors: [],
+};

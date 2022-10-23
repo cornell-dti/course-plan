@@ -1,5 +1,6 @@
 import { Course, CollegeOrMajorRequirement } from '../../types';
 import { ifCodeMatch, includesWithSubRequirements } from '../checkers-common';
+import { AdvisorGroup } from '@/requirements/tools-types';
 
 // from here https://courses.cornell.edu/preview_program.php?catoid=31&poid=15425
 const stsScienceRequirement: readonly string[] = ['PBS', 'PBSS', 'OPHLS', 'BIOLS', 'BIO'];
@@ -93,3 +94,7 @@ const stsRequirements: readonly CollegeOrMajorRequirement[] = [
 ];
 
 export default stsRequirements;
+
+export const stsAdvisors: AdvisorGroup = {
+  advisors: [],
+};

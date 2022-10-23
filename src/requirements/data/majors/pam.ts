@@ -8,6 +8,7 @@ import {
   includesWithSubRequirements,
   courseMeetsCreditMinimum,
 } from '../checkers-common';
+import { AdvisorGroup } from '@/requirements/tools-types';
 
 const pamRequirements: readonly CollegeOrMajorRequirement[] = [
   {
@@ -225,3 +226,7 @@ const pamRequirements: readonly CollegeOrMajorRequirement[] = [
 ];
 
 export default pamRequirements;
+
+export const pamAdvisors: AdvisorGroup = {
+  advisors: [],
+};
