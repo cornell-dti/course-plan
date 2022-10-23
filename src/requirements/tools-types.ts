@@ -1,6 +1,6 @@
 export type AdvisorGroup = {
   readonly advisors: Advisor[];
-  readonly source: string;
+  readonly source?: string;
 };
 
 export type AdvisorChecker = (user: FirestoreUserName) => boolean;
