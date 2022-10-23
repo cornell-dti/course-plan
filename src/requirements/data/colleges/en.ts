@@ -6,6 +6,7 @@ import {
   ifCodeMatch,
   courseIsForeignLang,
 } from '../checkers-common';
+import { LIBERAL_STUDIES_COURSE_ID } from '../constants';
 import { AdvisorGroup } from '../../tools-types';
 import { lastNameRange, lastNameRanges } from '../../advisor-checkers';
 
@@ -141,7 +142,9 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
           (course: Course): boolean =>
             engineeringLiberalArtsDistributions.some(
               distribution => course.catalogDistr?.includes(distribution) ?? false
-            ) || courseIsForeignLang(course),
+            ) ||
+            courseIsForeignLang(course) ||
+            course.crseId === LIBERAL_STUDIES_COURSE_ID,
         ],
         fulfilledBy: 'credits',
         perSlotMinCount: [18],
