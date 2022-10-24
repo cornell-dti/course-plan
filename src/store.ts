@@ -1,5 +1,5 @@
 import { Store } from 'vuex';
-import { doc, getDoc, onSnapshot, setDoc } from 'firebase/firestore';
+import { doc, getDoc, onSnapshot, setDoc, updateDoc } from 'firebase/firestore';
 
 import * as fb from './firebase-frontend-config';
 import computeGroupedRequirementFulfillmentReports from './requirements/requirement-frontend-computation';
@@ -275,6 +275,9 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
     if (data) {
       const { orderByNewest, semesters } = data;
       store.commit('setSemesters', semesters);
+      updateDoc(doc(fb.semestersCollection, simplifiedUser.email), {
+        plans: [{ semesters }], // TODO: andxu282 update later
+      });
       // if user hasn't yet chosen an ordering, choose true by default
       store.commit('setOrderByNewest', orderByNewest === undefined ? true : orderByNewest);
     } else {
