@@ -1,14 +1,14 @@
-name: Release
+name: Deploy to Staging
 on:
   push:
     branches:
-      - beta-release
+      - master
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v2
       - name: Set up Node
         uses: actions/setup-node@v2
         with:
@@ -17,11 +17,11 @@ jobs:
       - name: NPM Install
         run: npm install
       - name: Build
-        run: npm run build
+        run: npm run build:staging
       - name: Deploy
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
         run: |
           npm install --save-dev firebase-tools
-          ./node_modules/.bin/firebase use production
+          ./node_modules/.bin/firebase use staging
           ./node_modules/.bin/firebase deploy --token=$FIREBASE_TOKEN --non-interactive --only hosting
