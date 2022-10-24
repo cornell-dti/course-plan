@@ -111,6 +111,8 @@ export default defineComponent({
             this.gradRequirementCount.finished = Math.round(totalCompleted * 10) / 10;
             this.gradRequirementCount.needed = Math.round(totalRequired * 10) / 10;
             break;
+          default:
+            break;
         }
       });
     },
