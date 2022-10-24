@@ -90,7 +90,7 @@ export default {
       grid-column: 1/2;
       grid-row: 1/2;
       width: 600px;
-      height: min-content;
+      height: 275px;
     }
 
     &-advisors {
