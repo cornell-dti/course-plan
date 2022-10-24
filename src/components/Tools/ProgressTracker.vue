@@ -169,7 +169,6 @@ export default defineComponent({
     flex-direction: column;
     justify-content: center;
     flex-grow: 2;
-    margin: 0 0 0 0;
     position: relative;
     margin-bottom: 0.25rem;
   }
@@ -195,7 +194,7 @@ export default defineComponent({
   &-bar {
     position: absolute;
     top: 0;
-    left: 17%;
+    left: 20%;
     width: 9.375rem;
     height: 9.375rem; /* full circle! */
     border-radius: 50%;
@@ -220,21 +219,15 @@ export default defineComponent({
 
   &-status-text {
     position: absolute;
-    left: 25%;
-    font-family: 'Proxima Nova';
-    font-style: normal;
-    font-size: 0.875rem;
-    line-height: 0.938rem;
+    left: 30%;
+    font: '14px normal Proxima Nova';
     /* identical to box height */
     text-align: center;
     color: #92c3e6;
   }
 
   &-text-style {
-    font-family: 'Proxima Nova';
-    font-style: normal;
-    font-weight: 400;
-    font-size: 0.875rem;
+    font: '14px normal Proxima Nova';
     line-height: 1rem;
     /* identical to box height */
     display: flex;
