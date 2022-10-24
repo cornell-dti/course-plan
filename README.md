@@ -1,12 +1,12 @@
 # CoursePlan
 
-Access CoursePlan at [courseplan.io](http://courseplan.io 'courseplan.io')
+Access CoursePlan at [courseplan.io](https://courseplan.io)!
 
 CoursePlan is a four-year academic planner for Cornell undergraduates developed by the Design & Tech Initiative. CoursePlan helps undergraduates track their courses and their requirements automatically depending on their college, major, and minor. It aims to allow students view the big picture of their time at Cornell.
 
-View documentation on updating requirements data.
+View documentation in our [wiki](https://github.com/cornell-dti/course-plan/wiki).
 
-## Project installation
+## Project setup
 
 ```shell
 npm install
@@ -19,11 +19,6 @@ npm run serve
 ```
 
 Then access http://localhost:8080/
-
-## Docs
-
-- [Requirements](./src/requirements/README.md)
-- [Feature Flags](./src/feature-flags.md)
 
 ## Contributors
 
@@ -89,7 +84,7 @@ Then access http://localhost:8080/
 - **Theresa Cho** - TPM
 - **Ein Chang** - PM
 
-### FA2020
+### FA20
 
 - **Hahnbee Lee** - Developer
 - **Theresa Cho** - Developer

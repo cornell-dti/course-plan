@@ -5,7 +5,7 @@
         <span> Edit Profile</span>
       </div>
       <div class="profileContainer-subtitle">
-        <span> get your information up-to-date! </span>
+        <span> Get your information up-to-date! </span>
       </div>
     </div>
     <div class="profileContainer-buttonGroup">

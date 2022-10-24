@@ -1,6 +1,6 @@
 import { doc, setDoc } from 'firebase/firestore';
 
-import { overriddenFulfillmentChoicesCollection } from '../firebase-frontend-config';
+import { overriddenFulfillmentChoicesCollection } from '../firebase-config';
 import store from '../store';
 
 export const updateRequirementChoice = (

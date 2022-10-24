@@ -1,6 +1,6 @@
 import { doc, setDoc } from 'firebase/firestore';
 
-import { usernameCollection } from '../firebase-frontend-config';
+import { usernameCollection } from '../firebase-config';
 import store from '../store';
 
 const setUsernameData = (name: FirestoreUserName): void => {
