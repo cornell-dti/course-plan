@@ -22,7 +22,7 @@ jobs:
         run: echo "${{ github.event.inputs.semester }}" > update-courses.txt
       - name: Check Diff
         id: diff
-        run: exit $(git status --porcelain | wc -l)
+        run: if [[ $(git status --porcelain | wc -l) -gt 0 ]]; then exit 0; else exit 1; fi;
       - name: Log No Diff
         if: ${{ failure() && steps.diff.conclusion == 'failure' }}
         run: echo "Courses and requirements json are up to date."
