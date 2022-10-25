@@ -5,8 +5,8 @@ import {
   ifCodeMatch,
   courseMatchesCode,
 } from '../checkers-common';
-import { AdvisorGroup } from '@/requirements/tools-types';
-import { lastNameRange } from '@/requirements/advisor-checkers';
+import { AdvisorGroup } from '../../tools-types';
+import { lastNameRange } from '../../advisor-checkers';
 
 const csMinorRequirements: readonly CollegeOrMajorRequirement[] = [
   {

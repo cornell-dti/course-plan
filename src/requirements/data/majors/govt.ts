@@ -1,6 +1,6 @@
 import { CollegeOrMajorRequirement, Course } from '../../types';
 import { ifCodeMatch, includesWithSingleRequirement } from '../checkers-common';
-import { AdvisorGroup } from '@/requirements/tools-types';
+import { AdvisorGroup } from '../../tools-types';
 
 const governmentRequirements: readonly CollegeOrMajorRequirement[] = [
   {

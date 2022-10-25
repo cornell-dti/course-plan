@@ -5,7 +5,7 @@ import {
   includesWithSubRequirements,
   includesWithSingleRequirement,
 } from '../checkers-common';
-import { AdvisorGroup } from '@/requirements/tools-types';
+import { AdvisorGroup } from '../../tools-types';
 
 // courses that can be used for the materials elective
 const materialsElectives = [

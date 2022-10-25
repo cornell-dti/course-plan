@@ -1,6 +1,6 @@
 import { Course, CollegeOrMajorRequirement } from '../../types';
 import { courseIsFWS } from '../checkers-common';
-import { AdvisorGroup } from '@/requirements/tools-types';
+import { AdvisorGroup } from '../../tools-types';
 
 const humanEcologyRequirements: readonly CollegeOrMajorRequirement[] = [
   {

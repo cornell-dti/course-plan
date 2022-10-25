@@ -5,7 +5,7 @@ import {
   courseIsForeignLang,
   courseMatchesCodeOptions,
 } from '../checkers-common';
-import { AdvisorGroup } from '@/requirements/tools-types';
+import { AdvisorGroup } from '../../tools-types';
 
 const fashionDesignAdditionalRequirements: readonly string[] = [
   'PBS',

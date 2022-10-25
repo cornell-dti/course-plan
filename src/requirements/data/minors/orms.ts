@@ -4,7 +4,7 @@ import {
   ifCodeMatch,
   includesWithSingleRequirement,
 } from '../checkers-common';
-import { AdvisorGroup } from '@/requirements/tools-types';
+import { AdvisorGroup } from '../../tools-types';
 
 const ormsMinorRequirements: readonly CollegeOrMajorRequirement[] = [
   {

@@ -1,5 +1,5 @@
 import { Course, CollegeOrMajorRequirement } from '../../types';
-import { AdvisorGroup } from '@/requirements/tools-types';
+import { AdvisorGroup } from '../../tools-types';
 
 const historyRequirements: readonly CollegeOrMajorRequirement[] = [
   {
