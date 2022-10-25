@@ -152,7 +152,7 @@ export const genPDF = (): void => {
     const emojiPath = emojiPathMap[sem.season];
     const emoji = new Image();
     emoji.src = emojiPath;
-    doc.addImage(emoji, 'svg', tableX + 5, startct - 15.5, 12, 12);
+    doc.addImage(emoji, tableX + 5, startct - 15.5, 12, 12);
 
     let tableHeight = rowHeight;
 
