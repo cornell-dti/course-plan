@@ -29,3 +29,6 @@ cypress/videos
 # Firebase service account, used for things like running scripts and logging in for e2e tests
 serviceAccount.json
 serviceAccountProd.json
+
+# App-specific output files that should be ignored
+scripts/out

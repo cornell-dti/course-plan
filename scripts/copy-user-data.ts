@@ -14,7 +14,6 @@
  */
 
 import parseArgs from 'minimist';
-import { writeFileSync } from 'fs';
 import {
   DATABASE_URL_DEV,
   DATABASE_URL_PROD,
@@ -23,6 +22,7 @@ import {
   getDatabase,
   userCollectionNames,
 } from './firebase-config';
+import { writeToFile } from './util';
 
 const args = parseArgs(process.argv, {
   string: ['f', 't', 'o'],
@@ -104,7 +104,7 @@ async function execute(
     if (!options.output) {
       console.log(JSON.stringify(log, undefined, 2));
     } else {
-      writeFileSync(options.output, JSON.stringify(log, undefined, 2));
+      writeToFile(log, options.output);
     }
   }
 }
