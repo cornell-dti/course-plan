@@ -6,6 +6,7 @@ import {
   courseMatchesCode,
 } from '../checkers-common';
 import { AdvisorGroup } from '@/requirements/tools-types';
+import { lastNameRange } from '@/requirements/advisor-checkers';
 
 const csMinorRequirements: readonly CollegeOrMajorRequirement[] = [
   {
@@ -70,5 +71,9 @@ const csMinorRequirements: readonly CollegeOrMajorRequirement[] = [
 export default csMinorRequirements;
 
 export const csMinorAdvisors: AdvisorGroup = {
-  advisors: [],
+  advisors: [
+    { name: 'Ryan Marchenese ', email: 'ryan.m@cornell.edu', checker: lastNameRange('A', 'H') },
+    { name: 'Carl Cornell', email: 'cec232@cornell.edu', checker: lastNameRange('I', 'Q') },
+    { name: 'Nicole Roy', email: 'nicole.roy@cornell.edu', checker: lastNameRange('R', 'Z') },
+  ],
 };

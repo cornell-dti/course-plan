@@ -709,5 +709,5 @@ const ilrRequirements: readonly CollegeOrMajorRequirement[] = [
 export default ilrRequirements;
 
 export const ilrAdvisors: AdvisorGroup = {
-  advisors: [],
+  advisors: [{ name: 'Rebecca Schimenti', email: 'rss347@cornell.edu' }],
 };

@@ -121,5 +121,5 @@ const lingRequirements: readonly CollegeOrMajorRequirement[] = [
 export default lingRequirements;
 
 export const lingAdvisors: AdvisorGroup = {
-  advisors: [],
+  advisors: [{ name: 'Abigail Cohn', email: 'acc4@cornell.edu' }],
 };

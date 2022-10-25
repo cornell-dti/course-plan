@@ -112,5 +112,5 @@ const aerospaceMinorRequirements: readonly CollegeOrMajorRequirement[] = [
 export default aerospaceMinorRequirements;
 
 export const aerospaceMinorAdvisors: AdvisorGroup = {
-  advisors: [],
+  advisors: [{ name: 'Kae-Lynn Buchanan Wilson', email: 'kbw28@cornell.edu' }],
 };

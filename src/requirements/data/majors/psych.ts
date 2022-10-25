@@ -114,5 +114,5 @@ const psychRequirements: readonly CollegeOrMajorRequirement[] = [
 export default psychRequirements;
 
 export const psychAdvisors: AdvisorGroup = {
-  advisors: [],
+  advisors: [{ name: 'Vivian Zayas', email: 'psych-dus@cornell.edu' }],
 };

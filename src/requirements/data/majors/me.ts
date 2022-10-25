@@ -174,5 +174,5 @@ const mechanicalEngineeringRequirements: readonly CollegeOrMajorRequirement[] = 
 export default mechanicalEngineeringRequirements;
 
 export const mechanicalEngineeringAdvisors: AdvisorGroup = {
-  advisors: [],
+  advisors: [{ name: 'Kae-Lynn Buchanan Wilson', email: 'kbw28@cornell.edu' }],
 };

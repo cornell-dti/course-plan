@@ -136,5 +136,5 @@ const hotelAdminRequirements: readonly CollegeOrMajorRequirement[] = [
 export default hotelAdminRequirements;
 
 export const hotelAdminAdvisors: AdvisorGroup = {
-  advisors: [],
+  advisors: [{ name: 'Nolan School Advising', email: 'ha-advising@cornell.edu' }],
 };

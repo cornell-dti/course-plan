@@ -287,5 +287,5 @@ const foodSciRequirements: readonly CollegeOrMajorRequirement[] = [
 export default foodSciRequirements;
 
 export const foodSciAdvisors: AdvisorGroup = {
-  advisors: [],
+  advisors: [{ name: 'Jennifer Alcaine', email: 'jsa97@cornell.edu' }],
 };

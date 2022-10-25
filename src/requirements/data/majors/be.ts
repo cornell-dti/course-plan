@@ -184,5 +184,5 @@ const bioEngineeringRequirements: readonly CollegeOrMajorRequirement[] = [
 export default bioEngineeringRequirements;
 
 export const bioEngineeringAdvisors: AdvisorGroup = {
-  advisors: [],
+  advisors: [{ name: 'Jillian Goldfarb', email: 'jlg459@cornell.edu' }],
 };

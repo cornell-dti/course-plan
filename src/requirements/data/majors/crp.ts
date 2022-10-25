@@ -164,5 +164,5 @@ const crpRequirements: readonly CollegeOrMajorRequirement[] = [
 export default crpRequirements;
 
 export const crpAdvisors: AdvisorGroup = {
-  advisors: [],
+  advisors: [{ name: 'Nicholas Klein', email: 'njk8@cornell.edu' }],
 };

@@ -109,5 +109,5 @@ const epRequirements: readonly CollegeOrMajorRequirement[] = [
 export default epRequirements;
 
 export const epAdvisors: AdvisorGroup = {
-  advisors: [],
+  advisors: [{ name: 'Craig Fennie', email: 'fennie@cornell.edu' }],
 };

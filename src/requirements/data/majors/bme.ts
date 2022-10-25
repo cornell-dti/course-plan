@@ -154,5 +154,5 @@ const biomedicalEngineeringRequirements: readonly CollegeOrMajorRequirement[] = 
 export default biomedicalEngineeringRequirements;
 
 export const biomedicalEngineeringAdvisors: AdvisorGroup = {
-  advisors: [],
+  advisors: [{ name: 'Meinig School of Biomedical Engineering', email: 'bmeugrad@cornell.edu' }],
 };

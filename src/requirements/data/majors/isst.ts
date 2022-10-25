@@ -1,6 +1,7 @@
 import { CollegeOrMajorRequirement } from '../../types';
 import { includesWithSubRequirements, includesWithSingleRequirement } from '../checkers-common';
 import { AdvisorGroup } from '@/requirements/tools-types';
+import { lastNameRange } from '../../advisor-checkers';
 
 const isstRequirements: readonly CollegeOrMajorRequirement[] = [
   {
@@ -501,5 +502,9 @@ const isstRequirements: readonly CollegeOrMajorRequirement[] = [
 export default isstRequirements;
 
 export const isstAdvisors: AdvisorGroup = {
-  advisors: [],
+  advisors: [
+    { name: 'Ani Mercincavage', email: 'am2643@cornell.edu' },
+    { name: 'Terry Horgan', email: 'tmh233@cornell.edu', checker: lastNameRange('A', 'I') },
+    { name: 'Jess Wilkie', email: 'jlw433@cornell.edu', checker: lastNameRange('J', 'Z') },
+  ],
 };

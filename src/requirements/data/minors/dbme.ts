@@ -112,5 +112,5 @@ const dbmeMinorRequirements: readonly CollegeOrMajorRequirement[] = [
 export default dbmeMinorRequirements;
 
 export const dbmeAdvisors: AdvisorGroup = {
-  advisors: [],
+  advisors: [{ name: 'Jenny VanAtta', email: 'jmv86@cornell.edu' }],
 };

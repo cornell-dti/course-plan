@@ -96,5 +96,5 @@ const stsRequirements: readonly CollegeOrMajorRequirement[] = [
 export default stsRequirements;
 
 export const stsAdvisors: AdvisorGroup = {
-  advisors: [],
+  advisors: [{ name: 'Jessica Ratcliff', email: 'jrr47@cornell.edu' }],
 };

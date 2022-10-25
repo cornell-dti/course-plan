@@ -697,5 +697,5 @@ const bioRequirements: readonly CollegeOrMajorRequirement[] = [
 export default bioRequirements;
 
 export const bioAdvisors: AdvisorGroup = {
-  advisors: [],
+  advisors: [{ name: 'Amy Drumluk', email: 'ard244@cornell.edu' }],
 };

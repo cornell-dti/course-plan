@@ -71,5 +71,5 @@ const governmentRequirements: readonly CollegeOrMajorRequirement[] = [
 export default governmentRequirements;
 
 export const governmentAdvisors: AdvisorGroup = {
-  advisors: [],
+  advisors: [{ name: "Danielle O'Connor", email: 'dko1@cornell.edu' }],
 };

@@ -48,5 +48,5 @@ const historyRequirements: readonly CollegeOrMajorRequirement[] = [
 export default historyRequirements;
 
 export const historyAdvisors: AdvisorGroup = {
-  advisors: [],
+  advisors: [{ name: 'Robert Travers', email: 'history_DUS@cornell.edu' }],
 };

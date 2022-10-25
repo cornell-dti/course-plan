@@ -417,5 +417,10 @@ const mathRequirements: readonly CollegeOrMajorRequirement[] = [
 export default mathRequirements;
 
 export const mathAdvisors: AdvisorGroup = {
-  advisors: [],
+  advisors: [
+    {
+      name: 'Michelle Klinger',
+      email: 'mmk8@cornell.edu',
+    },
+  ],
 };

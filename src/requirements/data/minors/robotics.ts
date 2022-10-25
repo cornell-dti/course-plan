@@ -102,5 +102,5 @@ const roboticsMinorRequirements: readonly CollegeOrMajorRequirement[] = [
 export default roboticsMinorRequirements;
 
 export const roboticsMinorAdvisors: AdvisorGroup = {
-  advisors: [],
+  advisors: [{ name: 'Kae-Lynn Buchanan Wilson', email: 'kbw28@cornell.edu' }],
 };

@@ -563,5 +563,5 @@ const mpaRequirements: readonly CollegeOrMajorRequirement[] = [
 export default mpaRequirements;
 
 export const mpaAdvisors: AdvisorGroup = {
-  advisors: [],
+  advisors: [{ name: 'Rebecca Morgenstern Brenner', email: 'rjm478@cornell.edu' }],
 };

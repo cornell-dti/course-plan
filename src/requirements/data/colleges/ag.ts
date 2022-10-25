@@ -664,5 +664,5 @@ const calsRequirements: readonly CollegeOrMajorRequirement[] = [
 export default calsRequirements;
 
 export const calsAdvisors: AdvisorGroup = {
-  advisors: [],
+  advisors: [{ name: 'Kerri Lai', email: 'kll225@cornell.edu' }],
 };

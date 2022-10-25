@@ -78,5 +78,5 @@ const economicsRequirements: readonly CollegeOrMajorRequirement[] = [
 export default economicsRequirements;
 
 export const economicsAdvisors: AdvisorGroup = {
-  advisors: [],
+  advisors: [{ name: 'Allison Barrett', email: 'aeb238@cornell.edu' }],
 };

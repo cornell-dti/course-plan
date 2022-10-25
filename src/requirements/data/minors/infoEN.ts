@@ -281,5 +281,5 @@ const infoENMinorRequirements: readonly CollegeOrMajorRequirement[] = [
 export default infoENMinorRequirements;
 
 export const infoENMinorAdvisors: AdvisorGroup = {
-  advisors: [],
+  advisors: [{ name: 'Terry Horgan', email: 'tmh233@cornell.edu' }],
 };

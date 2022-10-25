@@ -157,5 +157,5 @@ const envEngineeringRequirements: readonly CollegeOrMajorRequirement[] = [
 export default envEngineeringRequirements;
 
 export const envEngineeringAdvisors: AdvisorGroup = {
-  advisors: [],
+  advisors: [{ name: 'Laura Ricciuti', email: 'lr482@cornell.edu' }],
 };

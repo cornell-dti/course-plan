@@ -55,5 +55,5 @@ const ormsMinorRequirements: readonly CollegeOrMajorRequirement[] = [
 export default ormsMinorRequirements;
 
 export const ormsMinorAdvisors: AdvisorGroup = {
-  advisors: [],
+  advisors: [{ name: 'Heidi Russell', email: 'hjr27@cornell.edu' }],
 };

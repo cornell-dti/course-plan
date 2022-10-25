@@ -310,5 +310,5 @@ const biologyAndSocietyRequirements: readonly CollegeOrMajorRequirement[] = [
 export default biologyAndSocietyRequirements;
 
 export const bioAdvisors: AdvisorGroup = {
-  advisors: [],
+  advisors: [{ name: 'David Ryan', email: 'dwr28@cornell.edu' }],
 };

@@ -94,5 +94,5 @@ const asRequirements: readonly CollegeOrMajorRequirement[] = [
 export default asRequirements;
 
 export const asAdvisors: AdvisorGroup = {
-  advisors: [],
+  advisors: [{ name: 'Art DeGaetano', email: 'atd2@cornell.edu' }],
 };

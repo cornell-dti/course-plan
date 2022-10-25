@@ -249,5 +249,5 @@ const easRequirements: readonly CollegeOrMajorRequirement[] = [
 export default easRequirements;
 
 export const easAdvisors: AdvisorGroup = {
-  advisors: [],
+  advisors: [{ name: 'Bruce Monger', email: 'bcm3@cornell.edu' }],
 };

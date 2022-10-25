@@ -5,6 +5,7 @@ import {
   ifCodeMatch,
 } from '../checkers-common';
 import { AdvisorGroup } from '@/requirements/tools-types';
+import { lastNameRange } from '../../advisor-checkers';
 
 const infoRequirements: readonly CollegeOrMajorRequirement[] = [
   {
@@ -307,5 +308,9 @@ const infoRequirements: readonly CollegeOrMajorRequirement[] = [
 export default infoRequirements;
 
 export const infoAdvisors: AdvisorGroup = {
-  advisors: [],
+  advisors: [
+    { name: 'Ani Mercincavage', email: 'am2643@cornell.edu' },
+    { name: 'Terry Horgan', email: 'tmh233@cornell.edu', checker: lastNameRange('A', 'I') },
+    { name: 'Jess Wilkie', email: 'jlw433@cornell.edu', checker: lastNameRange('J', 'Z') },
+  ],
 };

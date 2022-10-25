@@ -173,5 +173,5 @@ const eceRequirements: readonly CollegeOrMajorRequirement[] = [
 export default eceRequirements;
 
 export const eceAdvisors: AdvisorGroup = {
-  advisors: [],
+  advisors: [{ name: 'Sharif Ewais-Orozco', email: 'ugrad-coordinator@ece.cornell.edu' }],
 };

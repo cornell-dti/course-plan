@@ -91,5 +91,5 @@ const astroRequirements: readonly CollegeOrMajorRequirement[] = [
 export default astroRequirements;
 
 export const astroAdvisors: AdvisorGroup = {
-  advisors: [],
+  advisors: [{ name: 'Gordon J Stacey', email: 'stacey@cornell.edu' }],
 };

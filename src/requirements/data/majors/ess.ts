@@ -642,5 +642,5 @@ const environmentAndSustainability: readonly CollegeOrMajorRequirement[] = [
 export default environmentAndSustainability;
 
 export const essAdvisors: AdvisorGroup = {
-  advisors: [],
+  advisors: [{ name: 'Suzanne Wapner', email: 'sw38@cornell.edu' }],
 };

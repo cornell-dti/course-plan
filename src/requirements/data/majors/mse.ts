@@ -306,5 +306,5 @@ const mseRequirements: readonly CollegeOrMajorRequirement[] = [
 export default mseRequirements;
 
 export const mseAdvisors: AdvisorGroup = {
-  advisors: [],
+  advisors: [{ name: 'Michele Conrad', email: 'mmc2@cornell.edu' }],
 };

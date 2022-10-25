@@ -263,5 +263,5 @@ const chemERequirements: readonly CollegeOrMajorRequirement[] = [
 export default chemERequirements;
 
 export const chemEAdvisors: AdvisorGroup = {
-  advisors: [],
+  advisors: [{ name: 'Carol Casler', email: 'cad1@cornell.edu' }],
 };

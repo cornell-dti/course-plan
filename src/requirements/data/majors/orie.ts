@@ -82,5 +82,5 @@ const orieRequirements: readonly CollegeOrMajorRequirement[] = [
 export default orieRequirements;
 
 export const orieAdvisors: AdvisorGroup = {
-  advisors: [],
+  advisors: [{ name: 'Heidi Russell', email: 'hjr27@cornell.edu' }],
 };

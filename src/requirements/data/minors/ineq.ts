@@ -232,5 +232,5 @@ const inequalityRequirements: readonly CollegeOrMajorRequirement[] = [
 export default inequalityRequirements;
 
 export const inequalityAdvisors: AdvisorGroup = {
-  advisors: [],
+  advisors: [{ name: 'John Niederbuhl', email: 'jwn3@cornell.edu' }],
 };

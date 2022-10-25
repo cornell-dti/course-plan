@@ -89,5 +89,5 @@ const buMinorRequirements: readonly CollegeOrMajorRequirement[] = [
 export default buMinorRequirements;
 
 export const buMinorAdvisors: AdvisorGroup = {
-  advisors: [],
+  advisors: [{ name: 'Jenny VanAtta', email: 'jmv86@cornell.edu' }],
 };

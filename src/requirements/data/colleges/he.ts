@@ -41,5 +41,5 @@ const humanEcologyRequirements: readonly CollegeOrMajorRequirement[] = [
 export default humanEcologyRequirements;
 
 export const humanEcologyAdvisors: AdvisorGroup = {
-  advisors: [],
+  advisors: [{ name: 'Darryl Scott', email: 'ds42@cornell.edu' }],
 };

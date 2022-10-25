@@ -89,5 +89,5 @@ const englishRequirements: readonly CollegeOrMajorRequirement[] = [
 export default englishRequirements;
 
 export const englishAdvisors: AdvisorGroup = {
-  advisors: [],
+  advisors: [{ name: 'Aurora Ricardo', email: 'ar2368@cornell.edu' }],
 };

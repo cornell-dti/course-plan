@@ -6,5 +6,5 @@ const businessRequirements: readonly CollegeOrMajorRequirement[] = [];
 export default businessRequirements;
 
 export const businessAdvisors: AdvisorGroup = {
-  advisors: [],
+  advisors: [{ name: 'Brooke Tobey', email: 'gm-registrar@cornell.edu' }],
 };

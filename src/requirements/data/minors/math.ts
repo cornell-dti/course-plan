@@ -75,5 +75,5 @@ const mathMinorRequirements: readonly CollegeOrMajorRequirement[] = [
 export default mathMinorRequirements;
 
 export const mathMinorAdvisors: AdvisorGroup = {
-  advisors: [],
+  advisors: [{ name: 'Michelle Klinger', email: 'mmk8@cornell.edu' }],
 };

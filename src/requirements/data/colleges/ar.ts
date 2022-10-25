@@ -10,5 +10,5 @@ export default aapRequirements;
 // This can be accounted for in the checker
 
 export const aapAdvisors: AdvisorGroup = {
-  advisors: [],
+  advisors: [{ name: 'Becky Baines', email: 'rb786@cornell.edu' }],
 };

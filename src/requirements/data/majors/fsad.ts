@@ -236,5 +236,5 @@ const fashionDesignRequirements: readonly CollegeOrMajorRequirement[] = [
 export default fashionDesignRequirements;
 
 export const fashionDesignAdvisors: AdvisorGroup = {
-  advisors: [],
+  advisors: [{ name: 'Fran Kozen', email: 'fhk2@cornell.edu' }],
 };

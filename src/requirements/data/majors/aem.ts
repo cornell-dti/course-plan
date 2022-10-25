@@ -481,5 +481,5 @@ const aemRequirements: readonly CollegeOrMajorRequirement[] = [
 export default aemRequirements;
 
 export const aemAdvisors: AdvisorGroup = {
-  advisors: [],
+  advisors: [{ name: 'Dyson Office of Student Services', email: 'Dyson_OSS@cornell.edu' }],
 };

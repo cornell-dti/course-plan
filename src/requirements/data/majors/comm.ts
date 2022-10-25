@@ -165,5 +165,5 @@ const commRequirements: readonly CollegeOrMajorRequirement[] = [
 export default commRequirements;
 
 export const commAdvisors: AdvisorGroup = {
-  advisors: [],
+  advisors: [{ name: 'Ashlee Cherry', email: 'ac2396@cornell.edu' }],
 };

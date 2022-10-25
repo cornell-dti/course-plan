@@ -84,5 +84,5 @@ const lingMinorRequirements: readonly CollegeOrMajorRequirement[] = [
 export default lingMinorRequirements;
 
 export const lingMinorAdvisors: AdvisorGroup = {
-  advisors: [],
+  advisors: [{ name: 'Abigail Cohn', email: 'acc4@cornell.edu' }],
 };

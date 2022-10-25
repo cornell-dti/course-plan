@@ -213,5 +213,5 @@ const deaRequirements: readonly CollegeOrMajorRequirement[] = [
 export default deaRequirements;
 
 export const deaAdvisors: AdvisorGroup = {
-  advisors: [],
+  advisors: [{ name: 'Rhonda Gilmore', email: 'rg35@cornell.edu' }],
 };

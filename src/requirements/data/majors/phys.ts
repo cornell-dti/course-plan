@@ -124,5 +124,5 @@ const physRequirements: readonly CollegeOrMajorRequirement[] = [
 export default physRequirements;
 
 export const physAdvisors: AdvisorGroup = {
-  advisors: [],
+  advisors: [{ name: 'Tomas Arias', email: 'physicsdus@cornell.edu' }],
 };

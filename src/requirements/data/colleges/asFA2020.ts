@@ -1,6 +1,7 @@
 import { Course, CollegeOrMajorRequirement } from '../../types';
 import { courseIsFWS, ifCodeMatch, courseIsForeignLang } from '../checkers-common';
 import { AdvisorGroup } from '@/requirements/tools-types';
+import { lastNameRange } from '../../advisor-checkers';
 
 const casFA2020Requirements: readonly CollegeOrMajorRequirement[] = [
   {
@@ -103,5 +104,11 @@ const casFA2020Requirements: readonly CollegeOrMajorRequirement[] = [
 export default casFA2020Requirements;
 
 export const casAdvisors: AdvisorGroup = {
-  advisors: [],
+  advisors: [
+    {
+      name: 'Jayla Greene',
+      email: 'jng65@cornell.edu',
+      checker: lastNameRange('https://as.cornell.edu/advising', ''),
+    },
+  ],
 };

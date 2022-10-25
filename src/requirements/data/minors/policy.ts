@@ -40,5 +40,5 @@ const policyMinorRequirements: readonly CollegeOrMajorRequirement[] = [
 export default policyMinorRequirements;
 
 export const policyMinorAdvisors: AdvisorGroup = {
-  advisors: [],
+  advisors: [{ name: 'Aaron Childree', email: 'eac328@cornell.edu' }],
 };

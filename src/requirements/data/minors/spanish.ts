@@ -53,5 +53,5 @@ const spanishMinorRequirements: readonly CollegeOrMajorRequirement[] = [
 export default spanishMinorRequirements;
 
 export const spanishMinorAdvisors: AdvisorGroup = {
-  advisors: [],
+  advisors: [{ name: 'Callean Hile', email: 'clh2@cornell.edu' }],
 };

@@ -36,5 +36,5 @@ const cogsciMinorRequirements: readonly CollegeOrMajorRequirement[] = [
 export default cogsciMinorRequirements;
 
 export const cogsciMinorAdvisors: AdvisorGroup = {
-  advisors: [],
+  advisors: [{ name: 'Julie Simmons-Lynch', email: 'jes257@cornell.edu' }],
 };

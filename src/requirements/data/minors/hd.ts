@@ -51,5 +51,5 @@ const hdMinorRequirements: readonly CollegeOrMajorRequirement[] = [
 export default hdMinorRequirements;
 
 export const hdMinorAdvisors: AdvisorGroup = {
-  advisors: [],
+  advisors: [{ name: 'Vivian Zayas', email: 'psych-dus@cornell.edu' }],
 };

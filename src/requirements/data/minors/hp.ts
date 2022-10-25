@@ -61,5 +61,5 @@ const hpMinorRequirements: readonly CollegeOrMajorRequirement[] = [
 export default hpMinorRequirements;
 
 export const hpMinorAdvisors: AdvisorGroup = {
-  advisors: [],
+  advisors: [{ name: 'Jen Wright', email: 'jrd292@cornell.edu' }],
 };
