@@ -3,13 +3,17 @@
  * BE CAREFUL WHEN COPYING TO PROD!
  * Script to copy data from one user on production or dev to another user on dev.
  * Requires service accounts for database.
- * serviceAccountDev.json (if using dev) and serviceAccountProd.json (if using prod) must be at the root.
- * The output will be the data written or to be written to the target.
+ * serviceAccount.json (if using dev) and serviceAccountProd.json (if using prod) must be at the root.
+ * If you encounter problems, see scripts/firebase-config.ts for more information on how the service account is loaded.
+ *
+ * The data written (with --execute) or the data to be written (without --execute) to the target
+ * will be outputted to scripts/out/<OUTPUT> when -o is included and written to the console otherwise.
+ * If it doesn't already exist, out/ should be created in scripts/ if you include -o <OUTPUT>.
  *
  * From root, run: `npm run ts-node -- scripts/copy-user-data.ts -f <FROM_ENV>/<FROM_USER> -t <TO_ENV>/<TO_USER> -o <OUTPUT>`
  * To execute the script, include `--execute` at the end of the command
  * FROM_ENV and TO_ENV should be either "dev" or "prod"
- * OUTPUT is an optional argument to specify the JSON file to write the log to. If left empty, the script will write to the console.
+ * OUTPUT is an optional argument to specify the filepath to write the JSON log to. If left empty, the script will write to the console.
  * EXAMPLE: `npm run ts-node -- scripts/copy-user-data.ts -f dev/dummyaccount -t dev/newdummyaccount -o "log.json"`
  */
 
