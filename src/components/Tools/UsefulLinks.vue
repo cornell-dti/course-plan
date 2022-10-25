@@ -30,7 +30,7 @@ export default defineComponent({
         },
         {
           title: 'Academic Calendar',
-          link: 'https://registrar.cornell.edu/academic-calendar',
+          link: 'https://registrar.cornell.edu/academic-calendar/',
         },
         {
           title: 'Cornell DTI',
