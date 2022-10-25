@@ -108,7 +108,7 @@ export const casAdvisors: AdvisorGroup = {
     {
       name: 'Jayla Greene',
       email: 'jng65@cornell.edu',
-      checker: lastNameRange('https://as.cornell.edu/advising', ''),
     },
   ],
+  source: 'https://as.cornell.edu/advising',
 };
