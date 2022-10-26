@@ -310,7 +310,6 @@ export default infoRequirements;
 export const infoAdvisors: AdvisorGroup = {
   advisors: [
     { name: 'Ani Mercincavage', email: 'am2643@cornell.edu' },
-    { name: 'Terry Horgan', email: 'tmh233@cornell.edu', checker: lastNameRange('A', 'I') },
-    { name: 'Jess Wilkie', email: 'jlw433@cornell.edu', checker: lastNameRange('J', 'Z') },
+    { name: 'Jess Wilkie', email: 'jlw433@cornell.edu' },
   ],
 };
