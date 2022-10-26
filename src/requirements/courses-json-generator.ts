@@ -105,7 +105,7 @@ const getAllCoursesInSemester = async (
     await wait(coolingTimeMs);
     subjectCount += 1;
     if (doPrintDebuggingInfo) {
-      console.log(`There're ${semesterCourses.length} courses in ${subject} in ${semester}.`);
+      console.log(`There are ${semesterCourses.length} courses in ${subject} in ${semester}.`);
       console.log(`We fetched ${subjectCount} out of ${subjects.length} subjects in ${semester}.`);
     }
   }

@@ -18,11 +18,13 @@ jobs:
           cache: 'npm'
       - name: NPM Clean Install
         run: npm ci
-      - name: Generate Diff # TODO: replace this with update-courses script
-        run: echo "${{ github.event.inputs.semester }}" > update-courses.txt
+      - name: Generate Courses Json
+        run: npm run courses-gen
+      - name: Generate Requirements Json
+        run: npm run req-gen
       - name: Check Diff
         id: diff
-        run: exit $(git status --porcelain | wc -l)
+        run: if [[ $(git status --porcelain | wc -l) -gt 0 ]]; then exit 0; else exit 1; fi;
       - name: Log No Diff
         if: ${{ failure() && steps.diff.conclusion == 'failure' }}
         run: echo "Courses and requirements json are up to date."
@@ -31,9 +33,10 @@ jobs:
         uses: peter-evans/create-pull-request@v4
         with:
           title: "[Automated] Update Courses (${{ github.event.inputs.semester }})"
+          body: "Ran `npm run courses-gen` and `npm run req-gen`, as part of the update-courses workflow."
           commit-message: "[Automated] Update Courses (${{ github.event.inputs.semester }})"
           committer: Cornell DTI GitHub Bot <admin@cornelldti.org>
           branch: update-courses/${{ github.event.inputs.semester }}
           delete-branch: true
       - name: Log Pull Request URL
-        run: echo "Created pull request - ${{ steps.cpr.outputs.pull-request-url }}""
+        run: echo "Created pull request - ${{ steps.cpr.outputs.pull-request-url }}"
