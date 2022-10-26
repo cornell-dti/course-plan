@@ -29,6 +29,10 @@ export default defineComponent({
           link: 'https://classes.cornell.edu/browse/',
         },
         {
+          title: 'Academic Calendar',
+          link: 'https://registrar.cornell.edu/academic-calendar/',
+        },
+        {
           title: 'Cornell DTI',
           link: 'https://www.cornelldti.org/',
         },
