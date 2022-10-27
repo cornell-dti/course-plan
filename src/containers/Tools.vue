@@ -95,14 +95,14 @@ export default {
       grid-column: 2/3;
       grid-row: 1/2;
       width: 300px;
-      height: min-content;
+      height: 250px;
     }
 
     &-links {
       grid-column: 2/3;
       grid-row: 2/3;
       width: 300px;
-      height: min-content;
+      height: 250px;
     }
   }
 }
