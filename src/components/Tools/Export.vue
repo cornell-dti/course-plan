@@ -1,6 +1,8 @@
 <template>
   <div class="export">
-    <img src="@/assets/images/download.svg" alt="export schedule" @click="exportSchedule" />
+    <img class="export-icon" src="@/assets/images/download.svg" alt="export schedule" />
+    <span class="export-text">Export your schedule as PDF and share with your friends!</span>
+    <button class="export-button" @click="exportSchedule">Download</button>
   </div>
 </template>
 
@@ -21,9 +23,29 @@ export default defineComponent({
 @import '@/assets/scss/_variables.scss';
 
 .export {
-  width: 30px;
-  img:hover {
-    cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  padding-bottom: 1px;
+
+  &-text {
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+
+  &-icon {
+    size: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  &-button {
+    border-radius: 3px;
+    background-color: #4d7d92;
+    color: white;
+    font-size: 1rem;
+    padding: 0.25rem 0 0.25rem 0;
+    width: 75%;
   }
 }
 </style>

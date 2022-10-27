@@ -94,6 +94,7 @@ export default defineComponent({
     justify-content: center;
     width: calc(100% - 64px);
     height: 100%;
+    overflow: hidden;
   }
 
   &-name {
