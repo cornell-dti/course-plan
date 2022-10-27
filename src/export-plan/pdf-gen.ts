@@ -53,16 +53,8 @@ export const genPDF = async (): Promise<void> => {
 
   const img = await toDataURL("src/assets/cp-logo-pdf.png")
   console.log(img)
-  // new Image();
-  // img.src = path.resolve("src/assets/cp-logo-pdf.png");
-  // img.onerror = function () {
-  //   console.log("ee")
-  // }
-  // img.onload = function () {
-  //   console.log("loaded")
-  // }
-  console.log("trying to add cp logo")
-  doc.addImage(img, "PNG", 48, 30, 84, 23.25);
+  // console.log("trying to add cp logo")
+  // doc.addImage(img, "PNG", 48, 30, 84, 23.25);
 
   console.log("cp logo added")
   doc.setFontSize(10.5);
@@ -177,7 +169,7 @@ export const genPDF = async (): Promise<void> => {
     // emoji.onerror = function () {
     //   console.log("ee")
     // }
-    doc.addImage(emoji, tableX + 5, startct - 15.5, 12, 12);
+    // doc.addImage(emoji, tableX + 5, startct - 15.5, 12, 12);
 
     let tableHeight = rowHeight;
 
