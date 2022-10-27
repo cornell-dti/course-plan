@@ -1,6 +1,11 @@
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import url from '@/assets/cp-logo-pdf.png';
+import fallEmojiURL from '@/assets/images/pdf-gen/fall.png';
+import springEmojiURL from '@/assets/images/pdf-gen/spring.png';
+import summerEmojiURL from '@/assets/images/pdf-gen/summer.png';
+import winterEmojiURL from '@/assets/images/pdf-gen/winter.png';
+
 import {
   getCollegeFullName,
   getMajorFullName,
@@ -34,14 +39,20 @@ const bubbleColourMap: Record<RequirementGroupType, (req?: string) => string> = 
   Minor: () => '#145351',
 };
 
-function toDataURL(url: string) {
-  return fetch(url).then( response => response.blob() )
-            .then( blob => new Promise( callback =>{
-                let reader = new FileReader() ;
-                reader.onload = function(){ callback(this.result) } ;
-                reader.readAsDataURL(blob) ;
-            }) ).catch((reason) => console.log(reason)) ;
-}
+/**
+ * Asynchronously load an image
+ *
+ * @param src the source URL of the image to load
+ * @returns a promise wrapping the loaded image
+ */
+const loadImage = (src: string): Promise<HTMLImageElement> =>
+  new Promise((resolve, reject) => {
+    const img = new Image();
+    img.src = src;
+    img.onload = () => resolve(img);
+    img.onerror = err => reject(err);
+  });
+
 export const genPDF = async (): Promise<void> => {
   /* eslint new-cap: "off" */
   const doc = new jsPDF({ unit: 'pt', format: 'letter' });
@@ -51,12 +62,9 @@ export const genPDF = async (): Promise<void> => {
 
   const tableX = (doc.internal.pageSize.width - tableWidth) / 2;
 
-  const img = await toDataURL("src/assets/cp-logo-pdf.png")
-  console.log(img)
-  // console.log("trying to add cp logo")
-  doc.addImage(img, "PNG", 48, 30, 84, 23.25);
+  const img = await loadImage(url);
+  doc.addImage(img, 'PNG', 48, 30, 84, 23.25);
 
-  console.log("cp logo added")
   doc.setFontSize(10.5);
 
   doc.text('Name:', 48, 76);
@@ -135,6 +143,18 @@ export const genPDF = async (): Promise<void> => {
   const tableHeader = [['Course', 'Credits', 'Requirements Fulfilled']];
   let startct = Math.max(firstTableY, programY + 20);
 
+  const fallEmoji = await loadImage(fallEmojiURL);
+  const springEmoji = await loadImage(springEmojiURL);
+  const summerEmoji = await loadImage(summerEmojiURL);
+  const winterEmoji = await loadImage(winterEmojiURL);
+
+  const emojiMap = {
+    Fall: fallEmoji,
+    Spring: springEmoji,
+    Summer: summerEmoji,
+    Winter: winterEmoji,
+  };
+
   for (const sem of sems) {
     let headerHeight = rowHeight * (2 + sem.courses.length);
     if (sem.courses.length === 0) headerHeight = rowHeight;
@@ -154,21 +174,7 @@ export const genPDF = async (): Promise<void> => {
     doc.text(`${sem.season} ${sem.year}`, tableX + 20, startct - 6);
     doc.setFont('ProximaNova-Regular', 'normal');
 
-    const emojiPathMap: Record<FirestoreSemesterSeason, string> = {
-      Fall: 'src/assets/images/pdf-gen/fall.png',
-      Spring: 'src/assets/images/pdf-gen/spring.png',
-      Summer: 'src/assets/images/pdf-gen/summer.png',
-      Winter: 'src/assets/images/pdf-gen/winter.png',
-    };
-    // const emojiPath = emojiPathMap[sem.season];
-    const emoji = await toDataURL(emojiPathMap[sem.season])
-    
-    console.log(emoji)
-    // new Image();
-    // emoji.src = emojiPath;
-    // emoji.onerror = function () {
-    //   console.log("ee")
-    // }
+    const emoji = emojiMap[sem.season];
     doc.addImage(emoji, tableX + 5, startct - 15.5, 12, 12);
 
     let tableHeight = rowHeight;

@@ -160,8 +160,8 @@ export default defineComponent({
     closeMenuIfOpen() {
       this.menuOpen = false;
     },
-    submitPDF() {
-      genPDF();
+    async submitPDF() {
+      await genPDF();
     },
   },
   directives: {
