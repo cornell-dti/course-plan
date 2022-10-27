@@ -30,7 +30,7 @@
 import Card from '@/components/Tools/Card.vue';
 import AdvisorCard from '@/components/Tools/AdvisorCard.vue';
 import UsefulLinks from '@/components/Tools/UsefulLinks.vue';
-import ExportCard from '@/components/Tools/ExportCard';
+import ExportCard from '@/components/Tools/ExportCard.vue';
 
 export default {
   components: { ExportCard, UsefulLinks, AdvisorCard, Card },
