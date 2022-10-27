@@ -1,6 +1,6 @@
 import JsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import url from '@/assets/cp-logo-pdf.png';
+import coursePlanLogoURL from '@/assets/cp-logo-pdf.png';
 import fallEmojiURL from '@/assets/images/pdf-gen/fall.png';
 import springEmojiURL from '@/assets/images/pdf-gen/spring.png';
 import summerEmojiURL from '@/assets/images/pdf-gen/summer.png';
@@ -53,7 +53,17 @@ const loadImage = (src: string): Promise<HTMLImageElement> =>
     img.onerror = err => reject(err);
   });
 
-export const genPDF = async (): Promise<void> => {
+// Map from semester season to the emoji to display
+const emojiMap = {
+  Fall: await loadImage(fallEmojiURL),
+  Spring: await loadImage(springEmojiURL),
+  Summer: await loadImage(summerEmojiURL),
+  Winter: await loadImage(winterEmojiURL),
+};
+
+const coursePlanLogo = await loadImage(coursePlanLogoURL);
+
+export const genPDF = (): void => {
   const doc = new JsPDF({ unit: 'pt', format: 'letter' });
 
   addFonts(doc);
@@ -61,8 +71,7 @@ export const genPDF = async (): Promise<void> => {
 
   const tableX = (doc.internal.pageSize.width - tableWidth) / 2;
 
-  const img = await loadImage(url);
-  doc.addImage(img, 'PNG', 48, 30, 84, 23.25);
+  doc.addImage(coursePlanLogo, 'PNG', 48, 30, 84, 23.25);
 
   doc.setFontSize(10.5);
 
@@ -141,18 +150,6 @@ export const genPDF = async (): Promise<void> => {
   sems = trimEmptySems(sems);
   const tableHeader = [['Course', 'Credits', 'Requirements Fulfilled']];
   let startct = Math.max(firstTableY, programY + 20);
-
-  const fallEmoji = await loadImage(fallEmojiURL);
-  const springEmoji = await loadImage(springEmojiURL);
-  const summerEmoji = await loadImage(summerEmojiURL);
-  const winterEmoji = await loadImage(winterEmojiURL);
-
-  const emojiMap = {
-    Fall: fallEmoji,
-    Spring: springEmoji,
-    Summer: summerEmoji,
-    Winter: winterEmoji,
-  };
 
   for (const sem of sems) {
     let headerHeight = rowHeight * (2 + sem.courses.length);
