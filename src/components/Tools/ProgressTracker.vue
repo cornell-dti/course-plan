@@ -3,10 +3,7 @@
     <div class="progress-position">
       <div class="progress-bar-container">
         <div class="progress-bar-overflow">
-          <div
-            class="progress-bar"
-            :style="{ transform: `rotate(${45 + 180 * sumRequirements()}deg)` }"
-          ></div>
+          <div class="progress-bar" :style="progressBarStyle"></div>
         </div>
         <img class="progress-bar-caption" :src="getImage" />
       </div>
@@ -116,7 +113,12 @@ export default defineComponent({
         }
       });
     },
-    sumRequirements(): number {
+  },
+  computed: {
+    requirements(): readonly GroupedRequirementFulfillmentReport[] {
+      return store.state.groupedRequirementFulfillmentReport;
+    },
+    progress(): number {
       const totalRequired =
         this.collegeRequirementCount.needed +
         this.majorRequirementCount.needed +
@@ -129,27 +131,26 @@ export default defineComponent({
         this.gradRequirementCount.finished;
       return totalCompleted / totalRequired;
     },
-  },
-  computed: {
-    requirements(): readonly GroupedRequirementFulfillmentReport[] {
-      return store.state.groupedRequirementFulfillmentReport;
-    },
     getImage(): string {
       this.queryRequirements();
-      const progress = this.sumRequirements();
-      if (progress < 0.2) {
+      if (this.progress < 0.2) {
         return hands;
       }
-      if (progress < 0.4) {
+      if (this.progress < 0.4) {
         return flex;
       }
-      if (progress < 0.6) {
+      if (this.progress < 0.6) {
         return star;
       }
-      if (progress < 0.8) {
+      if (this.progress < 0.8) {
         return fire;
       }
       return confetti;
+    },
+    progressBarStyle(): Record<string, string> {
+      return {
+        transform: `rotate(${45 + 180 * this.progress}deg)`,
+      };
     },
     getProgressString(): string {
       return 'You are almost there!';
