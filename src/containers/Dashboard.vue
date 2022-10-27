@@ -257,9 +257,9 @@ export default defineComponent({
     },
 
     openProfile() {
-      if (featureFlagCheckers.isToolsEnabled()) {
+      this.showToolsPage = false;
+      if (featureFlagCheckers.isProfileEnabled()) {
         this.isProfileOpen = true;
-        this.showToolsPage = false;
       } else {
         this.editProfile();
       }
