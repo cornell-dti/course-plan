@@ -1,4 +1,4 @@
-import jsPDF from 'jspdf';
+import JsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import url from '@/assets/cp-logo-pdf.png';
 import fallEmojiURL from '@/assets/images/pdf-gen/fall.png';
@@ -53,9 +53,8 @@ const loadImage = (src: string): Promise<HTMLImageElement> =>
     img.onerror = err => reject(err);
   });
 
-export const genPDF = async (): Promise<void> => {
-  /* eslint new-cap: "off" */
-  const doc = new jsPDF({ unit: 'pt', format: 'letter' });
+const genPDF = async (): Promise<void> => {
+  const doc = new JsPDF({ unit: 'pt', format: 'letter' });
 
   addFonts(doc);
   doc.setFont('ProximaNova-Regular', 'normal');
@@ -329,7 +328,7 @@ const getFulfilledReqs = (
   ];
 };
 
-const renderBubbles = (doc: jsPDF, xPos: number, yPos: number, text: string, colour: string) => {
+const renderBubbles = (doc: JsPDF, xPos: number, yPos: number, text: string, colour: string) => {
   doc.setFillColor(colour);
   const bubbleWidth = 8 + text.length * 5.5;
   doc.roundedRect(xPos, yPos, bubbleWidth, 11, 6, 6, 'F');
