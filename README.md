@@ -27,6 +27,19 @@ Then access http://localhost:8080/
 
 ## Contributors
 
+### FA22
+
+- **Ben Shen** - Developer
+- **Noah Schiff** - Developer
+- **Jerry Wang** - Developer
+- **Andrew Xu** - Developer
+- **Vaishnavi Gupta** - Developer
+- **Kehui Guo** - Designer
+- **Noorejehan Umarn** - Designer
+- **Miranda Yu** - PMM
+- **Zak Kent** - TPM
+- **Michael Farkouh** - PM
+
 ### SP22
 
 - **Will Spencer** - Developer

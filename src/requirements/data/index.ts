@@ -46,6 +46,7 @@ import orieRequirements from './majors/orie';
 import pamRequirements from './majors/pam';
 import physRequirements from './majors/phys';
 import spanishRequirements from './majors/spanish';
+import psychRequirements from './majors/psych';
 import stsRequirements from './majors/sts';
 import aerospaceMinorRequirements from './minors/aerospace';
 import appliedMathMinorRequirements from './minors/applied-math';
@@ -301,6 +302,11 @@ const json: RequirementsJson = {
       name: 'Physics',
       schools: ['AS1', 'AS2'],
       requirements: physRequirements,
+    },
+    PSYCH: {
+      name: 'Psychology',
+      schools: ['AS1', 'AS2'],
+      requirements: psychRequirements,
     },
     SPAN: {
       name: 'Spanish',
