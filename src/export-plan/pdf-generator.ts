@@ -5,6 +5,8 @@ import fallEmojiURL from '@/assets/images/pdf-gen/fall.png';
 import springEmojiURL from '@/assets/images/pdf-gen/spring.png';
 import summerEmojiURL from '@/assets/images/pdf-gen/summer.png';
 import winterEmojiURL from '@/assets/images/pdf-gen/winter.png';
+import { lightPlaceholderGray, borderGray } from '@/assets/constants/scss-variables';
+import { pdfColors } from '@/assets/constants/colors';
 
 import {
   getCollegeFullName,
@@ -36,11 +38,11 @@ const reqsToFilterOut = ['A&S Credits'];
 const bubbleColorMap: Record<RequirementGroupType, (req?: string) => string> = {
   College: (req?: string) =>
     req && store.state.userRequirementsMap[req].sourceSpecificName === 'UNI'
-      ? '#1AA9A5'
-      : '#4F7D91',
-  Grad: () => '#1E8481',
-  Major: () => '#1E8481',
-  Minor: () => '#145351',
+      ? pdfColors.turquoise
+      : pdfColors.collegeBlue,
+  Grad: () => pdfColors.majorTeal,
+  Major: () => pdfColors.majorTeal,
+  Minor: () => pdfColors.minorDarkTeal,
 };
 
 /**
@@ -87,9 +89,9 @@ const generatePDF = async (): Promise<void> => {
   doc.circle(357, 124.5, 3, 'F');
   doc.setFillColor(bubbleColorMap.Minor());
   doc.circle(451, 107, 3, 'F');
-  doc.setFillColor('#1AA9A5');
+  doc.setFillColor(pdfColors.turquoise);
   doc.circle(451, 124.5, 3, 'F');
-  doc.setTextColor(117, 117, 117);
+  doc.setTextColor(lightPlaceholderGray);
 
   doc.text(
     `${store.state.userName.firstName} ${
@@ -102,17 +104,17 @@ const generatePDF = async (): Promise<void> => {
 
   let programY = 110;
   if (store.state.onboardingData.grad) {
-    doc.setTextColor(0);
+    doc.setTextColor('#000000');
     doc.text('Graduate:', 48, programY);
-    doc.setTextColor(117, 117, 117);
+    doc.setTextColor(lightPlaceholderGray);
     doc.text(getGradFullName(store.state.onboardingData.grad), 100.3, programY);
     programY += 17.5;
   }
 
   if (store.state.onboardingData.major.length > 0) {
-    doc.setTextColor(0);
+    doc.setTextColor('#000000');
     doc.text('Major:', 48, programY);
-    doc.setTextColor(117, 117, 117);
+    doc.setTextColor(lightPlaceholderGray);
     doc.text(
       store.state.onboardingData.major.map(major => getMajorFullName(major)).join(', '),
       100.3,
@@ -122,9 +124,9 @@ const generatePDF = async (): Promise<void> => {
   }
 
   if (store.state.onboardingData.minor.length > 0) {
-    doc.setTextColor(0);
+    doc.setTextColor('#000000');
     doc.text('Minor:', 48, programY);
-    doc.setTextColor(117, 117, 117);
+    doc.setTextColor(lightPlaceholderGray);
     doc.text(
       store.state.onboardingData.minor.map(minor => getMinorFullName(minor)).join(', '),
       100.3,
@@ -144,7 +146,7 @@ const generatePDF = async (): Promise<void> => {
     93.2
   );
 
-  doc.setTextColor(0);
+  doc.setTextColor('#000000');
 
   const sems = trimEmptySems(sortedSemesters(store.state.semesters, false));
   const tableHeader = [['Course', 'Credits', 'Requirements Fulfilled']];
@@ -161,7 +163,7 @@ const generatePDF = async (): Promise<void> => {
     let headerHeight = rowHeight * (2 + sem.courses.length);
     if (sem.courses.length === 0) headerHeight = rowHeight;
 
-    const [body, groups, colors] = getCourseRows(sem);
+    const { body, bubbles } = getCourseRows(sem);
 
     const estimatedHeight = estimateTableHeight(body);
     if (estimatedHeight + startct + 35 > doc.internal.pageSize.height) {
@@ -169,7 +171,7 @@ const generatePDF = async (): Promise<void> => {
       startct = 70;
     }
 
-    doc.setFillColor(212, 229, 230);
+    doc.setFillColor(pdfColors.backgroundTurquoise);
     doc.roundedRect(tableX, startct - rowHeight, tableWidth, headerHeight, 4, 4, 'F');
 
     doc.setFont('ProximaNova-Bold', 'bold');
@@ -216,16 +218,16 @@ const generatePDF = async (): Promise<void> => {
           data.cell.styles.lineWidth = 0.5;
         },
         willDrawCell: data => {
-          doc.setFillColor(255, 255, 255);
+          doc.setFillColor('#ffffff');
           if (data.row.index === sem.courses.length - 1) {
-            doc.setDrawColor(255, 255, 255);
+            doc.setDrawColor('#ffffff');
             data.cell.styles.lineWidth = 0.5;
           }
         },
         /* eslint no-loop-func: "off" */
         didDrawCell: data => {
           if (data.row.index === sem.courses.length - 1) {
-            doc.setDrawColor(216, 216, 216);
+            doc.setDrawColor(borderGray);
             doc.setLineWidth(0.5);
             // draw middle vertical borders for last row
             if (data.column.index > 0)
@@ -243,12 +245,10 @@ const generatePDF = async (): Promise<void> => {
             data.row.index < body.length
           ) {
             let yPos = data.cell.y + 3;
-            groups[data.row.index].forEach((group, index) => {
+            bubbles[data.row.index].forEach((bubble, index) => {
               const xPos =
                 data.cell.x + doc.getTextWidth(body[data.row.index][2].split('\n')[index]) + 8;
-
-              const color = colors[data.row.index][index];
-              renderBubbles(doc, xPos, yPos, group, color);
+              renderBubbles(doc, xPos, yPos, bubble.requirementGroup, bubble.color);
               yPos += rowFontSize + 1.5;
             });
           }
@@ -256,7 +256,7 @@ const generatePDF = async (): Promise<void> => {
       });
     }
 
-    doc.setDrawColor(216, 216, 216);
+    doc.setDrawColor(borderGray);
     doc.setLineWidth(0.5);
     doc.roundedRect(tableX, startct - rowHeight, tableWidth, tableHeight, 4, 4);
     startct += tableHeight + tableGap;
@@ -269,7 +269,7 @@ const generatePDF = async (): Promise<void> => {
   doc.textWithLink('courseplan.io', footerX + doc.getTextWidth('downloaded from '), footerY, {
     url: 'https://courseplan.io',
   });
-  doc.setDrawColor(0);
+  doc.setDrawColor('#000000');
   doc.line(
     footerX + doc.getTextWidth('downloaded from '),
     footerY + 3,
@@ -280,18 +280,28 @@ const generatePDF = async (): Promise<void> => {
   doc.save(pdfName);
 };
 
-const getCourseRows = (sem: FirestoreSemester): [string[][], string[][], string[][]] => {
-  const rows = sem.courses
+// represents a coloured bubble that shows the group a requirement falls in
+type bubble = {
+  requirementGroup: string;
+  color: string;
+};
+type semesterRows = {
+  // the body of the semester table
+  body: string[][];
+  // the list of bubbles for each course in the semester
+  bubbles: bubble[][];
+};
+const getCourseRows = (sem: FirestoreSemester): semesterRows => {
+  const rows: [string[], bubble[]][] = sem.courses
     .filter((course): course is FirestoreSemesterCourse => !isPlaceholderCourse(course))
     .map(course => {
-      const [reqs, groups, colors] = getFulfilledReqs(course);
+      const [reqs, bubbles] = getFulfilledReqs(course);
       return [
         [`${course.code}: ${course.name}`, course.credits.toString(), reqs.join('\n')],
-        groups,
-        colors,
+        bubbles,
       ];
     });
-  return [rows.map(row => row[0]), rows.map(row => row[1]), rows.map(row => row[2])];
+  return { body: rows.map(row => row[0]), bubbles: rows.map(row => row[1]) };
 };
 
 const trimEmptySems = (sems: readonly FirestoreSemester[]): readonly FirestoreSemester[] => {
@@ -302,9 +312,7 @@ const trimEmptySems = (sems: readonly FirestoreSemester[]): readonly FirestoreSe
   return sems.slice(0, maxNonemptyIndex + 1);
 };
 
-const getFulfilledReqs = (
-  course: FirestoreSemesterCourse
-): readonly [string[], string[], string[]] => {
+const getFulfilledReqs = (course: FirestoreSemesterCourse): readonly [string[], bubble[]] => {
   let reqsFulfilled = store.state.safeRequirementFulfillmentGraph.getConnectedRequirementsFromCourse(
     { uniqueId: course.uniqueID }
   );
@@ -322,10 +330,10 @@ const getFulfilledReqs = (
 
   return [
     reqsFulfilled.map(req => store.state.userRequirementsMap[req].name),
-    reqsFulfilled.map((req): string =>
-      bubbleTextMap[store.state.userRequirementsMap[req].sourceType](req)
-    ),
-    reqsFulfilled.map(req => bubbleColorMap[store.state.userRequirementsMap[req].sourceType](req)),
+    reqsFulfilled.map(req => ({
+      requirementGroup: bubbleTextMap[store.state.userRequirementsMap[req].sourceType](req),
+      color: bubbleColorMap[store.state.userRequirementsMap[req].sourceType](req),
+    })),
   ];
 };
 
@@ -333,7 +341,7 @@ const renderBubbles = (doc: JsPDF, xPos: number, yPos: number, text: string, col
   doc.setFillColor(color);
   const bubbleWidth = 8 + text.length * 5.5;
   doc.roundedRect(xPos, yPos, bubbleWidth, 11, 6, 6, 'F');
-  doc.setTextColor(256, 256, 256);
+  doc.setTextColor('#ffffff');
   doc.text(text, xPos + bubbleWidth / 2, yPos + 8.5, { align: 'center' });
 };
 
