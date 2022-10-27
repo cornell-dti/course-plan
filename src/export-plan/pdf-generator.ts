@@ -30,9 +30,11 @@ const firstTableY = 170;
 const rowFontSize = 10.5;
 const headerFontSize = 10.5;
 
-// list of requirements to not display in the PDF.
-// we filter these out because they apply to almost every course, and make the
-// PDF somewhat messy.
+/**
+ * List of requirements to not display in the PDF.
+ * We filter these out because they apply to almost every course, and make the
+ * PDF somewhat messy.
+ */
 const reqsToFilterOut = ['A&S Credits'];
 
 const bubbleColorMap: Record<RequirementGroupType, (req?: string) => string> = {
@@ -305,6 +307,7 @@ const getCourseRows = (sem: FirestoreSemester): semesterRows => {
 };
 
 const trimEmptySems = (sems: readonly FirestoreSemester[]): readonly FirestoreSemester[] => {
+  if (sems.length === 0) return [];
   let maxNonemptyIndex = -1;
   for (let i = 0; i < sems.length; i += 1) {
     if (sems[i].courses.length > 0) maxNonemptyIndex = i;
