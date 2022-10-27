@@ -69,25 +69,22 @@ export default defineComponent({
   },
   methods: {
     queryRequirements(): void {
-      this.requirements.forEach(r => {
+      for (const { reqs, groupName } of this.requirements) {
         let totalRequired = 0;
         let totalCompleted = 0;
-        r.reqs.forEach(req => {
-          if (req.fulfillment.fulfilledBy !== 'self-check') {
-            totalRequired += 1 + Object.values(req.fulfillment.additionalRequirements ?? {}).length;
+        for (const { fulfillment } of reqs) {
+          const additionalRequirements = Object.values(fulfillment.additionalRequirements ?? {});
+          if (fulfillment.fulfilledBy !== 'self-check') {
+            totalRequired += 1 + additionalRequirements.length;
           }
-          [req.fulfillment, ...Object.values(req.fulfillment.additionalRequirements ?? {})].forEach(
-            reqOrNestedReq => {
-              if (reqOrNestedReq.safeMinCountFulfilled >= reqOrNestedReq.minCountRequired) {
-                totalCompleted += 1;
-              } else {
-                totalCompleted +=
-                  reqOrNestedReq.safeMinCountFulfilled / reqOrNestedReq.minCountRequired;
-              }
+          const mixedRequirements = [fulfillment, ...additionalRequirements];
+          for (const mixedReq of mixedRequirements) {
+            if (mixedReq.safeMinCountFulfilled >= mixedReq.minCountRequired) {
+              totalCompleted += 1;
             }
-          );
-        });
-        switch (r.groupName) {
+          }
+        }
+        switch (groupName) {
           case 'College':
             this.hasCollege = true;
             this.collegeRequirementCount.finished = Math.round(totalCompleted * 10) / 10;
@@ -111,7 +108,7 @@ export default defineComponent({
           default:
             break;
         }
-      });
+      }
     },
   },
   computed: {
