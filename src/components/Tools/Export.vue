@@ -27,7 +27,6 @@ export default defineComponent({
   flex-direction: column;
   justify-content: space-around;
   align-items: center;
-  padding-bottom: 1px;
 
   &-text {
     text-align: center;
