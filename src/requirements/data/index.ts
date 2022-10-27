@@ -445,4 +445,6 @@ export const colleges = ['AG', 'AR', 'AS1', 'AS2', 'EN', 'HE', 'IL', 'BU'] as co
 export type College = typeof colleges[number];
 export default json;
 
-export const getCollegeAbbr = (collegeCode: string) => json.college[collegeCode].abbr;
+/** Get the abbreviation associated with a specified college */
+export const getCollegeAbbr = (collegeCode: string): string =>
+  json.college[collegeCode]?.abbr ?? 'other';
