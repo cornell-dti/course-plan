@@ -44,8 +44,12 @@ export const genPDF = (): void => {
 
   const img = new Image();
   img.src = 'src/assets/cp-logo-pdf.png';
+  img.onerror = function () {
+    console.log("ee")
+  }
   doc.addImage(img, 48, 30, 84, 23.25);
 
+  console.log("cp logo added")
   doc.setFontSize(10.5);
 
   doc.text('Name:', 48, 76);
@@ -152,6 +156,9 @@ export const genPDF = (): void => {
     const emojiPath = emojiPathMap[sem.season];
     const emoji = new Image();
     emoji.src = emojiPath;
+    emoji.onerror = function () {
+      console.log("ee")
+    }
     doc.addImage(emoji, tableX + 5, startct - 15.5, 12, 12);
 
     let tableHeight = rowHeight;
