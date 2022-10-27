@@ -21,7 +21,7 @@
         </div>
 
         <div
-          v-if="toolsEnabled"
+          v-if="showOpenPlan"
           class="navbar-buttonWrapper desktop"
           @click="openPlan"
           data-cyId="openPlan"
@@ -67,7 +67,7 @@
           </span>
         </button>
         <button
-          v-if="toolsEnabled"
+          v-if="showOpenPlan"
           class="nav-mobile-button"
           data-cyId="navbar-openPlan"
           @click="openPlan"
@@ -130,6 +130,9 @@ export default defineComponent({
     },
     pdfGenEnabled(): boolean {
       return featureFlagCheckers.isPDFGenEnabled();
+    },
+    showOpenPlan(): boolean {
+      return this.toolsEnabled || featureFlagCheckers.isProfileEnabled();
     },
   },
   methods: {

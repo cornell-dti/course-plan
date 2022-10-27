@@ -9,8 +9,8 @@ type FeatureFlagName =
   | 'RequirementDebugger'
   | 'ToggleRequirementsBarBtn'
   | 'Tools'
-  | 'PDFGen';
-
+  | 'PDFGen'
+  | 'Profile';
 /* | 'AddYourFeatureFlagNameHere' */
 const featureFlagCheckers: FeatureFlagCheckers = registerFeatureFlagChecker(
   'APIBFulfillment',
@@ -19,7 +19,8 @@ const featureFlagCheckers: FeatureFlagCheckers = registerFeatureFlagChecker(
   'RequirementDebugger',
   'ToggleRequirementsBarBtn',
   'Tools',
-  'PDFGen'
+  'PDFGen',
+  'Profile'
   /* 'AddYourFeatureFlagNameHere' */
 );
 export default featureFlagCheckers;
