@@ -1,5 +1,6 @@
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import url from '@/assets/cp-logo-pdf.png';
 import {
   getCollegeFullName,
   getMajorFullName,
@@ -43,7 +44,7 @@ export const genPDF = (): void => {
   const tableX = (doc.internal.pageSize.width - tableWidth) / 2;
 
   const img = new Image();
-  img.src = 'src/assets/cp-logo-pdf.png';
+  img.src = url;
   img.onerror = function () {
     console.log("ee")
   }
