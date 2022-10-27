@@ -84,7 +84,6 @@ import { defineComponent } from 'vue';
 import { getAuth, signOut } from 'firebase/auth';
 import { GTagEvent } from '@/gtag';
 import { clickOutside } from '@/utilities';
-import featureFlagCheckers from '@/feature-flags';
 
 export default defineComponent({
   props: {
