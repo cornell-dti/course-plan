@@ -10,13 +10,30 @@ export type CollegeOrMajorRequirement = RequirementCommon &
     readonly checker: readonly RequirementChecker[];
   }>;
 
-export type CollegeRequirements<R> = {
-  readonly [collegeCode: string]: {
-    readonly name: string;
-    readonly requirements: readonly R[];
-    readonly advisors?: AdvisorGroup;
-  };
-};
+/** A group of requirements, such as a college */
+type RequirementGroup<R> = Readonly<{
+  name: string;
+  requirements: readonly R[];
+  advisors?: AdvisorGroup;
+}>;
+
+/**
+ * A collection of common requirement groups, such as those corresponding
+ * to colleges
+ */
+type RequirementGroups<G extends string, R> = Readonly<Record<G, RequirementGroup<R>>>;
+
+/** Valid colleges */
+export const colleges = ['AG', 'AR', 'AS1', 'AS2', 'EN', 'HE', 'IL', 'BU'] as const;
+
+/** College codes */
+export type College = typeof colleges[number];
+
+/** Equality witness */
+export const isCollege = (code: string): code is College =>
+  colleges.some(college => college === code);
+
+export type CollegeRequirements<R> = RequirementGroups<College, R>;
 
 export type Major<R> = Readonly<{
   name: string;
@@ -33,8 +50,10 @@ export type MutableMajorRequirements<R> = {
 
 export type MajorRequirements<R> = Readonly<MutableMajorRequirements<R>>;
 
+type UniversityRequirements<R> = RequirementGroups<'UNI', R>;
+
 type GenericRequirementsJson<R> = {
-  readonly university: CollegeRequirements<R>;
+  readonly university: UniversityRequirements<R>;
   readonly college: CollegeRequirements<R>;
   readonly major: MajorRequirements<R>;
   readonly minor: MajorRequirements<R>;
@@ -45,7 +64,7 @@ type GenericRequirementsJson<R> = {
 export type RequirementsJson = GenericRequirementsJson<CollegeOrMajorRequirement>;
 
 export type DecoratedRequirementsJson = {
-  readonly university: CollegeRequirements<DecoratedCollegeOrMajorRequirement>;
+  readonly university: UniversityRequirements<DecoratedCollegeOrMajorRequirement>;
   readonly college: CollegeRequirements<DecoratedCollegeOrMajorRequirement>;
   readonly major: MajorRequirements<DecoratedCollegeOrMajorRequirement>;
   readonly minor: MajorRequirements<DecoratedCollegeOrMajorRequirement>;

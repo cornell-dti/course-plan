@@ -5,8 +5,9 @@ import {
   RequirementChecker,
   Course,
   MutableMajorRequirements,
+  colleges,
 } from './types';
-import sourceRequirements, { colleges } from './data';
+import sourceRequirements from './data';
 import { NO_FULFILLMENTS_COURSE_ID, SPECIAL_COURSES } from './data/constants';
 import {
   examRequirementsMapping,
@@ -261,12 +262,12 @@ const sortRequirementCourses: RequirementDecorator = requirement => {
                 name,
                 { courses: additionalRequirementsCourses, ...additionalRequirementRest },
               ]) => [
-                name,
-                {
-                  ...additionalRequirementRest,
-                  courses: additionalRequirementsCourses.map(c => [...c].sort((a, b) => a - b)),
-                },
-              ]
+                  name,
+                  {
+                    ...additionalRequirementRest,
+                    courses: additionalRequirementsCourses.map(c => [...c].sort((a, b) => a - b)),
+                  },
+                ]
             )
           ),
       };

@@ -1,6 +1,7 @@
 import { fullCoursesArray } from './assets/courses/typed-full-courses';
 import requirementJSON from './requirements/typed-requirement-json';
 import { coursesColorSet } from './assets/constants/colors';
+import { College } from './requirements/types';
 
 /** Enumerated type to define seasons as integers in season order
  * where the seasons are defined chronologically */
@@ -76,7 +77,7 @@ export function computeEntranceYears(): Readonly<Record<string, string>> {
   return semsDict;
 }
 
-export function getCollegeFullName(acronym: string | undefined): string {
+export function getCollegeFullName(acronym: College | undefined): string {
   // return Arts and Sciences for AS, AS1, or AS2
   if (acronym && acronym.startsWith('AS')) {
     return 'Arts and Sciences';

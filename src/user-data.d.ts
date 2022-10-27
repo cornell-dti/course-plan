@@ -172,13 +172,15 @@ interface CornellCourseRosterCourseFullDetail extends CornellCourseRosterCourse 
   readonly catalogDistr?: string;
 }
 
+type College = import('@/requirements/types').College
+
 // college and grad are optional fields: grad can be undefined if the user hasn't selected a grad program, and college can be undefined if the user has only selected a grad program.
 type AppOnboardingData = {
   readonly gradYear: string;
   readonly gradSem: FirestoreSemesterSeason | '';
   readonly entranceYear: string;
   readonly entranceSem: FirestoreSemesterSeason | '';
-  readonly college?: string;
+  readonly college?: College;
   readonly major: readonly string[];
   readonly minor: readonly string[];
   readonly grad?: string;

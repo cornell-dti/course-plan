@@ -212,8 +212,14 @@ export default defineComponent({
     displayDetails: { type: Boolean, required: true },
     displayedMajorIndex: { type: Number, required: true },
     displayedMinorIndex: { type: Number, required: true },
-    req: { type: Object as PropType<GroupedRequirementFulfillmentReport>, required: true },
-    onboardingData: { type: Object as PropType<AppOnboardingData>, required: true },
+    req: {
+      type: Object as PropType<GroupedRequirementFulfillmentReport>,
+      required: true,
+    },
+    onboardingData: {
+      type: Object as PropType<AppOnboardingData>,
+      required: true,
+    },
     showMajorOrMinorRequirements: { type: Boolean, required: true },
     numOfColleges: { type: Number, required: true },
   },

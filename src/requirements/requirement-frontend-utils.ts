@@ -3,6 +3,7 @@ import specialized from './specialize';
 import { examCourseIds } from './requirement-exam-mapping';
 import { getConstraintViolationsForSingleCourse } from './requirement-constraints-utils';
 import featureFlagCheckers from '../feature-flags';
+import { College } from './types';
 
 /**
  * A collection of helper functions
@@ -133,12 +134,12 @@ const fieldOfStudyReqs = (sourceType: 'Major' | 'Minor', fields: readonly string
       const fieldRequirement = fieldRequirements[field];
       return fieldRequirement?.requirements.map(
         it =>
-          (({
-            ...it,
-            id: `${sourceType}-${field}-${it.name}`,
-            sourceType,
-            sourceSpecificName: field,
-          } as const) ?? [])
+        (({
+          ...it,
+          id: `${sourceType}-${field}-${it.name}`,
+          sourceType,
+          sourceSpecificName: field,
+        } as const) ?? [])
       );
     })
     .flat();
@@ -162,18 +163,18 @@ const getMajors = (majorNames: readonly string[]) =>
  * @returns An array of college requirements specialized for the user based on
  * their majors
  */
-const specializedForCollege = (collegeName: string, majorNames: readonly string[]) => {
+const specializedForCollege = (collegeName: College, majorNames: readonly string[]) => {
   const majors = getMajors(majorNames);
   const collegeReqs = requirementJson.college[collegeName].requirements;
   const spec = specialized(collegeReqs, majors);
   return spec.map(
     req =>
-      ({
-        ...req,
-        id: `College-${collegeName}-${req.name}`,
-        sourceType: 'College',
-        sourceSpecificName: collegeName,
-      } as const)
+    ({
+      ...req,
+      id: `College-${collegeName}-${req.name}`,
+      sourceType: 'College',
+      sourceSpecificName: collegeName,
+    } as const)
   );
 };
 
@@ -184,35 +185,33 @@ export function getUserRequirements({
   grad,
 }: AppOnboardingData): readonly RequirementWithIDSourceType[] {
   // check university & college & major & minor requirements
-  if (college && !(college in requirementJson.college))
-    throw new Error(`College ${college} not found.`);
 
   const rawUniReqs = requirementJson.university.UNI;
   // University requirements only added if college is defined, i.e. if the user has selected an undergraduate program.
   const uniReqs = college
     ? rawUniReqs.requirements.map(
-        it =>
-          ({
-            ...it,
-            id: `College-UNI-${it.name}`,
-            sourceType: 'College',
-            sourceSpecificName: college,
-          } as const)
-      )
+      it =>
+      ({
+        ...it,
+        id: `College-UNI-${it.name}`,
+        sourceType: 'College',
+        sourceSpecificName: college,
+      } as const)
+    )
     : [];
   const collegeReqs = college ? specializedForCollege(college, majors) : [];
   const majorReqs = fieldOfStudyReqs('Major', majors);
   const minorReqs = fieldOfStudyReqs('Minor', minors);
   const gradReqs = grad
     ? requirementJson.grad[grad].requirements.map(
-        it =>
-          ({
-            ...it,
-            id: `Grad-${grad}-${it.name}`,
-            sourceType: 'Grad',
-            sourceSpecificName: grad,
-          } as const)
-      )
+      it =>
+      ({
+        ...it,
+        id: `Grad-${grad}-${it.name}`,
+        sourceType: 'Grad',
+        sourceSpecificName: grad,
+      } as const)
+    )
     : [];
   // flatten all requirements into single array
   return [uniReqs, collegeReqs, majorReqs, minorReqs, gradReqs].flat();
@@ -240,10 +239,10 @@ type MatchedRequirementFulfillmentSpecificationBase = {
  */
 type MatchedRequirementFulfillmentSpecification =
   | (MatchedRequirementFulfillmentSpecificationBase & {
-      readonly additionalRequirements?: {
-        readonly [name: string]: MatchedRequirementFulfillmentSpecificationBase;
-      };
-    })
+    readonly additionalRequirements?: {
+      readonly [name: string]: MatchedRequirementFulfillmentSpecificationBase;
+    };
+  })
   | null;
 
 /**
@@ -294,25 +293,25 @@ export function getMatchedRequirementFulfillmentSpecification(
     additionalRequirements == null
       ? undefined
       : Object.fromEntries(
-          Object.entries(additionalRequirements).map(([name, subRequirement]) => {
-            const slotNames =
-              subRequirement.fulfilledBy === 'courses' ? subRequirement.slotNames : [];
-            return [
-              name,
-              {
-                fulfilledBy: subRequirement.fulfilledBy,
-                hasRequirementCheckerWarning: false,
-                eligibleCourses: filterEligibleCoursesByRequirementConditions(
-                  subRequirement.courses,
-                  subRequirement.conditions
-                ),
-                perSlotMinCount: subRequirement.perSlotMinCount,
-                slotNames,
-                minNumberOfSlots: subRequirement.minNumberOfSlots,
-              },
-            ];
-          })
-        );
+        Object.entries(additionalRequirements).map(([name, subRequirement]) => {
+          const slotNames =
+            subRequirement.fulfilledBy === 'courses' ? subRequirement.slotNames : [];
+          return [
+            name,
+            {
+              fulfilledBy: subRequirement.fulfilledBy,
+              hasRequirementCheckerWarning: false,
+              eligibleCourses: filterEligibleCoursesByRequirementConditions(
+                subRequirement.courses,
+                subRequirement.conditions
+              ),
+              perSlotMinCount: subRequirement.perSlotMinCount,
+              slotNames,
+              minNumberOfSlots: subRequirement.minNumberOfSlots,
+            },
+          ];
+        })
+      );
 
   const hasRequirementCheckerWarning = requirement.checkerWarning != null;
   switch (requirement.fulfilledBy) {
@@ -347,8 +346,8 @@ export function getMatchedRequirementFulfillmentSpecification(
     case 'toggleable': {
       const option =
         requirement.fulfillmentOptions[
-          toggleableRequirementChoices[requirement.id] ||
-            Object.keys(requirement.fulfillmentOptions)[0]
+        toggleableRequirementChoices[requirement.id] ||
+        Object.keys(requirement.fulfillmentOptions)[0]
         ];
       return {
         fulfilledBy: option.counting,

@@ -42,7 +42,11 @@
         @updateTransfer="updateTransfer"
       />
     </div>
-    <div class="profileContainer-error" data-cyId="onboarding-error" v-if="isError">
+    <div
+      class="profileContainer-error"
+      data-cyId="onboarding-error"
+      v-if="isError"
+    >
       {{ errorText }}
     </div>
     <div>
@@ -96,7 +100,8 @@ export default defineComponent({
       onboarding: {
         ...this.onboardingData,
         gradYear:
-          this.onboardingData.gradYear in computeGradYears(this.onboardingData.entranceYear)
+          this.onboardingData.gradYear in
+          computeGradYears(this.onboardingData.entranceYear)
             ? this.onboardingData.gradYear
             : '',
       },
@@ -110,9 +115,14 @@ export default defineComponent({
       const { gradYear } = this.onboarding;
       const { entranceYear } = this.onboarding;
       if (gradYear !== '' && entranceYear !== '') {
-        if (this.onboarding.entranceSem && this.onboarding.gradSem && gradYear === entranceYear) {
+        if (
+          this.onboarding.entranceSem &&
+          this.onboarding.gradSem &&
+          gradYear === entranceYear
+        ) {
           return (
-            SeasonOrdinal[this.onboarding.gradSem] < SeasonOrdinal[this.onboarding.entranceSem]
+            SeasonOrdinal[this.onboarding.gradSem] <
+            SeasonOrdinal[this.onboarding.entranceSem]
           );
         }
         return gradYear < entranceYear;
@@ -127,11 +137,17 @@ export default defineComponent({
         this.onboarding.minor
           .map(getMinorFullName)
           .some((minorFullName: string) => minorFullName === '') ||
-        (this.onboarding.grad ? getGradFullName(this.onboarding.grad) === '' : false)
+        (this.onboarding.grad
+          ? getGradFullName(this.onboarding.grad) === ''
+          : false)
       );
     },
     isError(): boolean {
-      if (!this.changed || this.isInvalidGraduationSemester || this.isInvalidMajorMinorGradError) {
+      if (
+        !this.changed ||
+        this.isInvalidGraduationSemester ||
+        this.isInvalidMajorMinorGradError
+      ) {
         return true;
       }
       return (
@@ -140,8 +156,7 @@ export default defineComponent({
         this.onboarding.gradYear === '' ||
         !this.onboarding.gradSem ||
         this.onboarding.entranceYear === '' ||
-        !this.onboarding.entranceSem ||
-        (this.onboarding.college === '' && this.onboarding.grad === '')
+        !this.onboarding.entranceSem
       );
     },
     /**
@@ -236,7 +251,10 @@ export default defineComponent({
         this.updateTransfer([], 'no');
       }
     },
-    updateTransfer(exams: readonly FirestoreTransferExam[], tookSwim: 'yes' | 'no') {
+    updateTransfer(
+      exams: readonly FirestoreTransferExam[],
+      tookSwim: 'yes' | 'no'
+    ) {
       const userExams = exams.filter(
         ({ subject, score }) => score !== 0 && subject !== placeholderText
       );

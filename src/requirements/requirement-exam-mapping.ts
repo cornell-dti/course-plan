@@ -1,5 +1,5 @@
 import examData, { ExamFulfillmentBase, OTHER_COLLEGES } from './data/exams/ExamCredit';
-import { colleges, College } from './data';
+import { College, colleges } from './types';
 
 // TODO @bshen try to refactor these types
 type ExamRequirementsCollegeConditions = Record<number, College[]>;
