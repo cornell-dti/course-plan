@@ -12,7 +12,7 @@
           {{ advisor.name }}
         </span>
         <a class="advisors-info advisors-email" :href="`mailto:${advisor.email}`">
-          {{ advisor.email }}
+          <span class="advisors-email-text"> {{ advisor.email }} </span>
           <img
             class="advisors-email-icon"
             src="@/assets/images/link-gray.svg"
@@ -85,6 +85,7 @@ export default defineComponent({
     color: #3d3d3d;
     align-self: center;
     justify-self: start;
+    max-width: 100%;
   }
 
   &-row {
@@ -128,6 +129,10 @@ export default defineComponent({
 
     &-icon {
       margin-left: 0.25rem;
+    }
+
+    &-text {
+      max-width: 100%;
     }
   }
 

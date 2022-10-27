@@ -1,6 +1,6 @@
 import { doc, updateDoc } from 'firebase/firestore';
 
-import { semestersCollection } from '../firebase-frontend-config';
+import { semestersCollection } from '../firebase-config';
 import store from '../store';
 import { GTag, GTagEvent } from '../gtag';
 import { sortedSemesters } from '../utilities';

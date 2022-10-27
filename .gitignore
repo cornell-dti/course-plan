@@ -3,7 +3,6 @@ node_modules
 dist
 .vscode
 .firebase
-requirement-generator-dist/
 .eslintcache
 
 # local env files

@@ -1,6 +1,6 @@
 <template>
   <div
-    :class="columnWide ? 'onboarding-select--columnWide' : 'onboarding-select--column'"
+    :class="'onboarding-select--columnFill'"
     :style="{ borderColor: boxBorder }"
     v-click-outside="closeDropdownIfOpen"
   >

@@ -1,6 +1,6 @@
 import { collection, getDocs, limit, orderBy, query } from 'firebase/firestore';
 
-import { db } from '../firebase-frontend-config';
+import { db } from '../firebase-config';
 
 type AnalyticsData = {
   readonly data: string;

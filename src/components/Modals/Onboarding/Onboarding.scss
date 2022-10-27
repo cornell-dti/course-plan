@@ -302,7 +302,6 @@ input {
     cursor: pointer;
     margin-left: 1rem;
     color: $emGreen;
-    padding-bottom: 0.5rem;
   }
 
   &-bottom {
@@ -424,7 +423,7 @@ input {
     }
     &--column-removeExam {
       display: flex;
-      flex-direction: column-reverse;
+      flex-direction: column;
     }
     &--columnWide {
       display: flex;
@@ -432,6 +431,7 @@ input {
       width: 380px;
     }
     &--columnFill {
+      margin: 1rem;
       display: flex;
       flex-direction: column;
       width: 100%;
