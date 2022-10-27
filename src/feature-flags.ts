@@ -8,7 +8,6 @@ type FeatureFlagName =
   | 'RequirementConflicts'
   | 'RequirementDebugger'
   | 'ToggleRequirementsBarBtn'
-  | 'Tools'
   | 'Profile';
 /* | 'AddYourFeatureFlagNameHere' */
 const featureFlagCheckers: FeatureFlagCheckers = registerFeatureFlagChecker(
@@ -17,7 +16,6 @@ const featureFlagCheckers: FeatureFlagCheckers = registerFeatureFlagChecker(
   'RequirementConflicts',
   'RequirementDebugger',
   'ToggleRequirementsBarBtn',
-  'Tools',
   'Profile'
   /* 'AddYourFeatureFlagNameHere' */
 );
