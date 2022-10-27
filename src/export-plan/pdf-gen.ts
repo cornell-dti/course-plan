@@ -34,7 +34,15 @@ const bubbleColourMap: Record<RequirementGroupType, (req?: string) => string> = 
   Minor: () => '#145351',
 };
 
-export const genPDF = (): void => {
+function toDataURL(url: string) {
+  return fetch(url).then( response => response.blob() )
+            .then( blob => new Promise( callback =>{
+                let reader = new FileReader() ;
+                reader.onload = function(){ callback(this.result) } ;
+                reader.readAsDataURL(blob) ;
+            }) ) ;
+}
+export const genPDF = async (): Promise<void> => {
   /* eslint new-cap: "off" */
   const doc = new jsPDF({ unit: 'pt', format: 'letter' });
 
@@ -43,14 +51,15 @@ export const genPDF = (): void => {
 
   const tableX = (doc.internal.pageSize.width - tableWidth) / 2;
 
-  const img = new Image();
-  img.src = url;
-  img.onerror = function () {
-    console.log("ee")
-  }
-  img.onload = function () {
-    console.log("loaded")
-  }
+  const img = await toDataURL("src/assets/cp-logo-pdf.png")
+  // new Image();
+  // img.src = path.resolve("src/assets/cp-logo-pdf.png");
+  // img.onerror = function () {
+  //   console.log("ee")
+  // }
+  // img.onload = function () {
+  //   console.log("loaded")
+  // }
   console.log("trying to add cp logo")
   doc.addImage(img, "PNG", 48, 30, 84, 23.25);
 
@@ -158,12 +167,14 @@ export const genPDF = (): void => {
       Summer: 'src/assets/images/pdf-gen/summer.png',
       Winter: 'src/assets/images/pdf-gen/winter.png',
     };
-    const emojiPath = emojiPathMap[sem.season];
-    const emoji = new Image();
-    emoji.src = emojiPath;
-    emoji.onerror = function () {
-      console.log("ee")
-    }
+    // const emojiPath = emojiPathMap[sem.season];
+    const emoji = await toDataURL(emojiPathMap[sem.season])
+    
+    // new Image();
+    // emoji.src = emojiPath;
+    // emoji.onerror = function () {
+    //   console.log("ee")
+    // }
     doc.addImage(emoji, tableX + 5, startct - 15.5, 12, 12);
 
     let tableHeight = rowHeight;
