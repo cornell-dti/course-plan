@@ -2,7 +2,7 @@
   <div class="export">
     <img class="export-icon" src="@/assets/images/download.svg" alt="export schedule" />
     <span class="export-text">Export your schedule as PDF and share with your friends!</span>
-    <button class="export-button">Download</button>
+    <button class="export-button" @click="exportSchedule">Download</button>
   </div>
 </template>
 
@@ -10,7 +10,12 @@
 import { defineComponent } from 'vue';
 
 export default defineComponent({
-  methods: {},
+  methods: {
+    async exportSchedule() {
+      // eslint-disable-next-line no-console
+      console.info('Download PDF');
+    },
+  },
 });
 </script>
 
