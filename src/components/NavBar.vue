@@ -112,7 +112,7 @@ import { getAuth, signOut } from 'firebase/auth';
 import { GTagEvent } from '@/gtag';
 import { clickOutside } from '@/utilities';
 import featureFlagCheckers from '@/feature-flags';
-import genPDF from '@/export-plan';
+import generatePDF from '@/export-plan';
 
 export default defineComponent({
   props: {
@@ -164,7 +164,7 @@ export default defineComponent({
       this.menuOpen = false;
     },
     async submitPDF() {
-      await genPDF();
+      await generatePDF();
     },
   },
   directives: {

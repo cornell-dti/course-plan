@@ -10,26 +10,30 @@ import {
   getCollegeFullName,
   getMajorFullName,
   getMinorFullName,
+  getGradFullName,
   sortedSemesters,
   isPlaceholderCourse,
-  getGradFullName,
 } from '../utilities';
 import store from '../store';
 import { addFonts } from './add-fonts';
-import { getCollegeAbbr } from '@/requirements/data';
+import { getCollegeAbbr } from '../requirements/data';
 
 const rowHeight = 18;
 const tableWidth = 516;
 // vertical space between tables for two semesters
 const tableGap = 20;
+// starting y co-ordinate of the first table
 const firstTableY = 170;
 
 const rowFontSize = 10.5;
 const headerFontSize = 10.5;
 
+// list of requirements to not display in the PDF.
+// we filter these out because they apply to almost every course, and make the
+// PDF somewhat messy.
 const reqsToFilterOut = ['A&S Credits'];
 
-const bubbleColourMap: Record<RequirementGroupType, (req?: string) => string> = {
+const bubbleColorMap: Record<RequirementGroupType, (req?: string) => string> = {
   College: (req?: string) =>
     req && store.state.userRequirementsMap[req].sourceSpecificName === 'UNI'
       ? '#1AA9A5'
@@ -53,7 +57,7 @@ const loadImage = (src: string): Promise<HTMLImageElement> =>
     img.onerror = err => reject(err);
   });
 
-const genPDF = async (): Promise<void> => {
+const generatePDF = async (): Promise<void> => {
   const doc = new JsPDF({ unit: 'pt', format: 'letter' });
 
   addFonts(doc);
@@ -77,18 +81,23 @@ const genPDF = async (): Promise<void> => {
   doc.text('minor req', 459, 110);
   doc.text('other courses', 459, 127.5);
 
-  doc.setFillColor(bubbleColourMap.College());
+  doc.setFillColor(bubbleColorMap.College());
   doc.circle(357, 107, 3, 'F');
-  doc.setFillColor(bubbleColourMap.Major());
+  doc.setFillColor(bubbleColorMap.Major());
   doc.circle(357, 124.5, 3, 'F');
-  doc.setFillColor(bubbleColourMap.Minor());
+  doc.setFillColor(bubbleColorMap.Minor());
   doc.circle(451, 107, 3, 'F');
   doc.setFillColor('#1AA9A5');
   doc.circle(451, 124.5, 3, 'F');
   doc.setTextColor(117, 117, 117);
 
-  // TODO: include middle name
-  doc.text(`${store.state.userName.firstName} ${store.state.userName.lastName}`, 100.3, 76);
+  doc.text(
+    `${store.state.userName.firstName} ${
+      store.state.userName.middleName ? `${store.state.userName.middleName} ` : ''
+    }${store.state.userName.lastName}`,
+    100.3,
+    76
+  );
   doc.text(getCollegeFullName(store.state.onboardingData.college), 100.3, 93.2);
 
   let programY = 110;
@@ -152,7 +161,7 @@ const genPDF = async (): Promise<void> => {
     let headerHeight = rowHeight * (2 + sem.courses.length);
     if (sem.courses.length === 0) headerHeight = rowHeight;
 
-    const [body, groups, colours] = getCourseRows(sem);
+    const [body, groups, colors] = getCourseRows(sem);
 
     const estimatedHeight = estimateTableHeight(body);
     if (estimatedHeight + startct + 35 > doc.internal.pageSize.height) {
@@ -238,8 +247,8 @@ const genPDF = async (): Promise<void> => {
               const xPos =
                 data.cell.x + doc.getTextWidth(body[data.row.index][2].split('\n')[index]) + 8;
 
-              const colour = colours[data.row.index][index];
-              renderBubbles(doc, xPos, yPos, group, colour);
+              const color = colors[data.row.index][index];
+              renderBubbles(doc, xPos, yPos, group, color);
               yPos += rowFontSize + 1.5;
             });
           }
@@ -275,11 +284,11 @@ const getCourseRows = (sem: FirestoreSemester): [string[][], string[][], string[
   const rows = sem.courses
     .filter((course): course is FirestoreSemesterCourse => !isPlaceholderCourse(course))
     .map(course => {
-      const [reqs, groups, colours] = getFulfilledReqs(course);
+      const [reqs, groups, colors] = getFulfilledReqs(course);
       return [
         [`${course.code}: ${course.name}`, course.credits.toString(), reqs.join('\n')],
         groups,
-        colours,
+        colors,
       ];
     });
   return [rows.map(row => row[0]), rows.map(row => row[1]), rows.map(row => row[2])];
@@ -316,12 +325,12 @@ const getFulfilledReqs = (
     reqsFulfilled.map((req): string =>
       bubbleTextMap[store.state.userRequirementsMap[req].sourceType](req)
     ),
-    reqsFulfilled.map(req => bubbleColourMap[store.state.userRequirementsMap[req].sourceType](req)),
+    reqsFulfilled.map(req => bubbleColorMap[store.state.userRequirementsMap[req].sourceType](req)),
   ];
 };
 
-const renderBubbles = (doc: JsPDF, xPos: number, yPos: number, text: string, colour: string) => {
-  doc.setFillColor(colour);
+const renderBubbles = (doc: JsPDF, xPos: number, yPos: number, text: string, color: string) => {
+  doc.setFillColor(color);
   const bubbleWidth = 8 + text.length * 5.5;
   doc.roundedRect(xPos, yPos, bubbleWidth, 11, 6, 6, 'F');
   doc.setTextColor(256, 256, 256);
@@ -330,13 +339,12 @@ const renderBubbles = (doc: JsPDF, xPos: number, yPos: number, text: string, col
 
 const estimateTableHeight = (body: string[][]): number => {
   const courseCharPerLine = 50;
+  const headerHeight = rowHeight * 2;
 
-  let height = rowHeight * 2;
-  body.forEach(row => {
+  return body.reduce((sum, row) => {
     const numberOfLines = Math.max(row[0].length / courseCharPerLine, row[2].split('\n').length);
-    height += numberOfLines * (rowFontSize + 4);
-  });
-  return height;
+    return sum + numberOfLines * (rowFontSize + 4);
+  }, headerHeight);
 };
 
-export default genPDF;
+export default generatePDF;

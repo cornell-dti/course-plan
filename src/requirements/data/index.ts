@@ -95,12 +95,12 @@ const json: RequirementsJson = {
     AS1: {
       name: 'Arts and Sciences [before Fall 2020]',
       requirements: casPreFA2020Requirements,
-      abbr: 'a&s',
+      abbr: 'cas',
     },
     AS2: {
       name: 'Arts and Sciences [Fall 2020 and later]',
       requirements: casFA2020Requirements,
-      abbr: 'a&s',
+      abbr: 'cas',
     },
     EN: {
       name: 'Engineering',

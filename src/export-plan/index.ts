@@ -2,6 +2,6 @@
  * The only needed export is the main function that generates the PDF
  */
 
-import genPDF from './pdf-gen';
+import generatePDF from './pdf-generator';
 
-export default genPDF;
+export default generatePDF;
