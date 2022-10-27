@@ -47,7 +47,11 @@ export const genPDF = (): void => {
   img.onerror = function () {
     console.log("ee")
   }
-  doc.addImage(img, 48, 30, 84, 23.25);
+  img.onload = function () {
+    console.log("loaded")
+  }
+  console.log("trying to add cp logo")
+  doc.addImage(img, "PNG", 48, 30, 84, 23.25);
 
   console.log("cp logo added")
   doc.setFontSize(10.5);
