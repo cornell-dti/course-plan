@@ -272,22 +272,24 @@ const genPDF = async (): Promise<void> => {
 };
 
 const getCourseRows = (sem: FirestoreSemester): [string[][], string[][], string[][]] => {
-  const rows = sem.courses.filter(
-    (course): course is FirestoreSemesterCourse => !isPlaceholderCourse(course)
-  ).map(course => {
-    const [reqs, groups, colours] = getFulfilledReqs(course);
-    return [
-      [`${course.code}: ${course.name}`, course.credits.toString(), reqs.join('\n')],
-      groups,
-      colours,
-    ];
-  });
-
+  const rows = sem.courses
+    .filter((course): course is FirestoreSemesterCourse => !isPlaceholderCourse(course))
+    .map(course => {
+      const [reqs, groups, colours] = getFulfilledReqs(course);
+      return [
+        [`${course.code}: ${course.name}`, course.credits.toString(), reqs.join('\n')],
+        groups,
+        colours,
+      ];
+    });
   return [rows.map(row => row[0]), rows.map(row => row[1]), rows.map(row => row[2])];
 };
 
 const trimEmptySems = (sems: readonly FirestoreSemester[]): readonly FirestoreSemester[] => {
-  const maxNonemptyIndex = sems.findLastIndex(sem => sem.courses.length > 0)
+  let maxNonemptyIndex = -1;
+  for (let i = 0; i < sems.length; i += 1) {
+    if (sems[i].courses.length > 0) maxNonemptyIndex = i;
+  }
   return sems.slice(0, maxNonemptyIndex + 1);
 };
 
