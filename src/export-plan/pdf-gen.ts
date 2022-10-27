@@ -142,16 +142,11 @@ const genPDF = async (): Promise<void> => {
   const tableHeader = [['Course', 'Credits', 'Requirements Fulfilled']];
   let startct = Math.max(firstTableY, programY + 20);
 
-  const fallEmoji = await loadImage(fallEmojiURL);
-  const springEmoji = await loadImage(springEmojiURL);
-  const summerEmoji = await loadImage(summerEmojiURL);
-  const winterEmoji = await loadImage(winterEmojiURL);
-
   const emojiMap = {
-    Fall: fallEmoji,
-    Spring: springEmoji,
-    Summer: summerEmoji,
-    Winter: winterEmoji,
+    Fall: await loadImage(fallEmojiURL),
+    Spring: await loadImage(springEmojiURL),
+    Summer: await loadImage(summerEmojiURL),
+    Winter: await loadImage(winterEmojiURL),
   };
 
   for (const sem of sems) {
