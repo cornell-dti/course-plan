@@ -4,6 +4,7 @@ import {
   courseIsFWS,
   includesWithSingleRequirement,
 } from '../checkers-common';
+import { AdvisorGroup } from '../../tools-types';
 
 const calsCreditsRequirement: CollegeOrMajorRequirement = {
   name: 'CALS Credits',
@@ -661,3 +662,7 @@ const calsRequirements: readonly CollegeOrMajorRequirement[] = [
 ];
 
 export default calsRequirements;
+
+export const calsAdvisors: AdvisorGroup = {
+  advisors: [{ name: 'Kerri Lai', email: 'kll225@cornell.edu' }],
+};

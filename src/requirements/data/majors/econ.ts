@@ -4,6 +4,7 @@ import {
   includesWithSingleRequirement,
   includesWithSubRequirements,
 } from '../checkers-common';
+import { AdvisorGroup } from '../../tools-types';
 
 const economicsRequirements: readonly CollegeOrMajorRequirement[] = [
   {
@@ -75,3 +76,7 @@ const economicsRequirements: readonly CollegeOrMajorRequirement[] = [
 ];
 
 export default economicsRequirements;
+
+export const economicsAdvisors: AdvisorGroup = {
+  advisors: [{ name: 'Allison Barrett', email: 'aeb238@cornell.edu' }],
+};

@@ -5,6 +5,7 @@ import {
   courseIsForeignLang,
   courseMatchesCodeOptions,
 } from '../checkers-common';
+import { AdvisorGroup } from '../../tools-types';
 
 const fashionDesignAdditionalRequirements: readonly string[] = [
   'PBS',
@@ -233,3 +234,7 @@ const fashionDesignRequirements: readonly CollegeOrMajorRequirement[] = [
 ];
 
 export default fashionDesignRequirements;
+
+export const fashionDesignAdvisors: AdvisorGroup = {
+  advisors: [{ name: 'Fran Kozen', email: 'fhk2@cornell.edu' }],
+};

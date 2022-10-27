@@ -1,5 +1,6 @@
 import { CollegeOrMajorRequirement } from '../../types';
 import { includesWithSubRequirements } from '../checkers-common';
+import { AdvisorGroup } from '../../tools-types';
 
 const civilRequirements: readonly CollegeOrMajorRequirement[] = [
   {
@@ -142,3 +143,7 @@ const civilRequirements: readonly CollegeOrMajorRequirement[] = [
 ];
 
 export default civilRequirements;
+
+export const civilAdvisors: AdvisorGroup = {
+  advisors: [{ name: 'Laura Ricciuti', email: 'lr482@cornell.edu' }],
+};

@@ -1,5 +1,6 @@
 import { Course, CollegeOrMajorRequirement } from '../../types';
 import { includesWithSingleRequirement, includesWithSubRequirements } from '../checkers-common';
+import { AdvisorGroup } from '../../tools-types';
 
 const aemRequirements: readonly CollegeOrMajorRequirement[] = [
   {
@@ -478,3 +479,7 @@ const aemRequirements: readonly CollegeOrMajorRequirement[] = [
 ];
 
 export default aemRequirements;
+
+export const aemAdvisors: AdvisorGroup = {
+  advisors: [{ name: 'Dyson Office of Student Services', email: 'Dyson_OSS@cornell.edu' }],
+};

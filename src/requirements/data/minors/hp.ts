@@ -4,6 +4,7 @@ import {
   courseMatchesCodeOptions,
   ifCodeMatch,
 } from '../checkers-common';
+import { AdvisorGroup } from '../../tools-types';
 
 const hpMinorRequirements: readonly CollegeOrMajorRequirement[] = [
   {
@@ -58,3 +59,7 @@ const hpMinorRequirements: readonly CollegeOrMajorRequirement[] = [
 ];
 
 export default hpMinorRequirements;
+
+export const hpMinorAdvisors: AdvisorGroup = {
+  advisors: [{ name: 'Jen Wright', email: 'jrd292@cornell.edu' }],
+};

@@ -8,6 +8,7 @@ import {
   courseIsForeignLang,
   courseMeetsCreditMinimum,
 } from '../checkers-common';
+import { AdvisorGroup } from '../../tools-types';
 
 const hdRequirements: readonly CollegeOrMajorRequirement[] = [
   {
@@ -273,3 +274,7 @@ const hdRequirements: readonly CollegeOrMajorRequirement[] = [
 ];
 
 export default hdRequirements;
+
+export const hdAdvisors: AdvisorGroup = {
+  advisors: [{ name: 'Vivian Zayas', email: 'psych-dus@cornell.edu' }],
+};

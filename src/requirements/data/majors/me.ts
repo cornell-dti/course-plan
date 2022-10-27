@@ -4,8 +4,9 @@ import {
   includesWithSingleRequirement,
   includesWithSubRequirements,
 } from '../checkers-common';
+import { AdvisorGroup } from '../../tools-types';
 
-const mechnicalEngineeringRequirements: readonly CollegeOrMajorRequirement[] = [
+const mechanicalEngineeringRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'Engineering Distriubtions',
     description: 'ENGRD 2020',
@@ -170,4 +171,8 @@ const mechnicalEngineeringRequirements: readonly CollegeOrMajorRequirement[] = [
   },
 ];
 
-export default mechnicalEngineeringRequirements;
+export default mechanicalEngineeringRequirements;
+
+export const mechanicalEngineeringAdvisors: AdvisorGroup = {
+  advisors: [{ name: 'Kae-Lynn Buchanan Wilson', email: 'kbw28@cornell.edu' }],
+};

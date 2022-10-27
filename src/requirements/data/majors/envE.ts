@@ -1,5 +1,6 @@
 import { CollegeOrMajorRequirement, Course } from '../../types';
 import { includesWithSingleRequirement, includesWithSubRequirements } from '../checkers-common';
+import { AdvisorGroup } from '../../tools-types';
 
 const majorApproved: readonly string[] = [
   'BEE',
@@ -154,3 +155,7 @@ const envEngineeringRequirements: readonly CollegeOrMajorRequirement[] = [
 ];
 
 export default envEngineeringRequirements;
+
+export const envEngineeringAdvisors: AdvisorGroup = {
+  advisors: [{ name: 'Laura Ricciuti', email: 'lr482@cornell.edu' }],
+};

@@ -5,6 +5,7 @@ import {
   ifCodeMatch,
   courseMeetsCreditMinimum,
 } from '../checkers-common';
+import { AdvisorGroup } from '../../tools-types';
 
 const eceMinorRequirements: readonly CollegeOrMajorRequirement[] = [
   {
@@ -73,3 +74,7 @@ const eceMinorRequirements: readonly CollegeOrMajorRequirement[] = [
 ];
 
 export default eceMinorRequirements;
+
+export const eceMinorAdvisors: AdvisorGroup = {
+  advisors: [{ name: 'Sharif Ewais-Orozco', email: 'ugrad-coordinator@ece.cornell.edu' }],
+};

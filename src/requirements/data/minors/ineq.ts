@@ -1,5 +1,6 @@
 import { CollegeOrMajorRequirement } from '../../types';
 import { includesWithSubRequirements } from '../checkers-common';
+import { AdvisorGroup } from '../../tools-types';
 
 const inequalityRequirements: readonly CollegeOrMajorRequirement[] = [
   {
@@ -229,3 +230,7 @@ const inequalityRequirements: readonly CollegeOrMajorRequirement[] = [
 ];
 
 export default inequalityRequirements;
+
+export const inequalityAdvisors: AdvisorGroup = {
+  advisors: [{ name: 'John Niederbuhl', email: 'jwn3@cornell.edu' }],
+};
