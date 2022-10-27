@@ -52,6 +52,7 @@ export const genPDF = async (): Promise<void> => {
   const tableX = (doc.internal.pageSize.width - tableWidth) / 2;
 
   const img = await toDataURL("src/assets/cp-logo-pdf.png")
+  console.log(img)
   // new Image();
   // img.src = path.resolve("src/assets/cp-logo-pdf.png");
   // img.onerror = function () {
@@ -170,6 +171,7 @@ export const genPDF = async (): Promise<void> => {
     // const emojiPath = emojiPathMap[sem.season];
     const emoji = await toDataURL(emojiPathMap[sem.season])
     
+    console.log(emoji)
     // new Image();
     // emoji.src = emojiPath;
     // emoji.onerror = function () {
