@@ -137,8 +137,7 @@ const genPDF = async (): Promise<void> => {
 
   doc.setTextColor(0);
 
-  let sems = sortedSemesters(store.state.semesters, false);
-  sems = trimEmptySems(sems);
+  const sems = trimEmptySems(sortedSemesters(store.state.semesters, false));
   const tableHeader = [['Course', 'Credits', 'Requirements Fulfilled']];
   let startct = Math.max(firstTableY, programY + 20);
 
@@ -273,10 +272,9 @@ const genPDF = async (): Promise<void> => {
 };
 
 const getCourseRows = (sem: FirestoreSemester): [string[][], string[][], string[][]] => {
-  const filteredCourses = sem.courses.filter(
+  const rows = sem.courses.filter(
     (course): course is FirestoreSemesterCourse => !isPlaceholderCourse(course)
-  );
-  const rows = filteredCourses.map(course => {
+  ).map(course => {
     const [reqs, groups, colours] = getFulfilledReqs(course);
     return [
       [`${course.code}: ${course.name}`, course.credits.toString(), reqs.join('\n')],
@@ -289,10 +287,7 @@ const getCourseRows = (sem: FirestoreSemester): [string[][], string[][], string[
 };
 
 const trimEmptySems = (sems: readonly FirestoreSemester[]): readonly FirestoreSemester[] => {
-  let maxNonemptyIndex = -1;
-  for (let i = 0; i < sems.length; i += 1) {
-    if (sems[i].courses.length > 0) maxNonemptyIndex = i;
-  }
+  const maxNonemptyIndex = sems.findLastIndex(sem => sem.courses.length > 0)
   return sems.slice(0, maxNonemptyIndex + 1);
 };
 
