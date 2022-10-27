@@ -1,6 +1,6 @@
 import { doc, setDoc } from 'firebase/firestore';
 
-import { toggleableRequirementChoicesCollection } from '../firebase-frontend-config';
+import { toggleableRequirementChoicesCollection } from '../firebase-config';
 import store from '../store';
 
 const editToggleableRequirementChoices = (

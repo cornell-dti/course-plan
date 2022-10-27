@@ -3,30 +3,30 @@
  * BE CAREFUL WHEN COPYING TO PROD!
  * Script to copy data from one user on production or dev to another user on dev.
  * Requires service accounts for database.
- * serviceAccountDev.json (if using dev) and serviceAccountProd.json (if using prod) must be at the root.
- * The output will be the data written or to be written to the target.
+ * serviceAccount.json (if using dev) and serviceAccountProd.json (if using prod) must be at the root.
+ * If you encounter problems, see scripts/firebase-config.ts for more information on how the service account is loaded.
+ *
+ * The data written (with --execute) or the data to be written (without --execute) to the target
+ * will be outputted to scripts/out/<OUTPUT> when -o is included and written to the console otherwise.
+ * If it doesn't already exist, out/ should be created in scripts/ if you include -o <OUTPUT>.
  *
  * From root, run: `npm run ts-node -- scripts/copy-user-data.ts -f <FROM_ENV>/<FROM_USER> -t <TO_ENV>/<TO_USER> -o <OUTPUT>`
  * To execute the script, include `--execute` at the end of the command
  * FROM_ENV and TO_ENV should be either "dev" or "prod"
- * OUTPUT is an optional argument to specify the JSON file to write the log to. If left empty, the script will write to the console.
+ * OUTPUT is an optional argument to specify the filepath to write the JSON log to. If left empty, the script will write to the console.
  * EXAMPLE: `npm run ts-node -- scripts/copy-user-data.ts -f dev/dummyaccount -t dev/newdummyaccount -o "log.json"`
  */
 
-import { cert, initializeApp } from 'firebase-admin/app';
-import { getFirestore } from 'firebase-admin/firestore';
 import parseArgs from 'minimist';
-import { writeFileSync } from 'fs';
-
-const collections = [
-  'user-name',
-  'user-semesters',
-  'user-toggleable-requirement-choices',
-  'user-overridden-fulfillment-choices',
-  'user-subject-colors',
-  'user-unique-incrementer',
-  'user-onboarding-data',
-];
+import {
+  DATABASE_URL_DEV,
+  DATABASE_URL_PROD,
+  SERVICE_ACCOUNT_DEV,
+  SERVICE_ACCOUNT_PROD,
+  getDatabase,
+  userCollectionNames,
+} from './firebase-config';
+import { writeToFile } from './util';
 
 const args = parseArgs(process.argv, {
   string: ['f', 't', 'o'],
@@ -75,27 +75,13 @@ async function execute(
   let fromDb;
   let toDb;
   if (options.fromEnv === 'dev' || options.toEnv === 'dev') {
-    const dev = initializeApp(
-      {
-        credential: cert('serviceAccountDev.json'),
-        databaseURL: 'https://cornelldti-courseplan-dev.firebaseio.com',
-      },
-      'dev'
-    );
-    const devDb = getFirestore(dev);
+    const devDb = getDatabase(SERVICE_ACCOUNT_DEV, DATABASE_URL_DEV, 'dev');
     if (options.fromEnv === 'dev') fromDb = devDb;
     if (options.toEnv === 'dev') toDb = devDb;
   }
 
   if (options.fromEnv === 'prod' || options.toEnv === 'prod') {
-    const prod = initializeApp(
-      {
-        credential: cert('serviceAccountProd.json'),
-        databaseURL: 'https://cornell-courseplan.firebaseio.com',
-      },
-      'prod'
-    );
-    const prodDb = getFirestore(prod);
+    const prodDb = getDatabase(SERVICE_ACCOUNT_PROD, DATABASE_URL_PROD, 'prod');
     if (options.fromEnv === 'prod') fromDb = prodDb;
     if (options.toEnv === 'prod') toDb = prodDb;
   }
@@ -103,7 +89,7 @@ async function execute(
   const log: { source: { [key: string]: unknown } } = { source: {} };
   if (fromDb && toDb) {
     // this should always be true
-    for (const collection of collections) {
+    for (const collection of userCollectionNames) {
       const fromDoc = fromDb.collection(collection).doc(options.fromUser);
       const dataToCopy = (await fromDoc.get()).data();
       if (dataToCopy) {
@@ -122,7 +108,7 @@ async function execute(
     if (!options.output) {
       console.log(JSON.stringify(log, undefined, 2));
     } else {
-      writeFileSync(options.output, JSON.stringify(log, undefined, 2));
+      writeToFile(log, options.output);
     }
   }
 }

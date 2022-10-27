@@ -9,12 +9,17 @@
       </div>
     </div>
     <div class="toolsContainer-cards">
-      <card name="Contact Your Advisors" class="toolsContainer-card" id="advisors">
+      <card name="Progress Tracker" class="toolsContainer-card-progress" id="progress"></card>
+
+      <card name="Contact Your Advisors" class="toolsContainer-card-advisors" id="advisors">
         <advisor-card></advisor-card>
       </card>
-      <!--      <card name="Another Card" class="toolsContainer-card" id="x" :desired-width="400">-->
-      <!--        <h1>This one has a smaller width than default!</h1>-->
-      <!--      </card>-->
+
+      <card name="Export Schedule" class="toolsContainer-card-export" id="export"></card>
+
+      <card name="Useful Links" class="toolsContainer-card-links" id="links">
+        <useful-links></useful-links>
+      </card>
     </div>
   </div>
 </template>
@@ -22,9 +27,10 @@
 <script>
 import Card from '@/components/Tools/Card.vue';
 import AdvisorCard from '@/components/Tools/AdvisorCard.vue';
+import UsefulLinks from '@/components/Tools/UsefulLinks.vue';
 
 export default {
-  components: { AdvisorCard, Card },
+  components: { UsefulLinks, AdvisorCard, Card },
 };
 </script>
 
@@ -51,18 +57,50 @@ export default {
     color: #757575;
     padding-bottom: 30px;
     overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
   }
 
   &-cards {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-start;
+    display: grid;
+    grid-auto-columns: min-content;
+
+    column-gap: 5rem;
+    row-gap: 3rem;
+
+    @media only screen and (max-width: 1250px) {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-start;
+    }
   }
 
   &-card {
-    //  CSS handled in Card component. Go there to adjust margins.
+    &-progress {
+      grid-column: 1/2;
+      grid-row: 1/2;
+      width: 600px;
+      height: min-content;
+    }
+
+    &-advisors {
+      grid-column: 1/2;
+      grid-row: 2/3;
+      width: 600px;
+      height: min-content;
+    }
+
+    &-export {
+      grid-column: 2/3;
+      grid-row: 1/2;
+      width: 300px;
+      height: min-content;
+    }
+
+    &-links {
+      grid-column: 2/3;
+      grid-row: 2/3;
+      width: 300px;
+      height: min-content;
+    }
   }
 }
 </style>
