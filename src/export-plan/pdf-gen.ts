@@ -16,7 +16,7 @@ import {
 } from '../utilities';
 import store from '../store';
 import { addFonts } from './add-fonts';
-import { getCollegeAbbr } from '@/requirements/data/index';
+import { getCollegeAbbr } from '@/requirements/data';
 
 const rowHeight = 18;
 const tableWidth = 516;
