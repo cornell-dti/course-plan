@@ -40,7 +40,7 @@ function toDataURL(url: string) {
                 let reader = new FileReader() ;
                 reader.onload = function(){ callback(this.result) } ;
                 reader.readAsDataURL(blob) ;
-            }) ) ;
+            }) ).catch((reason) => console.log(reason)) ;
 }
 export const genPDF = async (): Promise<void> => {
   /* eslint new-cap: "off" */
