@@ -141,31 +141,7 @@ export default defineComponent({
     margin-bottom: 0.25rem;
   }
 
-  &-bar-container {
-    position: relative;
-    margin: 0.25rem;
-    float: left;
-    text-align: center;
-    flex-grow: 2;
-    margin-bottom: -6.25rem;
-  }
-
-  &-bar-overflow {
-    /* Wraps the rotating .bar */
-    position: absolute;
-    overflow: hidden; /* Comment this line to understand the trick */
-    width: 100%;
-    height: 4.688rem; /* Half circle (overflow) */
-    margin-top: 2rem;
-    z-index: 0;
-    display: flex;
-    justify-content: center;
-  }
-
   &-bar {
-    //position: absolute;
-    //top: 0;
-    //left: 20%;
     width: 9.375rem;
     height: 9.375rem; /* full circle! */
     border-radius: 50%;
@@ -175,45 +151,49 @@ export default defineComponent({
     border: 0.5rem solid #eee; /* half gray, */
     border-bottom-color: #0bf; /* half azure */
     border-right-color: #0bf;
-  }
-
-  &-bar-caption {
-    height: 3.125rem;
-    width: 3.125rem;
-    position: absolute;
-    z-index: 2;
-    left: 50%;
-    transform: translateX(-50%);
-    margin-top: 3.7rem;
+    &-caption {
+      height: 3.125rem;
+      width: 3.125rem;
+      position: absolute;
+      z-index: 2;
+      left: 50%;
+      transform: translateX(-50%);
+      margin-top: 3.7rem;
+    }
+    &-container {
+      position: relative;
+      margin: 0.25rem;
+      float: left;
+      text-align: center;
+      flex-grow: 2;
+      margin-bottom: -6.25rem;
+    }
+    &-overflow {
+      /* Wraps the rotating .bar */
+      position: absolute;
+      overflow: hidden; /* Comment this line to understand the trick */
+      width: 100%;
+      height: 4.688rem; /* Half circle (overflow) */
+      margin-top: 2rem;
+      z-index: 0;
+      display: flex;
+      justify-content: center;
+    }
   }
 
   &-status {
     flex-grow: 1;
     display: flex;
     justify-content: center;
-  }
-
-  &-status-text {
-    margin-top: 1rem;
-    //position: absolute;
-    //left: 30%;
-    font: '14px normal Proxima Nova';
-    /* identical to box height */
-    text-align: center;
-    color: #92c3e6;
-    z-index: 1;
-    margin-top: 8.7rem;
-  }
-
-  &-text-style {
-    font: '14px normal Proxima Nova';
-    line-height: 1rem;
-    /* identical to box height */
-    display: flex;
-    align-items: center;
-    letter-spacing: 0.01em;
-    color: #000000;
-    margin-bottom: 0.625rem;
+    &-text {
+      margin-top: 1rem;
+      font: '14px normal Proxima Nova';
+      /* identical to box height */
+      text-align: center;
+      color: #92c3e6;
+      z-index: 1;
+      margin-top: 8.7rem;
+    }
   }
 
   &-text {
@@ -221,6 +201,16 @@ export default defineComponent({
     flex-direction: column;
     justify-content: center;
     flex-grow: 1;
+    &-style {
+      font: '14px normal Proxima Nova';
+      line-height: 1rem;
+      /* identical to box height */
+      display: flex;
+      align-items: center;
+      letter-spacing: 0.01em;
+      color: #000000;
+      margin-bottom: 0.625rem;
+    }
   }
 }
 </style>
