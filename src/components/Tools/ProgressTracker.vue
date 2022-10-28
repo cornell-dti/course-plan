@@ -37,7 +37,7 @@ import {
   groupedRequirementDangerouslyFulfilled,
   groupedRequirementTotalDangerousRequirementProgress,
   groupedRequirementTotalRequired,
-  groupedRequirementTotalSafeRequirementProgres,
+  groupedRequirementTotalSafeRequirementProgress,
 } from '@/requirements/requirement-frontend-computation';
 
 export default defineComponent({
