@@ -10,7 +10,7 @@
     @right-button-clicked="addItem"
   >
     <div class="newCourse-text">
-      {{ selecting ? 'Search Course Roster' : 'Selected Course' }}
+      {{ searchText }}
     </div>
     <div v-if="selectedCourse != null" class="selected-course" data-cyId="newCourse-selectedCourse">
       {{ selectedCourse.subject }} {{ selectedCourse.catalogNbr }}:
@@ -21,7 +21,6 @@
       <course-selector
         v-if="selectedCourse === null"
         search-box-class-name="newCourse-dropdown"
-        :key="courseSelectorKey"
         placeholder='"CS 1110", "Multivariable Calculus", etc'
         :autoFocus="true"
         @on-escape="closeCurrentModal"
@@ -31,7 +30,7 @@
       <div class="newCourse-text" v-if="selectedCourse === null">
         <img
           class="requirement-checker-warning-icon"
-          src="/src/assets/images/warning.svg"
+          src="@/assets/images/warning.svg"
           alt="warning icon"
           data-v-74b2c930=""
         />
@@ -42,8 +41,6 @@
     <!-- show add modal -->
     <div v-else-if="needToAdd && selectedCourse != null">
       <replace-requirement-editor
-        :deleteSemYear="0"
-        :key="courseSelectorKey"
         :editMode="editMode"
         :selectedRequirementID="selectedRequirementID"
         :automaticallyFulfilledRequirements="automaticallyFulfilledRequirements"
@@ -56,8 +53,6 @@
     <!-- show duplicate modal -->
     <div v-else-if="hasDuplicates && selectedCourse != null">
       <replace-requirement-duplicate-editor
-        :deleteSemYear="0"
-        :key="courseSelectorKey"
         :editMode="editMode"
         :selectedRequirementID="selectedRequirementID"
         :automaticallyFulfilledRequirements="automaticallyFulfilledRequirements"
@@ -116,7 +111,6 @@ export default defineComponent({
       relatedRequirements: [] as readonly RequirementWithIDSourceType[],
       selfCheckRequirements: [] as readonly RequirementWithIDSourceType[],
       editMode: false,
-      courseSelectorKey: 0,
       isOpen: false,
       hasDuplicates: false,
       needToAdd: false,
@@ -130,6 +124,10 @@ export default defineComponent({
     },
     rightButtonText(): string {
       return this.editMode ? 'Next' : 'Add';
+    },
+
+    searchText(): string {
+      return this.selecting ? 'Search Course Roster' : 'Selected Course';
     },
   },
   methods: {
@@ -235,7 +233,6 @@ export default defineComponent({
           this.editMode = false;
         } else {
           this.selectedCourse = null;
-          this.courseSelectorKey += 1; // courseSelectorKey counts the number of times the courseSelector has been open
           this.semestersTaken = [];
           this.selecting = true;
         }

@@ -47,7 +47,12 @@
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
 import { clickOutside } from '@/utilities';
-import { inactiveGray, yuxuanBlue, darkPlaceholderGray } from '@/assets/constants/scss-variables';
+import {
+  inactiveGray,
+  yuxuanBlue,
+  darkPlaceholderGray,
+  lightPlaceholderGray,
+} from '@/assets/constants/scss-variables';
 
 type DisplayOption = {
   shown: boolean;
@@ -154,9 +159,9 @@ export default defineComponent({
       this.semesterText = semester;
       const displayOptions = this.displayOptions.semester;
       displayOptions.shown = false;
-      displayOptions.boxBorder = '#C4C4C4';
-      displayOptions.arrowColor = '#C4C4C4';
-      displayOptions.placeholderColor = '#757575';
+      displayOptions.boxBorder = inactiveGray;
+      displayOptions.arrowColor = inactiveGray;
+      displayOptions.placeholderColor = lightPlaceholderGray;
       this.$emit('updateSemProps', this.semesterText || this.semesterPlaceholder);
     },
   },

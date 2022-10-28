@@ -3,85 +3,24 @@
     <div class="selectSemester">
       <div class="selectSemester-section selectSemester-type">
         <div
-          :class="[{ duplicate: isDuplicate() }, { 'selectSemester-select': !isDuplicate() }]"
-          class="position-relative"
-          v-click-outside="closeSeasonDropdownIfOpen"
+          v-for="s in seasons"
+          :key="s[1]"
+          class="selectSemester-dropdown-content-item"
+          @click="selectSeason(s[1])"
+          data-cyId="newSemester-seasonItem"
         >
-          <div
-            class="selectSemester-dropdown-placeholder season-wrapper"
-            @click="showHideSeasonContent"
-            data-cyId="newSemester-seasonWrapper"
-          >
-            <div
-              class="selectSemester-dropdown-placeholder season-placeholder"
-              :style="{ color: displayOptions.season.placeholderColor }"
-            >
-              {{ seasonPlaceholder }}
-            </div>
-            <div
-              class="selectSemester-dropdown-placeholder season-arrow"
-              :style="{ borderTopColor: displayOptions.season.arrowColor }"
-            ></div>
-          </div>
-          <div
-            class="selectSemester-dropdown-content season-content position-absolute w-100"
-            v-if="displayOptions.season.shown"
-          >
-            <div
-              :class="{ warning: isDuplicate }"
-              v-for="s in seasons"
-              :key="s[1]"
-              class="selectSemester-dropdown-content-item"
-              @click="selectSeason(s[1])"
-              data-cyId="newSemester-seasonItem"
-            >
-              <img
-                :src="s[0]"
-                class="selectSemester-dropdown-content-season"
-                :alt="`${s[1]} icon`"
-              />
-              {{ s[1] }}
-            </div>
-          </div>
+          <img :src="s[0]" class="selectSemester-dropdown-content-season" :alt="`${s[1]} icon`" />
+          {{ s[1] }}
         </div>
-      </div>
-      <div class="selectSemester-section selectSemester-year">
         <div
-          :class="[{ duplicate: isDuplicate() }, { 'selectSemester-select': !isDuplicate() }]"
-          class="position-relative"
-          v-click-outside="closeYearDropdownIfOpen"
+          v-for="yearChoice in years"
+          :key="yearChoice"
+          :ref="`year-ref-${yearChoice}`"
+          class="selectSemester-dropdown-content-item"
+          @click="selectYear(yearChoice)"
+          data-cyId="newSemester-yearItem"
         >
-          <div
-            class="selectSemester-dropdown-placeholder year-wrapper"
-            @click="showHideYearContent"
-            data-cyId="newSemester-yearWrapper"
-          >
-            <div
-              class="selectSemester-dropdown-placeholder year-placeholder"
-              :style="{ color: displayOptions.year.placeholderColor }"
-            >
-              {{ yearPlaceholder }}
-            </div>
-            <div
-              class="selectSemester-dropdown-placeholder year-arrow"
-              :style="{ borderTopColor: displayOptions.year.arrowColor }"
-            ></div>
-          </div>
-          <div
-            class="selectSemester-dropdown-content year-content position-absolute"
-            v-if="displayOptions.year.shown"
-          >
-            <div
-              v-for="yearChoice in years"
-              :key="yearChoice"
-              :ref="`year-ref-${yearChoice}`"
-              class="selectSemester-dropdown-content-item"
-              @click="selectYear(yearChoice)"
-              data-cyId="newSemester-yearItem"
-            >
-              {{ yearChoice }}
-            </div>
-          </div>
+          {{ yearChoice }}
         </div>
       </div>
     </div>
