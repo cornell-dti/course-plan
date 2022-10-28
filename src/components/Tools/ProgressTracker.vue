@@ -167,13 +167,13 @@ export default defineComponent({
 
   &-bar {
     width: 9.375rem;
-    height: 9.375rem; /* full circle! */
+    height: 9.375rem;
     border-radius: 50%;
     box-sizing: border-box;
-    color: #ffffff;
-    background-color: #ffffff;
-    border: 0.5rem solid #eee; /* half gray, */
-    border-bottom-color: #0bf; /* half azure */
+    color: white;
+    background-color: white;
+    border: 0.5rem solid #eee;
+    border-bottom-color: #0bf;
     border-right-color: #0bf;
 
     &-caption {
@@ -183,7 +183,7 @@ export default defineComponent({
       z-index: 2;
       left: 50%;
       transform: translateX(-50%);
-      margin-top: 3.7rem;
+      margin-top: 1.7rem;
     }
 
     &-container {
@@ -195,12 +195,10 @@ export default defineComponent({
     }
 
     &-overflow {
-      /* Wraps the rotating .bar */
       position: absolute;
-      overflow: hidden; /* Comment this line to understand the trick */
+      overflow: hidden;
       width: 100%;
-      height: 4.688rem; /* Half circle (overflow) */
-      margin-top: 2rem;
+      height: 4.688rem;
       z-index: 0;
       display: flex;
       justify-content: center;
@@ -213,25 +211,24 @@ export default defineComponent({
     justify-content: center;
 
     &-text {
-      margin-top: 1rem;
-      /* identical to box height */
       text-align: center;
       color: #0bf;
       z-index: 1;
-      margin-top: 8.7rem;
+      margin-top: 5rem;
+      font-weight: 900;
     }
   }
 
   &-text {
     display: flex;
     flex-direction: column;
-    justify-content: center;
     flex-grow: 1;
+    justify-content: flex-start;
+    padding-top: 1rem;
 
     &-style {
       font-size: 14px;
       line-height: 1rem;
-      /* identical to box height */
       display: flex;
       align-items: center;
       letter-spacing: 0.01em;
