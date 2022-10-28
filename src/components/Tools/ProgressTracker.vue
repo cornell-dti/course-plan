@@ -170,12 +170,14 @@ export default defineComponent({
     height: 4.688rem; /* Half circle (overflow) */
     margin-bottom: -2.813rem; /* bring the numbers up */
     z-index: 0;
+    display: flex;
+    justify-content: center;
   }
 
   &-bar {
-    position: absolute;
-    top: 0;
-    left: 20%;
+    //position: absolute;
+    //top: 0;
+    //left: 20%;
     width: 9.375rem;
     height: 9.375rem; /* full circle! */
     border-radius: 50%;
@@ -190,17 +192,23 @@ export default defineComponent({
   &-bar-caption {
     height: 3.125rem;
     width: 3.125rem;
-    position: relative;
+    position: absolute;
     z-index: 2;
+    //left: ;
+    left: 50%;
+    transform: translateX(-50%);
   }
 
   &-status {
     flex-grow: 1;
+    display: flex;
+    justify-content: center;
   }
 
   &-status-text {
-    position: absolute;
-    left: 30%;
+    margin-top: 1rem;
+    //position: absolute;
+    //left: 30%;
     font: '14px normal Proxima Nova';
     /* identical to box height */
     text-align: center;
