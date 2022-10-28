@@ -8,7 +8,7 @@ import {
 } from './requirement-frontend-utils';
 import RequirementFulfillmentGraph from './requirement-graph';
 import buildRequirementFulfillmentGraphFromUserData from './requirement-graph-builder-from-user-data';
-import featureFlagCheckers from '@/feature-flags';
+import featureFlagCheckers from '../feature-flags';
 
 /**
  * Used for total academic credit requirements for all colleges except EN and AR
