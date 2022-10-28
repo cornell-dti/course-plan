@@ -8,16 +8,22 @@
         <img class="progress-bar-caption" :src="getImage" />
       </div>
       <div class="progress-status">
-        <span class="progress-status-text">{{ getProgressString }}</span>
+        <span class="progress-status-text">{{ progressMessage }}</span>
       </div>
     </div>
     <div class="progress-text">
       <span class="progress-text-style"> You've completed: </span>
-      <div v-for="(req, index) in requirementProgressBundles" :key="index" class="progress-row">
+      <div
+        v-for="(req, index) in requirementProgressBundles"
+        :key="index"
+        class="progress-row"
+      >
         <span class="progress-numfulfilled progress-text-style">
           {{ Math.floor(req.safeProgress) }} / {{ req.totalRequired }}
         </span>
-        <span class="progress-reqname progress-text-style"> {{ req.groupName }} Requirements </span>
+        <span class="progress-reqname progress-text-style">
+          {{ req.groupName }} Requirements
+        </span>
       </div>
     </div>
   </div>
@@ -38,6 +44,14 @@ import {
   groupedRequirementTotalSafeRequirementProgress,
 } from '@/requirements/requirement-frontend-computation';
 
+enum ProgressState {
+  First,
+  Second,
+  Third,
+  Fourth,
+  Fifth,
+}
+
 export default defineComponent({
   computed: {
     requirementProgressBundles(): GroupedRequirementFulfillmentReportWithProgress[] {
@@ -46,7 +60,8 @@ export default defineComponent({
         dangerouslyFulfilled: groupedRequirementDangerouslyFulfilled(req),
         totalRequired: groupedRequirementTotalRequired(req),
         safeProgress: groupedRequirementTotalSafeRequirementProgress(req),
-        dangerousProgress: groupedRequirementTotalDangerousRequirementProgress(req),
+        dangerousProgress:
+          groupedRequirementTotalDangerousRequirementProgress(req),
       }));
     },
     safeProgress() {
@@ -67,40 +82,57 @@ export default defineComponent({
       });
       return totalCompleted / totalRequired;
     },
-    getImage(): string {
+    progressState(): ProgressState {
       if (this.safeProgress < 0.2) {
-        return hands;
+        return ProgressState.First;
       }
       if (this.safeProgress < 0.4) {
-        return flex;
+        return ProgressState.Second;
       }
       if (this.safeProgress < 0.6) {
-        return star;
+        return ProgressState.Third;
       }
       if (this.safeProgress < 0.8) {
-        return fire;
+        return ProgressState.Fourth;
       }
-      return confetti;
+      return ProgressState.Fifth;
+    },
+    getImage(): string {
+      switch (this.progressState) {
+        case ProgressState.First:
+          return hands;
+        case ProgressState.Second:
+          return flex;
+        case ProgressState.Third:
+          return star;
+        case ProgressState.Fourth:
+          return fire;
+        case ProgressState.Fifth:
+          return confetti;
+        default:
+          throw new Error();
+      }
     },
     progressBarStyle(): Record<string, string> {
       return {
         transform: `rotate(${45 + 180 * this.safeProgress}deg)`,
       };
     },
-    getProgressString(): string {
-      if (this.safeProgress < 0.2) {
-        return 'Strong start!';
+    progressMessage(): string {
+      switch (this.progressState) {
+        case ProgressState.First:
+          return 'Strong start!';
+        case ProgressState.Second:
+          return 'Solid progress!';
+        case ProgressState.Third:
+          return 'Good work!';
+        case ProgressState.Fourth:
+          return 'Almost there!';
+        case ProgressState.Fifth:
+          return 'Congrats!';
+        default:
+          throw new Error();
       }
-      if (this.safeProgress < 0.4) {
-        return 'Solid progress!';
-      }
-      if (this.safeProgress < 0.6) {
-        return 'Good work!';
-      }
-      if (this.safeProgress < 0.8) {
-        return 'Almost there!';
-      }
-      return 'Congrats!';
     },
   },
 });
