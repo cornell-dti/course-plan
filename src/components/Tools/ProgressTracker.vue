@@ -14,9 +14,9 @@
     <div class="progress-text">
       <span class="progress-text-style"> You've completed: </span>
       <div v-for="(req, index) in requirementProgressBundles" :key="index" class="progress-row">
-        <span class="progress-numfulfilled progress-text-style"
-          >{{ Math.floor(req.safeProgress) }} / {{ req.totalRequired }}</span
-        >
+        <span class="progress-numfulfilled progress-text-style">
+          {{ Math.floor(req.safeProgress) }} / {{ req.totalRequired }}
+        </span>
         <span class="progress-reqname progress-text-style"> {{ req.groupName }} Requirements </span>
       </div>
     </div>
