@@ -90,7 +90,19 @@ export default defineComponent({
       };
     },
     getProgressString(): string {
-      return 'You are almost there!';
+      if (this.safeProgress < 0.2) {
+        return 'Strong start!';
+      }
+      if (this.safeProgress < 0.4) {
+        return 'Solid progress!';
+      }
+      if (this.safeProgress < 0.6) {
+        return 'Good work!';
+      }
+      if (this.safeProgress < 0.8) {
+        return 'Almost there!';
+      }
+      return 'Congrats!';
     },
   },
 });
