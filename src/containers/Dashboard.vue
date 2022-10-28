@@ -275,8 +275,9 @@ export default defineComponent({
     },
     openTools() {
       if (this.isProfileOpen) {
-        this.closeProfile();
         this.shouldOpenTools = true;
+        this.closeProfile();
+        this.showToolsPage = true;
       } else {
         this.showToolsPage = true;
       }
