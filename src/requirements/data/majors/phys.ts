@@ -4,6 +4,7 @@ import {
   includesWithSubRequirements,
   ifCodeMatch,
 } from '../checkers-common';
+import { AdvisorGroup } from '../../tools-types';
 
 const physRequirements: readonly CollegeOrMajorRequirement[] = [
   {
@@ -121,3 +122,7 @@ const physRequirements: readonly CollegeOrMajorRequirement[] = [
 ];
 
 export default physRequirements;
+
+export const physAdvisors: AdvisorGroup = {
+  advisors: [{ name: 'Tomas Arias', email: 'physicsdus@cornell.edu' }],
+};

@@ -4,9 +4,10 @@ import {
   includesWithSingleRequirement,
   includesWithSubRequirements,
   ifCodeMatch,
-  courseIsSpecial,
   courseIsForeignLang,
 } from '../checkers-common';
+import { AdvisorGroup } from '../../tools-types';
+import { lastNameRange, lastNameRanges } from '../../advisor-checkers';
 
 const engineeringLiberalArtsDistributions: readonly string[] = [
   'CA',
@@ -39,13 +40,14 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'Physics',
     description:
-      'PHYS 1112 and 2213, and, depending on the Major, either PHYS 2214 or a designated mathematics or science course.',
+      'PHYS 1112 and 2213, or the corresponding honors courses (PHYS 1116 and PHYS 2217). ' +
+      'Depending on the Major, also either PHYS 2214 / PHYS 2218 or a designated mathematics or science course.',
     source:
       'https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements',
-    checker: includesWithSubRequirements(['PHYS 1112'], ['PHYS 2213']),
+    checker: includesWithSubRequirements(['PHYS 1112', 'PHYS 1116'], ['PHYS 2213', 'PHYS 2217']),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1],
-    slotNames: ['PHYS 1112', 'PHYS 2213'],
+    slotNames: ['PHYS 1112 or PHYS 1116', 'PHYS 2213 or PHYS 2217'],
   },
   {
     name: 'Chemistry',
@@ -174,7 +176,6 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
       'https://www.engineering.cornell.edu/students/undergraduate-students/curriculum/undergraduate-requirements',
     checker: [
       (course: Course): boolean => {
-        if (courseIsSpecial(course)) return false;
         const { subject, catalogNbr } = course;
         return !(ifCodeMatch(subject, 'PE') || ifCodeMatch(catalogNbr, '10**'));
       },
@@ -230,3 +231,34 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
 ];
 
 export default engineeringRequirements;
+
+export const engineeringAdvisors: AdvisorGroup = {
+  advisors: [
+    {
+      name: 'Liane Fitzgerald',
+      email: 'lnf27@cornell.edu',
+      checker: lastNameRange('E', 'J'),
+    },
+    {
+      name: 'Ryan DeLany',
+      email: 'rd525@cornell.edu',
+      checker: lastNameRanges([
+        ['C', 'D'],
+        ['Q', 'Z'],
+      ]),
+    },
+    {
+      name: 'Benjamin Martin',
+      email: 'bem87@cornell.edu',
+      checker: lastNameRanges([
+        ['A', 'B'],
+        ['K', 'P'],
+      ]),
+    },
+    {
+      name: 'Alexandria Pizzola',
+      email: 'anp63@cornell.edu',
+    },
+  ],
+  source: 'https://www.engineering.cornell.edu/students/undergraduate-students/advising/meet-staff',
+};

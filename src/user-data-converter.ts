@@ -140,10 +140,13 @@ export const firestoreSemesterCourseToBottomBarCourse = ({
   workload: 0,
 });
 
+// set entranceSem to fall and gradSem to spring by default locally, saved to Firestore when Onboarding finished
 export const createAppOnboardingData = (data: FirestoreOnboardingUserData): AppOnboardingData => ({
   // TODO: take into account multiple colleges
-  gradYear: data.gradYear ? data.gradYear : '',
-  entranceYear: data.entranceYear ? data.entranceYear : '',
+  gradYear: data.gradYear ?? '',
+  gradSem: data.gradSem ?? '',
+  entranceYear: data.entranceYear ?? '',
+  entranceSem: data.entranceSem ?? '',
   college: data.colleges.length !== 0 ? data.colleges[0].acronym : undefined,
   major: data.majors.map(({ acronym }) => acronym),
   minor: data.minors.map(({ acronym }) => acronym),
@@ -151,6 +154,16 @@ export const createAppOnboardingData = (data: FirestoreOnboardingUserData): AppO
     'gradPrograms' in data && data.gradPrograms.length !== 0
       ? data.gradPrograms[0].acronym
       : undefined,
-  exam: 'exam' in data ? [...data.exam] : [],
+  // TODO @bshen migration script from type to examType
+  exam:
+    'exam' in data
+      ? [
+          ...data.exam.map(e => ({
+            ...e,
+            type: e.examType || e.type,
+            examType: e.type || e.examType,
+          })),
+        ]
+      : [],
   tookSwim: 'tookSwim' in data ? data.tookSwim : 'no',
 });

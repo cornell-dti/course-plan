@@ -1,4 +1,8 @@
-import buildRequirementFulfillmentGraph from '../requirement-graph-builder';
+import RequirementFulfillmentGraph from '../requirement-graph';
+import {
+  buildRequirementFulfillmentGraph,
+  removeIllegalEdgesFromRequirementFulfillmentGraph,
+} from '../requirement-graph-builder';
 
 const CS3410 = { uniqueId: 3410, courseId: 1 };
 const CS3420 = { uniqueId: 3420, courseId: 2 };
@@ -131,4 +135,32 @@ it('buildRequirementFulfillmentGraph phase 3 test 3', () => {
   expect(graph.getConnectedCoursesFromRequirement('CS3410/CS3420')).toEqual([CS3410]);
   expect(graph.getConnectedCoursesFromRequirement('Probability')).toEqual([MATH4710]);
   expect(graph.getConnectedCoursesFromRequirement('Elective')).toEqual([CS3420]);
+});
+
+it('removeIllegalEdgesFromRequirementFulfillmentGraph tests', () => {
+  const graph = new RequirementFulfillmentGraph<string, { uniqueId: number; courseId: 0 }>();
+  graph.addEdge('R1', { uniqueId: 1, courseId: 0 });
+  graph.addEdge('R2', { uniqueId: 1, courseId: 0 });
+  graph.addEdge('R3', { uniqueId: 1, courseId: 0 });
+  graph.addEdge('R1', { uniqueId: 2, courseId: 0 });
+  graph.addEdge('R2', { uniqueId: 2, courseId: 0 });
+  graph.addEdge('R1', { uniqueId: 2, courseId: 0 });
+  graph.addEdge('R1', { uniqueId: 3, courseId: 0 });
+  graph.addEdge('R4', { uniqueId: 3, courseId: 0 });
+  const doubleCountable = ['R1', 'R4'];
+  expect(
+    Array.from(
+      removeIllegalEdgesFromRequirementFulfillmentGraph(
+        graph,
+        (rA, rB) => doubleCountable.includes(rA) || doubleCountable.includes(rB)
+      ).doubleCountedCourseUniqueIDSet
+    )
+  ).toEqual([1]);
+
+  // Illegal double counting edges R2-1, R3-1 removed
+  expect(graph.getConnectedRequirementsFromCourse({ uniqueId: 1 })).toEqual(['R1']);
+  // Nothing removed
+  expect(graph.getConnectedRequirementsFromCourse({ uniqueId: 2 })).toEqual(['R1', 'R2']);
+  // Nothing removed
+  expect(graph.getConnectedRequirementsFromCourse({ uniqueId: 3 })).toEqual(['R1', 'R4']);
 });

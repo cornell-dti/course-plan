@@ -2,7 +2,8 @@ import { fullCoursesArray } from './assets/courses/typed-full-courses';
 import requirementJSON from './requirements/typed-requirement-json';
 import { coursesColorSet } from './assets/constants/colors';
 
-/** Enumerated type to define seasons as integers in season order */
+/** Enumerated type to define seasons as integers in season order
+ * where the seasons are defined chronologically */
 export const SeasonOrdinal = {
   Winter: 0,
   Spring: 1,
@@ -44,9 +45,45 @@ export function getCurrentYear(): number {
   return new Date().getFullYear();
 }
 
+// the number of year options to include in entrance year dropdown before and after the current year
+// ex. if the current year is 2022, and yearRange is 6, then the entrance year options are 2016-2028
+export const entranceYearRange = 6;
+
+// the number of year options to include in graduation year dropdown after the entrance year
+// ex. if the entrance year is 2022, and yearRange is 6, then the entrance year options are 2022-2034
+export const gradYearRange = entranceYearRange * 2;
+
+export function computeGradYears(entranceYear: string): Readonly<Record<string, string>> {
+  const semsDict: Record<string, string> = {};
+  let entranceYearNum = parseInt(entranceYear, 10);
+  if (!entranceYear) {
+    entranceYearNum = getCurrentYear();
+  }
+  for (let i = 0; i <= gradYearRange; i += 1) {
+    const yr = String(entranceYearNum + i);
+    semsDict[yr] = yr;
+  }
+  return semsDict;
+}
+
+export function computeEntranceYears(): Readonly<Record<string, string>> {
+  const semsDict: Record<string, string> = {};
+  const curYear = getCurrentYear();
+  for (let i = -entranceYearRange; i <= entranceYearRange; i += 1) {
+    const yr = String(curYear + i);
+    semsDict[yr] = yr;
+  }
+  return semsDict;
+}
+
 export function getCollegeFullName(acronym: string | undefined): string {
-  // Return empty string if college is not in requirementJSON
+  // return Arts and Sciences for AS, AS1, or AS2
+  if (acronym && acronym.startsWith('AS')) {
+    return 'Arts and Sciences';
+  }
   const college = acronym ? requirementJSON.college[acronym] : null;
+
+  // Return empty string if college is not in requirementJSON
   return college ? college.name : '';
 }
 
@@ -151,3 +188,14 @@ export function getReqColor(groupName: string, onboardingData: AppOnboardingData
   }
   return reqGroupColorList[0];
 }
+
+// Determines whether the given element in a FirestoreSemester list is a Placeholder or not
+export const isPlaceholderCourse = (
+  element: FirestoreSemesterPlaceholder | FirestoreSemesterCourse | CourseTaken
+): element is FirestoreSemesterPlaceholder =>
+  !!(element as FirestoreSemesterPlaceholder).startingSemester;
+
+// Determines whether the given element used in CourseCaution is CourseTaken
+export const isCourseTaken = (
+  element: FirestoreSemesterPlaceholder | FirestoreSemesterCourse | CourseTaken
+): element is CourseTaken => !!(element as CourseTaken).uniqueId;

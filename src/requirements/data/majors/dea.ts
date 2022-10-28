@@ -1,5 +1,6 @@
 import { Course, CollegeOrMajorRequirement } from '../../types';
 import { courseIsForeignLang, includesWithSubRequirements } from '../checkers-common';
+import { AdvisorGroup } from '../../tools-types';
 
 const deaRequirements: readonly CollegeOrMajorRequirement[] = [
   {
@@ -136,6 +137,7 @@ const deaRequirements: readonly CollegeOrMajorRequirement[] = [
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
     slotNames: ['Course'],
+    disallowTransferCredit: true,
   },
   {
     name: 'Natural Science I',
@@ -209,3 +211,7 @@ const deaRequirements: readonly CollegeOrMajorRequirement[] = [
 ];
 
 export default deaRequirements;
+
+export const deaAdvisors: AdvisorGroup = {
+  advisors: [{ name: 'Rhonda Gilmore', email: 'rg35@cornell.edu' }],
+};

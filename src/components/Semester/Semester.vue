@@ -10,8 +10,18 @@
   >
     <new-course-modal
       @close-course-modal="closeCourseModal"
+      @select-course="selectCourse"
       v-if="isCourseModalOpen"
       @add-course="addCourse"
+    />
+    <course-conflict-modal
+      @close-course-modal="closeConflictModal"
+      v-if="isConflictModalOpen"
+      :selectedCourse="conflictCourse"
+      :courseConflicts="courseConflicts"
+      :selfCheckRequirements="selfCheckRequirements"
+      @resolve-conflicts="handleConflictsResolved"
+      @remove-course="deleteCourseWithoutModal"
     />
     <confirmation :text="confirmationText" v-if="isConfirmationOpen" />
     <delete-semester
@@ -83,6 +93,7 @@
           <template #item="{ element }">
             <div class="semester-courseWrapper">
               <course
+                v-if="!isPlaceholderCourse(element)"
                 :courseObj="element"
                 :isReqCourse="false"
                 :compact="compact"
@@ -95,6 +106,12 @@
                 @color-subject="colorSubject"
                 @course-on-click="courseOnClick"
                 @edit-course-credit="editCourseCredit"
+              />
+              <placeholder
+                v-else
+                :compact="compact"
+                :semesterIndex="semesterIndex + 1"
+                :placeholderObj="element"
               />
             </div>
           </template>
@@ -122,7 +139,9 @@
 import { PropType, defineComponent } from 'vue';
 import draggable from 'vuedraggable';
 import Course from '@/components/Course/Course.vue';
+import Placeholder from '@/components/Course/Placeholder.vue';
 import NewCourseModal from '@/components/Modals/NewCourse/NewCourseModal.vue';
+import CourseConflictModal from '@/components/Modals/NewCourse/CourseConflictModal.vue';
 import Confirmation from '@/components/Modals/Confirmation.vue';
 import SemesterMenu from '@/components/Modals/SemesterMenu.vue';
 import DeleteSemester from '@/components/Modals/DeleteSemester.vue';
@@ -130,7 +149,7 @@ import EditSemester from '@/components/Modals/EditSemester.vue';
 import ClearSemester from '@/components/Modals/ClearSemester.vue';
 import AddCourseButton from '@/components/AddCourseButton.vue';
 
-import { clickOutside } from '@/utilities';
+import { clickOutside, isPlaceholderCourse } from '@/utilities';
 
 import fall from '@/assets/images/fallEmoji.svg';
 import spring from '@/assets/images/springEmoji.svg';
@@ -146,7 +165,12 @@ import {
   updateRequirementChoices,
 } from '@/global-firestore-data';
 import store, { updateSubjectColorData } from '@/store';
-import { getAllEligibleRelatedRequirementIds } from '@/requirements/requirement-frontend-utils';
+import {
+  getRelatedRequirementIdsForCourseOptOut,
+  getRelatedUnfulfilledRequirements,
+} from '@/requirements/requirement-frontend-utils';
+
+import featureFlagCheckers from '@/feature-flags';
 
 type ComponentRef = { $el: HTMLDivElement };
 
@@ -160,7 +184,9 @@ export default defineComponent({
     EditSemester,
     ClearSemester,
     NewCourseModal,
+    CourseConflictModal,
     SemesterMenu,
+    Placeholder,
   },
   data() {
     return {
@@ -178,7 +204,11 @@ export default defineComponent({
       isShadowCounter: 0,
       isDraggedFrom: false,
       isCourseModalOpen: false,
+      isConflictModalOpen: false,
       isSemesterMinimized: false,
+      conflictCourse: {} as FirestoreSemesterCourse,
+      courseConflicts: new Set<string[]>(),
+      selfCheckRequirements: [] as readonly RequirementWithIDSourceType[],
 
       seasonImg: {
         Fall: fall,
@@ -196,7 +226,7 @@ export default defineComponent({
     },
     year: { type: Number, required: true },
     courses: {
-      type: Array as PropType<readonly FirestoreSemesterCourse[]>,
+      type: Array as PropType<readonly (FirestoreSemesterCourse | FirestoreSemesterPlaceholder)[]>,
       required: true,
     },
     compact: { type: Boolean, required: true },
@@ -231,7 +261,7 @@ export default defineComponent({
 
   computed: {
     coursesForDraggable: {
-      get(): readonly FirestoreSemesterCourse[] {
+      get(): readonly (FirestoreSemesterCourse | FirestoreSemesterPlaceholder)[] {
         return this.courses;
       },
       /**
@@ -271,11 +301,13 @@ export default defineComponent({
             // the `optOut` field.
             // Below, we find all the requirements it can possibly match,
             // and only remove the requirementID since that's the one we should keep.
-            const optOut = getAllEligibleRelatedRequirementIds(
+            const optOut = getRelatedRequirementIdsForCourseOptOut(
               crseId,
+              requirementID,
               store.state.groupedRequirementFulfillmentReport,
-              store.state.toggleableRequirementChoices
-            ).filter(it => it !== requirementID);
+              store.state.toggleableRequirementChoices,
+              store.state.userRequirementsMap
+            );
             choices[uniqueID] = { ...choice, optOut };
           });
           return choices;
@@ -300,27 +332,21 @@ export default defineComponent({
     creditString() {
       let credits = 0;
       this.courses.forEach(course => {
-        credits += course.credits;
+        if (!isPlaceholderCourse(course)) {
+          credits += course.credits;
+        }
       });
       if (credits === 1) {
         return `${credits.toString()} credit`;
       }
       return `${credits.toString()} credits`;
     },
-    // Note: Currently not used
-    deleteDuplicateCourses(): readonly FirestoreSemesterCourse[] {
-      const uniqueCoursesNames: string[] = [];
-      const uniqueCourses: FirestoreSemesterCourse[] = [];
-      this.courses.forEach(course => {
-        if (uniqueCoursesNames.indexOf(course.name) === -1) {
-          uniqueCourses.push(course);
-          uniqueCoursesNames.push(course.name);
-        }
-      });
-      return uniqueCourses;
+    handleRequirementConflicts(): boolean {
+      return featureFlagCheckers.isRequirementConflictsEnabled();
     },
   },
   methods: {
+    isPlaceholderCourse,
     onDragStart() {
       this.isDraggedFrom = true;
       this.scrollable = true;
@@ -348,6 +374,19 @@ export default defineComponent({
     closeCourseModal() {
       this.isCourseModalOpen = false;
     },
+    openConflictModal(
+      course: FirestoreSemesterCourse,
+      conflicts: Set<string[]>,
+      selfCheckRequirements: readonly RequirementWithIDSourceType[]
+    ) {
+      this.conflictCourse = course;
+      this.courseConflicts = conflicts;
+      this.selfCheckRequirements = selfCheckRequirements;
+      this.isConflictModalOpen = !this.isConflictModalOpen;
+    },
+    closeConflictModal() {
+      this.isConflictModalOpen = false;
+    },
     openSemesterModal() {
       // Delete confirmation for the use case of adding multiple semesters consecutively
       this.closeConfirmationModal();
@@ -366,6 +405,7 @@ export default defineComponent({
     closeConfirmationModal() {
       this.isConfirmationOpen = false;
     },
+    // TODO @willespencer refactor the below methods after gatekeep removed (to only 1 method)
     addCourse(data: CornellCourseRosterCourse, choice: FirestoreCourseOptInOptOutChoices) {
       const newCourse = cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData(data);
       // Since the course is new, we know the old choice does not exist.
@@ -373,6 +413,47 @@ export default defineComponent({
 
       const courseCode = `${data.subject} ${data.catalogNbr}`;
       this.openConfirmationModal(`Added ${courseCode} to ${this.season} ${this.year}`);
+    },
+    selectCourse(data: CornellCourseRosterCourse) {
+      // only perform operations if the gatekeep is true
+      if (this.handleRequirementConflicts) {
+        const newCourse = cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData(data);
+
+        // set choice to nothing (no opting out, no opting in)
+        const choice: FirestoreCourseOptInOptOutChoices = {
+          optOut: [],
+          acknowledgedCheckerWarningOptIn: [],
+          arbitraryOptIn: {},
+        };
+
+        // add the course to the semeser (with no choice made)
+        addCourseToSemester(this.year, this.season, newCourse, () => choice, this.$gtag);
+        this.closeCourseModal();
+
+        const conflicts = store.state.courseToRequirementsInConstraintViolations.get(
+          newCourse.uniqueID
+        );
+
+        const { selfCheckRequirements } = getRelatedUnfulfilledRequirements(
+          data,
+          store.state.groupedRequirementFulfillmentReport,
+          store.state.onboardingData,
+          store.state.toggleableRequirementChoices,
+          store.state.overriddenFulfillmentChoices,
+          store.state.userRequirementsMap
+        );
+
+        // only open conflict modal if conflicts exist
+        if (conflicts && conflicts.size > 0) {
+          this.openConflictModal(newCourse, conflicts, selfCheckRequirements);
+        }
+      }
+    },
+    handleConflictsResolved(course: FirestoreSemesterCourse) {
+      this.openConfirmationModal(`Added ${course.code} to ${this.season} ${this.year}`);
+    },
+    deleteCourseWithoutModal(uniqueID: number) {
+      deleteCourseFromSemester(this.year, this.season, uniqueID, this.$gtag);
     },
     deleteCourse(courseCode: string, uniqueID: number) {
       deleteCourseFromSemester(this.year, this.season, uniqueID, this.$gtag);
@@ -397,7 +478,9 @@ export default defineComponent({
       const updater = (semester: FirestoreSemester): FirestoreSemester => ({
         ...semester,
         courses: semester.courses.map(course =>
-          course.code.split(' ')[0] === subject ? { ...course, color } : course
+          !isPlaceholderCourse(course) && course.code.split(' ')[0] === subject
+            ? { ...course, color }
+            : course
         ),
       });
       editSemesters(oldSemesters => oldSemesters.map(sem => updater(sem)));

@@ -5,6 +5,7 @@ import {
   includesWithSubRequirements,
   includesWithSingleRequirement,
 } from '../checkers-common';
+import { AdvisorGroup } from '../../tools-types';
 
 // courses that can be used for the materials elective
 const materialsElectives = [
@@ -303,3 +304,7 @@ const mseRequirements: readonly CollegeOrMajorRequirement[] = [
 ];
 
 export default mseRequirements;
+
+export const mseAdvisors: AdvisorGroup = {
+  advisors: [{ name: 'Michele Conrad', email: 'mmc2@cornell.edu' }],
+};

@@ -1,13 +1,13 @@
-name: TrackUsers
+name: Track User Analytics
 on:
   schedule:
-    - cron:  '0 4 * * *'
+    - cron: '0 4 * * *'
 
 jobs:
   track-users:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v2
       - name: Set up Node
         uses: actions/setup-node@v2
         with:
@@ -15,7 +15,7 @@ jobs:
           cache: 'npm'
       - name: NPM Clean Install
         run: npm ci
-      - name: Run TrackUsers
+      - name: Run TrackUsers Script
         run: npm run track-users
         env:
           PROD: true

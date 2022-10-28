@@ -1,15 +1,11 @@
-import {
-  ExamsTaken,
-  examsTakenToExamCourses,
-  userDataToExamCourses,
-} from '../requirement-exam-utils';
-import { NO_EQUIVALENT_COURSES_COURSE_ID } from '../data/constants';
+import userDataToExamCourses, { examsTakenToExamCourses } from '../requirement-exam-utils';
+import { NO_FULFILLMENTS_COURSE_ID } from '../data/constants';
 
 /**
  * Tests for examsTakenToExamCourses
  */
 it('Exam is converted to correct course', () => {
-  const exams: ExamsTaken = [
+  const exams: FirestoreTransferExam[] = [
     {
       examType: 'AP',
       subject: 'Computer Science A',
@@ -27,7 +23,7 @@ it('Exam is converted to correct course', () => {
 });
 
 it('Exam score is too low', () => {
-  const exams: ExamsTaken = [
+  const exams: FirestoreTransferExam[] = [
     {
       examType: 'AP',
       subject: 'Computer Science A',
@@ -39,13 +35,13 @@ it('Exam score is too low', () => {
     code: 'AP Computer Science A',
     uniqueId: 'AP Computer Science A',
     credits: 0,
-    courseId: NO_EQUIVALENT_COURSES_COURSE_ID,
+    courseId: NO_FULFILLMENTS_COURSE_ID,
   };
   expect(examCourses[0]).toEqual(expected);
 });
 
 it('Two exams are converted to the correct courses', () => {
-  const exams: ExamsTaken = [
+  const exams: FirestoreTransferExam[] = [
     {
       examType: 'AP',
       subject: 'Computer Science A',
@@ -69,10 +65,12 @@ it('Two exams are converted to the correct courses', () => {
 it('Exam is converted to correct course', () => {
   const userData: AppOnboardingData = {
     gradYear: '2020',
+    gradSem: 'Spring',
     entranceYear: '2016',
+    entranceSem: 'Fall',
     college: 'EN',
     major: [],
-    exam: [{ type: 'AP', score: 5, subject: 'Computer Science A' }],
+    exam: [{ examType: 'AP', score: 5, subject: 'Computer Science A' }],
     minor: [],
     tookSwim: 'no',
   };

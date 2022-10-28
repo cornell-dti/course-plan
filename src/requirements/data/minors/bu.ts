@@ -1,5 +1,6 @@
 import { CollegeOrMajorRequirement } from '../../types';
 import { includesWithSingleRequirement } from '../checkers-common';
+import { AdvisorGroup } from '../../tools-types';
 
 const buMinorRequirements: readonly CollegeOrMajorRequirement[] = [
   {
@@ -86,3 +87,7 @@ const buMinorRequirements: readonly CollegeOrMajorRequirement[] = [
 ];
 
 export default buMinorRequirements;
+
+export const buMinorAdvisors: AdvisorGroup = {
+  advisors: [{ name: 'Jenny VanAtta', email: 'jmv86@cornell.edu' }],
+};

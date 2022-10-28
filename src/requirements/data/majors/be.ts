@@ -1,5 +1,6 @@
 import { CollegeOrMajorRequirement } from '../../types';
 import { includesWithSingleRequirement, includesWithSubRequirements } from '../checkers-common';
+import { AdvisorGroup } from '../../tools-types';
 
 const bioEngineeringRequirements: readonly CollegeOrMajorRequirement[] = [
   {
@@ -181,3 +182,7 @@ const bioEngineeringRequirements: readonly CollegeOrMajorRequirement[] = [
 ];
 
 export default bioEngineeringRequirements;
+
+export const bioEngineeringAdvisors: AdvisorGroup = {
+  advisors: [{ name: 'Jillian Goldfarb', email: 'jlg459@cornell.edu' }],
+};

@@ -1,5 +1,6 @@
 import { CollegeOrMajorRequirement } from '../../types';
 import { includesWithSingleRequirement, includesWithSubRequirements } from '../checkers-common';
+import { AdvisorGroup } from '../../tools-types';
 
 const mathRequirements: readonly CollegeOrMajorRequirement[] = [
   {
@@ -414,3 +415,12 @@ const mathRequirements: readonly CollegeOrMajorRequirement[] = [
 ];
 
 export default mathRequirements;
+
+export const mathAdvisors: AdvisorGroup = {
+  advisors: [
+    {
+      name: 'Michelle Klinger',
+      email: 'mmk8@cornell.edu',
+    },
+  ],
+};

@@ -97,7 +97,7 @@
 
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
-import { getCurrentSeason, getCurrentYear, clickOutside } from '@/utilities';
+import { getCurrentSeason, getCurrentYear, clickOutside, entranceYearRange } from '@/utilities';
 import store from '@/store';
 
 import fall from '@/assets/images/fallEmoji.svg';
@@ -125,8 +125,6 @@ type Data = {
   };
 };
 
-const yearRange = 6;
-
 export default defineComponent({
   props: {
     currentSemesters: {
@@ -153,8 +151,8 @@ export default defineComponent({
       [winter, 'Winter'],
     ] as const;
     const years = [];
-    let startYear = currentYear - yearRange;
-    while (startYear <= currentYear + yearRange) {
+    let startYear = currentYear - entranceYearRange;
+    while (startYear <= currentYear + entranceYearRange) {
       years.push(startYear);
       startYear += 1;
     }
@@ -308,6 +306,8 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
+@import '@/assets/scss/_variables.scss';
+
 .duplicate-p {
   color: red;
 }
@@ -358,7 +358,7 @@ export default defineComponent({
     font-size: 14px;
     line-height: 14px;
 
-    color: #b6b6b6;
+    color: $darkPlaceholderGray;
   }
 
   &-icon {

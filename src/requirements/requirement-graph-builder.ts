@@ -1,3 +1,4 @@
+import { getConstraintViolations } from './requirement-constraints-utils';
 import RequirementFulfillmentGraph, { CourseWithUniqueId } from './requirement-graph';
 
 interface CourseForRequirementGraph extends CourseWithUniqueId {
@@ -49,7 +50,7 @@ export type BuildRequirementFulfillmentGraphParameters<
   ) => readonly number[];
 };
 
-const buildRequirementFulfillmentGraph = <
+export const buildRequirementFulfillmentGraph = <
   Requirement extends string,
   Course extends CourseForRequirementGraph
 >({
@@ -103,19 +104,13 @@ const buildRequirementFulfillmentGraph = <
 
   // Phase 3: Respect user's choices on opt-in/opt-out.
   userCourses.forEach(course => {
-    const { uniqueId } = course;
-    // typeof uniqueId === 'string' means it's AP/IB equivalent course.
-    // uniqueId < 0 means it's swim test.
-    // User never gets to make a choice about these courses, so it will never appear in the choices.
-    // Therefore, removing those edges will nullify all these credits.
-    if (typeof uniqueId === 'string' || uniqueId < 0) return;
-    const userChoiceOnOptInOptOutCourse = userChoiceOnRequirementOverrides[uniqueId];
+    const userChoiceOnOptInOptOutCourse = userChoiceOnRequirementOverrides[course.uniqueId];
     if (userChoiceOnOptInOptOutCourse == null) return;
     userChoiceOnOptInOptOutCourse.optIn.forEach(optedInRequirement => {
       graph.addEdge(optedInRequirement, course);
     });
-    userChoiceOnOptInOptOutCourse.optOut.forEach(optedInRequirement => {
-      graph.removeEdge(optedInRequirement, course);
+    userChoiceOnOptInOptOutCourse.optOut.forEach(optedOutRequirement => {
+      graph.removeEdge(optedOutRequirement, course);
     });
   });
 
@@ -123,4 +118,21 @@ const buildRequirementFulfillmentGraph = <
   return graph;
 };
 
-export default buildRequirementFulfillmentGraph;
+export const removeIllegalEdgesFromRequirementFulfillmentGraph = <
+  Requirement extends string,
+  Course extends CourseForRequirementGraph
+>(
+  graph: RequirementFulfillmentGraph<Requirement, Course>,
+  requirementConstraintHolds: (requirementA: Requirement, requirementB: Requirement) => boolean
+): {
+  courseToRequirementsInConstraintViolations: Map<string | number, Set<Requirement[]>>;
+  doubleCountedCourseUniqueIDSet: ReadonlySet<string | number>;
+} => {
+  const {
+    constraintViolationsGraph,
+    courseToRequirementsInConstraintViolations,
+    doubleCountedCourseUniqueIDSet,
+  } = getConstraintViolations(graph, requirementConstraintHolds);
+  graph.subtractGraphEdges(constraintViolationsGraph);
+  return { courseToRequirementsInConstraintViolations, doubleCountedCourseUniqueIDSet };
+};

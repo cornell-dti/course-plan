@@ -1,5 +1,6 @@
 import { CollegeOrMajorRequirement, Course } from '../../types';
-import { courseIsSpecial, ifCodeMatch, includesWithSubRequirements } from '../checkers-common';
+import { ifCodeMatch, includesWithSubRequirements } from '../checkers-common';
+import { AdvisorGroup } from '../../tools-types';
 
 const chemERequirements: readonly CollegeOrMajorRequirement[] = [
   {
@@ -249,7 +250,6 @@ const chemERequirements: readonly CollegeOrMajorRequirement[] = [
     source: 'http://courses.cornell.edu/preview_program.php?catoid=41&poid=19817',
     checker: [
       (course: Course): boolean => {
-        if (courseIsSpecial(course)) return false;
         const { subject, catalogNbr } = course;
         return !(ifCodeMatch(subject, 'PE') || ifCodeMatch(catalogNbr, '10**'));
       },
@@ -261,3 +261,7 @@ const chemERequirements: readonly CollegeOrMajorRequirement[] = [
 ];
 
 export default chemERequirements;
+
+export const chemEAdvisors: AdvisorGroup = {
+  advisors: [{ name: 'Carol Casler', email: 'cad1@cornell.edu' }],
+};
