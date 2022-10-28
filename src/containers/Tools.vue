@@ -83,7 +83,7 @@ export default {
       grid-column: 1/2;
       grid-row: 1/2;
       width: 600px;
-      height: 250px;
+      min-height: 250px;
     }
 
     &-advisors {
