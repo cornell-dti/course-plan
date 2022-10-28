@@ -13,22 +13,12 @@
     </div>
     <div class="progress-text">
       <span class="progress-text-style"> You've completed: </span>
-      <span class="progress-text-style" v-if="hasCollege">
-        {{ collegeRequirementCount.finished }} / {{ collegeRequirementCount.needed }} College
-        Requirements
-      </span>
-      <span class="progress-text-style" v-if="hasMajor">
-        {{ majorRequirementCount.finished }} / {{ majorRequirementCount.needed }} Major
-        Requirements</span
-      >
-      <span class="progress-text-style" v-if="hasMinor">
-        {{ minorRequirementCount.finished }} / {{ minorRequirementCount.needed }} Minor
-        Requirements</span
-      >
-      <span class="progress-text-style" v-if="hasGrad">
-        {{ gradRequirementCount.finished }} / {{ gradRequirementCount.needed }} Grad
-        Requirements</span
-      >
+      <div v-for="(req, index) in reqs" :key="index" class="progress-row">
+        <span class="progress-numfulfilled progress-text-style">
+          {{ req.numfulfilled }}
+        </span>
+        <span class="progress-reqname progress-text-style">{{ req.name }}</span>
+      </div>
     </div>
   </div>
 </template>
@@ -36,6 +26,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import store from '@/store';
+import { ProgressTrackerRequirement } from '@/requirements/tools-types';
 import confetti from '@/assets/images/progress_tracker/confetti.svg';
 import fire from '@/assets/images/progress_tracker/fire.svg';
 import flex from '@/assets/images/progress_tracker/flex.svg';
@@ -112,6 +103,33 @@ export default defineComponent({
     },
   },
   computed: {
+    reqs(): ProgressTrackerRequirement[] {
+      let allReqs: ProgressTrackerRequirement[] = [];
+      for (const { reqs, groupName } of this.requirements) {
+        let totalRequired = 0;
+        let totalCompleted = 0;
+        for (const { fulfillment } of reqs) {
+          const additionalRequirements = Object.values(fulfillment.additionalRequirements ?? {});
+          if (fulfillment.fulfilledBy !== 'self-check') {
+            totalRequired += 1 + additionalRequirements.length;
+          }
+          const mixedRequirements = [fulfillment, ...additionalRequirements];
+          for (const mixedReq of mixedRequirements) {
+            if (mixedReq.safeMinCountFulfilled >= mixedReq.minCountRequired) {
+              totalCompleted += 1;
+            }
+          }
+        }
+        const req = {
+          numfulfilled: String(Math.round(totalCompleted * 10) / 10)
+            .concat('/')
+            .concat(String(Math.round(totalRequired * 10) / 10)),
+          name: groupName.concat(' Requirements'),
+        };
+        allReqs = allReqs.concat(req);
+      }
+      return allReqs;
+    },
     requirements(): readonly GroupedRequirementFulfillmentReport[] {
       return store.state.groupedRequirementFulfillmentReport;
     },
@@ -163,6 +181,21 @@ export default defineComponent({
   height: 100%;
   width: 100%;
   background-color: #ffffff;
+
+  &-row {
+    display: grid;
+    grid-template-columns: 20% 80%;
+    justify-content: space-evenly;
+  }
+
+  &-numfulfilled {
+    grid-column-start: 1;
+    grid-column-end: 1;
+  }
+  &-reqname {
+    grid-column-start: 2;
+    grid-column-end: 2;
+  }
 
   &-position {
     display: flex;
@@ -234,7 +267,6 @@ export default defineComponent({
     align-items: center;
     letter-spacing: 0.01em;
     color: #000000;
-    margin-top: 0.625rem;
     margin-bottom: 0.625rem;
   }
   &-text {
