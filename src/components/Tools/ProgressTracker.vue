@@ -5,7 +5,7 @@
         <div class="progress-bar-overflow">
           <div class="progress-bar" :style="progressBarStyle"></div>
         </div>
-        <img class="progress-bar-caption" :src="getImage" />
+        <img class="progress-bar-caption" :src="emoji" />
       </div>
       <div class="progress-status">
         <span class="progress-status-text">{{ progressMessage }}</span>
@@ -13,17 +13,11 @@
     </div>
     <div class="progress-text">
       <span class="progress-text-style"> You've completed: </span>
-      <div
-        v-for="(req, index) in requirementProgressBundles"
-        :key="index"
-        class="progress-row"
-      >
+      <div v-for="(req, index) in requirementProgressBundles" :key="index" class="progress-row">
         <span class="progress-numfulfilled progress-text-style">
           {{ Math.floor(req.safeProgress) }} / {{ req.totalRequired }}
         </span>
-        <span class="progress-reqname progress-text-style">
-          {{ req.groupName }} Requirements
-        </span>
+        <span class="progress-reqname progress-text-style"> {{ req.groupName }} Requirements </span>
       </div>
     </div>
   </div>
@@ -60,8 +54,7 @@ export default defineComponent({
         dangerouslyFulfilled: groupedRequirementDangerouslyFulfilled(req),
         totalRequired: groupedRequirementTotalRequired(req),
         safeProgress: groupedRequirementTotalSafeRequirementProgress(req),
-        dangerousProgress:
-          groupedRequirementTotalDangerousRequirementProgress(req),
+        dangerousProgress: groupedRequirementTotalDangerousRequirementProgress(req),
       }));
     },
     safeProgress() {
@@ -97,7 +90,7 @@ export default defineComponent({
       }
       return ProgressState.Fifth;
     },
-    getImage(): string {
+    emoji(): string {
       switch (this.progressState) {
         case ProgressState.First:
           return hands;
