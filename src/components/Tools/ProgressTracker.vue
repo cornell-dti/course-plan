@@ -152,11 +152,11 @@ export default defineComponent({
 
   &-bar-overflow {
     /* Wraps the rotating .bar */
-    position: relative;
+    position: absolute;
     overflow: hidden; /* Comment this line to understand the trick */
     width: 100%;
     height: 4.688rem; /* Half circle (overflow) */
-    margin-bottom: -2.813rem; /* bring the numbers up */
+    margin-top: 2rem;
     z-index: 0;
     display: flex;
     justify-content: center;
@@ -182,9 +182,9 @@ export default defineComponent({
     width: 3.125rem;
     position: absolute;
     z-index: 2;
-    //left: ;
     left: 50%;
     transform: translateX(-50%);
+    margin-top: 3.7rem;
   }
 
   &-status {
@@ -201,6 +201,8 @@ export default defineComponent({
     /* identical to box height */
     text-align: center;
     color: #92c3e6;
+    z-index: 1;
+    margin-top: 8.7rem;
   }
 
   &-text-style {
