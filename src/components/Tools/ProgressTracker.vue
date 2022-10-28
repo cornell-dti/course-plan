@@ -5,7 +5,7 @@
         <div class="progress-bar-overflow">
           <div class="progress-bar" :style="progressBarStyle"></div>
         </div>
-        <img class="progress-bar-caption" :src="getImage" />
+        <img class="progress-bar-caption" :src="progressImage" />
       </div>
       <div class="progress-status">
         <span class="progress-status-text">{{ progressMessage }}</span>
@@ -13,16 +13,12 @@
     </div>
     <div class="progress-text">
       <span class="progress-text-style"> You've completed: </span>
-      <div
-        v-for="(req, index) in requirementProgressBundles"
-        :key="index"
-        class="progress-row"
-      >
-        <span class="progress-numfulfilled progress-text-style">
-          {{ Math.floor(req.safeProgress) }} / {{ req.totalRequired }}
-        </span>
+      <div v-for="(req, index) in requirementProgressBundles" :key="index" class="progress-row">
+        <span class="progress-numfulfilled progress-text-style"
+          >{{ req.dangerouslyFulfilled }} / {{ req.totalRequired }}</span
+        >
         <span class="progress-reqname progress-text-style">
-          {{ req.groupName }} Requirements
+          {{ req.specific }} {{ req.groupName }} Requirements
         </span>
       </div>
     </div>
@@ -60,44 +56,46 @@ export default defineComponent({
         dangerouslyFulfilled: groupedRequirementDangerouslyFulfilled(req),
         totalRequired: groupedRequirementTotalRequired(req),
         safeProgress: groupedRequirementTotalSafeRequirementProgress(req),
-        dangerousProgress:
-          groupedRequirementTotalDangerousRequirementProgress(req),
+        dangerousProgress: groupedRequirementTotalDangerousRequirementProgress(req),
       }));
     },
     safeProgress() {
-      let totalRequired = 0;
       let totalCompleted = 0;
       this.requirementProgressBundles.forEach(req => {
-        totalRequired += req.safeProgress;
-        totalCompleted += req.totalRequired;
+        totalCompleted += req.safeProgress;
       });
-      return totalCompleted / (100 * totalRequired);
+      return totalCompleted;
     },
     dangerousProgress() {
-      let totalRequired = 0;
       let totalCompleted = 0;
       this.requirementProgressBundles.forEach(req => {
-        totalRequired += req.dangerousProgress;
-        totalCompleted += req.totalRequired;
+        totalCompleted += req.dangerouslyFulfilled;
       });
-      return totalCompleted / totalRequired;
+      return totalCompleted;
+    },
+    totalRequired() {
+      let totalRequired = 0;
+      this.requirementProgressBundles.forEach(req => {
+        totalRequired += req.totalRequired;
+      });
+      return totalRequired;
     },
     progressState(): ProgressState {
-      if (this.safeProgress < 0.2) {
+      if (this.dangerousProgress / this.totalRequired < 0.25) {
         return ProgressState.First;
       }
-      if (this.safeProgress < 0.4) {
+      if (this.dangerousProgress / this.totalRequired < 0.5) {
         return ProgressState.Second;
       }
-      if (this.safeProgress < 0.6) {
+      if (this.dangerousProgress / this.totalRequired < 0.75) {
         return ProgressState.Third;
       }
-      if (this.safeProgress < 0.8) {
+      if (this.dangerousProgress / this.totalRequired < 1.0) {
         return ProgressState.Fourth;
       }
       return ProgressState.Fifth;
     },
-    getImage(): string {
+    progressImage(): string {
       switch (this.progressState) {
         case ProgressState.First:
           return hands;
@@ -115,9 +113,10 @@ export default defineComponent({
     },
     progressBarStyle(): Record<string, string> {
       return {
-        transform: `rotate(${45 + 180 * this.safeProgress}deg)`,
+        transform: `rotate(${45 + (180 * this.dangerousProgress) / this.totalRequired}deg)`,
       };
     },
+
     progressMessage(): string {
       switch (this.progressState) {
         case ProgressState.First:
