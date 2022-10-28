@@ -39,6 +39,7 @@ import {
   groupedRequirementTotalRequired,
   groupedRequirementTotalSafeRequirementProgress,
 } from '@/requirements/requirement-frontend-computation';
+import { sumBy } from '@/utilities';
 
 enum ProgressState {
   First,
@@ -59,26 +60,14 @@ export default defineComponent({
         dangerousProgress: groupedRequirementTotalDangerousRequirementProgress(req),
       }));
     },
-    safeProgress() {
-      let totalCompleted = 0;
-      this.requirementProgressBundles.forEach(req => {
-        totalCompleted += req.safeProgress;
-      });
-      return totalCompleted;
+    safeProgress(): number {
+      return sumBy(this.requirementProgressBundles, req => req.safeProgress);
     },
-    dangerousProgress() {
-      let totalCompleted = 0;
-      this.requirementProgressBundles.forEach(req => {
-        totalCompleted += req.dangerouslyFulfilled;
-      });
-      return totalCompleted;
+    dangerousProgress(): number {
+      return sumBy(this.requirementProgressBundles, req => req.dangerouslyFulfilled);
     },
-    totalRequired() {
-      let totalRequired = 0;
-      this.requirementProgressBundles.forEach(req => {
-        totalRequired += req.totalRequired;
-      });
-      return totalRequired;
+    totalRequired(): number {
+      return sumBy(this.requirementProgressBundles, req => req.totalRequired);
     },
     progressState(): ProgressState {
       if (this.dangerousProgress / this.totalRequired < 0.25) {
