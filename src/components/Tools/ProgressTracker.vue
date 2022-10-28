@@ -180,7 +180,7 @@ export default defineComponent({
       height: 3.125rem;
       width: 3.125rem;
       position: absolute;
-      z-index: 2;
+      z-index: 1;
       left: 50%;
       transform: translateX(-50%);
       margin-top: 1.7rem;
