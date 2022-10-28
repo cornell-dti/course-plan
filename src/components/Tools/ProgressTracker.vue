@@ -39,6 +39,7 @@ import {
   groupedRequirementTotalRequired,
   groupedRequirementTotalSafeRequirementProgress,
 } from '@/requirements/requirement-frontend-computation';
+import { sumBy } from '@/utilities';
 
 enum ProgressState {
   First,
@@ -59,26 +60,14 @@ export default defineComponent({
         dangerousProgress: groupedRequirementTotalDangerousRequirementProgress(req),
       }));
     },
-    safeProgress() {
-      let totalCompleted = 0;
-      this.requirementProgressBundles.forEach(req => {
-        totalCompleted += req.safeProgress;
-      });
-      return totalCompleted;
+    safeProgress(): number {
+      return sumBy(this.requirementProgressBundles, req => req.safeProgress);
     },
-    dangerousProgress() {
-      let totalCompleted = 0;
-      this.requirementProgressBundles.forEach(req => {
-        totalCompleted += req.dangerouslyFulfilled;
-      });
-      return totalCompleted;
+    dangerousProgress(): number {
+      return sumBy(this.requirementProgressBundles, req => req.dangerouslyFulfilled);
     },
-    totalRequired() {
-      let totalRequired = 0;
-      this.requirementProgressBundles.forEach(req => {
-        totalRequired += req.totalRequired;
-      });
-      return totalRequired;
+    totalRequired(): number {
+      return sumBy(this.requirementProgressBundles, req => req.totalRequired);
     },
     progressState(): ProgressState {
       if (this.dangerousProgress / this.totalRequired < 0.25) {
@@ -141,9 +130,11 @@ export default defineComponent({
 @import '@/assets/scss/_variables.scss';
 
 .progress {
-  height: 100%;
+  height: min-content;
   width: 100%;
   background-color: #ffffff;
+  display: flex;
+  flex-wrap: wrap;
 
   &-row {
     display: grid;
@@ -169,6 +160,8 @@ export default defineComponent({
     flex-grow: 2;
     position: relative;
     margin-bottom: 0.25rem;
+    min-height: 150px;
+    min-width: 200px;
   }
 
   &-bar {
@@ -181,6 +174,7 @@ export default defineComponent({
     border: 0.5rem solid #eee; /* half gray, */
     border-bottom-color: #0bf; /* half azure */
     border-right-color: #0bf;
+
     &-caption {
       height: 3.125rem;
       width: 3.125rem;
@@ -190,14 +184,15 @@ export default defineComponent({
       transform: translateX(-50%);
       margin-top: 3.7rem;
     }
+
     &-container {
       position: relative;
-      margin: 0.25rem;
       float: left;
       text-align: center;
       flex-grow: 2;
-      margin-bottom: -6.25rem;
+      margin: 0.25rem 0.25rem -6.25rem;
     }
+
     &-overflow {
       /* Wraps the rotating .bar */
       position: absolute;
@@ -215,6 +210,7 @@ export default defineComponent({
     flex-grow: 1;
     display: flex;
     justify-content: center;
+
     &-text {
       margin-top: 1rem;
       /* identical to box height */
@@ -231,6 +227,7 @@ export default defineComponent({
     flex-direction: column;
     justify-content: center;
     flex-grow: 1;
+
     &-style {
       font-size: 14px;
       line-height: 1rem;
