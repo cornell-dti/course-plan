@@ -5,7 +5,7 @@
         <div class="progress-bar-overflow">
           <div class="progress-bar" :style="progressBarStyle"></div>
         </div>
-        <img class="progress-bar-caption" :src="progressImage" />
+        <img class="progress-bar-caption" :src="emoji" />
       </div>
       <div class="progress-status">
         <span class="progress-status-text">{{ progressMessage }}</span>
@@ -95,7 +95,7 @@ export default defineComponent({
       }
       return ProgressState.Fifth;
     },
-    progressImage(): string {
+    emoji(): string {
       switch (this.progressState) {
         case ProgressState.First:
           return hands;
