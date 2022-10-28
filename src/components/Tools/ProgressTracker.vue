@@ -41,30 +41,6 @@ import {
 } from '@/requirements/requirement-frontend-computation';
 
 export default defineComponent({
-  data() {
-    return {
-      hasCollege: false,
-      hasMajor: false,
-      hasMinor: false,
-      hasGrad: false,
-      collegeRequirementCount: {
-        finished: 0,
-        needed: 0,
-      },
-      majorRequirementCount: {
-        finished: 0,
-        needed: 0,
-      },
-      minorRequirementCount: {
-        finished: 0,
-        needed: 0,
-      },
-      gradRequirementCount: {
-        finished: 0,
-        needed: 0,
-      },
-    };
-  },
   computed: {
     requirementProgressBundles(): GroupedRequirementFulfillmentReportWithProgress[] {
       return store.state.groupedRequirementFulfillmentReport.map(req => ({

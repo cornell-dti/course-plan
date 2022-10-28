@@ -18,8 +18,3 @@ export type AdvisorPackage = {
   readonly acronym: string;
   readonly email: string;
 };
-
-export type ProgressTrackerRequirement = {
-  readonly numfulfilled: string;
-  readonly name: string;
-};
