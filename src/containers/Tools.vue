@@ -16,7 +16,9 @@
         <advisor-card></advisor-card>
       </card>
 
-      <card name="Export Schedule" class="toolsContainer-card-export" id="export"></card>
+      <card name="Export Schedule" class="toolsContainer-card-export" id="export">
+        <export-card></export-card>
+      </card>
 
       <card name="Useful Links" class="toolsContainer-card-links" id="links">
         <useful-links></useful-links>
@@ -30,9 +32,10 @@ import Card from '@/components/Tools/Card.vue';
 import AdvisorCard from '@/components/Tools/AdvisorCard.vue';
 import UsefulLinks from '@/components/Tools/UsefulLinks.vue';
 import ProgressTracker from '@/components/Tools/ProgressTracker.vue';
+import ExportCard from '@/components/Tools/ExportCard.vue';
 
 export default {
-  components: { UsefulLinks, AdvisorCard, Card, ProgressTracker },
+  components: { ProgressTracker, ExportCard, UsefulLinks, AdvisorCard, Card },
 };
 </script>
 
@@ -94,14 +97,14 @@ export default {
       grid-column: 2/3;
       grid-row: 1/2;
       width: 300px;
-      height: min-content;
+      height: 250px;
     }
 
     &-links {
       grid-column: 2/3;
       grid-row: 2/3;
       width: 300px;
-      height: min-content;
+      height: 250px;
     }
   }
 }

@@ -1,5 +1,6 @@
 import { CollegeOrMajorRequirement } from '../../types';
 import { includesWithSingleRequirement } from '../checkers-common';
+import { AdvisorGroup } from '../../tools-types';
 
 const psychMinorRequirements: readonly CollegeOrMajorRequirement[] = [
   {
@@ -23,3 +24,7 @@ const psychMinorRequirements: readonly CollegeOrMajorRequirement[] = [
 ];
 
 export default psychMinorRequirements;
+
+export const psychMinorAdvisors: AdvisorGroup = {
+  advisors: [{ name: 'Vivian Zayas', email: 'psych-dus@cornell.edu' }],
+};

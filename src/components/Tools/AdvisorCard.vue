@@ -1,6 +1,9 @@
 <template>
   <div class="advisors">
-    <div class="advisors-content">
+    <div class="advisors-content" v-if="advisors.length === 0">
+      <span class="advisors-empty"> Sorry, you don't have an advisor yet. </span>
+    </div>
+    <div v-else class="advisors-content">
       <div class="advisors-heading-row">
         <span class="advisors-info advisors-heading-content">Type</span>
         <span class="advisors-info advisors-heading-content">Name</span>
@@ -78,6 +81,11 @@ export default defineComponent({
     flex-direction: column;
     justify-content: flex-start;
     margin: 0 1.5rem 0 1.5rem;
+  }
+
+  &-empty {
+    display: flex;
+    justify-content: space-around;
   }
 
   &-info {

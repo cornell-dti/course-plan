@@ -1,5 +1,6 @@
 import { CollegeOrMajorRequirement, Course } from '../../types';
 import { ifCodeMatch, includesWithSingleRequirement } from '../checkers-common';
+import { AdvisorGroup } from '../../tools-types';
 
 const governmentRequirements: readonly CollegeOrMajorRequirement[] = [
   {
@@ -68,3 +69,7 @@ const governmentRequirements: readonly CollegeOrMajorRequirement[] = [
 ];
 
 export default governmentRequirements;
+
+export const governmentAdvisors: AdvisorGroup = {
+  advisors: [{ name: "Danielle O'Connor", email: 'dko1@cornell.edu' }],
+};

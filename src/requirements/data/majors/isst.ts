@@ -1,5 +1,6 @@
 import { CollegeOrMajorRequirement } from '../../types';
 import { includesWithSubRequirements, includesWithSingleRequirement } from '../checkers-common';
+import { AdvisorGroup } from '../../tools-types';
 
 const isstRequirements: readonly CollegeOrMajorRequirement[] = [
   {
@@ -498,3 +499,10 @@ const isstRequirements: readonly CollegeOrMajorRequirement[] = [
 ];
 
 export default isstRequirements;
+
+export const isstAdvisors: AdvisorGroup = {
+  advisors: [
+    { name: 'Ani Mercincavage', email: 'am2643@cornell.edu' },
+    { name: 'Jess Wilkie', email: 'jlw433@cornell.edu' },
+  ],
+};

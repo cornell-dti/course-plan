@@ -4,6 +4,7 @@ import {
   includesWithSingleRequirement,
   includesWithSubRequirements,
 } from '../checkers-common';
+import { AdvisorGroup } from '../../tools-types';
 
 const crpRequirements: readonly CollegeOrMajorRequirement[] = [
   {
@@ -161,3 +162,7 @@ const crpRequirements: readonly CollegeOrMajorRequirement[] = [
 ];
 
 export default crpRequirements;
+
+export const crpAdvisors: AdvisorGroup = {
+  advisors: [{ name: 'Nicholas Klein', email: 'njk8@cornell.edu' }],
+};

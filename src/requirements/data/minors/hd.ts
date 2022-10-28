@@ -5,6 +5,7 @@ import {
   courseMatchesCodeOptions,
   includesWithSingleRequirement,
 } from '../checkers-common';
+import { AdvisorGroup } from '../../tools-types';
 
 const hdMinorRequirements: readonly CollegeOrMajorRequirement[] = [
   {
@@ -48,3 +49,7 @@ const hdMinorRequirements: readonly CollegeOrMajorRequirement[] = [
 ];
 
 export default hdMinorRequirements;
+
+export const hdMinorAdvisors: AdvisorGroup = {
+  advisors: [{ name: 'Vivian Zayas', email: 'psych-dus@cornell.edu' }],
+};
