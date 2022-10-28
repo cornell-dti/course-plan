@@ -82,7 +82,7 @@ export default defineComponent({
         totalRequired += req.safeProgress;
         totalCompleted += req.totalRequired;
       });
-      return totalCompleted / totalRequired;
+      return totalCompleted / (100 * totalRequired);
     },
     dangerousProgress() {
       let totalRequired = 0;
@@ -110,7 +110,7 @@ export default defineComponent({
     },
     progressBarStyle(): Record<string, string> {
       return {
-        transform: `rotate(${45 + 180 * this.safeProgress}g)`,
+        transform: `rotate(${45 + 180 * this.safeProgress}deg)`,
       };
     },
     getProgressString(): string {
@@ -182,7 +182,7 @@ export default defineComponent({
     box-sizing: border-box;
     color: #ffffff;
     background-color: #ffffff;
-    border: 0.313rem solid #eee; /* half gray, */
+    border: 0.5rem solid #eee; /* half gray, */
     border-bottom-color: #0bf; /* half azure */
     border-right-color: #0bf;
   }
