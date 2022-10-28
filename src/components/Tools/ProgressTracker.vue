@@ -217,7 +217,7 @@ export default defineComponent({
       text-align: center;
       color: #0bf;
       z-index: 1;
-      margin-top: 8.7rem;
+      margin-top: 10rem;
       font-weight: 900;
     }
   }
