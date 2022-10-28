@@ -14,12 +14,10 @@
     <div class="progress-text">
       <span class="progress-text-style"> You've completed: </span>
       <div v-for="(req, index) in requirementProgressBundles" :key="index" class="progress-row">
-        <span class="progress-reqname progress-text-style"
+        <span class="progress-numfulfilled progress-text-style"
           >{{ Math.floor(req.safeProgress) }} / {{ req.totalRequired }}</span
         >
-        <span class="progress-numfulfilled progress-text-style">
-          {{ req.groupName }} Requirements
-        </span>
+        <span class="progress-reqname progress-text-style"> {{ req.groupName }} Requirements </span>
       </div>
     </div>
   </div>
@@ -122,12 +120,13 @@ export default defineComponent({
     justify-content: space-evenly;
   }
 
-  &-reqname {
+  &-numfulfilled {
     grid-column-start: 1;
     grid-column-end: 1;
+    font-weight: 900;
   }
 
-  &-numfulfilled {
+  &-reqname {
     grid-column-start: 2;
     grid-column-end: 2;
   }
@@ -187,10 +186,9 @@ export default defineComponent({
     justify-content: center;
     &-text {
       margin-top: 1rem;
-      font: '14px normal Proxima Nova';
       /* identical to box height */
       text-align: center;
-      color: #92c3e6;
+      color: #0bf;
       z-index: 1;
       margin-top: 8.7rem;
     }
@@ -202,7 +200,7 @@ export default defineComponent({
     justify-content: center;
     flex-grow: 1;
     &-style {
-      font: '14px normal Proxima Nova';
+      font-size: 14px;
       line-height: 1rem;
       /* identical to box height */
       display: flex;
