@@ -222,6 +222,7 @@ export default defineComponent({
       color: #0bf;
       z-index: 1;
       margin-top: 8.7rem;
+      font-weight: 900;
     }
   }
 
