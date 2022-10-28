@@ -75,6 +75,8 @@ module.exports = {
     'no-use-before-define': ['off'],
     // allow debugger during development
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+    "no-shadow": "off",
+    "@typescript-eslint/no-shadow": "error"
   },
   settings: {
     'import/resolver': {
