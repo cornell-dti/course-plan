@@ -13,11 +13,13 @@
     </div>
     <div class="progress-text">
       <span class="progress-text-style"> You've completed: </span>
-      <div v-for="(req, index) in reqs" :key="index" class="progress-row">
+      <div v-for="(req, index) in requirementProgressBundles" :key="index" class="progress-row">
         <span class="progress-numfulfilled progress-text-style">
-          {{ req.numfulfilled }}
+          {{ req.specific }}
         </span>
-        <span class="progress-reqname progress-text-style">{{ req.name }}</span>
+        <span class="progress-reqname progress-text-style"
+          >{{ Math.floor(req.safeProgress) }} / {{ req.totalRequired }}</span
+        >
       </div>
     </div>
   </div>
@@ -26,12 +28,17 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import store from '@/store';
-import { ProgressTrackerRequirement } from '@/requirements/tools-types';
 import confetti from '@/assets/images/progress_tracker/confetti.svg';
 import fire from '@/assets/images/progress_tracker/fire.svg';
 import flex from '@/assets/images/progress_tracker/flex.svg';
 import hands from '@/assets/images/progress_tracker/hands_raised.svg';
 import star from '@/assets/images/progress_tracker/star.svg';
+import {
+  groupedRequirementDangerouslyFulfilled,
+  groupedRequirementTotalDangerousRequirementProgress,
+  groupedRequirementTotalRequired,
+  groupedRequirementTotalSafeRequirementProgres,
+} from '@/requirements/requirement-frontend-computation';
 
 export default defineComponent({
   data() {
@@ -58,113 +65,52 @@ export default defineComponent({
       },
     };
   },
-  methods: {
-    queryRequirements(): void {
-      for (const { reqs, groupName } of this.requirements) {
-        let totalRequired = 0;
-        let totalCompleted = 0;
-        for (const { fulfillment } of reqs) {
-          const additionalRequirements = Object.values(fulfillment.additionalRequirements ?? {});
-          if (fulfillment.fulfilledBy !== 'self-check') {
-            totalRequired += 1 + additionalRequirements.length;
-          }
-          const mixedRequirements = [fulfillment, ...additionalRequirements];
-          for (const mixedReq of mixedRequirements) {
-            if (mixedReq.safeMinCountFulfilled >= mixedReq.minCountRequired) {
-              totalCompleted += 1;
-            }
-          }
-        }
-        switch (groupName) {
-          case 'College':
-            this.hasCollege = true;
-            this.collegeRequirementCount.finished = Math.round(totalCompleted * 10) / 10;
-            this.collegeRequirementCount.needed = Math.round(totalRequired * 10) / 10;
-            break;
-          case 'Major':
-            this.hasMajor = true;
-            this.majorRequirementCount.finished = Math.round(totalCompleted * 10) / 10;
-            this.majorRequirementCount.needed = Math.round(totalRequired * 10) / 10;
-            break;
-          case 'Minor':
-            this.hasMinor = true;
-            this.minorRequirementCount.finished = Math.round(totalCompleted * 10) / 10;
-            this.minorRequirementCount.needed = Math.round(totalRequired * 10) / 10;
-            break;
-          case 'Grad':
-            this.hasGrad = true;
-            this.gradRequirementCount.finished = Math.round(totalCompleted * 10) / 10;
-            this.gradRequirementCount.needed = Math.round(totalRequired * 10) / 10;
-            break;
-          default:
-            break;
-        }
-      }
-    },
-  },
   computed: {
-    reqs(): ProgressTrackerRequirement[] {
-      let allReqs: ProgressTrackerRequirement[] = [];
-      for (const { reqs, groupName } of this.requirements) {
-        let totalRequired = 0;
-        let totalCompleted = 0;
-        for (const { fulfillment } of reqs) {
-          const additionalRequirements = Object.values(fulfillment.additionalRequirements ?? {});
-          if (fulfillment.fulfilledBy !== 'self-check') {
-            totalRequired += 1 + additionalRequirements.length;
-          }
-          const mixedRequirements = [fulfillment, ...additionalRequirements];
-          for (const mixedReq of mixedRequirements) {
-            if (mixedReq.safeMinCountFulfilled >= mixedReq.minCountRequired) {
-              totalCompleted += 1;
-            }
-          }
-        }
-        const req = {
-          numfulfilled: String(Math.round(totalCompleted * 10) / 10)
-            .concat('/')
-            .concat(String(Math.round(totalRequired * 10) / 10)),
-          name: groupName.concat(' Requirements'),
-        };
-        allReqs = allReqs.concat(req);
-      }
-      return allReqs;
+    requirementProgressBundles(): GroupedRequirementFulfillmentReportWithProgress[] {
+      return store.state.groupedRequirementFulfillmentReport.map(req => ({
+        ...req,
+        dangerouslyFulfilled: groupedRequirementDangerouslyFulfilled(req),
+        totalRequired: groupedRequirementTotalRequired(req),
+        safeProgress: groupedRequirementTotalSafeRequirementProgress(req),
+        dangerousProgress: groupedRequirementTotalDangerousRequirementProgress(req),
+      }));
     },
-    requirements(): readonly GroupedRequirementFulfillmentReport[] {
-      return store.state.groupedRequirementFulfillmentReport;
+    safeProgress() {
+      let totalRequired = 0;
+      let totalCompleted = 0;
+      this.requirementProgressBundles.forEach(req => {
+        totalRequired += req.safeProgress;
+        totalCompleted += req.totalRequired;
+      });
+      return totalCompleted / totalRequired;
     },
-    progress(): number {
-      const totalRequired =
-        this.collegeRequirementCount.needed +
-        this.majorRequirementCount.needed +
-        this.minorRequirementCount.needed +
-        this.gradRequirementCount.needed;
-      const totalCompleted =
-        this.collegeRequirementCount.finished +
-        this.majorRequirementCount.finished +
-        this.minorRequirementCount.finished +
-        this.gradRequirementCount.finished;
+    dangerousProgress() {
+      let totalRequired = 0;
+      let totalCompleted = 0;
+      this.requirementProgressBundles.forEach(req => {
+        totalRequired += req.dangerousProgress;
+        totalCompleted += req.totalRequired;
+      });
       return totalCompleted / totalRequired;
     },
     getImage(): string {
-      this.queryRequirements();
-      if (this.progress < 0.2) {
+      if (this.safeProgress < 0.2) {
         return hands;
       }
-      if (this.progress < 0.4) {
+      if (this.safeProgress < 0.4) {
         return flex;
       }
-      if (this.progress < 0.6) {
+      if (this.safeProgress < 0.6) {
         return star;
       }
-      if (this.progress < 0.8) {
+      if (this.safeProgress < 0.8) {
         return fire;
       }
       return confetti;
     },
     progressBarStyle(): Record<string, string> {
       return {
-        transform: `rotate(${45 + 180 * this.progress}deg)`,
+        transform: `rotate(${45 + 180 * this.safeProgress}g)`,
       };
     },
     getProgressString(): string {
@@ -192,6 +138,7 @@ export default defineComponent({
     grid-column-start: 1;
     grid-column-end: 1;
   }
+
   &-reqname {
     grid-column-start: 2;
     grid-column-end: 2;
@@ -224,6 +171,7 @@ export default defineComponent({
     margin-bottom: -2.813rem; /* bring the numbers up */
     z-index: 0;
   }
+
   &-bar {
     position: absolute;
     top: 0;
@@ -269,6 +217,7 @@ export default defineComponent({
     color: #000000;
     margin-bottom: 0.625rem;
   }
+
   &-text {
     display: flex;
     flex-direction: column;

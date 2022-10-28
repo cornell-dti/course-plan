@@ -165,3 +165,10 @@ type GroupedRequirementFulfillmentReport = {
   readonly specific: string;
   readonly reqs: readonly RequirementFulfillment[];
 };
+
+type GroupedRequirementFulfillmentReportWithProgress = GroupedRequirementFulfillmentReport & {
+  readonly dangerouslyFulfilled: number;
+  readonly totalRequired: number;
+  readonly safeProgress: number;
+  readonly dangerousProgress: number;
+};
