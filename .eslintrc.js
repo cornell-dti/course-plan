@@ -15,6 +15,7 @@ module.exports = {
   reportUnusedDisableDirectives: true,
   plugins: ['@typescript-eslint'],
   parserOptions: {
+    project: './tsconfig.json',
     parser: '@typescript-eslint/parser',
     ecmaVersion: 2020,
     sourceType: 'module',
