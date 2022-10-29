@@ -15,7 +15,6 @@ module.exports = {
   reportUnusedDisableDirectives: true,
   plugins: ['@typescript-eslint'],
   parserOptions: {
-    project: './tsconfig.json',
     parser: '@typescript-eslint/parser',
     ecmaVersion: 2020,
     sourceType: 'module',
@@ -78,7 +77,6 @@ module.exports = {
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'no-shadow': 'off',
     '@typescript-eslint/no-shadow': 'error',
-    '@typescript-eslint/switch-exhaustiveness-check': 'error',
   },
   settings: {
     'import/resolver': {
@@ -95,6 +93,15 @@ module.exports = {
       files: ['*.ts', '*.tsx', '*.vue'],
       rules: {
         'import/extensions': ['error', 'always', { js: 'never', ts: 'never', vue: 'always' }],
+      },
+    },
+    {
+      files: ['src/*.ts', 'src/*.tsx', 'src/*.vue'],
+      rules: {
+        '@typescript-eslint/switch-exhaustiveness-check': 'error',
+      },
+      parserOptions: {
+        project: './tsconfig.json',
       },
     },
     {
