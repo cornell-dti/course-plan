@@ -77,6 +77,7 @@ module.exports = {
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'no-shadow': 'off',
     '@typescript-eslint/no-shadow': 'error',
+    '@typescript-eslint/switch-exhaustiveness-check': 'error',
   },
   settings: {
     'import/resolver': {
