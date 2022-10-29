@@ -207,6 +207,6 @@ export const isCourseTaken = (
  * @param f the function to map over each element
  * @returns the sum of `f` applied to each element in `collection`
  */
-export function sumBy<E>(collection: E[], f: (e: E) => number): number {
+export function sumBy<E>(collection: readonly E[], f: (e: E) => number): number {
   return collection.reduce((sum, e) => sum + f(e), 0);
 }
