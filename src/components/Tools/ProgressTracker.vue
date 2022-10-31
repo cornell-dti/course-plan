@@ -205,12 +205,13 @@ export default defineComponent({
   &-status {
     display: flex;
     justify-content: center;
+    height: 1rem;
+    margin-top: 1rem;
 
     &-text {
       text-align: center;
       color: #0bf;
       z-index: 1;
-      margin-top: 1rem;
       font-weight: bolder;
     }
   }
