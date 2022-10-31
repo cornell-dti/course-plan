@@ -158,10 +158,8 @@ export default defineComponent({
     display: flex;
     flex-direction: column;
     justify-content: center;
-    flex-grow: 2;
-    position: relative;
+    flex-grow: 1;
     margin-bottom: 0.25rem;
-    min-height: 150px;
     min-width: 200px;
   }
 
@@ -190,15 +188,14 @@ export default defineComponent({
       position: relative;
       float: left;
       text-align: center;
-      flex-grow: 2;
-      margin: 0.25rem 0.25rem -6.25rem;
+      height: 75px;
     }
 
     &-overflow {
       position: absolute;
       overflow: hidden;
       width: 100%;
-      height: 4.688rem;
+      height: 75px;
       z-index: 0;
       display: flex;
       justify-content: center;
@@ -206,7 +203,6 @@ export default defineComponent({
   }
 
   &-status {
-    flex-grow: 1;
     display: flex;
     justify-content: center;
 
@@ -214,7 +210,7 @@ export default defineComponent({
       text-align: center;
       color: #0bf;
       z-index: 1;
-      margin-top: 5rem;
+      margin-top: 1rem;
       font-weight: 900;
     }
   }
