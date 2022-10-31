@@ -192,14 +192,14 @@ export default defineComponent({
       // set current season to winter in january, spring from february to may, summer from june to august, and fall from september to december
       let defaultSeason: string = getCurrentSeason();
       if (this.isCourseModelSelectingSemester) {
-        defaultSeason = 'Select';
+        defaultSeason = 'Season';
       }
       return this.seasonText || this.season || defaultSeason;
     },
     yearPlaceholder(): string {
       let defaultYear = String(getCurrentYear());
       if (this.isCourseModelSelectingSemester) {
-        defaultYear = 'Select';
+        defaultYear = 'Year';
       }
       return String(this.yearText || this.year || defaultYear);
     },
