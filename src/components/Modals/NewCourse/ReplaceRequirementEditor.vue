@@ -28,7 +28,6 @@ export default defineComponent({
   components: { SelectSemester },
   data() {
     return {
-      courseSelectorKey: 0,
       season: '' as FirestoreSemesterSeason,
       year: 0,
     };

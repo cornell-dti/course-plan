@@ -23,11 +23,6 @@ import { RequirementWithID } from '@/components/Modals/NewCourse/SelectedRequire
  */
 export default defineComponent({
   components: { SelectSemesterDuplicate },
-  data() {
-    return {
-      courseSelectorKey: 0,
-    };
-  },
   props: {
     editMode: { type: Boolean, required: true },
     selectedRequirementID: { type: String, required: true },
