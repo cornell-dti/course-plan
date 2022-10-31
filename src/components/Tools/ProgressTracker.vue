@@ -146,7 +146,7 @@ export default defineComponent({
   &-numfulfilled {
     grid-column-start: 1;
     grid-column-end: 1;
-    font-weight: 900;
+    font-weight: bolder;
   }
 
   &-reqname {
@@ -211,7 +211,7 @@ export default defineComponent({
       color: #0bf;
       z-index: 1;
       margin-top: 1rem;
-      font-weight: 900;
+      font-weight: bolder;
     }
   }
 
