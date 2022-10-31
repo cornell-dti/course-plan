@@ -16,7 +16,7 @@
       v-if="selectedCourse === null"
       search-box-class-name="newCourse-dropdown"
       :key="courseSelectorKey"
-      placeholder='"CS 1110", "Multivariable Calculus", etc'
+      placeholder="placeholderText"
       :autoFocus="true"
       @on-escape="closeCurrentModal"
       @on-select="selectCourse"
@@ -77,6 +77,9 @@ export default defineComponent({
     };
   },
   computed: {
+    placeholderText(): string {
+      return '"CS 1110", "Multivariable Calculus", etc';
+    },
     leftButtonText(): string {
       if (this.selectedCourse == null && !this.editMode) return 'Cancel';
       return 'Back';

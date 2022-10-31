@@ -14,7 +14,7 @@
       search-box-class-name="newCourse-dropdown"
       :key="courseSelectorKey"
       :courseFilter="courseCanAppearInSearchResult"
-      placeholder='"CS 1110", "Multivariable Calculus", etc'
+      placeholder="placeholderText"
       :autoFocus="true"
       @on-escape="closeCurrentModal"
       @on-select="setCourse"
@@ -66,6 +66,9 @@ export default defineComponent({
   computed: {
     modalTitle(): string {
       return `Add Course to ${this.subReqName}`;
+    },
+    placeholderText(): string {
+      return '"CS 1110", "Multivariable Calculus", etc';
     },
     leftButtonText(): string {
       return 'Cancel';
