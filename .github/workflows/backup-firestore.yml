@@ -18,4 +18,4 @@ jobs:
         service_account_key: ${{ secrets.GCP_SERVICE_ACCOUNT_FIRESTORE_BACKUP_CORNELLDTI_COURSEPLAN_PROD }}
         export_default_credentials: true
     - run: gcloud config set project $PROJECT_ID
-    - run: gcloud firestore export $BUCKET
+    - run: gcloud firestore export $BUCKET/$(date +"%Y-%m-%d")
