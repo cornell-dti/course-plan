@@ -13,7 +13,7 @@ jobs:
   backup:
     runs-on: ubuntu-latest
     steps:
-    - uses: google-github-actions/setup-gcloud@main
+    - uses: google-github-actions/setup-gcloud@v0
       with:
         service_account_key: ${{ secrets.GCP_SERVICE_ACCOUNT_FIRESTORE_BACKUP_CORNELLDTI_COURSEPLAN_PROD }}
         export_default_credentials: true
