@@ -9,8 +9,9 @@
       </div>
     </div>
     <div class="toolsContainer-cards">
-      <card name="Progress Tracker" class="toolsContainer-card-progress" id="progress"></card>
-
+      <card name="Progress Tracker" class="toolsContainer-card-progress" id="progress">
+        <progress-tracker />
+      </card>
       <card name="Contact Your Advisors" class="toolsContainer-card-advisors" id="advisors">
         <advisor-card></advisor-card>
       </card>
@@ -30,10 +31,11 @@
 import Card from '@/components/Tools/Card.vue';
 import AdvisorCard from '@/components/Tools/AdvisorCard.vue';
 import UsefulLinks from '@/components/Tools/UsefulLinks.vue';
+import ProgressTracker from '@/components/Tools/ProgressTracker.vue';
 import ExportCard from '@/components/Tools/ExportCard.vue';
 
 export default {
-  components: { ExportCard, UsefulLinks, AdvisorCard, Card },
+  components: { ProgressTracker, ExportCard, UsefulLinks, AdvisorCard, Card },
 };
 </script>
 
@@ -81,7 +83,7 @@ export default {
       grid-column: 1/2;
       grid-row: 1/2;
       width: 600px;
-      height: min-content;
+      min-height: 250px;
     }
 
     &-advisors {
