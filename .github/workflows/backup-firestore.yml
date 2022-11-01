@@ -1,0 +1,21 @@
+name: Backup Firestore
+
+on:
+  schedule:
+    - cron:  '5 4 11 1,7 *' # 4:05am on 1/11 and 7/11
+  workflow_dispatch:
+
+env:
+  PROJECT_ID: cornell-courseplan
+  BUCKET: gs://cp_prod_backup_bucket
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: google-github-actions/setup-gcloud@main
+      with:
+        service_account_key: ${{ secrets.GCP_SERVICE_ACCOUNT_FIRESTORE_BACKUP_CORNELLDTI_COURSEPLAN_PROD }}
+        export_default_credentials: true
+    - run: gcloud config set project $PROJECT_ID
+    - run: gcloud firestore export $BUCKET
