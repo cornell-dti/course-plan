@@ -1,5 +1,5 @@
 import { CollegeOrMajorRequirement } from '../../requirements/types';
-import { AdvisorGroup } from '../../tools/types';
+import { AdvisorGroup } from '../../tools/advisors/types';
 
 const businessRequirements: readonly CollegeOrMajorRequirement[] = [];
 // offers two undergraduate majors: AEM and Hotel Admin

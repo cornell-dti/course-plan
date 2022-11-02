@@ -1,4 +1,4 @@
-import sourceRequirements from '../data';
+import sourceRequirements from '../../data';
 import { AdvisorPackage } from './types';
 
 export default function getAdvisor(

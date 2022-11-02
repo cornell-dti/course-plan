@@ -1,6 +1,6 @@
 import { CollegeOrMajorRequirement, Course } from '../../requirements/types';
 import { ifCodeMatch, includesWithSubRequirements } from '../../requirements/checkers';
-import { AdvisorGroup } from '../../tools/types';
+import { AdvisorGroup } from '../../tools/advisors/types';
 
 const orieRequirements: readonly CollegeOrMajorRequirement[] = [
   {

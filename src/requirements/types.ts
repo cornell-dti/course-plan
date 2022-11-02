@@ -1,4 +1,4 @@
-import { AdvisorGroup } from '@/tools/types';
+import { AdvisorGroup } from '@/tools/advisors/types';
 
 export type Course = Omit<CornellCourseRosterCourse, 'roster'>;
 
@@ -14,7 +14,6 @@ export type CollegeRequirements<R> = {
   readonly [collegeCode: string]: {
     readonly name: string;
     readonly requirements: readonly R[];
-    readonly description?: string;
     readonly advisors?: AdvisorGroup;
     readonly abbrev?: string;
   };

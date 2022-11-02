@@ -4,7 +4,7 @@ import {
   courseIsFWS,
   includesWithSingleRequirement,
 } from '../../requirements/checkers';
-import { AdvisorGroup } from '../../tools/types';
+import { AdvisorGroup } from '../../tools/advisors/types';
 
 const calsCreditsRequirement: CollegeOrMajorRequirement = {
   name: 'CALS Credits',

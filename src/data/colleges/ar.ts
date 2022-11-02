@@ -1,5 +1,5 @@
 import { CollegeOrMajorRequirement } from '../../requirements/types';
-import { AdvisorGroup } from '../../tools/types';
+import { AdvisorGroup } from '../../tools/advisors/types';
 
 const aapRequirements: readonly CollegeOrMajorRequirement[] = [];
 // As of Fall 2020, there are no college-level graduation requirements in addition

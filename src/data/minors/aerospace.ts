@@ -1,6 +1,6 @@
 import { CollegeOrMajorRequirement } from '../../requirements/types';
 import { includesWithSubRequirements } from '../../requirements/checkers';
-import { AdvisorGroup } from '../../tools/types';
+import { AdvisorGroup } from '../../tools/advisors/types';
 
 const aerospaceMinorRequirements: readonly CollegeOrMajorRequirement[] = [
   {

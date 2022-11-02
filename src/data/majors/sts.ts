@@ -1,6 +1,6 @@
 import { Course, CollegeOrMajorRequirement } from '../../requirements/types';
 import { ifCodeMatch, includesWithSubRequirements } from '../../requirements/checkers';
-import { AdvisorGroup } from '../../tools/types';
+import { AdvisorGroup } from '../../tools/advisors/types';
 
 // from here https://courses.cornell.edu/preview_program.php?catoid=31&poid=15425
 const stsScienceRequirement: readonly string[] = ['PBS', 'PBSS', 'OPHLS', 'BIOLS', 'BIO'];

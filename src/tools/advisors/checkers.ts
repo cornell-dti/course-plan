@@ -1,4 +1,4 @@
-import { AdvisorChecker } from '@/tools/types';
+import { AdvisorChecker } from '@/tools/advisors/types';
 
 /**
  * This function returns a checker that checks whether an advisor works with the user based on the user's last name

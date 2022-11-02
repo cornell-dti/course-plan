@@ -3,7 +3,7 @@ import {
   includesWithSingleRequirement,
   includesWithSubRequirements,
 } from '../../requirements/checkers';
-import { AdvisorGroup } from '../../tools/types';
+import { AdvisorGroup } from '../../tools/advisors/types';
 
 const environmentAndSustainability: readonly CollegeOrMajorRequirement[] = [
   {

@@ -5,7 +5,7 @@ import {
   courseIsForeignLang,
   courseMatchesCodeOptions,
 } from '../../requirements/checkers';
-import { AdvisorGroup } from '../../tools/types';
+import { AdvisorGroup } from '../../tools/advisors/types';
 
 const fashionDesignAdditionalRequirements: readonly string[] = [
   'PBS',

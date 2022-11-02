@@ -4,7 +4,7 @@ import {
   includesWithSubRequirements,
   courseMatchesCodeOptions,
 } from '../../requirements/checkers';
-import { AdvisorGroup } from '../../tools/types';
+import { AdvisorGroup } from '../../tools/advisors/types';
 
 const eceRequirements: readonly CollegeOrMajorRequirement[] = [
   {
