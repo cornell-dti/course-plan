@@ -4,6 +4,7 @@ import {
   includesWithSubRequirements,
   courseMatchesCodeOptions,
 } from '../checkers-common';
+import { AdvisorGroup } from '../../tools-types';
 
 const eceRequirements: readonly CollegeOrMajorRequirement[] = [
   {
@@ -170,3 +171,7 @@ const eceRequirements: readonly CollegeOrMajorRequirement[] = [
 ];
 
 export default eceRequirements;
+
+export const eceAdvisors: AdvisorGroup = {
+  advisors: [{ name: 'Sharif Ewais-Orozco', email: 'ugrad-coordinator@ece.cornell.edu' }],
+};

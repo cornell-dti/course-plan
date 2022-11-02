@@ -4,6 +4,7 @@ import {
   courseMatchesCodeOptions,
   ifCodeMatch,
 } from '../checkers-common';
+import { AdvisorGroup } from '../../tools-types';
 
 const infoRequirements: readonly CollegeOrMajorRequirement[] = [
   {
@@ -304,3 +305,10 @@ const infoRequirements: readonly CollegeOrMajorRequirement[] = [
 ];
 
 export default infoRequirements;
+
+export const infoAdvisors: AdvisorGroup = {
+  advisors: [
+    { name: 'Ani Mercincavage', email: 'am2643@cornell.edu' },
+    { name: 'Jess Wilkie', email: 'jlw433@cornell.edu' },
+  ],
+};

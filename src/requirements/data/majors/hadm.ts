@@ -4,6 +4,7 @@ import {
   includesWithSingleRequirement,
   includesWithSubRequirements,
 } from '../checkers-common';
+import { AdvisorGroup } from '../../tools-types';
 
 const hotelAdminRequirements: readonly CollegeOrMajorRequirement[] = [
   {
@@ -133,3 +134,7 @@ const hotelAdminRequirements: readonly CollegeOrMajorRequirement[] = [
 ];
 
 export default hotelAdminRequirements;
+
+export const hotelAdminAdvisors: AdvisorGroup = {
+  advisors: [{ name: 'Nolan School Advising', email: 'ha-advising@cornell.edu' }],
+};

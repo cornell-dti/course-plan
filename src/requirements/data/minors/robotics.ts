@@ -1,5 +1,6 @@
 import { CollegeOrMajorRequirement } from '../../types';
 import { includesWithSingleRequirement } from '../checkers-common';
+import { AdvisorGroup } from '../../tools-types';
 
 const roboticsMinorRequirements: readonly CollegeOrMajorRequirement[] = [
   // TODO: can't handle major specific restrictions yet
@@ -99,3 +100,7 @@ const roboticsMinorRequirements: readonly CollegeOrMajorRequirement[] = [
 ];
 
 export default roboticsMinorRequirements;
+
+export const roboticsMinorAdvisors: AdvisorGroup = {
+  advisors: [{ name: 'Kae-Lynn Buchanan Wilson', email: 'kbw28@cornell.edu' }],
+};

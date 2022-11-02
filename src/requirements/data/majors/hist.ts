@@ -1,4 +1,5 @@
 import { Course, CollegeOrMajorRequirement } from '../../types';
+import { AdvisorGroup } from '../../tools-types';
 
 const historyRequirements: readonly CollegeOrMajorRequirement[] = [
   {
@@ -45,3 +46,7 @@ const historyRequirements: readonly CollegeOrMajorRequirement[] = [
 ];
 
 export default historyRequirements;
+
+export const historyAdvisors: AdvisorGroup = {
+  advisors: [{ name: 'Robert Travers', email: 'history_DUS@cornell.edu' }],
+};
