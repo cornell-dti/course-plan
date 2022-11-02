@@ -3,7 +3,7 @@ import {
   includesWithSingleRequirement,
   includesWithSubRequirements,
   ifCodeMatch,
-} from '../checkers-common';
+} from '../../requirements/checkers';
 import { AdvisorGroup } from '../../tools/types';
 
 const physRequirements: readonly CollegeOrMajorRequirement[] = [

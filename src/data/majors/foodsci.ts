@@ -1,5 +1,8 @@
 import { CollegeOrMajorRequirement } from '../../requirements/types';
-import { includesWithSubRequirements, includesWithSingleRequirement } from '../checkers-common';
+import {
+  includesWithSubRequirements,
+  includesWithSingleRequirement,
+} from '../../requirements/checkers';
 import { AdvisorGroup } from '../../tools/types';
 
 const foodSciRequirements: readonly CollegeOrMajorRequirement[] = [

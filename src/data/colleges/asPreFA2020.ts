@@ -1,5 +1,5 @@
 import { Course, CollegeOrMajorRequirement } from '../../requirements/types';
-import { courseIsForeignLang, courseIsFWS, ifCodeMatch } from '../checkers-common';
+import { courseIsForeignLang, courseIsFWS, ifCodeMatch } from '../../requirements/checkers';
 
 const casPreFA2020Requirements: readonly CollegeOrMajorRequirement[] = [
   {

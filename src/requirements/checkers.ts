@@ -1,5 +1,5 @@
-import { Course, RequirementChecker } from '../requirements/types';
-import { FWS_COURSE_ID } from './constants';
+import { Course, RequirementChecker } from './types';
+import { FWS_COURSE_ID } from '../data/constants';
 
 // course codes representing foreign languages from: https://lrc.cornell.edu/languages-cornell
 // codes are commented out if they cannot count for the A&S language requirement

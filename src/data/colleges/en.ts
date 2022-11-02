@@ -5,9 +5,9 @@ import {
   includesWithSubRequirements,
   ifCodeMatch,
   courseIsForeignLang,
-} from '../checkers-common';
+} from '../../requirements/checkers';
 import { AdvisorGroup } from '../../tools/types';
-import { lastNameRange, lastNameRanges } from '../../tools/advisor-checkers';
+import { lastNameRange, lastNameRanges } from '../../tools/advisors/checkers';
 
 const engineeringLiberalArtsDistributions: readonly string[] = [
   'CA',

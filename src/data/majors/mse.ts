@@ -4,7 +4,7 @@ import {
   ifCodeMatch,
   includesWithSubRequirements,
   includesWithSingleRequirement,
-} from '../checkers-common';
+} from '../../requirements/checkers';
 import { AdvisorGroup } from '../../tools/types';
 
 // courses that can be used for the materials elective

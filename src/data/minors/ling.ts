@@ -6,7 +6,7 @@ import {
   courseMatchesCodeOptions,
   includesWithSingleRequirement,
   courseMeetsCreditMinimum,
-} from '../checkers-common';
+} from '../../requirements/checkers';
 import { AdvisorGroup } from '../../tools/types';
 
 const lingMinorRequirements: readonly CollegeOrMajorRequirement[] = [

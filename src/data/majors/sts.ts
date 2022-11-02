@@ -1,5 +1,5 @@
 import { Course, CollegeOrMajorRequirement } from '../../requirements/types';
-import { ifCodeMatch, includesWithSubRequirements } from '../checkers-common';
+import { ifCodeMatch, includesWithSubRequirements } from '../../requirements/checkers';
 import { AdvisorGroup } from '../../tools/types';
 
 // from here https://courses.cornell.edu/preview_program.php?catoid=31&poid=15425

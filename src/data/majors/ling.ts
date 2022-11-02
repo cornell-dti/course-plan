@@ -7,7 +7,7 @@ import {
   includesWithSubRequirements,
   courseMeetsCreditMinimum,
   courseHasAttribute,
-} from '../checkers-common';
+} from '../../requirements/checkers';
 import { AdvisorGroup } from '../../tools/types';
 
 const lingRequirements: readonly CollegeOrMajorRequirement[] = [

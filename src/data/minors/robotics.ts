@@ -1,5 +1,5 @@
 import { CollegeOrMajorRequirement } from '../../requirements/types';
-import { includesWithSingleRequirement } from '../checkers-common';
+import { includesWithSingleRequirement } from '../../requirements/checkers';
 import { AdvisorGroup } from '../../tools/types';
 
 const roboticsMinorRequirements: readonly CollegeOrMajorRequirement[] = [

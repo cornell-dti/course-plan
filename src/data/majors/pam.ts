@@ -7,7 +7,7 @@ import {
   courseIsForeignLang,
   includesWithSubRequirements,
   courseMeetsCreditMinimum,
-} from '../checkers-common';
+} from '../../requirements/checkers';
 import { AdvisorGroup } from '../../tools/types';
 
 const pamRequirements: readonly CollegeOrMajorRequirement[] = [

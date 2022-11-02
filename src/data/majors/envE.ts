@@ -1,5 +1,8 @@
 import { CollegeOrMajorRequirement, Course } from '../../requirements/types';
-import { includesWithSingleRequirement, includesWithSubRequirements } from '../checkers-common';
+import {
+  includesWithSingleRequirement,
+  includesWithSubRequirements,
+} from '../../requirements/checkers';
 import { AdvisorGroup } from '../../tools/types';
 
 const majorApproved: readonly string[] = [

@@ -4,9 +4,9 @@ import {
   includesWithSubRequirements,
   courseMatchesCodeOptions,
   ifCodeMatch,
-} from '../checkers-common';
+} from '../../requirements/checkers';
 import { AdvisorGroup } from '../../tools/types';
-import { lastNameRange } from '../../tools/advisor-checkers';
+import { lastNameRange } from '../../tools/advisors/checkers';
 
 const csRequirements: readonly CollegeOrMajorRequirement[] = [
   {

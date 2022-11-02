@@ -3,7 +3,7 @@ import {
   courseIsFWS,
   includesWithSingleRequirement,
   includesWithSubRequirements,
-} from '../checkers-common';
+} from '../../requirements/checkers';
 import { AdvisorGroup } from '../../tools/types';
 
 const crpRequirements: readonly CollegeOrMajorRequirement[] = [

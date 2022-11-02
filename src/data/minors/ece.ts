@@ -4,7 +4,7 @@ import {
   courseMatchesCodeOptions,
   ifCodeMatch,
   courseMeetsCreditMinimum,
-} from '../checkers-common';
+} from '../../requirements/checkers';
 import { AdvisorGroup } from '../../tools/types';
 
 const eceMinorRequirements: readonly CollegeOrMajorRequirement[] = [

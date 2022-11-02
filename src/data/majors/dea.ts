@@ -1,5 +1,5 @@
 import { Course, CollegeOrMajorRequirement } from '../../requirements/types';
-import { courseIsForeignLang, includesWithSubRequirements } from '../checkers-common';
+import { courseIsForeignLang, includesWithSubRequirements } from '../../requirements/checkers';
 import { AdvisorGroup } from '../../tools/types';
 
 const deaRequirements: readonly CollegeOrMajorRequirement[] = [

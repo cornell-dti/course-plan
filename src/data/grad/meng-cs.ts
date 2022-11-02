@@ -3,7 +3,7 @@ import {
   courseMatchesCodeOptions,
   ifCodeMatch,
   includesWithSingleRequirement,
-} from '../checkers-common';
+} from '../../requirements/checkers';
 
 const isAdvancedCSCourse = (course: Course): boolean =>
   ifCodeMatch(course.subject, 'CS') &&

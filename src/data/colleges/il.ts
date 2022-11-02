@@ -4,7 +4,7 @@ import {
   courseMatchesCodeOptions,
   includesWithSingleRequirement,
   includesWithSubRequirements,
-} from '../checkers-common';
+} from '../../requirements/checkers';
 import { AdvisorGroup } from '../../tools/types';
 
 const FLcourses: readonly string[] = [

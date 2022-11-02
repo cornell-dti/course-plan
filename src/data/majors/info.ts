@@ -3,7 +3,7 @@ import {
   includesWithSubRequirements,
   courseMatchesCodeOptions,
   ifCodeMatch,
-} from '../checkers-common';
+} from '../../requirements/checkers';
 import { AdvisorGroup } from '../../tools/types';
 
 const infoRequirements: readonly CollegeOrMajorRequirement[] = [
