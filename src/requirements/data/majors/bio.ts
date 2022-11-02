@@ -1,5 +1,6 @@
 import { CollegeOrMajorRequirement } from '../../types';
 import { includesWithSubRequirements } from '../checkers-common';
+import { AdvisorGroup } from '../../tools-types';
 
 const bioRequirements: readonly CollegeOrMajorRequirement[] = [
   {
@@ -694,3 +695,7 @@ const bioRequirements: readonly CollegeOrMajorRequirement[] = [
 ];
 
 export default bioRequirements;
+
+export const bioAdvisors: AdvisorGroup = {
+  advisors: [{ name: 'Amy Drumluk', email: 'ard244@cornell.edu' }],
+};

@@ -1,5 +1,6 @@
 import { CollegeOrMajorRequirement } from '../../types';
 import { includesWithSingleRequirement, includesWithSubRequirements } from '../checkers-common';
+import { AdvisorGroup } from '../../tools-types';
 
 const deaMinorRequirements: readonly CollegeOrMajorRequirement[] = [
   {
@@ -60,3 +61,7 @@ const deaMinorRequirements: readonly CollegeOrMajorRequirement[] = [
 ];
 
 export default deaMinorRequirements;
+
+export const deaAdvisors: AdvisorGroup = {
+  advisors: [{ name: 'Rhonda Gilmore', email: 'rg35@cornell.edu' }],
+};

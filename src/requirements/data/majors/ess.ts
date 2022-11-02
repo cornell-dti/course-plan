@@ -1,5 +1,6 @@
 import { CollegeOrMajorRequirement } from '../../types';
 import { includesWithSingleRequirement, includesWithSubRequirements } from '../checkers-common';
+import { AdvisorGroup } from '../../tools-types';
 
 const environmentAndSustainability: readonly CollegeOrMajorRequirement[] = [
   {
@@ -639,3 +640,7 @@ const environmentAndSustainability: readonly CollegeOrMajorRequirement[] = [
 ];
 
 export default environmentAndSustainability;
+
+export const essAdvisors: AdvisorGroup = {
+  advisors: [{ name: 'Suzanne Wapner', email: 'sw38@cornell.edu' }],
+};

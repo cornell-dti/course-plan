@@ -8,6 +8,7 @@ import {
 } from './requirement-frontend-utils';
 import RequirementFulfillmentGraph from './requirement-graph';
 import buildRequirementFulfillmentGraphFromUserData from './requirement-graph-builder-from-user-data';
+import featureFlagCheckers from '../feature-flags';
 
 /**
  * Used for total academic credit requirements for all colleges except EN and AR
@@ -330,4 +331,81 @@ export default function computeGroupedRequirementFulfillmentReports(
     doubleCountedCourseUniqueIDSet,
     groupedRequirementFulfillmentReport,
   };
+}
+
+// number of fully fulfilled requirements, including those with courses that have conflicts
+// note pure self-checks are never fulfilled
+export function groupedRequirementDangerouslyFulfilled(
+  groupedRequirementFulfillmentReport: GroupedRequirementFulfillmentReport
+): number {
+  let fulfilled = 0;
+  groupedRequirementFulfillmentReport.reqs.forEach(req => {
+    [req.fulfillment, ...Object.values(req.fulfillment.additionalRequirements ?? {})].forEach(
+      reqOrNestedReq => {
+        if (
+          reqOrNestedReq.dangerousMinCountFulfilled >= reqOrNestedReq.minCountRequired &&
+          !featureFlagCheckers.isRequirementConflictsEnabled()
+        ) {
+          fulfilled += 1;
+        }
+        if (
+          reqOrNestedReq.safeMinCountFulfilled >= reqOrNestedReq.minCountRequired &&
+          featureFlagCheckers.isRequirementConflictsEnabled()
+        ) {
+          fulfilled += 1;
+        }
+      }
+    );
+  });
+  return fulfilled;
+}
+
+// number of requirements that can be fulfilled (so no pure self-checks)
+export function groupedRequirementTotalRequired(
+  groupedRequirementFulfillmentReport: GroupedRequirementFulfillmentReport
+): number {
+  let totalRequired = 0;
+  groupedRequirementFulfillmentReport.reqs.forEach(req => {
+    if (req.fulfillment.fulfilledBy === 'self-check') return;
+    totalRequired += 1 + Object.values(req.fulfillment.additionalRequirements ?? {}).length;
+  });
+  return totalRequired;
+}
+
+// the sum of the progress of each requirement (outside of pure self-check), maxed out at 1, excluding conflicts
+export function groupedRequirementTotalSafeRequirementProgress(
+  groupedRequirementFulfillmentReport: GroupedRequirementFulfillmentReport
+): number {
+  let fulfilled = 0;
+  groupedRequirementFulfillmentReport.reqs.forEach(req => {
+    [req.fulfillment, ...Object.values(req.fulfillment.additionalRequirements ?? {})].forEach(
+      reqOrNestedReq => {
+        if (reqOrNestedReq.safeMinCountFulfilled >= reqOrNestedReq.minCountRequired) {
+          fulfilled += 1;
+        } else {
+          fulfilled += reqOrNestedReq.safeMinCountFulfilled / reqOrNestedReq.minCountRequired;
+        }
+      }
+    );
+  });
+  return fulfilled;
+}
+
+// sum of the progress of each requirement, including requirements fulfilled dangerously, maxed out at 1
+export function groupedRequirementTotalDangerousRequirementProgress(
+  groupedRequirementFulfillmentReport: GroupedRequirementFulfillmentReport
+): number {
+  let fulfilled = 0;
+  groupedRequirementFulfillmentReport.reqs.forEach(req => {
+    [req.fulfillment, ...Object.values(req.fulfillment.additionalRequirements ?? {})].forEach(
+      reqOrNestedReq => {
+        if (reqOrNestedReq.dangerousMinCountFulfilled >= reqOrNestedReq.minCountRequired) {
+          fulfilled += 1;
+        } else {
+          fulfilled += reqOrNestedReq.dangerousMinCountFulfilled / reqOrNestedReq.minCountRequired;
+        }
+      }
+    );
+  });
+  return fulfilled;
 }

@@ -4,6 +4,7 @@ import {
   includesWithSingleRequirement,
   includesWithSubRequirements,
 } from '../checkers-common';
+import { AdvisorGroup } from '../../tools-types';
 
 const commRequirements: readonly CollegeOrMajorRequirement[] = [
   {
@@ -162,3 +163,7 @@ const commRequirements: readonly CollegeOrMajorRequirement[] = [
 ];
 
 export default commRequirements;
+
+export const commAdvisors: AdvisorGroup = {
+  advisors: [{ name: 'Ashlee Cherry', email: 'ac2396@cornell.edu' }],
+};
