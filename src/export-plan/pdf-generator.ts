@@ -281,12 +281,12 @@ const trimEmptySems = (sems: readonly FirestoreSemester[]): readonly FirestoreSe
 const getFulfilledReqs = (
   course: FirestoreSemesterCourse | CourseTaken
 ): readonly [string[], bubbleData[]] => {
-  let reqsFulfilled = store.state.safeRequirementFulfillmentGraph.getConnectedRequirementsFromCourse(
-    { uniqueId: isCourseTaken(course) ? course.uniqueId : course.uniqueID }
-  );
-  reqsFulfilled = reqsFulfilled.filter(
-    req => !reqsToFilterOut.includes(store.state.userRequirementsMap[req].name)
-  );
+  const reqsFulfilled = store.state.safeRequirementFulfillmentGraph
+    .getConnectedRequirementsFromCourse({
+      uniqueId: isCourseTaken(course) ? course.uniqueId : course.uniqueID,
+    })
+    .filter(req => req in store.state.userRequirementsMap)
+    .filter(req => !reqsToFilterOut.includes(store.state.userRequirementsMap[req].name));
 
   const getBubbleText = (req: string): string => {
     switch (store.state.userRequirementsMap[req].sourceType) {
