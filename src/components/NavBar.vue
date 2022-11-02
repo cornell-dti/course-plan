@@ -13,12 +13,6 @@
         <div class="navbar-iconWrapper hairlineWrapper no-hover">
           <img class="navbar-icon hairline" src="@/assets/images/navbar/hairline.svg" />
         </div>
-        <div class="navbar-buttonWrapper desktop" v-if="pdfGenEnabled" @click="submitPDF">
-          <button class="navbar-iconWrapper plan-icon full-opacity-on-hover" />
-          <div class="navbar-iconText">
-            <span>get PDF</span>
-          </div>
-        </div>
 
         <div
           v-if="showOpenPlan"
@@ -112,7 +106,6 @@ import { getAuth, signOut } from 'firebase/auth';
 import { GTagEvent } from '@/gtag';
 import { clickOutside } from '@/utilities';
 import featureFlagCheckers from '@/feature-flags';
-import generatePDF from '@/export-plan';
 
 export default defineComponent({
   props: {
@@ -162,9 +155,6 @@ export default defineComponent({
     },
     closeMenuIfOpen() {
       this.menuOpen = false;
-    },
-    async submitPDF() {
-      await generatePDF();
     },
   },
   directives: {
