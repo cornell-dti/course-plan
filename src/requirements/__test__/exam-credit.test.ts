@@ -1,5 +1,5 @@
 import userDataToExamCourses, { examsTakenToExamCourses } from '../requirement-exam-utils';
-import { NO_FULFILLMENTS_COURSE_ID } from '../data/constants';
+import { NO_FULFILLMENTS_COURSE_ID } from '../../data/constants';
 
 /**
  * Tests for examsTakenToExamCourses
