@@ -455,10 +455,13 @@ const truncatePrograms = (programs: string[]): [string, number] => {
   let currentLine = '';
 
   programs
+    // trimming identifiers like [before fall 2020]
     .map(program => {
       const cropIndex = program.lastIndexOf('[');
       return cropIndex === -1 ? program : program.slice(0, cropIndex).trim();
     })
+    // policy: if a program would overflow current line, we push the whole program
+    // to a new line.
     .forEach(program => {
       if (program.length > programLineCharLimit) {
         if (currentLine !== '') lines.push(currentLine);
@@ -473,7 +476,7 @@ const truncatePrograms = (programs: string[]): [string, number] => {
       }
     });
   lines.push(currentLine);
-  
+
   // joining with a newline, and removing trailing comma
   return [
     lines.join('\n').replace(/,\s*$/, ''),
