@@ -78,47 +78,56 @@ const json: RequirementsJson = {
     UNI: {
       name: 'University',
       requirements: universityRequirements,
+      abbrev: 'other',
     },
   },
   college: {
     AG: {
       name: 'Agriculture and Life Sciences',
       requirements: calsRequirements,
+      abbrev: 'cals',
       advisors: calsAdvisors,
     },
     AR: {
       name: 'Architecture, Art and Planning',
       requirements: aapRequirements,
+      abbrev: 'aap',
       advisors: aapAdvisors,
     },
     AS1: {
       name: 'Arts and Sciences [before Fall 2020]',
       requirements: casPreFA2020Requirements,
+      abbrev: 'cas',
       advisors: casAdvisors,
     },
     AS2: {
       name: 'Arts and Sciences [Fall 2020 and later]',
       requirements: casFA2020Requirements,
+      abbrev: 'cas',
       advisors: casAdvisors,
     },
     EN: {
       name: 'Engineering',
       requirements: engineeringRequirements,
       advisors: engineeringAdvisors,
+      abbrev: 'eng',
     },
     HE: {
       name: 'Human Ecology',
       requirements: humanEcologyRequirements,
+      abbrev: 'humec',
       advisors: humanEcologyAdvisors,
     },
     IL: {
       name: 'Industrial Labor Relations',
       requirements: ilrRequirements,
+      abbrev: 'ilr',
       advisors: ilrAdvisors,
     },
     BU: {
       name: 'SC Johnson College of Business',
       requirements: businessRequirements,
+      abbrev: 'johnson',
       advisors: businessAdvisors,
     },
   },
@@ -500,5 +509,8 @@ const json: RequirementsJson = {
 
 export const colleges = ['AG', 'AR', 'AS1', 'AS2', 'EN', 'HE', 'IL', 'BU'] as const;
 export type College = typeof colleges[number];
-
 export default json;
+
+/** Get the abbreviation associated with a specified college */
+export const getCollegeAbbrev = (collegeCode: string): string =>
+  json.college[collegeCode]?.abbrev ?? 'other';

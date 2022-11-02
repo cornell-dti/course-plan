@@ -8,12 +8,12 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import generatePDF from '@/export-plan';
 
 export default defineComponent({
   methods: {
     async exportSchedule() {
-      // eslint-disable-next-line no-console
-      console.info('Download PDF');
+      generatePDF();
     },
   },
 });

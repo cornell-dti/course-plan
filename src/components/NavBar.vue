@@ -13,6 +13,7 @@
         <div class="navbar-iconWrapper hairlineWrapper no-hover">
           <img class="navbar-icon hairline" src="@/assets/images/navbar/hairline.svg" />
         </div>
+
         <div
           v-if="showOpenPlan"
           class="navbar-buttonWrapper desktop"

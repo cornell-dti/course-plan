@@ -54,3 +54,11 @@ export const coursesColorSet = [
     hex: '#D67B9B',
   },
 ];
+
+export const pdfColors = {
+  collegeBlue: '#4F7D91',
+  majorTeal: '#1E8481',
+  minorDarkTeal: '#145351',
+  turquoise: '#1AA9A5',
+  backgroundTurquoise: '#d4e5e6',
+};
