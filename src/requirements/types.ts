@@ -1,4 +1,4 @@
-import { AdvisorGroup } from '@/requirements/tools-types';
+import { AdvisorGroup } from '../tools/advisors/types';
 
 export type Course = Omit<CornellCourseRosterCourse, 'roster'>;
 

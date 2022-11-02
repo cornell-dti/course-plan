@@ -1,5 +1,5 @@
 import { isPlaceholderCourse } from '../utilities';
-import { SWIM_TEST_CODE, SWIM_TEST_COURSE_ID, SWIM_TEST_UNIQUE_ID } from './data/constants';
+import { SWIM_TEST_CODE, SWIM_TEST_COURSE_ID, SWIM_TEST_UNIQUE_ID } from '../data/constants';
 import userDataToExamCourses from './requirement-exam-utils';
 import {
   courseIsAPIB,
