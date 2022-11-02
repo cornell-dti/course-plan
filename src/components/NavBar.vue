@@ -121,9 +121,6 @@ export default defineComponent({
     toolsEnabled(): boolean {
       return featureFlagCheckers.isToolsEnabled();
     },
-    pdfGenEnabled(): boolean {
-      return featureFlagCheckers.isPDFGenEnabled();
-    },
     showOpenPlan(): boolean {
       return this.toolsEnabled || featureFlagCheckers.isProfileEnabled();
     },
