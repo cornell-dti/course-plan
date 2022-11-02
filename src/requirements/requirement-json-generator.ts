@@ -6,8 +6,8 @@ import {
   Course,
   MutableMajorRequirements,
 } from './types';
-import sourceRequirements, { colleges } from './data';
-import { NO_FULFILLMENTS_COURSE_ID, SPECIAL_COURSES } from './data/constants';
+import sourceRequirements, { colleges } from '../data';
+import { NO_FULFILLMENTS_COURSE_ID, SPECIAL_COURSES } from '../data/constants';
 import {
   examRequirementsMapping,
   examToCourseMapping,
