@@ -1,5 +1,9 @@
 name: CI Check
-on: push
+on: 
+  push:
+  pull_request:
+    types: [opened]
+  workflow_dispatch:
 
 jobs:
   check:

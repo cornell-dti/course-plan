@@ -1,9 +1,9 @@
-name: Update Courses Data # TODO @bshen finish implementing this workflow
+name: Update Courses Data
 on:
   workflow_dispatch:
     inputs:
       semester:
-        description: 'Semester (eg. FA22)'     
+        description: 'Semester-Tag (eg. FA22-Nov1)' # ensure there are no spaces
         required: true
 
 jobs:
