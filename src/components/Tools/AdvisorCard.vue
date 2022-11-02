@@ -31,8 +31,8 @@
 import { defineComponent } from 'vue';
 import store from '@/store';
 import { getCollegeFullName, getMajorFullName } from '@/utilities';
-import { AdvisorPackage } from '@/tools/types';
-import getAdvisor from '@/tools/tools-utilities';
+import { AdvisorPackage } from '@/tools/advisors/types';
+import getAdvisor from '@/tools/advisors/utilities';
 
 export default defineComponent({
   props: {
