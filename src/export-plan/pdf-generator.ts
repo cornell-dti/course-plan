@@ -211,7 +211,7 @@ const generatePDF = async (): Promise<void> => {
     doc.text('AP/IB Credit', tableX + 20, startct - 6);
 
     const emoji = emojiMap.APIB;
-    doc.addImage(emoji, tableX + 5, startct - 15.5, 12, 12);
+    doc.addImage(emoji, tableX + 5, startct - 16.5, 12, 12);
 
     renderTable(doc, { body, bubbles }, tableX, startct, APIBTableHeader);
   }
@@ -368,7 +368,7 @@ const renderTable = (
       headStyles: {
         fontSize: headerFontSize,
         valign: 'middle',
-        halign: 'center',
+        halign: 'left',
         fillColor: [255, 255, 255],
         textColor: 0,
         lineWidth: 0.5,
