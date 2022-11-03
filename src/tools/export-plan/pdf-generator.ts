@@ -9,6 +9,8 @@ import APIBEmojiURL from '@/assets/images/pdf-gen/apib.png';
 import { lightPlaceholderGray, borderGray } from '@/assets/constants/scss-variables';
 import { pdfColors } from '@/assets/constants/colors';
 import userDataToExamCourses from '../../requirements/requirement-exam-utils';
+import { trimEmptySems, bubbleColorMap, getCourseRows, loadImage } from './utilities';
+import { semesterRows } from './types';
 
 import {
   getCollegeFullName,
@@ -16,12 +18,9 @@ import {
   getMinorFullName,
   getGradFullName,
   sortedSemesters,
-  isPlaceholderCourse,
-  isCourseTaken,
 } from '../../utilities';
 import store from '../../store';
 import { addFonts } from './add-fonts';
-import { getCollegeAbbrev } from '../../data';
 
 const rowHeight = 18;
 const tableWidth = 516;
@@ -40,26 +39,6 @@ const APIBTableHeader = [['Exam', 'Credits', 'Requirements Fulfilled']];
 
 // max number of characters that can fit into a line for the major, minor or grad program field
 const programLineCharLimit = 45;
-
-/**
- * List of requirements to not display in the PDF.
- * We filter these out because they apply to almost every course, and make the
- * PDF somewhat messy.
- */
-const reqsToFilterOut = ['A&S Credits'];
-
-/**
- * Maps from requirement groups to the appropriate colored bubble
- */
-const bubbleColorMap: Record<RequirementGroupType, (req?: string) => string> = {
-  College: (req?: string) =>
-    req && store.state.userRequirementsMap[req].sourceSpecificName === 'UNI'
-      ? pdfColors.turquoise
-      : pdfColors.collegeBlue,
-  Grad: () => pdfColors.majorTeal,
-  Major: () => pdfColors.majorTeal,
-  Minor: () => pdfColors.minorDarkTeal,
-};
 
 const generatePDF = async (): Promise<void> => {
   const doc = new JsPDF({ unit: 'pt', format: 'letter' });
@@ -236,83 +215,6 @@ const generatePDF = async (): Promise<void> => {
   doc.save(pdfName);
 };
 
-// represents a coloured bubble that shows the group a requirement falls in
-type bubbleData = {
-  requirementGroup: string;
-  color: string;
-};
-type semesterRows = {
-  // the body of the semester table
-  body: string[][];
-  // the list of bubbles for each course in the semester
-  bubbles: bubbleData[][];
-};
-
-const getCourseRows = (
-  courses: readonly (FirestoreSemesterCourse | FirestoreSemesterPlaceholder | CourseTaken)[]
-): semesterRows => {
-  const rows: [string[], bubbleData[]][] = courses
-    .filter(
-      (course): course is FirestoreSemesterCourse | CourseTaken => !isPlaceholderCourse(course)
-    )
-    .map(course => {
-      const [reqs, bubbles] = getFulfilledReqs(course);
-      return [
-        [
-          `${course.code}${isCourseTaken(course) ? '' : `: ${course.name}`}`,
-          course.credits.toString(),
-          reqs.join('\n'),
-        ],
-        bubbles,
-      ];
-    });
-  return { body: rows.map(row => row[0]), bubbles: rows.map(row => row[1]) };
-};
-
-const trimEmptySems = (sems: readonly FirestoreSemester[]): readonly FirestoreSemester[] => {
-  if (sems.length === 0) return [];
-  let maxNonemptyIndex = -1;
-  for (let i = 0; i < sems.length; i += 1) {
-    if (sems[i].courses.length > 0) maxNonemptyIndex = i;
-  }
-  return sems.slice(0, maxNonemptyIndex + 1);
-};
-
-const getFulfilledReqs = (
-  course: FirestoreSemesterCourse | CourseTaken
-): readonly [string[], bubbleData[]] => {
-  const reqsFulfilled = store.state.safeRequirementFulfillmentGraph
-    .getConnectedRequirementsFromCourse({
-      uniqueId: isCourseTaken(course) ? course.uniqueId : course.uniqueID,
-    })
-    .filter(req => req in store.state.userRequirementsMap)
-    .filter(req => !reqsToFilterOut.includes(store.state.userRequirementsMap[req].name));
-
-  const getBubbleText = (req: string): string => {
-    switch (store.state.userRequirementsMap[req].sourceType) {
-      case 'College': {
-        return getCollegeAbbrev(store.state.userRequirementsMap[req].sourceSpecificName);
-      }
-      case 'Grad':
-        return 'grad';
-      case 'Major':
-      case 'Minor': {
-        return store.state.userRequirementsMap[req].sourceSpecificName.toLowerCase();
-      }
-      default:
-        throw new Error('group type not valid for bubble');
-    }
-  };
-
-  return [
-    reqsFulfilled.map(req => store.state.userRequirementsMap[req].name),
-    reqsFulfilled.map(req => ({
-      requirementGroup: getBubbleText(req),
-      color: bubbleColorMap[store.state.userRequirementsMap[req].sourceType](req),
-    })),
-  ];
-};
-
 const renderBubbles = (doc: JsPDF, xPos: number, yPos: number, text: string, color: string) => {
   doc.setFillColor(color);
   const bubbleWidth = 8 + text.length * 5.5;
@@ -428,20 +330,6 @@ const renderTable = (
   doc.roundedRect(tableX, tableY - rowHeight, tableWidth, tableHeight, 4, 4);
   return tableHeight;
 };
-
-/**
- * Asynchronously load an image
- *
- * @param src the source URL of the image to load
- * @returns a promise wrapping the loaded image
- */
-const loadImage = (src: string): Promise<HTMLImageElement> =>
-  new Promise((resolve, reject) => {
-    const img = new Image();
-    img.src = src;
-    img.onload = () => resolve(img);
-    img.onerror = err => reject(err);
-  });
 
 /**
  * Given a list of program names
