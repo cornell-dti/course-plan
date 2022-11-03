@@ -10,7 +10,7 @@ import { lightPlaceholderGray, borderGray } from '@/assets/constants/scss-variab
 import { pdfColors } from '@/assets/constants/colors';
 import userDataToExamCourses from '../../requirements/requirement-exam-utils';
 import { trimEmptySems, bubbleColorMap, getCourseRows, loadImage } from './utilities';
-import { semesterRows } from './types';
+import { SemesterRows } from './types';
 
 import {
   getCollegeFullName,
@@ -243,7 +243,7 @@ const estimateTableHeight = (body: string[][]): number => {
  */
 const renderTable = (
   doc: JsPDF,
-  rows: semesterRows,
+  rows: SemesterRows,
   tableX: number,
   tableY: number,
   header: string[][] = tableHeader

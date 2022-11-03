@@ -2,10 +2,9 @@ import { isPlaceholderCourse, isCourseTaken } from '../../utilities';
 import { getCollegeAbbrev } from '../../data';
 import store from '../../store';
 import { pdfColors } from '@/assets/constants/colors';
-import { semesterRows, bubbleData } from './types';
+import { SemesterRows, BubbleData } from './types';
 
 export const trimEmptySems = (sems: readonly FirestoreSemester[]): readonly FirestoreSemester[] => {
-  if (sems.length === 0) return [];
   let maxNonemptyIndex = -1;
   for (let i = 0; i < sems.length; i += 1) {
     if (sems[i].courses.length > 0) maxNonemptyIndex = i;
@@ -22,8 +21,8 @@ const reqsToFilterOut = ['A&S Credits'];
 
 export const getCourseRows = (
   courses: readonly (FirestoreSemesterCourse | FirestoreSemesterPlaceholder | CourseTaken)[]
-): semesterRows => {
-  const rows: [string[], bubbleData[]][] = courses
+): SemesterRows => {
+  const rows: [string[], BubbleData[]][] = courses
     .filter(
       (course): course is FirestoreSemesterCourse | CourseTaken => !isPlaceholderCourse(course)
     )
@@ -43,7 +42,7 @@ export const getCourseRows = (
 
 export const getFulfilledReqs = (
   course: FirestoreSemesterCourse | CourseTaken
-): readonly [string[], bubbleData[]] => {
+): readonly [string[], BubbleData[]] => {
   const reqsFulfilled = store.state.safeRequirementFulfillmentGraph
     .getConnectedRequirementsFromCourse({
       uniqueId: isCourseTaken(course) ? course.uniqueId : course.uniqueID,
