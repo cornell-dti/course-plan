@@ -5,9 +5,12 @@ import fallEmojiURL from '@/assets/images/pdf-gen/fall.png';
 import springEmojiURL from '@/assets/images/pdf-gen/spring.png';
 import summerEmojiURL from '@/assets/images/pdf-gen/summer.png';
 import winterEmojiURL from '@/assets/images/pdf-gen/winter.png';
+import APIBEmojiURL from '@/assets/images/pdf-gen/apib.png';
 import { lightPlaceholderGray, borderGray } from '@/assets/constants/scss-variables';
 import { pdfColors } from '@/assets/constants/colors';
 import userDataToExamCourses from '../../requirements/requirement-exam-utils';
+import { trimEmptySems, bubbleColorMap, getCourseRows, loadImage } from './utilities';
+import { SemesterRows } from './types';
 
 import {
   getCollegeFullName,
@@ -15,12 +18,9 @@ import {
   getMinorFullName,
   getGradFullName,
   sortedSemesters,
-  isPlaceholderCourse,
-  isCourseTaken,
 } from '../../utilities';
 import store from '../../store';
 import { addFonts } from './add-fonts';
-import { getCollegeAbbrev } from '../../data';
 
 const rowHeight = 18;
 const tableWidth = 516;
@@ -31,43 +31,14 @@ const firstTableY = 170;
 
 const rowFontSize = 10.5;
 const headerFontSize = 10.5;
+const lineSpacing = 1.5;
+const headerLinesGap = 7;
 
 const tableHeader = [['Course', 'Credits', 'Requirements Fulfilled']];
 const APIBTableHeader = [['Exam', 'Credits', 'Requirements Fulfilled']];
 
-/**
- * List of requirements to not display in the PDF.
- * We filter these out because they apply to almost every course, and make the
- * PDF somewhat messy.
- */
-const reqsToFilterOut = ['A&S Credits'];
-
-/**
- * Maps from requirement groups to the appropriate colored bubble
- */
-const bubbleColorMap: Record<RequirementGroupType, (req?: string) => string> = {
-  College: (req?: string) =>
-    req && store.state.userRequirementsMap[req].sourceSpecificName === 'UNI'
-      ? pdfColors.turquoise
-      : pdfColors.collegeBlue,
-  Grad: () => pdfColors.majorTeal,
-  Major: () => pdfColors.majorTeal,
-  Minor: () => pdfColors.minorDarkTeal,
-};
-
-/**
- * Asynchronously load an image
- *
- * @param src the source URL of the image to load
- * @returns a promise wrapping the loaded image
- */
-const loadImage = (src: string): Promise<HTMLImageElement> =>
-  new Promise((resolve, reject) => {
-    const img = new Image();
-    img.src = src;
-    img.onload = () => resolve(img);
-    img.onerror = err => reject(err);
-  });
+// max number of characters that can fit into a line for the major, minor or grad program field
+const programLineCharLimit = 45;
 
 const generatePDF = async (): Promise<void> => {
   const doc = new JsPDF({ unit: 'pt', format: 'letter' });
@@ -81,7 +52,7 @@ const generatePDF = async (): Promise<void> => {
   const img = await loadImage(url);
   doc.addImage(img, 'PNG', 48, 30, 84, 23.25);
 
-  doc.setFontSize(10.5);
+  doc.setFontSize(headerFontSize);
 
   doc.text('Name:', 48, 76);
   doc.text('College:', 48, 93.2);
@@ -118,32 +89,36 @@ const generatePDF = async (): Promise<void> => {
     doc.setTextColor('#000000');
     doc.text('Graduate:', 48, programY);
     doc.setTextColor(lightPlaceholderGray);
-    doc.text(getGradFullName(store.state.onboardingData.grad), 100.3, programY);
-    programY += 17.5;
+
+    const [gradProgram, textHeight] = truncatePrograms([
+      getGradFullName(store.state.onboardingData.grad),
+    ]);
+    doc.text(gradProgram, 100.3, programY);
+    programY += textHeight;
   }
 
   if (store.state.onboardingData.major.length > 0) {
     doc.setTextColor('#000000');
     doc.text('Major:', 48, programY);
     doc.setTextColor(lightPlaceholderGray);
-    doc.text(
-      store.state.onboardingData.major.map(major => getMajorFullName(major)).join(', '),
-      100.3,
-      programY
+
+    const [majors, textHeight] = truncatePrograms(
+      store.state.onboardingData.major.map(major => getMajorFullName(major))
     );
-    programY += 17.5;
+    doc.text(majors, 100.3, programY);
+    programY += textHeight;
   }
 
   if (store.state.onboardingData.minor.length > 0) {
     doc.setTextColor('#000000');
     doc.text('Minor:', 48, programY);
     doc.setTextColor(lightPlaceholderGray);
-    doc.text(
-      store.state.onboardingData.minor.map(minor => getMinorFullName(minor)).join(', '),
-      100.3,
-      programY
+
+    const [minors, textHeight] = truncatePrograms(
+      store.state.onboardingData.minor.map(minor => getMinorFullName(minor))
     );
-    programY += 17.5;
+    doc.text(minors, 100.3, programY);
+    programY += textHeight;
   }
 
   doc.text(
@@ -168,6 +143,7 @@ const generatePDF = async (): Promise<void> => {
     Spring: await loadImage(springEmojiURL),
     Summer: await loadImage(summerEmojiURL),
     Winter: await loadImage(winterEmojiURL),
+    APIB: await loadImage(APIBEmojiURL),
   };
 
   for (const sem of sems) {
@@ -211,7 +187,10 @@ const generatePDF = async (): Promise<void> => {
     doc.roundedRect(tableX, startct - rowHeight, tableWidth, headerHeight, 4, 4, 'F');
 
     doc.setFont('ProximaNova-Bold', 'bold');
-    doc.text('AP/IB credit', tableX + 20, startct - 6);
+    doc.text('AP/IB Credit', tableX + 20, startct - 6);
+
+    const emoji = emojiMap.APIB;
+    doc.addImage(emoji, tableX + 5, startct - 16.5, 12, 12);
 
     renderTable(doc, { body, bubbles }, tableX, startct, APIBTableHeader);
   }
@@ -234,83 +213,6 @@ const generatePDF = async (): Promise<void> => {
 
   const pdfName = `${store.state.userName.firstName}_CoursePlan`;
   doc.save(pdfName);
-};
-
-// represents a coloured bubble that shows the group a requirement falls in
-type bubbleData = {
-  requirementGroup: string;
-  color: string;
-};
-type semesterRows = {
-  // the body of the semester table
-  body: string[][];
-  // the list of bubbles for each course in the semester
-  bubbles: bubbleData[][];
-};
-
-const getCourseRows = (
-  courses: readonly (FirestoreSemesterCourse | FirestoreSemesterPlaceholder | CourseTaken)[]
-): semesterRows => {
-  const rows: [string[], bubbleData[]][] = courses
-    .filter(
-      (course): course is FirestoreSemesterCourse | CourseTaken => !isPlaceholderCourse(course)
-    )
-    .map(course => {
-      const [reqs, bubbles] = getFulfilledReqs(course);
-      return [
-        [
-          `${course.code}${isCourseTaken(course) ? '' : `: ${course.name}`}`,
-          course.credits.toString(),
-          reqs.join('\n'),
-        ],
-        bubbles,
-      ];
-    });
-  return { body: rows.map(row => row[0]), bubbles: rows.map(row => row[1]) };
-};
-
-const trimEmptySems = (sems: readonly FirestoreSemester[]): readonly FirestoreSemester[] => {
-  if (sems.length === 0) return [];
-  let maxNonemptyIndex = -1;
-  for (let i = 0; i < sems.length; i += 1) {
-    if (sems[i].courses.length > 0) maxNonemptyIndex = i;
-  }
-  return sems.slice(0, maxNonemptyIndex + 1);
-};
-
-const getFulfilledReqs = (
-  course: FirestoreSemesterCourse | CourseTaken
-): readonly [string[], bubbleData[]] => {
-  let reqsFulfilled = store.state.safeRequirementFulfillmentGraph.getConnectedRequirementsFromCourse(
-    { uniqueId: isCourseTaken(course) ? course.uniqueId : course.uniqueID }
-  );
-  reqsFulfilled = reqsFulfilled.filter(
-    req => !reqsToFilterOut.includes(store.state.userRequirementsMap[req].name)
-  );
-
-  const getBubbleText = (req: string): string => {
-    switch (store.state.userRequirementsMap[req].sourceType) {
-      case 'College': {
-        return getCollegeAbbrev(store.state.userRequirementsMap[req].sourceSpecificName);
-      }
-      case 'Grad':
-        return 'grad';
-      case 'Major':
-      case 'Minor': {
-        return store.state.userRequirementsMap[req].sourceSpecificName.toLowerCase();
-      }
-      default:
-        throw new Error('group type not valid for bubble');
-    }
-  };
-
-  return [
-    reqsFulfilled.map(req => store.state.userRequirementsMap[req].name),
-    reqsFulfilled.map(req => ({
-      requirementGroup: getBubbleText(req),
-      color: bubbleColorMap[store.state.userRequirementsMap[req].sourceType](req),
-    })),
-  ];
 };
 
 const renderBubbles = (doc: JsPDF, xPos: number, yPos: number, text: string, color: string) => {
@@ -341,7 +243,7 @@ const estimateTableHeight = (body: string[][]): number => {
  */
 const renderTable = (
   doc: JsPDF,
-  rows: semesterRows,
+  rows: SemesterRows,
   tableX: number,
   tableY: number,
   header: string[][] = tableHeader
@@ -368,7 +270,7 @@ const renderTable = (
       headStyles: {
         fontSize: headerFontSize,
         valign: 'middle',
-        halign: 'center',
+        halign: 'left',
         fillColor: [255, 255, 255],
         textColor: 0,
         lineWidth: 0.5,
@@ -429,4 +331,44 @@ const renderTable = (
   return tableHeight;
 };
 
+/**
+ * Given a list of program names
+ * @returns a pair with
+ * 1) string consisting of several lines, each no more than the maximum character
+ * limit needed.
+ * 2) the height of the string when rendered
+ */
+const truncatePrograms = (programs: string[]): [string, number] => {
+  const lines: string[] = [];
+  let currentLine = '';
+
+  programs
+    // trimming identifiers like [before fall 2020]
+    .map(program => {
+      const cropIndex = program.lastIndexOf('[');
+      return cropIndex === -1 ? program : program.slice(0, cropIndex).trim();
+    })
+    // policy: if a program would overflow current line, we push the whole program
+    // to a new line.
+    .forEach(program => {
+      if (program.length > programLineCharLimit) {
+        if (currentLine !== '') lines.push(currentLine);
+        const programOverflowPos = program.lastIndexOf(' ', programLineCharLimit);
+        lines.push(program.slice(0, programOverflowPos));
+        currentLine = `${program.slice(programOverflowPos)}, `;
+      } else if (currentLine.length + program.length > programLineCharLimit) {
+        lines.push(currentLine);
+        currentLine = `${program}, `;
+      } else {
+        currentLine += `${program}, `;
+      }
+    });
+  lines.push(currentLine);
+
+  // joining with a newline, and removing trailing comma
+  return [
+    lines.join('\n').replace(/,\s*$/, ''),
+    headerLinesGap + lines.length * headerFontSize + (lines.length - 1) * lineSpacing,
+  ];
+};
 export default generatePDF;
