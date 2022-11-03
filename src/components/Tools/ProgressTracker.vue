@@ -160,7 +160,7 @@ export default defineComponent({
     justify-content: center;
     flex-grow: 1;
     margin-bottom: 0.25rem;
-    min-width: 200px;
+    min-width: 220px;
   }
 
   &-bar {
