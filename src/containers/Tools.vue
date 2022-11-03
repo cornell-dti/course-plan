@@ -2,7 +2,7 @@
   <div class="toolsContainer">
     <div class="toolsContainer-header">
       <div class="toolsContainer-title">
-        <span>Hi Courseplanner!</span>
+        <span>Hi, {{ userInfo.firstName }}!</span>
       </div>
       <div class="toolsContainer-subtitle">
         <span>Here are some resources to help you plan.</span>
@@ -27,16 +27,23 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import { defineComponent } from 'vue';
 import Card from '@/components/Tools/Card.vue';
 import AdvisorCard from '@/components/Tools/AdvisorCard.vue';
 import UsefulLinks from '@/components/Tools/UsefulLinks.vue';
 import ProgressTracker from '@/components/Tools/ProgressTracker.vue';
 import ExportCard from '@/components/Tools/ExportCard.vue';
+import store from '@/store';
 
-export default {
+export default defineComponent({
   components: { ProgressTracker, ExportCard, UsefulLinks, AdvisorCard, Card },
-};
+  computed: {
+    userInfo(): FirestoreUserName {
+      return store.state.userName;
+    },
+  },
+});
 </script>
 
 <style scoped lang="scss">

@@ -1,7 +1,7 @@
 <template>
   <div class="links">
     <div v-for="{ title, link } in list" :key="title" class="links-group">
-      <a class="links-link" :href="link">
+      <a class="links-link" :href="link" target="_blank" rel="noopener noreferrer">
         {{ title }}
         <img class="links-link-icon" src="@/assets/images/link-gray.svg" alt="external link" />
       </a>
