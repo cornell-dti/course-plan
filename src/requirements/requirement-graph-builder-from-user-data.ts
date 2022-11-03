@@ -1,7 +1,7 @@
 import {
   getMatchedRequirementFulfillmentSpecification,
-  allowCourseDoubleCountingBetweenRequirements,
   getUserRequirements,
+  requirementConstraintHoldsAfterOptIn,
 } from './requirement-frontend-utils';
 import RequirementFulfillmentGraph from './requirement-graph';
 import {
@@ -88,10 +88,10 @@ export default function buildRequirementFulfillmentGraphFromUserData(
     courseToRequirementsInConstraintViolations,
   } = removeIllegalEdgesFromRequirementFulfillmentGraph(
     safeRequirementFulfillmentGraph,
-    (reqA, reqB) =>
-      allowCourseDoubleCountingBetweenRequirements(
-        userRequirementsMap[reqA],
-        userRequirementsMap[reqB]
+    ({ uniqueId }) =>
+      requirementConstraintHoldsAfterOptIn(
+        overriddenFulfillmentChoices[uniqueId]?.arbitraryOptIn,
+        userRequirementsMap
       )
   );
 

@@ -66,6 +66,9 @@ type FirestoreOnboardingUserData = {
   readonly tookSwim: 'yes' | 'no';
 };
 
+type FirestoreArbitraryOptInChoices = readonly {
+  readonly [requirement: string]: readonly string[];
+};
 type FirestoreCourseOptInOptOutChoices = {
   /** A list of requirements to opt-out */
   readonly optOut: readonly string[];
@@ -76,7 +79,7 @@ type FirestoreCourseOptInOptOutChoices = {
    * It's for attaching completely unknown courses to a requirement
    * (e.g. opt-in CS 2112 for history requirement).
    */
-  readonly arbitraryOptIn: readonly { readonly [requirement: string]: readonly string[] };
+  readonly arbitraryOptIn: FirestoreArbitraryOptInChoices;
 };
 type FirestoreOverriddenFulfillmentChoices = {
   readonly [courseUniqueId: string]: FirestoreCourseOptInOptOutChoices;

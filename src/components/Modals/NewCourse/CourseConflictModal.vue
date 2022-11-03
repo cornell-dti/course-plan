@@ -48,7 +48,10 @@ import { PropType, defineComponent } from 'vue';
 import TeleportModal from '@/components/Modals/TeleportModal.vue';
 import SingleConflictEditor from '@/components/Modals/NewCourse/SingleConflictEditor.vue';
 import { getConstraintViolationsForSingleCourse } from '@/requirements/requirement-constraints-utils';
-import { allowCourseDoubleCountingBetweenRequirements } from '@/requirements/requirement-frontend-utils';
+import {
+  allowCourseDoubleCountingBetweenRequirements,
+  requirementConstraintHoldsAfterOptIn,
+} from '@/requirements/requirement-frontend-utils';
 import store from '@/store';
 
 export default defineComponent({
@@ -179,20 +182,18 @@ export default defineComponent({
     // based on course with uniqueID.
     // return the list of conflictReqIds + selectableReqIds in conflict.
     getReqsInConflict(
-      uniqueID: string | number,
+      uniqueId: string | number,
       conflictReqIds: string[],
       selectableReqIds: string[]
     ): string[] {
       const selectableReqIdsInConflict: string[] = [];
+      const arbitraryOptIn = store.state.overriddenFulfillmentChoices[uniqueId]?.arbitraryOptIn;
+      const { userRequirementsMap } = store.state;
       selectableReqIds.forEach(selectableReqId => {
         const constraintViolations = getConstraintViolationsForSingleCourse(
-          { uniqueId: uniqueID },
+          { uniqueId },
           [...conflictReqIds, selectableReqId],
-          (reqA, reqB) =>
-            allowCourseDoubleCountingBetweenRequirements(
-              store.state.userRequirementsMap[reqA],
-              store.state.userRequirementsMap[reqB]
-            )
+          requirementConstraintHoldsAfterOptIn(arbitraryOptIn, userRequirementsMap)
         );
 
         // if selectable req is not in conflict with conflictReqIds, it will be missing from requirementsThatDoNotAllowDoubleCounting

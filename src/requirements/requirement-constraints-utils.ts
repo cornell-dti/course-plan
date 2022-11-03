@@ -84,7 +84,9 @@ export const getConstraintViolationsForSingleCourse = <Requirement extends strin
 
 export const getConstraintViolations = <Requirement extends string>(
   graph: RequirementFulfillmentGraph<Requirement, CourseWithUniqueId>,
-  requirementConstraintHolds: (requirementA: Requirement, requirementB: Requirement) => boolean
+  requirementConstraintHoldsForCourse: (
+    course: CourseWithUniqueId
+  ) => (requirementA: Requirement, requirementB: Requirement) => boolean
 ): RequirementFulfillmentGraphConstraintViolations<Requirement> => {
   const constraintViolationsGraph = new RequirementFulfillmentGraph<
     Requirement,
@@ -102,7 +104,7 @@ export const getConstraintViolations = <Requirement extends string>(
     } = getConstraintViolationsForSingleCourse(
       course,
       graph.getConnectedRequirementsFromCourse(course),
-      requirementConstraintHolds
+      requirementConstraintHoldsForCourse(course)
     );
     constraintViolationsGraph.addGraph(constraintViolationsGraphForSingleCourse);
     courseToRequirementsInConstraintViolationsForSingleCourse.forEach((v, k) =>

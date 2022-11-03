@@ -137,22 +137,21 @@ it('buildRequirementFulfillmentGraph phase 3 test 3', () => {
   expect(graph.getConnectedCoursesFromRequirement('Elective')).toEqual([CS3420]);
 });
 
-it('removeIllegalEdgesFromRequirementFulfillmentGraph tests', () => {
+it('removeIllegalEdgesFromRequirementFulfillmentGraph tests without opt in', () => {
   const graph = new RequirementFulfillmentGraph<string, { uniqueId: number; courseId: 0 }>();
   graph.addEdge('R1', { uniqueId: 1, courseId: 0 });
   graph.addEdge('R2', { uniqueId: 1, courseId: 0 });
   graph.addEdge('R3', { uniqueId: 1, courseId: 0 });
   graph.addEdge('R1', { uniqueId: 2, courseId: 0 });
   graph.addEdge('R2', { uniqueId: 2, courseId: 0 });
-  graph.addEdge('R1', { uniqueId: 2, courseId: 0 });
   graph.addEdge('R1', { uniqueId: 3, courseId: 0 });
   graph.addEdge('R4', { uniqueId: 3, courseId: 0 });
   const doubleCountable = ['R1', 'R4'];
   expect(
     Array.from(
-      removeIllegalEdgesFromRequirementFulfillmentGraph(
-        graph,
-        (rA, rB) => doubleCountable.includes(rA) || doubleCountable.includes(rB)
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      removeIllegalEdgesFromRequirementFulfillmentGraph(graph, c => (rA, rB) =>
+        doubleCountable.includes(rA) || doubleCountable.includes(rB)
       ).doubleCountedCourseUniqueIDSet
     )
   ).toEqual([1]);
@@ -163,4 +162,37 @@ it('removeIllegalEdgesFromRequirementFulfillmentGraph tests', () => {
   expect(graph.getConnectedRequirementsFromCourse({ uniqueId: 2 })).toEqual(['R1', 'R2']);
   // Nothing removed
   expect(graph.getConnectedRequirementsFromCourse({ uniqueId: 3 })).toEqual(['R1', 'R4']);
+});
+
+it('removeIllegalEdgesFromRequirementFulfillmentGraph tests with opt in', () => {
+  const graph = new RequirementFulfillmentGraph<string, { uniqueId: number; courseId: 0 }>();
+  graph.addEdge('R1', { uniqueId: 1, courseId: 0 });
+  graph.addEdge('R2', { uniqueId: 1, courseId: 0 });
+  graph.addEdge('R3', { uniqueId: 1, courseId: 0 });
+  graph.addEdge('R1', { uniqueId: 2, courseId: 0 });
+  graph.addEdge('R2', { uniqueId: 2, courseId: 0 });
+  graph.addEdge('R3', { uniqueId: 2, courseId: 0 });
+  const doubleCountable = ['R1'];
+  const overriddenFulfillmentChoices: FirestoreOverriddenFulfillmentChoices = {
+    '1': {
+      optOut: [],
+      acknowledgedCheckerWarningOptIn: [],
+      arbitraryOptIn: { R2: ['Course'] },
+    },
+  };
+  expect(
+    Array.from(
+      removeIllegalEdgesFromRequirementFulfillmentGraph(graph, ({ uniqueId }) => (rA, rB) =>
+        !!overriddenFulfillmentChoices[uniqueId]?.arbitraryOptIn[rA]?.length ||
+        !!overriddenFulfillmentChoices[uniqueId]?.arbitraryOptIn[rB]?.length ||
+        doubleCountable.includes(rA) ||
+        doubleCountable.includes(rB)
+      ).doubleCountedCourseUniqueIDSet
+    )
+  ).toEqual([2]);
+
+  // Nothing removed
+  expect(graph.getConnectedRequirementsFromCourse({ uniqueId: 1 })).toEqual(['R1', 'R2', 'R3']);
+  // Illegal double counting edges R1-2, R2-2 removed
+  expect(graph.getConnectedRequirementsFromCourse({ uniqueId: 2 })).toEqual(['R1']);
 });

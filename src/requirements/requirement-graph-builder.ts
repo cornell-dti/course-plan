@@ -123,7 +123,9 @@ export const removeIllegalEdgesFromRequirementFulfillmentGraph = <
   Course extends CourseForRequirementGraph
 >(
   graph: RequirementFulfillmentGraph<Requirement, Course>,
-  requirementConstraintHolds: (requirementA: Requirement, requirementB: Requirement) => boolean
+  requirementConstraintHoldsForCourse: (
+    course: CourseWithUniqueId
+  ) => (requirementA: Requirement, requirementB: Requirement) => boolean
 ): {
   courseToRequirementsInConstraintViolations: Map<string | number, Set<Requirement[]>>;
   doubleCountedCourseUniqueIDSet: ReadonlySet<string | number>;
@@ -132,7 +134,7 @@ export const removeIllegalEdgesFromRequirementFulfillmentGraph = <
     constraintViolationsGraph,
     courseToRequirementsInConstraintViolations,
     doubleCountedCourseUniqueIDSet,
-  } = getConstraintViolations(graph, requirementConstraintHolds);
+  } = getConstraintViolations(graph, requirementConstraintHoldsForCourse);
   graph.subtractGraphEdges(constraintViolationsGraph);
   return { courseToRequirementsInConstraintViolations, doubleCountedCourseUniqueIDSet };
 };
