@@ -1,0 +1,42 @@
+name: Update Courses Data
+on:
+  workflow_dispatch:
+    inputs:
+      semester:
+        description: 'Semester-Tag (eg. FA22-Nov1)' # ensure there are no spaces
+        required: true
+
+jobs:
+  update-courses:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+          cache: 'npm'
+      - name: NPM Clean Install
+        run: npm ci
+      - name: Generate Courses Json
+        run: npm run courses-gen
+      - name: Generate Requirements Json
+        run: npm run req-gen
+      - name: Check Diff
+        id: diff
+        run: if [[ $(git status --porcelain | wc -l) -gt 0 ]]; then exit 0; else exit 1; fi;
+      - name: Log No Diff
+        if: ${{ failure() && steps.diff.conclusion == 'failure' }}
+        run: echo "Courses and requirements json are up to date."
+      - name: Create Pull Request
+        id: cpr
+        uses: peter-evans/create-pull-request@v4
+        with:
+          title: "[Automated] Update Courses (${{ github.event.inputs.semester }})"
+          body: "Ran `npm run courses-gen` and `npm run req-gen`, as part of the update-courses workflow."
+          commit-message: "[Automated] Update Courses (${{ github.event.inputs.semester }})"
+          committer: Cornell DTI GitHub Bot <admin@cornelldti.org>
+          branch: update-courses/${{ github.event.inputs.semester }}
+          delete-branch: true
+      - name: Log Pull Request URL
+        run: echo "Created pull request - ${{ steps.cpr.outputs.pull-request-url }}"

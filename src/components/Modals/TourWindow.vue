@@ -37,7 +37,7 @@
             <div>
               Submit bugs &amp; feature requests using the Feedback button found on the right side
               of the page or contact us at
-              <a href="mailto:courseplan@cornelldti.org">courseplan@cornelldti.org</a>.
+              <a href="mailto:courseplan.io@gmail.com">courseplan.io@gmail.com</a>.
             </div>
           </div>
           <button class="startButton" data-cyId="tour-startButton" @click="startTour()">

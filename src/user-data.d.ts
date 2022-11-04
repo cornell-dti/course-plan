@@ -28,11 +28,6 @@ type FirestoreSemesterPlaceholder = {
   readonly startingSemester: number;
 };
 
-// This is used for drag&drop between SubRequirement and Semester
-type AppFirestoreSemesterCourseWithRequirementID = FirestoreSemesterCourse & {
-  readonly requirementID?: string;
-};
-
 type FirestoreSemesterSeason = 'Fall' | 'Spring' | 'Summer' | 'Winter';
 type FirestoreSemester = {
   readonly year: number;
@@ -40,20 +35,21 @@ type FirestoreSemester = {
   readonly courses: readonly (FirestoreSemesterCourse | FirestoreSemesterPlaceholder)[];
 };
 
-type FirestoreCollegeOrMajorOrMinor = { readonly acronym: string };
-type FirestoreAPIBExam = {
-  readonly type: 'AP' | 'IB';
-  readonly score: number;
-  readonly subject: string;
+type FirestoreSemestersData = {
+  readonly semesters: readonly FirestoreSemester[];
+  readonly orderByNewest: boolean;
 };
+
+type FirestoreCollegeOrMajorOrMinor = { readonly acronym: string };
 
 /** Represents the name of an exam a student can take for transfer credit */
 type TransferExamType = 'AP' | 'IB' | 'CASE';
 
 type FirestoreTransferExam = {
   readonly examType: TransferExamType;
-  readonly score: number;
   readonly subject: string;
+  readonly score: number | string;
+  readonly type?: TransferExamType; // TODO @bshen migrate away
 };
 
 type FirestoreCollegeMajorMinorOrGrad = { readonly acronym: string };
@@ -66,7 +62,7 @@ type FirestoreOnboardingUserData = {
   readonly majors: readonly FirestoreCollegeMajorMinorOrGrad[];
   readonly minors: readonly FirestoreCollegeMajorMinorOrGrad[];
   readonly gradPrograms: readonly FirestoreCollegeMajorMinorOrGrad[];
-  readonly exam: readonly FirestoreAPIBExam[];
+  readonly exam: readonly FirestoreTransferExam[];
   readonly tookSwim: 'yes' | 'no';
 };
 
@@ -130,6 +126,8 @@ type FirestoreTrackUsersOnboardingData = {
   gradYearFrequencies: { readonly [group: string]: number };
 };
 
+type FirestoreUniqueIncrementer = { readonly uniqueIncrementer: number };
+
 interface CornellCourseRosterCourse {
   readonly crseId: number;
   readonly subject: string;
@@ -184,7 +182,7 @@ type AppOnboardingData = {
   readonly major: readonly string[];
   readonly minor: readonly string[];
   readonly grad?: string;
-  readonly exam: readonly FirestoreAPIBExam[];
+  readonly exam: readonly FirestoreTransferExam[];
   readonly tookSwim: 'yes' | 'no';
 };
 
@@ -205,6 +203,11 @@ type AppBottomBarCourse = {
   overallRating: number;
   difficulty: number;
   workload: number;
+};
+
+// This is used for drag&drop between SubRequirement and Semester
+type AppFirestoreSemesterCourseWithRequirementID = FirestoreSemesterCourse & {
+  readonly requirementID?: string;
 };
 
 /** Map from requirement ID to option chosen */

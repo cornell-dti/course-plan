@@ -5,6 +5,7 @@ export const primaryGray = '#3d3d3d';
 export const secondaryGray = '#858585';
 export const lightPlaceholderGray = '#757575';
 export const darkPlaceholderGray = '#b6b6b6';
+export const borderGray = '#d8d8d8';
 export const emGreen = '#148481';
 export const smallBreakpoint = '440px';
 export const smallMediumBreakpoint = '600px';
