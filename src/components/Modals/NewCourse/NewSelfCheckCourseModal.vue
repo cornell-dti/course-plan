@@ -14,7 +14,7 @@
       search-box-class-name="newCourse-dropdown"
       :key="courseSelectorKey"
       :courseFilter="courseCanAppearInSearchResult"
-      placeholder="placeholderText"
+      :placeholder="placeholderText"
       :autoFocus="true"
       @on-escape="closeCurrentModal"
       @on-select="setCourse"

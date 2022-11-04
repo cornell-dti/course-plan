@@ -21,7 +21,7 @@
       <course-selector
         v-if="selectedCourse === null"
         search-box-class-name="newCourse-dropdown"
-        placeholder="placeholderText"
+        :placeholder="placeholderText"
         :autoFocus="true"
         @on-escape="closeCurrentModal"
         @on-select="selectCourse"
