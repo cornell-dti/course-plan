@@ -1,6 +1,6 @@
-import { Course, CollegeOrMajorRequirement } from '../../types';
-
-import { courseMatchesCodeOptions, includesWithSubRequirements } from '../checkers-common';
+import { Course, CollegeOrMajorRequirement } from '../../requirements/types';
+import { courseMatchesCodeOptions, includesWithSubRequirements } from '../../requirements/checkers';
+import { AdvisorGroup } from '../../tools/advisors/types';
 
 const hbhsRequirements: readonly CollegeOrMajorRequirement[] = [
   {
@@ -354,3 +354,7 @@ const hbhsRequirements: readonly CollegeOrMajorRequirement[] = [
 ];
 
 export default hbhsRequirements;
+
+export const hbhsAdvisors: AdvisorGroup = {
+  advisors: [],
+};
