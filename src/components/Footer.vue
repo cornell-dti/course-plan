@@ -6,6 +6,7 @@
           Cornell DTI @ {{ getYear() }}</a
         >
       </div>
+
       <div class="col-3">
         <p class="footer">
           Built with
