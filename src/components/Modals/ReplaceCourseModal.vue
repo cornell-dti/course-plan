@@ -32,7 +32,6 @@
           class="requirement-checker-warning-icon"
           src="@/assets/images/warning.svg"
           alt="warning icon"
-          data-v-74b2c930=""
         />
         We can't check that this course correctly fulfills the requirement so check carefully before
         selecting.
@@ -284,6 +283,18 @@ export default defineComponent({
 
 .content-course {
   width: 27.75rem;
+}
+
+.requirement-checker-warning {
+  color: $warning;
+  margin-top: 0.25rem;
+
+  &-icon {
+    float: left;
+    margin: 0.125rem 0.25rem 0 0;
+    width: 14px;
+    height: 14px;
+  }
 }
 
 @media only screen and (max-width: $small-medium-breakpoint) {
