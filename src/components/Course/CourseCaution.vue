@@ -1,51 +1,70 @@
 <template>
-  <course-base-tooltip
-    v-if="hasCourseCautions"
-    :isInformation="false"
-    :hideVerticalBar="shouldHideVerticalBar"
-  >
-    <div v-if="singleWarning">
-      <div v-if="courseCautions.noMatchedRequirement">
-        This class is not matched to any requirement. Re-add this course to choose a requirement to
-        bind to.
+  <div>
+    <course-conflict-modal
+      v-if="isConflictModalOpen && !isPlaceholderCourse(course)"
+      @close-course-modal="closeConflictModal"
+      :selectedCourse="course"
+      :courseConflicts="courseConflicts"
+      :selectableRequirements="selectableRequirements"
+      :relatedRequirements="relatedRequirements"
+      :isEditingRequirements="true"
+    />
+    <course-base-tooltip
+      v-if="hasCourseCautions"
+      :isInformation="false"
+      :hideVerticalBar="shouldHideVerticalBar"
+    >
+      <div v-if="singleWarning">
+        <div v-if="courseCautions.noMatchedRequirement">
+          This class is not matched to any requirement. Re-add this course to choose a requirement
+          to bind to.
+        </div>
+        <div v-if="courseCautions.typicallyOfferedWarning">
+          This class is typically offered in
+          {{ courseCautions.typicallyOfferedWarning.join(', ') }}.
+        </div>
+        <div v-if="courseCautions.isCourseDuplicate">Duplicate</div>
+        <div v-if="courseCautions.isPlaceholderWrongSemester">
+          This requirement is suggested to be fulfilled in your
+          {{ placeholderWarningSemesterText }} semester.
+        </div>
+        <div v-if="courseCautions.hasConflictRequirement">
+          This course has a conflict.<button class="warning-button" @click="openConflictModal">
+            Fix now
+          </button>
+        </div>
       </div>
-      <div v-if="courseCautions.typicallyOfferedWarning">
-        This class is typically offered in {{ courseCautions.typicallyOfferedWarning.join(', ') }}.
-      </div>
-      <div v-if="courseCautions.isCourseDuplicate">Duplicate</div>
-      <div v-if="courseCautions.isPlaceholderWrongSemester">
-        This requirement is suggested to be fulfilled in your
-        {{ placeholderWarningSemesterText }} semester.
-      </div>
-      <div v-if="courseCautions.hasConflictRequirement">
-        This course has a conflict.<button class="warning-button">Fix now</button>
-      </div>
-    </div>
-    <ul v-if="!singleWarning" class="warning-list">
-      <li class="warning-item" v-if="courseCautions.hasConflictRequirement">
-        This course has a conflict.<button class="warning-button">Fix now</button>
-      </li>
-      <li class="warning-item" v-if="courseCautions.noMatchedRequirement">
-        This class is not matched to any requirement. Re-add this course to choose a requirement to
-        bind to.
-      </li>
-      <li class="warning-item" v-if="courseCautions.typicallyOfferedWarning">
-        This class is typically offered in {{ courseCautions.typicallyOfferedWarning.join(', ') }}.
-      </li>
-      <li class="warning-item" v-if="courseCautions.isCourseDuplicate">Duplicate</li>
-      <li class="warning-item" v-if="courseCautions.isPlaceholderWrongSemester">
-        This requirement is suggested to be fulfilled in your
-        {{ placeholderWarningSemesterText }} semester.
-      </li>
-    </ul>
-  </course-base-tooltip>
+      <ul v-if="!singleWarning" class="warning-list">
+        <li class="warning-item" v-if="courseCautions.hasConflictRequirement">
+          This course has a conflict.<button class="warning-button" @click="openConflictModal">
+            Fix now
+          </button>
+        </li>
+        <li class="warning-item" v-if="courseCautions.noMatchedRequirement">
+          This class is not matched to any requirement. Re-add this course to choose a requirement
+          to bind to.
+        </li>
+        <li class="warning-item" v-if="courseCautions.typicallyOfferedWarning">
+          This class is typically offered in
+          {{ courseCautions.typicallyOfferedWarning.join(', ') }}.
+        </li>
+        <li class="warning-item" v-if="courseCautions.isCourseDuplicate">Duplicate</li>
+        <li class="warning-item" v-if="courseCautions.isPlaceholderWrongSemester">
+          This requirement is suggested to be fulfilled in your
+          {{ placeholderWarningSemesterText }} semester.
+        </li>
+      </ul>
+    </course-base-tooltip>
+  </div>
 </template>
 
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
 import CourseBaseTooltip from '@/components/Course/CourseBaseTooltip.vue';
 import store, { isCourseConflict } from '@/store';
-import { isPlaceholderCourse, isCourseTaken } from '@/utilities';
+import { isPlaceholderCourse, isCourseTaken, convertCourseToCourseRoster } from '@/utilities';
+import CourseConflictModal from '@/components/Modals/NewCourse/CourseConflictModal.vue';
+import { getRelatedUnfulfilledRequirements } from '@/requirements/requirement-frontend-utils';
 
 type CourseCautions = {
   readonly noMatchedRequirement: boolean;
@@ -109,7 +128,11 @@ const getCourseCautions = (
 };
 
 export default defineComponent({
-  components: { CourseBaseTooltip },
+  components: { CourseBaseTooltip, CourseConflictModal },
+  emits: {
+    'close-conflict-modal': () => true,
+    'open-conflict-modal': () => true,
+  },
   props: {
     course: {
       type: Object as PropType<
@@ -119,6 +142,14 @@ export default defineComponent({
     },
     semesterIndex: { type: Number, required: false, default: 0 },
     isCompactView: { type: Boolean, required: true },
+  },
+  data() {
+    return {
+      isConflictModalOpen: false,
+      courseConflicts: new Set() as Set<string[]>,
+      selectableRequirements: [] as readonly RequirementWithIDSourceType[],
+      relatedRequirements: [] as readonly RequirementWithIDSourceType[],
+    };
   },
   computed: {
     courseCautions(): CourseCautions {
@@ -162,6 +193,7 @@ export default defineComponent({
     },
   },
   methods: {
+    isPlaceholderCourse,
     formatOrdinals(n: number): string {
       const rules = new Intl.PluralRules('en-US', { type: 'ordinal' });
 
@@ -175,6 +207,30 @@ export default defineComponent({
       const rule = rules.select(n);
       const suffix = suffixes.get(rule);
       return `${n}${suffix}`;
+    },
+    openConflictModal() {
+      const uniqueID = isCourseTaken(this.course) ? this.course.uniqueId : this.course.uniqueID;
+      this.courseConflicts =
+        store.state.courseToRequirementsInConstraintViolations.get(uniqueID) ?? new Set();
+
+      if (!isPlaceholderCourse(this.course)) {
+        const { relatedRequirements, selfCheckRequirements } = getRelatedUnfulfilledRequirements(
+          convertCourseToCourseRoster(this.course),
+          store.state.groupedRequirementFulfillmentReport,
+          store.state.toggleableRequirementChoices,
+          store.state.overriddenFulfillmentChoices,
+          store.state.userRequirementsMap
+        );
+        this.selectableRequirements = selfCheckRequirements;
+        this.relatedRequirements = relatedRequirements;
+      }
+
+      this.isConflictModalOpen = true;
+      this.$emit('open-conflict-modal');
+    },
+    closeConflictModal() {
+      this.isConflictModalOpen = false;
+      this.$emit('close-conflict-modal');
     },
   },
 });

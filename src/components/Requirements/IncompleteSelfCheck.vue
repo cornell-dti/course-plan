@@ -41,12 +41,9 @@ import store from '@/store';
 import {
   cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData,
   addCourseToSemester,
-  updateRequirementChoice,
+  addAcknowledgedCheckerWarningOptIn,
 } from '@/global-firestore-data';
-import {
-  canFulfillChecker,
-  getRelatedRequirementIdsForCourseOptOut,
-} from '@/requirements/requirement-frontend-utils';
+import { canFulfillChecker } from '@/requirements/requirement-frontend-utils';
 
 import NewSelfCheckCourseModal from '@/components/Modals/NewCourse/NewSelfCheckCourseModal.vue';
 
@@ -143,50 +140,14 @@ export default defineComponent({
     },
     addExistingCourse(option: string) {
       this.showDropdown = false;
-      const { uniqueID, crseId } = this.selfCheckCourses[option];
-      updateRequirementChoice(uniqueID, choice => ({
-        ...choice,
-        // Since we edit from a self-check requirement,
-        // we know it must be `acknowledgedCheckerWarningOptIn`.
-        acknowledgedCheckerWarningOptIn: Array.from(
-          new Set([...choice.acknowledgedCheckerWarningOptIn, this.subReqId])
-        ),
-        // Keep existing behavior of keeping it connected to at most one requirement.
-        optOut: getRelatedRequirementIdsForCourseOptOut(
-          crseId,
-          this.subReqId,
-          store.state.groupedRequirementFulfillmentReport,
-          store.state.toggleableRequirementChoices,
-          store.state.userRequirementsMap
-        ),
-      }));
+      const { uniqueID } = this.selfCheckCourses[option];
+      addAcknowledgedCheckerWarningOptIn(uniqueID, this.subReqId);
     },
     addNewCourse(course: CornellCourseRosterCourse, season: FirestoreSemesterSeason, year: number) {
       this.showDropdown = false;
       const newCourse = cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData(course);
-      addCourseToSemester(
-        year,
-        season,
-        newCourse,
-        // Since the course is new, we know the old choice does not exist.
-        () => ({
-          arbitraryOptIn: {},
-          // Since we edit from a self-check requirement,
-          // we know it must be `acknowledgedCheckerWarningOptIn`.
-          acknowledgedCheckerWarningOptIn: [this.subReqId],
-          // We also need to opt-out of all requirements without warnings,
-          // because the user intention is clear that we only want to bind
-          // the course to this specific requirement.
-          optOut: getRelatedRequirementIdsForCourseOptOut(
-            newCourse.crseId,
-            this.subReqId,
-            store.state.groupedRequirementFulfillmentReport,
-            store.state.toggleableRequirementChoices,
-            store.state.userRequirementsMap
-          ),
-        }),
-        this.$gtag
-      );
+      addAcknowledgedCheckerWarningOptIn(newCourse.uniqueID, this.subReqId);
+      addCourseToSemester(year, season, newCourse, this.$gtag);
     },
     openCourseModal() {
       this.isCourseModalOpen = true;

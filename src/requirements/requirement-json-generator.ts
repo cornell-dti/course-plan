@@ -6,8 +6,8 @@ import {
   Course,
   MutableMajorRequirements,
 } from './types';
-import sourceRequirements, { colleges } from './data';
-import { NO_FULFILLMENTS_COURSE_ID, SPECIAL_COURSES } from './data/constants';
+import sourceRequirements, { colleges } from '../data';
+import { NO_FULFILLMENTS_COURSE_ID, SPECIAL_COURSES } from '../data/constants';
 import {
   examRequirementsMapping,
   examToCourseMapping,
@@ -341,14 +341,14 @@ const generateDecoratedRequirementsJson = (): DecoratedRequirementsJson => {
       sortRequirementCourses
     );
   Object.entries(university).forEach(([universityName, universityRequirement]) => {
-    const { requirements, advisors, ...rest } = universityRequirement;
+    const { requirements, advisors, abbrev: abbr, ...rest } = universityRequirement;
     decoratedJson.university[universityName] = {
       ...rest,
       requirements: decorateRequirements(requirements),
     };
   });
   Object.entries(college).forEach(([collegeName, collegeRequirement]) => {
-    const { requirements, advisors, ...rest } = collegeRequirement;
+    const { requirements, advisors, abbrev: abbr, ...rest } = collegeRequirement;
     decoratedJson.college[collegeName] = {
       ...rest,
       requirements: decorateRequirements(requirements),
