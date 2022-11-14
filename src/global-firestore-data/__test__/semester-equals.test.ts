@@ -1,4 +1,4 @@
-import { semesterEquals } from '../semesters';
+import { semesterEquals } from '../user-semesters';
 
 it('correct season and correct year', () => {
   const year = 2022;

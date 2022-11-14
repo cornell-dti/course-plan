@@ -2,8 +2,8 @@ import examData, {
   ExamFulfillmentBase,
   ExamFulfillmentWithMinimumScore,
   ExamFulfillments,
-} from './data/exams/ExamCredit';
-import { NO_FULFILLMENTS_COURSE_ID } from './data/constants';
+} from '../data/exams/ExamCredit';
+import { NO_FULFILLMENTS_COURSE_ID } from '../data/constants';
 
 type ExamSubjects = Record<TransferExamType, string[]>;
 

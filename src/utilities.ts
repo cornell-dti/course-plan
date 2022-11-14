@@ -200,6 +200,17 @@ export const isCourseTaken = (
   element: FirestoreSemesterPlaceholder | FirestoreSemesterCourse | CourseTaken
 ): element is CourseTaken => !!(element as CourseTaken).uniqueId;
 
+/**
+ * Sum over a collection
+ *
+ * @param collection the collection to iterate over
+ * @param f the function to map over each element
+ * @returns the sum of `f` applied to each element in `collection`
+ */
+export function sumBy<E>(collection: readonly E[], f: (e: E) => number): number {
+  return collection.reduce((sum, e) => sum + f(e), 0);
+}
+
 // Converts a FirestoreSemesterCourse or CourseTaken to the first applicable CornellCourseRosterCourse
 export const convertCourseToCourseRoster = (
   course: FirestoreSemesterCourse | CourseTaken

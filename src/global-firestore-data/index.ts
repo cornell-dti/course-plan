@@ -4,15 +4,14 @@
 import store from '../store';
 
 import { cornellCourseRosterCourseToFirebaseSemesterCourse } from '../user-data-converter';
-import { incrementUniqueID } from './utils';
+import incrementUniqueID from './user-unique-incrementer';
 
 export const cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData = (
   course: CornellCourseRosterCourse
 ): FirestoreSemesterCourse =>
   cornellCourseRosterCourseToFirebaseSemesterCourse(course, store, incrementUniqueID);
 
-export { incrementUniqueID };
-export { setAppOnboardingData, deleteTransferCredit } from './onboarding-data';
+export { setAppOnboardingData, deleteTransferCredit } from './user-onboarding-data';
 export {
   editSemesters,
   editSemester,
@@ -23,8 +22,8 @@ export {
   deleteAllCoursesFromSemester,
   deleteCourseFromSemesters,
   populateSemesters,
-} from './semesters';
-export { default as chooseToggleableRequirementOption } from './toggleable-requirement-choices';
+} from './user-semesters';
+export { default as chooseToggleableRequirementOption } from './user-toggleable-requirement-choices';
 export {
   updateRequirementChoices,
   updateRequirementChoice,
@@ -36,4 +35,4 @@ export {
   resolveConflicts,
 } from './overridden-fulfillment-choices';
 
-export { default as retrieveAnalytics } from './analytics';
+export { default as retrieveAnalytics } from './track-users';

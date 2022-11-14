@@ -1,5 +1,5 @@
 <template>
-  <div class="card" :style="cssVars" :class="{ 'card--collapsed': isCollapsed }">
+  <div class="card" :class="{ 'card--collapsed': isCollapsed }">
     <div class="card-top">
       <div class="card-minspacer">
         <img v-if="!isCollapsed" src="@/assets/images/minimize.svg" alt="minimize card" />
@@ -19,15 +19,13 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent } from 'vue';
 
 export default defineComponent({
   props: {
     id: { type: String, required: true },
     name: { type: String, required: true },
-    desiredWidth: { type: Number, required: false, default: 574 },
-    desiredHeight: { type: Number, required: false, default: 275 },
   },
 
   data() {
@@ -45,14 +43,6 @@ export default defineComponent({
       localStorage.setItem(JSON.stringify(this.name), JSON.stringify(this.isCollapsed));
     },
   },
-  computed: {
-    cssVars() {
-      return {
-        '--w': `${this.desiredWidth}px`,
-        '--h': `${this.desiredHeight}px`,
-      };
-    },
-  },
 });
 </script>
 
@@ -60,8 +50,6 @@ export default defineComponent({
 @import '@/assets/scss/_variables.scss';
 
 .card {
-  width: var(--w);
-  height: var(--h);
   box-sizing: border-box;
   box-shadow: 0 0 10px 4px $boxShadowGray;
   position: relative;
@@ -69,11 +57,11 @@ export default defineComponent({
   border-width: 0;
   align-items: center;
   background-color: $white;
-  margin: 0 0 2.5rem 0.25rem;
+  margin: 0;
 
   &--collapsed {
-    height: 50px;
-    margin-bottom: calc(var(--h) - 50px + 40px);
+    min-height: 0 !important;
+    height: 50px !important;
   }
 
   &-top {
