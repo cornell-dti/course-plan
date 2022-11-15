@@ -56,9 +56,9 @@
 import { PropType, defineComponent } from 'vue';
 import draggable from 'vuedraggable';
 import Course from '@/components/Course/Course.vue';
+import incrementUniqueID from '@/global-firestore-data/user-unique-incrementer';
 import { GTagEvent } from '@/gtag';
 import ReplaceSlotMenu from '@/components/Modals/ReplaceSlotMenu.vue';
-import { incrementUniqueID } from '@/global-firestore-data';
 import ReplaceCourseModal from '@/components/Modals/ReplaceCourseModal.vue';
 
 export default defineComponent({
