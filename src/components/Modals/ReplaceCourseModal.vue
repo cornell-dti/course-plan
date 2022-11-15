@@ -92,7 +92,7 @@ export default defineComponent({
     ReplaceRequirementDuplicateEditor,
   },
   emits: {
-    'close-course-modal': () => true,
+    'close-replace-course-modal': () => true,
     'select-course': (course: CornellCourseRosterCourse) => typeof course === 'object',
     'add-course': (course: CornellCourseRosterCourse, selectableReqId: string) =>
       typeof course === 'object' && typeof selectableReqId === 'string',
@@ -107,7 +107,6 @@ export default defineComponent({
       relatedRequirements: [] as readonly RequirementWithIDSourceType[],
       selfCheckRequirements: [] as readonly RequirementWithIDSourceType[],
       editMode: false,
-      courseSelectorKey: 0,
       isOpen: false,
       hasDuplicates: false,
       needToAdd: false,
@@ -143,13 +142,28 @@ export default defineComponent({
         }
       }
     },
+    handleAdd() {
+      this.selecting = false;
+      this.getSemestersTaken();
+      const count = this.semestersTaken.length;
+      if (count === 0) {
+        // opens the add modal if the course does not exist
+        this.needToAdd = true;
+      } else if (count > 1) {
+        // opens the duplicates modal if the course exists 2+ times
+        this.hasDuplicates = true;
+      } else {
+        // closes the modal if the course exists exactly once
+        this.closeCurrentModal();
+      }
+    },
     selectCourse(result: CornellCourseRosterCourse) {
       this.selectedCourse = result;
       this.$emit('select-course', this.selectedCourse);
       this.getReqsRelatedToCourse(result);
     },
     closeCurrentModal() {
-      this.$emit('close-course-modal');
+      this.$emit('close-replace-course-modal');
     },
     getReqsRelatedToCourse(selectedCourse: CornellCourseRosterCourse) {
       const {
@@ -198,11 +212,13 @@ export default defineComponent({
       this.selectedRequirementID = selected;
     },
     backOrCancel() {
-      if (this.leftButtonText === 'Back') {
+      if (this.leftButtonText === leftButtonState.Back) {
         if (this.editMode) {
           this.editMode = false;
         } else {
           this.selectedCourse = null;
+          this.semestersTaken = [];
+          this.selecting = true;
         }
       } else {
         this.closeCurrentModal();
