@@ -161,6 +161,7 @@ export default defineComponent({
       this.selectedCourse = result;
       this.$emit('select-course', this.selectedCourse);
       this.getReqsRelatedToCourse(result);
+      this.handleAdd();
     },
     closeCurrentModal() {
       this.$emit('close-replace-course-modal');
