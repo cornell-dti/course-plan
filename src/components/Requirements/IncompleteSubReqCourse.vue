@@ -41,7 +41,7 @@
 import { PropType, defineComponent } from 'vue';
 import draggable from 'vuedraggable';
 import Course from '@/components/Course/Course.vue';
-import { incrementUniqueID } from '@/global-firestore-data';
+import incrementUniqueID from '@/global-firestore-data/user-unique-incrementer';
 import { GTagEvent } from '@/gtag';
 
 export default defineComponent({
