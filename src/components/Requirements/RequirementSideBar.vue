@@ -143,7 +143,8 @@ import DropDownArrow from '@/components/DropDownArrow.vue';
 import clipboard from '@/assets/images/clipboard.svg';
 import warning from '@/assets/images/warning.svg';
 import store from '@/store';
-import { chooseToggleableRequirementOption, incrementUniqueID } from '@/global-firestore-data';
+import { chooseToggleableRequirementOption } from '@/global-firestore-data';
+import incrementUniqueID from '@/global-firestore-data/user-unique-incrementer';
 
 export type ShowAllCourses = {
   readonly name: string;
