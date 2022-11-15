@@ -73,10 +73,7 @@ import TeleportModal from '@/components/Modals/TeleportModal.vue';
 import CourseSelector from '@/components/Modals/NewCourse/CourseSelector.vue';
 
 import store from '@/store';
-import {
-  getRelatedRequirementIdsForCourseOptOut,
-  getRelatedUnfulfilledRequirements,
-} from '@/requirements/requirement-frontend-utils';
+import { getRelatedUnfulfilledRequirements } from '@/requirements/requirement-frontend-utils';
 
 const leftButtonState = {
   Back: 'Back',
@@ -95,10 +92,10 @@ export default defineComponent({
     ReplaceRequirementDuplicateEditor,
   },
   emits: {
-    'close-replace-course-modal': () => true,
+    'close-course-modal': () => true,
     'select-course': (course: CornellCourseRosterCourse) => typeof course === 'object',
-    'add-course': (course: CornellCourseRosterCourse, choice: FirestoreCourseOptInOptOutChoices) =>
-      typeof course === 'object' && typeof choice === 'object',
+    'add-course': (course: CornellCourseRosterCourse, selectableReqId: string) =>
+      typeof course === 'object' && typeof selectableReqId === 'string',
   },
   data() {
     return {
@@ -110,6 +107,7 @@ export default defineComponent({
       relatedRequirements: [] as readonly RequirementWithIDSourceType[],
       selfCheckRequirements: [] as readonly RequirementWithIDSourceType[],
       editMode: false,
+      courseSelectorKey: 0,
       isOpen: false,
       hasDuplicates: false,
       needToAdd: false,
@@ -145,30 +143,13 @@ export default defineComponent({
         }
       }
     },
-    // handles the add button
-    handleAdd() {
-      this.selecting = false;
-      this.getSemestersTaken();
-      const count = this.semestersTaken.length;
-      if (count === 0) {
-        // opens the add modal if the course does not exist
-        this.needToAdd = true;
-      } else if (count > 1) {
-        // opens the duplicates modal if the course exists 2+ times
-        this.hasDuplicates = true;
-      } else {
-        // closes the modal if the course exists exactly once
-        this.closeCurrentModal();
-      }
-    },
     selectCourse(result: CornellCourseRosterCourse) {
       this.selectedCourse = result;
       this.$emit('select-course', this.selectedCourse);
       this.getReqsRelatedToCourse(result);
-      this.handleAdd();
     },
     closeCurrentModal() {
-      this.$emit('close-replace-course-modal');
+      this.$emit('close-course-modal');
     },
     getReqsRelatedToCourse(selectedCourse: CornellCourseRosterCourse) {
       const {
@@ -178,7 +159,6 @@ export default defineComponent({
       } = getRelatedUnfulfilledRequirements(
         selectedCourse,
         store.state.groupedRequirementFulfillmentReport,
-        store.state.onboardingData,
         store.state.toggleableRequirementChoices,
         store.state.overriddenFulfillmentChoices,
         store.state.userRequirementsMap
@@ -187,14 +167,15 @@ export default defineComponent({
         automaticallyFulfilledRequirements.map(({ id }) => id)
       );
 
-      const reqFilter = (req: RequirementWithIDSourceType) =>
-        !automaticallyFulfilledRequirementIds.has(req.id);
-
       this.automaticallyFulfilledRequirements = automaticallyFulfilledRequirements.map(
         ({ name }) => name
       );
-      this.relatedRequirements = relatedRequirements.filter(reqFilter);
-      this.selfCheckRequirements = selfCheckRequirements.filter(reqFilter);
+      this.relatedRequirements = relatedRequirements.filter(
+        req => !automaticallyFulfilledRequirementIds.has(req.id)
+      );
+      this.selfCheckRequirements = selfCheckRequirements.filter(
+        req => !automaticallyFulfilledRequirementIds.has(req.id)
+      );
       if (this.relatedRequirements.length > 0) {
         this.selectedRequirementID = this.relatedRequirements[0].id;
       } else {
@@ -210,33 +191,18 @@ export default defineComponent({
     },
     addCourse() {
       if (this.selectedCourse == null) return;
-      this.$emit('add-course', this.selectedCourse, {
-        optOut: getRelatedRequirementIdsForCourseOptOut(
-          this.selectedCourse.crseId,
-          this.selectedRequirementID,
-          store.state.groupedRequirementFulfillmentReport,
-          store.state.toggleableRequirementChoices,
-          store.state.userRequirementsMap
-        ),
-        // Only include the selected requirement from opt-in.
-        acknowledgedCheckerWarningOptIn: this.selfCheckRequirements
-          .filter(it => it.id === this.selectedRequirementID)
-          .map(it => it.id),
-        arbitraryOptIn: {},
-      });
+      this.$emit('add-course', this.selectedCourse, this.selectedRequirementID);
       this.closeCurrentModal();
     },
     onSelectedChange(selected: string) {
       this.selectedRequirementID = selected;
     },
     backOrCancel() {
-      if (this.leftButtonText === leftButtonState.Back) {
+      if (this.leftButtonText === 'Back') {
         if (this.editMode) {
           this.editMode = false;
         } else {
           this.selectedCourse = null;
-          this.semestersTaken = [];
-          this.selecting = true;
         }
       } else {
         this.closeCurrentModal();
