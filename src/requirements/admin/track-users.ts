@@ -6,6 +6,8 @@ import {
   trackUsersCollection,
 } from '../../firebase-admin-config';
 
+import { getFirstPlan } from '../../utilities';
+
 const average = (array: readonly number[]) => array.reduce((a, b) => a + b) / array.length;
 function seasonToMonth(season: string) {
   switch (season) {
@@ -133,7 +135,7 @@ async function trackUsers() {
 
       let oldSemesterCount = 0;
       let newSemesterCount = 0;
-      doc.data().semesters.forEach(semester => {
+      getFirstPlan(doc.data()).forEach(semester => {
         if (isOld(semester)) {
           oldSemesterCount += 1;
         } else {
@@ -141,7 +143,7 @@ async function trackUsers() {
         }
         semesterCount += 1;
       });
-      semesters.push(doc.data().semesters.length);
+      semesters.push(getFirstPlan(doc.data()).length);
       oldSemesters.push(oldSemesterCount);
       newSemesters.push(newSemesterCount);
     });

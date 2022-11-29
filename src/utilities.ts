@@ -1,6 +1,7 @@
 import { fullCoursesArray } from './assets/courses/typed-full-courses';
 import requirementJSON from './requirements/typed-requirement-json';
 import { coursesColorSet } from './assets/constants/colors';
+import { SemesterDocumentData } from './firebase-config-common';
 
 /** Enumerated type to define seasons as integers in season order
  * where the seasons are defined chronologically */
@@ -10,6 +11,13 @@ export const SeasonOrdinal = {
   Summer: 2,
   Fall: 3,
 } as const;
+
+export const getFirstPlan = (semestersDoc: SemesterDocumentData): readonly FirestoreSemester[] => {
+  if (semestersDoc.plans) {
+    return semestersDoc.plans[0].semesters;
+  }
+  return semestersDoc.semesters;
+};
 
 /**
  * Returns given semesters sorted in either increasing or decreasing order of date

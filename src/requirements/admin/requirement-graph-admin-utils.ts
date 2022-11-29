@@ -1,5 +1,5 @@
 import { createAppOnboardingData } from '../../user-data-converter';
-import { checkNotNull } from '../../utilities';
+import { checkNotNull, getFirstPlan } from '../../utilities';
 import {
   semestersCollection,
   toggleableRequirementChoicesCollection,
@@ -32,7 +32,7 @@ export async function getUserDataOnAdmin(userEmail: string): Promise<UserDataOnA
     semestersCollection
       .doc(userEmail)
       .get()
-      .then(it => checkNotNull(it.data()).semesters),
+      .then(it => getFirstPlan(checkNotNull(it.data()))),
     toggleableRequirementChoicesCollection
       .doc(userEmail)
       .get()
