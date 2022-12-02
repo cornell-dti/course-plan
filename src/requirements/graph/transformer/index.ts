@@ -8,12 +8,16 @@ export default interface GraphTransformer<
   Requirement extends string,
   Course extends CourseForRequirementGraph
 > {
+  /** Non-mutating function to generate output graph from input graph */
   transform: (
     graph: RequirementGraph<Requirement, Course>
   ) => RequirementGraph<Requirement, Course>;
 }
 
-export function compose<Requirement extends string, Course extends CourseForRequirementGraph>(
+/**
+ * Compose zero or more transformers on a requirement graph.
+ */
+export function transform<Requirement extends string, Course extends CourseForRequirementGraph>(
   graph: RequirementGraph<Requirement, Course>,
   ...transformers: GraphTransformer<Requirement, Course>[]
 ) {

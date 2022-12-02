@@ -7,7 +7,7 @@ export type RemoveConstraintViolationEdgesParameters<Requirement extends string>
   requirementConstraintHolds: (requirementA: Requirement, requirementB: Requirement) => boolean;
 };
 
-export default class AddArbitraryOptInChoices<
+export default class RemoveConstraintViolationEdges<
   Requirement extends string,
   Course extends CourseForRequirementGraph
 > implements GraphTransformer<Requirement, Course> {

@@ -25,14 +25,16 @@ export default class AddBasicUserFulfillmentChoices<
   Requirement extends string,
   Course extends CourseForRequirementGraph
 > implements GraphTransformer<Requirement, Course> {
-  private basicUserFulfillmentParameters: BasicUserFulfillmentChoicesParameters<Requirement>;
+  private basicUserFulfillmentChoicesParameters: BasicUserFulfillmentChoicesParameters<Requirement>;
 
-  constructor(basicUserFulfillmentParameters: BasicUserFulfillmentChoicesParameters<Requirement>) {
-    this.basicUserFulfillmentParameters = basicUserFulfillmentParameters;
+  constructor(
+    basicUserFulfillmentChoicesParameters: BasicUserFulfillmentChoicesParameters<Requirement>
+  ) {
+    this.basicUserFulfillmentChoicesParameters = basicUserFulfillmentChoicesParameters;
   }
 
   public transform(graph: RequirementFulfillmentGraph<Requirement, Course>) {
-    return addBasicUserFulfillmentChoices(graph, this.basicUserFulfillmentParameters);
+    return addBasicUserFulfillmentChoices(graph, this.basicUserFulfillmentChoicesParameters);
   }
 }
 

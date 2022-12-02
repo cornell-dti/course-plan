@@ -166,7 +166,7 @@ export type BuildRequirementFulfillmentGraphParameters<
 };
 
 /**
- * Build an initial requirement fulfillment graph from the user's requirements and courses.
+ * Build an initial requirement graph from the user's requirements and courses.
  *
  * This is not directly implemented in the constructor of RequirementFulfillmentGraph,
  * in order to abstract the class for testing purposes.
