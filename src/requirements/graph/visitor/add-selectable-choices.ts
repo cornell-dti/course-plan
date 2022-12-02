@@ -1,4 +1,4 @@
-import GraphVisitor from './interface';
+import GraphVisitor from './definition';
 import RequirementFulfillmentGraph from '..';
 import { CourseForRequirementGraph } from '../types';
 
@@ -19,10 +19,11 @@ export type AddSelectableChoicesParameters<Requirement> = {
 export default class AddSelectableChoices<
   Requirement extends string,
   Course extends CourseForRequirementGraph
-> implements GraphVisitor<Requirement, Course> {
+> extends GraphVisitor<Requirement, Course> {
   private addSelectableChoicesParameters: AddSelectableChoicesParameters<Requirement>;
 
   constructor(addSelectableChoicesParameters: AddSelectableChoicesParameters<Requirement>) {
+    super();
     this.addSelectableChoicesParameters = addSelectableChoicesParameters;
   }
 

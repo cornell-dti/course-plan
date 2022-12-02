@@ -1,4 +1,4 @@
-import GraphVisitor from './interface';
+import GraphVisitor from './definition';
 import RequirementFulfillmentGraph from '..';
 import { CourseWithUniqueId } from '../types';
 import { getConstraintViolations } from '../../requirement-constraints-utils';
@@ -13,12 +13,13 @@ export type RemoveConstraintViolationEdgesParameters<Requirement> = {
 export default class RemoveConstraintViolationEdges<
   Requirement extends string,
   Course extends CourseWithUniqueId
-> implements GraphVisitor<Requirement, Course> {
+> extends GraphVisitor<Requirement, Course> {
   private removeConstraintViolationEdgesParameters: RemoveConstraintViolationEdgesParameters<Requirement>;
 
   constructor(
     removeConstraintViolationEdgesParameters: RemoveConstraintViolationEdgesParameters<Requirement>
   ) {
+    super();
     this.removeConstraintViolationEdgesParameters = removeConstraintViolationEdgesParameters;
   }
 

@@ -1,4 +1,4 @@
-import GraphVisitor from './interface';
+import GraphVisitor from './definition';
 import RequirementFulfillmentGraph from '..';
 import { CourseWithUniqueId } from '../types';
 
@@ -19,10 +19,11 @@ export type AddArbitraryOptInChoicesParameters<Requirement> = {
 export default class AddArbitraryOptInChoices<
   Requirement extends string,
   Course extends CourseWithUniqueId
-> implements GraphVisitor<Requirement, Course> {
+> extends GraphVisitor<Requirement, Course> {
   private arbitraryOptInChoicesParameters: AddArbitraryOptInChoicesParameters<Requirement>;
 
   constructor(arbitraryOptInChoicesParameters: AddArbitraryOptInChoicesParameters<Requirement>) {
+    super();
     this.arbitraryOptInChoicesParameters = arbitraryOptInChoicesParameters;
   }
 

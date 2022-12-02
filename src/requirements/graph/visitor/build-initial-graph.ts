@@ -1,4 +1,4 @@
-import GraphVisitor from './interface';
+import GraphVisitor from './definition';
 import RequirementFulfillmentGraph from '..';
 import { CourseForRequirementGraph, CourseWithUniqueId } from '../types';
 
@@ -27,10 +27,11 @@ export type BuildInitialGraphParameters<Requirement, Course> = {
 export default class BuildInitialGraph<
   Requirement extends string,
   Course extends CourseForRequirementGraph
-> implements GraphVisitor<Requirement, Course> {
+> extends GraphVisitor<Requirement, Course> {
   private buildInitialGraphParameters: BuildInitialGraphParameters<Requirement, Course>;
 
   constructor(buildInitialGraphParameters: BuildInitialGraphParameters<Requirement, Course>) {
+    super();
     this.buildInitialGraphParameters = buildInitialGraphParameters;
   }
 
