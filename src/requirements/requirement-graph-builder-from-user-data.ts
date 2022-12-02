@@ -106,7 +106,7 @@ export default function buildRequirementFulfillmentGraphFromUserData(
     doubleCountedCourseUniqueIDSet,
     courseToRequirementsInConstraintViolations,
   } = removeIllegalEdgesFromRequirementFulfillmentGraph(
-    safeRequirementFulfillmentGraph,
+    dangerousRequirementFulfillmentGraph,
     (reqA, reqB) =>
       allowCourseDoubleCountingBetweenRequirements(
         userRequirementsMap[reqA],
