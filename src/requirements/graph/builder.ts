@@ -3,7 +3,7 @@ import RequirementFulfillmentGraph from '.';
 import { CourseForRequirementGraph } from './types';
 
 /**
- * @deprecated Use processor pipeline model.
+ * @deprecated Use visitor pipeline model.
  */
 export type BuildRequirementFulfillmentGraphParametersDeprecated<
   Requirement extends string,
@@ -51,7 +51,7 @@ export type BuildRequirementFulfillmentGraphParametersDeprecated<
 };
 
 /**
- * @deprecated Use processor pipeline model.
+ * @deprecated Use visitor pipeline model.
  */
 export const buildRequirementFulfillmentGraphDeprecated = <
   Requirement extends string,
@@ -122,7 +122,7 @@ export const buildRequirementFulfillmentGraphDeprecated = <
 };
 
 /**
- * @deprecated Use processor pipeline model.
+ * @deprecated Use visitor pipeline model.
  */
 export const removeIllegalEdgesFromRequirementFulfillmentGraph = <
   Requirement extends string,

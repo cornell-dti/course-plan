@@ -1,11 +1,8 @@
-import GraphProcessor from './interface';
+import GraphVisitor from './interface';
 import RequirementFulfillmentGraph from '..';
 import { CourseForRequirementGraph, CourseWithUniqueId } from '../types';
 
-export type BuildInitialGraphParameters<
-  Requirement extends string,
-  Course extends CourseWithUniqueId
-> = {
+export type BuildInitialGraphParameters<Requirement, Course> = {
   /**
    * A list of applicable requirements in the system. e.g. if the user is CS major
    * in COE, then the list should contain all university requirements, COE requirements, and CS major
@@ -30,7 +27,7 @@ export type BuildInitialGraphParameters<
 export default class BuildInitialGraph<
   Requirement extends string,
   Course extends CourseForRequirementGraph
-> implements GraphProcessor<Requirement, Course> {
+> implements GraphVisitor<Requirement, Course> {
   private buildInitialGraphParameters: BuildInitialGraphParameters<Requirement, Course>;
 
   constructor(buildInitialGraphParameters: BuildInitialGraphParameters<Requirement, Course>) {

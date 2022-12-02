@@ -12,7 +12,7 @@ import {
   BuildInitialGraph,
   process,
   RemoveConstraintViolationEdges,
-} from './graph/processor';
+} from './graph/visitor';
 import { getConstraintViolations } from './requirement-constraints-utils';
 
 export default function buildRequirementFulfillmentGraphFromUserData(

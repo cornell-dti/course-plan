@@ -1,8 +1,8 @@
-import GraphProcessor from './interface';
+import GraphVisitor from './interface';
 import RequirementFulfillmentGraph from '..';
 import { CourseForRequirementGraph } from '../types';
 
-export type AddOptOutChoicesParameters<Requirement extends string> = {
+export type AddOptOutChoicesParameters<Requirement> = {
   /**
    * The mapping from course's unique ID to opt out choices.
    */
@@ -19,7 +19,7 @@ export type AddOptOutChoicesParameters<Requirement extends string> = {
 export default class AddOptOutChoices<
   Requirement extends string,
   Course extends CourseForRequirementGraph
-> implements GraphProcessor<Requirement, Course> {
+> implements GraphVisitor<Requirement, Course> {
   private addOptOutChoicesParameters: AddOptOutChoicesParameters<Requirement>;
 
   constructor(addOptOutChoicesParameters: AddOptOutChoicesParameters<Requirement>) {

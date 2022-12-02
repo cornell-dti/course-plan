@@ -1,4 +1,4 @@
-import GraphProcessor from './interface';
+import GraphVisitor from './interface';
 import RequirementFulfillmentGraph from '..';
 import { CourseForRequirementGraph } from '../types';
 
@@ -18,7 +18,7 @@ export type AddToggleableChoicesParameters<Requirement extends string> = {
 export default class AddToggleableChoices<
   Requirement extends string,
   Course extends CourseForRequirementGraph
-> implements GraphProcessor<Requirement, Course> {
+> implements GraphVisitor<Requirement, Course> {
   private addToggleableChoicesParameters: AddToggleableChoicesParameters<Requirement>;
 
   constructor(addToggleableChoicesParameters: AddToggleableChoicesParameters<Requirement>) {
