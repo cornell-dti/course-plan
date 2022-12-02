@@ -24,6 +24,9 @@ export type BuildInitialGraphParameters<
   ) => readonly number[];
 };
 
+/**
+ * Build the initial graph. The intended use is to pass in an undefined or empty graph.
+ */
 export default class BuildInitialGraph<
   Requirement extends string,
   Course extends CourseForRequirementGraph
@@ -69,8 +72,6 @@ export type BuildRequirementFulfillmentGraphParameters<
  *
  * This is not directly implemented in the constructor of RequirementFulfillmentGraph,
  * in order to abstract the class for testing purposes.
- *
- * Precondition: `graph` is empty.
  */
 export const buildInitialGraph = <
   Requirement extends string,

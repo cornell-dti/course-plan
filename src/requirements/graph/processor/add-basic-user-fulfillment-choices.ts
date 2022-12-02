@@ -21,6 +21,10 @@ export type BasicUserFulfillmentChoicesParameters<Requirement extends string> = 
   };
 };
 
+/**
+ * Add basic user fulfillment choices, including toggleable choies, selectable requirement choices,
+ * and opt out choices.
+ */
 export default class AddBasicUserFulfillmentChoices<
   Requirement extends string,
   Course extends CourseForRequirementGraph

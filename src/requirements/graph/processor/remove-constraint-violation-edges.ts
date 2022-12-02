@@ -7,6 +7,9 @@ export type RemoveConstraintViolationEdgesParameters<Requirement extends string>
   requirementConstraintHolds: (requirementA: Requirement, requirementB: Requirement) => boolean;
 };
 
+/**
+ * Remove constraint violation edges from the graph.
+ */
 export default class RemoveConstraintViolationEdges<
   Requirement extends string,
   Course extends CourseWithUniqueId

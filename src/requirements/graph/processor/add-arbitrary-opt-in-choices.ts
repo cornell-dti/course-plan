@@ -13,6 +13,9 @@ export type ArbitraryOptInChoicesParameters<Requirement extends string> = {
   };
 };
 
+/**
+ * Add the user's arbitrary opt in choices to the graph.
+ */
 export default class AddArbitraryOptInChoices<
   Requirement extends string,
   Course extends CourseWithUniqueId
