@@ -1,7 +1,7 @@
-import { getConstraintViolations } from '@/requirements/requirement-constraints-utils';
 import GraphProcessor from './definition';
 import RequirementFulfillmentGraph from '..';
 import { CourseForRequirementGraph } from '../types';
+import { getConstraintViolations } from '../../requirement-constraints-utils';
 
 export type RemoveConstraintViolationEdgesParameters<Requirement extends string> = {
   requirementConstraintHolds: (requirementA: Requirement, requirementB: Requirement) => boolean;
