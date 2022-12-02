@@ -1,4 +1,4 @@
-import GraphProcessor from './definition';
+import GraphProcessor from './interface';
 import RequirementFulfillmentGraph from '..';
 import { CourseForRequirementGraph } from '../types';
 
@@ -31,13 +31,13 @@ export default class AddOptOutChoices<
   }
 }
 
-export const addOptOutChoices = <
+export function addOptOutChoices<
   Requirement extends string,
   Course extends CourseForRequirementGraph
 >(
   graph: RequirementFulfillmentGraph<Requirement, Course>,
   { userChoiceOnRequirementOverrides }: AddOptOutChoicesParameters<Requirement>
-): RequirementFulfillmentGraph<Requirement, Course> => {
+): RequirementFulfillmentGraph<Requirement, Course> {
   graph.getAllCourses().forEach(course => {
     userChoiceOnRequirementOverrides[course.uniqueId]?.optOut?.forEach(requirement => {
       graph.removeEdge(requirement, course);
@@ -45,4 +45,4 @@ export const addOptOutChoices = <
   });
 
   return graph;
-};
+}

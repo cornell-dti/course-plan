@@ -1,4 +1,4 @@
-import GraphProcessor from './definition';
+import GraphProcessor from './interface';
 import RequirementFulfillmentGraph from '..';
 import { CourseForRequirementGraph } from '../types';
 
@@ -31,13 +31,13 @@ export default class AddSelectableChoices<
   }
 }
 
-export const addSelectableChoices = <
+export function addSelectableChoices<
   Requirement extends string,
   Course extends CourseForRequirementGraph
 >(
   graph: RequirementFulfillmentGraph<Requirement, Course>,
   { userChoiceOnRequirementOverrides }: AddSelectableChoicesParameters<Requirement>
-): RequirementFulfillmentGraph<Requirement, Course> => {
+): RequirementFulfillmentGraph<Requirement, Course> {
   graph.getAllCourses().forEach(course => {
     userChoiceOnRequirementOverrides[course.uniqueId]?.acknowledgedCheckerWarningOptIn?.forEach(
       requirement => {
@@ -47,4 +47,4 @@ export const addSelectableChoices = <
   });
 
   return graph;
-};
+}

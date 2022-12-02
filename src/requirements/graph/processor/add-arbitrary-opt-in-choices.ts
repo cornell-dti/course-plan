@@ -1,4 +1,4 @@
-import GraphProcessor from './definition';
+import GraphProcessor from './interface';
 import RequirementFulfillmentGraph from '..';
 import { CourseWithUniqueId } from '../types';
 
@@ -27,21 +27,21 @@ export default class AddArbitraryOptInChoices<
   }
 
   public process(graph: RequirementFulfillmentGraph<Requirement, Course>) {
-    return addArbitraryOptInChoicesParameters(graph.copy(), this.arbitraryOptInChoicesParameters);
+    return addArbitraryOptInChoices(graph.copy(), this.arbitraryOptInChoicesParameters);
   }
 }
 
-export const addArbitraryOptInChoicesParameters = <
+export function addArbitraryOptInChoices<
   Requirement extends string,
   Course extends CourseWithUniqueId
 >(
   graph: RequirementFulfillmentGraph<Requirement, Course>,
   { userChoiceOnRequirementOverrides }: AddArbitraryOptInChoicesParameters<Requirement>
-): RequirementFulfillmentGraph<Requirement, Course> => {
+): RequirementFulfillmentGraph<Requirement, Course> {
   graph.getAllCourses().forEach(course => {
     userChoiceOnRequirementOverrides[course.uniqueId]?.arbitraryOptIn?.forEach(requirement => {
       graph.addEdge(requirement, course);
     });
   });
   return graph;
-};
+}

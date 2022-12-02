@@ -1,6 +1,6 @@
-import RequirementFulfillmentGraph from '../definition';
+import RequirementFulfillmentGraph from '..';
 import { CourseWithUniqueId } from '../types';
-import GraphProcessor from './definition';
+import GraphProcessor from './interface';
 
 export { default as AddArbitraryOptInChoices } from './add-arbitrary-opt-in-choices';
 export { default as AddOptOutChoices } from './add-opt-out-choices';

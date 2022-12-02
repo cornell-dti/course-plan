@@ -1,4 +1,4 @@
-import GraphProcessor from './definition';
+import GraphProcessor from './interface';
 import RequirementFulfillmentGraph from '..';
 import { CourseForRequirementGraph } from '../types';
 
@@ -30,13 +30,13 @@ export default class AddToggleableChoices<
   }
 }
 
-export const addToggleableChoices = <
+export function addToggleableChoices<
   Requirement extends string,
   Course extends CourseForRequirementGraph
 >(
   graph: RequirementFulfillmentGraph<Requirement, Course>,
   { userChoiceOnFulfillmentStrategy }: AddToggleableChoicesParameters<Requirement>
-): RequirementFulfillmentGraph<Requirement, Course> => {
+): RequirementFulfillmentGraph<Requirement, Course> {
   Object.entries<readonly number[]>(userChoiceOnFulfillmentStrategy).forEach(
     ([key, coursesOfChosenFulfillmentStrategy]) => {
       const correspondingRequirement = key as Requirement;
@@ -51,4 +51,4 @@ export const addToggleableChoices = <
     }
   );
   return graph;
-};
+}

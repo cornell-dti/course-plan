@@ -1,4 +1,4 @@
-import GraphProcessor from './definition';
+import GraphProcessor from './interface';
 import RequirementFulfillmentGraph from '..';
 import { CourseForRequirementGraph, CourseWithUniqueId } from '../types';
 
@@ -73,7 +73,7 @@ export type BuildRequirementFulfillmentGraphParameters<
  * This is not directly implemented in the constructor of RequirementFulfillmentGraph,
  * in order to abstract the class for testing purposes.
  */
-export const buildInitialGraph = <
+export function buildInitialGraph<
   Requirement extends string,
   Course extends CourseForRequirementGraph
 >(
@@ -83,7 +83,7 @@ export const buildInitialGraph = <
     courses,
     getAllCoursesThatCanPotentiallySatisfyRequirement,
   }: BuildRequirementFulfillmentGraphParameters<Requirement, Course>
-): RequirementFulfillmentGraph<Requirement, Course> => {
+): RequirementFulfillmentGraph<Requirement, Course> {
   const userCourseCourseIDToCourseMap = new Map<number, Course[]>();
   courses.forEach(course => {
     let existing = userCourseCourseIDToCourseMap.get(course.courseId);
@@ -106,4 +106,4 @@ export const buildInitialGraph = <
   });
 
   return graph;
-};
+}
