@@ -1,11 +1,11 @@
-import { getConstraintViolations } from './requirement-constraints-utils';
-import RequirementFulfillmentGraph, { CourseWithUniqueId } from './requirement-graph';
+import { getConstraintViolations } from '../requirement-constraints-utils';
+import RequirementFulfillmentGraph from '.';
+import { CourseForRequirementGraph } from './types';
 
-interface CourseForRequirementGraph extends CourseWithUniqueId {
-  readonly courseId: number;
-}
-
-export type BuildRequirementFulfillmentGraphParameters<
+/**
+ * @deprecated Use transformer pipeline model.
+ */
+export type BuildRequirementFulfillmentGraphParametersDeprecated<
   Requirement extends string,
   Course extends CourseForRequirementGraph
 > = {
@@ -50,7 +50,10 @@ export type BuildRequirementFulfillmentGraphParameters<
   ) => readonly number[];
 };
 
-export const buildRequirementFulfillmentGraph = <
+/**
+ * @deprecated Use transformer pipeline model.
+ */
+export const buildRequirementFulfillmentGraphDeprecated = <
   Requirement extends string,
   Course extends CourseForRequirementGraph
 >({
@@ -59,10 +62,10 @@ export const buildRequirementFulfillmentGraph = <
   userChoiceOnFulfillmentStrategy,
   userChoiceOnRequirementOverrides,
   getAllCoursesThatCanPotentiallySatisfyRequirement,
-}: BuildRequirementFulfillmentGraphParameters<Requirement, Course>): RequirementFulfillmentGraph<
+}: BuildRequirementFulfillmentGraphParametersDeprecated<
   Requirement,
   Course
-> => {
+>): RequirementFulfillmentGraph<Requirement, Course> => {
   const graph = new RequirementFulfillmentGraph<Requirement, Course>();
   const userCourseCourseIDToCourseMap = new Map<number, Course[]>();
   userCourses.forEach(course => {
@@ -118,6 +121,9 @@ export const buildRequirementFulfillmentGraph = <
   return graph;
 };
 
+/**
+ * @deprecated Use transformer pipeline model.
+ */
 export const removeIllegalEdgesFromRequirementFulfillmentGraph = <
   Requirement extends string,
   Course extends CourseForRequirementGraph
@@ -135,4 +141,69 @@ export const removeIllegalEdgesFromRequirementFulfillmentGraph = <
   } = getConstraintViolations(graph, requirementConstraintHolds);
   graph.subtractGraphEdges(constraintViolationsGraph);
   return { courseToRequirementsInConstraintViolations, doubleCountedCourseUniqueIDSet };
+};
+
+export type BuildRequirementFulfillmentGraphParameters<
+  Requirement extends string,
+  Course extends CourseForRequirementGraph
+> = {
+  /**
+   * A list of applicable requirements in the system. e.g. if the user is CS major
+   * in COE, then the list should contain all university requirements, COE requirements, and CS major
+   * requirements.
+   */
+  readonly requirements: readonly Requirement[];
+  /** A list of courses user inputted into course plan, regardless of semesters. */
+  readonly courses: readonly Course[];
+  /**
+   * Naively give a list of courses ID that can satisfy a requirement. Most of the time this function
+   * should just return the pre-computed eligible course id list. For requirements have multiple
+   * fulfillment strategies, it will return the union of all pre-computed course list.
+   */
+  readonly getAllCoursesThatCanPotentiallySatisfyRequirement: (
+    requirement: Requirement
+  ) => readonly number[];
+};
+
+/**
+ * Build an initial requirement fulfillment graph from the user's requirements and courses.
+ *
+ * This is not directly implemented in the constructor of RequirementFulfillmentGraph,
+ * in order to abstract the class for testing purposes.
+ */
+export const buildRequirementFulfillmentGraph = <
+  Requirement extends string,
+  Course extends CourseForRequirementGraph
+>({
+  requirements,
+  courses,
+  getAllCoursesThatCanPotentiallySatisfyRequirement,
+}: BuildRequirementFulfillmentGraphParameters<Requirement, Course>): RequirementFulfillmentGraph<
+  Requirement,
+  Course
+> => {
+  const graph = new RequirementFulfillmentGraph<Requirement, Course>();
+
+  const userCourseCourseIDToCourseMap = new Map<number, Course[]>();
+  courses.forEach(course => {
+    let existing = userCourseCourseIDToCourseMap.get(course.courseId);
+    if (existing == null) {
+      existing = [];
+      userCourseCourseIDToCourseMap.set(course.courseId, existing);
+    }
+    existing.push(course);
+  });
+
+  // Build a rough graph by naively connecting requirements and courses based on
+  // `getAllCoursesThatCanPotentiallySatisfyRequirement`.
+  requirements.forEach(requirement => {
+    graph.addRequirementNode(requirement);
+    getAllCoursesThatCanPotentiallySatisfyRequirement(requirement).forEach(courseId => {
+      (userCourseCourseIDToCourseMap.get(courseId) || []).forEach(course =>
+        graph.addEdge(requirement, course)
+      );
+    });
+  });
+
+  return graph;
 };

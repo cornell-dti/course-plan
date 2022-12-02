@@ -1,4 +1,4 @@
-import RequirementFulfillmentGraph, { CourseWithUniqueId } from './requirement-graph';
+import RequirementFulfillmentGraph, { CourseWithUniqueId } from './graph';
 
 type RequirementFulfillmentGraphConstraintViolations<Requirement extends string> = {
   constraintViolationsGraph: RequirementFulfillmentGraph<Requirement, CourseWithUniqueId>;

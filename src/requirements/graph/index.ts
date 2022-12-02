@@ -1,6 +1,4 @@
-export interface CourseWithUniqueId {
-  readonly uniqueId: string | number;
-}
+import { CourseWithUniqueId } from './types';
 
 /**
  * A mutable graph data structure that represents the mathematically relation between requirement

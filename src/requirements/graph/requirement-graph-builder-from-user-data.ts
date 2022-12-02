@@ -2,13 +2,13 @@ import {
   getMatchedRequirementFulfillmentSpecification,
   allowCourseDoubleCountingBetweenRequirements,
   getUserRequirements,
-} from './requirement-frontend-utils';
-import RequirementFulfillmentGraph from './requirement-graph';
+} from '../requirement-frontend-utils';
+import RequirementFulfillmentGraph from '.';
 import {
-  BuildRequirementFulfillmentGraphParameters,
-  buildRequirementFulfillmentGraph,
+  BuildRequirementFulfillmentGraphParametersDeprecated,
+  buildRequirementFulfillmentGraphDeprecated,
   removeIllegalEdgesFromRequirementFulfillmentGraph,
-} from './requirement-graph-builder';
+} from './builder';
 
 export default function buildRequirementFulfillmentGraphFromUserData(
   coursesTaken: readonly CourseTaken[],
@@ -26,7 +26,7 @@ export default function buildRequirementFulfillmentGraphFromUserData(
   const userRequirements = getUserRequirements(onboardingData);
   const userRequirementsMap = Object.fromEntries(userRequirements.map(it => [it.id, it]));
 
-  const requirementGraphBuilderParameters: BuildRequirementFulfillmentGraphParameters<
+  const requirementGraphBuilderParameters: BuildRequirementFulfillmentGraphParametersDeprecated<
     string,
     CourseTaken
   > = {
@@ -79,7 +79,7 @@ export default function buildRequirementFulfillmentGraphFromUserData(
       return spec.eligibleCourses.flat();
     },
   };
-  const dangerousRequirementFulfillmentGraph = buildRequirementFulfillmentGraph(
+  const dangerousRequirementFulfillmentGraph = buildRequirementFulfillmentGraphDeprecated(
     requirementGraphBuilderParameters
   );
   const safeRequirementFulfillmentGraph = dangerousRequirementFulfillmentGraph.copy();
