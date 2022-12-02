@@ -4,14 +4,14 @@ import {
   getUserRequirements,
 } from './requirement-frontend-utils';
 import RequirementFulfillmentGraph from './graph';
-import { removeIllegalEdgesFromRequirementFulfillmentGraph } from './graph/builder';
 import {
   AddBasicUserFulfillmentChoices,
   AddArbitraryOptInChoices,
   BuildInitialGraph,
-  RemoveConstraintViolationEdges,
   process,
+  RemoveConstraintViolationEdges,
 } from './graph/processor';
+import { getConstraintViolations } from './requirement-constraints-utils';
 
 export default function buildRequirementFulfillmentGraphFromUserData(
   coursesTaken: readonly CourseTaken[],
@@ -38,7 +38,7 @@ export default function buildRequirementFulfillmentGraphFromUserData(
         [
           uniqueId,
           {
-            arbitraryOptIn: [...new Set(Object.keys(choice.arbitraryOptIn))],
+            arbitraryOptIn: [...new Set(Object.keys(choice.arbitraryOptIn || {}))],
             acknowledgedCheckerWarningOptIn: [...new Set(choice.acknowledgedCheckerWarningOptIn)],
             optOut: [...new Set(choice.optOut)],
           },
@@ -54,8 +54,6 @@ export default function buildRequirementFulfillmentGraphFromUserData(
       courses: coursesTaken,
       getAllCoursesThatCanPotentiallySatisfyRequirement: requirementID => {
         const requirement = userRequirementsMap[requirementID];
-        // When a requirement has checker warning, we do not add those edges in phase 1.
-        // All edges will be explictly opt-in only from stage 3.
         const spec = getMatchedRequirementFulfillmentSpecification(
           requirement,
           toggleableRequirementChoices
@@ -103,15 +101,13 @@ export default function buildRequirementFulfillmentGraphFromUserData(
   );
 
   const {
-    doubleCountedCourseUniqueIDSet,
     courseToRequirementsInConstraintViolations,
-  } = removeIllegalEdgesFromRequirementFulfillmentGraph(
-    dangerousRequirementFulfillmentGraph,
-    (reqA, reqB) =>
-      allowCourseDoubleCountingBetweenRequirements(
-        userRequirementsMap[reqA],
-        userRequirementsMap[reqB]
-      )
+    doubleCountedCourseUniqueIDSet,
+  } = getConstraintViolations(dangerousRequirementFulfillmentGraph, (reqA, reqB) =>
+    allowCourseDoubleCountingBetweenRequirements(
+      userRequirementsMap[reqA],
+      userRequirementsMap[reqB]
+    )
   );
 
   return {

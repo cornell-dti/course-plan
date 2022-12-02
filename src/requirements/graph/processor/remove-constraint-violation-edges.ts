@@ -1,6 +1,6 @@
 import GraphProcessor from './definition';
 import RequirementFulfillmentGraph from '..';
-import { CourseForRequirementGraph } from '../types';
+import { CourseWithUniqueId } from '../types';
 import { getConstraintViolations } from '../../requirement-constraints-utils';
 
 export type RemoveConstraintViolationEdgesParameters<Requirement extends string> = {
@@ -9,7 +9,7 @@ export type RemoveConstraintViolationEdgesParameters<Requirement extends string>
 
 export default class RemoveConstraintViolationEdges<
   Requirement extends string,
-  Course extends CourseForRequirementGraph
+  Course extends CourseWithUniqueId
 > implements GraphProcessor<Requirement, Course> {
   private removeConstraintViolationEdgesParameters: RemoveConstraintViolationEdgesParameters<Requirement>;
 
@@ -20,21 +20,21 @@ export default class RemoveConstraintViolationEdges<
   }
 
   public process(graph: RequirementFulfillmentGraph<Requirement, Course>) {
-    return removeConstraintViolationEdges(graph, this.removeConstraintViolationEdgesParameters);
+    return removeConstraintViolationEdges(
+      graph.copy(),
+      this.removeConstraintViolationEdgesParameters
+    );
   }
 }
 
 export const removeConstraintViolationEdges = <
   Requirement extends string,
-  Course extends CourseForRequirementGraph
+  Course extends CourseWithUniqueId
 >(
   graph: RequirementFulfillmentGraph<Requirement, Course>,
   { requirementConstraintHolds }: RemoveConstraintViolationEdgesParameters<Requirement>
 ): RequirementFulfillmentGraph<Requirement, Course> => {
-  const newGraph = graph.copy();
-
   const { constraintViolationsGraph } = getConstraintViolations(graph, requirementConstraintHolds);
-  newGraph.subtractGraphEdges(constraintViolationsGraph);
-
-  return newGraph;
+  graph.subtractGraphEdges(constraintViolationsGraph);
+  return graph;
 };

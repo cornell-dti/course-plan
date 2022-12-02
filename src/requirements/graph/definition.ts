@@ -94,11 +94,13 @@ export default class RequirementFulfillmentGraph<
 
   public copy(): RequirementFulfillmentGraph<Requirement, Course> {
     const newCopy = new RequirementFulfillmentGraph<Requirement, Course>();
+    // newCopy.addGraph(this);
+    // return newCopy;
     this.requirementToCoursesMap.forEach((courseIdToCourseMap, key) => {
       newCopy.requirementToCoursesMap.set(key, new Map(courseIdToCourseMap.entries()));
     });
     this.courseToRequirementsMap.forEach((requirementSet, key) => {
-      newCopy.courseToRequirementsMap.set(key, new Set(requirementSet));
+      newCopy.courseToRequirementsMap.set(key, new Set(Array.from(requirementSet)));
     });
     return newCopy;
   }

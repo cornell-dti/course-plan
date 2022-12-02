@@ -1,10 +1,10 @@
 import GraphProcessor from './definition';
 import RequirementFulfillmentGraph from '..';
-import { CourseForRequirementGraph } from '../types';
+import { CourseForRequirementGraph, CourseWithUniqueId } from '../types';
 
 export type BuildInitialGraphParameters<
   Requirement extends string,
-  Course extends CourseForRequirementGraph
+  Course extends CourseWithUniqueId
 > = {
   /**
    * A list of applicable requirements in the system. e.g. if the user is CS major
@@ -34,13 +34,17 @@ export default class BuildInitialGraph<
     this.buildInitialGraphParameters = buildInitialGraphParameters;
   }
 
-  public process(graph: RequirementFulfillmentGraph<Requirement, Course>) {
-    return buildInitialGraph(graph, this.buildInitialGraphParameters);
+  public process(graph?: RequirementFulfillmentGraph<Requirement, Course>) {
+    return buildInitialGraph(
+      graph?.copy() ?? new RequirementFulfillmentGraph<Requirement, Course>(),
+      this.buildInitialGraphParameters
+    );
   }
 }
+
 export type BuildRequirementFulfillmentGraphParameters<
   Requirement extends string,
-  Course extends CourseForRequirementGraph
+  Course extends CourseWithUniqueId
 > = {
   /**
    * A list of applicable requirements in the system. e.g. if the user is CS major
@@ -79,8 +83,6 @@ export const buildInitialGraph = <
     getAllCoursesThatCanPotentiallySatisfyRequirement,
   }: BuildRequirementFulfillmentGraphParameters<Requirement, Course>
 ): RequirementFulfillmentGraph<Requirement, Course> => {
-  const newGraph = graph.copy(); // redundant copy, for safety
-
   const userCourseCourseIDToCourseMap = new Map<number, Course[]>();
   courses.forEach(course => {
     let existing = userCourseCourseIDToCourseMap.get(course.courseId);
@@ -94,13 +96,13 @@ export const buildInitialGraph = <
   // Build a rough graph by naively connecting requirements and courses based on
   // `getAllCoursesThatCanPotentiallySatisfyRequirement`.
   requirements.forEach(requirement => {
-    newGraph.addRequirementNode(requirement);
+    graph.addRequirementNode(requirement);
     getAllCoursesThatCanPotentiallySatisfyRequirement(requirement).forEach(courseId => {
-      (userCourseCourseIDToCourseMap.get(courseId) || []).forEach(course =>
-        newGraph.addEdge(requirement, course)
-      );
+      userCourseCourseIDToCourseMap
+        .get(courseId)
+        ?.forEach(course => graph.addEdge(requirement, course));
     });
   });
 
-  return newGraph;
+  return graph;
 };

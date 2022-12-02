@@ -34,7 +34,7 @@ export default class AddBasicUserFulfillmentChoices<
   }
 
   public process(graph: RequirementFulfillmentGraph<Requirement, Course>) {
-    return addBasicUserFulfillmentChoices(graph, this.basicUserFulfillmentChoicesParameters);
+    return addBasicUserFulfillmentChoices(graph.copy(), this.basicUserFulfillmentChoicesParameters);
   }
 }
 
@@ -48,35 +48,33 @@ export const addBasicUserFulfillmentChoices = <
     userChoiceOnRequirementOverrides,
   }: BasicUserFulfillmentChoicesParameters<Requirement>
 ): RequirementFulfillmentGraph<Requirement, Course> => {
-  const newGraph = graph.copy();
-
   // Respect user's choices on fulfillment strategies.
   Object.entries<readonly number[]>(userChoiceOnFulfillmentStrategy).forEach(
     ([key, coursesOfChosenFulfillmentStrategy]) => {
       const correspondingRequirement = key as Requirement;
       const coursesToKeepSet = new Set(coursesOfChosenFulfillmentStrategy);
 
-      newGraph
+      graph
         .getConnectedCoursesFromRequirement(correspondingRequirement)
         .forEach(connectedCourse => {
           if (!coursesToKeepSet.has(connectedCourse.courseId)) {
-            newGraph.removeEdge(correspondingRequirement, connectedCourse);
+            graph.removeEdge(correspondingRequirement, connectedCourse);
           }
         });
     }
   );
 
   // Respect user's choices on selectable and opt-out choices.
-  newGraph.getAllCourses().forEach(course => {
+  graph.getAllCourses().forEach(course => {
     const userChoiceOnOptInOptOutCourse = userChoiceOnRequirementOverrides[course.uniqueId];
     if (userChoiceOnOptInOptOutCourse == null) return;
     userChoiceOnOptInOptOutCourse.acknowledgedCheckerWarningOptIn.forEach(requirement => {
-      newGraph.addEdge(requirement, course);
+      graph.addEdge(requirement, course);
     });
     userChoiceOnOptInOptOutCourse.optOut.forEach(requirement => {
-      newGraph.removeEdge(requirement, course);
+      graph.removeEdge(requirement, course);
     });
   });
 
-  return newGraph;
+  return graph;
 };
