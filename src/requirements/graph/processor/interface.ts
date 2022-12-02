@@ -2,14 +2,18 @@ import RequirementFulfillmentGraph from '..';
 import { CourseWithUniqueId } from '../types';
 
 /**
- * A pipelining interface for moving requirement graphs through different stages.
+ * A pipelining interface for processing items through different stages.
  */
-export default interface GraphProcessor<
-  Requirement extends string,
-  Course extends CourseWithUniqueId
-> {
-  /** Non-mutating function to generate output graph from input graph */
-  process: (
-    graph: RequirementFulfillmentGraph<Requirement, Course>
-  ) => RequirementFulfillmentGraph<Requirement, Course>;
+interface Processor<T> {
+  /** Non-mutating function to generate output item from input item */
+  process: (item: T) => T;
 }
+
+/**
+ * A pipelining interface for processing requirement fulfillment graphs through different stages.
+ */
+type GraphProcessor<Requirement extends string, Course extends CourseWithUniqueId> = Processor<
+  RequirementFulfillmentGraph<Requirement, Course>
+>;
+
+export default GraphProcessor;
