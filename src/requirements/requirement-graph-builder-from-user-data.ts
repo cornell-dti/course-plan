@@ -4,14 +4,12 @@ import {
   getUserRequirements,
 } from './requirement-frontend-utils';
 import RequirementFulfillmentGraph from './graph';
-import {
-  buildRequirementFulfillmentGraph,
-  removeIllegalEdgesFromRequirementFulfillmentGraph,
-} from './graph/builder';
+import { removeIllegalEdgesFromRequirementFulfillmentGraph } from './graph/builder';
 import AddBasicUserFulfillmentChoices from './graph/processor/add-basic-user-fulfillment-choices';
 import { process } from './graph/processor';
 import AddArbitraryOptInChoices from './graph/processor/add-arbitrary-opt-in-choices';
 import RemoveConstraintViolationEdges from './graph/processor/remove-constraint-violation-edges';
+import BuildInitialGraph from './graph/processor/build-initial-graph';
 
 export default function buildRequirementFulfillmentGraphFromUserData(
   coursesTaken: readonly CourseTaken[],
@@ -47,26 +45,25 @@ export default function buildRequirementFulfillmentGraphFromUserData(
     })
   );
 
-  const initialRequirementFulfillmentGraph = buildRequirementFulfillmentGraph({
-    requirements: userRequirements.map(it => it.id),
-    courses: coursesTaken,
-    getAllCoursesThatCanPotentiallySatisfyRequirement: requirementID => {
-      const requirement = userRequirementsMap[requirementID];
-      // When a requirement has checker warning, we do not add those edges in phase 1.
-      // All edges will be explictly opt-in only from stage 3.
-      const spec = getMatchedRequirementFulfillmentSpecification(
-        requirement,
-        toggleableRequirementChoices
-      );
-      if (spec == null || spec.hasRequirementCheckerWarning) {
-        return [];
-      }
-      return spec.eligibleCourses.flat();
-    },
-  });
-
   const basicUserFulfillmentGraph = process(
-    initialRequirementFulfillmentGraph,
+    undefined, // initial graph is undefined, so the pipeline creates it for us
+    new BuildInitialGraph({
+      requirements: userRequirements.map(it => it.id),
+      courses: coursesTaken,
+      getAllCoursesThatCanPotentiallySatisfyRequirement: requirementID => {
+        const requirement = userRequirementsMap[requirementID];
+        // When a requirement has checker warning, we do not add those edges in phase 1.
+        // All edges will be explictly opt-in only from stage 3.
+        const spec = getMatchedRequirementFulfillmentSpecification(
+          requirement,
+          toggleableRequirementChoices
+        );
+        if (spec == null || spec.hasRequirementCheckerWarning) {
+          return [];
+        }
+        return spec.eligibleCourses.flat();
+      },
+    }),
     new AddBasicUserFulfillmentChoices({
       userChoiceOnFulfillmentStrategy: Object.fromEntries(
         userRequirements

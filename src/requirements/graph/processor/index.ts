@@ -16,7 +16,7 @@ export default interface GraphProcessor<
  * Compose zero or more graph processors on a requirement graph.
  */
 export function process<Requirement extends string, Course extends CourseForRequirementGraph>(
-  graph: RequirementGraph<Requirement, Course>,
+  graph = new RequirementGraph<Requirement, Course>(),
   ...processors: GraphProcessor<Requirement, Course>[]
 ) {
   return processors.reduce((newGraph, processor) => processor.process(newGraph), graph);
