@@ -5,8 +5,10 @@ import {
 } from './requirement-frontend-utils';
 import RequirementFulfillmentGraph from './graph';
 import {
-  AddBasicUserFulfillmentChoices,
   AddArbitraryOptInChoices,
+  AddOptOutChoices,
+  AddSelectableChoices,
+  AddToggleableChoices,
   BuildInitialGraph,
   process,
   RemoveConstraintViolationEdges,
@@ -64,7 +66,7 @@ export default function buildRequirementFulfillmentGraphFromUserData(
         return spec.eligibleCourses.flat();
       },
     }),
-    new AddBasicUserFulfillmentChoices({
+    new AddToggleableChoices({
       userChoiceOnFulfillmentStrategy: Object.fromEntries(
         userRequirements
           .map(requirement => {
@@ -77,8 +79,9 @@ export default function buildRequirementFulfillmentGraphFromUserData(
           })
           .filter((it): it is [string, number[]] => it != null)
       ),
-      userChoiceOnRequirementOverrides,
-    })
+    }),
+    new AddSelectableChoices({ userChoiceOnRequirementOverrides }),
+    new AddOptOutChoices({ userChoiceOnRequirementOverrides })
   );
 
   // TODO @bshen rename to optimisticGraph

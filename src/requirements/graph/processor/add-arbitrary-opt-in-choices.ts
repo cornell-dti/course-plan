@@ -2,9 +2,9 @@ import GraphProcessor from './definition';
 import RequirementFulfillmentGraph from '..';
 import { CourseWithUniqueId } from '../types';
 
-export type ArbitraryOptInChoicesParameters<Requirement extends string> = {
+export type AddArbitraryOptInChoicesParameters<Requirement extends string> = {
   /**
-   * The mapping from course's unique ID to arbitrary opt-in choices.
+   * The mapping from course's unique ID to arbitrary opt in choices.
    */
   readonly userChoiceOnRequirementOverrides: {
     readonly [uniqueId: string]: {
@@ -20,9 +20,9 @@ export default class AddArbitraryOptInChoices<
   Requirement extends string,
   Course extends CourseWithUniqueId
 > implements GraphProcessor<Requirement, Course> {
-  private arbitraryOptInChoicesParameters: ArbitraryOptInChoicesParameters<Requirement>;
+  private arbitraryOptInChoicesParameters: AddArbitraryOptInChoicesParameters<Requirement>;
 
-  constructor(arbitraryOptInChoicesParameters: ArbitraryOptInChoicesParameters<Requirement>) {
+  constructor(arbitraryOptInChoicesParameters: AddArbitraryOptInChoicesParameters<Requirement>) {
     this.arbitraryOptInChoicesParameters = arbitraryOptInChoicesParameters;
   }
 
@@ -36,12 +36,10 @@ export const addArbitraryOptInChoicesParameters = <
   Course extends CourseWithUniqueId
 >(
   graph: RequirementFulfillmentGraph<Requirement, Course>,
-  { userChoiceOnRequirementOverrides }: ArbitraryOptInChoicesParameters<Requirement>
+  { userChoiceOnRequirementOverrides }: AddArbitraryOptInChoicesParameters<Requirement>
 ): RequirementFulfillmentGraph<Requirement, Course> => {
   graph.getAllCourses().forEach(course => {
-    const userChoiceOnOptInOptOutCourse = userChoiceOnRequirementOverrides[course.uniqueId];
-    if (userChoiceOnOptInOptOutCourse == null) return;
-    userChoiceOnOptInOptOutCourse.arbitraryOptIn.forEach(requirement => {
+    userChoiceOnRequirementOverrides[course.uniqueId]?.arbitraryOptIn?.forEach(requirement => {
       graph.addEdge(requirement, course);
     });
   });
