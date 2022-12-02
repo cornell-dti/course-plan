@@ -1,22 +1,17 @@
-import RequirementGraph from '..';
+import RequirementFulfillmentGraph from '../definition';
 import { CourseForRequirementGraph } from '../types';
+import GraphProcessor from './definition';
 
-/**
- * A pipelining interface for moving requirement graphs through different stages.
- */
-export default interface GraphProcessor<
-  Requirement extends string,
-  Course extends CourseForRequirementGraph
-> {
-  /** Non-mutating function to generate output graph from input graph */
-  process: (graph: RequirementGraph<Requirement, Course>) => RequirementGraph<Requirement, Course>;
-}
+export { default as AddArbitraryOptInChoices } from './add-arbitrary-opt-in-choices';
+export { default as AddBasicUserFulfillmentChoices } from './add-basic-user-fulfillment-choices';
+export { default as BuildInitialGraph } from './build-initial-graph';
+export { default as RemoveConstraintViolationEdges } from './remove-constraint-violation-edges';
 
 /**
  * Compose zero or more graph processors on a requirement graph.
  */
 export function process<Requirement extends string, Course extends CourseForRequirementGraph>(
-  graph = new RequirementGraph<Requirement, Course>(),
+  graph = new RequirementFulfillmentGraph<Requirement, Course>(),
   ...processors: GraphProcessor<Requirement, Course>[]
 ) {
   return processors.reduce((newGraph, processor) => processor.process(newGraph), graph);

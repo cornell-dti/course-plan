@@ -5,11 +5,13 @@ import {
 } from './requirement-frontend-utils';
 import RequirementFulfillmentGraph from './graph';
 import { removeIllegalEdgesFromRequirementFulfillmentGraph } from './graph/builder';
-import AddBasicUserFulfillmentChoices from './graph/processor/add-basic-user-fulfillment-choices';
-import { process } from './graph/processor';
-import AddArbitraryOptInChoices from './graph/processor/add-arbitrary-opt-in-choices';
-import RemoveConstraintViolationEdges from './graph/processor/remove-constraint-violation-edges';
-import BuildInitialGraph from './graph/processor/build-initial-graph';
+import {
+  AddBasicUserFulfillmentChoices,
+  AddArbitraryOptInChoices,
+  BuildInitialGraph,
+  RemoveConstraintViolationEdges,
+  process,
+} from './graph/processor';
 
 export default function buildRequirementFulfillmentGraphFromUserData(
   coursesTaken: readonly CourseTaken[],

@@ -1,5 +1,5 @@
 import { getConstraintViolations } from '@/requirements/requirement-constraints-utils';
-import GraphProcessor from '.';
+import GraphProcessor from './definition';
 import RequirementFulfillmentGraph from '..';
 import { CourseForRequirementGraph } from '../types';
 

@@ -1,4 +1,4 @@
-import GraphProcessor from '.';
+import GraphProcessor from './definition';
 import RequirementFulfillmentGraph from '..';
 import { CourseForRequirementGraph } from '../types';
 
