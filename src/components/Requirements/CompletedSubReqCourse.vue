@@ -3,8 +3,13 @@
     <delete-course-modal
       :isTransferCredit="isTransferCredit"
       :reqName="courseTaken.code"
+      :reqDesc="reqDesc"
       v-if="deleteModalVisible"
       @close-delete-course-modal="onDeleteCourseModalClose"
+    />
+    <replace-course-modal
+      v-if="replaceModalVisible"
+      @close-replace-course-modal="onReplaceCourseModalClose"
     />
     <div class="completed-reqCourses-course-wrapper">
       <div class="separator"></div>
@@ -20,7 +25,11 @@
           /></span>
           <span class="completed-reqCourses-course-heading-name">{{ slotName }}</span>
         </div>
-        <button class="reqCourse-button" @click="onDeleteModalOpen">Delete ></button>
+        <button
+          class="reqCourse-button"
+          @click="openSlotMenu"
+          data-cyId="gear-complete-subreq"
+        ></button>
       </div>
       <div class="completed-reqCourses-course-object-wrapper">
         <req-course
@@ -37,6 +46,7 @@
     <slot-menu
       v-if="slotMenuOpen"
       :position="slotMenuPosition"
+      @open-replace-slot-modal="onReplaceModalOpen"
       @open-delete-slot-modal="onDeleteModalOpen"
       @close-slot-menu="closeSlotMenu"
     />
@@ -48,6 +58,7 @@ import { PropType, defineComponent } from 'vue';
 import ReqCourse from '@/components/Requirements/ReqCourse.vue';
 import SlotMenu from '@/components/Modals/SlotMenu.vue';
 import DeleteCourseModal from '@/components/Modals/DeleteCourseModal.vue';
+import ReplaceCourseModal from '@/components/Modals/ReplaceCourseModal.vue';
 import CourseCaution from '@/components/Course/CourseCaution.vue';
 import store, { isCourseConflict } from '@/store';
 import { deleteCourseFromSemesters, deleteTransferCredit } from '@/global-firestore-data';
@@ -56,12 +67,14 @@ import { getCurrentSeason, getCurrentYear, clickOutside } from '@/utilities';
 const transferCreditColor = 'DA4A4A'; // Arbitrary color for transfer credit
 
 export default defineComponent({
-  components: { ReqCourse, DeleteCourseModal, SlotMenu, CourseCaution },
+  components: { ReqCourse, DeleteCourseModal, ReplaceCourseModal, SlotMenu, CourseCaution },
   props: {
     slotName: { type: String, required: true },
     courseTaken: { type: Object as PropType<CourseTaken>, required: true },
+    reqDesc: { type: String, required: true },
   },
   data: () => ({
+    replaceModalVisible: false,
     deleteModalVisible: false,
     slotMenuOpen: false,
     mousePosition: { x: 0, y: 0 },
@@ -115,6 +128,12 @@ export default defineComponent({
         }
       }
     },
+    onReplaceModalOpen(): void {
+      this.replaceModalVisible = true;
+    },
+    onReplaceCourseModalClose(): void {
+      this.replaceModalVisible = false;
+    },
     openSlotMenu(e: MouseEvent) {
       this.mousePosition = {
         x: e.clientX,
@@ -132,6 +151,9 @@ export default defineComponent({
   },
   emits: {
     'update:modelValue': (value: boolean) => typeof value === 'boolean',
+    'select-course': (course: CornellCourseRosterCourse) => typeof course === 'object',
+    'add-course': (course: CornellCourseRosterCourse, choice: FirestoreCourseOptInOptOutChoices) =>
+      typeof course === 'object' && typeof choice === 'object',
   },
 });
 </script>
@@ -187,13 +209,12 @@ export default defineComponent({
   }
 }
 
-.reqCourse {
-  &-button {
-    font-size: 14px;
-    line-height: 15px;
-    color: $yuxuanBlue;
-    padding: 0 0.2rem 0.4rem;
-    cursor: pointer;
+.reqCourse-button {
+  padding: 0 0.5rem 0rem;
+  cursor: pointer;
+  background: url('@/assets/images/gear.svg') no-repeat;
+  &:hover {
+    background: url('@/assets/images/settingsBlue.svg') no-repeat;
   }
 }
 </style>

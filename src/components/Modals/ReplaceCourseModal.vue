@@ -1,6 +1,6 @@
 <template>
-  <TeleportModal
-    title="Add Course"
+  <teleport-modal
+    title="Replace Course"
     content-class="content-course"
     :leftButtonText="leftButtonText"
     :rightButtonText="rightButtonText"
@@ -10,27 +10,36 @@
     @right-button-clicked="addItem"
   >
     <div class="newCourse-text">
-      {{ selectedCourse === null ? 'Search Course Roster' : 'Selected Course' }}
+      {{ searchText }}
     </div>
-    <course-selector
-      v-if="selectedCourse === null"
-      search-box-class-name="newCourse-dropdown"
-      :key="courseSelectorKey"
-      :placeholder="placeholderText"
-      :autoFocus="true"
-      @on-escape="closeCurrentModal"
-      @on-select="selectCourse"
-      data-cyId="newCourse-dropdown"
-    />
-    <div v-else class="selected-course" data-cyId="newCourse-selectedCourse">
+    <div v-if="selectedCourse != null" class="selected-course" data-cyId="newCourse-selectedCourse">
       {{ selectedCourse.subject }} {{ selectedCourse.catalogNbr }}:
       {{ selectedCourse.titleLong }}
     </div>
-    <div v-if="selectedCourse != null">
-      <!-- if a course is selected -->
-      <selected-requirement-editor
-        :deleteSemYear="0"
-        :key="courseSelectorKey"
+    <!-- show search bar if still selecting -->
+    <div v-if="selecting">
+      <course-selector
+        v-if="selectedCourse === null"
+        search-box-class-name="newCourse-dropdown"
+        :placeholder="placeholderText"
+        :autoFocus="true"
+        @on-escape="closeCurrentModal"
+        @on-select="selectCourse"
+        data-cyId="newCourse-dropdown"
+      />
+      <div class="newCourse-text" v-if="selectedCourse === null">
+        <img
+          class="requirement-checker-warning-icon"
+          src="@/assets/images/warning.svg"
+          alt="warning icon"
+        />
+        We can't check that this course correctly fulfills the requirement so check carefully before
+        selecting.
+      </div>
+    </div>
+    <!-- show add modal -->
+    <div v-else-if="needToAdd && selectedCourse != null">
+      <replace-requirement-editor
         :editMode="editMode"
         :selectedRequirementID="selectedRequirementID"
         :automaticallyFulfilledRequirements="automaticallyFulfilledRequirements"
@@ -40,28 +49,57 @@
         @edit-mode="toggleEditMode"
       />
     </div>
-  </TeleportModal>
+    <!-- show duplicate modal -->
+    <div v-else-if="hasDuplicates && selectedCourse != null">
+      <replace-requirement-duplicate-editor
+        :editMode="editMode"
+        :selectedRequirementID="selectedRequirementID"
+        :automaticallyFulfilledRequirements="automaticallyFulfilledRequirements"
+        :relatedRequirements="relatedRequirements"
+        :potentialRequirements="selfCheckRequirements"
+        :semestersTaken="semestersTaken"
+        @on-selected-change="onSelectedChange"
+        @edit-mode="toggleEditMode"
+      />
+    </div>
+  </teleport-modal>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import SelectedRequirementEditor from '@/components/Modals/NewCourse/SelectedRequirementEditor.vue';
+import ReplaceRequirementEditor from './NewCourse/ReplaceRequirementEditor.vue';
+import ReplaceRequirementDuplicateEditor from './NewCourse/ReplaceRequirementDuplicateEditor.vue';
 import TeleportModal from '@/components/Modals/TeleportModal.vue';
 import CourseSelector from '@/components/Modals/NewCourse/CourseSelector.vue';
 
 import store from '@/store';
 import { getRelatedUnfulfilledRequirements } from '@/requirements/requirement-frontend-utils';
 
+const leftButtonState = {
+  Back: 'Back',
+  Cancel: 'Cancel',
+} as const;
+/**
+ * Modal to replace course requirement, opens the modal to add course if none
+ * of that course exists, else opens the modal to resolve duplicates of the
+ * course if it exists, else closes the modal if one of that course exists
+ */
 export default defineComponent({
-  components: { CourseSelector, TeleportModal, SelectedRequirementEditor },
+  components: {
+    CourseSelector,
+    TeleportModal,
+    ReplaceRequirementEditor,
+    ReplaceRequirementDuplicateEditor,
+  },
   emits: {
-    'close-course-modal': () => true,
+    'close-replace-course-modal': () => true,
     'select-course': (course: CornellCourseRosterCourse) => typeof course === 'object',
     'add-course': (course: CornellCourseRosterCourse, selectableReqId: string) =>
       typeof course === 'object' && typeof selectableReqId === 'string',
   },
   data() {
     return {
+      selecting: true,
       selectedCourse: null as CornellCourseRosterCourse | null,
       selectedRequirementID: '',
       automaticallyFulfilledRequirements: [] as readonly string[],
@@ -69,8 +107,10 @@ export default defineComponent({
       relatedRequirements: [] as readonly RequirementWithIDSourceType[],
       selfCheckRequirements: [] as readonly RequirementWithIDSourceType[],
       editMode: false,
-      courseSelectorKey: 0,
       isOpen: false,
+      hasDuplicates: false,
+      needToAdd: false,
+      semestersTaken: [] as FirestoreSemester[],
     };
   },
   computed: {
@@ -78,21 +118,53 @@ export default defineComponent({
       return '"CS 1110", "Multivariable Calculus", etc';
     },
     leftButtonText(): string {
-      if (this.selectedCourse == null && !this.editMode) return 'Cancel';
-      return 'Back';
+      if (this.selectedCourse == null && !this.editMode) return leftButtonState.Cancel;
+      return leftButtonState.Back;
     },
     rightButtonText(): string {
       return this.editMode ? 'Next' : 'Add';
     },
+
+    searchText(): string {
+      return this.selecting ? 'Search Course Roster' : 'Selected Course';
+    },
   },
   methods: {
+    // gets the semesters that the selected course exists in
+    getSemestersTaken() {
+      for (const semester of store.state.semesters) {
+        for (const course of semester.courses) {
+          if ('crseId' in course) {
+            if (this.selectedCourse?.crseId === course.crseId) {
+              this.semestersTaken.push(semester);
+            }
+          }
+        }
+      }
+    },
+    handleAdd() {
+      this.selecting = false;
+      this.getSemestersTaken();
+      const count = this.semestersTaken.length;
+      if (count === 0) {
+        // opens the add modal if the course does not exist
+        this.needToAdd = true;
+      } else if (count > 1) {
+        // opens the duplicates modal if the course exists 2+ times
+        this.hasDuplicates = true;
+      } else {
+        // closes the modal if the course exists exactly once
+        this.closeCurrentModal();
+      }
+    },
     selectCourse(result: CornellCourseRosterCourse) {
       this.selectedCourse = result;
       this.$emit('select-course', this.selectedCourse);
       this.getReqsRelatedToCourse(result);
+      this.handleAdd();
     },
     closeCurrentModal() {
-      this.$emit('close-course-modal');
+      this.$emit('close-replace-course-modal');
     },
     getReqsRelatedToCourse(selectedCourse: CornellCourseRosterCourse) {
       const {
@@ -141,12 +213,13 @@ export default defineComponent({
       this.selectedRequirementID = selected;
     },
     backOrCancel() {
-      if (this.leftButtonText === 'Back') {
+      if (this.leftButtonText === leftButtonState.Back) {
         if (this.editMode) {
           this.editMode = false;
         } else {
           this.selectedCourse = null;
-          this.courseSelectorKey += 1;
+          this.semestersTaken = [];
+          this.selecting = true;
         }
       } else {
         this.closeCurrentModal();
@@ -179,20 +252,6 @@ export default defineComponent({
       color: $darkPlaceholderGray;
     }
   }
-  &-name {
-    position: relative;
-    border-radius: 11px;
-    font-weight: 600;
-    font-size: 14px;
-    line-height: 14px;
-    color: $darkGray;
-  }
-  &-title {
-    font-size: 14px;
-    line-height: 17px;
-    color: $lightPlaceholderGray;
-    margin-bottom: 6px;
-  }
 }
 
 .selected-course {
@@ -207,6 +266,18 @@ export default defineComponent({
 
 .content-course {
   width: 27.75rem;
+}
+
+.requirement-checker-warning {
+  color: $warning;
+  margin-top: 0.25rem;
+
+  &-icon {
+    float: left;
+    margin: 0.125rem 0.25rem 0 0;
+    width: 14px;
+    height: 14px;
+  }
 }
 
 @media only screen and (max-width: $small-medium-breakpoint) {

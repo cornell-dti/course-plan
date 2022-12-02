@@ -1,7 +1,11 @@
 <template>
   <div>
     <div v-for="(selfCheckCourse, id) in fulfilledSelfCheckCourses" :key="id">
-      <completed-sub-req-course :slotName="`Course ${id + 1}`" :courseTaken="selfCheckCourse" />
+      <completed-sub-req-course
+        :slotName="`Course ${id + 1}`"
+        :courseTaken="selfCheckCourse"
+        :reqDesc="requirementFulfillment.requirement.name"
+      />
     </div>
     <div v-if="!isCompleted">
       <incomplete-self-check

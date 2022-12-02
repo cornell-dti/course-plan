@@ -7,31 +7,17 @@
     :hasCustomPosition="true"
     :position="position"
   >
+    <!-- Replace slot menu for unselected course -->
     <button class="slotMenu-section full-opacity-on-hover" @click="openReplaceSlotModal">
-      <!-- Replace slot menu item for selected course -->
       <div class="slotMenu-row">
         <div class="slotMenu-left">
           <img
             class="slotMenu-icon"
             src="@/assets/images/replace.svg"
             alt="replace requirement swap icon"
-            data-cyId="replace-slot-item-complete"
+            data-cyId="replace-slot-item-incomplete"
           />
           <span class="slotMenu-replace">Replace</span>
-        </div>
-      </div>
-    </button>
-    <button class="slotMenu-section full-opacity-on-hover" @click="openDeleteSlotModal">
-      <!-- Remove slot menu item for selected course -->
-      <div class="slotMenu-row">
-        <div class="slotMenu-left">
-          <img
-            class="slotMenu-icon"
-            src="@/assets/images/trashcan.svg"
-            alt="remove requirement trashcan icon"
-            data-cyId="remove-slot-item"
-          />
-          <span class="slotMenu-remove">Remove</span>
         </div>
       </div>
     </button>
@@ -43,8 +29,8 @@ import { PropType, defineComponent } from 'vue';
 import TeleportModal from '@/components/Modals/TeleportModal.vue';
 
 /**
- * Replace and remove slot menu items on the slot menu that opens from selecting
- * the gear icon for a complete subrequirement
+ * Replace slot menu item on the slot menu that opens from selecting the gear
+ * icon for an incomplete subrequirement
  */
 export default defineComponent({
   components: { TeleportModal },
@@ -107,9 +93,6 @@ export default defineComponent({
   &-row {
     display: flex;
     flex-direction: row;
-  }
-  &-remove {
-    color: black;
   }
   &-replace {
     color: black;

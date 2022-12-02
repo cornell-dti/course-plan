@@ -76,7 +76,6 @@ import { GTagEvent } from '@/gtag';
 import RequirementsDropdown from '@/components/Modals/NewCourse/RequirementsDropdown.vue';
 
 export type RequirementWithID = { readonly id: string; readonly name: string };
-
 export default defineComponent({
   components: { RequirementsDropdown },
   props: {

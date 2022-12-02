@@ -104,7 +104,12 @@ import fall from '@/assets/images/fallEmoji.svg';
 import spring from '@/assets/images/springEmoji.svg';
 import winter from '@/assets/images/winterEmoji.svg';
 import summer from '@/assets/images/summerEmoji.svg';
-import { inactiveGray, yuxuanBlue, darkPlaceholderGray } from '@/assets/constants/scss-variables';
+import {
+  inactiveGray,
+  yuxuanBlue,
+  darkPlaceholderGray,
+  lightPlaceholderGray,
+} from '@/assets/constants/scss-variables';
 
 type DisplayOption = {
   shown: boolean;
@@ -187,14 +192,14 @@ export default defineComponent({
       // set current season to winter in january, spring from february to may, summer from june to august, and fall from september to december
       let defaultSeason: string = getCurrentSeason();
       if (this.isCourseModelSelectingSemester) {
-        defaultSeason = 'Select';
+        defaultSeason = 'Season';
       }
       return this.seasonText || this.season || defaultSeason;
     },
     yearPlaceholder(): string {
       let defaultYear = String(getCurrentYear());
       if (this.isCourseModelSelectingSemester) {
-        defaultYear = 'Select';
+        defaultYear = 'Year';
       }
       return String(this.yearText || this.year || defaultYear);
     },
@@ -261,9 +266,9 @@ export default defineComponent({
     selectOption(type: 'season' | 'year'): void {
       const displayOptions = this.displayOptions[type];
       displayOptions.shown = false;
-      displayOptions.boxBorder = '#C4C4C4';
-      displayOptions.arrowColor = '#C4C4C4';
-      displayOptions.placeholderColor = '#757575';
+      displayOptions.boxBorder = inactiveGray;
+      displayOptions.arrowColor = inactiveGray;
+      displayOptions.placeholderColor = lightPlaceholderGray;
       this.$emit(
         'updateSemProps',
         this.seasonText || this.seasonPlaceholder,

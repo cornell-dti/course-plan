@@ -12,6 +12,7 @@
           :isFlipped="displayDescription"
           :fillColor="isCompleted ? '#979797CC' : '#979797'"
           :isSubReq="true"
+          data-cyId="dropdown-button"
         />
         <div class="requirement-name-container">
           <p class="requirement-name-text">
