@@ -1,4 +1,4 @@
-import GraphTransformer from '.';
+import GraphProcessor from '.';
 import RequirementFulfillmentGraph from '..';
 import { CourseForRequirementGraph } from '../types';
 
@@ -24,7 +24,7 @@ export type BasicUserFulfillmentChoicesParameters<Requirement extends string> = 
 export default class AddBasicUserFulfillmentChoices<
   Requirement extends string,
   Course extends CourseForRequirementGraph
-> implements GraphTransformer<Requirement, Course> {
+> implements GraphProcessor<Requirement, Course> {
   private basicUserFulfillmentChoicesParameters: BasicUserFulfillmentChoicesParameters<Requirement>;
 
   constructor(
@@ -33,7 +33,7 @@ export default class AddBasicUserFulfillmentChoices<
     this.basicUserFulfillmentChoicesParameters = basicUserFulfillmentChoicesParameters;
   }
 
-  public transform(graph: RequirementFulfillmentGraph<Requirement, Course>) {
+  public process(graph: RequirementFulfillmentGraph<Requirement, Course>) {
     return addBasicUserFulfillmentChoices(graph, this.basicUserFulfillmentChoicesParameters);
   }
 }

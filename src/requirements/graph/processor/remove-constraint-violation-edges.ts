@@ -1,5 +1,5 @@
 import { getConstraintViolations } from '@/requirements/requirement-constraints-utils';
-import GraphTransformer from '.';
+import GraphProcessor from '.';
 import RequirementFulfillmentGraph from '..';
 import { CourseForRequirementGraph } from '../types';
 
@@ -10,7 +10,7 @@ export type RemoveConstraintViolationEdgesParameters<Requirement extends string>
 export default class RemoveConstraintViolationEdges<
   Requirement extends string,
   Course extends CourseForRequirementGraph
-> implements GraphTransformer<Requirement, Course> {
+> implements GraphProcessor<Requirement, Course> {
   private removeConstraintViolationEdgesParameters: RemoveConstraintViolationEdgesParameters<Requirement>;
 
   constructor(
@@ -19,7 +19,7 @@ export default class RemoveConstraintViolationEdges<
     this.removeConstraintViolationEdgesParameters = removeConstraintViolationEdgesParameters;
   }
 
-  public transform(graph: RequirementFulfillmentGraph<Requirement, Course>) {
+  public process(graph: RequirementFulfillmentGraph<Requirement, Course>) {
     return removeConstraintViolationEdges(graph, this.removeConstraintViolationEdgesParameters);
   }
 }

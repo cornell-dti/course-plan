@@ -8,10 +8,10 @@ import {
   buildRequirementFulfillmentGraph,
   removeIllegalEdgesFromRequirementFulfillmentGraph,
 } from './graph/builder';
-import AddBasicUserFulfillmentChoices from './graph/transformer/add-basic-user-fulfillment-choices';
-import { transform } from './graph/transformer';
-import AddArbitraryOptInChoices from './graph/transformer/add-arbitrary-opt-in-choices';
-import RemoveConstraintViolationEdges from './graph/transformer/remove-constraint-violation-edges';
+import AddBasicUserFulfillmentChoices from './graph/processor/add-basic-user-fulfillment-choices';
+import { process } from './graph/processor';
+import AddArbitraryOptInChoices from './graph/processor/add-arbitrary-opt-in-choices';
+import RemoveConstraintViolationEdges from './graph/processor/remove-constraint-violation-edges';
 
 export default function buildRequirementFulfillmentGraphFromUserData(
   coursesTaken: readonly CourseTaken[],
@@ -65,7 +65,7 @@ export default function buildRequirementFulfillmentGraphFromUserData(
     },
   });
 
-  const basicUserFulfillmentGraph = transform(
+  const basicUserFulfillmentGraph = process(
     initialRequirementFulfillmentGraph,
     new AddBasicUserFulfillmentChoices({
       userChoiceOnFulfillmentStrategy: Object.fromEntries(
@@ -85,14 +85,14 @@ export default function buildRequirementFulfillmentGraphFromUserData(
   );
 
   // TODO @bshen rename to optimisticGraph
-  const dangerousRequirementFulfillmentGraph = transform(
+  const dangerousRequirementFulfillmentGraph = process(
     basicUserFulfillmentGraph,
     new AddArbitraryOptInChoices({
       userChoiceOnRequirementOverrides,
     })
   );
 
-  const safeRequirementFulfillmentGraph = transform(
+  const safeRequirementFulfillmentGraph = process(
     dangerousRequirementFulfillmentGraph,
     new RemoveConstraintViolationEdges({
       requirementConstraintHolds: (reqA, reqB) =>

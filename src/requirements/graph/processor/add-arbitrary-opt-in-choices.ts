@@ -1,4 +1,4 @@
-import GraphTransformer from '.';
+import GraphProcessor from '.';
 import RequirementFulfillmentGraph from '..';
 import { CourseForRequirementGraph } from '../types';
 
@@ -16,14 +16,14 @@ export type ArbitraryOptInChoicesParameters<Requirement extends string> = {
 export default class AddArbitraryOptInChoices<
   Requirement extends string,
   Course extends CourseForRequirementGraph
-> implements GraphTransformer<Requirement, Course> {
+> implements GraphProcessor<Requirement, Course> {
   private arbitraryOptInChoicesParameters: ArbitraryOptInChoicesParameters<Requirement>;
 
   constructor(arbitraryOptInChoicesParameters: ArbitraryOptInChoicesParameters<Requirement>) {
     this.arbitraryOptInChoicesParameters = arbitraryOptInChoicesParameters;
   }
 
-  public transform(graph: RequirementFulfillmentGraph<Requirement, Course>) {
+  public process(graph: RequirementFulfillmentGraph<Requirement, Course>) {
     return addArbitraryOptInChoicesParameters(graph, this.arbitraryOptInChoicesParameters);
   }
 }
