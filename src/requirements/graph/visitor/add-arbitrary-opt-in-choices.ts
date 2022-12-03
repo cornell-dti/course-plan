@@ -1,5 +1,5 @@
 import GraphVisitor from './definition';
-import RequirementFulfillmentGraph from '..';
+import { RequirementFulfillmentGraph, ReadonlyRequirementFulfillmentGraph } from '..';
 import { CourseWithUniqueId } from '../types';
 
 export type AddArbitraryOptInChoicesParameters<Requirement> = {
@@ -27,8 +27,8 @@ export default class AddArbitraryOptInChoices<
     this.arbitraryOptInChoicesParameters = arbitraryOptInChoicesParameters;
   }
 
-  public process(graph: RequirementFulfillmentGraph<Requirement, Course>) {
-    return addArbitraryOptInChoices(graph.copy(), this.arbitraryOptInChoicesParameters);
+  public process(graph: ReadonlyRequirementFulfillmentGraph<Requirement, Course>) {
+    return addArbitraryOptInChoices(graph, this.arbitraryOptInChoicesParameters);
   }
 }
 
@@ -36,13 +36,16 @@ export function addArbitraryOptInChoices<
   Requirement extends string,
   Course extends CourseWithUniqueId
 >(
-  graph: RequirementFulfillmentGraph<Requirement, Course>,
+  graph: ReadonlyRequirementFulfillmentGraph<Requirement, Course>,
   { userChoiceOnRequirementOverrides }: AddArbitraryOptInChoicesParameters<Requirement>
 ): RequirementFulfillmentGraph<Requirement, Course> {
-  graph.getAllCourses().forEach(course => {
+  const newGraph = graph.copy();
+
+  newGraph.getAllCourses().forEach(course => {
     userChoiceOnRequirementOverrides[course.uniqueId]?.arbitraryOptIn?.forEach(requirement => {
-      graph.addEdge(requirement, course);
+      newGraph.addEdge(requirement, course);
     });
   });
-  return graph;
+
+  return newGraph;
 }

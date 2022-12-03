@@ -1,8 +1,8 @@
 import { CourseWithUniqueId } from './types';
 
 /**
- * A mutable graph data structure that represents the mathematically relation between requirement
- * and course.
+ * An immutable graph data structure that represents the relation between requirements and courses.
+ *
  * An edge between requirement `r` and course `c` implies that `c` may help satisfy `r`. It's up to
  * the client of the data structure to gradually refine the graph so that an edge `r-c` implies that
  * `c` definitely helps satisfies `r`.
@@ -10,19 +10,19 @@ import { CourseWithUniqueId } from './types';
  * We keep type of `Requirement` and `Course` generic, so that they can be easily mocked during
  * testing and make this basic graph implementation not tied to anything specific representation.
  */
-export default class RequirementFulfillmentGraph<
+export class ReadonlyRequirementFulfillmentGraph<
   Requirement extends string,
   Course extends CourseWithUniqueId
 > {
   // Internally, we use a two hash map to represent the bidirection relation
   // between requirement and courses.
 
-  private readonly requirementToCoursesMap: Map<
+  protected readonly requirementToCoursesMap: Map<
     Requirement,
     Map<string | number, Course>
   > = new Map();
 
-  private readonly courseToRequirementsMap: Map<string | number, Set<Requirement>> = new Map();
+  protected readonly courseToRequirementsMap: Map<string | number, Set<Requirement>> = new Map();
 
   public getAllRequirements(): readonly Requirement[] {
     return Array.from(this.requirementToCoursesMap.keys());
@@ -46,6 +46,37 @@ export default class RequirementFulfillmentGraph<
     return edges;
   }
 
+  public getConnectedCoursesFromRequirement(requirement: Requirement): readonly Course[] {
+    const courseSet = this.requirementToCoursesMap.get(requirement);
+    if (courseSet == null) return [];
+    return Array.from(courseSet.values());
+  }
+
+  public getConnectedRequirementsFromCourse(course: CourseWithUniqueId): readonly Requirement[] {
+    const requirementSet = this.courseToRequirementsMap.get(course.uniqueId);
+    if (requirementSet == null) return [];
+    return Array.from(requirementSet);
+  }
+
+  public copy(): RequirementFulfillmentGraph<Requirement, Course> {
+    const newCopy = new RequirementFulfillmentGraph<Requirement, Course>();
+    this.requirementToCoursesMap.forEach((courseIdToCourseMap, key) => {
+      newCopy.requirementToCoursesMap.set(key, new Map(courseIdToCourseMap.entries()));
+    });
+    this.courseToRequirementsMap.forEach((requirementSet, key) => {
+      newCopy.courseToRequirementsMap.set(key, new Set(Array.from(requirementSet)));
+    });
+    return newCopy;
+  }
+}
+
+/**
+ * An mutable graph data structure that represents the relation between requirements and courses.
+ */
+export class RequirementFulfillmentGraph<
+  Requirement extends string,
+  Course extends CourseWithUniqueId
+> extends ReadonlyRequirementFulfillmentGraph<Requirement, Course> {
   public addRequirementNode(requirement: Requirement): void {
     if (!this.requirementToCoursesMap.has(requirement)) {
       this.requirementToCoursesMap.set(requirement, new Map());
@@ -80,30 +111,8 @@ export default class RequirementFulfillmentGraph<
     }
   }
 
-  public getConnectedCoursesFromRequirement(requirement: Requirement): readonly Course[] {
-    const courseSet = this.requirementToCoursesMap.get(requirement);
-    if (courseSet == null) return [];
-    return Array.from(courseSet.values());
-  }
-
-  public getConnectedRequirementsFromCourse(course: CourseWithUniqueId): readonly Requirement[] {
-    const requirementSet = this.courseToRequirementsMap.get(course.uniqueId);
-    if (requirementSet == null) return [];
-    return Array.from(requirementSet);
-  }
-
-  public copy(): RequirementFulfillmentGraph<Requirement, Course> {
-    const newCopy = new RequirementFulfillmentGraph<Requirement, Course>();
-    this.requirementToCoursesMap.forEach((courseIdToCourseMap, key) => {
-      newCopy.requirementToCoursesMap.set(key, new Map(courseIdToCourseMap.entries()));
-    });
-    this.courseToRequirementsMap.forEach((requirementSet, key) => {
-      newCopy.courseToRequirementsMap.set(key, new Set(Array.from(requirementSet)));
-    });
-    return newCopy;
-  }
-
-  public addGraph(graph: RequirementFulfillmentGraph<Requirement, Course>): void {
+  // adds requirement nodes and graph edges
+  public addGraph(graph: ReadonlyRequirementFulfillmentGraph<Requirement, Course>): void {
     graph.getAllRequirements().forEach(req => {
       this.addRequirementNode(req);
     });
@@ -112,9 +121,9 @@ export default class RequirementFulfillmentGraph<
     });
   }
 
-  // does not subtract requirement nodes
+  // subtracts graph edges (but does not subtract requirement nodes)
   public subtractGraphEdges(
-    graph: RequirementFulfillmentGraph<Requirement, CourseWithUniqueId>
+    graph: ReadonlyRequirementFulfillmentGraph<Requirement, CourseWithUniqueId>
   ): void {
     graph.getAllEdges().forEach(([req, course]) => {
       this.removeEdge(req, course);

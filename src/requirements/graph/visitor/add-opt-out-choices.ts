@@ -1,5 +1,5 @@
 import GraphVisitor from './definition';
-import RequirementFulfillmentGraph from '..';
+import { ReadonlyRequirementFulfillmentGraph, RequirementFulfillmentGraph } from '..';
 import { CourseForRequirementGraph } from '../types';
 
 export type AddOptOutChoicesParameters<Requirement> = {
@@ -27,8 +27,8 @@ export default class AddOptOutChoices<
     this.addOptOutChoicesParameters = addOptOutChoicesParameters;
   }
 
-  public process(graph: RequirementFulfillmentGraph<Requirement, Course>) {
-    return addOptOutChoices(graph.copy(), this.addOptOutChoicesParameters);
+  public process(graph: ReadonlyRequirementFulfillmentGraph<Requirement, Course>) {
+    return addOptOutChoices(graph, this.addOptOutChoicesParameters);
   }
 }
 
@@ -36,14 +36,16 @@ export function addOptOutChoices<
   Requirement extends string,
   Course extends CourseForRequirementGraph
 >(
-  graph: RequirementFulfillmentGraph<Requirement, Course>,
+  graph: ReadonlyRequirementFulfillmentGraph<Requirement, Course>,
   { userChoiceOnRequirementOverrides }: AddOptOutChoicesParameters<Requirement>
 ): RequirementFulfillmentGraph<Requirement, Course> {
-  graph.getAllCourses().forEach(course => {
+  const newGraph = graph.copy();
+
+  newGraph.getAllCourses().forEach(course => {
     userChoiceOnRequirementOverrides[course.uniqueId]?.optOut?.forEach(requirement => {
-      graph.removeEdge(requirement, course);
+      newGraph.removeEdge(requirement, course);
     });
   });
 
-  return graph;
+  return newGraph;
 }

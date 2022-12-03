@@ -3,7 +3,7 @@ import {
   allowCourseDoubleCountingBetweenRequirements,
   getUserRequirements,
 } from './requirement-frontend-utils';
-import RequirementFulfillmentGraph from './graph';
+import { RequirementFulfillmentGraph } from './graph';
 import {
   AddArbitraryOptInChoices,
   AddOptOutChoices,

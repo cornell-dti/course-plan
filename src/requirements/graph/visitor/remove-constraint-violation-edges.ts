@@ -1,5 +1,5 @@
 import GraphVisitor from './definition';
-import RequirementFulfillmentGraph from '..';
+import { RequirementFulfillmentGraph, ReadonlyRequirementFulfillmentGraph } from '..';
 import { CourseWithUniqueId } from '../types';
 import { getConstraintViolations } from '../../requirement-constraints-utils';
 
@@ -23,11 +23,8 @@ export default class RemoveConstraintViolationEdges<
     this.removeConstraintViolationEdgesParameters = removeConstraintViolationEdgesParameters;
   }
 
-  public process(graph: RequirementFulfillmentGraph<Requirement, Course>) {
-    return removeConstraintViolationEdges(
-      graph.copy(),
-      this.removeConstraintViolationEdgesParameters
-    );
+  public process(graph: ReadonlyRequirementFulfillmentGraph<Requirement, Course>) {
+    return removeConstraintViolationEdges(graph, this.removeConstraintViolationEdgesParameters);
   }
 }
 
@@ -35,10 +32,16 @@ export function removeConstraintViolationEdges<
   Requirement extends string,
   Course extends CourseWithUniqueId
 >(
-  graph: RequirementFulfillmentGraph<Requirement, Course>,
+  graph: ReadonlyRequirementFulfillmentGraph<Requirement, Course>,
   { requirementConstraintHolds }: RemoveConstraintViolationEdgesParameters<Requirement>
 ): RequirementFulfillmentGraph<Requirement, Course> {
-  const { constraintViolationsGraph } = getConstraintViolations(graph, requirementConstraintHolds);
-  graph.subtractGraphEdges(constraintViolationsGraph);
-  return graph;
+  const newGraph = graph.copy();
+
+  const { constraintViolationsGraph } = getConstraintViolations(
+    newGraph,
+    requirementConstraintHolds
+  );
+  newGraph.subtractGraphEdges(constraintViolationsGraph);
+
+  return newGraph;
 }

@@ -1,4 +1,4 @@
-import RequirementFulfillmentGraph from '../graph';
+import { RequirementFulfillmentGraph } from '../graph';
 import { CourseWithUniqueId } from '../graph/types';
 
 const CS3410 = { uniqueId: 3410 };

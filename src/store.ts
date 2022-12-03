@@ -3,7 +3,7 @@ import { doc, getDoc, onSnapshot, setDoc } from 'firebase/firestore';
 
 import * as fb from './firebase-config';
 import computeGroupedRequirementFulfillmentReports from './requirements/requirement-frontend-computation';
-import RequirementFulfillmentGraph from './requirements/graph';
+import { ReadonlyRequirementFulfillmentGraph } from './requirements/graph';
 import { createAppOnboardingData } from './user-data-converter';
 import {
   allocateAllSubjectColor,
@@ -40,8 +40,8 @@ export type VuexStoreState = {
   toggleableRequirementChoices: AppToggleableRequirementChoices;
   overriddenFulfillmentChoices: FirestoreOverriddenFulfillmentChoices;
   userRequirementsMap: Readonly<Record<string, RequirementWithIDSourceType>>;
-  dangerousRequirementFulfillmentGraph: RequirementFulfillmentGraph<string, CourseTaken>;
-  safeRequirementFulfillmentGraph: RequirementFulfillmentGraph<string, CourseTaken>;
+  dangerousRequirementFulfillmentGraph: ReadonlyRequirementFulfillmentGraph<string, CourseTaken>;
+  safeRequirementFulfillmentGraph: ReadonlyRequirementFulfillmentGraph<string, CourseTaken>;
   courseToRequirementsInConstraintViolations: ReadonlyMap<string | number, Set<string[]>>;
   doubleCountedCourseUniqueIDSet: ReadonlySet<string | number>;
   groupedRequirementFulfillmentReport: readonly GroupedRequirementFulfillmentReport[];

@@ -32,7 +32,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import store from '@/store';
-import RequirementFulfillmentGraph from '@/requirements/graph';
+import {ReadonlyRequirementFulfillmentGraph} from '@/requirements/graph';
 
 type RequirementGraphForDisplay = {
   requirements: readonly string[];
@@ -41,7 +41,7 @@ type RequirementGraphForDisplay = {
 };
 
 function computeRequirementGraphForDisplay(
-  graph: RequirementFulfillmentGraph<string, CourseTaken>,
+  graph: ReadonlyRequirementFulfillmentGraph<string, CourseTaken>,
   onlyNodeToKeepEdge: string | number | null
 ): RequirementGraphForDisplay {
   const requirements = graph.getAllRequirements();
@@ -81,7 +81,7 @@ export default defineComponent({
     },
   },
   computed: {
-    graph(): RequirementFulfillmentGraph<string, CourseTaken> {
+    graph(): ReadonlyRequirementFulfillmentGraph<string, CourseTaken> {
       return this.graphType === 'safe'
         ? store.state.safeRequirementFulfillmentGraph
         : store.state.dangerousRequirementFulfillmentGraph;
