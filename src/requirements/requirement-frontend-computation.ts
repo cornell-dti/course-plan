@@ -6,7 +6,7 @@ import {
   convertFirestoreSemesterCourseToCourseTaken,
   computeFulfillmentCoursesAndStatistics,
 } from './requirement-frontend-utils';
-import RequirementFulfillmentGraph from './requirement-graph';
+import RequirementFulfillmentGraph from './graph';
 import buildRequirementFulfillmentGraphFromUserData from './requirement-graph-builder-from-user-data';
 import featureFlagCheckers from '../feature-flags';
 

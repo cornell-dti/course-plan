@@ -3,7 +3,7 @@ import { doc, getDoc, onSnapshot, setDoc } from 'firebase/firestore';
 
 import * as fb from './firebase-config';
 import computeGroupedRequirementFulfillmentReports from './requirements/requirement-frontend-computation';
-import RequirementFulfillmentGraph from './requirements/requirement-graph';
+import RequirementFulfillmentGraph from './requirements/graph';
 import { createAppOnboardingData } from './user-data-converter';
 import {
   allocateAllSubjectColor,

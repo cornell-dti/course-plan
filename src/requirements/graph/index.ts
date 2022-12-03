@@ -1,6 +1,4 @@
-export interface CourseWithUniqueId {
-  readonly uniqueId: string | number;
-}
+import { CourseWithUniqueId } from './types';
 
 /**
  * A mutable graph data structure that represents the mathematically relation between requirement
@@ -100,7 +98,7 @@ export default class RequirementFulfillmentGraph<
       newCopy.requirementToCoursesMap.set(key, new Map(courseIdToCourseMap.entries()));
     });
     this.courseToRequirementsMap.forEach((requirementSet, key) => {
-      newCopy.courseToRequirementsMap.set(key, new Set(requirementSet));
+      newCopy.courseToRequirementsMap.set(key, new Set(Array.from(requirementSet)));
     });
     return newCopy;
   }
