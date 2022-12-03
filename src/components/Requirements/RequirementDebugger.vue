@@ -32,7 +32,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import store from '@/store';
-import {ReadonlyRequirementFulfillmentGraph} from '@/requirements/graph';
+import { ReadonlyRequirementFulfillmentGraph } from '@/requirements/graph';
 
 type RequirementGraphForDisplay = {
   requirements: readonly string[];
