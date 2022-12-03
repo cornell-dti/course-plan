@@ -1,5 +1,5 @@
 import GraphVisitor from './definition';
-import RequirementFulfillmentGraph from '..';
+import { RequirementFulfillmentGraph, ReadonlyRequirementFulfillmentGraph } from '..';
 import { CourseForRequirementGraph, CourseWithUniqueId } from '../types';
 
 export type BuildInitialGraphParameters<Requirement, Course> = {
@@ -35,9 +35,9 @@ export default class BuildInitialGraph<
     this.buildInitialGraphParameters = buildInitialGraphParameters;
   }
 
-  public process(graph?: RequirementFulfillmentGraph<Requirement, Course>) {
+  public process(graph?: ReadonlyRequirementFulfillmentGraph<Requirement, Course>) {
     return buildInitialGraph(
-      graph?.copy() ?? new RequirementFulfillmentGraph<Requirement, Course>(),
+      graph?.copy() ?? new ReadonlyRequirementFulfillmentGraph<Requirement, Course>(),
       this.buildInitialGraphParameters
     );
   }
@@ -75,13 +75,15 @@ export function buildInitialGraph<
   Requirement extends string,
   Course extends CourseForRequirementGraph
 >(
-  graph: RequirementFulfillmentGraph<Requirement, Course>,
+  graph: ReadonlyRequirementFulfillmentGraph<Requirement, Course>,
   {
     requirements,
     courses,
     getAllCoursesThatCanPotentiallySatisfyRequirement,
   }: BuildRequirementFulfillmentGraphParameters<Requirement, Course>
 ): RequirementFulfillmentGraph<Requirement, Course> {
+  const newGraph = graph.copy();
+
   const userCourseCourseIDToCourseMap = new Map<number, Course[]>();
   courses.forEach(course => {
     let existing = userCourseCourseIDToCourseMap.get(course.courseId);
@@ -95,13 +97,13 @@ export function buildInitialGraph<
   // Build a rough graph by naively connecting requirements and courses based on
   // `getAllCoursesThatCanPotentiallySatisfyRequirement`.
   requirements.forEach(requirement => {
-    graph.addRequirementNode(requirement);
+    newGraph.addRequirementNode(requirement);
     getAllCoursesThatCanPotentiallySatisfyRequirement(requirement).forEach(courseId => {
       userCourseCourseIDToCourseMap
         .get(courseId)
-        ?.forEach(course => graph.addEdge(requirement, course));
+        ?.forEach(course => newGraph.addEdge(requirement, course));
     });
   });
 
-  return graph;
+  return newGraph;
 }
