@@ -1,4 +1,4 @@
-import RequirementFulfillmentGraph from '../graph';
+import { RequirementFulfillmentGraph } from '../graph';
 import {
   buildRequirementFulfillmentGraphDeprecated,
   removeIllegalEdgesFromRequirementFulfillmentGraph,

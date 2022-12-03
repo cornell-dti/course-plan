@@ -1,5 +1,5 @@
 import GraphVisitor from './definition';
-import RequirementFulfillmentGraph from '..';
+import { ReadonlyRequirementFulfillmentGraph, RequirementFulfillmentGraph } from '..';
 import { CourseForRequirementGraph } from '../types';
 
 export type AddSelectableChoicesParameters<Requirement> = {
@@ -27,8 +27,8 @@ export default class AddSelectableChoices<
     this.addSelectableChoicesParameters = addSelectableChoicesParameters;
   }
 
-  public process(graph: RequirementFulfillmentGraph<Requirement, Course>) {
-    return addSelectableChoices(graph.copy(), this.addSelectableChoicesParameters);
+  public process(graph: ReadonlyRequirementFulfillmentGraph<Requirement, Course>) {
+    return addSelectableChoices(graph, this.addSelectableChoicesParameters);
   }
 }
 
@@ -36,16 +36,18 @@ export function addSelectableChoices<
   Requirement extends string,
   Course extends CourseForRequirementGraph
 >(
-  graph: RequirementFulfillmentGraph<Requirement, Course>,
+  graph: ReadonlyRequirementFulfillmentGraph<Requirement, Course>,
   { userChoiceOnRequirementOverrides }: AddSelectableChoicesParameters<Requirement>
 ): RequirementFulfillmentGraph<Requirement, Course> {
-  graph.getAllCourses().forEach(course => {
+  const newGraph = graph.copy();
+
+  newGraph.getAllCourses().forEach(course => {
     userChoiceOnRequirementOverrides[course.uniqueId]?.acknowledgedCheckerWarningOptIn?.forEach(
       requirement => {
-        graph.addEdge(requirement, course);
+        newGraph.addEdge(requirement, course);
       }
     );
   });
 
-  return graph;
+  return newGraph;
 }

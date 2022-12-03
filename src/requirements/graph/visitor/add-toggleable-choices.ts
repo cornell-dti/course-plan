@@ -1,5 +1,5 @@
 import GraphVisitor from './definition';
-import RequirementFulfillmentGraph from '..';
+import { RequirementFulfillmentGraph, ReadonlyRequirementFulfillmentGraph } from '..';
 import { CourseForRequirementGraph } from '../types';
 
 export type AddToggleableChoicesParameters<Requirement extends string> = {
@@ -26,8 +26,8 @@ export default class AddToggleableChoices<
     this.addToggleableChoicesParameters = addToggleableChoicesParameters;
   }
 
-  public process(graph: RequirementFulfillmentGraph<Requirement, Course>) {
-    return addToggleableChoices(graph.copy(), this.addToggleableChoicesParameters);
+  public process(graph: ReadonlyRequirementFulfillmentGraph<Requirement, Course>) {
+    return addToggleableChoices(graph, this.addToggleableChoicesParameters);
   }
 }
 
@@ -35,21 +35,25 @@ export function addToggleableChoices<
   Requirement extends string,
   Course extends CourseForRequirementGraph
 >(
-  graph: RequirementFulfillmentGraph<Requirement, Course>,
+  graph: ReadonlyRequirementFulfillmentGraph<Requirement, Course>,
   { userChoiceOnFulfillmentStrategy }: AddToggleableChoicesParameters<Requirement>
 ): RequirementFulfillmentGraph<Requirement, Course> {
+  const newGraph = graph.copy();
+
   Object.entries<readonly number[]>(userChoiceOnFulfillmentStrategy).forEach(
     ([key, coursesOfChosenFulfillmentStrategy]) => {
       const correspondingRequirement = key as Requirement;
       const coursesToKeepSet = new Set(coursesOfChosenFulfillmentStrategy);
-      graph
+
+      newGraph
         .getConnectedCoursesFromRequirement(correspondingRequirement)
         .forEach(connectedCourse => {
           if (!coursesToKeepSet.has(connectedCourse.courseId)) {
-            graph.removeEdge(correspondingRequirement, connectedCourse);
+            newGraph.removeEdge(correspondingRequirement, connectedCourse);
           }
         });
     }
   );
-  return graph;
+
+  return newGraph;
 }

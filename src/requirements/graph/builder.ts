@@ -1,5 +1,5 @@
 import { getConstraintViolations } from '../requirement-constraints-utils';
-import RequirementFulfillmentGraph from '.';
+import { RequirementFulfillmentGraph } from '.';
 import { CourseForRequirementGraph } from './types';
 
 /**
