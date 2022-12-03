@@ -3,7 +3,7 @@ import {
   allowCourseDoubleCountingBetweenRequirements,
   getUserRequirements,
 } from './requirement-frontend-utils';
-import { RequirementFulfillmentGraph } from './graph';
+import { ReadonlyRequirementFulfillmentGraph } from './graph';
 import {
   AddArbitraryOptInChoices,
   AddOptOutChoices,
@@ -23,8 +23,14 @@ export default function buildRequirementFulfillmentGraphFromUserData(
 ): {
   readonly userRequirements: readonly RequirementWithIDSourceType[];
   readonly userRequirementsMap: Readonly<Record<string, RequirementWithIDSourceType>>;
-  readonly dangerousRequirementFulfillmentGraph: RequirementFulfillmentGraph<string, CourseTaken>;
-  readonly safeRequirementFulfillmentGraph: RequirementFulfillmentGraph<string, CourseTaken>;
+  readonly dangerousRequirementFulfillmentGraph: ReadonlyRequirementFulfillmentGraph<
+    string,
+    CourseTaken
+  >;
+  readonly safeRequirementFulfillmentGraph: ReadonlyRequirementFulfillmentGraph<
+    string,
+    CourseTaken
+  >;
   readonly doubleCountedCourseUniqueIDSet: ReadonlySet<string | number>;
   readonly courseToRequirementsInConstraintViolations: Map<string | number, Set<string[]>>;
 } {
