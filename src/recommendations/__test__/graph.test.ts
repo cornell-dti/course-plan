@@ -1,4 +1,4 @@
-import Graph from '../graph'
+import Graph from '../graph';
 
 //         2 -- 5
 //        /      \
@@ -16,7 +16,7 @@ const noCycle: [number, number][] = [
   [5, 6],
   [3, 6],
   [7, 6],
-  [6, 8]
+  [6, 8],
 ];
 
 // Graph with a cycle
@@ -24,7 +24,7 @@ const cycle: [number, number][] = [
   [0, 1],
   [1, 2],
   [2, 0],
-]
+];
 
 // Test whether an ordering of vertices is topological
 function isTopologicallySorted<V>(edges: [V, V][], sorting: V[]) {
@@ -41,9 +41,9 @@ describe('recommendations graph test suite', () => {
     const graph = new Graph(noCycle);
     const ordering = graph.topologicalSort();
     expect(isTopologicallySorted(noCycle, ordering)).toBe(true);
-  })
+  });
   it('topological sort cycle', () => {
     const graph = new Graph(cycle);
     expect(() => graph.topologicalSort()).toThrow();
-  })
-})
+  });
+});

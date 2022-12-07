@@ -1,7 +1,6 @@
-
 /**
  * A seeded random number generator
- * 
+ *
  * @param seed the seed of the prng
  * @returns a random number generator seeded with `seed`
  */
