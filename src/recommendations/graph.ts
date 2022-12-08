@@ -2,9 +2,9 @@
 class Vertex<V> {
   private readonly $key: V;
 
-  private readonly $incoming: Vertex<V>[];
+  private readonly $incoming: Vertex<V>[] = [];
 
-  private readonly $outgoing: Vertex<V>[];
+  private readonly $outgoing: Vertex<V>[] = [];
 
   /** The unique key of this vertex */
   get key(): V {
@@ -37,8 +37,6 @@ class Vertex<V> {
    */
   constructor(key: V) {
     this.$key = key;
-    this.$incoming = [];
-    this.$outgoing = [];
   }
 
   /**
@@ -53,7 +51,7 @@ class Vertex<V> {
 
 /** A directed graph with unlabeled edges and labeled vertices */
 export default class Graph<V extends string | number> {
-  private readonly vertices: Map<V, Vertex<V>>;
+  private readonly vertices: Map<V, Vertex<V>> = new Map();
 
   /**
    * Construct a graph from a list of edges
@@ -61,7 +59,6 @@ export default class Graph<V extends string | number> {
    * @param edges an array `[[u1, v1], ..., [un, vn]]` representing the edges of the graph
    */
   constructor(edges: [V, V][]) {
-    this.vertices = new Map();
     for (const [u, v] of edges) {
       const src = this.getVertex(u);
       const dst = this.getVertex(v);
