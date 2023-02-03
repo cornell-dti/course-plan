@@ -22,6 +22,13 @@ Then access http://localhost:8080/
 
 ## Contributors
 
+### SP23
+
+- **Jerry Wang** - Developer
+- **Miranda Yu** - Developer
+- **Zak Kent** - TPM
+- **Noah Schiff** - PM
+
 ### FA22
 
 - **Ben Shen** - Developer
