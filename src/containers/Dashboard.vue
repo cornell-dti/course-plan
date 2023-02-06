@@ -286,10 +286,8 @@ export default defineComponent({
     closeProfile() {
       if (this.isProfileOpen && this.profileChanged) {
         this.isProfileSaveReminderOpen = true;
-        this.profileChanged = false;
-      } else {
-        this.isProfileOpen = false;
       }
+      this.isProfileOpen = false;
     },
 
     confirmLeaveProfile() {
@@ -297,11 +295,13 @@ export default defineComponent({
       this.isProfileOpen = false;
       this.showToolsPage = this.shouldOpenTools;
       this.shouldOpenTools = false;
+      this.profileChanged = false;
     },
 
     cancelLeaveProfile() {
       this.isProfileSaveReminderOpen = false;
       this.showToolsPage = false;
+      this.isProfileOpen = true;
     },
 
     setProfileChanged() {
