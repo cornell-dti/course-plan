@@ -2,7 +2,7 @@ import { CollegeOrMajorRequirement } from '../../requirements/types';
 import { includesWithSubRequirements } from '../../requirements/checkers';
 import { AdvisorGroup } from '../../tools/advisors/types';
 
-const aemMinorRequirements: readonly CollegeOrMajorRequirement[] = [
+const appliedEconMinorRequirements: readonly CollegeOrMajorRequirement[] = [
   // prerequisites
   {
     name: 'Introductory Economics',
@@ -52,8 +52,8 @@ const aemMinorRequirements: readonly CollegeOrMajorRequirement[] = [
   },
 ];
 
-export default aemMinorRequirements;
+export default appliedEconMinorRequirements;
 
-export const aemMinorAdvisors: AdvisorGroup = {
+export const appliedEconMinorAdvisors: AdvisorGroup = {
   advisors: [{ name: 'Dyson Office of Student Services', email: 'Dyson_OSS@cornell.edu' }],
 };
