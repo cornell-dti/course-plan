@@ -70,6 +70,6 @@ const aemMinorRequirements: readonly CollegeOrMajorRequirement[] = [
 
 export default aemMinorRequirements;
 
-export const aemAdvisors: AdvisorGroup = {
+export const aemMinorAdvisors: AdvisorGroup = {
   advisors: [{ name: 'Dyson Office of Student Services', email: 'Dyson_OSS@cornell.edu' }],
 };

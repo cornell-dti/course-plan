@@ -48,7 +48,7 @@ import physRequirements, { physAdvisors } from './majors/phys';
 import spanishRequirements, { spanishAdvisors } from './majors/spanish';
 import psychRequirements, { psychAdvisors } from './majors/psych';
 import stsRequirements, { stsAdvisors } from './majors/sts';
-import aemMinorRequirements, { aemAdvisors } from './minors/aem';
+import aemMinorRequirements, { aemMinorAdvisors } from './minors/aem';
 import aerospaceMinorRequirements, { aerospaceMinorAdvisors } from './minors/aerospace';
 import appliedMathMinorRequirements, { appliedMathMinorAdvisors } from './minors/applied-math';
 import buMinorRequirements, { buMinorAdvisors } from './minors/bu';
@@ -380,7 +380,7 @@ const json: RequirementsJson = {
       name: 'Applied Economics and Management',
       schools: ['AG', 'BU'],
       requirements: aemMinorRequirements,
-      advisors: aemAdvisors,
+      advisors: aemMinorAdvisors,
     },
     AEROSPACE: {
       name: 'Aerospace Engineering',
