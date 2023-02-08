@@ -25,8 +25,9 @@ const aemMinorRequirements: readonly CollegeOrMajorRequirement[] = [
   },
   {
     name: 'Applied Economics',
-    description: 'Three of the following courses are required: AEM 2600, ECON 3030, or PAM 2000.'
-      + ' Please note that 3 credits must be Johnson College of Business (JCB) courses, which include any course code of AEM, HADM, NBA, or NCC.',
+    description:
+      'Three of the following courses are required: AEM 2600, ECON 3030, or PAM 2000.' +
+      ' Please note that 3 credits must be Johnson College of Business (JCB) courses, which include any course code of AEM, HADM, NBA, or NCC.',
     source: 'https://business.cornell.edu/programs/undergraduate/minors/applied-economics/',
     checker: includesWithSubRequirements([
       'AEM 4140',
@@ -43,12 +44,11 @@ const aemMinorRequirements: readonly CollegeOrMajorRequirement[] = [
       'AEM 4510',
       'AEM 4515',
       'AEM 4545',
-      'AEM 4550'
+      'AEM 4550',
     ]),
     fulfilledBy: 'courses',
     perSlotMinCount: [3],
-    slotNames: 
-    [
+    slotNames: [
       'AEM 4140',
       'AEM 4150',
       'AEM 4160',
@@ -63,9 +63,9 @@ const aemMinorRequirements: readonly CollegeOrMajorRequirement[] = [
       'AEM 4510',
       'AEM 4515',
       'AEM 4545',
-      'AEM 4550'
+      'AEM 4550',
     ],
-  }
+  },
 ];
 
 export default aemMinorRequirements;
