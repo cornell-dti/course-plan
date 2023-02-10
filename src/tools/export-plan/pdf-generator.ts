@@ -135,7 +135,6 @@ const generatePDF = async (collegeNames: Map<string, string>): Promise<void> => 
 
   // Rendering tables now
   const sems = trimEmptySems(sortedSemesters(store.state.semesters, false));
-  console.log(store.state.semesters);
   let startct = Math.max(firstTableY, programY + 20);
 
   const emojiMap = {
@@ -321,13 +320,11 @@ const renderTable = (
           data.row.index < body.length
         ) {
           let yPos = data.cell.y + 3;
-          console.log(bubbles);
           bubbles[data.row.index].forEach((bubble, index) => {
             const xPos =
               data.cell.x + doc.getTextWidth(body[data.row.index][2].split('\n')[index]) + 8;
             const collegeCode = collegeNames.get(bubble.requirementGroup);
             if (collegeCode !== undefined) {
-              console.log(collegeCode);
               renderBubbles(doc, xPos, yPos, collegeCode, bubble.color);
             }
             yPos += rowFontSize + 1.5;
