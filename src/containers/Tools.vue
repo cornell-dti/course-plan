@@ -37,7 +37,9 @@ import ExportCard from '@/components/Tools/ExportCard.vue';
 import store from '@/store';
 
 export default defineComponent({
-  props: ['collegeNames'],
+  props: {
+    collegeNames: { type: Map },
+  },
   components: { ProgressTracker, ExportCard, UsefulLinks, AdvisorCard, Card },
   computed: {
     userInfo(): FirestoreUserName {

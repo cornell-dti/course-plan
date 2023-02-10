@@ -251,7 +251,7 @@ const renderTable = (
   rows: SemesterRows,
   tableX: number,
   tableY: number,
-  header: string[][] = tableHeader,
+  header: string[][],
   collegeNames: Map<string, string>
 ): number => {
   doc.setFont('ProximaNova-Regular', 'normal');
