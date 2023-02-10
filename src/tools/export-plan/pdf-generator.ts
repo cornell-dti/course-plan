@@ -325,8 +325,8 @@ const renderTable = (
           bubbles[data.row.index].forEach((bubble, index) => {
             const xPos =
               data.cell.x + doc.getTextWidth(body[data.row.index][2].split('\n')[index]) + 8;
-            let collegeCode = collegeNames.get(bubble.requirementGroup);
-            if (collegeCode != undefined) {
+            const collegeCode = collegeNames.get(bubble.requirementGroup);
+            if (collegeCode !== undefined) {
               console.log(collegeCode);
               renderBubbles(doc, xPos, yPos, collegeCode, bubble.color);
             }
