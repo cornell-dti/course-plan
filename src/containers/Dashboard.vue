@@ -50,7 +50,7 @@
         :isMobile="isMobile"
         @compact-updated="compactUpdated"
       />
-      <tools-container class="toolsPage" v-if="showToolsPage" />
+      <tools-container class="toolsPage" :collegeNames="fullCollegeNameMap" v-if="showToolsPage" />
       <profile-editor
         class="profilePage"
         :onboardingData="onboardingData"
@@ -159,6 +159,24 @@ export default defineComponent({
       showTourEndWindow: false,
       showToolsPage: false,
       isProfileOpen: false,
+      fullCollegeNameMap: new Map<string, string>([
+        ['AS', 'A&S'],
+        ['AS1', 'A&S'],
+        ['AS2', 'A&S'],
+        ['cas', 'A&S'],
+        ['AR', 'AAP'],
+        ['aap', 'AAP'],
+        ['cals', 'CALS'],
+        ['AG', 'CALS'],
+        ['EN', 'CoE'],
+        ['eng', 'CoE'],
+        ['HE', 'HumEc'],
+        ['humec', 'HumEc'],
+        ['IL', 'ILR'],
+        ['ilr', 'ILR'],
+        ['johnson', 'Dyson'],
+        ['BU', 'Dyson'],
+      ]),
     };
   },
   computed: {
@@ -257,9 +275,9 @@ export default defineComponent({
     },
 
     openProfile() {
+      this.showToolsPage = false;
       if (featureFlagCheckers.isProfileEnabled()) {
         this.isProfileOpen = true;
-        this.showToolsPage = false;
       } else {
         this.editProfile();
       }

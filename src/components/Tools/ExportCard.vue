@@ -11,9 +11,10 @@ import { defineComponent } from 'vue';
 import generatePDF from '@/tools/export-plan';
 
 export default defineComponent({
+  props: ['collegeNames'],
   methods: {
     async exportSchedule() {
-      generatePDF();
+      generatePDF(this.collegeNames);
     },
   },
 });

@@ -18,7 +18,7 @@
           {{ req.dangerouslyFulfilled }} / {{ req.totalRequired }}
         </span>
         <span class="progress-reqname progress-text-style">
-          {{ req.specific }} {{ req.groupName }} Requirements
+          {{ collegeNames.get(req.specific) }} {{ req.groupName }} Requirements
         </span>
       </div>
     </div>
@@ -51,6 +51,7 @@ enum ProgressState {
 }
 
 export default defineComponent({
+  props: ['collegeNames'],
   computed: {
     requirementProgressBundles(): GroupedRequirementFulfillmentReportWithProgress[] {
       return store.state.groupedRequirementFulfillmentReport.map(req => ({

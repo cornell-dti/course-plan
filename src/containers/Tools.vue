@@ -10,14 +10,14 @@
     </div>
     <div class="toolsContainer-cards">
       <card name="Progress Tracker" class="toolsContainer-card-progress" id="progress">
-        <progress-tracker />
+        <progress-tracker :collegeNames="collegeNames" />
       </card>
       <card name="Contact Your Advisors" class="toolsContainer-card-advisors" id="advisors">
         <advisor-card></advisor-card>
       </card>
 
       <card name="Export Schedule" class="toolsContainer-card-export" id="export">
-        <export-card></export-card>
+        <export-card :collegeNames="collegeNames"></export-card>
       </card>
 
       <card name="Useful Links" class="toolsContainer-card-links" id="links">
@@ -37,6 +37,7 @@ import ExportCard from '@/components/Tools/ExportCard.vue';
 import store from '@/store';
 
 export default defineComponent({
+  props: ['collegeNames'],
   components: { ProgressTracker, ExportCard, UsefulLinks, AdvisorCard, Card },
   computed: {
     userInfo(): FirestoreUserName {

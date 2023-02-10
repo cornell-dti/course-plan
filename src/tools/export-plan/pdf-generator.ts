@@ -40,7 +40,7 @@ const APIBTableHeader = [['Exam', 'Credits', 'Requirements Fulfilled']];
 // max number of characters that can fit into a line for the major, minor or grad program field
 const programLineCharLimit = 45;
 
-const generatePDF = async (): Promise<void> => {
+const generatePDF = async (collegeNames: Map<string, string>): Promise<void> => {
   const doc = new JsPDF({ unit: 'pt', format: 'letter' });
 
   addFonts(doc);
@@ -113,7 +113,6 @@ const generatePDF = async (): Promise<void> => {
     doc.setTextColor('#000000');
     doc.text('Minor:', 48, programY);
     doc.setTextColor(lightPlaceholderGray);
-
     const [minors, textHeight] = truncatePrograms(
       store.state.onboardingData.minor.map(minor => getMinorFullName(minor))
     );
@@ -136,6 +135,7 @@ const generatePDF = async (): Promise<void> => {
 
   // Rendering tables now
   const sems = trimEmptySems(sortedSemesters(store.state.semesters, false));
+  console.log(store.state.semesters);
   let startct = Math.max(firstTableY, programY + 20);
 
   const emojiMap = {
@@ -167,7 +167,14 @@ const generatePDF = async (): Promise<void> => {
     const emoji = emojiMap[sem.season];
     doc.addImage(emoji, tableX + 5, startct - 15.5, 12, 12);
 
-    const tableHeight = renderTable(doc, { body, bubbles }, tableX, startct);
+    const tableHeight = renderTable(
+      doc,
+      { body, bubbles },
+      tableX,
+      startct,
+      tableHeader,
+      collegeNames
+    );
     startct += tableHeight + tableGap;
   }
 
@@ -191,8 +198,7 @@ const generatePDF = async (): Promise<void> => {
 
     const emoji = emojiMap.APIB;
     doc.addImage(emoji, tableX + 5, startct - 16.5, 12, 12);
-
-    renderTable(doc, { body, bubbles }, tableX, startct, APIBTableHeader);
+    renderTable(doc, { body, bubbles }, tableX, startct, APIBTableHeader, collegeNames);
   }
 
   // rendering PDF footer
@@ -246,7 +252,8 @@ const renderTable = (
   rows: SemesterRows,
   tableX: number,
   tableY: number,
-  header: string[][] = tableHeader
+  header: string[][] = tableHeader,
+  collegeNames: Map<string, string>
 ): number => {
   doc.setFont('ProximaNova-Regular', 'normal');
 
@@ -314,10 +321,15 @@ const renderTable = (
           data.row.index < body.length
         ) {
           let yPos = data.cell.y + 3;
+          console.log(bubbles);
           bubbles[data.row.index].forEach((bubble, index) => {
             const xPos =
               data.cell.x + doc.getTextWidth(body[data.row.index][2].split('\n')[index]) + 8;
-            renderBubbles(doc, xPos, yPos, bubble.requirementGroup, bubble.color);
+            let collegeCode = collegeNames.get(bubble.requirementGroup);
+            if (collegeCode != undefined) {
+              console.log(collegeCode);
+              renderBubbles(doc, xPos, yPos, collegeCode, bubble.color);
+            }
             yPos += rowFontSize + 1.5;
           });
         }
