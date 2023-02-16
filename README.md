@@ -26,6 +26,7 @@ Then access http://localhost:8080/
 
 - **Jerry Wang** - Developer
 - **Miranda Yu** - Developer
+- **Rohan Maheshwari** - Developer
 - **Zak Kent** - TPM
 - **Noah Schiff** - PM
 
