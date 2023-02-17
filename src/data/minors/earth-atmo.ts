@@ -1,5 +1,6 @@
-import { CollegeOrMajorRequirement } from '../../requirements/types';
+import { CollegeOrMajorRequirement, Course } from '../../requirements/types';
 import {
+  ifCodeMatch,
   includesWithSingleRequirement,
   includesWithSubRequirements,
 } from '../../requirements/checkers';
@@ -42,7 +43,10 @@ const earthAndAtmosphericSciencesMinorRequirements: readonly CollegeOrMajorRequi
       'Additional EAS courses at the 3000-level or higher. These courses may include, but are not limited to, additional courses from the above list, undergraduate research courses, and outdoor field courses.',
     source:
       'https://www.eas.cornell.edu/eas/programs/undergraduate-programs/undergraduate-minors/earth-and-atmospheric-sciences-minor',
-    fulfilledBy: 'self-check',
+    checker: [(course: Course): boolean => !ifCodeMatch(course.catalogNbr, '3***')],
+    perSlotMinCount: [1],
+    fulfilledBy: 'courses',
+    slotNames: ['Course'],
   },
 ];
 
