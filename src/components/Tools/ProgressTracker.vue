@@ -18,7 +18,7 @@
           {{ req.dangerouslyFulfilled }} / {{ req.totalRequired }}
         </span>
         <span class="progress-reqname progress-text-style">
-          {{ req.specific }} {{ req.groupName }} Requirements
+          {{ generateRequirementProgressString(req.specific, req.groupName) }}
         </span>
       </div>
     </div>
@@ -39,6 +39,7 @@ import {
   groupedRequirementTotalRequired,
   groupedRequirementTotalSafeRequirementProgress,
 } from '@/requirements/requirement-frontend-computation';
+import { getCollegeAbbrev, getMajorAbbrev, getMinorAbbrev, getGradAbbrev } from '../../data';
 import { sumBy } from '@/utilities';
 
 /** Discrete progress towards completing requirements */
@@ -106,7 +107,6 @@ export default defineComponent({
         transform: `rotate(${45 + (180 * this.dangerousProgress) / this.totalRequired}deg)`,
       };
     },
-
     progressMessage(): string {
       switch (this.progressState) {
         case ProgressState.First:
@@ -121,6 +121,23 @@ export default defineComponent({
           return 'Congrats!';
         default:
           throw new Error();
+      }
+    },
+  },
+  methods: {
+    generateRequirementProgressString(req: string, reqGroup: string): string {
+      console.log(req);
+      switch (reqGroup) {
+        case 'College':
+          return getCollegeAbbrev(req) + ' ' + reqGroup + ' Requirements';
+        case 'Major':
+          return getMajorAbbrev(req) + ' ' + reqGroup + ' Requirements';
+        case 'Minor':
+          return getMinorAbbrev(req) + ' ' + reqGroup + ' Requirements';
+        case 'Grad':
+          return getGradAbbrev(req) + ' ' + reqGroup + ' Requirements';
+        default:
+          return '';
       }
     },
   },
