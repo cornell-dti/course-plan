@@ -126,7 +126,6 @@ export default defineComponent({
   },
   methods: {
     generateRequirementProgressString(req: string, reqGroup: string): string {
-      console.log(req);
       switch (reqGroup) {
         case 'College':
           return getCollegeAbbrev(req) + ' ' + reqGroup + ' Requirements';
