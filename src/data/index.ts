@@ -79,6 +79,10 @@ import earthAndAtmosphericSciencesMinorRequirements, {
 import mpaRequirements, { mpaAdvisors } from './grad/mpa';
 
 import { MATH2940, CHEM2080 } from './specializations/en';
+import earthAndAtmosphericSciencesMinorRequirements, {
+  easMinorAdvisors,
+} from './minors/earth-atmo';
+import appliedEconMinorRequirements, { appliedEconMinorAdvisors } from './minors/aem';
 
 const json: RequirementsJson = {
   university: {
@@ -442,6 +446,13 @@ const json: RequirementsJson = {
       requirements: appliedEconMinorRequirements,
       advisors: appliedEconMinorAdvisors,
       abbrev: 'AppliedEcon',
+    },
+    APPLIEDECON: {
+      name: 'Applied Economics',
+      schools: ['AG', 'BU'],
+      requirements: appliedEconMinorRequirements,
+      advisors: appliedEconMinorAdvisors,
+      abbrev: 'Applied Econ',
     },
     APPLIEDMATH: {
       name: 'Applied Mathematics',
