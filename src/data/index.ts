@@ -72,6 +72,7 @@ import spanishMinorRequirements, { spanishMinorAdvisors } from './minors/spanish
 import mpaRequirements, { mpaAdvisors } from './grad/mpa';
 
 import { MATH2940, CHEM2080 } from './specializations/en';
+import appliedEconMinorRequirements, { appliedEconMinorAdvisors } from './minors/aem';
 
 const json: RequirementsJson = {
   university: {
@@ -421,6 +422,13 @@ const json: RequirementsJson = {
       requirements: aerospaceMinorRequirements,
       advisors: aerospaceMinorAdvisors,
       abbrev: 'Aero Eng',
+    },
+    APPLIEDECON: {
+      name: 'Applied Economics',
+      schools: ['AG', 'BU'],
+      requirements: appliedEconMinorRequirements,
+      advisors: appliedEconMinorAdvisors,
+      abbrev: 'Applied Econ',
     },
     APPLIEDMATH: {
       name: 'Applied Mathematics',
