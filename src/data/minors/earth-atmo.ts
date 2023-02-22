@@ -43,7 +43,10 @@ const earthAndAtmosphericSciencesMinorRequirements: readonly CollegeOrMajorRequi
       'Additional EAS courses at the 3000-level or higher. These courses may include, but are not limited to, additional courses from the above list, undergraduate research courses, and outdoor field courses.',
     source:
       'https://www.eas.cornell.edu/eas/programs/undergraduate-programs/undergraduate-minors/earth-and-atmospheric-sciences-minor',
-    checker: [(course: Course): boolean => !ifCodeMatch(course.catalogNbr, '3***')],
+    checker: [
+      (course: Course): boolean =>
+        !(ifCodeMatch(course.catalogNbr, '1***') || ifCodeMatch(course.catalogNbr, '2***')),
+    ],
     perSlotMinCount: [1],
     fulfilledBy: 'courses',
     slotNames: ['Course'],
