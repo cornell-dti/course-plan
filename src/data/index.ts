@@ -79,7 +79,6 @@ import earthAndAtmosphericSciencesMinorRequirements, {
 import mpaRequirements, { mpaAdvisors } from './grad/mpa';
 
 import { MATH2940, CHEM2080 } from './specializations/en';
-import appliedEconMinorRequirements, { appliedEconMinorAdvisors } from './minors/aem';
 
 const json: RequirementsJson = {
   university: {
