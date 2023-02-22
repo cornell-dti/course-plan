@@ -18,7 +18,7 @@
           {{ req.dangerouslyFulfilled }} / {{ req.totalRequired }}
         </span>
         <span class="progress-reqname progress-text-style">
-          {{ generateRequirementProgressString(req.specific, req.groupName) }}
+          {{ requirementProgressString(req.specific, req.groupName) }}
         </span>
       </div>
     </div>
@@ -125,7 +125,7 @@ export default defineComponent({
     },
   },
   methods: {
-    generateRequirementProgressString(req: string, reqGroup: string): string {
+    requirementProgressString(req: string, reqGroup: string): string {
       switch (reqGroup) {
         case 'College':
           return `${getCollegeAbbrev(req)} ${reqGroup} Requirements`;
