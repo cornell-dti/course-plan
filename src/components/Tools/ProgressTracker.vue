@@ -128,13 +128,13 @@ export default defineComponent({
     generateRequirementProgressString(req: string, reqGroup: string): string {
       switch (reqGroup) {
         case 'College':
-          return getCollegeAbbrev(req) + ' ' + reqGroup + ' Requirements';
+          return `${getCollegeAbbrev(req)} ${reqGroup} Requirements`;
         case 'Major':
-          return getMajorAbbrev(req) + ' ' + reqGroup + ' Requirements';
+          return `${getMajorAbbrev(req)} ${reqGroup} Requirements`;
         case 'Minor':
-          return getMinorAbbrev(req) + ' ' + reqGroup + ' Requirements';
+          return `${getMinorAbbrev(req)} ${reqGroup} Requirements`;
         case 'Grad':
-          return getGradAbbrev(req) + ' ' + reqGroup + ' Requirements';
+          return `${getGradAbbrev(req)} ${reqGroup} Requirements`;
         default:
           return '';
       }
