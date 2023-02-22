@@ -73,6 +73,7 @@ import mpaRequirements, { mpaAdvisors } from './grad/mpa';
 
 import { MATH2940, CHEM2080 } from './specializations/en';
 import appliedEconMinorRequirements, { appliedEconMinorAdvisors } from './minors/aem';
+import earthAndAtmosphericSciencesMinorRequirements, {easMinorAdvisors} from './minors/earth-atmo';
 
 const json: RequirementsJson = {
   university: {
@@ -471,6 +472,12 @@ const json: RequirementsJson = {
       requirements: deaMinorRequirements,
       advisors: deaAdvisors,
       abbrev: 'D+EA',
+    },
+    EAS: {
+      name: 'Earth and Atmospheric Sciences',
+      schools: ['EN', 'AG'],
+      requirements: earthAndAtmosphericSciencesMinorRequirements,
+      advisors: easMinorAdvisors,
     },
     ECE: {
       name: 'Electrical and Computer Engineering',
