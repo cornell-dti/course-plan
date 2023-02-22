@@ -4,11 +4,11 @@
       :isTransferCredit="isTransferCredit"
       :reqName="courseTaken.code"
       :reqDesc="reqDesc"
-      v-if="currentModal === Modals.Delete"
+      v-if="deleteModalVisible"
       @close-delete-course-modal="onDeleteCourseModalClose"
     />
     <replace-course-modal
-      v-if="currentModal === Modals.Replace"
+      v-if="replaceModalVisible"
       @close-replace-course-modal="onReplaceCourseModalClose"
     />
     <div class="completed-reqCourses-course-wrapper">
@@ -44,7 +44,7 @@
       </div>
     </div>
     <slot-menu
-      v-if="(currentModal = Modals.SlotMenu)"
+      v-if="slotMenuOpen"
       :position="slotMenuPosition"
       @open-replace-slot-modal="onReplaceModalOpen"
       @open-delete-slot-modal="onDeleteModalOpen"
@@ -74,13 +74,9 @@ export default defineComponent({
     reqDesc: { type: String, required: true },
   },
   data: () => ({
-    Modals: {
-      Replace: 0,
-      Delete: 1,
-      SlotMenu: 2,
-      None: 3,
-    },
-    currentModal: 3,
+    replaceModalVisible: false,
+    deleteModalVisible: false,
+    slotMenuOpen: false,
     mousePosition: { x: 0, y: 0 },
   }),
   computed: {
@@ -118,11 +114,10 @@ export default defineComponent({
   },
   methods: {
     onDeleteModalOpen(): void {
-      this.currentModal = this.Modals.Delete;
-      console.log(this.currentModal);
+      this.deleteModalVisible = true;
     },
     onDeleteCourseModalClose(isDelete: boolean): void {
-      this.currentModal = this.Modals.None;
+      this.deleteModalVisible = false;
 
       if (isDelete) {
         if (this.isTransferCredit) {
@@ -134,21 +129,20 @@ export default defineComponent({
       }
     },
     onReplaceModalOpen(): void {
-      console.log(this.currentModal);
-      this.currentModal = this.Modals.Replace;
+      this.replaceModalVisible = true;
     },
     onReplaceCourseModalClose(): void {
-      this.currentModal = this.Modals.None;
+      this.replaceModalVisible = false;
     },
     openSlotMenu(e: MouseEvent) {
       this.mousePosition = {
         x: e.clientX,
         y: e.clientY,
       };
-      this.currentModal = this.Modals.SlotMenu;
+      this.slotMenuOpen = true;
     },
     closeSlotMenu() {
-      this.currentModal = this.Modals.None;
+      this.slotMenuOpen = false;
     },
     isCourseConflict,
   },
