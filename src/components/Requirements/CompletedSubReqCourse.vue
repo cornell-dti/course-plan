@@ -4,11 +4,11 @@
       :isTransferCredit="isTransferCredit"
       :reqName="courseTaken.code"
       :reqDesc="reqDesc"
-      v-if="deleteModalVisible"
+      v-if="currentModal === Modals.Delete"
       @close-delete-course-modal="onDeleteCourseModalClose"
     />
     <replace-course-modal
-      v-if="replaceModalVisible"
+      v-if="currentModal === Modals.Replace"
       @close-replace-course-modal="onReplaceCourseModalClose"
     />
     <div class="completed-reqCourses-course-wrapper">
@@ -44,7 +44,7 @@
       </div>
     </div>
     <slot-menu
-      v-if="slotMenuOpen"
+      v-if="currentModal === Modals.SlotMenu"
       :position="slotMenuPosition"
       @open-replace-slot-modal="onReplaceModalOpen"
       @open-delete-slot-modal="onDeleteModalOpen"
@@ -74,9 +74,13 @@ export default defineComponent({
     reqDesc: { type: String, required: true },
   },
   data: () => ({
-    replaceModalVisible: false,
-    deleteModalVisible: false,
-    slotMenuOpen: false,
+    Modals: {
+      Replace: 0,
+      Delete: 1,
+      SlotMenu: 2,
+      None: 3,
+    },
+    currentModal: 3,
     mousePosition: { x: 0, y: 0 },
   }),
   computed: {
@@ -114,10 +118,11 @@ export default defineComponent({
   },
   methods: {
     onDeleteModalOpen(): void {
-      this.deleteModalVisible = true;
+      this.currentModal = this.Modals.Delete;
+      console.log('Current Modal:', this.currentModal);
     },
     onDeleteCourseModalClose(isDelete: boolean): void {
-      this.deleteModalVisible = false;
+      this.currentModal = this.Modals.None;
 
       if (isDelete) {
         if (this.isTransferCredit) {
@@ -129,20 +134,25 @@ export default defineComponent({
       }
     },
     onReplaceModalOpen(): void {
-      this.replaceModalVisible = true;
+      console.log('Current Modal: ', this.currentModal);
+      this.currentModal = this.Modals.Replace;
     },
     onReplaceCourseModalClose(): void {
-      this.replaceModalVisible = false;
+      this.currentModal = this.Modals.None;
     },
     openSlotMenu(e: MouseEvent) {
       this.mousePosition = {
         x: e.clientX,
         y: e.clientY,
       };
-      this.slotMenuOpen = true;
+      this.currentModal = this.Modals.SlotMenu;
+      console.log('Current Modal: ', this.currentModal);
     },
     closeSlotMenu() {
-      this.slotMenuOpen = false;
+      if (this.currentModal === this.Modals.SlotMenu) {
+        this.currentModal = this.Modals.None;
+      }
+      console.log('Current Modal: ', this.currentModal);
     },
     isCourseConflict,
   },
