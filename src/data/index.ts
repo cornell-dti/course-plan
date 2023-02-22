@@ -67,13 +67,15 @@ import policyMinorRequirements, { policyMinorAdvisors } from './minors/policy';
 import psychMinorRequirements, { psychMinorAdvisors } from './minors/psych';
 import roboticsMinorRequirements, { roboticsMinorAdvisors } from './minors/robotics';
 import spanishMinorRequirements, { spanishMinorAdvisors } from './minors/spanish';
+import appliedEconMinorRequirements, { appliedEconMinorAdvisors } from './minors/aem';
+import earthAndAtmosphericSciencesMinorRequirements, {
+  easMinorAdvisors,
+} from './minors/earth-atmo';
 
 // import mengCSRequirements from './grad/meng-cs';
 import mpaRequirements, { mpaAdvisors } from './grad/mpa';
 
 import { MATH2940, CHEM2080 } from './specializations/en';
-import appliedEconMinorRequirements, { appliedEconMinorAdvisors } from './minors/aem';
-import earthAndAtmosphericSciencesMinorRequirements, {easMinorAdvisors} from './minors/earth-atmo';
 
 const json: RequirementsJson = {
   university: {
