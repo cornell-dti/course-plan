@@ -13,7 +13,7 @@ export const SeasonOrdinal = {
 } as const;
 
 export const getFirstPlan = (semestersDoc: SemesterDocumentData): readonly FirestoreSemester[] => {
-  if (semestersDoc.plans) {
+  if (semestersDoc.plans && semestersDoc.plans.length > 0) {
     return semestersDoc.plans[0].semesters;
   }
   return semestersDoc.semesters;
