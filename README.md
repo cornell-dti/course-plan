@@ -31,6 +31,7 @@ Then access http://localhost:8080/
 - **Michelle Dai** - Designer
 - **Zak Kent** - TPM
 - **Noah Schiff** - PM
+- **Kaylin Chan** - APM
 
 ### FA22
 
