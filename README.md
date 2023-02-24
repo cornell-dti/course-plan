@@ -24,6 +24,7 @@ Then access http://localhost:8080/
 
 ### SP23
 
+- **Pablo Raigoza** - Developer
 - **Jerry Wang** - Developer
 - **Miranda Yu** - Developer
 - **Zak Kent** - TPM
