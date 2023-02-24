@@ -24,9 +24,12 @@ Then access http://localhost:8080/
 
 ### SP23
 
+- **Pablo Raigoza** - Developer
 - **Jerry Wang** - Developer
 - **Miranda Yu** - Developer
 - **Elizabeth Tang** - Developer
+- **Rohan Maheshwari** - Developer
+- **Michelle Dai** - Designer
 - **Zak Kent** - TPM
 - **Noah Schiff** - PM
 
