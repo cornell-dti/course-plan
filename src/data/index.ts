@@ -57,6 +57,7 @@ import csMinorRequirements, { csMinorAdvisors } from './minors/cs';
 import dbmeMinorRequirements, { dbmeAdvisors } from './minors/dbme';
 import deaMinorRequirements from './minors/dea';
 import eceMinorRequirements, { eceMinorAdvisors } from './minors/ece';
+import gameDesignMinorRequirements, { gameDesignMinorAdvisors } from './minors/game-design';
 import hpMinorRequirements, { hpMinorAdvisors } from './minors/hp';
 import hdMinorRequirements, { hdMinorAdvisors } from './minors/hd';
 import inequalityRequirements, { inequalityAdvisors } from './minors/ineq';
@@ -438,6 +439,12 @@ const json: RequirementsJson = {
       schools: ['EN'],
       requirements: eceMinorRequirements,
       advisors: eceMinorAdvisors,
+    },
+    GAMEDESIGN: {
+      name: 'Game Design',
+      schools: ['EN', 'AS1', 'AS2'],
+      requirements: gameDesignMinorRequirements,
+      advisors: gameDesignMinorAdvisors,
     },
     HP: {
       name: 'Health Policy',
