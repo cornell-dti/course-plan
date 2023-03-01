@@ -370,7 +370,7 @@ const generateDecoratedRequirementsJson = (): DecoratedRequirementsJson => {
     };
   });
   Object.entries(grad).forEach(([gradName, gradRequirement]) => {
-    const { requirements, advisors, abbrev: abbr, ...rest } = gradRequirement;
+    const { requirements, advisors, abbrev, ...rest } = gradRequirement;
     decoratedJson.grad[gradName] = {
       ...rest,
       requirements: decorateRequirements(requirements),
