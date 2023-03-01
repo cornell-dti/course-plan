@@ -162,14 +162,14 @@ const json: RequirementsJson = {
       schools: ['AG', 'AS1', 'AS2'],
       requirements: bioRequirements,
       advisors: bioAdvisors,
-      abbrev: 'BioSci,
+      abbrev: 'BioSci',
     },
     BSOC: {
       name: 'Biology and Society',
       schools: ['AG', 'AS1', 'AS2'],
       requirements: bsocRequirements,
       advisors: bioAdvisors,
-      abbrev: 'BioSoc'
+      abbrev: 'BioSoc',
     },
     BME: {
       name: 'Biomedical Engineering',
@@ -190,7 +190,7 @@ const json: RequirementsJson = {
       schools: ['EN'],
       requirements: civilRequirements,
       advisors: civilAdvisors,
-      abbrev: 'CivilEng'
+      abbrev: 'CivilEng',
     },
     CHEM: {
       name: 'Chemistry',
@@ -282,7 +282,7 @@ const json: RequirementsJson = {
       schools: ['EN'],
       requirements: epRequirements,
       advisors: epAdvisors,
-      abbrev: 'EngPhys'
+      abbrev: 'EngPhys',
     },
     FSAD: {
       name: 'Fashion Design',
@@ -303,7 +303,7 @@ const json: RequirementsJson = {
       schools: ['AS1', 'AS2'],
       requirements: governmentRequirements,
       advisors: governmentAdvisors,
-      abbrev: 'Gov'
+      abbrev: 'Gov',
     },
     HADM: {
       name: 'Hotel Administration',
@@ -317,7 +317,7 @@ const json: RequirementsJson = {
       schools: ['HE'],
       requirements: hdRequirements,
       advisors: hdAdvisors,
-      abbrev: 'HumanDev'
+      abbrev: 'HumanDev',
     },
     HIST: {
       name: 'History',
@@ -424,21 +424,21 @@ const json: RequirementsJson = {
       schools: ['EN'],
       requirements: aerospaceMinorRequirements,
       advisors: aerospaceMinorAdvisors,
-      abbrev: 'AeroEng'
+      abbrev: 'AeroEng',
     },
     APPLIEDECON: {
       name: 'Applied Economics',
       schools: ['AG', 'BU'],
       requirements: appliedEconMinorRequirements,
       advisors: appliedEconMinorAdvisors,
-      abbrev: 'AppliedEcon'
+      abbrev: 'AppliedEcon',
     },
     APPLIEDMATH: {
       name: 'Applied Mathematics',
       schools: ['EN'],
       requirements: appliedMathMinorRequirements,
       advisors: appliedMathMinorAdvisors,
-      abbrev: 'AppliedMath'
+      abbrev: 'AppliedMath',
     },
     BU: {
       name: 'Business',
@@ -466,7 +466,7 @@ const json: RequirementsJson = {
       schools: ['BU'],
       requirements: dbmeMinorRequirements,
       advisors: dbmeAdvisors,
-      abbrev: 'DBME'
+      abbrev: 'DBME',
     },
     DEA: {
       name: 'Design and Environmental Analysis',
@@ -480,7 +480,7 @@ const json: RequirementsJson = {
       schools: ['EN', 'AG'],
       requirements: earthAndAtmosphericSciencesMinorRequirements,
       advisors: easMinorAdvisors,
-      abbrev: 'EAS'
+      abbrev: 'EAS',
     },
     ECE: {
       name: 'Electrical and Computer Engineering',
@@ -494,21 +494,21 @@ const json: RequirementsJson = {
       schools: ['HE'],
       requirements: hpMinorRequirements,
       advisors: hpMinorAdvisors,
-      abbrev: 'HealthPol'
+      abbrev: 'HealthPol',
     },
     HD: {
       name: 'Human Development',
       schools: ['HE'],
       requirements: hdMinorRequirements,
       advisors: hdMinorAdvisors,
-      abbrev: 'HumanDev'
+      abbrev: 'HumanDev',
     },
     INEQ: {
       name: 'Inequality Studies',
       schools: ['AS1', 'AS2'],
       requirements: inequalityRequirements,
       advisors: inequalityAdvisors,
-      abbrev: 'IneqStudies'
+      abbrev: 'IneqStudies',
     },
     ISST: {
       name: 'Information Science [Engineering]',
@@ -522,7 +522,7 @@ const json: RequirementsJson = {
       schools: ['AS1', 'AS2'],
       requirements: lingMinorRequirements,
       advisors: lingMinorAdvisors,
-      abbrev: 'Ling'
+      abbrev: 'Ling',
     },
     MATH: {
       name: 'Mathematics',
@@ -543,7 +543,7 @@ const json: RequirementsJson = {
       schools: ['AS1', 'AS2'],
       requirements: policyMinorRequirements,
       advisors: policyMinorAdvisors,
-      abbrev: 'PublicPolicy'
+      abbrev: 'PublicPolicy',
     },
     PSYCH: {
       name: 'Psychology',
