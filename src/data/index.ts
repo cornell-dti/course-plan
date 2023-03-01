@@ -131,7 +131,7 @@ const json: RequirementsJson = {
     BU: {
       name: 'SC Johnson College of Business',
       requirements: businessRequirements,
-      abbrev: 'Dyson',
+      abbrev: 'Business',
       advisors: businessAdvisors,
     },
   },
@@ -162,14 +162,14 @@ const json: RequirementsJson = {
       schools: ['AG', 'AS1', 'AS2'],
       requirements: bioRequirements,
       advisors: bioAdvisors,
-      abbrev: 'Bio',
+      abbrev: 'BioSci,
     },
     BSOC: {
       name: 'Biology and Society',
       schools: ['AG', 'AS1', 'AS2'],
       requirements: bsocRequirements,
       advisors: bioAdvisors,
-      abbrev: 'BSoc',
+      abbrev: 'BioSoc'
     },
     BME: {
       name: 'Biomedical Engineering',
@@ -190,7 +190,7 @@ const json: RequirementsJson = {
       schools: ['EN'],
       requirements: civilRequirements,
       advisors: civilAdvisors,
-      abbrev: 'Civil Eng',
+      abbrev: 'CivilEng'
     },
     CHEM: {
       name: 'Chemistry',
@@ -282,7 +282,7 @@ const json: RequirementsJson = {
       schools: ['EN'],
       requirements: epRequirements,
       advisors: epAdvisors,
-      abbrev: 'Eng Physics',
+      abbrev: 'EngPhys'
     },
     FSAD: {
       name: 'Fashion Design',
@@ -303,7 +303,7 @@ const json: RequirementsJson = {
       schools: ['AS1', 'AS2'],
       requirements: governmentRequirements,
       advisors: governmentAdvisors,
-      abbrev: 'Govt',
+      abbrev: 'Gov'
     },
     HADM: {
       name: 'Hotel Administration',
@@ -317,7 +317,7 @@ const json: RequirementsJson = {
       schools: ['HE'],
       requirements: hdRequirements,
       advisors: hdAdvisors,
-      abbrev: 'Human Dev',
+      abbrev: 'HumanDev'
     },
     HIST: {
       name: 'History',
@@ -424,21 +424,21 @@ const json: RequirementsJson = {
       schools: ['EN'],
       requirements: aerospaceMinorRequirements,
       advisors: aerospaceMinorAdvisors,
-      abbrev: 'Aero Eng',
+      abbrev: 'AeroEng'
     },
     APPLIEDECON: {
       name: 'Applied Economics',
       schools: ['AG', 'BU'],
       requirements: appliedEconMinorRequirements,
       advisors: appliedEconMinorAdvisors,
-      abbrev: 'Applied Econ',
+      abbrev: 'AppliedEcon'
     },
     APPLIEDMATH: {
       name: 'Applied Mathematics',
       schools: ['EN'],
       requirements: appliedMathMinorRequirements,
       advisors: appliedMathMinorAdvisors,
-      abbrev: 'Applied Math',
+      abbrev: 'AppliedMath'
     },
     BU: {
       name: 'Business',
@@ -466,7 +466,7 @@ const json: RequirementsJson = {
       schools: ['BU'],
       requirements: dbmeMinorRequirements,
       advisors: dbmeAdvisors,
-      abbrev: 'CoE Dyson',
+      abbrev: 'DBME'
     },
     DEA: {
       name: 'Design and Environmental Analysis',
@@ -480,6 +480,7 @@ const json: RequirementsJson = {
       schools: ['EN', 'AG'],
       requirements: earthAndAtmosphericSciencesMinorRequirements,
       advisors: easMinorAdvisors,
+      abbrev: 'EAS'
     },
     ECE: {
       name: 'Electrical and Computer Engineering',
@@ -493,21 +494,21 @@ const json: RequirementsJson = {
       schools: ['HE'],
       requirements: hpMinorRequirements,
       advisors: hpMinorAdvisors,
-      abbrev: 'Health Policy',
+      abbrev: 'HealthPol'
     },
     HD: {
       name: 'Human Development',
       schools: ['HE'],
       requirements: hdMinorRequirements,
       advisors: hdMinorAdvisors,
-      abbrev: 'Human Dev',
+      abbrev: 'HumanDev'
     },
     INEQ: {
       name: 'Inequality Studies',
       schools: ['AS1', 'AS2'],
       requirements: inequalityRequirements,
       advisors: inequalityAdvisors,
-      abbrev: 'Inequality',
+      abbrev: 'IneqStudies'
     },
     ISST: {
       name: 'Information Science [Engineering]',
@@ -521,7 +522,7 @@ const json: RequirementsJson = {
       schools: ['AS1', 'AS2'],
       requirements: lingMinorRequirements,
       advisors: lingMinorAdvisors,
-      abbrev: 'Linguistics',
+      abbrev: 'Ling'
     },
     MATH: {
       name: 'Mathematics',
@@ -542,7 +543,7 @@ const json: RequirementsJson = {
       schools: ['AS1', 'AS2'],
       requirements: policyMinorRequirements,
       advisors: policyMinorAdvisors,
-      abbrev: 'Public Policy',
+      abbrev: 'PublicPolicy'
     },
     PSYCH: {
       name: 'Psychology',
@@ -572,7 +573,7 @@ const json: RequirementsJson = {
       name: 'MEng in Computer Science',
       schools: ['EN'],
       requirements: mengCSRequirements,
-      abbrev: 'CS MEng
+      abbrev: 'CS MEng'
     },
     */
     MPA: {
