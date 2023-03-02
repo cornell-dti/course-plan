@@ -41,6 +41,7 @@ const userCollections = {
   unique: 'user-unique-incrementer',
   onboarding: 'user-onboarding-data',
 };
+
 export const userCollectionNames = Object.values(userCollections);
 
 export const usernameCollection = db.collection(userCollections.name);
@@ -51,3 +52,4 @@ export const subjectColorsCollection = db.collection(userCollections.colors);
 export const uniqueIncrementerCollection = db.collection(userCollections.unique);
 export const onboardingDataCollection = db.collection(userCollections.onboarding);
 export const trackUsersCollection = db.collection('track-users');
+export const coursesCollection = db.collection('courses');
