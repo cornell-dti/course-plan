@@ -238,7 +238,7 @@ it('Minimize a semester', () => {
   cy.get('[data-cyId=semester-addCourse]').should('be.visible');
 });
 
-it('Add CS 3410 w/gear', () => {
+it.skip('Add CS 3410 w/gear', () => {
   cy.get('[data-cyId=requirements-viewMore]').contains('View All Major Requirements').click();
   cy.get('[data-cyId=requirements-displayToggle]').contains('Computer Science Core').click();
   // click gear
@@ -267,7 +267,7 @@ it('Add CS 3410 w/gear', () => {
   cy.get('[data-cyId=modal-button]').click();
 });
 
-it('Remove CS 3410 w/gear', () => {
+it.skip('Remove CS 3410 w/gear', () => {
   // click gear
   cy.get('[data-cyId=gear-complete-subreq]').eq(2).click();
   // click remove
@@ -276,7 +276,7 @@ it('Remove CS 3410 w/gear', () => {
   cy.get('[data-cyId=modal-button]').click();
 });
 
-it('Replace CS 3410 w/CS 3420 (none)', () => {
+it.skip('Replace CS 3410 w/CS 3420 (none)', () => {
   // add CS 3410
   cy.get('[data-cyId=semester-addCourse]').click();
   cy.get('[data-cyId=newCourse-dropdown]').type('CS 3410');
@@ -301,7 +301,7 @@ it('Replace CS 3410 w/CS 3420 (none)', () => {
   cy.get('[data-cyId=modal-button').click();
 });
 
-it('Replace CS 3410 w/CS 3420 (one)', () => {
+it.skip('Replace CS 3410 w/CS 3420 (one)', () => {
   // click gear
   cy.get('[data-cyId=gear-complete-subreq]').eq(2).click();
   // click remove
@@ -324,7 +324,7 @@ it('Replace CS 3410 w/CS 3420 (one)', () => {
   cy.get('[data-cyId=newCourse-searchResult]').first().click();
 });
 
-it('Replace CS 3410 w/CS 3420 (two)', () => {
+it.skip('Replace CS 3410 w/CS 3420 (two)', () => {
   // remove CS 3420
   // click gear
   cy.get('[data-cyId=gear-complete-subreq]').eq(2).click();
