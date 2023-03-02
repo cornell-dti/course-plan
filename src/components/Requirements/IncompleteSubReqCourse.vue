@@ -7,12 +7,15 @@
     <div class="draggable-requirements-wrapper" v-if="displayDescription">
       <div class="separator"></div>
       <div class="draggable-requirements-heading">
-        <div class="draggable-requirements-heading-label">{{ addCourseLabel }}</div>
+        <div class="draggable-requirements-heading-label">
+          {{ addCourseLabel }}
+        </div>
         <button
+          v-if="showSettingsButton"
           class="reqCourse-button"
           @click="openReplaceSlotMenu"
           data-cyId="gear-incomplete-subreq"
-        ></button>
+        />
         <button
           v-if="showSeeAllLabel"
           class="draggable-requirements-heading-seeAll"
@@ -60,6 +63,7 @@ import incrementUniqueID from '@/global-firestore-data/user-unique-incrementer';
 import { GTagEvent } from '@/gtag';
 import ReplaceSlotMenu from '@/components/Modals/ReplaceSlotMenu.vue';
 import ReplaceCourseModal from '@/components/Modals/ReplaceCourseModal.vue';
+import featureFlagCheckers from '@/feature-flags';
 
 export default defineComponent({
   components: { draggable, Course, ReplaceSlotMenu, ReplaceCourseModal },
@@ -70,13 +74,18 @@ export default defineComponent({
     mousePosition: { x: 0, y: 0 },
   }),
   mounted() {
-    this.$el.addEventListener('touchmove', this.dragListener, { passive: false });
+    this.$el.addEventListener('touchmove', this.dragListener, {
+      passive: false,
+    });
   },
   beforeUnmount() {
     this.$el.removeEventListener('touchmove', this.dragListener);
   },
   props: {
-    subReq: { type: Object as PropType<RequirementFulfillment>, required: true },
+    subReq: {
+      type: Object as PropType<RequirementFulfillment>,
+      required: true,
+    },
     slotName: { type: String, required: true },
     courses: {
       type: Array as PropType<readonly AppFirestoreSemesterCourseWithRequirementID[]>,
@@ -87,6 +96,9 @@ export default defineComponent({
   },
   emits: ['onShowAllCourses'],
   computed: {
+    showSettingsButton() {
+      return featureFlagCheckers.isReplaceModalEnabled();
+    },
     addCourseLabel(): string {
       let label = 'Add Course';
       if (this.subReq.fulfillment.fulfilledBy === 'courses') {

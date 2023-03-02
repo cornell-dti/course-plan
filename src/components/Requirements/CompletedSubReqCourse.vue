@@ -26,10 +26,11 @@
           <span class="completed-reqCourses-course-heading-name">{{ slotName }}</span>
         </div>
         <button
+          v-if="showSettingsButton"
           class="reqCourse-button"
           @click="openSlotMenu"
           data-cyId="gear-complete-subreq"
-        ></button>
+        />
       </div>
       <div class="completed-reqCourses-course-object-wrapper">
         <req-course
@@ -63,11 +64,18 @@ import CourseCaution from '@/components/Course/CourseCaution.vue';
 import store, { isCourseConflict } from '@/store';
 import { deleteCourseFromSemesters, deleteTransferCredit } from '@/global-firestore-data';
 import { getCurrentSeason, getCurrentYear, clickOutside } from '@/utilities';
+import featureFlagCheckers from '@/feature-flags';
 
 const transferCreditColor = 'DA4A4A'; // Arbitrary color for transfer credit
 
 export default defineComponent({
-  components: { ReqCourse, DeleteCourseModal, ReplaceCourseModal, SlotMenu, CourseCaution },
+  components: {
+    ReqCourse,
+    DeleteCourseModal,
+    ReplaceCourseModal,
+    SlotMenu,
+    CourseCaution,
+  },
   props: {
     slotName: { type: String, required: true },
     courseTaken: { type: Object as PropType<CourseTaken>, required: true },
@@ -80,6 +88,9 @@ export default defineComponent({
     mousePosition: { x: 0, y: 0 },
   }),
   computed: {
+    showSettingsButton() {
+      return featureFlagCheckers.isReplaceModalEnabled();
+    },
     semesters(): readonly FirestoreSemester[] {
       return store.state.semesters;
     },
