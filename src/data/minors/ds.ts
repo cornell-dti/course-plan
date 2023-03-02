@@ -26,6 +26,7 @@ const dsMinorRequirements: readonly CollegeOrMajorRequirement[] = [
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
     slotNames: ['Course'],
+    allowCourseDoubleCounting: true,
   },
   {
     name: 'Core Computing',
