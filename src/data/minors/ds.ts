@@ -26,7 +26,6 @@ const dsMinorRequirements: readonly CollegeOrMajorRequirement[] = [
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
     slotNames: ['Course'],
-    allowCourseDoubleCounting: true,
   },
   {
     name: 'Core Computing',
@@ -53,7 +52,6 @@ const dsMinorRequirements: readonly CollegeOrMajorRequirement[] = [
     slotNames: ['Course'],
     checkerWarning:
       'Students majoring in a subject that require intro programming need to take a more advanced programming course.',
-    allowCourseDoubleCounting: true,
   },
 
   {
