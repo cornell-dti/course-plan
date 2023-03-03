@@ -26,6 +26,7 @@ export type Major<R> = Readonly<{
   /** College requirements that have been "specialized" for this major */
   specializations?: readonly R[];
   advisors?: AdvisorGroup;
+  readonly abbrev?: string;
 }>;
 
 export type MutableMajorRequirements<R> = {
