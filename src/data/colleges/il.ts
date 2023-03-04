@@ -42,7 +42,7 @@ const FLcourses: readonly string[] = [
 
 const ilrRequirements: readonly CollegeOrMajorRequirement[] = [
   {
-    name: 'First Year Core Requirements',
+    name: 'First Year Core Fart',
     description:
       'Students are required to fulfill the following core requirements during the first four semesters of enrollment in the ILR school.',
     source:
