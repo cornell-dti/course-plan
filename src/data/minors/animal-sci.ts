@@ -1,8 +1,6 @@
 import { CollegeOrMajorRequirement, Course } from '../../requirements/types';
 import {
-  includesWithSingleRequirement,
-  ifCodeMatch,
-  courseMeetsCreditMinimum,
+  ifCodeMatch
 } from '../../requirements/checkers';
 import { AdvisorGroup } from '../../tools/advisors/types';
 
