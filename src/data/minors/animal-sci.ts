@@ -1,7 +1,5 @@
 import { CollegeOrMajorRequirement, Course } from '../../requirements/types';
-import {
-  ifCodeMatch
-} from '../../requirements/checkers';
+import { ifCodeMatch } from '../../requirements/checkers';
 import { AdvisorGroup } from '../../tools/advisors/types';
 
 const animalSciRequirements: readonly CollegeOrMajorRequirement[] = [
