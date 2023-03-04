@@ -2,6 +2,8 @@ import { AdvisorGroup } from '../tools/advisors/types';
 
 export type Course = Omit<CornellCourseRosterCourse, 'roster'>;
 
+export type CourseFullDetail = CornellCourseRosterCourseFullDetail;
+
 export type BaseRequirement = RequirementCommon & RequirementFulfillmentInformation;
 
 export type RequirementChecker = (course: Course) => boolean;

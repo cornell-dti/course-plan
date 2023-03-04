@@ -39,8 +39,8 @@
  *                //create firestore document for 'course' in 'subject'
  */
 import fetch from 'node-fetch';
-import axios from 'axios';
 import { coursesCollection } from '../firebase-config';
+import { CourseFullDetail } from '../../src/requirements/types';
 
 /** A helper function to generate a wait promise. Used for cooldown to limit API usage. */
 const wait = (time: number) =>
@@ -72,22 +72,61 @@ const retrieveAvailableSubjects = async (roster: string) => {
 };
 
 const retrieveAvailableCourses = async (roster: string, subject: string) => {
-  const courses: readonly string[] = await fetch(
+  const courses: CourseFullDetail[] = await fetch(
     `https://classes.cornell.edu/api/2.0/search/classes.json?roster=${roster}&subject=${subject}`
   )
     .then(res => res.json())
     .then(jsonRes => jsonRes.data.classes)
-    .then(jsonCourses => jsonCourses.map(jsonCourse => jsonCourse.catalogNbr));
+    .then(jsonCourses => jsonCourses.map(jsonCourse => courseFieldFilter(jsonCourse)));
   return courses;
 };
 
 /* TODO */
-const extractData = (jsonCourse: string) => jsonCourse;
+// const extractData = (jsonCourse: string) => jsonCourse;
 
-const migrateCourses = async (roster: string, subject: string, courses: string[]) => {
-  courses.forEach(course =>
-    coursesCollection.doc(roster).collection(subject).doc(course).set({ course })
-  );
+const cleanField = (value: string | null | undefined) =>
+  value?.replace(/\u00a0/g, ' ') || undefined;
+
+const courseFieldFilter = ({
+  subject,
+  crseId,
+  catalogNbr,
+  titleLong,
+  enrollGroups,
+  catalogWhenOffered,
+  catalogBreadth,
+  catalogDistr,
+  catalogComments,
+  catalogSatisfiesReq,
+  catalogCourseSubfield,
+  catalogAttribute,
+  acadCareer,
+  acadGroup,
+  description,
+  catalogPrereqCoreq,
+}: CourseFullDetail): CourseFullDetail => ({
+  subject: cleanField(subject) || '',
+  crseId,
+  catalogNbr: cleanField(catalogNbr) || '',
+  titleLong: cleanField(titleLong) || '',
+  enrollGroups,
+  catalogWhenOffered: cleanField(catalogWhenOffered),
+  catalogBreadth: cleanField(catalogBreadth),
+  catalogDistr: cleanField(catalogDistr),
+  catalogComments: cleanField(catalogComments),
+  catalogSatisfiesReq: cleanField(catalogSatisfiesReq),
+  catalogCourseSubfield: cleanField(catalogCourseSubfield),
+  catalogAttribute: cleanField(catalogAttribute),
+  acadCareer: cleanField(acadCareer) || '',
+  acadGroup: cleanField(acadGroup) || '',
+  description: cleanField(description) || '',
+  catalogPrereqCoreq: cleanField(catalogPrereqCoreq) || '',
+});
+
+const migrateCourses = async (roster: string, subject: string, courses: CourseFullDetail[]) => {
+  courses.forEach(async course => {
+    await coursesCollection.doc(roster).collection(subject).doc(course.catalogNbr).set({ course });
+  });
 };
 
 const populate = async () => {
@@ -107,15 +146,20 @@ const populate = async () => {
     .then(subjects => subjects.flat());
 
   let subjectCount = 0;
+  let coursesCount = 0;
   for (const subject of rosterSubjectPairs) {
-    const semesterCourses = await retrieveAvailableCourses(subject.roster, subject.subject);
+    const subjectCourses = await retrieveAvailableCourses(subject.roster, subject.subject);
+    migrateCourses(subject.roster, subject.subject, subjectCourses);
     await wait(50);
+    coursesCount += subjectCourses.length;
     subjectCount += 1;
     console.log(
-      `There are ${semesterCourses.length} courses in ${subject.subject} in ${subject.roster}.`
+      `There are ${subjectCourses.length} courses in ${subject.subject} in ${subject.roster}.`
     );
     console.log(`We fetched ${subjectCount} out of ${rosterSubjectPairs.length} subjects`);
   }
+
+  console.log(`There are ${coursesCount} total courses.`);
 };
 /*
 ['FA14', 'SP15]
