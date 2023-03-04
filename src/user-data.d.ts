@@ -28,16 +28,17 @@ type FirestoreSemesterPlaceholder = {
   readonly startingSemester: number;
 };
 
-// This is used for drag&drop between SubRequirement and Semester
-type AppFirestoreSemesterCourseWithRequirementID = FirestoreSemesterCourse & {
-  readonly requirementID?: string;
-};
-
 type FirestoreSemesterSeason = 'Fall' | 'Spring' | 'Summer' | 'Winter';
 type FirestoreSemester = {
   readonly year: number;
   readonly season: FirestoreSemesterSeason;
   readonly courses: readonly (FirestoreSemesterCourse | FirestoreSemesterPlaceholder)[];
+};
+
+type FirestoreSemestersData = {
+  readonly plans?: readonly { semesters: readonly FirestoreSemester[] }[];
+  readonly semesters: readonly FirestoreSemester[];
+  readonly orderByNewest: boolean;
 };
 
 type FirestoreCollegeOrMajorOrMinor = { readonly acronym: string };
@@ -126,6 +127,8 @@ type FirestoreTrackUsersOnboardingData = {
   gradYearFrequencies: { readonly [group: string]: number };
 };
 
+type FirestoreUniqueIncrementer = { readonly uniqueIncrementer: number };
+
 interface CornellCourseRosterCourse {
   readonly crseId: number;
   readonly subject: string;
@@ -201,6 +204,11 @@ type AppBottomBarCourse = {
   overallRating: number;
   difficulty: number;
   workload: number;
+};
+
+// This is used for drag&drop between SubRequirement and Semester
+type AppFirestoreSemesterCourseWithRequirementID = FirestoreSemesterCourse & {
+  readonly requirementID?: string;
 };
 
 /** Map from requirement ID to option chosen */

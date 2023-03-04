@@ -1,7 +1,7 @@
 import { Store } from 'vuex';
 import { doc, getDoc, onSnapshot, setDoc, updateDoc } from 'firebase/firestore';
 
-import * as fb from './firebase-frontend-config';
+import * as fb from './firebase-config';
 import computeGroupedRequirementFulfillmentReports from './requirements/requirement-frontend-computation';
 import RequirementFulfillmentGraph from './requirements/requirement-graph';
 import { createAppOnboardingData } from './user-data-converter';

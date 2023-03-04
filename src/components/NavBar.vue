@@ -13,23 +13,13 @@
         <div class="navbar-iconWrapper hairlineWrapper no-hover">
           <img class="navbar-icon hairline" src="@/assets/images/navbar/hairline.svg" />
         </div>
-        <div
-          v-if="toolsEnabled"
-          class="navbar-buttonWrapper desktop"
-          @click="openPlan"
-          data-cyId="openPlan"
-        >
+        <div class="navbar-buttonWrapper desktop" @click="openPlan" data-cyId="openPlan">
           <button class="navbar-iconWrapper plan-icon full-opacity-on-hover" />
           <div class="navbar-iconText">
             <span>Plan</span>
           </div>
         </div>
-        <div
-          v-if="toolsEnabled"
-          class="navbar-buttonWrapper desktop"
-          @click="openTools"
-          data-cyId="openTools"
-        >
+        <div class="navbar-buttonWrapper desktop" @click="openTools" data-cyId="openTools">
           <button class="navbar-iconWrapper tools-icon full-opacity-on-hover" />
           <div class="navbar-iconText">
             <span>Tools</span>
@@ -59,21 +49,11 @@
             {{ isDisplayingRequirementsMobile ? 'View Schedule' : 'View Requirements' }}
           </span>
         </button>
-        <button
-          v-if="toolsEnabled"
-          class="nav-mobile-button"
-          data-cyId="navbar-openPlan"
-          @click="openPlan"
-        >
+        <button class="nav-mobile-button" data-cyId="navbar-openPlan" @click="openPlan">
           <div class="navbar-iconWrapper plan-mobile-icon" />
           <span class="nav-mobile-button-text">Plan</span>
         </button>
-        <button
-          v-if="toolsEnabled"
-          class="nav-mobile-button"
-          data-cyId="navbar-openTools"
-          @click="openTools"
-        >
+        <button class="nav-mobile-button" data-cyId="navbar-openTools" @click="openTools">
           <div class="navbar-iconWrapper tools-mobile-icon" />
           <span class="nav-mobile-button-text">Tools</span>
         </button>
@@ -104,7 +84,6 @@ import { defineComponent } from 'vue';
 import { getAuth, signOut } from 'firebase/auth';
 import { GTagEvent } from '@/gtag';
 import { clickOutside } from '@/utilities';
-import featureFlagCheckers from '@/feature-flags';
 
 export default defineComponent({
   props: {
@@ -115,11 +94,6 @@ export default defineComponent({
     return {
       menuOpen: false,
     };
-  },
-  computed: {
-    toolsEnabled(): boolean {
-      return featureFlagCheckers.isToolsEnabled();
-    },
   },
   methods: {
     logout() {

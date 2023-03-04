@@ -1,17 +1,10 @@
 {
+  "extends": "@tsconfig/node14/tsconfig.json",
   "compilerOptions": {
     "declaration": true,
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
     "incremental": true,
     "jsx": "preserve",
-    "lib": ["dom", "esnext"],
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "outDir": "requirement-generator-dist",
-    "resolveJsonModule": true,
     "strict": true,
-    "target": "es2015"
   },
   "include": ["src/"]
 }
