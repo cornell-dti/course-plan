@@ -13,6 +13,7 @@ import {
   getCurrentYear,
   sortedSemesters,
   isPlaceholderCourse,
+  getFirstPlan,
 } from './utilities';
 import featureFlagCheckers from './feature-flags';
 
@@ -273,7 +274,8 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
   getDoc(doc(fb.semestersCollection, simplifiedUser.email)).then(snapshot => {
     const data = snapshot.data();
     if (data) {
-      const { orderByNewest, semesters } = data;
+      const semesters = getFirstPlan(data);
+      const { orderByNewest } = data;
       store.commit('setSemesters', semesters);
       updateDoc(doc(fb.semestersCollection, simplifiedUser.email), {
         plans: [{ semesters }], // TODO: andxu282 update later
