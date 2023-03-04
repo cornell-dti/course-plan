@@ -49,7 +49,7 @@ import spanishRequirements, { spanishAdvisors } from './majors/spanish';
 import psychRequirements, { psychAdvisors } from './majors/psych';
 import stsRequirements, { stsAdvisors } from './majors/sts';
 import aerospaceMinorRequirements, { aerospaceMinorAdvisors } from './minors/aerospace';
-import animalSciRequirements, {animalSciAdvisors} from './minors/animal-sci';
+import animalSciRequirements, { animalSciAdvisors } from './minors/animal-sci';
 import appliedMathMinorRequirements, { appliedMathMinorAdvisors } from './minors/applied-math';
 import buMinorRequirements, { buMinorAdvisors } from './minors/bu';
 import cogsciMinorRequirements, { cogsciMinorAdvisors } from './minors/cogsci';
@@ -433,7 +433,7 @@ const json: RequirementsJson = {
       schools: ['EN', 'AS2', 'AG'],
       requirements: animalSciRequirements,
       advisors: animalSciAdvisors,
-      abbrev: 'AnimalSci'
+      abbrev: 'AnimalSci',
     },
     APPLIEDECON: {
       name: 'Applied Economics',
