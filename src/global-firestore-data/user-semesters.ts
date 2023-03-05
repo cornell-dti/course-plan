@@ -14,10 +14,12 @@ import {
 export const editSemesters = (
   updater: (oldSemesters: readonly FirestoreSemester[]) => readonly FirestoreSemester[]
 ): void => {
-  const newSemesters = updater(store.state.semesters);
-  store.commit('setSemesters', newSemesters);
+  const semesters = updater(store.state.semesters);
+  store.commit('setSemesters', semesters);
+  // TODO: update when multiple plans frontend implemented
   updateDoc(doc(semestersCollection, store.state.currentFirebaseUser.email), {
-    semesters: newSemesters,
+    semesters,
+    plans: [{ semesters }],
   });
 };
 
