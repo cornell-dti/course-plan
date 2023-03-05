@@ -53,6 +53,7 @@ import appliedMathMinorRequirements, { appliedMathMinorAdvisors } from './minors
 import buMinorRequirements, { buMinorAdvisors } from './minors/bu';
 import cogsciMinorRequirements, { cogsciMinorAdvisors } from './minors/cogsci';
 import csMinorRequirements, { csMinorAdvisors } from './minors/cs';
+import dsMinorRequirements, { dsMinorAdvisors } from './minors/ds';
 import dbmeMinorRequirements, { dbmeAdvisors } from './minors/dbme';
 import deaMinorRequirements from './minors/dea';
 import eceMinorRequirements, { eceMinorAdvisors } from './minors/ece';
@@ -461,6 +462,12 @@ const json: RequirementsJson = {
       requirements: csMinorRequirements,
       advisors: csMinorAdvisors,
       abbrev: 'CS',
+    },
+    DS: {
+      name: 'Data Science',
+      schools: ['EN', 'AG', 'AS2'],
+      requirements: dsMinorRequirements,
+      advisors: dsMinorAdvisors,
     },
     DBME: {
       name: 'Dyson Business Minor for Engineers',
