@@ -24,7 +24,7 @@ TOP_K = 10
 
 # Model parameters
 EPOCHS = 100
-BATCH_SIZE = 256
+BATCH_SIZE = 128
 
 SEED = DEFAULT_SEED  # Set None for non-deterministic results
 
