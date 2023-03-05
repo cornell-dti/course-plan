@@ -23,7 +23,7 @@ print("Tensorflow version: {}".format(tf.__version__))
 TOP_K = 10
 
 # Model parameters
-EPOCHS = 100
+EPOCHS = 200
 BATCH_SIZE = 256
 
 SEED = DEFAULT_SEED  # Set None for non-deterministic results
