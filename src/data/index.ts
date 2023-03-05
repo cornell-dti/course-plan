@@ -430,7 +430,7 @@ const json: RequirementsJson = {
     },
     ANIMALSCIENCE: {
       name: 'Animal Science',
-      schools: ['EN', 'AS2', 'AG'],
+      schools: ['AG'],
       requirements: animalSciRequirements,
       advisors: animalSciAdvisors,
       abbrev: 'AnimalSci',
