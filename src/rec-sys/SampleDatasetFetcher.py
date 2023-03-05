@@ -20,7 +20,6 @@ leave_one_out_test = test.groupby("userID").last().reset_index()
 train_file = "./train.csv"
 test_file = "./test.csv"
 leave_one_out_test_file = "./leave_one_out_test.csv"
-# train.to_csv(train_file, index=False)
-# test.to_csv(test_file, index=False)
-# leave_one_out_test.to_csv(leave_one_out_test_file, index=False)
-print(type(test))
+train.to_csv(train_file, index=False)
+test.to_csv(test_file, index=False)
+leave_one_out_test.to_csv(leave_one_out_test_file, index=False)
