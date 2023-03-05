@@ -1,7 +1,7 @@
 <template>
   <div class="completedsubreqcourse">
     <delete-course-modal
-      :isTestReq="isTransferCredit"
+      :isTransferCredit="isTransferCredit"
       :reqName="courseTaken.code"
       v-if="deleteModalVisible"
       @close-delete-course-modal="onDeleteCourseModalClose"
@@ -10,7 +10,12 @@
       <div class="separator"></div>
       <div class="completed-reqCourses-course-heading-wrapper">
         <div class="completed-reqCourses-course-heading-course">
-          <span class="completed-reqCourses-course-heading-check"
+          <course-caution
+            v-if="isCourseConflict(courseTaken.uniqueId)"
+            :course="courseTaken"
+            :isCompactView="false"
+          />
+          <span v-else class="completed-reqCourses-course-heading-check"
             ><img src="@/assets/images/checkmark-green.svg" alt="checkmark"
           /></span>
           {{ slotName }}
@@ -23,6 +28,7 @@
           :courseCode="courseTaken.code"
           :compact="true"
           :isCompletedReqCourse="true"
+          :isConflict="isCourseConflict(courseTaken.uniqueId)"
           class="completed-reqCourses-course-object"
         />
         <div class="completed-reqCourses-course-object-semester">in {{ semesterLabel }}</div>
@@ -42,15 +48,15 @@ import { PropType, defineComponent } from 'vue';
 import ReqCourse from '@/components/Requirements/ReqCourse.vue';
 import SlotMenu from '@/components/Modals/SlotMenu.vue';
 import DeleteCourseModal from '@/components/Modals/DeleteCourseModal.vue';
-import store from '@/store';
-import { deleteCourseFromSemesters } from '@/global-firestore-data';
-import { onboardingDataCollection } from '@/firebase-frontend-config';
+import CourseCaution from '@/components/Course/CourseCaution.vue';
+import store, { isCourseConflict } from '@/store';
+import { deleteCourseFromSemesters, deleteTransferCredit } from '@/global-firestore-data';
 import { getCurrentSeason, getCurrentYear, clickOutside } from '@/utilities';
 
 const transferCreditColor = 'DA4A4A'; // Arbitrary color for transfer credit
 
 export default defineComponent({
-  components: { ReqCourse, DeleteCourseModal, SlotMenu },
+  components: { ReqCourse, DeleteCourseModal, SlotMenu, CourseCaution },
   props: {
     slotName: { type: String, required: true },
     courseTaken: { type: Object as PropType<CourseTaken>, required: true },
@@ -102,14 +108,7 @@ export default defineComponent({
 
       if (isDelete) {
         if (this.isTransferCredit) {
-          const type = this.courseTaken.code.substr(0, 2);
-          const name = this.courseTaken.code.substr(3);
-
-          const onBoardingData = store.state.onboardingData;
-
-          onboardingDataCollection.doc(store.state.currentFirebaseUser.email).update({
-            exam: onBoardingData.exam.filter(e => !(e.type === type && e.subject === name)),
-          });
+          deleteTransferCredit(this.courseTaken.code);
         } else {
           const { uniqueId } = this.courseTaken;
           if (typeof uniqueId === 'number') deleteCourseFromSemesters(uniqueId, this.$gtag);
@@ -126,6 +125,7 @@ export default defineComponent({
     closeSlotMenu() {
       this.slotMenuOpen = false;
     },
+    isCourseConflict,
   },
   directives: {
     'click-outside': clickOutside,

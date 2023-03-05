@@ -39,6 +39,7 @@
 
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
+import { fulfillmentProgressString } from '@/requirements/requirement-frontend-utils';
 
 /** Show compound requirement for toggle or description */
 export default defineComponent({
@@ -57,24 +58,18 @@ export default defineComponent({
       return this.requirementFulfillment.requirement;
     },
     nestedRequirements(): readonly string[] | null {
-      if (this.requirementFulfillment.additionalRequirements) {
-        return Object.keys(this.requirementFulfillment.additionalRequirements);
+      if (this.requirementFulfillment.fulfillment.additionalRequirements) {
+        return Object.keys(this.requirementFulfillment.fulfillment.additionalRequirements);
       }
       return null;
     },
     progressString(): string {
-      const currentVisibleNestedRequirementStatistics = (this.requirementFulfillment
+      const currentVisibleNestedRequirementStatistics = (this.requirementFulfillment.fulfillment
         .additionalRequirements || {})[this.choice];
       if (currentVisibleNestedRequirementStatistics != null) {
-        const {
-          minCountFulfilled,
-          minCountRequired,
-          fulfilledBy,
-        } = currentVisibleNestedRequirementStatistics;
-        return `${minCountFulfilled}/${minCountRequired} ${fulfilledBy}`;
+        return fulfillmentProgressString(currentVisibleNestedRequirementStatistics);
       }
-      const { minCountFulfilled, minCountRequired, fulfilledBy } = this.requirementFulfillment;
-      return `${minCountFulfilled}/${minCountRequired} ${fulfilledBy}`;
+      return fulfillmentProgressString(this.requirementFulfillment.fulfillment);
     },
   },
 });

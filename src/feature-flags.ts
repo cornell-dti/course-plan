@@ -2,12 +2,21 @@
 const GateKeeperTogglers: Record<string, () => void> = {};
 
 // Register your new feature flags below, both in type and in `registerFeatureFlagChecker`.
-type FeatureFlagName = 'Case' | 'RequirementDebugger' | 'ToggleRequirementsBarBtn';
+type FeatureFlagName =
+  | 'APIBFulfillment'
+  | 'Case'
+  | 'RequirementConflicts'
+  | 'RequirementDebugger'
+  | 'ToggleRequirementsBarBtn'
+  | 'Profile';
 /* | 'AddYourFeatureFlagNameHere' */
 const featureFlagCheckers: FeatureFlagCheckers = registerFeatureFlagChecker(
+  'APIBFulfillment',
   'Case',
+  'RequirementConflicts',
   'RequirementDebugger',
-  'ToggleRequirementsBarBtn'
+  'ToggleRequirementsBarBtn',
+  'Profile'
   /* 'AddYourFeatureFlagNameHere' */
 );
 export default featureFlagCheckers;

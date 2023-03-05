@@ -15,9 +15,7 @@
         </div>
         <div class="onboarding-selectWrapperRow-review">
           <div class="onboarding-inputWrapper onboarding-inputWrapper--name">
-            <label class="onboarding-label"
-              ><span> First Name<span class="onboarding-required-star">*</span></span></label
-            >
+            <label class="onboarding-label"><span> First Name</span></label>
             <label class="onboarding-label--review"
               ><span> {{ userName.firstName }}</span></label
             >
@@ -29,25 +27,36 @@
             >
           </div>
           <div class="onboarding-inputWrapper onboarding-inputWrapper--name">
-            <label class="onboarding-label"
-              ><span>Last Name<span class="onboarding-required-star">*</span></span></label
-            >
+            <label class="onboarding-label"><span>Last Name</span></label>
             <label class="onboarding-label--review"
               ><span> {{ userName.lastName }}</span></label
             >
           </div>
-          <div class="onboarding-inputWrapper onboarding-inputWrapper--name">
-            <label class="onboarding-label"
-              ><span>Entrance Year<span class="onboarding-required-star">*</span></span></label
+          <div
+            class="onboarding-inputWrapper onboarding-inputWrapper--name onboarding-inputWrapper--description"
+          >
+            <label class="onboarding-label"><span>Entrance Season</span></label>
+            <label class="onboarding-label--review"
+              ><span data-cyId="onboarding-entranceSeason">{{ entranceSemText }}</span></label
             >
+          </div>
+          <div class="onboarding-inputWrapper onboarding-inputWrapper--name">
+            <label class="onboarding-label"><span>Entrance Year</span></label>
             <label class="onboarding-label--review"
               ><span data-cyId="onboarding-entranceYear">{{ entranceYearText }}</span></label
             >
           </div>
-          <div class="onboarding-inputWrapper onboarding-inputWrapper--name">
-            <label class="onboarding-label"
-              ><span>Graduation Year<span class="onboarding-required-star">*</span></span></label
+          <div class="onboarding-inputWrapper onboarding-inputWrapper--name"></div>
+          <div
+            class="onboarding-inputWrapper onboarding-inputWrapper--name onboarding-inputWrapper--noMargin"
+          >
+            <label class="onboarding-label"><span>Graduation Season</span></label>
+            <label class="onboarding-label--review"
+              ><span data-cyId="onboarding-gradSeason">{{ gradSemText }}</span></label
             >
+          </div>
+          <div class="onboarding-inputWrapper onboarding-inputWrapper--name">
+            <label class="onboarding-label"><span>Graduation Year</span></label>
             <label class="onboarding-label--review"
               ><span data-cyId="onboarding-gradYear">{{ gradYearText }}</span></label
             >
@@ -212,6 +221,12 @@ export default defineComponent({
       return this.onboardingData.entranceYear !== ''
         ? this.onboardingData.entranceYear
         : placeholderText;
+    },
+    gradSemText(): string {
+      return this.onboardingData.gradSem ?? placeholderText;
+    },
+    entranceSemText(): string {
+      return this.onboardingData.entranceSem ?? placeholderText;
     },
     totalCredits(): number {
       let count = 0;

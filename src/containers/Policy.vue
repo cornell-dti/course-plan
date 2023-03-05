@@ -12,7 +12,7 @@
       </p>
       If you have any questions or concerns about this privacy notice, or our practices with regards
       to your personal information, please contact us at
-      <a href="mailto: courseplan@cornelldti.org">courseplan@cornelldti.org</a>
+      <a href="mailto: courseplan.io@gmail.com">courseplan.io@gmail.com</a>
       <p>This policy is effective as of 4 April 2021 and was last updated on 4 April 2021.</p>
 
       <h3>Information We Collect</h3>
@@ -222,7 +222,7 @@
         For any questions or concerns regarding your privacy, you may contact us using the following
         details:
       </p>
-      <p><a href="mailto: courseplan@cornelldti.org">courseplan@cornelldti.org</a></p>
+      <p><a href="mailto: courseplan.io@gmail.com">courseplan.io@gmail.com</a></p>
     </div>
   </div>
 </template>

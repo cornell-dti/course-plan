@@ -36,14 +36,17 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 
-import { clickOutside } from '@/utilities';
+import { clickOutside, isPlaceholderCourse } from '@/utilities';
 import store from '@/store';
 import {
   cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData,
   addCourseToSemester,
-  addCourseToSelectableRequirements,
+  updateRequirementChoice,
 } from '@/global-firestore-data';
-import { canFulfillChecker } from '@/requirements/requirement-frontend-utils';
+import {
+  canFulfillChecker,
+  getRelatedRequirementIdsForCourseOptOut,
+} from '@/requirements/requirement-frontend-utils';
 
 import NewSelfCheckCourseModal from '@/components/Modals/NewCourse/NewSelfCheckCourseModal.vue';
 
@@ -74,61 +77,51 @@ export default defineComponent({
     // and courses that do not fulfill the requirement checker
     selfCheckCourses(): Record<string, FirestoreSemesterCourse> {
       const courses: Record<string, FirestoreSemesterCourse> = {};
-      store.state.semesters.forEach(semester => {
-        semester.courses.forEach(course => {
-          const selectableRequirementCourses =
-            store.state.derivedSelectableRequirementData.requirementToCoursesMap[this.subReqId];
-
-          // if course is mapped to another req(s), only allow it if all other reqs are double countable
-          let isAddable = true;
-          const otherReqsMappedTo = store.state.requirementFulfillmentGraph.getConnectedRequirementsFromCourse(
-            { uniqueId: course.uniqueID }
-          );
-
-          // true if all other requirements (if any) the course is assigned to are double countable, false otherwise
-          let allOtherReqsDoubleCountableIfAny = true;
-
-          // true if this requirement is double countable, false otherwise.
-          let thisReqDoubleCountable = false;
-
-          // loop through all reqs and determine if all other reqs this course is assigned to are
-          // double countable (if any exist) and whether or not this req itself is double countable
-          const collegesMajorsMinors = store.state.groupedRequirementFulfillmentReport;
-          collegesMajorsMinors.forEach(reqGroup => {
-            reqGroup.reqs.forEach(req => {
-              if (
-                otherReqsMappedTo.includes(req.requirement.id) &&
-                !req.requirement.allowCourseDoubleCounting
-              ) {
-                allOtherReqsDoubleCountableIfAny = false;
-              } else if (
-                req.requirement.id === this.subReqId &&
-                req.requirement.allowCourseDoubleCounting
-              ) {
-                thisReqDoubleCountable = true;
-              }
-            });
-          });
-
-          // if neither the current req or all other assigned reqs are not double countable, restrict from adding
-          if (!(allOtherReqsDoubleCountableIfAny || thisReqDoubleCountable)) {
-            isAddable = false;
+      store.state.semesters
+        .flatMap(it => it.courses)
+        .forEach(course => {
+          if (
+            isPlaceholderCourse(course) ||
+            !canFulfillChecker(
+              store.state.userRequirementsMap,
+              store.state.toggleableRequirementChoices,
+              this.subReqId,
+              course.crseId
+            )
+          ) {
+            // If the course can't help fulfill the checker (or is a placeholder), do not add to choices.
+            return;
           }
 
-          const isAlreadyAddedToReq =
-            selectableRequirementCourses && selectableRequirementCourses.includes(course);
-
-          // filter out courses that cannot fulfill the self-check, for self-checks with warnings
-          const canFulfillReq = canFulfillChecker(
-            store.state.userRequirementsMap,
-            store.state.toggleableRequirementChoices,
-            this.subReqId,
-            course.crseId
+          const currentlyMatchedRequirements = store.state.safeRequirementFulfillmentGraph.getConnectedRequirementsFromCourse(
+            {
+              uniqueId: course.uniqueID,
+            }
           );
+          if (currentlyMatchedRequirements.includes(this.subReqId)) {
+            // If the course is already matched to the current requirement, do not add to choices.
+            return;
+          }
 
-          if (!isAlreadyAddedToReq && isAddable && canFulfillReq) courses[course.code] = course;
+          /* TODO @bshen fix .allowCourseDoubleCounting flag
+             we should allow the constraint violation to be broken, i.e. don't return early */
+          const currentRequirementAllowDoubleCounting =
+            store.state.userRequirementsMap[this.subReqCourseId]?.allowCourseDoubleCounting;
+          const allOtherRequirementsAllowDoubleCounting = store.state.safeRequirementFulfillmentGraph
+            .getConnectedRequirementsFromCourse({ uniqueId: course.uniqueID })
+            .every(reqID => store.state.userRequirementsMap[reqID]?.allowCourseDoubleCounting);
+          if (!currentRequirementAllowDoubleCounting && !allOtherRequirementsAllowDoubleCounting) {
+            // At this point, we need to consider double counting issues.
+            // There are 2 ways we can add the course to the requirement without double counting violations:
+            // 1. This requirement allows double counting.
+            // 2. All the already matched requirements allow double counting.
+            // If both don't hold, we cannot add.
+            return;
+          }
+
+          // All pre-conditions have been checked, we can add it as choice!
+          courses[course.code] = course;
         });
-      });
 
       return courses;
     },
@@ -150,12 +143,50 @@ export default defineComponent({
     },
     addExistingCourse(option: string) {
       this.showDropdown = false;
-      addCourseToSelectableRequirements(this.selfCheckCourses[option].uniqueID, this.subReqId);
+      const { uniqueID, crseId } = this.selfCheckCourses[option];
+      updateRequirementChoice(uniqueID, choice => ({
+        ...choice,
+        // Since we edit from a self-check requirement,
+        // we know it must be `acknowledgedCheckerWarningOptIn`.
+        acknowledgedCheckerWarningOptIn: Array.from(
+          new Set([...choice.acknowledgedCheckerWarningOptIn, this.subReqId])
+        ),
+        // Keep existing behavior of keeping it connected to at most one requirement.
+        optOut: getRelatedRequirementIdsForCourseOptOut(
+          crseId,
+          this.subReqId,
+          store.state.groupedRequirementFulfillmentReport,
+          store.state.toggleableRequirementChoices,
+          store.state.userRequirementsMap
+        ),
+      }));
     },
     addNewCourse(course: CornellCourseRosterCourse, season: FirestoreSemesterSeason, year: number) {
       this.showDropdown = false;
       const newCourse = cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData(course);
-      addCourseToSemester(year, season, newCourse, this.subReqId, this.$gtag);
+      addCourseToSemester(
+        year,
+        season,
+        newCourse,
+        // Since the course is new, we know the old choice does not exist.
+        () => ({
+          arbitraryOptIn: {},
+          // Since we edit from a self-check requirement,
+          // we know it must be `acknowledgedCheckerWarningOptIn`.
+          acknowledgedCheckerWarningOptIn: [this.subReqId],
+          // We also need to opt-out of all requirements without warnings,
+          // because the user intention is clear that we only want to bind
+          // the course to this specific requirement.
+          optOut: getRelatedRequirementIdsForCourseOptOut(
+            newCourse.crseId,
+            this.subReqId,
+            store.state.groupedRequirementFulfillmentReport,
+            store.state.toggleableRequirementChoices,
+            store.state.userRequirementsMap
+          ),
+        }),
+        this.$gtag
+      );
     },
     openCourseModal() {
       this.isCourseModalOpen = true;

@@ -9,6 +9,17 @@
         <span class="onboarding-subHeader--font"> Transfer Credits (Optional)</span>
       </div>
       <div class="onboarding-transferCredits onboarding-inputs">
+        <div>
+          <img
+            class="onboarding-warningIcon"
+            src="@/assets/images/warning.svg"
+            alt="warning icon"
+          />
+          <div class="onboarding-transferCreditDescription onboarding-transferCreditWarning">
+            Some transfer credits may incorrectly apply to requirements. We are working to fix these
+            bugs, so please double check transfer credits!
+          </div>
+        </div>
         <div
           class="onboarding-inputWrapper onboarding-inputWrapper--college onboarding-inputWrapper--description"
         >
@@ -16,7 +27,6 @@
             examType="AP"
             :exams="exams.AP"
             :subjects="subjectsAP"
-            :scores="scores.AP"
             :placeholderText="placeholderText"
             @on-subject-select="selectAPSubject"
             @on-score-select="selectAPScore"
@@ -27,7 +37,6 @@
             examType="IB"
             :exams="exams.IB"
             :subjects="subjectsIB"
-            :scores="scores.IB"
             :placeholderText="placeholderText"
             @on-subject-select="selectIBSubject"
             @on-score-select="selectIBScore"
@@ -41,6 +50,7 @@
             :subjects="subjectsCASE"
             :placeholderText="placeholderText"
             @on-subject-select="selectCASESubject"
+            @on-score-select="selectCASEScore"
             @on-remove="removeExam"
             @on-add="addExam"
           />
@@ -59,7 +69,7 @@
 
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
-import { examSubjects, getExamCredit } from '@/requirements/requirement-exam-utils';
+import { examSubjects, getExamCredit, getExamScores } from '@/requirements/requirement-exam-utils';
 import featureFlagCheckers from '@/feature-flags';
 import OnboardingTransferSwimming from './OnboardingTransferSwimming.vue';
 import OnboardingTransferCreditsSource from './OnboardingTransferCreditsSource.vue';
@@ -78,30 +88,8 @@ type Data = {
     IB: FirestoreTransferExam[];
     CASE: FirestoreTransferExam[];
   };
-  scores: {
-    AP: readonly number[];
-    IB: readonly number[];
-  };
   classes: TransferClassWithOptionalCourse[];
 };
-
-const asAPIB = (exam: FirestoreTransferExam) => {
-  const { examType } = exam;
-  if (examType === 'CASE') {
-    throw new TypeError('Cannot fetch credit from CASE exam');
-  }
-  return { ...exam, type: examType };
-};
-
-const asAPIBArray = (exams: readonly FirestoreTransferExam[]) => exams.map(asAPIB);
-
-const scores = {
-  AP: [5, 4, 3, 2, 1],
-  IB: [7, 6, 5, 4, 3, 2, 1],
-} as const;
-
-// TODO: replace stubbed in values
-const subjectsCASE = ['Computer Science', 'Chemistry', 'Physics', 'Foreign Language'];
 
 export default defineComponent({
   components: {
@@ -122,18 +110,17 @@ export default defineComponent({
       CASE: [] as FirestoreTransferExam[],
     };
     this.onboardingData.exam.forEach(exam => {
-      exams[exam.type].push({ ...exam, examType: exam.type });
+      exams[exam.examType].push(exam);
     });
-    exams.AP.push({ examType: 'AP', subject: placeholderText, score: 0 });
-    exams.IB.push({ examType: 'IB', subject: placeholderText, score: 0 });
-    exams.CASE.push({ examType: 'CASE', subject: placeholderText, score: 0 });
+    exams.AP.push({ examType: 'AP', subject: placeholderText, score: '' });
+    exams.IB.push({ examType: 'IB', subject: placeholderText, score: '' });
+    exams.CASE.push({ examType: 'CASE', subject: placeholderText, score: '' });
     const transferClasses: TransferClassWithOptionalCourse[] = [];
     transferClasses.push({ class: placeholderText, credits: 0 });
     return {
       tookSwimTest:
         typeof this.onboardingData.tookSwim !== 'undefined' ? this.onboardingData.tookSwim : 'no',
       exams,
-      scores,
       classes: transferClasses,
       placeholderText,
     };
@@ -165,21 +152,32 @@ export default defineComponent({
     },
     selectCASESubject(subject: string, i: number) {
       this.selectSubject(subject, i, 'CASE');
+      const scores = getExamScores('CASE', subject) as string[];
+      if (!scores.includes(this.exams.CASE[i].score.toString())) {
+        this.selectCASEScore('', i);
+      }
     },
-    selectScore(score: number, i: number, examType: TransferExamType) {
+    selectScore(score: string | number, i: number, examType: TransferExamType) {
       this.exams[examType] = this.exams[examType].map((exam, index) =>
         index === i ? { ...exam, score } : exam
       );
       this.updateTransfer();
     },
-    selectAPScore(score: number, i: number) {
+    selectAPScore(score: string | number, i: number) {
       this.selectScore(score, i, 'AP');
     },
-    selectIBScore(score: number, i: number) {
+    selectIBScore(score: string | number, i: number) {
       this.selectScore(score, i, 'IB');
     },
+    selectCASEScore(score: string | number, i: number) {
+      this.selectScore(score, i, 'CASE');
+    },
     addExam(examType: TransferExamType) {
-      const exam = { examType, subject: this.placeholderText, score: 0 };
+      const exam = {
+        examType,
+        subject: this.placeholderText,
+        score: '',
+      };
       this.exams[examType].push(exam);
     },
     removeExam(examType: TransferExamType, index: number) {
@@ -201,7 +199,7 @@ export default defineComponent({
     updateTransfer() {
       this.$emit(
         'updateTransfer',
-        [...asAPIBArray(this.exams.AP), ...asAPIBArray(this.exams.IB)],
+        [...this.exams.AP, ...this.exams.IB, ...this.exams.CASE],
         this.tookSwimTest
       );
     },
@@ -216,14 +214,13 @@ export default defineComponent({
     subjects(examType: TransferExamType) {
       const currentSubjects = new Set(this.exams[examType].map(({ subject }) => subject));
       // stub in CASE exams here for now
-      const subjects = { ...examSubjects, CASE: subjectsCASE };
-      return subjects[examType].filter(subject => !currentSubjects.has(subject));
+      return examSubjects[examType].filter(subject => !currentSubjects.has(subject));
     },
   },
   computed: {
     totalCredits(): number {
       let count = 0;
-      const aggregated = [...asAPIBArray(this.exams.AP), ...asAPIBArray(this.exams.IB)];
+      const aggregated = [...this.exams.AP, ...this.exams.IB, ...this.exams.CASE];
       aggregated.forEach(exam => {
         count += getExamCredit(exam);
       });

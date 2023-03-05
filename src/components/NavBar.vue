@@ -10,11 +10,27 @@
         <div class="navbar-iconWrapper course-plan-logo no-hover">
           <img class="navbar-icon" src="@/assets/images/branding/logo.svg" alt="Courseplan logo" />
         </div>
-        <button
-          class="navbar-iconWrapper desktop profile-icon full-opacity-on-hover"
-          @click="editProfile"
-          data-cyId="editProfile"
-        ></button>
+        <div class="navbar-iconWrapper hairlineWrapper no-hover">
+          <img class="navbar-icon hairline" src="@/assets/images/navbar/hairline.svg" />
+        </div>
+        <div class="navbar-buttonWrapper desktop" @click="openPlan" data-cyId="openPlan">
+          <button class="navbar-iconWrapper plan-icon full-opacity-on-hover" />
+          <div class="navbar-iconText">
+            <span>Plan</span>
+          </div>
+        </div>
+        <div class="navbar-buttonWrapper desktop" @click="openTools" data-cyId="openTools">
+          <button class="navbar-iconWrapper tools-icon full-opacity-on-hover" />
+          <div class="navbar-iconText">
+            <span>Tools</span>
+          </div>
+        </div>
+        <div class="navbar-buttonWrapper desktop" @click="openProfile" data-cyId="editProfile">
+          <button class="navbar-iconWrapper profile-icon full-opacity-on-hover" />
+          <div class="navbar-iconText">
+            <span>Profile</span>
+          </div>
+        </div>
       </div>
       <div class="navbar-bottom">
         <button
@@ -33,7 +49,15 @@
             {{ isDisplayingRequirementsMobile ? 'View Schedule' : 'View Requirements' }}
           </span>
         </button>
-        <button class="nav-mobile-button" data-cyId="navbar-editProfile" @click="editProfile">
+        <button class="nav-mobile-button" data-cyId="navbar-openPlan" @click="openPlan">
+          <div class="navbar-iconWrapper plan-mobile-icon" />
+          <span class="nav-mobile-button-text">Plan</span>
+        </button>
+        <button class="nav-mobile-button" data-cyId="navbar-openTools" @click="openTools">
+          <div class="navbar-iconWrapper tools-mobile-icon" />
+          <span class="nav-mobile-button-text">Tools</span>
+        </button>
+        <button class="nav-mobile-button" data-cyId="navbar-editProfile" @click="openProfile">
           <div class="navbar-iconWrapper profile-mobile-icon" />
           <span class="nav-mobile-button-text">Edit Profile</span>
         </button>
@@ -57,7 +81,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import firebase from 'firebase/app';
+import { getAuth, signOut } from 'firebase/auth';
 import { GTagEvent } from '@/gtag';
 import { clickOutside } from '@/utilities';
 
@@ -65,7 +89,7 @@ export default defineComponent({
   props: {
     isDisplayingRequirementsMobile: { type: Boolean, required: true },
   },
-  emits: ['editProfile', 'toggleRequirementsMobile'],
+  emits: ['openPlan', 'openTools', 'toggleRequirementsMobile', 'openProfile'],
   data() {
     return {
       menuOpen: false,
@@ -74,14 +98,23 @@ export default defineComponent({
   methods: {
     logout() {
       GTagEvent(this.$gtag, 'logout');
-      firebase
-        .auth()
-        .signOut()
-        .then(() => window.location.reload());
+      const auth = getAuth();
+      signOut(auth).then(() => window.location.reload());
+    },
+    openPlan() {
+      this.menuOpen = false;
+      this.$emit('openPlan');
+    },
+    openTools() {
+      this.menuOpen = false;
+      this.$emit('openTools');
     },
     editProfile() {
       this.menuOpen = false;
-      this.$emit('editProfile');
+    },
+    openProfile() {
+      this.menuOpen = false;
+      this.$emit('openProfile');
     },
     toggleRequirementsMobile() {
       this.menuOpen = false;
@@ -119,24 +152,57 @@ $mobile-navbar-height: 4.5rem;
   &-iconWrapper {
     width: $icon-size;
     height: $icon-size;
-    cursor: pointer;
     background-repeat: no-repeat;
     background-size: auto;
     background-position: center;
+  }
 
-    &:not(:first-child) {
-      margin-top: 2.25rem;
+  &-buttonWrapper {
+    cursor: pointer;
+    margin-bottom: 1.5rem;
+    &:hover,
+    &:focus,
+    &:active {
+      .navbar-iconText {
+        color: #0d7acb;
+      }
+      .plan-icon {
+        background-image: url('@/assets/images/navbar/planIconBlue.svg');
+      }
+      .tools-icon {
+        background-image: url('@/assets/images/navbar/toolboxIconBlue.svg');
+      }
+      .profile-icon {
+        background-image: url('@/assets/images/navbar/profileIconBlue.svg');
+      }
     }
+  }
+
+  &-iconText {
+    display: flex;
+    justify-content: center;
+    color: #808080;
+  }
+
+  .hairlineWrapper {
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .hairline {
+    width: 100%;
+  }
+
+  .plan-icon {
+    background-image: url('@/assets/images/navbar/planIcon.svg');
+  }
+
+  .tools-icon {
+    background-image: url('@/assets/images/navbar/toolboxIcon.svg');
   }
 
   .profile-icon {
     background-image: url('@/assets/images/navbar/profileIcon.svg');
-
-    &:hover,
-    &:focus,
-    &:active {
-      background-image: url('@/assets/images/navbar/profileIconBlue.svg');
-    }
   }
 
   .requirements-bar {
@@ -185,6 +251,14 @@ $mobile-navbar-height: 4.5rem;
       padding: 1rem;
       text-align: center;
     }
+  }
+
+  .plan-mobile-icon {
+    background-image: url('@/assets/images/navbar/plan-mobile-icon.svg');
+  }
+
+  .tools-mobile-icon {
+    background-image: url('@/assets/images/navbar/toolbox-mobile-icon.svg');
   }
 
   .profile-mobile-icon {
@@ -281,6 +355,11 @@ $mobile-navbar-height: 4.5rem;
   }
 
   .desktop {
+    display: none;
+  }
+
+  .hairline,
+  .hairlineWrapper {
     display: none;
   }
 

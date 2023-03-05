@@ -35,8 +35,8 @@ it('Onboard a new user with all required fields', () => {
   cy.get('[data-cyId=onboarding]').clickOutside();
   cy.get('[data-cyId=onboarding]').should('be.visible');
 
-  // set Graduation year to 2018
-  cy.get('[data-cyId=onboarding-dropdown]').eq(0).click();
+  // set Entrance semester to 2018 (default Fall)
+  cy.get('[data-cyId=onboarding-dropdown]').eq(1).click();
   cy.get('[data-cyId=onboarding-dropdownItem]').each($el => {
     cy.wrap($el)
       .invoke('text')
@@ -49,8 +49,21 @@ it('Onboard a new user with all required fields', () => {
   cy.get('[data-cyId=onboarding-nextButton]').should('be.disabled');
   cy.get('[data-cyId=onboarding-error]').scrollIntoView().should('be.visible');
 
-  // set Graduation year to 2022
-  cy.get('[data-cyId=onboarding-dropdown]').eq(1).click();
+  // set Graduation semester to Summer 2022
+  cy.get('[data-cyId=onboarding-dropdown]').eq(2).click();
+  cy.get('[data-cyId=onboarding-dropdownItem]').each($el => {
+    cy.wrap($el)
+      .invoke('text')
+      .then(text => {
+        if (text.includes('Summer')) {
+          cy.wrap($el).click();
+        }
+      });
+  });
+  cy.get('[data-cyId=onboarding-nextButton]').should('be.disabled');
+  cy.get('[data-cyId=onboarding-error]').scrollIntoView().should('be.visible');
+
+  cy.get('[data-cyId=onboarding-dropdown]').eq(3).click();
   cy.get('[data-cyId=onboarding-dropdownItem]').each($el => {
     cy.wrap($el)
       .invoke('text')
@@ -64,7 +77,7 @@ it('Onboard a new user with all required fields', () => {
   cy.get('[data-cyId=onboarding-error]').scrollIntoView().should('be.visible');
 
   // set to Engineering college
-  cy.get('[data-cyId=onboarding-dropdown]').eq(2).click();
+  cy.get('[data-cyId=onboarding-dropdown]').eq(4).click();
   cy.get('[data-cyId=onboarding-dropdownItem]').each($el => {
     cy.wrap($el)
       .invoke('text')
@@ -80,9 +93,11 @@ it('Onboard a new user with all required fields', () => {
   cy.get('[data-cyId=onboarding-error]').should('not.exist');
   cy.get('[data-cyId=onboarding-nextButton]').click();
 
-  // confirm 2018, 2022, and engineering are selected on the review screen
+  // confirm Fall 2018, Summer 2022, and engineering are selected on the review screen
   cy.get('[data-cyId=onboarding-entranceYear]').contains('2018');
+  cy.get('[data-cyId=onboarding-entranceSeason]').contains('Fall');
   cy.get('[data-cyId=onboarding-gradYear]').contains('2022');
+  cy.get('[data-cyId=onboarding-gradSeason]').contains('Summer');
   cy.get('[data-cyId=onboarding-college]').contains('Engineering');
   cy.get('[data-cyId=onboarding-finishButton]').click();
 });
@@ -141,7 +156,7 @@ it('Test that only one semester button shows', () => {
   cy.get('[data-cyId=newSemester-seasonWrapper]').click();
   cy.get('[data-cyId=newSemester-seasonItem]').first().click();
 
-  // click 2015
+  // click oldest year
   cy.get('[data-cyId=newSemester-yearWrapper]').click();
   cy.get('[data-cyId=newSemester-yearItem]').first().click();
 
