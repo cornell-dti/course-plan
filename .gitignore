@@ -39,4 +39,5 @@ scripts/out
 src\rec-sys\leave_one_out_test_full.csv
 src\rec-sys\leave_one_out_test.csv
 src\rec-sys\test.csv
+src\rec-sys\test_full.csv
 src\rec-sys\train.csv
