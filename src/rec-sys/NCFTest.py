@@ -87,10 +87,10 @@ eval_precision = precision_at_k(
 eval_recall = recall_at_k(test, all_predictions,
                           col_prediction='prediction', k=TOP_K)
 
-assert(eval_map > 0.02)
-assert(eval_ndcg > 0.1)
-assert(eval_precision > 0.1)
-assert(eval_recall > 0.05)
+assert (eval_map > 0.02)
+assert (eval_ndcg > 0.1)
+assert (eval_precision > 0.1)
+assert (eval_recall > 0.05)
 print("MAP:\t%f" % eval_map,
       "NDCG:\t%f" % eval_ndcg,
       "Precision@K:\t%f" % eval_precision,
