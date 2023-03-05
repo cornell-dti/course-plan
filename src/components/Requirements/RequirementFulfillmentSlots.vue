@@ -78,6 +78,7 @@ export default defineComponent({
     isCompleted: { type: Boolean, required: true },
     displayDescription: { type: Boolean, required: true },
     toggleableRequirementChoice: { type: String, default: null },
+    courseTaken: { type: Object as PropType<CourseTaken>, required: true },
   },
   emits: {
     onShowAllCourses(courses: {
@@ -174,7 +175,6 @@ export default defineComponent({
           }
         });
       }
-
       return slots;
     },
   },

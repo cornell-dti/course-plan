@@ -45,12 +45,26 @@
         :automaticallyFulfilledRequirements="automaticallyFulfilledRequirements"
         :relatedRequirements="relatedRequirements"
         :potentialRequirements="selfCheckRequirements"
+        @season="selectedSeason"
+        @year="selectedYear"
         @on-selected-change="onSelectedChange"
         @edit-mode="toggleEditMode"
       />
     </div>
     <!-- show duplicate modal -->
     <div v-else-if="hasDuplicates && selectedCourse != null">
+      <replace-requirement-duplicate-editor
+        :editMode="editMode"
+        :selectedRequirementID="selectedRequirementID"
+        :automaticallyFulfilledRequirements="automaticallyFulfilledRequirements"
+        :relatedRequirements="relatedRequirements"
+        :potentialRequirements="selfCheckRequirements"
+        :semestersTaken="semestersTaken"
+        @on-selected-change="onSelectedChange"
+        @edit-mode="toggleEditMode"
+      />
+    </div>
+    <div v-else>
       <replace-requirement-duplicate-editor
         :editMode="editMode"
         :selectedRequirementID="selectedRequirementID"
@@ -94,8 +108,12 @@ export default defineComponent({
   emits: {
     'close-replace-course-modal': () => true,
     'select-course': (course: CornellCourseRosterCourse) => typeof course === 'object',
-    'add-course': (course: CornellCourseRosterCourse, selectableReqId: string) =>
+    'add-new-course': (course: CornellCourseRosterCourse, selectableReqId: string) =>
       typeof course === 'object' && typeof selectableReqId === 'string',
+    'replace-requirement': (course: CornellCourseRosterCourse, selectableReqId: string) =>
+      typeof course === 'object' && typeof selectableReqId === 'string',
+    'selected-season': (id: string) => typeof id === 'string',
+    'selected-year': (id: number) => typeof id === 'number',
   },
   data() {
     return {
@@ -111,6 +129,8 @@ export default defineComponent({
       hasDuplicates: false,
       needToAdd: false,
       semestersTaken: [] as FirestoreSemester[],
+      season: '' as FirestoreSemesterSeason,
+      year: 0,
     };
   },
   computed: {
@@ -152,9 +172,13 @@ export default defineComponent({
       } else if (count > 1) {
         // opens the duplicates modal if the course exists 2+ times
         this.hasDuplicates = true;
+        if (this.selectedCourse != null) this.$emit('replace-requirement', this.selectedCourse, this.selectedRequirementID);
+        // this.closeCurrentModal();
       } else {
         // closes the modal if the course exists exactly once
-        this.closeCurrentModal();
+        console.log(this.relatedRequirements)
+        if (this.selectedCourse != null) this.$emit('replace-requirement', this.selectedCourse, this.selectedRequirementID);
+        // this.closeCurrentModal();
       }
     },
     selectCourse(result: CornellCourseRosterCourse) {
@@ -162,6 +186,12 @@ export default defineComponent({
       this.$emit('select-course', this.selectedCourse);
       this.getReqsRelatedToCourse(result);
       this.handleAdd();
+    },
+    selectedSeason(season: string) {
+      this.season = season as FirestoreSemesterSeason;
+    },
+    selectedYear(year: number) {
+      this.year = year;
     },
     closeCurrentModal() {
       this.$emit('close-replace-course-modal');
@@ -196,6 +226,7 @@ export default defineComponent({
       } else {
         this.selectedRequirementID = '';
       }
+
     },
     addItem() {
       if (this.editMode) {
@@ -206,7 +237,9 @@ export default defineComponent({
     },
     addCourse() {
       if (this.selectedCourse == null) return;
-      this.$emit('add-course', this.selectedCourse, this.selectedRequirementID);
+      this.$emit('selected-season', this.season);
+      this.$emit('selected-year', this.year);
+      this.$emit('add-new-course', this.selectedCourse, this.selectedRequirementID);
       this.closeCurrentModal();
     },
     onSelectedChange(selected: string) {
@@ -229,6 +262,13 @@ export default defineComponent({
       this.editMode = !this.editMode;
     },
   },
+  updateSemProps(season: string) {
+    const split = season.split(" ", 2);
+    this.season = split[0] as FirestoreSemesterSeason;
+    this.year = Number(split[1]);
+    this.$emit('selected-season', split[0]);
+    this.$emit('selected-year', Number(split[1]));
+   },
 });
 </script>
 

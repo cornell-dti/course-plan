@@ -48,11 +48,15 @@ export default defineComponent({
     relatedRequirements: {
       type: Array as PropType<readonly RequirementWithID[]>,
       required: true,
+      season: '' as FirestoreSemesterSeason,
+      year: 0,
     },
   },
   emits: {
     'on-selected-change': (id: string) => typeof id === 'string',
     'edit-mode': () => true,
+    'season': (id: string) => typeof id === 'string',
+    'year': (id: number) => typeof id === 'number',
   },
   computed: {
     chosenRequirementText(): string {
@@ -94,6 +98,8 @@ export default defineComponent({
     updateSemProps(season: string, year: number) {
       this.season = season as FirestoreSemesterSeason;
       this.year = year;
+      this.$emit('season', season);
+      this.$emit('year', year);
     },
   },
 });

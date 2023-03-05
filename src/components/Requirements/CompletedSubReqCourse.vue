@@ -9,8 +9,13 @@
     />
     <replace-course-modal
       v-if="replaceModalVisible"
+      @selected-season="selectedSeason"
+      @selected-year="selectedYear"
       @close-replace-course-modal="onReplaceCourseModalClose"
+      @add-new-course="addCourse"
+      @replace-requirement="replaceRequirement"
     />
+    <confirmation :text="confirmationText" v-if="isConfirmationOpen" />
     <div class="completed-reqCourses-course-wrapper">
       <div class="separator"></div>
       <div class="completed-reqCourses-course-heading-wrapper">
@@ -59,15 +64,30 @@ import ReqCourse from '@/components/Requirements/ReqCourse.vue';
 import SlotMenu from '@/components/Modals/SlotMenu.vue';
 import DeleteCourseModal from '@/components/Modals/DeleteCourseModal.vue';
 import ReplaceCourseModal from '@/components/Modals/ReplaceCourseModal.vue';
+import Confirmation from '@/components/Modals/Confirmation.vue';
 import CourseCaution from '@/components/Course/CourseCaution.vue';
 import store, { isCourseConflict } from '@/store';
-import { deleteCourseFromSemesters, deleteTransferCredit } from '@/global-firestore-data';
+import {
+  addAcknowledgedCheckerWarningOptIn,
+  addCourseToSemester,
+  cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData,
+  deleteCourseFromSemesters,
+  deleteCourseFromSemester,
+  deleteTransferCredit,
+} from '@/global-firestore-data';
 import { getCurrentSeason, getCurrentYear, clickOutside } from '@/utilities';
 
 const transferCreditColor = 'DA4A4A'; // Arbitrary color for transfer credit
 
 export default defineComponent({
-  components: { ReqCourse, DeleteCourseModal, ReplaceCourseModal, SlotMenu, CourseCaution },
+  components: {
+    ReqCourse,
+    DeleteCourseModal,
+    ReplaceCourseModal,
+    SlotMenu,
+    Confirmation,
+    CourseCaution,
+  },
   props: {
     slotName: { type: String, required: true },
     courseTaken: { type: Object as PropType<CourseTaken>, required: true },
@@ -76,8 +96,12 @@ export default defineComponent({
   data: () => ({
     replaceModalVisible: false,
     deleteModalVisible: false,
+    confirmationText: '',
+    isConfirmationOpen: false,
     slotMenuOpen: false,
     mousePosition: { x: 0, y: 0 },
+    season: '' as FirestoreSemesterSeason,
+    year: 0,
   }),
   computed: {
     semesters(): readonly FirestoreSemester[] {
@@ -124,8 +148,11 @@ export default defineComponent({
           deleteTransferCredit(this.courseTaken.code);
         } else {
           const { uniqueId } = this.courseTaken;
-          if (typeof uniqueId === 'number') deleteCourseFromSemesters(uniqueId, this.$gtag);
+          if (typeof uniqueId === 'number') {
+            deleteCourseFromSemesters(uniqueId, this.$gtag);
+          }
         }
+        this.onReplaceCourseModalClose();
       }
     },
     onReplaceModalOpen(): void {
@@ -133,6 +160,63 @@ export default defineComponent({
     },
     onReplaceCourseModalClose(): void {
       this.replaceModalVisible = false;
+    },
+    openConfirmationModal(msg: string) {
+      // Set text and display confirmation modal, then have it disappear after 3 seconds
+      this.confirmationText = msg;
+      this.isConfirmationOpen = true;
+
+      setTimeout(() => {
+        this.closeConfirmationModal();
+      }, 2000);
+    },
+    closeConfirmationModal() {
+      this.isConfirmationOpen = false;
+    },
+    addCourse(data: CornellCourseRosterCourse, selectableReqId: string) {
+      const newCourse = cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData(data);
+      if (selectableReqId) {
+        addAcknowledgedCheckerWarningOptIn(newCourse.uniqueID, selectableReqId);
+      }
+      const { uniqueId } = this.courseTaken;
+      
+      if (typeof uniqueId === 'number') deleteCourseFromSemesters(uniqueId, this.$gtag);
+      addCourseToSemester(this.year, this.season, newCourse, this.$gtag);
+ 
+      this.onReplaceCourseModalClose();
+
+      const courseCode = `${data.subject} ${data.catalogNbr}`;
+      this.openConfirmationModal(`Added ${courseCode} to ${this.season} ${this.year}`);
+    },
+    replaceRequirement(data: CornellCourseRosterCourse, selectableReqId: string) {
+      const prevCourse = cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData(data);
+      if (selectableReqId) {
+        addAcknowledgedCheckerWarningOptIn(prevCourse.uniqueID, this.reqDesc);
+      }
+      
+      // let prevYear = 0;
+      // let prevSeason = '' as FirestoreSemesterSeason;
+
+      // if (semestersTaken.length === 1) {
+      //   prevYear = semestersTaken[0].year;
+      //   prevSeason = semestersTaken[0].season;
+      // } else {
+      //   prevYear = semestersTaken[0].year;
+      //   prevSeason = semestersTaken[0].season;
+      // }
+
+      // // if new course exists in schedule
+      // if (typeof uniqueId === 'number') {
+      //   deleteCourseFromSemester(prevYear, prevSeason, uniqueId, this.$gtag);
+      //   addCourseToSemester(prevYear, prevSeason, prevCourse, this.$gtag);
+      // }
+      this.onReplaceCourseModalClose();
+    },
+    selectedSeason(season: string) {
+      this.season = season as FirestoreSemesterSeason;
+    },
+    selectedYear(year: number) {
+      this.year = year;
     },
     openSlotMenu(e: MouseEvent) {
       this.mousePosition = {
@@ -154,6 +238,8 @@ export default defineComponent({
     'select-course': (course: CornellCourseRosterCourse) => typeof course === 'object',
     'add-course': (course: CornellCourseRosterCourse, choice: FirestoreCourseOptInOptOutChoices) =>
       typeof course === 'object' && typeof choice === 'object',
+    selectedSeason: (id: string) => typeof id === 'string',
+    selectedYear: (id: number) => typeof id === 'number',
   },
 });
 </script>
@@ -206,6 +292,11 @@ export default defineComponent({
         }
       }
     }
+  }
+
+  &-confirmation {
+    top: 16px;
+    display: none;
   }
 }
 

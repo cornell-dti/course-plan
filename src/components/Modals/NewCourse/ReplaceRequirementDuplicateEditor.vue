@@ -6,6 +6,7 @@
         <select-semester-duplicate
           :isCourseModelSelectingSemester="true"
           :semestersTaken="semestersTaken"
+          @updateSemProps="updateSemProps"
         />
       </div>
     </div>
@@ -45,6 +46,7 @@ export default defineComponent({
   emits: {
     'on-selected-change': (id: string) => typeof id === 'string',
     'edit-mode': () => true,
+    'update-sem-props': (season: string) => typeof season === 'string',
   },
   computed: {
     chosenRequirementText(): string {
@@ -83,6 +85,9 @@ export default defineComponent({
       GTagEvent(this.$gtag, 'add-modal-edit-requirements');
       this.$emit('edit-mode');
     },
+    updateSemProps(season: string) {
+      this.$emit('update-sem-props', season);
+    }
   },
 });
 </script>
