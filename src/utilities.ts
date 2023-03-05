@@ -11,14 +11,16 @@ export const SeasonOrdinal = {
   Fall: 3,
 } as const;
 
-export const getFirstPlan = (
-  semestersDoc: FirestoreSemestersData
-): readonly FirestoreSemester[] => {
-  if (semestersDoc.plans && semestersDoc.plans.length > 0) {
-    return semestersDoc.plans[0].semesters;
-  }
-  return semestersDoc.semesters;
-};
+/**
+ * Get a user's first plan given their semesters
+ * @param semestersDoc A document in the `user-semesters` collection
+ * @returns The user's first plan
+ */
+export const getFirstPlan = ({
+  semesters,
+  plans,
+}: FirestoreSemestersData): readonly FirestoreSemester[] =>
+  plans && plans.length > 0 ? plans[0].semesters : semesters;
 
 /**
  * Returns given semesters sorted in either increasing or decreasing order of date
