@@ -111,7 +111,7 @@ const courseFieldFilter = ({
   crseToCatalogNbrCollection - contains a mapping from each course's crseId to its catalogNbr (which is a subject + code)
   coursesCollection - contains all courses ever offered by the class roster API from FA14 - present. 
 */
-const populateCourses = async (roster: string, subject: string, courses: CourseFullDetail[]) => {
+const populateCourses = (roster: string, subject: string, courses: CourseFullDetail[]) => {
   courses.forEach(async course => {
     /* Computing a mapping that maps a course to a list of semesters it is offered in */
     const courseAndRostersDoc = await availableRostersForCourseCollection
