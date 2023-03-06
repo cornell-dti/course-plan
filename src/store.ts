@@ -1,5 +1,5 @@
 import { Store } from 'vuex';
-import { doc, getDoc, onSnapshot, setDoc } from 'firebase/firestore';
+import { doc, getDoc, onSnapshot, setDoc, updateDoc } from 'firebase/firestore';
 
 import * as fb from './firebase-config';
 import computeGroupedRequirementFulfillmentReports from './requirements/requirement-frontend-computation';
@@ -13,6 +13,7 @@ import {
   getCurrentYear,
   sortedSemesters,
   isPlaceholderCourse,
+  getFirstPlan,
 } from './utilities';
 import featureFlagCheckers from './feature-flags';
 
@@ -273,8 +274,12 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
   getDoc(doc(fb.semestersCollection, simplifiedUser.email)).then(snapshot => {
     const data = snapshot.data();
     if (data) {
-      const { orderByNewest, semesters } = data;
+      const semesters = getFirstPlan(data);
+      const { orderByNewest } = data;
       store.commit('setSemesters', semesters);
+      updateDoc(doc(fb.semestersCollection, simplifiedUser.email), {
+        plans: [{ semesters }], // TODO: andxu282 update later
+      });
       // if user hasn't yet chosen an ordering, choose true by default
       store.commit('setOrderByNewest', orderByNewest === undefined ? true : orderByNewest);
     } else {
@@ -286,6 +291,7 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
       store.commit('setSemesters', [newSemester]);
       setDoc(doc(fb.semestersCollection, simplifiedUser.email), {
         orderByNewest: true,
+        plans: [{ semesters: [newSemester] }], // TODO: andxu282 update later
         semesters: [newSemester],
       });
     }
