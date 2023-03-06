@@ -58,15 +58,11 @@ const retrieveAvailableSubjects = async (roster: string) => {
 };
 
 /* Retrieves and formats available courses for a {roster: string, subject: string} object */
-const retrieveAvailableCourses = async (roster: string, subject: string) => {
-  const courses: CourseFullDetail[] = await fetch(
-    `https://classes.cornell.edu/api/2.0/search/classes.json?roster=${roster}&subject=${subject}`
-  )
+const retrieveAvailableCourses = (roster: string, subject: string): Promise<CourseFullDetail[]> => {
+  fetch(`https://classes.cornell.edu/api/2.0/search/classes.json?roster=${roster}&subject=${subject}`)
     .then(res => res.json())
     .then(jsonRes => jsonRes.data.classes)
     .then(jsonCourses => jsonCourses.map(jsonCourse => courseFieldFilter(jsonCourse)));
-  return courses;
-};
 
 /* Helper functions to clean and format class roster data */
 const cleanField = (value: string | null | undefined) =>
