@@ -45,17 +45,13 @@ const retrieveAvailableRosters = async () => {
 };
 
 /* Retrieves the subjects across for a roster and creates a list of {roster: string, subject: string} objects */
-const retrieveAvailableSubjects = async (roster: string) => {
-  const subjects: readonly { roster: string; subject: string }[] = await fetch(
-    `https://classes.cornell.edu/api/2.0/config/subjects.json?roster=${roster}`
-  )
+const retrieveAvailableSubjects = (roster: string): Promise<readonly { roster: string; subject: string }[]> =>
+  fetch(`https://classes.cornell.edu/api/2.0/config/subjects.json?roster=${roster}`)
     .then(res => res.json())
     .then(jsonRes => jsonRes.data.subjects)
     .then(jsonSubjects =>
       jsonSubjects.map(jsonSubject => ({ roster, subject: jsonSubject.value }))
     );
-  return subjects;
-};
 
 /* Retrieves and formats available courses for a {roster: string, subject: string} object */
 const retrieveAvailableCourses = (roster: string, subject: string): Promise<CourseFullDetail[]> => {
