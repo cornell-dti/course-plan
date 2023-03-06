@@ -93,7 +93,7 @@ const hbhsRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: includesWithSubRequirements(['PHYS 1101', 'PHYS 2207']),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
-    slotNames: ['PHYS 1101 or PHYS 2207],
+    slotNames: ['PHYS 1101 or PHYS 2207'],
   },
   {
     name: 'Organic Chemistry Lecture',
@@ -109,7 +109,7 @@ const hbhsRequirements: readonly CollegeOrMajorRequirement[] = [
         checker: includesWithSubRequirements(['CHEM 1570']),
         counting: 'courses',
         perSlotMinCount: [1],
-        slotNames: ['Course']
+        slotNames: ['Course'],
       },
       'Option 2': {
         description: 'CHEM 3530',
@@ -142,7 +142,7 @@ const hbhsRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: includesWithSubRequirements(['BIOG 2510', 'BIOSM 3010']),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
-    slotNames: ['BIOG 2510 or BIOSM 3010']
+    slotNames: ['BIOG 2510 or BIOSM 3010'],
   },
   {
     name: 'Physiology',
@@ -153,7 +153,7 @@ const hbhsRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: includesWithSubRequirements(['NS 3410', 'BIOAP 3110']),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
-    slotNames: ['NS 3410 or BIOAP 3110']
+    slotNames: ['NS 3410 or BIOAP 3110'],
   },
   {
     name: 'Biochemistry',
@@ -167,7 +167,7 @@ const hbhsRequirements: readonly CollegeOrMajorRequirement[] = [
         checker: includesWithSubRequirements(['NS 3200']),
         counting: 'courses',
         perSlotMinCount: [1],
-        slotNames: ['Course']
+        slotNames: ['Course'],
       },
       'Option 2': {
         description: 'BIOMG 3300',
@@ -227,7 +227,7 @@ const hbhsRequirements: readonly CollegeOrMajorRequirement[] = [
         !courseMatchesCodeOptions(course, ['BIOMG 3310']) &&
         !courseMatchesCodeOptions(course, ['BIOMG 3320']) &&
         !courseMatchesCodeOptions(course, ['BIOMG 3350']) &&
-        !courseMatchesCodeOptions(course, ['NS 3200'])
+        !courseMatchesCodeOptions(course, ['NS 3200']),
     ],
     checkerWarning: 'We do not check that the courses are approved Biology Electives.',
     fulfilledBy: 'credits',
@@ -247,7 +247,7 @@ const hbhsRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: [],
     checkerWarning: 'We do not check that the courses are approved electives.',
     fulfilledBy: 'credits',
-    perSlotMinCount: [6]
+    perSlotMinCount: [6],
   },
   {
     name: 'Natural Science Perspective on Health Selectives',
@@ -263,7 +263,7 @@ const hbhsRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: [],
     checkerWarning: 'We do not check that the courses are approved electives.',
     fulfilledBy: 'credits',
-    perSlotMinCount: [6]
+    perSlotMinCount: [6],
   },
   {
     name: 'Nutritional Science Perspective on Health Selectives',
@@ -278,7 +278,7 @@ const hbhsRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: [],
     checkerWarning: 'We do not check that the courses are approved electives.',
     fulfilledBy: 'credits',
-    perSlotMinCount: [3 || 4]
+    perSlotMinCount: [3 || 4],
   },
   {
     name: 'Social Sciences',
@@ -291,7 +291,7 @@ const hbhsRequirements: readonly CollegeOrMajorRequirement[] = [
     checkerWarning:
       'We do not check that the courses are approved electives. We also do not check whether they come from two of the four areas.',
     fulfilledBy: 'credits',
-    perSlotMinCount: [6]
+    perSlotMinCount: [6],
   },
   {
     name: 'Humanities',
@@ -303,10 +303,10 @@ const hbhsRequirements: readonly CollegeOrMajorRequirement[] = [
       (course: Course): boolean =>
         (course.catalogDistr?.includes('CA-') ?? false) ||
         (course.catalogDistr?.includes('HA-') ?? false) ||
-        (course.catalogDistr?.includes('LA-') ?? false)
+        (course.catalogDistr?.includes('LA-') ?? false),
     ],
     fulfilledBy: 'credits',
-    perSlotMinCount: [3 || 4]
+    perSlotMinCount: [3 || 4],
   },
   {
     name: 'Calculus/Advanced Math',
@@ -319,7 +319,7 @@ const hbhsRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: includesWithSubRequirements(['MATH 1105', 'MATH 1106', 'MATH 1110', 'MATH 1120']),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
-    slotNames: ['MATH 1105, MATH 1106, MATH 1110, or MATH 1120']
+    slotNames: ['MATH 1105, MATH 1106, MATH 1110, or MATH 1120'],
   },
   {
     name: 'Statistics',
@@ -338,7 +338,7 @@ const hbhsRequirements: readonly CollegeOrMajorRequirement[] = [
       'STSCI 2100',
       'MATH 1710',
       'PSYCH 2500',
-      'SOC 3010'
+      'SOC 3010',
     ]),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
