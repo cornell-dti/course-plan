@@ -54,3 +54,5 @@ export const uniqueIncrementerCollection = db.collection(userCollections.unique)
 export const onboardingDataCollection = db.collection(userCollections.onboarding);
 export const trackUsersCollection = db.collection('track-users');
 export const coursesCollection = db.collection('courses');
+export const availableRostersForCourseCollection = db.collection('available-rosters-for-course');
+export const crseIdToCatalogNbrCollection = db.collection('crseid-to-catalognbr');
