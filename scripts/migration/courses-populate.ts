@@ -111,29 +111,34 @@ const courseFieldFilter = ({
   crseToCatalogNbrCollection - contains a mapping from each course's crseId to its catalogNbr (which is a subject + code)
   coursesCollection - contains all courses ever offered by the class roster API from FA14 - present. 
 */
-const populateCourses = (roster: string, subject: string, courses: CourseFullDetail[]) => {
-  courses.forEach(async course => {
-    /* Computing a mapping that maps a course to a list of semesters it is offered in */
-    const courseAndRostersDoc = await availableRostersForCourseCollection
-      .doc(`${subject} ${course.catalogNbr.toString()}`)
-      .get();
-    if (courseAndRostersDoc.exists) {
-      await availableRostersForCourseCollection
+const populateCourses = (roster: string, subject: string, courses: CourseFullDetail[]) =>
+  Promise.all(
+    courses.map(async course => {
+      /* Computing a mapping that maps a course to a list of semesters it is offered in */
+      const courseAndRostersDoc = await availableRostersForCourseCollection
         .doc(`${subject} ${course.catalogNbr.toString()}`)
-        .update({ rosters: FieldValue.arrayUnion(roster) });
-    } else {
-      await availableRostersForCourseCollection
-        .doc(`${subject} ${course.catalogNbr.toString()}`)
-        .set({ rosters: [roster] });
-    }
-    /* Mapping that maps from a course's crseId to their course code */
-    await crseIdToCatalogNbrCollection
-      .doc(course.crseId.toString())
-      .set({ catalogNbr: `${subject} ${course.catalogNbr}` });
-    /* Writing each course to the 'courses' collection */
-    await coursesCollection.doc(roster).collection(subject).doc(course.catalogNbr).set({ course });
-  });
-};
+        .get();
+      if (courseAndRostersDoc.exists) {
+        await availableRostersForCourseCollection
+          .doc(`${subject} ${course.catalogNbr.toString()}`)
+          .update({ rosters: FieldValue.arrayUnion(roster) });
+      } else {
+        await availableRostersForCourseCollection
+          .doc(`${subject} ${course.catalogNbr.toString()}`)
+          .set({ rosters: [roster] });
+      }
+      /* Mapping that maps from a course's crseId to their course code */
+      await crseIdToCatalogNbrCollection
+        .doc(course.crseId.toString())
+        .set({ catalogNbr: `${subject} ${course.catalogNbr}` });
+      /* Writing each course to the 'courses' collection */
+      await coursesCollection
+        .doc(roster)
+        .collection(subject)
+        .doc(course.catalogNbr)
+        .set({ course });
+    })
+  );
 
 /* 
   A promise pipeline that maps a list of rosters to a list of courses using 
