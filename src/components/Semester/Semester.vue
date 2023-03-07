@@ -10,7 +10,6 @@
   >
     <new-course-modal
       @close-course-modal="closeCourseModal"
-      @select-course="selectCourse"
       v-if="isCourseModalOpen"
       @add-course="addCourse"
     />
@@ -164,12 +163,9 @@ import {
   addCourseToSemester,
   deleteCourseFromSemester,
   deleteAllCoursesFromSemester,
-  addAcknowledgedCheckerWarningOptIn,
 } from '@/global-firestore-data';
 import store, { updateSubjectColorData } from '@/store';
 import { getRelatedUnfulfilledRequirements } from '@/requirements/requirement-frontend-utils';
-
-import featureFlagCheckers from '@/feature-flags';
 
 type ComponentRef = { $el: HTMLDivElement };
 
@@ -311,9 +307,6 @@ export default defineComponent({
       }
       return `${credits.toString()} credits`;
     },
-    handleRequirementConflicts(): boolean {
-      return featureFlagCheckers.isRequirementConflictsEnabled();
-    },
   },
   methods: {
     isPlaceholderCourse,
@@ -375,41 +368,27 @@ export default defineComponent({
     closeConfirmationModal() {
       this.isConfirmationOpen = false;
     },
-    // TODO @willespencer refactor the below methods after gatekeep removed (to only 1 method)
-    addCourse(data: CornellCourseRosterCourse, selectableReqId: string) {
+    addCourse(data: CornellCourseRosterCourse) {
       const newCourse = cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData(data);
-      if (selectableReqId) {
-        addAcknowledgedCheckerWarningOptIn(newCourse.uniqueID, selectableReqId);
-      }
+
       addCourseToSemester(this.year, this.season, newCourse, this.$gtag);
+      this.closeCourseModal();
 
-      const courseCode = `${data.subject} ${data.catalogNbr}`;
-      this.openConfirmationModal(`Added ${courseCode} to ${this.season} ${this.year}`);
-    },
-    selectCourse(data: CornellCourseRosterCourse) {
-      // only perform operations if the gatekeep is true
-      if (this.handleRequirementConflicts) {
-        const newCourse = cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData(data);
+      const conflicts = store.state.courseToRequirementsInConstraintViolations.get(
+        newCourse.uniqueID
+      );
 
-        addCourseToSemester(this.year, this.season, newCourse, this.$gtag);
-        this.closeCourseModal();
+      const { selfCheckRequirements } = getRelatedUnfulfilledRequirements(
+        data,
+        store.state.groupedRequirementFulfillmentReport,
+        store.state.toggleableRequirementChoices,
+        store.state.overriddenFulfillmentChoices,
+        store.state.userRequirementsMap
+      );
 
-        const conflicts = store.state.courseToRequirementsInConstraintViolations.get(
-          newCourse.uniqueID
-        );
-
-        const { selfCheckRequirements } = getRelatedUnfulfilledRequirements(
-          data,
-          store.state.groupedRequirementFulfillmentReport,
-          store.state.toggleableRequirementChoices,
-          store.state.overriddenFulfillmentChoices,
-          store.state.userRequirementsMap
-        );
-
-        // only open conflict modal if conflicts exist
-        if (conflicts && conflicts.size > 0) {
-          this.openConflictModal(newCourse, conflicts, selfCheckRequirements);
-        }
+      // only open conflict modal if conflicts exist
+      if (conflicts && conflicts.size > 0) {
+        this.openConflictModal(newCourse, conflicts, selfCheckRequirements);
       }
     },
     handleConflictsResolved(course: FirestoreSemesterCourse | CourseTaken) {

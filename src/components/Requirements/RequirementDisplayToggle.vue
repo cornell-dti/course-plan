@@ -31,12 +31,14 @@
 import { PropType, defineComponent } from 'vue';
 import DropDownArrow from '@/components/DropDownArrow.vue';
 import { fulfillmentProgressString } from '@/requirements/requirement-frontend-utils';
-import featureFlagCheckers from '@/feature-flags';
 
 export default defineComponent({
   components: { DropDownArrow },
   props: {
-    requirementFulfillment: { type: Object as PropType<RequirementFulfillment>, required: true },
+    requirementFulfillment: {
+      type: Object as PropType<RequirementFulfillment>,
+      required: true,
+    },
     isCompleted: { type: Boolean, required: true },
     displayDescription: { type: Boolean, required: true },
   },
@@ -53,8 +55,6 @@ export default defineComponent({
       // Compute progress string x/y requirements fulfilled.
       // We also need to include the main requirement into consideration.
 
-      let totalFulfilledRequirements =
-        fulfillment.safeMinCountFulfilled >= fulfillment.minCountRequired ? 1 : 0;
       let dangerouslyFulfilledCount =
         fulfillment.dangerousMinCountFulfilled >= fulfillment.minCountRequired ? 1 : 0;
 
@@ -67,19 +67,10 @@ export default defineComponent({
         ) {
           dangerouslyFulfilledCount += 1;
         }
-
-        if (
-          additionalRequirementProgress.safeMinCountFulfilled >=
-          additionalRequirementProgress.minCountRequired
-        ) {
-          totalFulfilledRequirements += 1;
-        }
       }
 
       // count anything that fulfills requirement, including dangerous fulfillments
-      return featureFlagCheckers.isRequirementConflictsEnabled()
-        ? `${dangerouslyFulfilledCount}/${totalRequirementsCount} requirements`
-        : `${totalFulfilledRequirements}/${totalRequirementsCount} requirements`;
+      return `${dangerouslyFulfilledCount}/${totalRequirementsCount} requirements`;
     },
   },
 });
