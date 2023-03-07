@@ -25,6 +25,7 @@ import {
   crseIdToCatalogNbrCollection,
 } from '../firebase-config';
 import { CourseFullDetail } from '../../src/requirements/types';
+import { courseFieldFilter } from '../../src/utilities';
 
 /** A helper function to generate a wait promise. Used for cooldown to limit API usage. */
 const wait = (time: number) =>
@@ -32,77 +33,34 @@ const wait = (time: number) =>
     setTimeout(() => resolve(), time);
   });
 
+const classRosterURL = 'https://classes.cornell.edu/api/2.0';
+
 /* Retrieves the rosters available on the class roster API */
 const retrieveAvailableRosters = async () => {
-  const rosters: readonly string[] = await fetch(
-    'https://classes.cornell.edu/api/2.0/config/rosters.json'
-  )
-    .then(res => res.json())
-    .then(jsonRes => jsonRes.data.rosters)
-    .then(jsonRosters => jsonRosters.map(jsonRoster => jsonRoster.slug));
-
-  return rosters;
+  const res = await fetch(`${classRosterURL}/config/rosters.json`);
+  return (await res.json()).data.rosters.map(jsonRoster => jsonRoster.slug);
 };
 
 /* Retrieves the subjects across for a roster and creates a list of {roster: string, subject: string} objects */
-const retrieveAvailableSubjects = (
+const retrieveAvailableSubjects = async (
   roster: string
-): Promise<readonly { roster: string; subject: string }[]> =>
-  fetch(`https://classes.cornell.edu/api/2.0/config/subjects.json?roster=${roster}`)
-    .then(res => res.json())
-    .then(jsonRes => jsonRes.data.subjects)
-    .then(jsonSubjects =>
-      jsonSubjects.map(jsonSubject => ({ roster, subject: jsonSubject.value }))
-    );
+): Promise<readonly { roster: string; subject: string }[]> => {
+  const res = await fetch(
+    `https://classes.cornell.edu/api/2.0/config/subjects.json?roster=${roster}`
+  );
+  return (await res.json()).data.subjects.map(({ value }) => ({ roster, subject: value }));
+};
 
 /* Retrieves and formats available courses for a {roster: string, subject: string} object */
-const retrieveAvailableCourses = (roster: string, subject: string): Promise<CourseFullDetail[]> =>
-  fetch(
-    `https://classes.cornell.edu/api/2.0/search/classes.json?roster=${roster}&subject=${subject}`
-  )
-    .then(res => res.json())
-    .then(jsonRes => jsonRes.data.classes)
-    .then(jsonCourses => jsonCourses.map(jsonCourse => courseFieldFilter(jsonCourse)));
-
-/* Helper functions to clean and format class roster data */
-const cleanField = (value: string | null | undefined) =>
-  value?.replace(/\u00a0/g, ' ') || undefined;
-
-const courseFieldFilter = ({
-  subject,
-  crseId,
-  catalogNbr,
-  titleLong,
-  enrollGroups,
-  catalogWhenOffered,
-  catalogBreadth,
-  catalogDistr,
-  catalogComments,
-  catalogSatisfiesReq,
-  catalogCourseSubfield,
-  catalogAttribute,
-  acadCareer,
-  acadGroup,
-  description,
-  catalogPrereqCoreq,
-}: CourseFullDetail): CourseFullDetail => ({
-  subject: cleanField(subject) || '',
-  crseId,
-  catalogNbr: cleanField(catalogNbr) || '',
-  titleLong: cleanField(titleLong) || '',
-  enrollGroups,
-  catalogWhenOffered: cleanField(catalogWhenOffered),
-  catalogBreadth: cleanField(catalogBreadth),
-  catalogDistr: cleanField(catalogDistr),
-  catalogComments: cleanField(catalogComments),
-  catalogSatisfiesReq: cleanField(catalogSatisfiesReq),
-  catalogCourseSubfield: cleanField(catalogCourseSubfield),
-  catalogAttribute: cleanField(catalogAttribute),
-  acadCareer: cleanField(acadCareer) || '',
-  acadGroup: cleanField(acadGroup) || '',
-  description: cleanField(description) || '',
-  catalogPrereqCoreq: cleanField(catalogPrereqCoreq) || '',
-});
+const retrieveAvailableCourses = async (
+  roster: string,
+  subject: string
+): Promise<CourseFullDetail[]> => {
+  const res = await fetch(
+    `${classRosterURL}/search/classes.json?roster=${roster}&subject=${subject}`
+  );
+  return (await res.json()).data.classes.map(jsonCourse => courseFieldFilter(jsonCourse));
+};
 
 /* 
   Populates firebase with the retrieved course data, and meta data structures for future migration. 
