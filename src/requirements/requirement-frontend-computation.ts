@@ -8,7 +8,6 @@ import {
 } from './requirement-frontend-utils';
 import { ReadonlyRequirementFulfillmentGraph } from './graph';
 import buildRequirementFulfillmentGraphFromUserData from './requirement-graph-builder-from-user-data';
-import featureFlagCheckers from '../feature-flags';
 
 /**
  * Used for total academic credit requirements for all colleges except EN and AR
@@ -348,16 +347,7 @@ export function groupedRequirementDangerouslyFulfilled(
   groupedRequirementFulfillmentReport.reqs.forEach(req => {
     [req.fulfillment, ...Object.values(req.fulfillment.additionalRequirements ?? {})].forEach(
       reqOrNestedReq => {
-        if (
-          reqOrNestedReq.dangerousMinCountFulfilled >= reqOrNestedReq.minCountRequired &&
-          !featureFlagCheckers.isRequirementConflictsEnabled()
-        ) {
-          fulfilled += 1;
-        }
-        if (
-          reqOrNestedReq.safeMinCountFulfilled >= reqOrNestedReq.minCountRequired &&
-          featureFlagCheckers.isRequirementConflictsEnabled()
-        ) {
+        if (reqOrNestedReq.safeMinCountFulfilled >= reqOrNestedReq.minCountRequired) {
           fulfilled += 1;
         }
       }

@@ -141,7 +141,6 @@
           aria-valuemax="100"
         ></div>
         <div
-          v-if="conflictsEnabled"
           class="progress-bar progress-bar--warning"
           :style="{ width: dangerousProgressWidth }"
           role="progressbar"
@@ -203,7 +202,6 @@ import {
   getGradFullName,
   getReqColor,
 } from '@/utilities';
-import featureFlagCheckers from '@/feature-flags';
 import {
   groupedRequirementDangerouslyFulfilled,
   groupedRequirementTotalDangerousRequirementProgress,
@@ -218,8 +216,14 @@ export default defineComponent({
     displayDetails: { type: Boolean, required: true },
     displayedMajorIndex: { type: Number, required: true },
     displayedMinorIndex: { type: Number, required: true },
-    req: { type: Object as PropType<GroupedRequirementFulfillmentReport>, required: true },
-    onboardingData: { type: Object as PropType<AppOnboardingData>, required: true },
+    req: {
+      type: Object as PropType<GroupedRequirementFulfillmentReport>,
+      required: true,
+    },
+    onboardingData: {
+      type: Object as PropType<AppOnboardingData>,
+      required: true,
+    },
     showMajorOrMinorRequirements: { type: Boolean, required: true },
     numOfColleges: { type: Number, required: true },
   },
@@ -235,9 +239,6 @@ export default defineComponent({
     },
   },
   computed: {
-    conflictsEnabled(): boolean {
-      return featureFlagCheckers.isRequirementConflictsEnabled();
-    },
     requirementDangerouslyFulfilled(): number {
       return groupedRequirementDangerouslyFulfilled(this.req);
     },
@@ -266,9 +267,7 @@ export default defineComponent({
       return ((diff / this.requirementTotalRequired) * 100).toFixed(1);
     },
     numberConflicts(): number {
-      return this.conflictsEnabled
-        ? this.totalDangerousRequirementProgress - this.totalSafeRequirementProgress
-        : 0;
+      return this.totalDangerousRequirementProgress - this.totalSafeRequirementProgress;
     },
     numberConflictsRounded(): number {
       return Math.ceil(this.numberConflicts);

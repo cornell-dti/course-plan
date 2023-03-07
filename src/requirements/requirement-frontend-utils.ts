@@ -2,7 +2,6 @@ import requirementJson from './typed-requirement-json';
 import specialized from './specialize';
 import { examCourseIds } from './requirement-exam-mapping';
 import { getConstraintViolationsForSingleCourse } from './requirement-constraints-utils';
-import featureFlagCheckers from '../feature-flags';
 
 /**
  * A collection of helper functions
@@ -485,16 +484,12 @@ export function computeFulfillmentCoursesAndStatistics(
 }
 
 // display the entire number of fulfillents, including those that are dangerous
-export function fulfillmentProgressString({
+export const fulfillmentProgressString = ({
   fulfilledBy,
   dangerousMinCountFulfilled,
-  safeMinCountFulfilled,
   minCountRequired,
-}: MixedRequirementFulfillmentStatistics) {
-  return featureFlagCheckers.isRequirementConflictsEnabled()
-    ? `${dangerousMinCountFulfilled}/${minCountRequired} ${fulfilledBy}`
-    : `${safeMinCountFulfilled}/${minCountRequired} ${fulfilledBy}`;
-}
+}: MixedRequirementFulfillmentStatistics) =>
+  `${dangerousMinCountFulfilled}/${minCountRequired} ${fulfilledBy}`;
 
 export function getRelatedUnfulfilledRequirements(
   {
