@@ -10,7 +10,6 @@
   >
     <new-course-modal
       @close-course-modal="closeCourseModal"
-      @select-course="selectCourse"
       v-if="isCourseModalOpen"
       @add-course="addCourse"
     />
@@ -164,7 +163,6 @@ import {
   addCourseToSemester,
   deleteCourseFromSemester,
   deleteAllCoursesFromSemester,
-  addAcknowledgedCheckerWarningOptIn,
 } from '@/global-firestore-data';
 import store, { updateSubjectColorData } from '@/store';
 import { getRelatedUnfulfilledRequirements } from '@/requirements/requirement-frontend-utils';
@@ -370,18 +368,7 @@ export default defineComponent({
     closeConfirmationModal() {
       this.isConfirmationOpen = false;
     },
-    // TODO @willespencer refactor the below methods after gatekeep removed (to only 1 method)
-    addCourse(data: CornellCourseRosterCourse, selectableReqId: string) {
-      const newCourse = cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData(data);
-      if (selectableReqId) {
-        addAcknowledgedCheckerWarningOptIn(newCourse.uniqueID, selectableReqId);
-      }
-      addCourseToSemester(this.year, this.season, newCourse, this.$gtag);
-
-      const courseCode = `${data.subject} ${data.catalogNbr}`;
-      this.openConfirmationModal(`Added ${courseCode} to ${this.season} ${this.year}`);
-    },
-    selectCourse(data: CornellCourseRosterCourse) {
+    addCourse(data: CornellCourseRosterCourse) {
       const newCourse = cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData(data);
 
       addCourseToSemester(this.year, this.season, newCourse, this.$gtag);
