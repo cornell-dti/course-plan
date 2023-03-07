@@ -5,17 +5,16 @@ import { AdvisorGroup } from '../../tools/advisors/types';
 const dbmeMinorRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'Introductory Microeconomics',
-    description: 'ECON 1100 or ECON 3030 or HADM 1410 or PAM 2000',
+    description: 'ECON 1110 or ECON 3030 or PAM 2000',
     source: 'https://business.cornell.edu/programs/undergraduate/minors/business-engineers/',
-    checker: includesWithSingleRequirement('ECON 1100', 'ECON 3030', 'HADM 1410', 'PAM 2000'),
+    checker: includesWithSingleRequirement('ECON 1110', 'ECON 3030', 'PAM 2000'),
     fulfilledBy: 'credits',
     perSlotMinCount: [3],
   },
   {
     name: 'Introduction to basic business concepts',
     description:
-      'Choose one: AEM 1200, AEM 2400, HADM 1810, HADM 2410, ENGRI 1270, ILRD 1700, NCC 5530, NCC 5580' +
-      'ORIE 4152',
+      'Choose one: AEM 1200, AEM 2400, HADM 1810, HADM 2410, ENGRI 1270, ILRID 1700, NCC 5530, NCC 4530, NCC 5580, ORIE 4152/ENGRG 4610/MAE 4610',
     source: 'https://business.cornell.edu/programs/undergraduate/minors/business-engineers/',
     checker: includesWithSingleRequirement(
       'AEM 1200',
@@ -23,10 +22,13 @@ const dbmeMinorRequirements: readonly CollegeOrMajorRequirement[] = [
       'HADM 1810',
       'HADM 2410',
       'ENGRI 1270',
-      'ILRD 1700',
+      'ILRID 1700',
+      'NCC 4530',
       'NCC 5530',
       'NCC 5580',
-      'ORIE 4152'
+      'ORIE 4152',
+      'ENGRG 4610',
+      'MAE 4610'
     ),
     fulfilledBy: 'credits',
     perSlotMinCount: [3],
