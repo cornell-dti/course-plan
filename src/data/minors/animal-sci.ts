@@ -1,9 +1,5 @@
 import { CollegeOrMajorRequirement, Course } from '../../requirements/types';
-import {
-  ifCodeMatch,
-  courseMatchesCodeOptions,
-  courseHasAttribute,
-} from '../../requirements/checkers';
+import { ifCodeMatch } from '../../requirements/checkers';
 import { AdvisorGroup } from '../../tools/advisors/types';
 
 const animalSciRequirements: readonly CollegeOrMajorRequirement[] = [
@@ -15,10 +11,11 @@ const animalSciRequirements: readonly CollegeOrMajorRequirement[] = [
       'https://cals.cornell.edu/animal-science/degrees-programs/undergraduate-studies/minor-requirements',
     checker: [
       (course: Course): boolean => {
-        if (ifCodeMatch(course.subject, 'BIOAP') && ifCodeMatch(course.catalogNbr, '1100'))
+        if (ifCodeMatch(course.subject, 'BIOAP') && ifCodeMatch(course.catalogNbr, '1100')) {
           return true;
-        else if (ifCodeMatch(course.subject, 'ANSC')) {
-          let isSpecial =
+        }
+        if (ifCodeMatch(course.subject, 'ANSC')) {
+          const isSpecial =
             ifCodeMatch(course.catalogNbr, '49**') ||
             ifCodeMatch(course.catalogNbr, '5***') ||
             ifCodeMatch(course.catalogNbr, '6***') ||
