@@ -10,6 +10,7 @@
     "ts-node": "ts-node -T -P tsconfig.node.json",
     "courses-gen": "npm run ts-node -- src/requirements/courses-json-generator.ts",
     "req-gen": "npm run ts-node -- src/requirements/requirement-json-generator.ts",
+    "add-user-ids": "npm run ts-node -- scripts/add-user-id.ts",
     "track-users": "npm run ts-node -- scripts/track-users.ts",
     "courses-populate": "npm run ts-node -- scripts/population/populate.ts",
     "populate-specific-roster": "npm run ts-node -- scripts/population/populate-specific-roster.ts",
