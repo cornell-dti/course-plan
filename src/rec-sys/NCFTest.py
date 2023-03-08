@@ -14,11 +14,6 @@ import numpy as np
 import tensorflow as tf
 tf.get_logger().setLevel('ERROR')  # only show error messages
 
-
-print("System version: {}".format(sys.version))
-print("Pandas version: {}".format(pd.__version__))
-print("Tensorflow version: {}".format(tf.__version__))
-
 # top k items to recommend
 TOP_K = 10
 
