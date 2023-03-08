@@ -1,7 +1,6 @@
 import { fullCoursesArray } from './assets/courses/typed-full-courses';
 import requirementJSON from './requirements/typed-requirement-json';
 import { coursesColorSet } from './assets/constants/colors';
-import { Course } from './requirements/types';
 
 /** Enumerated type to define seasons as integers in season order
  * where the seasons are defined chronologically */
@@ -211,41 +210,3 @@ export const isCourseTaken = (
 export function sumBy<E>(collection: readonly E[], f: (e: E) => number): number {
   return collection.reduce((sum, e) => sum + f(e), 0);
 }
-
-export const cleanField = (value: string | null | undefined) =>
-  value?.replace(/\u00a0/g, ' ') || undefined;
-
-export const courseFieldFilter = ({
-  subject,
-  crseId,
-  catalogNbr,
-  titleLong,
-  enrollGroups,
-  catalogWhenOffered,
-  catalogBreadth,
-  catalogDistr,
-  catalogComments,
-  catalogSatisfiesReq,
-  catalogCourseSubfield,
-  catalogAttribute,
-  acadCareer,
-  acadGroup,
-}: Course): Course => ({
-  subject: cleanField(subject) || '',
-  crseId,
-  catalogNbr: cleanField(catalogNbr) || '',
-  titleLong: cleanField(titleLong) || '',
-  enrollGroups: enrollGroups.map(({ unitsMaximum, unitsMinimum }) => ({
-    unitsMaximum,
-    unitsMinimum,
-  })),
-  catalogWhenOffered: cleanField(catalogWhenOffered),
-  catalogBreadth: cleanField(catalogBreadth),
-  catalogDistr: cleanField(catalogDistr),
-  catalogComments: cleanField(catalogComments),
-  catalogSatisfiesReq: cleanField(catalogSatisfiesReq),
-  catalogCourseSubfield: cleanField(catalogCourseSubfield),
-  catalogAttribute: cleanField(catalogAttribute),
-  acadCareer: cleanField(acadCareer) || '',
-  acadGroup: cleanField(acadGroup) || '',
-});

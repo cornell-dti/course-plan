@@ -24,8 +24,7 @@ import {
   availableRostersForCourseCollection,
   crseIdToCatalogNbrCollection,
 } from '../firebase-config';
-import { CourseFullDetail } from '../../src/requirements/types';
-import { courseFieldFilter } from '../../src/utilities';
+import { Course, CourseFullDetail } from '../../src/requirements/types';
 
 /** A helper function to generate a wait promise. Used for cooldown to limit API usage. */
 const wait = (time: number) =>
@@ -52,6 +51,44 @@ const retrieveAvailableSubjects = async (
 };
 
 /* Retrieves and formats available courses for a {roster: string, subject: string} object */
+
+const cleanField = (value: string | null | undefined) =>
+  value?.replace(/\u00a0/g, ' ') || undefined;
+
+const courseFieldFilter = ({
+  subject,
+  crseId,
+  catalogNbr,
+  titleLong,
+  enrollGroups,
+  catalogWhenOffered,
+  catalogBreadth,
+  catalogDistr,
+  catalogComments,
+  catalogSatisfiesReq,
+  catalogCourseSubfield,
+  catalogAttribute,
+  acadCareer,
+  acadGroup,
+}: Course): Course => ({
+  subject: cleanField(subject) || '',
+  crseId,
+  catalogNbr: cleanField(catalogNbr) || '',
+  titleLong: cleanField(titleLong) || '',
+  enrollGroups: enrollGroups.map(({ unitsMaximum, unitsMinimum }) => ({
+    unitsMaximum,
+    unitsMinimum,
+  })),
+  catalogWhenOffered: cleanField(catalogWhenOffered),
+  catalogBreadth: cleanField(catalogBreadth),
+  catalogDistr: cleanField(catalogDistr),
+  catalogComments: cleanField(catalogComments),
+  catalogSatisfiesReq: cleanField(catalogSatisfiesReq),
+  catalogCourseSubfield: cleanField(catalogCourseSubfield),
+  catalogAttribute: cleanField(catalogAttribute),
+  acadCareer: cleanField(acadCareer) || '',
+  acadGroup: cleanField(acadGroup) || '',
+});
 const retrieveAvailableCourses = async (
   roster: string,
   subject: string
