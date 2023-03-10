@@ -7,6 +7,7 @@
     >
       →
     </button>
+
     <aside v-if="isMobile ? isDisplayingMobile : !isMinimized" class="requirements">
       <div
         class="requirements-wrapper"
@@ -35,6 +36,9 @@
           >
             Open Requirement Debugger
           </button>
+          <div class="multiple-plans" v-if="multiplePlansAllowed">
+            <button class="add-plan-button" @click="addPlan()">+ Add Plan</button>
+          </div>
           <teleport-modal
             content-class="requirement-debugger-modal-content"
             :isSimpleModal="true"
@@ -220,6 +224,9 @@ export default defineComponent({
     },
   },
   computed: {
+    multiplePlansAllowed(): boolean {
+      return featureFlagCheckers.isMultiplePlansEnabled();
+    },
     debuggerAllowed(): boolean {
       return featureFlagCheckers.isRequirementDebuggerEnabled();
     },
@@ -252,6 +259,9 @@ export default defineComponent({
     },
   },
   methods: {
+    addPlan() {
+      console.log('add plan clicked!');
+    },
     toggleDebugger(): void {
       this.displayDebugger = !this.displayDebugger;
     },
@@ -364,6 +374,21 @@ export default defineComponent({
     color: $yuxuanBlue;
     opacity: 1;
   }
+}
+
+.multiple-plans {
+  height: 2.5rem;
+}
+
+.add-plan-button {
+  float: right;
+  background: $sangBlue;
+  border-radius: 8px;
+  min-height: 2.5rem;
+  min-width: 6.5rem;
+  color: $white;
+  border: none;
+  font-size: 16px;
 }
 
 .requirement-sidebar-btn-open {
