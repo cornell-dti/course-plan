@@ -95,3 +95,94 @@ print("MAP:\t%f" % eval_map,
       "NDCG:\t%f" % eval_ndcg,
       "Precision@K:\t%f" % eval_precision,
       "Recall@K:\t%f" % eval_recall, sep='\n')
+
+
+# Pre-training of GMF and MLP models
+model = NCF (
+    n_users=data.n_users, 
+    n_items=data.n_items,
+    model_type="GMF",
+    n_factors=4,
+    layer_sizes=[16,8,4],
+    n_epochs=EPOCHS,
+    batch_size=BATCH_SIZE,
+    learning_rate=1e-3,
+    verbose=10,
+    seed=SEED
+)
+
+with Timer() as train_time:
+    model.fit(data)
+
+print("Took {} seconds for training.".format(train_time.interval))
+
+model.save(dir_name=".pretrain/GMF")
+
+model = NCF (
+    n_users=data.n_users, 
+    n_items=data.n_items,
+    model_type="MLP",
+    n_factors=4,
+    layer_sizes=[16,8,4],
+    n_epochs=EPOCHS,
+    batch_size=BATCH_SIZE,
+    learning_rate=1e-3,
+    verbose=10,
+    seed=SEED
+)
+
+with Timer() as train_time:
+    model.fit(data)
+
+print("Took {} seconds for training.".format(train_time.interval))
+
+model.save(dir_name=".pretrain/MLP")
+
+# Load pre-trained models for NeuMF
+model = NCF (
+    n_users=data.n_users, 
+    n_items=data.n_items,
+    model_type="NeuMF",
+    n_factors=4,
+    layer_sizes=[16,8,4],
+    n_epochs=EPOCHS,
+    batch_size=BATCH_SIZE,
+    learning_rate=1e-3,
+    verbose=10,
+    seed=SEED
+)
+
+model.load(gmf_dir=".pretrain/GMF", mlp_dir=".pretrain/MLP", alpha=0.5)
+
+with Timer() as train_time:
+    model.fit(data)
+
+print("Took {} seconds for training.".format(train_time.interval))
+
+# Compare with not pre-trained NeuMF
+with Timer() as test_time:
+
+    users, items, preds = [], [], []
+    item = list(train.itemID.unique())
+    for user in train.userID.unique():
+        user = [user] * len(item) 
+        users.extend(user)
+        items.extend(item)
+        preds.extend(list(model.predict(user, item, is_list=True)))
+
+    all_predictions = pd.DataFrame(data={"userID": users, "itemID":items, "prediction":preds})
+
+    merged = pd.merge(train, all_predictions, on=["userID", "itemID"], how="outer")
+    all_predictions = merged[merged.rating.isnull()].drop('rating', axis=1)
+
+print("Took {} seconds for prediction.".format(test_time.interval))
+
+eval_map2 = map_at_k(test, all_predictions, col_prediction='prediction', k=TOP_K)
+eval_ndcg2 = ndcg_at_k(test, all_predictions, col_prediction='prediction', k=TOP_K)
+eval_precision2 = precision_at_k(test, all_predictions, col_prediction='prediction', k=TOP_K)
+eval_recall2 = recall_at_k(test, all_predictions, col_prediction='prediction', k=TOP_K)
+
+print("MAP:\t%f" % eval_map2,
+      "NDCG:\t%f" % eval_ndcg2,
+      "Precision@K:\t%f" % eval_precision2,
+      "Recall@K:\t%f" % eval_recall2, sep='\n')
