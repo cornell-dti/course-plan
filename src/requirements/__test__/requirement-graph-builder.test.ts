@@ -1,8 +1,8 @@
-import RequirementFulfillmentGraph from '../requirement-graph';
+import { RequirementFulfillmentGraph } from '../graph';
 import {
-  buildRequirementFulfillmentGraph,
+  buildRequirementFulfillmentGraphDeprecated,
   removeIllegalEdgesFromRequirementFulfillmentGraph,
-} from '../requirement-graph-builder';
+} from '../graph/builder';
 
 const CS3410 = { uniqueId: 3410, courseId: 1 };
 const CS3420 = { uniqueId: 3420, courseId: 2 };
@@ -26,7 +26,7 @@ const getAllCoursesThatCanPotentiallySatisfyRequirement = (
 };
 
 it('buildRequirementFulfillmentGraph phase 1 test 1', () => {
-  const graph = buildRequirementFulfillmentGraph({
+  const graph = buildRequirementFulfillmentGraphDeprecated({
     requirements,
     userCourses: [CS3410, CS3420, MATH4710],
     userChoiceOnFulfillmentStrategy: {},
@@ -42,7 +42,7 @@ it('buildRequirementFulfillmentGraph phase 1 test 1', () => {
 // This test ensures that we are actually using userCourses and drop any courses from pre-computed
 // course list that are not in userCourses.
 it('buildRequirementFulfillmentGraph phase 1 test 2', () => {
-  const graph = buildRequirementFulfillmentGraph({
+  const graph = buildRequirementFulfillmentGraphDeprecated({
     requirements,
     userCourses: [CS3410, MATH4710],
     userChoiceOnFulfillmentStrategy: {},
@@ -57,7 +57,7 @@ it('buildRequirementFulfillmentGraph phase 1 test 2', () => {
 
 // Following two tests test how we are removing edges depending on user choices on fulfillment strategy.
 it('buildRequirementFulfillmentGraph phase 2-1 test', () => {
-  const graph = buildRequirementFulfillmentGraph({
+  const graph = buildRequirementFulfillmentGraphDeprecated({
     requirements,
     userCourses: [CS3410, CS3420, MATH4710],
     userChoiceOnFulfillmentStrategy: { 'CS3410/CS3420': [CS3410.courseId] },
@@ -72,7 +72,7 @@ it('buildRequirementFulfillmentGraph phase 2-1 test', () => {
 });
 
 it('buildRequirementFulfillmentGraph phase 2-2 test', () => {
-  const graph = buildRequirementFulfillmentGraph({
+  const graph = buildRequirementFulfillmentGraphDeprecated({
     requirements,
     userCourses: [CS3410, CS3420, MATH4710],
     userChoiceOnFulfillmentStrategy: { 'CS3410/CS3420': [CS3420.courseId] },
@@ -88,7 +88,7 @@ it('buildRequirementFulfillmentGraph phase 2-2 test', () => {
 
 // The following two tests test that we will remove edges incompatible with user supplied choices.
 it('buildRequirementFulfillmentGraph phase 3 test 1', () => {
-  const graph = buildRequirementFulfillmentGraph({
+  const graph = buildRequirementFulfillmentGraphDeprecated({
     requirements,
     userCourses: [CS3410, CS3420, MATH4710],
     userChoiceOnFulfillmentStrategy: { 'CS3410/CS3420': [CS3410.courseId] },
@@ -104,7 +104,7 @@ it('buildRequirementFulfillmentGraph phase 3 test 1', () => {
 });
 
 it('buildRequirementFulfillmentGraph phase 3 test 2', () => {
-  const graph = buildRequirementFulfillmentGraph({
+  const graph = buildRequirementFulfillmentGraphDeprecated({
     requirements,
     userCourses: [CS3410, CS3420, MATH4710],
     userChoiceOnFulfillmentStrategy: { 'CS3410/CS3420': [CS3410.courseId] },
@@ -121,7 +121,7 @@ it('buildRequirementFulfillmentGraph phase 3 test 2', () => {
 
 // The following test runs on a fully specified graph algorithm on complete user choices
 it('buildRequirementFulfillmentGraph phase 3 test 3', () => {
-  const graph = buildRequirementFulfillmentGraph({
+  const graph = buildRequirementFulfillmentGraphDeprecated({
     requirements,
     userCourses: [CS3410, CS3420, MATH4710],
     userChoiceOnFulfillmentStrategy: { 'CS3410/CS3420': [CS3410.courseId] },

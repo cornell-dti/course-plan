@@ -1,11 +1,11 @@
-import { getConstraintViolations } from './requirement-constraints-utils';
-import RequirementFulfillmentGraph, { CourseWithUniqueId } from './requirement-graph';
+import { getConstraintViolations } from '../requirement-constraints-utils';
+import { RequirementFulfillmentGraph } from '.';
+import { CourseForRequirementGraph } from './types';
 
-interface CourseForRequirementGraph extends CourseWithUniqueId {
-  readonly courseId: number;
-}
-
-export type BuildRequirementFulfillmentGraphParameters<
+/**
+ * @deprecated Use visitor pipeline model.
+ */
+export type BuildRequirementFulfillmentGraphParametersDeprecated<
   Requirement extends string,
   Course extends CourseForRequirementGraph
 > = {
@@ -50,7 +50,10 @@ export type BuildRequirementFulfillmentGraphParameters<
   ) => readonly number[];
 };
 
-export const buildRequirementFulfillmentGraph = <
+/**
+ * @deprecated Use visitor pipeline model.
+ */
+export const buildRequirementFulfillmentGraphDeprecated = <
   Requirement extends string,
   Course extends CourseForRequirementGraph
 >({
@@ -59,10 +62,10 @@ export const buildRequirementFulfillmentGraph = <
   userChoiceOnFulfillmentStrategy,
   userChoiceOnRequirementOverrides,
   getAllCoursesThatCanPotentiallySatisfyRequirement,
-}: BuildRequirementFulfillmentGraphParameters<Requirement, Course>): RequirementFulfillmentGraph<
+}: BuildRequirementFulfillmentGraphParametersDeprecated<
   Requirement,
   Course
-> => {
+>): RequirementFulfillmentGraph<Requirement, Course> => {
   const graph = new RequirementFulfillmentGraph<Requirement, Course>();
   const userCourseCourseIDToCourseMap = new Map<number, Course[]>();
   userCourses.forEach(course => {
@@ -118,6 +121,9 @@ export const buildRequirementFulfillmentGraph = <
   return graph;
 };
 
+/**
+ * @deprecated Use visitor pipeline model.
+ */
 export const removeIllegalEdgesFromRequirementFulfillmentGraph = <
   Requirement extends string,
   Course extends CourseForRequirementGraph

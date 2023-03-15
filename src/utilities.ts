@@ -1,4 +1,4 @@
-import { fullCoursesArray } from './assets/courses/typed-full-courses';
+import { fullCoursesArray, fullCoursesJson } from './assets/courses/typed-full-courses';
 import requirementJSON from './requirements/typed-requirement-json';
 import { coursesColorSet } from './assets/constants/colors';
 
@@ -221,3 +221,9 @@ export const isCourseTaken = (
 export function sumBy<E>(collection: readonly E[], f: (e: E) => number): number {
   return collection.reduce((sum, e) => sum + f(e), 0);
 }
+
+// Converts a FirestoreSemesterCourse or CourseTaken to the first applicable CornellCourseRosterCourse
+export const convertCourseToCourseRoster = (
+  course: FirestoreSemesterCourse | CourseTaken
+): CornellCourseRosterCourse =>
+  fullCoursesJson[isCourseTaken(course) ? course.courseId : course.crseId][0];

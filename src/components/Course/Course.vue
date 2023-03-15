@@ -32,6 +32,8 @@
               v-if="!isReqCourse && compact"
               :course="courseObj"
               :isCompactView="true"
+              @open-conflict-modal="openConflictModal"
+              @close-conflict-modal="closeConflictModal"
             />
           </div>
           <button v-if="!isReqCourse" class="course-dotRow" @click="openMenu">
@@ -42,7 +44,13 @@
         <div v-if="!compact" class="course-info">
           <span class="course-credits">{{ creditString }}</span>
           <span v-if="semesterString" class="course-semesters">{{ semesterString }}</span>
-          <course-caution v-if="!isReqCourse" :course="courseObj" :isCompactView="false" />
+          <course-caution
+            v-if="!isReqCourse"
+            :course="courseObj"
+            :isCompactView="false"
+            @open-conflict-modal="openConflictModal"
+            @close-conflict-modal="closeConflictModal"
+          />
         </div>
       </div>
     </div>
@@ -100,6 +108,7 @@ export default defineComponent({
       getCreditRange: this.courseObj.creditRange,
       isEditColorOpen: false,
       editedColor: '',
+      isConflictModalOpen: false,
     };
   },
   computed: {
@@ -162,7 +171,7 @@ export default defineComponent({
       this.closeMenuIfOpen();
     },
     courseOnClick() {
-      if (!this.menuOpen) {
+      if (!this.menuOpen && !this.isConflictModalOpen) {
         this.$emit('course-on-click', this.courseObj);
         addCourseToBottomBar(this.courseObj);
       }
@@ -172,6 +181,12 @@ export default defineComponent({
       this.closeMenuIfOpen();
     },
     isCourseConflict,
+    openConflictModal() {
+      this.isConflictModalOpen = true;
+    },
+    closeConflictModal() {
+      this.isConflictModalOpen = false;
+    },
   },
   directives: {
     'click-outside': clickOutside,

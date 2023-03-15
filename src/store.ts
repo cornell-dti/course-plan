@@ -3,7 +3,7 @@ import { doc, getDoc, onSnapshot, setDoc, updateDoc } from 'firebase/firestore';
 
 import * as fb from './firebase-config';
 import computeGroupedRequirementFulfillmentReports from './requirements/requirement-frontend-computation';
-import RequirementFulfillmentGraph from './requirements/requirement-graph';
+import { ReadonlyRequirementFulfillmentGraph } from './requirements/graph';
 import { createAppOnboardingData } from './user-data-converter';
 import {
   allocateAllSubjectColor,
@@ -15,7 +15,6 @@ import {
   isPlaceholderCourse,
   getFirstPlan,
 } from './utilities';
-import featureFlagCheckers from './feature-flags';
 
 type SimplifiedFirebaseUser = { readonly displayName: string; readonly email: string };
 
@@ -41,8 +40,8 @@ export type VuexStoreState = {
   toggleableRequirementChoices: AppToggleableRequirementChoices;
   overriddenFulfillmentChoices: FirestoreOverriddenFulfillmentChoices;
   userRequirementsMap: Readonly<Record<string, RequirementWithIDSourceType>>;
-  dangerousRequirementFulfillmentGraph: RequirementFulfillmentGraph<string, CourseTaken>;
-  safeRequirementFulfillmentGraph: RequirementFulfillmentGraph<string, CourseTaken>;
+  dangerousRequirementFulfillmentGraph: ReadonlyRequirementFulfillmentGraph<string, CourseTaken>;
+  safeRequirementFulfillmentGraph: ReadonlyRequirementFulfillmentGraph<string, CourseTaken>;
   courseToRequirementsInConstraintViolations: ReadonlyMap<string | number, Set<string[]>>;
   doubleCountedCourseUniqueIDSet: ReadonlySet<string | number>;
   groupedRequirementFulfillmentReport: readonly GroupedRequirementFulfillmentReport[];
@@ -359,7 +358,6 @@ export const updateSubjectColorData = (color: string, code: string): void => {
 };
 
 export const isCourseConflict = (uniqueId: string | number): boolean =>
-  featureFlagCheckers.isRequirementConflictsEnabled() &&
   store.state.doubleCountedCourseUniqueIDSet.has(uniqueId);
 
 fb.auth.onAuthStateChanged(user => {

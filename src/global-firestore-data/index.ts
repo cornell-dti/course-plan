@@ -25,11 +25,14 @@ export {
 } from './user-semesters';
 export { default as chooseToggleableRequirementOption } from './user-toggleable-requirement-choices';
 export {
-  updateRequirementChoice,
-  toggleRequirementChoice,
   updateRequirementChoices,
+  updateRequirementChoice,
+  deleteCoursesFromRequirementChoices,
   deleteCourseFromRequirementChoices,
-} from './user-overridden-fulfillment-choices';
-export { incrementUniqueID };
+  addOptOut,
+  addAcknowledgedCheckerWarningOptIn,
+  addArbitraryOptIn,
+  resolveConflicts,
+} from './overridden-fulfillment-choices';
 
 export { default as retrieveAnalytics } from './track-users';

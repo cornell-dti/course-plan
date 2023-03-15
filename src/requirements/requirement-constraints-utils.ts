@@ -1,7 +1,8 @@
-import RequirementFulfillmentGraph, { CourseWithUniqueId } from './requirement-graph';
+import { RequirementFulfillmentGraph, ReadonlyRequirementFulfillmentGraph } from './graph';
+import { CourseWithUniqueId } from './graph/types';
 
 type RequirementFulfillmentGraphConstraintViolations<Requirement extends string> = {
-  constraintViolationsGraph: RequirementFulfillmentGraph<Requirement, CourseWithUniqueId>;
+  constraintViolationsGraph: ReadonlyRequirementFulfillmentGraph<Requirement, CourseWithUniqueId>;
   courseToRequirementsInConstraintViolations: Map<string | number, Set<Requirement[]>>;
   doubleCountedCourseUniqueIDSet: Set<string | number>;
   requirementsThatDoNotAllowDoubleCounting: Set<Requirement>;
@@ -53,7 +54,6 @@ export const getConstraintViolationsForSingleCourse = <Requirement extends strin
         requirement,
         constraintViolatingRequirementsForCurrentRequirement
       );
-      constraintViolationsGraph.addRequirementNode(requirement);
       constraintViolationsGraph.addEdge(requirement, course);
       doubleCountedCourseUniqueIDSet.add(course.uniqueId);
       requirementsThatDoNotAllowDoubleCounting.add(requirement);
@@ -83,7 +83,7 @@ export const getConstraintViolationsForSingleCourse = <Requirement extends strin
 };
 
 export const getConstraintViolations = <Requirement extends string>(
-  graph: RequirementFulfillmentGraph<Requirement, CourseWithUniqueId>,
+  graph: ReadonlyRequirementFulfillmentGraph<Requirement, CourseWithUniqueId>,
   requirementConstraintHolds: (requirementA: Requirement, requirementB: Requirement) => boolean
 ): RequirementFulfillmentGraphConstraintViolations<Requirement> => {
   const constraintViolationsGraph = new RequirementFulfillmentGraph<

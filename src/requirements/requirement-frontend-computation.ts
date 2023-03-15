@@ -6,9 +6,8 @@ import {
   convertFirestoreSemesterCourseToCourseTaken,
   computeFulfillmentCoursesAndStatistics,
 } from './requirement-frontend-utils';
-import RequirementFulfillmentGraph from './requirement-graph';
+import { ReadonlyRequirementFulfillmentGraph } from './graph';
 import buildRequirementFulfillmentGraphFromUserData from './requirement-graph-builder-from-user-data';
-import featureFlagCheckers from '../feature-flags';
 
 /**
  * Used for total academic credit requirements for all colleges except EN and AR
@@ -204,8 +203,14 @@ export default function computeGroupedRequirementFulfillmentReports(
   overriddenFulfillmentChoices: FirestoreOverriddenFulfillmentChoices
 ): {
   readonly userRequirementsMap: Readonly<Record<string, RequirementWithIDSourceType>>;
-  readonly dangerousRequirementFulfillmentGraph: RequirementFulfillmentGraph<string, CourseTaken>;
-  readonly safeRequirementFulfillmentGraph: RequirementFulfillmentGraph<string, CourseTaken>;
+  readonly dangerousRequirementFulfillmentGraph: ReadonlyRequirementFulfillmentGraph<
+    string,
+    CourseTaken
+  >;
+  readonly safeRequirementFulfillmentGraph: ReadonlyRequirementFulfillmentGraph<
+    string,
+    CourseTaken
+  >;
   readonly courseToRequirementsInConstraintViolations: Map<string | number, Set<string[]>>;
   readonly doubleCountedCourseUniqueIDSet: ReadonlySet<string | number>;
   readonly groupedRequirementFulfillmentReport: readonly GroupedRequirementFulfillmentReport[];
@@ -342,16 +347,7 @@ export function groupedRequirementDangerouslyFulfilled(
   groupedRequirementFulfillmentReport.reqs.forEach(req => {
     [req.fulfillment, ...Object.values(req.fulfillment.additionalRequirements ?? {})].forEach(
       reqOrNestedReq => {
-        if (
-          reqOrNestedReq.dangerousMinCountFulfilled >= reqOrNestedReq.minCountRequired &&
-          !featureFlagCheckers.isRequirementConflictsEnabled()
-        ) {
-          fulfilled += 1;
-        }
-        if (
-          reqOrNestedReq.safeMinCountFulfilled >= reqOrNestedReq.minCountRequired &&
-          featureFlagCheckers.isRequirementConflictsEnabled()
-        ) {
+        if (reqOrNestedReq.safeMinCountFulfilled >= reqOrNestedReq.minCountRequired) {
           fulfilled += 1;
         }
       }

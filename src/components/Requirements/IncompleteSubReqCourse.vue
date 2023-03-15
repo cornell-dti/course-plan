@@ -1,9 +1,21 @@
 <template>
   <div class="incompletesubreqcourse" v-if="courses.length > 0">
+    <replace-course-modal
+      v-if="replaceModalVisible"
+      @close-replace-course-modal="onReplaceCourseModalClose"
+    />
     <div class="draggable-requirements-wrapper" v-if="displayDescription">
       <div class="separator"></div>
       <div class="draggable-requirements-heading">
-        <div class="draggable-requirements-heading-label">{{ addCourseLabel }}</div>
+        <div class="draggable-requirements-heading-label">
+          {{ addCourseLabel }}
+        </div>
+        <button
+          v-if="showSettingsButton"
+          class="reqCourse-button"
+          @click="openReplaceSlotMenu"
+          data-cyId="gear-incomplete-subreq"
+        />
         <button
           v-if="showSeeAllLabel"
           class="draggable-requirements-heading-seeAll"
@@ -34,6 +46,12 @@
         </template>
       </draggable>
     </div>
+    <replace-slot-menu
+      v-if="replaceSlotMenuOpen"
+      :position="replaceSlotMenuPosition"
+      @close-slot-menu="closeReplaceSlotMenu"
+      @open-replace-slot-modal="onReplaceModalOpen"
+    />
   </div>
 </template>
 
@@ -41,24 +59,33 @@
 import { PropType, defineComponent } from 'vue';
 import draggable from 'vuedraggable';
 import Course from '@/components/Course/Course.vue';
-import { incrementUniqueID } from '@/global-firestore-data';
+import incrementUniqueID from '@/global-firestore-data/user-unique-incrementer';
 import { GTagEvent } from '@/gtag';
+import ReplaceSlotMenu from '@/components/Modals/ReplaceSlotMenu.vue';
+import ReplaceCourseModal from '@/components/Modals/ReplaceCourseModal.vue';
+import featureFlagCheckers from '@/feature-flags';
 
 export default defineComponent({
-  components: { draggable, Course },
+  components: { draggable, Course, ReplaceSlotMenu, ReplaceCourseModal },
+  data: () => ({
+    replaceModalVisible: false,
+    scrollable: false,
+    replaceSlotMenuOpen: false,
+    mousePosition: { x: 0, y: 0 },
+  }),
   mounted() {
-    this.$el.addEventListener('touchmove', this.dragListener, { passive: false });
-  },
-  data() {
-    return {
-      scrollable: false,
-    };
+    this.$el.addEventListener('touchmove', this.dragListener, {
+      passive: false,
+    });
   },
   beforeUnmount() {
     this.$el.removeEventListener('touchmove', this.dragListener);
   },
   props: {
-    subReq: { type: Object as PropType<RequirementFulfillment>, required: true },
+    subReq: {
+      type: Object as PropType<RequirementFulfillment>,
+      required: true,
+    },
     slotName: { type: String, required: true },
     courses: {
       type: Array as PropType<readonly AppFirestoreSemesterCourseWithRequirementID[]>,
@@ -69,6 +96,9 @@ export default defineComponent({
   },
   emits: ['onShowAllCourses'],
   computed: {
+    showSettingsButton() {
+      return featureFlagCheckers.isReplaceModalEnabled();
+    },
     addCourseLabel(): string {
       let label = 'Add Course';
       if (this.subReq.fulfillment.fulfilledBy === 'courses') {
@@ -91,6 +121,11 @@ export default defineComponent({
     coursesWithoutRequirementID(): readonly FirestoreSemesterCourse[] {
       return this.courses.map(({ requirementID: _, ...rest }) => rest);
     },
+    replaceSlotMenuPosition(): { x: number; y: number } {
+      return window.innerWidth > 863
+        ? { x: this.mousePosition.x + 10, y: this.mousePosition.y - 14 }
+        : { x: this.mousePosition.x - 120, y: this.mousePosition.y - 7 };
+    },
   },
   methods: {
     onDrag() {
@@ -110,6 +145,22 @@ export default defineComponent({
     },
     onShowAllCourses() {
       this.$emit('onShowAllCourses');
+    },
+    onReplaceModalOpen(): void {
+      this.replaceModalVisible = true;
+    },
+    onReplaceCourseModalClose(): void {
+      this.replaceModalVisible = false;
+    },
+    openReplaceSlotMenu(e: MouseEvent) {
+      this.mousePosition = {
+        x: e.clientX,
+        y: e.clientY,
+      };
+      this.replaceSlotMenuOpen = true;
+    },
+    closeReplaceSlotMenu() {
+      this.replaceSlotMenuOpen = false;
     },
   },
 });
@@ -173,6 +224,15 @@ export default defineComponent({
   &-course:active:hover {
     touch-action: none;
     cursor: grabbing;
+  }
+}
+
+.reqCourse-button {
+  padding: 0 0.5rem 0rem;
+  cursor: pointer;
+  background: url('@/assets/images/gear.svg') no-repeat;
+  &:hover {
+    background: url('@/assets/images/settingsBlue.svg') no-repeat;
   }
 }
 </style>
