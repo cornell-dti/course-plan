@@ -1,8 +1,7 @@
-import { Course, genCourseEntries } from "../parse";
+import { Course, genCourseEntries } from '../parse';
 
-describe("Parse function", () => {
-  test("It should test that valid data is parsed into the corresponding Course[]", () => {
-    
+describe('Parse function', () => {
+  test('It should test that valid data is parsed into the corresponding Course[]', () => {
     const input = [
       [
         {
@@ -10,9 +9,9 @@ describe("Parse function", () => {
           dir: 'ltr',
           width: 157.51871999999997,
           height: 6.96,
-          transform: [ 6.96, 0, 0, 6.96, 520.39, 497.14 ],
-          fontName: 'g_d0_f2'
-        }
+          transform: [6.96, 0, 0, 6.96, 520.39, 497.14],
+          fontName: 'g_d0_f2',
+        },
       ],
       [
         {
@@ -21,8 +20,8 @@ describe("Parse function", () => {
           width: 15.473880000000001,
           height: 6.36,
           transform: [Array],
-          fontName: 'g_d0_f1'
-        }
+          fontName: 'g_d0_f1',
+        },
       ],
       [
         {
@@ -31,8 +30,8 @@ describe("Parse function", () => {
           width: 12.96008,
           height: 6.36,
           transform: [Array],
-          fontName: 'g_d0_f1'
-        }
+          fontName: 'g_d0_f1',
+        },
       ],
       [
         {
@@ -41,8 +40,8 @@ describe("Parse function", () => {
           width: 66.44928000000002,
           height: 6.36,
           transform: [Array],
-          fontName: 'g_d0_f1'
-        }
+          fontName: 'g_d0_f1',
+        },
       ],
       [
         {
@@ -51,8 +50,8 @@ describe("Parse function", () => {
           width: 12.63096,
           height: 6.36,
           transform: [Array],
-          fontName: 'g_d0_f1'
-        }
+          fontName: 'g_d0_f1',
+        },
       ],
       [
         {
@@ -61,8 +60,8 @@ describe("Parse function", () => {
           width: 12.1476,
           height: 6.36,
           transform: [Array],
-          fontName: 'g_d0_f1'
-        }
+          fontName: 'g_d0_f1',
+        },
       ],
       [
         {
@@ -71,8 +70,8 @@ describe("Parse function", () => {
           width: 3.22452,
           height: 6.36,
           transform: [Array],
-          fontName: 'g_d0_f1'
-        }
+          fontName: 'g_d0_f1',
+        },
       ],
       [
         {
@@ -81,8 +80,8 @@ describe("Parse function", () => {
           width: 20.4792,
           height: 6.36,
           transform: [Array],
-          fontName: 'g_d0_f1'
-        }
+          fontName: 'g_d0_f1',
+        },
       ],
       [
         {
@@ -91,8 +90,8 @@ describe("Parse function", () => {
           width: 18.329520000000002,
           height: 6.36,
           transform: [Array],
-          fontName: 'g_d0_f1'
-        }
+          fontName: 'g_d0_f1',
+        },
       ],
       [
         {
@@ -101,8 +100,8 @@ describe("Parse function", () => {
           width: 12.96008,
           height: 6.36,
           transform: [Array],
-          fontName: 'g_d0_f1'
-        }
+          fontName: 'g_d0_f1',
+        },
       ],
       [
         {
@@ -111,8 +110,8 @@ describe("Parse function", () => {
           width: 137.41415999999998,
           height: 6.36,
           transform: [Array],
-          fontName: 'g_d0_f1'
-        }
+          fontName: 'g_d0_f1',
+        },
       ],
       [
         {
@@ -121,8 +120,8 @@ describe("Parse function", () => {
           width: 10.971,
           height: 6.36,
           transform: [Array],
-          fontName: 'g_d0_f1'
-        }
+          fontName: 'g_d0_f1',
+        },
       ],
       [
         {
@@ -131,8 +130,8 @@ describe("Parse function", () => {
           width: 10.03608,
           height: 6.36,
           transform: [Array],
-          fontName: 'g_d0_f1'
-        }
+          fontName: 'g_d0_f1',
+        },
       ],
       [
         {
@@ -141,8 +140,8 @@ describe("Parse function", () => {
           width: 3.22452,
           height: 6.36,
           transform: [Array],
-          fontName: 'g_d0_f1'
-        }
+          fontName: 'g_d0_f1',
+        },
       ],
       [
         {
@@ -151,8 +150,8 @@ describe("Parse function", () => {
           width: 20.4792,
           height: 6.36,
           transform: [Array],
-          fontName: 'g_d0_f1'
-        }
+          fontName: 'g_d0_f1',
+        },
       ],
       [
         {
@@ -161,8 +160,8 @@ describe("Parse function", () => {
           width: 15.81096,
           height: 6.36,
           transform: [Array],
-          fontName: 'g_d0_f1'
-        }
+          fontName: 'g_d0_f1',
+        },
       ],
       [
         {
@@ -171,8 +170,8 @@ describe("Parse function", () => {
           width: 12.96008,
           height: 6.36,
           transform: [Array],
-          fontName: 'g_d0_f1'
-        }
+          fontName: 'g_d0_f1',
+        },
       ],
       [
         {
@@ -181,8 +180,8 @@ describe("Parse function", () => {
           width: 50.180400000000006,
           height: 6.36,
           transform: [Array],
-          fontName: 'g_d0_f1'
-        }
+          fontName: 'g_d0_f1',
+        },
       ],
       [
         {
@@ -191,8 +190,8 @@ describe("Parse function", () => {
           width: 10.971,
           height: 6.36,
           transform: [Array],
-          fontName: 'g_d0_f1'
-        }
+          fontName: 'g_d0_f1',
+        },
       ],
       [
         {
@@ -201,8 +200,8 @@ describe("Parse function", () => {
           width: 5.512040000000001,
           height: 6.36,
           transform: [Array],
-          fontName: 'g_d0_f1'
-        }
+          fontName: 'g_d0_f1',
+        },
       ],
       [
         {
@@ -211,27 +210,27 @@ describe("Parse function", () => {
           width: 3.22452,
           height: 6.36,
           transform: [Array],
-          fontName: 'g_d0_f1'
-        }
-      ]
+          fontName: 'g_d0_f1',
+        },
+      ],
     ];
 
-    const output: Course[] = [ 
+    const output: Course[] = [
       {
         subject: 'ANSC',
         catalogNbr: 4140,
-        categories: [ 'KCM' ]
+        categories: ['KCM'],
       },
       {
         subject: 'ANTHR',
         catalogNbr: 1300,
-        categories: [ 'SBA' ]
+        categories: ['SBA'],
       },
       {
         subject: 'ARAB',
         catalogNbr: 1201,
-        categories: [ 'FL' ]
-      }
+        categories: ['FL'],
+      },
     ];
     expect(genCourseEntries(input)).toEqual(output);
   });

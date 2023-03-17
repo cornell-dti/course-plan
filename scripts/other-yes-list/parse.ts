@@ -7,16 +7,16 @@ import { readFile } from 'fs/promises';
 // genTextContextMatrix(text).then((table: any) => console.log(table.slice(22,100)));
 
 export type Course = {
-	/** Corresponds to the "prefix" column on the PDF */
-	subject: string;
+  /** Corresponds to the "prefix" column on the PDF */
+  subject: string;
   /** Corresponds to the "code" column on the PDF */
   catalogNbr: number;
-	/** The liberal studies categories satisfied by the course */
+  /** The liberal studies categories satisfied by the course */
   categories: readonly string[];
-}
- 
+};
+
 // parses PDF into matrix
-export async function getPDF()  {
+export async function getPDF() {
   const pdfPath = await readFile('./ApprovedLiberalStudies.pdf');
   return genTextContextMatrix(pdfPath);
 }
@@ -33,15 +33,15 @@ export function genCourseEntries(data) {
   // find the index of the first course (right after Notes)
   let start = 0;
   for (let i = 0; i < data.length; i++) {
-    try { 
+    try {
       const v = data[i][0].str.trim();
-      if (v.slice(0,5) === 'Notes') {
-        start = i+1;
+      if (v.slice(0, 5) === 'Notes') {
+        start = i + 1;
       }
     } catch {
       // in case there is no list of approved courses
     }
-  };
+  }
   // assumes that the columns are ordered and there are no empty cells
   for (let i = start; i < data.length; i++) {
     try {
@@ -67,7 +67,7 @@ export function genCourseEntries(data) {
         // credits = creditList;
         col = 'course prefix';
 
-        const course = { subject, catalogNbr, categories};
+        const course = { subject, catalogNbr, categories };
         courseEntries.push(course);
       }
     } catch {
