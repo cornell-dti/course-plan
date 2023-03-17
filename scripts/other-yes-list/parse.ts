@@ -32,7 +32,7 @@ export function genCourseEntries(data) {
 
   // find the index of the first course (right after Notes)
   let start = 0;
-  for (let i = 0; i < data.length; i++) {
+  for (let i = 0; i < data.length; i += 1) {
     try {
       const v = data[i][0].str.trim();
       if (v.slice(0, 5) === 'Notes') {
@@ -43,7 +43,7 @@ export function genCourseEntries(data) {
     }
   }
   // assumes that the columns are ordered and there are no empty cells
-  for (let i = start; i < data.length; i++) {
+  for (let i = start; i < data.length; i += 1) {
     try {
       const v = data[i][0].str.trim();
       if (col === 'course prefix' && v.length <= 5) {
