@@ -1,11 +1,3 @@
-import { genTextContextMatrix } from 'pdf-to-excel';
-import { readFile } from 'fs/promises';
-// import { readFileSync } from 'fs';
-
-// Original text matrix
-// const text = readFileSync('./ApprovedLiberalStudies.pdf');
-// genTextContextMatrix(text).then((table: any) => console.log(table.slice(22,100)));
-
 export type Course = {
   /** Corresponds to the "prefix" column on the PDF */
   subject: string;
@@ -15,16 +7,9 @@ export type Course = {
   categories: readonly string[];
 };
 
-// parses PDF into matrix
-export async function getPDF() {
-  const pdfPath = await readFile('./ApprovedLiberalStudies.pdf');
-  return genTextContextMatrix(pdfPath);
-}
-
 // creates list of course entries
 export function genCourseEntries(data) {
-  // eslint-disable-next-line prefer-const
-  let courseEntries: Course[] = [];
+  const courseEntries: Course[] = [];
   let col = 'course prefix';
   let subject = '';
   let catalogNbr = 0;
@@ -76,5 +61,3 @@ export function genCourseEntries(data) {
   }
   return courseEntries.filter(course => !Number.isNaN(course.catalogNbr));
 }
-
-// getPDF().then(pdf => console.log(genCourseEntries(pdf)));
