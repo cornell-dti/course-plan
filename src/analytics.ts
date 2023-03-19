@@ -1,5 +1,4 @@
 type EventPayload = { event_category: string; event_label: string; value: number };
-type LoginEventPayload = { method: string };
 import { analytics } from './firebase-config';
 import { isSupported, logEvent as firebaseLogEvent } from 'firebase/analytics';
 
