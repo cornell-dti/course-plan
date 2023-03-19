@@ -4,8 +4,7 @@ import { isSupported, logEvent as firebaseLogEvent } from 'firebase/analytics';
 
 /** loginEvent represents the gtag that tracks when users login. */
 export const loginEvent = async (method: string): Promise<void> => {
-  if (await isSupported())
-    firebaseLogEvent(analytics, 'login', { method });
+  if (await isSupported()) firebaseLogEvent(analytics, 'login', { method });
 };
 
 type EventType =
@@ -205,6 +204,5 @@ export const logEvent = async (eventType: EventType): Promise<void> => {
     default:
       return;
   }
-  if (await isSupported())
-    firebaseLogEvent(analytics, eventType, eventPayload);
+  if (await isSupported()) firebaseLogEvent(analytics, eventType, eventPayload);
 };
