@@ -83,7 +83,7 @@
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
 import { reviewColors } from '@/assets/constants/colors';
-import { GTagEvent } from '@/gtag';
+import { logEvent } from '@/analytics';
 
 const noneIfEmpty = (str: string): string => (str && str.length !== 0 ? str : 'None');
 
@@ -112,7 +112,7 @@ export default defineComponent({
     },
 
     clickCUReviewsLink(): void {
-      GTagEvent(this.$gtag, 'bottom-bar-CU-reviews-link');
+      logEvent('bottom-bar-CU-reviews-link');
     },
   },
 

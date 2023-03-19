@@ -1,14 +1,12 @@
 type EventPayload = { event_category: string; event_label: string; value: number };
 type LoginEventPayload = { method: string };
+import { analytics } from './firebase-config';
+import { isSupported, logEvent as firebaseLogEvent } from 'firebase/analytics';
 
-export type GTag = {
-  event(eventType: string, eventPayload: LoginEventPayload | EventPayload): void;
-};
-
-/** GTagLoginEvent represents the gtag that tracks when users login. */
-export const GTagLoginEvent = (gtag: GTag | undefined, method: string): void => {
-  if (!gtag) return;
-  gtag.event('login', { method });
+/** loginEvent represents the gtag that tracks when users login. */
+export const loginEvent = async (method: string): Promise<void> => {
+  if (await isSupported())
+    firebaseLogEvent(analytics, 'login', { method });
 };
 
 type EventType =
@@ -37,12 +35,11 @@ type EventType =
   | 'to-not-compact'; // User sets the semester view to default
 
 /**
- * GTagEvent represents a gtag event.
+ * logEvent represents a gtag event.
  * @param gtag is the global site tag that sends events to Google Analytics
  * @param eventType specifies the type of event that the gtag sends
  */
-export const GTagEvent = (gtag: GTag | undefined, eventType: EventType): void => {
-  if (!gtag) return;
+export const logEvent = async (eventType: EventType): Promise<void> => {
   let eventPayload: EventPayload | undefined;
   switch (eventType) {
     case 'add-course':
@@ -209,5 +206,6 @@ export const GTagEvent = (gtag: GTag | undefined, eventType: EventType): void =>
     default:
       return;
   }
-  gtag.event(eventType, eventPayload);
+  if (await isSupported())
+    firebaseLogEvent(analytics, eventType, eventPayload);
 };

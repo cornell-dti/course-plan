@@ -2,7 +2,7 @@ import { doc, updateDoc } from 'firebase/firestore';
 
 import { semestersCollection } from '../firebase-config';
 import store from '../store';
-import { GTag, GTagEvent } from '../gtag';
+import { logEvent } from '../analytics';
 import { sortedSemesters } from '../utilities';
 
 import {
@@ -90,10 +90,9 @@ export const addCourseToSemester = (
   year: number,
   season: FirestoreSemesterSeason,
   newCourse: FirestoreSemesterCourse,
-  choiceUpdater: (choice: FirestoreCourseOptInOptOutChoices) => FirestoreCourseOptInOptOutChoices,
-  gtag?: GTag
+  choiceUpdater: (choice: FirestoreCourseOptInOptOutChoices) => FirestoreCourseOptInOptOutChoices
 ): void => {
-  GTagEvent(gtag, 'add-course');
+  logEvent('add-course');
   editSemesters(oldSemesters => {
     let semesterFound = false;
     const newSemestersWithCourse = oldSemesters.map(sem => {
@@ -112,10 +111,9 @@ export const addCourseToSemester = (
 export const deleteCourseFromSemester = (
   year: number,
   season: FirestoreSemesterSeason,
-  courseUniqueID: number,
-  gtag?: GTag
+  courseUniqueID: number
 ): void => {
-  GTagEvent(gtag, 'delete-course');
+  logEvent('delete-course');
   const semester = store.state.semesters.find(sem => semesterEquals(sem, year, season));
   if (semester) {
     deleteCourseFromRequirementChoices(courseUniqueID);
@@ -132,10 +130,9 @@ export const deleteCourseFromSemester = (
 
 export const deleteAllCoursesFromSemester = (
   year: number,
-  season: FirestoreSemesterSeason,
-  gtag?: GTag
+  season: FirestoreSemesterSeason
 ): void => {
-  GTagEvent(gtag, 'delete-semester-courses');
+  logEvent('delete-semester-courses');
   const semester = store.state.semesters.find(sem => semesterEquals(sem, year, season));
   if (semester) {
     deleteCoursesFromRequirementChoices(semester.courses.map(course => course.uniqueID));
@@ -148,8 +145,8 @@ export const deleteAllCoursesFromSemester = (
   }
 };
 
-export const deleteCourseFromSemesters = (courseUniqueID: number, gtag?: GTag): void => {
-  GTagEvent(gtag, 'delete-course');
+export const deleteCourseFromSemesters = (courseUniqueID: number): void => {
+  logEvent('delete-course');
   editSemesters(oldSemesters =>
     oldSemesters.map(semester => {
       const coursesWithoutDeleted = semester.courses.filter(

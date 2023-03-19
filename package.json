@@ -37,7 +37,6 @@
     "jspdf-autotable": "^3.5.25",
     "node-fetch": "^2.6.7",
     "vue": "^3.2.19",
-    "vue-gtag-next": "^1.14.0",
     "vue-router": "^4.0.6",
     "vuedraggable": "^4.0.0",
     "vuex": "^4.0.2"

@@ -42,7 +42,7 @@ import { PropType, defineComponent } from 'vue';
 import draggable from 'vuedraggable';
 import Course from '@/components/Course/Course.vue';
 import { incrementUniqueID } from '@/global-firestore-data';
-import { GTagEvent } from '@/gtag';
+import { logEvent } from '@/analytics';
 
 export default defineComponent({
   components: { draggable, Course },
@@ -98,7 +98,7 @@ export default defineComponent({
     },
     onDrop() {
       this.scrollable = true;
-      GTagEvent(this.$gtag, 'requirements-bar-course-drag-and-drop');
+      logEvent('requirements-bar-course-drag-and-drop');
     },
     dragListener(event: { preventDefault: () => void }) {
       if (!this.scrollable) event.preventDefault();

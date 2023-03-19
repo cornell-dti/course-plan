@@ -55,7 +55,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { clickOutside } from '@/utilities';
-import { GTagEvent } from '@/gtag';
+import { logEvent } from '@/analytics';
 import TeleportModal from '@/components/Modals/TeleportModal.vue';
 
 export default defineComponent({
@@ -83,11 +83,11 @@ export default defineComponent({
     startTour(): void {
       this.$emit('startTour');
       this.$emit('closeTourWindow');
-      GTagEvent(this.$gtag, 'start-walkthrough');
+      logEvent('start-walkthrough');
     },
     skipTour(): void {
       this.$emit('closeTourWindow');
-      GTagEvent(this.$gtag, 'skip-walkthrough');
+      logEvent('skip-walkthrough');
     },
   },
 });

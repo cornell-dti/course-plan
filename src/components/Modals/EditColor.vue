@@ -34,7 +34,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import TeleportModal from '@/components/Modals/TeleportModal.vue';
-import { GTagEvent } from '@/gtag';
+import { logEvent } from '@/analytics';
 
 export default defineComponent({
   components: { TeleportModal },
@@ -66,10 +66,10 @@ export default defineComponent({
     editColor(scope: string) {
       if (scope === 'course') {
         this.$emit('color-course', this.editedColor.substring(1));
-        GTagEvent(this.$gtag, 'course-edit-color');
+        logEvent('course-edit-color');
       } else {
         this.$emit('color-subject', this.editedColor.substring(1));
-        GTagEvent(this.$gtag, 'subject-edit-color');
+        logEvent('subject-edit-color');
       }
       this.closeCurrentModal();
     },

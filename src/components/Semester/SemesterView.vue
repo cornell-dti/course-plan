@@ -78,7 +78,7 @@ import Confirmation from '@/components/Modals/Confirmation.vue';
 import NewSemesterModal from '@/components/Modals/NewSemesterModal.vue';
 
 import store from '@/store';
-import { GTagEvent } from '@/gtag';
+import { logEvent } from '@/analytics';
 import { addSemester, deleteSemester } from '@/global-firestore-data';
 import { closeBottomBar } from '@/components/BottomBar/BottomBarState';
 import ViewDropdown from './ViewDropdown.vue';
@@ -122,7 +122,7 @@ export default defineComponent({
     toggleCompact(toggled: boolean) {
       if (toggled !== this.compact) {
         this.$emit('compact-updated', toggled);
-        GTagEvent(this.$gtag, toggled ? 'to-compact' : 'to-not-compact');
+        logEvent(toggled ? 'to-compact' : 'to-not-compact');
       }
     },
     openSemesterConfirmationModal(season: FirestoreSemesterSeason, year: number, isAdd: boolean) {

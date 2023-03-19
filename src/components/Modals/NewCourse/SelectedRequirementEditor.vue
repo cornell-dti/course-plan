@@ -72,7 +72,7 @@
 
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
-import { GTagEvent } from '@/gtag';
+import { logEvent } from '@/analytics';
 import RequirementsDropdown from '@/components/Modals/NewCourse/RequirementsDropdown.vue';
 
 export type RequirementWithID = { readonly id: string; readonly name: string };
@@ -135,7 +135,7 @@ export default defineComponent({
       this.$emit('on-selected-change', id);
     },
     toggleEditMode() {
-      GTagEvent(this.$gtag, 'add-modal-edit-requirements');
+      logEvent('add-modal-edit-requirements');
       this.$emit('edit-mode');
     },
   },

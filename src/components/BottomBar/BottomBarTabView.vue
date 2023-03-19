@@ -67,7 +67,7 @@ import {
   deleteBottomBarCourse,
   moveBottomBarCourseToFirst,
 } from '@/components/BottomBar/BottomBarState';
-import { GTagEvent } from '@/gtag';
+import { logEvent } from '@/analytics';
 
 export default defineComponent({
   components: { BottomBarTab },
@@ -103,7 +103,7 @@ export default defineComponent({
     moveBottomBarCourseToFirst,
     bottomBarSeeMoreToggle() {
       this.seeMoreOpen = !this.seeMoreOpen;
-      GTagEvent(this.$gtag, 'bottom-bar-see-more');
+      logEvent('bottom-bar-see-more');
     },
   },
 });
