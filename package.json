@@ -11,7 +11,7 @@
     "courses-gen": "npm run ts-node -- src/requirements/courses-json-generator.ts",
     "req-gen": "npm run ts-node -- src/requirements/requirement-json-generator.ts",
     "track-users": "npm run ts-node -- scripts/track-users.ts",
-    "courses-populate": "npm run ts-node -- scripts/populate/courses-populate.ts",
+    "courses-populate": "npm run ts-node -- scripts/migration/courses-populate.ts",
     "lint": "eslint . --cache",
     "tsc": "tsc",
     "type-check": "vue-tsc --noEmit",
