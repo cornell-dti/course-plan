@@ -1,5 +1,4 @@
 import { reactive } from 'vue';
-// import { GTag, GTagEvent } from '../../analytics';
 import { logEvent } from '../../analytics';
 import { checkNotNull } from '../../utilities';
 

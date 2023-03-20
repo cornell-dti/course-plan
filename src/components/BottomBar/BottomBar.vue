@@ -11,7 +11,7 @@
     <button
       class="bottombar-title full-opacity-on-hover"
       :class="{ expandedBottomBarTitle: isExpanded }"
-      @click="toggleBottomBar($gtag)"
+      @click="toggleBottomBar()"
     >
       <bottom-bar-title
         :color="focusedBottomBarCourse.color"

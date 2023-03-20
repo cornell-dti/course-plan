@@ -1,6 +1,7 @@
-type EventPayload = { event_category: string; event_label: string; value: number };
-import { analytics } from './firebase-config';
 import { isSupported, logEvent as firebaseLogEvent } from 'firebase/analytics';
+import { analytics } from './firebase-config';
+
+type EventPayload = { event_category: string; event_label: string; value: number };
 
 /** loginEvent represents the gtag that tracks when users login. */
 export const loginEvent = async (method: string): Promise<void> => {
