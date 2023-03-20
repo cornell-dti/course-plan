@@ -173,6 +173,10 @@ interface CornellCourseRosterCourseFullDetail extends CornellCourseRosterCourse 
   readonly catalogDistr?: string;
 }
 
+interface FullClassRosterCourseWithUniqueID extends CornellCourseRosterCourseFullDetail {
+  readonly uniqueID: number;
+}
+
 // college and grad are optional fields: grad can be undefined if the user hasn't selected a grad program, and college can be undefined if the user has only selected a grad program.
 type AppOnboardingData = {
   readonly gradYear: string;

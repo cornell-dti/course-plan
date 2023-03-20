@@ -1,11 +1,12 @@
 import { reactive } from 'vue';
 import { GTag, GTagEvent } from '../../gtag';
-import { checkNotNull } from '../../utilities';
 
 import {
   cornellCourseRosterCourseDetailedInformationToPartialBottomCourseInformation,
   firestoreSemesterCourseToBottomBarCourse,
 } from '../../user-data-converter';
+
+import { coursesCollection } from '../../../scripts/firebase-config';
 
 export type BottomBarState = {
   bottomCourses: readonly AppBottomBarCourse[];
@@ -38,14 +39,11 @@ const getDetailedInformationForBottomBar = async (
   subject: string,
   number: string
 ) => {
-  const courses: readonly CornellCourseRosterCourseFullDetail[] = (
-    await fetch(
-      `https://classes.cornell.edu/api/2.0/search/classes.json?roster=${roster}&subject=${subject}`
-    ).then(response => response.json())
-  ).data.classes;
-  return cornellCourseRosterCourseDetailedInformationToPartialBottomCourseInformation(
-    checkNotNull(courses.find(it => it.catalogNbr === number))
-  );
+  const course = (
+    await coursesCollection.doc(roster).collection(subject).doc(number).get()
+  ).data() as CornellCourseRosterCourseFullDetail;
+
+  return cornellCourseRosterCourseDetailedInformationToPartialBottomCourseInformation(course);
 };
 
 const getReviews = (
