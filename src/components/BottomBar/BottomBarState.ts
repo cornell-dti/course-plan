@@ -1,4 +1,5 @@
 import { reactive } from 'vue';
+import { doc, getDoc } from 'firebase/firestore';
 import { GTag, GTagEvent } from '../../gtag';
 
 import {
@@ -6,7 +7,9 @@ import {
   firestoreSemesterCourseToBottomBarCourse,
 } from '../../user-data-converter';
 
-import { coursesCollection } from '../../../scripts/firebase-config';
+import { coursesCollection } from '../../firebase-config';
+// import { coursesCollection } from '../../../scripts/firebase-config';
+import { checkNotNull } from '@/utilities';
 
 export type BottomBarState = {
   bottomCourses: readonly AppBottomBarCourse[];
@@ -39,11 +42,26 @@ const getDetailedInformationForBottomBar = async (
   subject: string,
   number: string
 ) => {
-  const course = (
-    await coursesCollection.doc(roster).collection(subject).doc(number).get()
-  ).data() as CornellCourseRosterCourseFullDetail;
+  const courses: readonly CornellCourseRosterCourseFullDetail[] = (
+    await fetch(
+      `https://classes.cornell.edu/api/2.0/search/classes.json?roster=${roster}&subject=${subject}`
+    ).then(response => response.json())
+  ).data.classes;
 
-  return cornellCourseRosterCourseDetailedInformationToPartialBottomCourseInformation(course);
+  // eslint-disable-next-line no-console
+  console.log(roster, subject, number);
+
+  const course = await getDoc(doc(coursesCollection, `${roster}/${subject}/${number}`));
+
+  if (course.data()) {
+    // eslint-disable-next-line no-console
+    const courseData = course.data() as CornellCourseRosterCourseFullDetail;
+    console.log(course.data());
+  }
+
+  return cornellCourseRosterCourseDetailedInformationToPartialBottomCourseInformation(
+    checkNotNull(courses.find(it => it.catalogNbr === number))
+  );
 };
 
 const getReviews = (
