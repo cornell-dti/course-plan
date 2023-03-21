@@ -56,7 +56,8 @@ const getDetailedInformationForBottomBar = async (
   if (course.data()) {
     // eslint-disable-next-line no-console
     const courseData = course.data() as CornellCourseRosterCourseFullDetail;
-    console.log(course.data());
+    console.log(courseData);
+    console.log(courseData.titleLong);
   }
 
   return cornellCourseRosterCourseDetailedInformationToPartialBottomCourseInformation(
