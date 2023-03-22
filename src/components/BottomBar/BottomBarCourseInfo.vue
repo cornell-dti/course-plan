@@ -58,7 +58,7 @@
 
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
-import { GTagEvent } from '@/gtag';
+import { logEvent } from '@/analytics';
 
 const joinOrNAString = (arr: readonly string[]): string =>
   arr.length !== 0 && arr[0] !== '' ? arr.join(', ') : 'N/A';
@@ -113,7 +113,7 @@ export default defineComponent({
 
   methods: {
     clickViewCourseInformationOnRoster(): void {
-      GTagEvent(this.$gtag, 'bottom-bar-view-course-information-on-roster');
+      logEvent('bottom-bar-view-course-information-on-roster');
     },
   },
 });

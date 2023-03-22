@@ -409,7 +409,7 @@ export default defineComponent({
     addCourse(data: CornellCourseRosterCourse, choice: FirestoreCourseOptInOptOutChoices) {
       const newCourse = cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData(data);
       // Since the course is new, we know the old choice does not exist.
-      addCourseToSemester(this.year, this.season, newCourse, () => choice, this.$gtag);
+      addCourseToSemester(this.year, this.season, newCourse, () => choice);
 
       const courseCode = `${data.subject} ${data.catalogNbr}`;
       this.openConfirmationModal(`Added ${courseCode} to ${this.season} ${this.year}`);
@@ -427,7 +427,7 @@ export default defineComponent({
         };
 
         // add the course to the semeser (with no choice made)
-        addCourseToSemester(this.year, this.season, newCourse, () => choice, this.$gtag);
+        addCourseToSemester(this.year, this.season, newCourse, () => choice);
         this.closeCourseModal();
 
         const conflicts = store.state.courseToRequirementsInConstraintViolations.get(
@@ -453,10 +453,10 @@ export default defineComponent({
       this.openConfirmationModal(`Added ${course.code} to ${this.season} ${this.year}`);
     },
     deleteCourseWithoutModal(uniqueID: number) {
-      deleteCourseFromSemester(this.year, this.season, uniqueID, this.$gtag);
+      deleteCourseFromSemester(this.year, this.season, uniqueID);
     },
     deleteCourse(courseCode: string, uniqueID: number) {
-      deleteCourseFromSemester(this.year, this.season, uniqueID, this.$gtag);
+      deleteCourseFromSemester(this.year, this.season, uniqueID);
       // Update requirements menu
       this.openConfirmationModal(`Removed ${courseCode} from ${this.season} ${this.year}`);
     },
@@ -557,7 +557,7 @@ export default defineComponent({
       this.isClearSemesterOpen = false;
     },
     clearSemester() {
-      deleteAllCoursesFromSemester(this.year, this.season, this.$gtag);
+      deleteAllCoursesFromSemester(this.year, this.season);
       this.openConfirmationModal(`Cleared ${this.season} ${this.year} in plan`);
     },
     walkthroughText() {

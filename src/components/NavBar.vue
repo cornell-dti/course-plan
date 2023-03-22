@@ -82,7 +82,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { getAuth, signOut } from 'firebase/auth';
-import { GTagEvent } from '@/gtag';
+import { logEvent } from '@/analytics';
 import { clickOutside } from '@/utilities';
 
 export default defineComponent({
@@ -97,7 +97,7 @@ export default defineComponent({
   },
   methods: {
     logout() {
-      GTagEvent(this.$gtag, 'logout');
+      logEvent('logout');
       const auth = getAuth();
       signOut(auth).then(() => window.location.reload());
     },

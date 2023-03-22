@@ -111,7 +111,7 @@ export default defineComponent({
           deleteTransferCredit(this.courseTaken.code);
         } else {
           const { uniqueId } = this.courseTaken;
-          if (typeof uniqueId === 'number') deleteCourseFromSemesters(uniqueId, this.$gtag);
+          if (typeof uniqueId === 'number') deleteCourseFromSemesters(uniqueId);
         }
       }
     },

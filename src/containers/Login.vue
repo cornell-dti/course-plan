@@ -149,7 +149,7 @@ import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 
 import CustomFooter from '@/components/Footer.vue';
 
-import { GTagLoginEvent } from '@/gtag';
+import { loginEvent } from '@/analytics';
 import store from '@/store';
 import { checkNotNull } from '@/utilities';
 
@@ -194,7 +194,7 @@ export default defineComponent({
           store.commit('setCurrentFirebaseUser', simplifiedUser);
           this.performingRequest = false;
           this.$router.push('/');
-          GTagLoginEvent(this.$gtag, 'Google');
+          loginEvent('Google');
         })
         .catch(err => {
           this.performingRequest = false;

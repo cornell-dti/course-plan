@@ -193,7 +193,7 @@ import {
   getMinorFullName,
   getGradFullName,
 } from '@/utilities';
-import { GTagEvent } from '@/gtag';
+import { logEvent } from '@/analytics';
 
 const placeholderText = 'Select one';
 
@@ -242,11 +242,11 @@ export default defineComponent({
   methods: {
     editBasicInformation(): void {
       this.setPage(1);
-      GTagEvent(this.$gtag, 'onboarding-edit-basic-information');
+      logEvent('onboarding-edit-basic-information');
     },
     editTransferCredits(): void {
       this.setPage(2);
-      GTagEvent(this.$gtag, 'onboarding-edit-transfer-credits');
+      logEvent('onboarding-edit-transfer-credits');
     },
     getMajorFullName,
     getMinorFullName,

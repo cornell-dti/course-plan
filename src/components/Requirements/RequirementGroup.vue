@@ -94,7 +94,7 @@
 
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
-import { GTagEvent } from '@/gtag';
+import { logEvent } from '@/analytics';
 import RequirementHeader from '@/components/Requirements/RequirementHeader.vue';
 import RequirementFulfillment from '@/components/Requirements/RequirementFulfillment.vue';
 import { getReqColor } from '@/utilities';
@@ -185,7 +185,7 @@ export default defineComponent({
       this.displayDetails = !this.displayDetails;
     },
     turnCompleted(bool: boolean) {
-      GTagEvent(this.$gtag, 'requirements-bar-filled-requirements-toggle');
+      logEvent('requirements-bar-filled-requirements-toggle');
       this.displayCompleted = bool;
     },
   },

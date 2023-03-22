@@ -1,0 +1,217 @@
+import {
+  logEvent as firebaseLogEvent,
+  isSupported,
+  Analytics,
+  getAnalytics,
+} from 'firebase/analytics';
+import { app } from './firebase-config';
+
+type EventPayload = { event_category: string; event_label: string; value: number };
+
+export const analytics: Analytics | null = (await isSupported()) ? getAnalytics(app) : null;
+
+/** loginEvent represents the gtag that tracks when users login. */
+export const loginEvent = (method: string): void => {
+  if (analytics != null) firebaseLogEvent(analytics, 'login', { method });
+};
+
+type EventType =
+  | 'add-course' // User adds a course
+  | 'add-modal-edit-requirements' // User clicks Edit Requirements on Add Modal
+  | 'add-semester' // User adds a semester
+  | 'bottom-bar-close' // User collapses or closes the Bottom Bar
+  | 'bottom-bar-CU-reviews-link' // User clicks CU Reviews link on Bottom Bar
+  | 'bottom-bar-delete-tab' // User deletes a tab on the Bottom Bar
+  | 'bottom-bar-open' // User opens or expands the Bottom Bar
+  | 'bottom-bar-see-more' // User clicks on the See More tab of the Bottom Bar
+  | 'bottom-bar-view-course-information-on-roster' // User clicks View Course Information on Roster link on Bottom Bar
+  | 'course-edit-color' // User edits the course color
+  | 'subject-edit-color' // User edits the subject color
+  | 'delete-course' // User deletes a course
+  | 'delete-semester' // User deletes a semester
+  | 'delete-semester-courses' // User deletes all courses in a semester
+  | 'logout' // User logs out
+  | 'onboarding-edit-basic-information' // User clicks to edit basic info on the review page of Onboarding
+  | 'onboarding-edit-transfer-credits' // User clicks to edit transfer credits on the review page of Onboarding
+  | 'requirements-bar-course-drag-and-drop' // User drags and drops a course from the Requirements Bar
+  | 'requirements-bar-filled-requirements-toggle' // User toggles the SHOW/HIDE of Filled Requirements section on Requirements Bar
+  | 'skip-walkthrough' // User clicks to skip the walkthrough
+  | 'start-walkthrough' // User clicks to start the walkthrough
+  | 'to-compact' // User sets the semester view to compact
+  | 'to-not-compact'; // User sets the semester view to default
+
+/**
+ * logEvent represents a gtag event.
+ * @param gtag is the global site tag that sends events to Google Analytics
+ * @param eventType specifies the type of event that the gtag sends
+ */
+export const logEvent = async (eventType: EventType): Promise<void> => {
+  let eventPayload: EventPayload | undefined;
+  switch (eventType) {
+    case 'add-course':
+      eventPayload = {
+        event_category: 'course',
+        event_label: 'add',
+        value: 1,
+      };
+      break;
+    case 'add-modal-edit-requirements':
+      eventPayload = {
+        event_category: 'add-modal',
+        event_label: 'edit-requirements',
+        value: 1,
+      };
+      break;
+    case 'add-semester':
+      eventPayload = {
+        event_category: 'semester',
+        event_label: 'add',
+        value: 1,
+      };
+      break;
+    case 'bottom-bar-close':
+      eventPayload = {
+        event_category: 'bottom-bar',
+        event_label: 'close',
+        value: 1,
+      };
+      break;
+    case 'bottom-bar-CU-reviews-link':
+      eventPayload = {
+        event_category: 'bottom-bar',
+        event_label: 'CU-reviews-link',
+        value: 1,
+      };
+      break;
+    case 'bottom-bar-delete-tab':
+      eventPayload = {
+        event_category: 'bottom-bar',
+        event_label: 'delete-tab',
+        value: 1,
+      };
+      break;
+    case 'bottom-bar-open':
+      eventPayload = {
+        event_category: 'bottom-bar',
+        event_label: 'open',
+        value: 1,
+      };
+      break;
+    case 'bottom-bar-see-more':
+      eventPayload = {
+        event_category: 'bottom-bar',
+        event_label: 'see-more',
+        value: 1,
+      };
+      break;
+    case 'bottom-bar-view-course-information-on-roster':
+      eventPayload = {
+        event_category: 'bottom-bar',
+        event_label: 'view-course-information-on-roster',
+        value: 1,
+      };
+      break;
+    case 'course-edit-color':
+      eventPayload = {
+        event_category: 'course',
+        event_label: 'edit-color',
+        value: 1,
+      };
+      break;
+    case 'subject-edit-color':
+      eventPayload = {
+        event_category: 'subject',
+        event_label: 'edit-color',
+        value: 1,
+      };
+      break;
+    case 'delete-course':
+      eventPayload = {
+        event_category: 'course',
+        event_label: 'delete',
+        value: 1,
+      };
+      break;
+    case 'delete-semester':
+      eventPayload = {
+        event_category: 'semester',
+        event_label: 'delete',
+        value: 1,
+      };
+      break;
+    case 'delete-semester-courses':
+      eventPayload = {
+        event_category: 'semester-courses',
+        event_label: 'delete',
+        value: 1,
+      };
+      break;
+    case 'logout':
+      eventPayload = {
+        event_category: 'engagement',
+        event_label: 'logout',
+        value: 1,
+      };
+      break;
+    case 'onboarding-edit-basic-information':
+      eventPayload = {
+        event_category: 'onboarding',
+        event_label: 'edit-basic-information',
+        value: 1,
+      };
+      break;
+    case 'onboarding-edit-transfer-credits':
+      eventPayload = {
+        event_category: 'onboarding',
+        event_label: 'edit-transfer-credits',
+        value: 1,
+      };
+      break;
+    case 'requirements-bar-course-drag-and-drop':
+      eventPayload = {
+        event_category: 'requirements-bar',
+        event_label: 'course-drag-and-drop',
+        value: 1,
+      };
+      break;
+    case 'requirements-bar-filled-requirements-toggle':
+      eventPayload = {
+        event_category: 'requirements-bar',
+        event_label: 'filled-requirements-toggle',
+        value: 1,
+      };
+      break;
+    case 'skip-walkthrough':
+      eventPayload = {
+        event_category: 'walkthrough',
+        event_label: 'skip',
+        value: 1,
+      };
+      break;
+    case 'start-walkthrough':
+      eventPayload = {
+        event_category: 'walkthrough',
+        event_label: 'start',
+        value: 1,
+      };
+      break;
+    case 'to-compact':
+      eventPayload = {
+        event_category: 'views',
+        event_label: 'compact',
+        value: 1,
+      };
+      break;
+    case 'to-not-compact':
+      eventPayload = {
+        event_category: 'views',
+        event_label: 'not-compact',
+        value: 1,
+      };
+      break;
+    default:
+      return;
+  }
+  if (analytics != null)
+    firebaseLogEvent(analytics, eventType, eventPayload), console.log('logged');
+};

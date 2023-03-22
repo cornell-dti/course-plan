@@ -78,7 +78,7 @@ import Confirmation from '@/components/Modals/Confirmation.vue';
 import NewSemesterModal from '@/components/Modals/NewSemesterModal.vue';
 
 import store from '@/store';
-import { GTagEvent } from '@/gtag';
+import { logEvent } from '@/analytics';
 import { addSemester, deleteSemester } from '@/global-firestore-data';
 import { closeBottomBar } from '@/components/BottomBar/BottomBarState';
 import ViewDropdown from './ViewDropdown.vue';
@@ -122,7 +122,7 @@ export default defineComponent({
     toggleCompact(toggled: boolean) {
       if (toggled !== this.compact) {
         this.$emit('compact-updated', toggled);
-        GTagEvent(this.$gtag, toggled ? 'to-compact' : 'to-not-compact');
+        logEvent(toggled ? 'to-compact' : 'to-not-compact');
       }
     },
     openSemesterConfirmationModal(season: FirestoreSemesterSeason, year: number, isAdd: boolean) {
@@ -145,11 +145,11 @@ export default defineComponent({
       this.isSemesterModalOpen = false;
     },
     addSemester(season: string, year: number) {
-      addSemester(year, season as FirestoreSemesterSeason, this.$gtag);
+      addSemester(year, season as FirestoreSemesterSeason);
       this.openSemesterConfirmationModal(season as FirestoreSemesterSeason, year, true);
     },
     deleteSemester(season: string, year: number) {
-      deleteSemester(year, season as FirestoreSemesterSeason, this.$gtag);
+      deleteSemester(year, season as FirestoreSemesterSeason);
       this.openSemesterConfirmationModal(season as FirestoreSemesterSeason, year, false);
     },
     courseOnClick(course: FirestoreSemesterCourse) {
@@ -159,7 +159,7 @@ export default defineComponent({
     },
     closeBar() {
       if (!this.isCourseClicked) {
-        closeBottomBar(this.$gtag);
+        closeBottomBar();
       }
       this.isCourseClicked = false;
     },
