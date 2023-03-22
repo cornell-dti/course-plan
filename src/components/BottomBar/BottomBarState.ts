@@ -42,26 +42,13 @@ const getDetailedInformationForBottomBar = async (
   subject: string,
   number: string
 ) => {
-  const courses: readonly CornellCourseRosterCourseFullDetail[] = (
-    await fetch(
-      `https://classes.cornell.edu/api/2.0/search/classes.json?roster=${roster}&subject=${subject}`
-    ).then(response => response.json())
-  ).data.classes;
-
   // eslint-disable-next-line no-console
   console.log(roster, subject, number);
 
   const course = await getDoc(doc(coursesCollection, `${roster}/${subject}/${number}`));
-
-  if (course.data()) {
-    // eslint-disable-next-line no-console
-    const courseData = course.data() as CornellCourseRosterCourseFullDetail;
-    console.log(courseData);
-    console.log(courseData.titleLong);
-  }
-
   return cornellCourseRosterCourseDetailedInformationToPartialBottomCourseInformation(
-    checkNotNull(courses.find(it => it.catalogNbr === number))
+    // TODO: change reference of course.data()?.course to course.data() once firestore is updated
+    checkNotNull(course.data()?.course)
   );
 };
 
@@ -86,7 +73,11 @@ const getReviews = (
       }
   );
 
-export const addCourseToBottomBar = (course: FirestoreSemesterCourse): void => {
+export const addCourseToBottomBar = (
+  course: FirestoreSemesterCourse,
+  season: string,
+  year: number
+): void => {
   vueForBottomBar.isExpanded = true;
 
   for (let i = 0; i < vueForBottomBar.bottomCourses.length; i += 1) {
@@ -99,7 +90,7 @@ export const addCourseToBottomBar = (course: FirestoreSemesterCourse): void => {
   }
 
   vueForBottomBar.bottomCourses = [
-    firestoreSemesterCourseToBottomBarCourse(course),
+    firestoreSemesterCourseToBottomBarCourse(course, season, year),
     ...vueForBottomBar.bottomCourses,
   ];
   vueForBottomBar.bottomCourseFocus = 0;
@@ -116,21 +107,23 @@ export const addCourseToBottomBar = (course: FirestoreSemesterCourse): void => {
         bottomBarCourse.workload = classWorkload;
       }
     }),
-    getDetailedInformationForBottomBar(course.lastRoster, subject, number).then(
-      ({ description, prereqs, enrollment, lectureTimes, instructors, distributions }) => {
-        const bottomBarCourse = vueForBottomBar.bottomCourses.find(
-          ({ uniqueID, code }) => uniqueID === course.uniqueID && code === course.code
-        );
-        if (bottomBarCourse) {
-          bottomBarCourse.description = description;
-          bottomBarCourse.prereqs = prereqs;
-          bottomBarCourse.enrollment = enrollment;
-          bottomBarCourse.lectureTimes = lectureTimes;
-          bottomBarCourse.instructors = instructors;
-          bottomBarCourse.distributions = distributions;
-        }
+    getDetailedInformationForBottomBar(
+      vueForBottomBar.bottomCourses[vueForBottomBar.bottomCourseFocus].currRoster,
+      subject,
+      number
+    ).then(({ description, prereqs, enrollment, lectureTimes, instructors, distributions }) => {
+      const bottomBarCourse = vueForBottomBar.bottomCourses.find(
+        ({ uniqueID, code }) => uniqueID === course.uniqueID && code === course.code
+      );
+      if (bottomBarCourse) {
+        bottomBarCourse.description = description;
+        bottomBarCourse.prereqs = prereqs;
+        bottomBarCourse.enrollment = enrollment;
+        bottomBarCourse.lectureTimes = lectureTimes;
+        bottomBarCourse.instructors = instructors;
+        bottomBarCourse.distributions = distributions;
       }
-    ),
+    }),
   ]);
 };
 

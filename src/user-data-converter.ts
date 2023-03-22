@@ -113,15 +113,22 @@ export const cornellCourseRosterCourseDetailedInformationToPartialBottomCourseIn
   return { description, prereqs, enrollment, lectureTimes, instructors, distributions };
 };
 
-export const firestoreSemesterCourseToBottomBarCourse = ({
-  code,
-  name,
-  credits,
-  color,
-  lastRoster,
-  semesters,
-  uniqueID,
-}: FirestoreSemesterCourse): AppBottomBarCourse => ({
+export const semesterAndYearToRosterIdentifier = (season: string, year: number): string => {
+  const seasonToSemesterMap = new Map([
+    ['Fall', 'FA'],
+    ['Spring', 'SP'],
+    ['Winter', 'WI'],
+    ['Summer', 'SU'],
+  ]);
+
+  return `${seasonToSemesterMap.get(season)}${year - 2000}`;
+};
+
+export const firestoreSemesterCourseToBottomBarCourse = (
+  { code, name, credits, color, lastRoster, semesters, uniqueID }: FirestoreSemesterCourse,
+  season: string,
+  year: number
+): AppBottomBarCourse => ({
   code,
   name,
   credits,
@@ -138,6 +145,7 @@ export const firestoreSemesterCourseToBottomBarCourse = ({
   overallRating: 0,
   difficulty: 0,
   workload: 0,
+  currRoster: semesterAndYearToRosterIdentifier(season, year),
 });
 
 // set entranceSem to fall and gradSem to spring by default locally, saved to Firestore when Onboarding finished

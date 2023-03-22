@@ -208,6 +208,7 @@ type AppBottomBarCourse = {
   overallRating: number;
   difficulty: number;
   workload: number;
+  currRoster: string;
 };
 
 // This is used for drag&drop between SubRequirement and Semester
