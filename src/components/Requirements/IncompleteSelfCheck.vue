@@ -184,8 +184,7 @@ export default defineComponent({
             store.state.toggleableRequirementChoices,
             store.state.userRequirementsMap
           ),
-        }),
-        this.$gtag
+        })
       );
     },
     openCourseModal() {

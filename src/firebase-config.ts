@@ -1,4 +1,3 @@
-import { getAnalytics } from 'firebase/analytics';
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { collection, getFirestore } from 'firebase/firestore';
@@ -84,6 +83,3 @@ export const onboardingDataCollection = collection(db, 'user-onboarding-data').w
 export const trackUsersCollection = collection(db, 'track-users').withConverter(
   getTypedFirestoreDataConverter<FirestoreTrackUsersData>()
 );
-
-// export const analytics = (await isSupported()) ? getAnalytics(app) : getAnalytics(app);
-export const analytics = getAnalytics(app);

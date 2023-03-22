@@ -66,19 +66,14 @@ export const semesterEquals = (
 export const addSemester = (
   year: number,
   season: FirestoreSemesterSeason,
-  gtag?: GTag,
   courses: readonly FirestoreSemesterCourse[] = []
 ): void => {
-  GTagEvent(gtag, 'add-semester');
+  logEvent('add-semester');
   editSemesters(oldSemesters => [...oldSemesters, createSemester(year, season, courses)]);
 };
 
-export const deleteSemester = (
-  year: number,
-  season: FirestoreSemesterSeason,
-  gtag?: GTag
-): void => {
-  GTagEvent(gtag, 'delete-semester');
+export const deleteSemester = (year: number, season: FirestoreSemesterSeason): void => {
+  logEvent('delete-semester');
   const semester = store.state.semesters.find(sem => semesterEquals(sem, year, season));
   if (semester) {
     deleteCoursesFromRequirementChoices(semester.courses.map(course => course.uniqueID));

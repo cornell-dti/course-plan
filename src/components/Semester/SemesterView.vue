@@ -145,11 +145,11 @@ export default defineComponent({
       this.isSemesterModalOpen = false;
     },
     addSemester(season: string, year: number) {
-      addSemester(year, season as FirestoreSemesterSeason, this.$gtag);
+      addSemester(year, season as FirestoreSemesterSeason);
       this.openSemesterConfirmationModal(season as FirestoreSemesterSeason, year, true);
     },
     deleteSemester(season: string, year: number) {
-      deleteSemester(year, season as FirestoreSemesterSeason, this.$gtag);
+      deleteSemester(year, season as FirestoreSemesterSeason);
       this.openSemesterConfirmationModal(season as FirestoreSemesterSeason, year, false);
     },
     courseOnClick(course: FirestoreSemesterCourse) {
@@ -159,7 +159,7 @@ export default defineComponent({
     },
     closeBar() {
       if (!this.isCourseClicked) {
-        closeBottomBar(this.$gtag);
+        closeBottomBar();
       }
       this.isCourseClicked = false;
     },
