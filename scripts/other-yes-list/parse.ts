@@ -7,7 +7,6 @@ export type Course = {
   categories: readonly string[];
 };
 
-
 enum Col {
   CoursePrefix,
   CourseNumber,
