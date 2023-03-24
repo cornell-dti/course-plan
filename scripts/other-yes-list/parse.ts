@@ -7,19 +7,20 @@ export type Course = {
   categories: readonly string[];
 };
 
+
 enum Col {
   CoursePrefix,
   CourseNumber,
   Title,
   College,
   Category,
-  Credits
-};
+  Credits,
+}
 
 // creates list of course entries
 export function genCourseEntries(data) {
   const courseEntries: Course[] = [];
-  let c: Col= Col.CoursePrefix as Col;
+  let c: Col = Col.CoursePrefix as Col;
   let subject = '';
   let catalogNbr = 0;
   let categories = [];
@@ -43,8 +44,8 @@ export function genCourseEntries(data) {
       switch (c) {
         case Col.CoursePrefix:
           if (v.length <= 5) {
-          subject = v;
-          c = Col.CourseNumber;
+            subject = v;
+            c = Col.CourseNumber;
           }
           break;
         case Col.CourseNumber:
