@@ -129,8 +129,7 @@ export const semesterAndYearToRosterIdentifier = (season: string, year: number):
 
 export const firestoreSemesterCourseToBottomBarCourse = (
   { code, name, credits, color, lastRoster, semesters, uniqueID }: FirestoreSemesterCourse,
-  season: string,
-  year: number
+  roster: string
 ): AppBottomBarCourse => ({
   code,
   name,
@@ -148,7 +147,7 @@ export const firestoreSemesterCourseToBottomBarCourse = (
   overallRating: 0,
   difficulty: 0,
   workload: 0,
-  currRoster: semesterAndYearToRosterIdentifier(season, year), // currRoster = lastRoster when course is not offered in currRoster
+  currRoster: roster, // currRoster = lastRoster when course is not offered in currRoster
 });
 
 // set entranceSem to fall and gradSem to spring by default locally, saved to Firestore when Onboarding finished

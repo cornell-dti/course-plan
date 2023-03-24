@@ -5,6 +5,7 @@ import { GTag, GTagEvent } from '../../gtag';
 import {
   cornellCourseRosterCourseDetailedInformationToPartialBottomCourseInformation,
   firestoreSemesterCourseToBottomBarCourse,
+  semesterAndYearToRosterIdentifier,
 } from '../../user-data-converter';
 
 import { coursesCollection, availableRostersForCoursesCollection } from '../../firebase-config';
@@ -105,24 +106,20 @@ export const addCourseToBottomBar = async (
   const availableRostersForCourse = (
     await getDoc(doc(availableRostersForCoursesCollection, course.code))
   ).data() as { rosters: string[] };
-  const currentRoster = firestoreSemesterCourseToBottomBarCourse(course, season, year).currRoster;
+  const currentRoster = semesterAndYearToRosterIdentifier(season, year);
   // check if the course was offered in the semester that the user has it under
   if (availableRostersForCourse.rosters.indexOf(currentRoster) !== -1) {
     vueForBottomBar.bottomCourses = [
-      firestoreSemesterCourseToBottomBarCourse(course, season, year),
+      firestoreSemesterCourseToBottomBarCourse(course, currentRoster),
       ...vueForBottomBar.bottomCourses,
     ];
   } else {
     // if not, retrieve the info from the latest class roster the course is in
     const latestRosterIndex = availableRostersForCourse.rosters.length - 1;
     const latestRoster = availableRostersForCourse.rosters[latestRosterIndex];
-    const seasonAndYear = rosterIdentifierToSemesterAndYear(latestRoster);
+    // const seasonAndYear = rosterIdentifierToSemesterAndYear(latestRoster);
     vueForBottomBar.bottomCourses = [
-      firestoreSemesterCourseToBottomBarCourse(
-        course,
-        seasonAndYear[0], // season
-        parseInt(seasonAndYear[1], 10) // year
-      ),
+      firestoreSemesterCourseToBottomBarCourse(course, latestRoster),
       ...vueForBottomBar.bottomCourses,
     ];
   }
@@ -196,21 +193,4 @@ export const moveBottomBarCourseToFirst = (index: number): void => {
     ...vueForBottomBar.bottomCourses.slice(index + 1),
   ];
   vueForBottomBar.bottomCourseFocus = 0;
-};
-
-/**
- * This function transforms roster ID to a semester and year tuple. EX: SP23 -> [Spring, 2023]
- * */
-export const rosterIdentifierToSemesterAndYear = (roster: string): string[] => {
-  const semester = roster.slice(0, 2);
-  let year = parseInt(roster.slice(2, 4), 10);
-  const semesterToSeasonMap = new Map([
-    ['FA', 'Fall'],
-    ['SP', 'Spring'],
-    ['WI', 'Winter'],
-    ['SU', 'Summer'],
-  ]);
-  const season = semesterToSeasonMap.get(semester) as string;
-  year += 2000;
-  return [season, year.toString()];
 };
