@@ -7,8 +7,7 @@ import {
   firestoreSemesterCourseToBottomBarCourse,
 } from '../../user-data-converter';
 
-import { coursesCollection } from '../../firebase-config';
-// import { coursesCollection } from '../../../scripts/firebase-config';
+import { coursesCollection, availableRostersForCoursesCollection } from '../../firebase-config';
 import { checkNotNull } from '@/utilities';
 
 export type BottomBarState = {
@@ -42,10 +41,25 @@ const getDetailedInformationForBottomBar = async (
   subject: string,
   number: string
 ) => {
-  // eslint-disable-next-line no-console
-  console.log(roster, subject, number);
-
   const course = await getDoc(doc(coursesCollection, `${roster}/${subject}/${number}`));
+  if (!course.exists()) {
+    const availableRostersForCourse = (
+      await getDoc(doc(availableRostersForCoursesCollection, `${subject} ${number}`))
+    ).data() as { rosters: string[] };
+
+    const lastRoster = availableRostersForCourse.rosters.length - 1;
+    const latestCourse = await getDoc(
+      doc(
+        coursesCollection,
+        `${availableRostersForCourse.rosters[lastRoster]}/${subject}/${number}`
+      )
+    );
+
+    return cornellCourseRosterCourseDetailedInformationToPartialBottomCourseInformation(
+      // TODO: change reference of course.data()?.course to course.data() once firestore is updated
+      checkNotNull(latestCourse.data()?.course)
+    );
+  }
   return cornellCourseRosterCourseDetailedInformationToPartialBottomCourseInformation(
     // TODO: change reference of course.data()?.course to course.data() once firestore is updated
     checkNotNull(course.data()?.course)
@@ -73,11 +87,11 @@ const getReviews = (
       }
   );
 
-export const addCourseToBottomBar = (
+export const addCourseToBottomBar = async (
   course: FirestoreSemesterCourse,
   season: string,
   year: number
-): void => {
+): Promise<void> => {
   vueForBottomBar.isExpanded = true;
 
   for (let i = 0; i < vueForBottomBar.bottomCourses.length; i += 1) {
@@ -88,11 +102,31 @@ export const addCourseToBottomBar = (
       return;
     }
   }
+  const availableRostersForCourse = (
+    await getDoc(doc(availableRostersForCoursesCollection, course.code))
+  ).data() as { rosters: string[] };
+  const currentRoster = firestoreSemesterCourseToBottomBarCourse(course, season, year).currRoster;
+  // check if the course was offered in the semester that the user has it under
+  if (availableRostersForCourse.rosters.indexOf(currentRoster) !== -1) {
+    vueForBottomBar.bottomCourses = [
+      firestoreSemesterCourseToBottomBarCourse(course, season, year),
+      ...vueForBottomBar.bottomCourses,
+    ];
+  } else {
+    // if not, retrieve the info from the latest class roster the course is in
+    const latestRosterIndex = availableRostersForCourse.rosters.length - 1;
+    const latestRoster = availableRostersForCourse.rosters[latestRosterIndex];
+    const seasonAndYear = rosterIdentifierToSemesterAndYear(latestRoster);
+    vueForBottomBar.bottomCourses = [
+      firestoreSemesterCourseToBottomBarCourse(
+        course,
+        seasonAndYear[0], // season
+        parseInt(seasonAndYear[1], 10) // year
+      ),
+      ...vueForBottomBar.bottomCourses,
+    ];
+  }
 
-  vueForBottomBar.bottomCourses = [
-    firestoreSemesterCourseToBottomBarCourse(course, season, year),
-    ...vueForBottomBar.bottomCourses,
-  ];
   vueForBottomBar.bottomCourseFocus = 0;
 
   const [subject, number] = course.code.split(' ');
@@ -162,4 +196,21 @@ export const moveBottomBarCourseToFirst = (index: number): void => {
     ...vueForBottomBar.bottomCourses.slice(index + 1),
   ];
   vueForBottomBar.bottomCourseFocus = 0;
+};
+
+/**
+ * This function transforms roster ID to a semester and year tuple. EX: SP23 -> [Spring, 2023]
+ * */
+export const rosterIdentifierToSemesterAndYear = (roster: string): string[] => {
+  const semester = roster.slice(0, 2);
+  let year = parseInt(roster.slice(2, 4), 10);
+  const semesterToSeasonMap = new Map([
+    ['FA', 'Fall'],
+    ['SP', 'Spring'],
+    ['WI', 'Winter'],
+    ['SU', 'Summer'],
+  ]);
+  const season = semesterToSeasonMap.get(semester) as string;
+  year += 2000;
+  return [season, year.toString()];
 };

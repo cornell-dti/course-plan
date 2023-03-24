@@ -88,3 +88,5 @@ export const onboardingDataCollection = collection(db, 'user-onboarding-data').w
 export const trackUsersCollection = collection(db, 'track-users').withConverter(
   getTypedFirestoreDataConverter<FirestoreTrackUsersData>()
 );
+
+export const availableRostersForCoursesCollection = collection(db, 'available-rosters-for-course');

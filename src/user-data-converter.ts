@@ -113,6 +113,9 @@ export const cornellCourseRosterCourseDetailedInformationToPartialBottomCourseIn
   return { description, prereqs, enrollment, lectureTimes, instructors, distributions };
 };
 
+/**
+ * This function transforms semester and year to a roster ID. EX: Spring 2023 -> SP23
+ * */
 export const semesterAndYearToRosterIdentifier = (season: string, year: number): string => {
   const seasonToSemesterMap = new Map([
     ['Fall', 'FA'],
@@ -145,7 +148,7 @@ export const firestoreSemesterCourseToBottomBarCourse = (
   overallRating: 0,
   difficulty: 0,
   workload: 0,
-  currRoster: semesterAndYearToRosterIdentifier(season, year),
+  currRoster: semesterAndYearToRosterIdentifier(season, year), // currRoster = lastRoster when course is not offered in currRoster
 });
 
 // set entranceSem to fall and gradSem to spring by default locally, saved to Firestore when Onboarding finished
