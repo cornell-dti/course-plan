@@ -59,9 +59,6 @@ export const semestersCollection = collection(db, 'user-semesters').withConverte
 );
 
 export const coursesCollection = collection(db, 'courses');
-// .withConverter(
-//   getTypedFirestoreDataConverter<CornellCourseRosterCourseFullDetail>()
-// );
 
 export const toggleableRequirementChoicesCollection = collection(
   db,
