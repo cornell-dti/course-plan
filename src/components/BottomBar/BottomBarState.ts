@@ -7,6 +7,7 @@ import {
   cornellCourseRosterCourseDetailedInformationToPartialBottomCourseInformation,
   firestoreSemesterCourseToBottomBarCourse,
 } from '../../user-data-converter';
+import getCourse from '@/global-firestore-data/courses';
 
 export type BottomBarState = {
   bottomCourses: readonly AppBottomBarCourse[];
@@ -39,6 +40,7 @@ const getDetailedInformationForBottomBar = async (
   subject: string,
   number: string
 ) => {
+  console.log(await getCourse(roster, subject, number));
   const courses: readonly CornellCourseRosterCourseFullDetail[] = (
     await fetch(
       `https://classes.cornell.edu/api/2.0/search/classes.json?roster=${roster}&subject=${subject}`
