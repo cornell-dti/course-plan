@@ -41,7 +41,7 @@ const seasonAndYearToRosterIdentifier = (season: FirestoreSemesterSeason, year: 
     Fall: 'FA',
     Spring: 'SP',
     Winter: 'WI',
-    Summer: 'SU'
+    Summer: 'SU',
   } as const;
 
   return `${seasonToSemesterMap[season]}${year - 2000}`;
