@@ -81,5 +81,3 @@ const seasonAndYearToRosterIdentifier = (season: string, year: number): string =
 
   return `${seasonToSemesterMap.get(season)}${year - 2000}`;
 };
-
-export default getCourseWithSeasonAndYear;
