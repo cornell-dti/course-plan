@@ -36,15 +36,15 @@ export const getCourseWithSeasonAndYear = async (
 /**
  * This function transforms semester and year to a roster ID. EX: Spring 2023 -> SP23
  * */
-const seasonAndYearToRosterIdentifier = (season: string, year: number): string => {
-  const seasonToSemesterMap = new Map([
-    ['Fall', 'FA'],
-    ['Spring', 'SP'],
-    ['Winter', 'WI'],
-    ['Summer', 'SU'],
-  ]);
+const seasonAndYearToRosterIdentifier = (season: FirestoreSemesterSeason, year: number): string => {
+  const seasonToSemesterMap = {
+    Fall: 'FA',
+    Spring: 'SP',
+    Winter: 'WI',
+    Summer: 'SU'
+  } as const;
 
-  return `${seasonToSemesterMap.get(season)}${year - 2000}`;
+  return `${seasonToSemesterMap[season]}${year - 2000}`;
 };
 
 export default getCourseWithSeasonAndYear;
