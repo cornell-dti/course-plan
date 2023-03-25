@@ -1,6 +1,9 @@
 import { reactive } from 'vue';
 import { doc, getDoc } from 'firebase/firestore';
 import { GTag, GTagEvent } from '../../gtag';
+import { VueGtag } from 'vue-gtag-next';
+import { checkNotNull } from '../../utilities';
+
 
 import {
   cornellCourseRosterCourseDetailedInformationToPartialBottomCourseInformation,
@@ -158,7 +161,7 @@ export const addCourseToBottomBar = async (
   ]);
 };
 
-export const toggleBottomBar = (gtag?: GTag): void => {
+export const toggleBottomBar = (gtag?: VueGtag): void => {
   vueForBottomBar.isExpanded = !vueForBottomBar.isExpanded;
   if (vueForBottomBar.isExpanded) {
     GTagEvent(gtag, 'bottom-bar-open');
@@ -167,7 +170,7 @@ export const toggleBottomBar = (gtag?: GTag): void => {
   }
 };
 
-export const closeBottomBar = (gtag?: GTag): void => {
+export const closeBottomBar = (gtag?: VueGtag): void => {
   vueForBottomBar.isExpanded = false;
   GTagEvent(gtag, 'bottom-bar-close');
 };
@@ -176,7 +179,7 @@ export const changeBottomBarCourseFocus = (index: number): void => {
   vueForBottomBar.bottomCourseFocus = index;
 };
 
-export const deleteBottomBarCourse = (index: number, gtag?: GTag): void => {
+export const deleteBottomBarCourse = (index: number, gtag?: VueGtag): void => {
   GTagEvent(gtag, 'bottom-bar-delete-tab');
   vueForBottomBar.bottomCourses = vueForBottomBar.bottomCourses.filter((_, i) => i !== index);
   if (vueForBottomBar.bottomCourseFocus >= vueForBottomBar.bottomCourses.length) {
