@@ -62,8 +62,6 @@ export const coursesCollection = collection(db, 'courses');
 
 export const availableRostersForCoursesCollection = collection(db, 'available-rosters-for-course');
 
-export const crseIdToCatalogNbrCollection = collection(db, 'crseid-to-catalognbr');
-
 export const toggleableRequirementChoicesCollection = collection(
   db,
   'user-toggleable-requirement-choices'
