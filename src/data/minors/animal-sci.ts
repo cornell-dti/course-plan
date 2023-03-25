@@ -15,13 +15,7 @@ const animalSciRequirements: readonly CollegeOrMajorRequirement[] = [
           return true;
         }
         if (ifCodeMatch(course.subject, 'ANSC')) {
-          const isSpecial =
-            ifCodeMatch(course.catalogNbr, '49**') ||
-            ifCodeMatch(course.catalogNbr, '5***') ||
-            ifCodeMatch(course.catalogNbr, '6***') ||
-            ifCodeMatch(course.catalogNbr, '7***') ||
-            ifCodeMatch(course.catalogNbr, '8***') ||
-            ifCodeMatch(course.catalogNbr, '9***');
+          const isSpecial = ifCodeMatch(course.catalogNbr, '49**');
           return (
             (ifCodeMatch(course.catalogNbr, '1***') ||
               ifCodeMatch(course.catalogNbr, '2***') ||
