@@ -38,7 +38,11 @@
           </button>
           <div class="multiple-plans" v-if="multiplePlansAllowed">
             <button class="add-plan-button" @click="addPlan()">+ Add Plan</button>
+            <div class="multiple-plans-dropdown">
+              <multiple-plans-dropdown></multiple-plans-dropdown>
+            </div>
           </div>
+
           <teleport-modal
             content-class="requirement-debugger-modal-content"
             :isSimpleModal="true"
@@ -143,6 +147,7 @@ import TeleportModal from '@/components/Modals/TeleportModal.vue';
 import RequirementDebugger from '@/components/Requirements/RequirementDebugger.vue';
 import RequirementGroup from '@/components/Requirements/RequirementGroup.vue';
 import DropDownArrow from '@/components/DropDownArrow.vue';
+import MultiplePlansDropdown from './MultiplePlansDropdown.vue';
 
 import clipboard from '@/assets/images/clipboard.svg';
 import warning from '@/assets/images/warning.svg';
@@ -186,6 +191,7 @@ export default defineComponent({
     RequirementDebugger,
     RequirementGroup,
     TeleportModal,
+    MultiplePlansDropdown,
   },
   props: {
     startTour: { type: Boolean, required: true },
