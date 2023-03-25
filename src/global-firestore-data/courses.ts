@@ -18,19 +18,20 @@ export const getCourseWithSeasonAndYear = async (
   const roster = seasonAndYearToRosterIdentifier(season, year);
   const course = await getDoc(doc(coursesCollection, `${roster}/${subject}/${number}`));
   if (!course.exists()) {
-    const availableRostersForCourse = (
-      await getDoc(doc(availableRostersForCoursesCollection, `${subject} ${number}`))
-    ).data() as { rosters: string[] };
-    const lastRoster = availableRostersForCourse.rosters.length - 1;
-    const latestCourse = await getDoc(
-      doc(
-        coursesCollection,
-        `${availableRostersForCourse.rosters[lastRoster]}/${subject}/${number}`
-      )
-    );
-    return latestCourse.data()?.course as CornellCourseRosterCourseFullDetail;
+    return getLastOffering(subject, number);
   }
   return course.data()?.course as CornellCourseRosterCourseFullDetail;
+};
+
+const getLastOffering = async (subject: string, number: string) => {
+  const availableRostersForCourse = (
+    await getDoc(doc(availableRostersForCoursesCollection, `${subject} ${number}`))
+  ).data() as { rosters: string[] };
+  const lastRoster = availableRostersForCourse.rosters.length - 1;
+  const latestCourse = await getDoc(
+    doc(coursesCollection, `${availableRostersForCourse.rosters[lastRoster]}/${subject}/${number}`)
+  );
+  return latestCourse.data()?.course as CornellCourseRosterCourseFullDetail;
 };
 
 /**
