@@ -2,6 +2,7 @@ import { reactive } from 'vue';
 import { VueGtag } from 'vue-gtag-next';
 import { GTagEvent } from '../../gtag';
 import { checkNotNull } from '../../utilities';
+import { getCourse } from '../../global-firestore-data/courses';
 
 import {
   cornellCourseRosterCourseDetailedInformationToPartialBottomCourseInformation,
