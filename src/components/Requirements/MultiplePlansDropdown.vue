@@ -8,12 +8,17 @@
         :class="{ plansHidden: shown }"
       >
         <img :src="editplan" class="multiplePlans-dropdown-placeholder editimg" />
-        <div class="multiplePlans-dropdown-placeholder plan">PLAN 1</div>
+        <div class="multiplePlans-dropdown-placeholder plan">{{ currplan }}</div>
         <div class="multiplePlans-dropdown-placeholder down-arrow" v-if="!shown"></div>
         <div class="multiplePlans-dropdown-placeholder up-arrow" v-if="shown"></div>
       </div>
       <div class="multiplePlans-dropdown-content" v-if="shown">
-        <div v-for="plan in filterPlans" class="multiplePlans-dropdown-content item" :key="plan">
+        <div
+          v-for="plan in filterPlans"
+          class="multiplePlans-dropdown-content item"
+          :key="plan"
+          @click="planClicked(plan)"
+        >
           {{ plan === currentplan ? null : plan }}
         </div>
       </div>
@@ -31,7 +36,7 @@ export default defineComponent({
   },
   data() {
     return {
-      plans: ['PLAN 1', 'PLAN 2'],
+      plans: ['PLAN 1'],
       shown: false,
       currplan: 'PLAN 1',
       editplan,
@@ -46,6 +51,9 @@ export default defineComponent({
   methods: {
     closeDropdownIfOpen() {
       this.shown = !this.shown;
+    },
+    planClicked(plan: string) {
+      if (this.plans.length !== 1) this.currplan = plan;
     },
   },
 });
