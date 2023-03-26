@@ -1,5 +1,9 @@
 import { doc, getDoc } from 'firebase/firestore';
-import { coursesCollection, availableRostersForCoursesCollection } from '../firebase-config';
+import {
+  coursesCollection,
+  availableRostersForCoursesCollection,
+  crseIdToCatalogNbrCollection,
+} from '../firebase-config';
 
 /**
  * This function uses the subject and number of a course to retrieve the course information from 'courses' collection
@@ -23,6 +27,37 @@ export const getCourseWithSeasonAndYear = async (
   return course.data()?.course as CornellCourseRosterCourseFullDetail;
 };
 
+/**
+ * This function uses the crseId and desired roster of a course to retrieve the course information from 'courses' collection
+ * @param roster The roster from which we want to fetch the course
+ * @param crseId  The course id of the course
+ * @returns `Promise<CornellCourseRosterCourseFullDetail>`
+ */
+export const getCourseWithCrseIdAndRoster = async (
+  roster: string,
+  crseId: number
+): Promise<CornellCourseRosterCourseFullDetail> => {
+  // use crseId to retrieve course subject and code
+  const courseSubjectAndNumber = (
+    await getDoc(doc(crseIdToCatalogNbrCollection, `${crseId}`))
+  ).data()?.catalogNbr as string;
+
+  const subject = extractSubjectAndNumber(courseSubjectAndNumber)[0];
+  const number = extractSubjectAndNumber(courseSubjectAndNumber)[1];
+
+  const course = await getDoc(doc(coursesCollection, `${roster}/${subject}/${number}`));
+  if (!course.exists()) {
+    return getLastOffering(subject, number);
+  }
+  return course.data()?.course as CornellCourseRosterCourseFullDetail;
+};
+
+/**
+ * This function retrieves the latest information of the course based on the last roster it was offered in
+ * @param subject The subject of the course
+ * @param number The number of the course
+ * @returns The course information from the latest roster it is offered in
+ */
 const getLastOffering = async (subject: string, number: string) => {
   const availableRostersForCourse = (
     await getDoc(doc(availableRostersForCoursesCollection, `${subject} ${number}`))
@@ -46,6 +81,19 @@ const seasonAndYearToRosterIdentifier = (season: FirestoreSemesterSeason, year: 
   } as const;
 
   return `${seasonToSemesterMap[season]}${year - 2000}`;
+};
+
+/**
+ *
+ * @param courseCode The course code (EX: 'CS 1110')
+ * @returns A string[] containing the subject and number (EX: ['CS', '1110'])
+ */
+const extractSubjectAndNumber = (courseCode: string): string[] => {
+  if (courseCode.split(' ').length !== 2) {
+    throw Error(`Invalid course format. Expected courseCode.split(' ') === 2`);
+  } else {
+    return courseCode.split(' ');
+  }
 };
 
 export default getCourseWithSeasonAndYear;
