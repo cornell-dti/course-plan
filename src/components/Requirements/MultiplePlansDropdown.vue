@@ -9,7 +9,8 @@
       >
         <img :src="editplan" class="multiplePlans-dropdown-placeholder editimg" />
         <div class="multiplePlans-dropdown-placeholder plan">PLAN 1</div>
-        <div class="multiplePlans-dropdown-placeholder arrow"></div>
+        <div class="multiplePlans-dropdown-placeholder down-arrow" v-if="!shown"></div>
+        <div class="multiplePlans-dropdown-placeholder up-arrow" v-if="shown"></div>
       </div>
       <div class="multiplePlans-dropdown-content" v-if="shown">
         <div v-for="plan in filterPlans" class="multiplePlans-dropdown-content item" :key="plan">
@@ -82,12 +83,21 @@ export default defineComponent({
       width: 70%;
     }
 
-    &.arrow {
+    &.down-arrow {
       width: 6.24px;
       height: 6.24px;
       border-left: 6.24px solid transparent;
       border-right: 6.24px solid transparent;
       border-top: 6.24px solid #636363;
+    }
+
+    &.up-arrow {
+      width: 6.24px;
+      height: 6.24px;
+      border-left: 6.24px solid transparent;
+      border-right: 6.24px solid transparent;
+      border-top: 6.24px solid #636363;
+      transform: rotate(180deg);
     }
 
     &.editimg {
