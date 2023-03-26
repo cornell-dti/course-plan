@@ -42,8 +42,9 @@ export const getCourseWithCrseIdAndRoster = async (
     await getDoc(doc(crseIdToCatalogNbrCollection, `${crseId}`))
   ).data()?.catalogNbr as string;
 
-  const subject = extractSubjectAndNumber(courseSubjectAndNumber)[0];
-  const number = extractSubjectAndNumber(courseSubjectAndNumber)[1];
+  const subjectAndNumberList = extractSubjectAndNumber(courseSubjectAndNumber);
+  const subject = subjectAndNumberList[0];
+  const number = subjectAndNumberList[1];
 
   const course = await getDoc(doc(coursesCollection, `${roster}/${subject}/${number}`));
   if (!course.exists()) {
