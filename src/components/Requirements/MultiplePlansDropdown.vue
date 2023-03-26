@@ -19,7 +19,7 @@
           :key="plan"
           @click="planClicked(plan)"
         >
-          {{ plan === currentplan ? null : plan }}
+          {{ plan }}
         </div>
       </div>
     </div>
