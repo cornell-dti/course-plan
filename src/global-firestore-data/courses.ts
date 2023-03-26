@@ -24,7 +24,7 @@ export const getCourseWithSeasonAndYear = async (
   if (!course.exists()) {
     return getLastOffering(subject, number);
   }
-  return course.data()?.course as CornellCourseRosterCourseFullDetail;
+  return course.data()?.course;
 };
 
 /**
@@ -50,7 +50,7 @@ export const getCourseWithCrseIdAndRoster = async (
   if (!course.exists()) {
     return getLastOffering(subject, number);
   }
-  return course.data()?.course as CornellCourseRosterCourseFullDetail;
+  return course.data()?.course;
 };
 
 /**
@@ -67,7 +67,7 @@ const getLastOffering = async (subject: string, number: string) => {
   const latestCourse = await getDoc(
     doc(coursesCollection, `${availableRostersForCourse.rosters[lastRoster]}/${subject}/${number}`)
   );
-  return latestCourse.data()?.course as CornellCourseRosterCourseFullDetail;
+  return latestCourse.data()?.course;
 };
 
 /**
