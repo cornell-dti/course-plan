@@ -4,8 +4,8 @@
       <div class="multiplePlans-dropdown-placeholder wrapper" @click="closeDropdownIfOpen()">
         <img :src="editPlan" class="multiplePlans-dropdown-placeholder editimg" />
         <div class="multiplePlans-dropdown-placeholder plan">{{ currPlan }}</div>
-        <div class="multiplePlans-dropdown-placeholder up-arrow" v-if="shown"></div>
-        <div class="multiplePlans-dropdown-placeholder down-arrow" v-else></div>
+        <img class="multiplePlans-dropdown-placeholder up-arrow" v-if="shown" />
+        <img class="multiplePlans-dropdown-placeholder down-arrow" v-else />
       </div>
       <div
         class="multiplePlans-dropdown-content"
@@ -73,7 +73,7 @@ export default defineComponent({
     display: flex;
     align-items: center;
 
-    color: #636363;
+    color: $lightPlaceholderGray;
 
     background: transparent;
 
@@ -81,12 +81,12 @@ export default defineComponent({
       width: 90%;
       height: 2.5rem;
       border-radius: 2px;
-      border: 1px solid #636363;
+      border: 1px solid $lightPlaceholderGray;
       cursor: pointer;
     }
 
     &.plan {
-      padding-left: 8px;
+      padding-left: 0.5rem;
       width: 100%;
     }
 
@@ -97,7 +97,7 @@ export default defineComponent({
       height: 6.24px;
       border-left: 6.24px solid transparent;
       border-right: 6.24px solid transparent;
-      border-top: 6.24px solid #636363;
+      border-top: 6.24px solid $lightPlaceholderGray;
     }
 
     &.up-arrow {
@@ -107,7 +107,7 @@ export default defineComponent({
       height: 6.24px;
       border-left: 6.24px solid transparent;
       border-right: 6.24px solid transparent;
-      border-top: 6.24px solid #636363;
+      border-top: 6.24px solid $lightPlaceholderGray;
       transform: rotate(180deg);
     }
 
@@ -124,17 +124,15 @@ export default defineComponent({
     border-radius: 2px;
     &.item {
       width: 91%;
-      border: 1px solid #636363;
+      border: 1px solid $lightPlaceholderGray;
       z-index: 150;
-      background-color: #ffffff;
+      background-color: white;
       height: 2.5rem;
-      font-style: normal;
-      font-weight: normal;
       font-size: 16px;
       line-height: 16px;
       display: flex;
       align-items: center;
-      color: #858585;
+      color: $lightPlaceholderGray;
       padding-left: 10px;
     }
   }
