@@ -4,6 +4,7 @@
  */
 
 import { getCurrentYear, entranceYearRange } from '../../src/utilities';
+import GateKeeperTogglers from '../../src/feature-flags';
 
 const startYear = getCurrentYear() - entranceYearRange;
 
@@ -239,9 +240,13 @@ it('Minimize a semester', () => {
 });
 
 it('Multiple plans dropdown open/close', () => {
+  window.GK.enableMultiplePlans();
+  // dropdown initially closed
   cy.get('[data-cyId=multiplePlans-wrapper]').should('not.have.class', 'shown');
   cy.get('[data-cyId=multiplePlans-wrapper]').click();
+  // dropdown opens
   cy.get('[data-cyId=multiplePlans-wrapper]').should('have.class', 'shown');
   cy.get('[data-cyId=multiplePlans-wrapper]').click();
+  // dropdown closed again
   cy.get('[data-cyId=multiplePlans-wrapper]').should('not.have.class', 'shown');
 });

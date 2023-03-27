@@ -36,7 +36,7 @@ export default defineComponent({
   },
   data() {
     return {
-      plans: ['PLAN 1'],
+      plans: ['PLAN 1', 'PLAN 2'],
       shown: false,
       currplan: 'PLAN 1',
       editplan,
