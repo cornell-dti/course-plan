@@ -39,7 +39,7 @@
           <div class="multiple-plans" v-if="multiplePlansAllowed">
             <button class="add-plan-button" @click="addPlan()">+ Add Plan</button>
             <div class="multiple-plans-dropdown">
-              <multiple-plans-dropdown></multiple-plans-dropdown>
+              <multiple-plans-dropdown />
             </div>
           </div>
 

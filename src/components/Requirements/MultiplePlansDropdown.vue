@@ -1,25 +1,24 @@
 <template>
   <div>
     <div class="multiplePlans-dropdown">
-      <div
-        class="multiplePlans-dropdown-placeholder wrapper"
-        @click="closeDropdownIfOpen()"
-        data-cyid="multiplePlans-wrapper"
-        :class="{ plansHidden: shown }"
-      >
-        <img :src="editplan" class="multiplePlans-dropdown-placeholder editimg" />
-        <div class="multiplePlans-dropdown-placeholder plan">{{ currplan }}</div>
-        <div class="multiplePlans-dropdown-placeholder down-arrow" v-if="!shown"></div>
+      <div class="multiplePlans-dropdown-placeholder wrapper" @click="closeDropdownIfOpen()">
+        <img :src="editPlan" class="multiplePlans-dropdown-placeholder editimg" />
+        <div class="multiplePlans-dropdown-placeholder plan">{{ currPlan }}</div>
         <div class="multiplePlans-dropdown-placeholder up-arrow" v-if="shown"></div>
+        <div class="multiplePlans-dropdown-placeholder down-arrow" v-else></div>
       </div>
-      <div class="multiplePlans-dropdown-content" v-if="shown">
+      <div
+        class="multiplePlans-dropdown-content"
+        v-if="shown"
+        data-cyid="multiplePlans-dropdown-content"
+      >
         <div
-          v-for="plan in filterPlans"
+          v-for="otherPlan in otherPlans"
           class="multiplePlans-dropdown-content item"
-          :key="plan"
-          @click="planClicked(plan)"
+          :key="otherPlan"
+          @click="planClicked(otherPlan)"
         >
-          {{ plan }}
+          {{ otherPlan }}
         </div>
       </div>
     </div>
@@ -28,7 +27,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import editplan from '@/assets/images/editplan.svg';
+import editPlan from '@/assets/images/editplan.svg';
 
 export default defineComponent({
   props: {
@@ -38,13 +37,13 @@ export default defineComponent({
     return {
       plans: ['PLAN 1', 'PLAN 2'],
       shown: false,
-      currplan: 'PLAN 1',
-      editplan,
+      currPlan: 'PLAN 1',
+      editPlan,
     };
   },
   computed: {
-    filterPlans() {
-      const filtered = this.$data.plans.filter(plan => plan !== this.$data.currplan);
+    otherPlans() {
+      const filtered = this.plans.filter(plan => plan !== this.currPlan);
       return filtered.length === 0 ? ['No additional plans yet'] : filtered;
     },
   },
@@ -53,7 +52,7 @@ export default defineComponent({
       this.shown = !this.shown;
     },
     planClicked(plan: string) {
-      if (this.plans.length !== 1) this.currplan = plan;
+      if (this.plans.length !== 1) this.currPlan = plan;
     },
   },
 });
@@ -88,10 +87,12 @@ export default defineComponent({
 
     &.plan {
       padding-left: 8px;
-      width: 70%;
+      width: 100%;
     }
 
     &.down-arrow {
+      position: relative;
+      right: 7%;
       width: 6.24px;
       height: 6.24px;
       border-left: 6.24px solid transparent;
@@ -100,6 +101,8 @@ export default defineComponent({
     }
 
     &.up-arrow {
+      position: relative;
+      right: 7%;
       width: 6.24px;
       height: 6.24px;
       border-left: 6.24px solid transparent;
