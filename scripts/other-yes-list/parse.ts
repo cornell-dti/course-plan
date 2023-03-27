@@ -52,11 +52,9 @@ export function genCourseEntries(data) {
           c = Col.Title;
           break;
         case Col.Title:
-          // title = v;
           c = Col.College;
           break;
         case Col.College:
-          // college = v;
           c = Col.Category;
           break;
         case Col.Category:
@@ -64,9 +62,6 @@ export function genCourseEntries(data) {
           c = Col.Credits;
           break;
         case Col.Credits: {
-          // let creditList = v.split('-');
-          // creditList = creditList.map((x: string) => parseInt(x, 10));
-          // credits = creditList;
           const course = { subject, catalogNbr, categories };
           courseEntries.push(course);
           c = Col.CoursePrefix;
