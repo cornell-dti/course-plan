@@ -4,7 +4,6 @@
  */
 
 import { getCurrentYear, entranceYearRange } from '../../src/utilities';
-import { registerGateKeeper } from '../../src/feature-flags';
 
 const startYear = getCurrentYear() - entranceYearRange;
 
@@ -240,14 +239,12 @@ it('Minimize a semester', () => {
 });
 
 it('Multiple plans dropdown open/close', () => {
-  registerGateKeeper();
-  window.GK.enableMultiplePlans();
   // dropdown initially closed
-  cy.get('[data-cyId=multiplePlans-dropdown-content]').should('not.be.visible');
-  cy.get('[data-cyId=multiplePlans-dropdown-content]').click();
+  cy.get('[data-cyId=multiplePlans-dropdown-content]').should('not.exist');
+  cy.get('[data-cyId=multiplePlans-dropdown]').click();
   // dropdown opens
   cy.get('[data-cyId=multiplePlans-dropdown-content]').should('be.visible');
-  cy.get('[data-cyId=multiplePlans-dropdown-content]').click();
+  cy.get('[data-cyId=multiplePlans-dropdown]').click();
   // dropdown closed again
-  cy.get('[data-cyId=multiplePlans-dropdown-content]').should('not.be.visible');
+  cy.get('[data-cyId=multiplePlans-dropdown-content]').should('not.exist');
 });

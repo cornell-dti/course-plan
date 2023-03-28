@@ -1,7 +1,11 @@
 <template>
   <div>
     <div class="multiplePlans-dropdown">
-      <div class="multiplePlans-dropdown-placeholder wrapper" @click="closeDropdownIfOpen()">
+      <div
+        class="multiplePlans-dropdown-placeholder wrapper"
+        @click="closeDropdownIfOpen()"
+        data-cyId="multiplePlans-dropdown"
+      >
         <img :src="editPlan" class="multiplePlans-dropdown-placeholder editimg" />
         <div class="multiplePlans-dropdown-placeholder plan">{{ currPlan }}</div>
         <img class="multiplePlans-dropdown-placeholder up-arrow" v-if="shown" />
@@ -10,7 +14,8 @@
       <div
         class="multiplePlans-dropdown-content"
         v-if="shown"
-        data-cyid="multiplePlans-dropdown-content"
+        data-cyId="multiplePlans-dropdown-content"
+        :class="shown"
       >
         <div
           v-for="otherPlan in otherPlans"

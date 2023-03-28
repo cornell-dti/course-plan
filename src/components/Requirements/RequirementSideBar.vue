@@ -36,7 +36,7 @@
           >
             Open Requirement Debugger
           </button>
-          <div class="multiple-plans" v-if="multiplePlansAllowed">
+          <div class="multiple-plans">
             <button class="add-plan-button" @click="addPlan()">+ Add Plan</button>
             <div class="multiple-plans-dropdown">
               <multiple-plans-dropdown />
