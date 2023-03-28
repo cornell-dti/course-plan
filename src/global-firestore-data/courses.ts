@@ -20,11 +20,7 @@ export const getCourseWithSeasonAndYear = async (
   number: string
 ): Promise<CornellCourseRosterCourseFullDetail> => {
   const roster = seasonAndYearToRosterIdentifier(season, year);
-  const course = await getDoc(doc(coursesCollection, `${roster}/${subject}/${number}`));
-  if (!course.exists()) {
-    return getLastOffering(subject, number);
-  }
-  return course.data()?.course;
+  return getCourse(roster, subject, number);
 };
 
 /**
@@ -42,15 +38,11 @@ export const getCourseWithCrseIdAndRoster = async (
     await getDoc(doc(crseIdToCatalogNbrCollection, `${crseId}`))
   ).data()?.catalogNbr as string;
 
-  const subjectAndNumberList = extractSubjectAndNumber(courseSubjectAndNumber);
-  const subject = subjectAndNumberList[0];
-  const number = subjectAndNumberList[1];
+  const subjectAndNumber = extractSubjectAndNumber(courseSubjectAndNumber);
+  const { subject } = subjectAndNumber;
+  const { number } = subjectAndNumber;
 
-  const course = await getDoc(doc(coursesCollection, `${roster}/${subject}/${number}`));
-  if (!course.exists()) {
-    return getLastOffering(subject, number);
-  }
-  return course.data()?.course;
+  return getCourse(roster, subject, number);
 };
 
 /**
@@ -68,6 +60,26 @@ const getLastOffering = async (subject: string, number: string) => {
     doc(coursesCollection, `${availableRostersForCourse.rosters[lastRoster]}/${subject}/${number}`)
   );
   return latestCourse.data()?.course;
+};
+
+/**
+ * This function attempts to retrieve the course from the specified roster. If it does not
+ * exist, it will retrieve the course from the last roster it was offered in.
+ * @param roster The roster from which the course should be retrieved
+ * @param subject The subject of the course
+ * @param number The number of the course
+ * @returns `Promise<CornellCourseRosterCourseFullDetail>`
+ */
+const getCourse = async (
+  roster: string,
+  subject: string,
+  number: string
+): Promise<CornellCourseRosterCourseFullDetail> => {
+  const course = await getDoc(doc(coursesCollection, `${roster}/${subject}/${number}`));
+  if (!course.exists()) {
+    return getLastOffering(subject, number);
+  }
+  return course.data()?.course;
 };
 
 /**
@@ -89,11 +101,13 @@ const seasonAndYearToRosterIdentifier = (season: FirestoreSemesterSeason, year: 
  * @param courseCode The course code (EX: 'CS 1110')
  * @returns A string[] containing the subject and number (EX: ['CS', '1110'])
  */
-const extractSubjectAndNumber = (courseCode: string): string[] => {
+const extractSubjectAndNumber = (courseCode: string): { subject: string; number: string } => {
   if (courseCode.split(' ').length !== 2) {
-    throw Error(`Invalid course format. Expected courseCode.split(' ') === 2`);
+    throw Error(
+      `Invalid course format. Expected course to be of form subject and number. EX: CS 1110`
+    );
   } else {
-    return courseCode.split(' ');
+    return { subject: courseCode.split(' ')[0], number: courseCode.split(' ')[1] };
   }
 };
 
