@@ -6,10 +6,14 @@
         @click="closeDropdownIfOpen()"
         data-cyId="multiplePlans-dropdown"
       >
-        <img :src="editPlan" class="multiplePlans-dropdown-placeholder editimg" />
+        <img :src="editPlan" class="multiplePlans-dropdown-placeholder editimg" alt="edit plans" />
         <div class="multiplePlans-dropdown-placeholder plan">{{ currPlan }}</div>
-        <img class="multiplePlans-dropdown-placeholder up-arrow" v-if="shown" />
-        <img class="multiplePlans-dropdown-placeholder down-arrow" v-else />
+        <img
+          class="multiplePlans-dropdown-placeholder up-arrow"
+          v-if="shown"
+          alt="close dropdown"
+        />
+        <img class="multiplePlans-dropdown-placeholder down-arrow" v-else alt="open dropdown" />
       </div>
       <div
         class="multiplePlans-dropdown-content"
@@ -40,7 +44,7 @@ export default defineComponent({
   },
   data() {
     return {
-      plans: ['PLAN 1', 'PLAN 2'],
+      plans: ['PLAN 1', 'PLAN 2', 'PLAN 3', 'PLAN 4'],
       shown: false,
       currPlan: 'PLAN 1',
       editPlan,
@@ -83,6 +87,8 @@ export default defineComponent({
     background: transparent;
 
     &.wrapper {
+      position: relative;
+      right: 0.25rem;
       width: 90%;
       height: 2.5rem;
       border-radius: 2px;
@@ -123,12 +129,11 @@ export default defineComponent({
   }
 
   &-content {
-    margin-left: 0.11rem;
     z-index: 100;
     max-height: 8rem;
     border-radius: 2px;
     &.item {
-      width: 91%;
+      width: 90%;
       border: 1px solid $lightPlaceholderGray;
       z-index: 150;
       background-color: white;
@@ -139,6 +144,10 @@ export default defineComponent({
       align-items: center;
       color: $lightPlaceholderGray;
       padding-left: 10px;
+    }
+    &.item:hover {
+      background-color: $searchBoxHoverGray;
+      opacity: 1;
     }
   }
 }
