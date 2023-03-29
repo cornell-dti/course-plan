@@ -1,18 +1,18 @@
 import { reactive } from 'vue';
 import { doc, getDoc } from 'firebase/firestore';
-import { GTag, GTagEvent } from '../../gtag';
 import { VueGtag } from 'vue-gtag-next';
+import { GTagEvent } from '../../gtag';
 import { checkNotNull } from '../../utilities';
-
+import { getCourseWithSeasonAndYear } from '../../global-firestore-data/courses';
 
 import {
   cornellCourseRosterCourseDetailedInformationToPartialBottomCourseInformation,
   firestoreSemesterCourseToBottomBarCourse,
-  semesterAndYearToRosterIdentifier,
+  rosterIdentifierToSeasonAndYear,
+  seasonAndYearToRosterIdentifier,
 } from '../../user-data-converter';
 
-import { coursesCollection, availableRostersForCoursesCollection } from '../../firebase-config';
-import { checkNotNull } from '@/utilities';
+import { availableRostersForCoursesCollection } from '../../firebase-config';
 
 export type BottomBarState = {
   bottomCourses: readonly AppBottomBarCourse[];
@@ -45,28 +45,16 @@ const getDetailedInformationForBottomBar = async (
   subject: string,
   number: string
 ) => {
-  const course = await getDoc(doc(coursesCollection, `${roster}/${subject}/${number}`));
-  if (!course.exists()) {
-    const availableRostersForCourse = (
-      await getDoc(doc(availableRostersForCoursesCollection, `${subject} ${number}`))
-    ).data() as { rosters: string[] };
-
-    const lastRoster = availableRostersForCourse.rosters.length - 1;
-    const latestCourse = await getDoc(
-      doc(
-        coursesCollection,
-        `${availableRostersForCourse.rosters[lastRoster]}/${subject}/${number}`
-      )
-    );
-
-    return cornellCourseRosterCourseDetailedInformationToPartialBottomCourseInformation(
-      // TODO: change reference of course.data()?.course to course.data() once firestore is updated
-      checkNotNull(latestCourse.data()?.course)
-    );
-  }
+  const seasonAndYear = rosterIdentifierToSeasonAndYear(roster);
+  const course = await getCourseWithSeasonAndYear(
+    seasonAndYear.season,
+    seasonAndYear.year,
+    subject,
+    number
+  );
+  console.log(course);
   return cornellCourseRosterCourseDetailedInformationToPartialBottomCourseInformation(
-    // TODO: change reference of course.data()?.course to course.data() once firestore is updated
-    checkNotNull(course.data()?.course)
+    checkNotNull(course)
   );
 };
 
@@ -109,20 +97,20 @@ export const addCourseToBottomBar = async (
   const availableRostersForCourse = (
     await getDoc(doc(availableRostersForCoursesCollection, course.code))
   ).data() as { rosters: string[] };
-  const currentRoster = semesterAndYearToRosterIdentifier(season, year);
+  const currentRoster = seasonAndYearToRosterIdentifier(season, year);
   // check if the course was offered in the semester that the user has it under
   if (availableRostersForCourse.rosters.indexOf(currentRoster) !== -1) {
     vueForBottomBar.bottomCourses = [
-      firestoreSemesterCourseToBottomBarCourse(course, currentRoster),
+      firestoreSemesterCourseToBottomBarCourse(course, season, year),
       ...vueForBottomBar.bottomCourses,
     ];
   } else {
     // if not, retrieve the info from the latest class roster the course is in
     const latestRosterIndex = availableRostersForCourse.rosters.length - 1;
     const latestRoster = availableRostersForCourse.rosters[latestRosterIndex];
-    // const seasonAndYear = rosterIdentifierToSemesterAndYear(latestRoster);
+    const seasonAndYear = rosterIdentifierToSeasonAndYear(latestRoster);
     vueForBottomBar.bottomCourses = [
-      firestoreSemesterCourseToBottomBarCourse(course, latestRoster),
+      firestoreSemesterCourseToBottomBarCourse(course, seasonAndYear.season, seasonAndYear.year),
       ...vueForBottomBar.bottomCourses,
     ];
   }
