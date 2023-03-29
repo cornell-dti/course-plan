@@ -148,6 +148,7 @@ export default defineComponent({
     &.item:hover {
       background-color: $searchBoxHoverGray;
       opacity: 1;
+      cursor: pointer;
     }
   }
 }
