@@ -1,3 +1,5 @@
+import { fullCoursesArray } from '../../src/assets/courses/typed-full-courses';
+
 export type Course = {
   /** Corresponds to the "prefix" column on the PDF */
   subject: string;
@@ -5,6 +7,10 @@ export type Course = {
   catalogNbr: number;
   /** The liberal studies categories satisfied by the course */
   categories: readonly string[];
+};
+
+export type CourseWithId = Course & {
+  crseId: number;
 };
 
 enum Col {
@@ -52,11 +58,9 @@ export function genCourseEntries(data) {
           c = Col.Title;
           break;
         case Col.Title:
-          // title = v;
           c = Col.College;
           break;
         case Col.College:
-          // college = v;
           c = Col.Category;
           break;
         case Col.Category:
@@ -64,9 +68,6 @@ export function genCourseEntries(data) {
           c = Col.Credits;
           break;
         case Col.Credits: {
-          // let creditList = v.split('-');
-          // creditList = creditList.map((x: string) => parseInt(x, 10));
-          // credits = creditList;
           const course = { subject, catalogNbr, categories };
           courseEntries.push(course);
           c = Col.CoursePrefix;
@@ -80,4 +81,29 @@ export function genCourseEntries(data) {
     }
   }
   return courseEntries.filter(course => !Number.isNaN(course.catalogNbr));
+}
+
+export function getValidCourses(data) {
+  const courseEntries = genCourseEntries(data);
+  const approvedCourses = fullCoursesArray;
+
+  const validCourses: CourseWithId[] = [];
+  for (const courseWithId of approvedCourses) {
+    for (const course of courseEntries) {
+      if (
+        courseWithId.subject === course.subject &&
+        courseWithId.catalogNbr === course.catalogNbr.toString()
+      ) {
+        const x: CourseWithId = {
+          subject: course.subject,
+          catalogNbr: course.catalogNbr,
+          categories: course.categories,
+          crseId: courseWithId.crseId,
+        };
+        validCourses.push(x);
+        break;
+      }
+    }
+  }
+  return validCourses;
 }
