@@ -174,6 +174,7 @@ interface CornellCourseRosterCourseFullDetail extends CornellCourseRosterCourse 
 }
 
 interface FullClassRosterCourseWithUniqueID extends CornellCourseRosterCourseFullDetail {
+  readonly userChosenCredits: number;
   readonly uniqueID: number;
 }
 
