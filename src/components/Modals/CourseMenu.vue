@@ -16,15 +16,11 @@
         </div>
         <img
           class="courseMenu-arrow"
-          src="@/assets/images/sidearrow.svg"
+          src="@/assets/images/downarrow.svg"
           alt="arrow to expand edit course color"
         />
 
-        <div
-          v-if="displayColors"
-          class="courseMenu-content courseMenu-colors"
-          :class="{ 'courseMenu-colors--left': isLeft }"
-        >
+        <div v-if="displayColors" class="courseMenu-content courseMenu-colors">
           <button
             v-for="(color, index) in colors"
             :key="index"
@@ -69,13 +65,12 @@
         </div>
         <img
           class="courseMenu-arrow"
-          src="@/assets/images/sidearrow.svg"
+          src="@/assets/images/downarrow.svg"
           alt="arrow to expand edit course credits"
         />
         <div
           v-if="displayEditCourseCredits"
           class="courseMenu-content courseMenu-editCredits courseMenu-centerCredits"
-          :class="{ 'courseMenu-editCredits--left': isLeft }"
         >
           <div
             v-for="credit in makeCreditArary()"
@@ -296,26 +291,20 @@ export default defineComponent({
   &-colors {
     position: absolute;
     padding: 10px 5px 0px 5px;
-    right: -9rem;
-
-    &--left {
-      right: 8.87rem;
-    }
+    top: 100%;
+    right: 0;
   }
 
   &-editCredits {
     position: absolute;
-    width: 2.75rem;
-    right: -2.75rem;
+    top: 100%;
+    right: 0;
+    width: 100%;
     padding: auto;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
-
-    &--left {
-      right: 8.87rem;
-    }
   }
 }
 
