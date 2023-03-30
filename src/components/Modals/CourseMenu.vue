@@ -246,7 +246,8 @@ export default defineComponent({
       background-color: rgba(50, 160, 242, 0.15);
     }
 
-    &:first-child {
+    &:first-child:not(.courseMenu-editCredits > &),
+    &:only-child {
       border-top-left-radius: 9px;
       border-top-right-radius: 9px;
     }
@@ -311,21 +312,28 @@ export default defineComponent({
     position: absolute;
     padding: 10px 5px 0px 5px;
     top: 100%;
-    right: 0;
     z-index: 1;
+    width: calc(100% + 0.081rem);
+    left: -0.031rem;
+    border-radius: 0 0 9px 9px;
+    border-top: none;
+    box-sizing: border-box;
   }
 
   &-editCredits {
     position: absolute;
     top: 100%;
-    right: 0;
-    width: 100%;
+    width: calc(100% + 0.081rem);
+    left: -0.031rem;
     padding: auto;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
     z-index: 1;
+    border-radius: 0 0 9px 9px;
+    border-top: none;
+    box-sizing: border-box;
   }
 }
 
@@ -338,7 +346,7 @@ export default defineComponent({
     }
     &-colors {
       right: 0rem;
-      left: -9rem;
+      left: 0rem;
     }
   }
 }
