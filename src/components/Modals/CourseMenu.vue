@@ -20,7 +20,11 @@
           alt="arrow to expand edit course color"
         />
 
-        <div v-if="displayColors" class="courseMenu-content courseMenu-colors">
+        <div
+          v-if="displayColors"
+          class="courseMenu-content courseMenu-colors"
+          :style="{ zIndex: zIndexColors }"
+        >
           <button
             v-for="(color, index) in colors"
             :key="index"
@@ -71,6 +75,7 @@
         <div
           v-if="displayEditCourseCredits"
           class="courseMenu-content courseMenu-editCredits courseMenu-centerCredits"
+          :style="{ zIndex: zIndexEditCredits }"
         >
           <div
             v-for="credit in makeCreditArary()"
@@ -124,6 +129,8 @@ export default defineComponent({
       displayColors: false,
       displayEditCourseCredits: false,
       tooltipColor: '',
+      zIndexColors: 1,
+      zIndexEditCredits: 1,
     };
   },
   computed: {
@@ -160,6 +167,12 @@ export default defineComponent({
     },
     setDisplayColors(bool: boolean) {
       this.displayColors = bool;
+      if (bool) {
+        this.zIndexColors = 3;
+        this.zIndexEditCredits = 1;
+      } else {
+        this.zIndexColors = 1;
+      }
     },
     setDisplayColorTooltip(bool: boolean, color: string) {
       if (bool) {
@@ -170,6 +183,12 @@ export default defineComponent({
     },
     setDisplayEditCourseCredits(bool: boolean) {
       this.displayEditCourseCredits = bool;
+      if (bool) {
+        this.zIndexEditCredits = 3;
+        this.zIndexColors = 1;
+      } else {
+        this.zIndexEditCredits = 1;
+      }
     },
     editCourseCredit(credit: number) {
       this.$emit('edit-course-credit', credit);
@@ -293,6 +312,7 @@ export default defineComponent({
     padding: 10px 5px 0px 5px;
     top: 100%;
     right: 0;
+    z-index: 1;
   }
 
   &-editCredits {
@@ -305,6 +325,7 @@ export default defineComponent({
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    z-index: 1;
   }
 }
 
