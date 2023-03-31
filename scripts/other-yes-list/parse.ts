@@ -85,22 +85,12 @@ export function genCourseEntries(data) {
 
 export function getValidCourses(data) {
   const courseEntries = genCourseEntries(data);
-  const approvedCourses = fullCoursesArray;
-
   const validCourses: CourseWithId[] = [];
-  for (const courseWithId of approvedCourses) {
+
+  for (const { subject, catalogNbr, crseId } of fullCoursesArray) {
     for (const course of courseEntries) {
-      if (
-        courseWithId.subject === course.subject &&
-        courseWithId.catalogNbr === course.catalogNbr.toString()
-      ) {
-        const x: CourseWithId = {
-          subject: course.subject,
-          catalogNbr: course.catalogNbr,
-          categories: course.categories,
-          crseId: courseWithId.crseId,
-        };
-        validCourses.push(x);
+      if (subject === course.subject && catalogNbr === course.catalogNbr.toString()) {
+        validCourses.push({ ...course, crseId });
         break;
       }
     }
