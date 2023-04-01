@@ -81,8 +81,8 @@ export default defineComponent({
     active: { type: Boolean, required: true },
     isReqCourse: { type: Boolean, required: true },
     semesterIndex: { type: Number, required: false, default: 0 },
-    season: { type: String, required: true },
-    year: { type: Number, required: true },
+    season: { type: String, required: false, default: '' },
+    year: { type: Number, required: false, default: 0 },
   },
   emits: {
     'delete-course': (code: string, uniqueID: number) =>
