@@ -52,7 +52,6 @@ const getDetailedInformationForBottomBar = async (
     subject,
     number
   );
-  console.log(course);
   return cornellCourseRosterCourseDetailedInformationToPartialBottomCourseInformation(
     checkNotNull(course)
   );
