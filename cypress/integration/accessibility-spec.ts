@@ -52,6 +52,19 @@ it('Check accessibility of the requirements sidebar', () => {
   cy.checkA11y('[data-cyId=reqsSidebar]');
 });
 
+// it('Check accessibility of the bottom bar', () => {
+//   // Note that a course must be added in case the plan is empty to do so
+//   cy.get('[data-cyId=semester-addCourse]').click();
+//   cy.get('[data-cyId=newCourse-dropdown]').type('CS 1110');
+//   cy.get('[data-cyId=newCourse-searchResult]').first().click();
+//   cy.get('[data-cyId=modal-button]').click();
+
+//   // open the bottom bar
+//   cy.get('[data-cyId=semester-course]').eq(0).click();
+
+//   cy.checkA11y('[data-cyId=bottombar]', null, null, true); // only check accessibility within the bottom bar
+// });
+
 it('Check accessibility of the bottom bar', () => {
   // Note that a course must be added in case the plan is empty to do so
   cy.get('[data-cyId=semester-addCourse]').click();
@@ -61,6 +74,9 @@ it('Check accessibility of the bottom bar', () => {
 
   // open the bottom bar
   cy.get('[data-cyId=semester-course]').eq(0).click();
+
+  // wait for the bottom bar to become visible before running the accessibility check
+  cy.get('[data-cyId=bottombar]', { timeout: 10000 }).should('be.visible');
 
   cy.checkA11y('[data-cyId=bottombar]', null, null, true); // only check accessibility within the bottom bar
 });
