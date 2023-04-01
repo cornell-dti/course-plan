@@ -29,6 +29,8 @@
               :compact="true"
               :active="false"
               class="requirements-course"
+              :season="getSeason(element.code)"
+              :year="getYear(element.code)"
             />
           </div>
         </template>
@@ -40,9 +42,12 @@
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
 import draggable from 'vuedraggable';
+import { doc, getDoc } from 'firebase/firestore';
 import Course from '@/components/Course/Course.vue';
 import { incrementUniqueID } from '@/global-firestore-data';
 import { GTagEvent } from '@/gtag';
+import { rosterIdentifierToSeasonAndYear } from '../../user-data-converter';
+import { availableRostersForCoursesCollection } from '@/firebase-config';
 
 export default defineComponent({
   components: { draggable, Course },
@@ -93,6 +98,18 @@ export default defineComponent({
     },
   },
   methods: {
+    async getSeason(code: string) {
+      const rosters = (
+        await getDoc(doc(availableRostersForCoursesCollection, code))
+      ).data() as string[];
+      return rosterIdentifierToSeasonAndYear(rosters[rosters.length - 1]).season;
+    },
+    async getYear(code: string) {
+      const rosters = (
+        await getDoc(doc(availableRostersForCoursesCollection, code))
+      ).data() as string[];
+      return rosterIdentifierToSeasonAndYear(rosters[rosters.length - 1]).year;
+    },
     onDrag() {
       this.scrollable = true;
     },

@@ -5,6 +5,8 @@ import {
   crseIdToCatalogNbrCollection,
 } from '../firebase-config';
 
+import { seasonAndYearToRosterIdentifier } from '../user-data-converter';
+
 /**
  * This function uses the subject and number of a course to retrieve the course information from 'courses' collection
  * @param season The season that the course is under in the user's semester view
@@ -81,21 +83,6 @@ const getCourse = async (
   }
   return course.data()?.course;
 };
-
-/**
- * This function transforms semester and year to a roster ID. EX: Spring 2023 -> SP23
- * */
-const seasonAndYearToRosterIdentifier = (season: FirestoreSemesterSeason, year: number): string => {
-  const seasonToSemesterMap = {
-    Fall: 'FA',
-    Spring: 'SP',
-    Winter: 'WI',
-    Summer: 'SU',
-  } as const;
-
-  return `${seasonToSemesterMap[season]}${year - 2000}`;
-};
-
 /**
  *
  * @param courseCode The course code (EX: 'CS 1110')
