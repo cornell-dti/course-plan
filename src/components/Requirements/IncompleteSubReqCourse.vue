@@ -29,8 +29,8 @@
               :compact="true"
               :active="false"
               class="requirements-course"
-              :season="getSeason(element.code)"
-              :year="getYear(element.code)"
+              :season="getSeason(element.code).then(season => season)"
+              :year="getYear(element.code).then(year => year)"
             />
           </div>
         </template>
@@ -102,7 +102,8 @@ export default defineComponent({
       const rosters = (
         await getDoc(doc(availableRostersForCoursesCollection, code))
       ).data() as string[];
-      return rosterIdentifierToSeasonAndYear(rosters[rosters.length - 1]).season;
+      return rosterIdentifierToSeasonAndYear(rosters[rosters.length - 1])
+        .season as FirestoreSemesterSeason;
     },
     async getYear(code: string) {
       const rosters = (
