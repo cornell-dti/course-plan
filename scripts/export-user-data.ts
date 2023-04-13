@@ -16,6 +16,7 @@ class Rating {
     this.rating = rating;
     this.timestamp = timestamp;
   }
+
   saveAsCSV() {
     const csv = `${this.userId},${this.courseId},${this.rating},${this.timestamp}\n`;
     try {
@@ -29,10 +30,10 @@ class Rating {
 function getUserCourses(
   user: FirebaseFirestore.QueryDocumentSnapshot<FirebaseFirestore.DocumentData>
 ): number[] {
-  let userCourseIDs: number[] = [];
+  const userCourseIDs: number[] = [];
   const semesters = user.get('semesters');
   for (const semester of semesters) {
-    const courses = semester.courses;
+    const { courses } = semester;
     for (const course of courses) {
       userCourseIDs.push(course.crseId);
     }
