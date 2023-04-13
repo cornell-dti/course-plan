@@ -1,12 +1,20 @@
+import pandas
 from recommenders.datasets import movielens
 from recommenders.datasets.python_splitters import python_chrono_split
+import argparse
 
-MOVIELENS_DATA_SIZE = '100k'
+parser = argparse.ArgumentParser()
+parser.add_argument("--use_sample_data",
+                    help="Use the Movielens Dataset", action="store_true")
+args = parser.parse_args()
 
-df = movielens.load_pandas_df(
-    size=MOVIELENS_DATA_SIZE,
-    header=["userID", "itemID", "rating", "timestamp"]
-)
+if args.use_sample_data:
+    df = movielens.load_pandas_df(
+        size='100k',
+        header=["userID", "itemID", "rating", "timestamp"]
+    )
+else:
+    df = pandas.read_csv("ratings.csv")
 
 df.head()
 
