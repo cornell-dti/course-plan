@@ -82,23 +82,11 @@ eval_precision = precision_at_k(
 eval_recall = recall_at_k(test, all_predictions,
                           col_prediction='prediction', k=TOP_K)
 
-<< << << < HEAD
-
-== == == =
 assert(eval_map > 0.02)
 assert(eval_ndcg > 0.1)
 assert(eval_precision > 0.1)
 assert(eval_recall > 0.05)
->>>>>> > recsys
 print("MAP:\t%f" % eval_map,
       "NDCG:\t%f" % eval_ndcg,
       "Precision@K:\t%f" % eval_precision,
       "Recall@K:\t%f" % eval_recall, sep='\n')
-<< << << < HEAD
-
-assert(eval_map < 0.1)
-assert(eval_ndcg < 0.25)
-assert(eval_precision < 0.2)
-assert(eval_recall < 0.15)
-== == == =
->>>>>> > recsys
