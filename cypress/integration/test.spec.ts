@@ -237,3 +237,14 @@ it('Minimize a semester', () => {
   cy.get('[data-cyId=semester-course]').should('be.visible');
   cy.get('[data-cyId=semester-addCourse]').should('be.visible');
 });
+
+it('Multiple plans dropdown open/close', () => {
+  // dropdown initially closed
+  cy.get('[data-cyId=multiplePlans-dropdown-content]').should('not.exist');
+  cy.get('[data-cyId=multiplePlans-dropdown]').click();
+  // dropdown opens
+  cy.get('[data-cyId=multiplePlans-dropdown-content]').should('be.visible');
+  cy.get('[data-cyId=multiplePlans-dropdown]').click();
+  // dropdown closed again
+  cy.get('[data-cyId=multiplePlans-dropdown-content]').should('not.exist');
+});
