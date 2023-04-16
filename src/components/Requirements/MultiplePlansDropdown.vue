@@ -37,6 +37,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import editPlan from '@/assets/images/editplan.svg';
+import store from '@/store';
 
 export default defineComponent({
   props: {
@@ -44,7 +45,7 @@ export default defineComponent({
   },
   data() {
     return {
-      plans: ['PLAN 1', 'PLAN 2', 'PLAN 3', 'PLAN 4'],
+      plans: store.state.plans.map(plan => plan.name),
       shown: false,
       currPlan: 'PLAN 1',
       editPlan,
