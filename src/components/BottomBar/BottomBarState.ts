@@ -96,11 +96,11 @@ export const addCourseToBottomBar = async (
   const availableRostersForCourse = (
     await getDoc(doc(availableRostersForCoursesCollection, course.code))
   ).data() as { rosters: string[] };
-  const currentRoster = seasonAndYearToRosterIdentifier(season, year);
+  const currentRoster = seasonAndYearToRosterIdentifier(season as FirestoreSemesterSeason, year);
   // check if the course was offered in the semester that the user has it under
   if (availableRostersForCourse.rosters.indexOf(currentRoster) !== -1) {
     vueForBottomBar.bottomCourses = [
-      firestoreSemesterCourseToBottomBarCourse(course, season, year),
+      firestoreSemesterCourseToBottomBarCourse(course, season as FirestoreSemesterSeason, year),
       ...vueForBottomBar.bottomCourses,
     ];
   } else {
