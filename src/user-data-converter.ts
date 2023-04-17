@@ -135,21 +135,25 @@ export const rosterIdentifierToSeasonAndYear = (
 };
 
 /**
- * This function transforms a season and year to a roster ID. EX: Spring 2023 -> SP23
+ * This function transforms semester and year to a roster ID. EX: Spring 2023 -> SP23
  * */
-export const seasonAndYearToRosterIdentifier = (season: string, year: number): string => {
-  const seasonToSemesterMap = new Map([
-    ['Fall', 'FA'],
-    ['Spring', 'SP'],
-    ['Winter', 'WI'],
-    ['Summer', 'SU'],
-  ]);
-  return `${seasonToSemesterMap.get(season) as string}${year - 2000}`;
+export const seasonAndYearToRosterIdentifier = (
+  season: FirestoreSemesterSeason,
+  year: number
+): string => {
+  const seasonToSemesterMap = {
+    Fall: 'FA',
+    Spring: 'SP',
+    Winter: 'WI',
+    Summer: 'SU',
+  } as const;
+
+  return `${seasonToSemesterMap[season]}${year - 2000}`;
 };
 
 export const firestoreSemesterCourseToBottomBarCourse = (
   { code, name, credits, color, lastRoster, semesters, uniqueID }: FirestoreSemesterCourse,
-  season: string,
+  season: FirestoreSemesterSeason,
   year: number
 ): AppBottomBarCourse => ({
   code,
