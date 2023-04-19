@@ -10,7 +10,7 @@ class Rating {
 
   timestamp: number;
 
-  constructor(id: number, course: number, rating: 1, timestamp: 0) {
+  constructor(id: number, course: number, rating: number, timestamp: number) {
     this.userId = id;
     this.courseId = course;
     this.rating = rating;
@@ -52,17 +52,16 @@ function createCSVHeaders() {
 const exportUserData = async () => {
   const userSnapshot = await semestersCollection.get();
   createCSVHeaders();
+  let id = 0;
   for (const user of userSnapshot.docs) {
     const courses = getUserCourses(user);
-    const id = user.get('id');
-    if (id !== undefined) {
-      for (const course of courses) {
-        if (course !== undefined) {
-          const rating = new Rating(id, course, 1, 0);
-          rating.saveAsCSV();
-        }
+    for (const course of courses) {
+      if (course !== undefined) {
+        const rating = new Rating(id, course, 1, 0);
+        rating.saveAsCSV();
       }
     }
+    id++;
   }
 };
 
