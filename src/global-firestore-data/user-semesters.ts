@@ -23,7 +23,9 @@ export const editSemesters = (
   });
 };
 
-export const editPlans = async (updater: (oldPlans: readonly Plan[]) => readonly Plan[]): Promise<void> => {
+export const editPlans = async (
+  updater: (oldPlans: readonly Plan[]) => readonly Plan[]
+): Promise<void> => {
   const plans = updater(store.state.plans);
   store.commit('setPlans', plans);
   await updateDoc(doc(semestersCollection, store.state.currentFirebaseUser.email), {
@@ -97,7 +99,11 @@ export const addSemester = (
   editSemesters(oldSemesters => [...oldSemesters, createSemester(year, season, courses)]);
 };
 
-export const addPlan = async (name: string, semesters: FirestoreSemester[], gtag?: GTag): Promise<void> => {
+export const addPlan = async (
+  name: string,
+  semesters: FirestoreSemester[],
+  gtag?: GTag
+): Promise<void> => {
   GTagEvent(gtag, 'add-plan');
   await editPlans(oldPlans => [...oldPlans, createPlan(name, semesters)]);
 };
