@@ -97,9 +97,9 @@ export const addSemester = (
   editSemesters(oldSemesters => [...oldSemesters, createSemester(year, season, courses)]);
 };
 
-export const addPlan = (name: string, semesters: FirestoreSemester[], gtag?: GTag): void => {
+export const addPlan = async (name: string, semesters: FirestoreSemester[], gtag?: GTag): Promise<void> => {
   GTagEvent(gtag, 'add-plan');
-  editPlans(oldPlans => [...oldPlans, createPlan(name, semesters)]);
+  await editPlans(oldPlans => [...oldPlans, createPlan(name, semesters)]);
 };
 
 export const deleteSemester = (
