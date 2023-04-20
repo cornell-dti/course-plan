@@ -23,14 +23,13 @@ export const editSemesters = (
   });
 };
 
-export const editPlans = (updater: (oldPlans: readonly Plan[]) => readonly Plan[]): void => {
+export const editPlans = async (updater: (oldPlans: readonly Plan[]) => readonly Plan[]): Promise<void> => {
   const plans = updater(store.state.plans);
   store.commit('setPlans', plans);
-  updateDoc(doc(semestersCollection, store.state.currentFirebaseUser.email), {
+  await updateDoc(doc(semestersCollection, store.state.currentFirebaseUser.email), {
     plans,
   });
 };
-
 /**
  * Sets whether semesters are ordered by newest/oldest
  */
