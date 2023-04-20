@@ -291,7 +291,7 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
       store.commit('setSemesters', [newSemester]);
       setDoc(doc(fb.semestersCollection, simplifiedUser.email), {
         orderByNewest: true,
-        plans: [{ semesters: [newSemester] }], // TODO: andxu282 update later
+        plans: [{ name: 'Plan 1', semesters: [newSemester] }], // TODO: andxu282 update later
         semesters: [newSemester],
       });
     }
