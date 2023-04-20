@@ -61,7 +61,7 @@ const exportUserData = async () => {
         rating.saveAsCSV();
       }
     }
-    id++;
+    id += 1;
   }
 };
 
