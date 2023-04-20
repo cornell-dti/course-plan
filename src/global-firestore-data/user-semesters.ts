@@ -115,11 +115,10 @@ export const deleteSemester = (
   }
 };
 
-export const deletePlan = (name: string, gtag?: GTag): void => {
+export const deletePlan = async (name: string, gtag?: GTag): Promise<void> => {
   GTagEvent(gtag, 'delete-plan');
-  const plan = store.state.plans.find(p => p.name === name);
-  if (plan) {
-    editPlans(oldPlans => oldPlans.filter(p => !(p.name === name)));
+  if (store.state.plans.some(p => p.name === name)) {
+    await editPlans(oldPlans => oldPlans.filter(p => p.name !== name));
   }
 };
 
