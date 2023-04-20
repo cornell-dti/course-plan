@@ -161,7 +161,7 @@ const store: TypedVuexStore = new TypedVuexStore({
     setIsTeleportModalOpen(state: VuexStoreState, newTeleportModalValue: boolean) {
       state.isTeleportModalOpen = newTeleportModalValue;
     },
-    setPlans(state: VuexStoreState, newPlans: Plan[]) {
+    setPlans(state: VuexStoreState, newPlans: readonly Plan[]) {
       state.plans = newPlans;
     },
     setCurrentPlan(state: VuexStoreState, newCurrPlan: Plan) {
