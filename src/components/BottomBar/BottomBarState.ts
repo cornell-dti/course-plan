@@ -133,12 +133,14 @@ export const addCourseToBottomBar = async (
         ({ uniqueID, code }) => uniqueID === course.uniqueID && code === course.code
       );
       if (bottomBarCourse) {
-        bottomBarCourse.description = description;
-        bottomBarCourse.prereqs = prereqs;
-        bottomBarCourse.enrollment = enrollment;
-        bottomBarCourse.lectureTimes = lectureTimes;
-        bottomBarCourse.instructors = instructors;
-        bottomBarCourse.distributions = distributions;
+        Object.assign(bottomBarCourse, {
+          description,
+          prereqs,
+          enrollment,
+          lectureTimes,
+          instructors,
+          distributions,
+        });
       }
     }),
   ]);
