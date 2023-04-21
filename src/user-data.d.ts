@@ -145,7 +145,7 @@ interface CornellCourseRosterCourse {
   readonly catalogSatisfiesReq?: string;
   readonly catalogCourseSubfield?: string;
   readonly catalogAttribute?: string;
-  readonly roster: string;
+  roster: string;
   readonly acadCareer: string;
   readonly acadGroup: string;
 }

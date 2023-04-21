@@ -61,7 +61,9 @@ const getLastOffering = async (subject: string, number: string) => {
   const latestCourse = await getDoc(
     doc(coursesCollection, `${availableRostersForCourse.rosters[lastRoster]}/${subject}/${number}`)
   );
-  return latestCourse.data()?.course;
+  const course: CornellCourseRosterCourseFullDetail = latestCourse.data()?.course;
+  course.roster = availableRostersForCourse.rosters[lastRoster];
+  return course;
 };
 
 /**
@@ -72,7 +74,7 @@ const getLastOffering = async (subject: string, number: string) => {
  * @param number The number of the course
  * @returns `Promise<CornellCourseRosterCourseFullDetail>`
  */
-const getCourse = async (
+export const getCourse = async (
   roster: string,
   subject: string,
   number: string
@@ -81,14 +83,18 @@ const getCourse = async (
   if (!course.exists()) {
     return getLastOffering(subject, number);
   }
-  return course.data()?.course;
+  const retrievedCourse: CornellCourseRosterCourseFullDetail = course.data()?.course;
+  retrievedCourse.roster = roster;
+  return retrievedCourse;
 };
 /**
  *
  * @param courseCode The course code (EX: 'CS 1110')
  * @returns A string[] containing the subject and number (EX: ['CS', '1110'])
  */
-const extractSubjectAndNumber = (courseCode: string): { subject: string; number: string } => {
+export const extractSubjectAndNumber = (
+  courseCode: string
+): { subject: string; number: string } => {
   if (courseCode.split(' ').length !== 2) {
     throw Error(
       `Invalid course format. Expected course to be of form subject and number. EX: CS 1110`

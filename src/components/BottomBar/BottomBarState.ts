@@ -1,9 +1,13 @@
 import { reactive } from 'vue';
-import { doc, getDoc } from 'firebase/firestore';
+// import { doc, getDoc } from 'firebase/firestore';
 import { VueGtag } from 'vue-gtag-next';
 import { GTagEvent } from '../../gtag';
 import { checkNotNull } from '../../utilities';
-import { getCourseWithSeasonAndYear } from '../../global-firestore-data/courses';
+import {
+  getCourseWithSeasonAndYear,
+  getCourse,
+  extractSubjectAndNumber,
+} from '../../global-firestore-data/courses';
 
 import {
   cornellCourseRosterCourseDetailedInformationToPartialBottomCourseInformation,
@@ -12,7 +16,7 @@ import {
   seasonAndYearToRosterIdentifier,
 } from '../../user-data-converter';
 
-import { availableRostersForCoursesCollection } from '../../firebase-config';
+// import { availableRostersForCoursesCollection } from '../../firebase-config';
 
 export type BottomBarState = {
   bottomCourses: readonly AppBottomBarCourse[];
@@ -93,26 +97,18 @@ export const addCourseToBottomBar = async (
       return;
     }
   }
-  const availableRostersForCourse = (
-    await getDoc(doc(availableRostersForCoursesCollection, course.code))
-  ).data() as { rosters: string[] };
-  const currentRoster = seasonAndYearToRosterIdentifier(season as FirestoreSemesterSeason, year);
-  // check if the course was offered in the semester that the user has it under
-  if (availableRostersForCourse.rosters.indexOf(currentRoster) !== -1) {
-    vueForBottomBar.bottomCourses = [
-      firestoreSemesterCourseToBottomBarCourse(course, season as FirestoreSemesterSeason, year),
-      ...vueForBottomBar.bottomCourses,
-    ];
-  } else {
-    // if not, retrieve the info from the latest class roster the course is in
-    const latestRosterIndex = availableRostersForCourse.rosters.length - 1;
-    const latestRoster = availableRostersForCourse.rosters[latestRosterIndex];
-    const seasonAndYear = rosterIdentifierToSeasonAndYear(latestRoster);
-    vueForBottomBar.bottomCourses = [
-      firestoreSemesterCourseToBottomBarCourse(course, seasonAndYear.season, seasonAndYear.year),
-      ...vueForBottomBar.bottomCourses,
-    ];
-  }
+  const courseSubjectAndNumber = extractSubjectAndNumber(course.code);
+  const classRosterCourseData = await getCourse(
+    seasonAndYearToRosterIdentifier(season as FirestoreSemesterSeason, year),
+    courseSubjectAndNumber.subject,
+    courseSubjectAndNumber.number
+  );
+  const seasonAndYear = rosterIdentifierToSeasonAndYear(classRosterCourseData.roster);
+
+  vueForBottomBar.bottomCourses = [
+    firestoreSemesterCourseToBottomBarCourse(course, seasonAndYear.season, seasonAndYear.year),
+    ...vueForBottomBar.bottomCourses,
+  ];
 
   vueForBottomBar.bottomCourseFocus = 0;
 
