@@ -144,12 +144,12 @@ export default defineComponent({
     closeSemesterModal() {
       this.isSemesterModalOpen = false;
     },
-    addSemester(season: string, year: number) {
-      addSemester(year, season as FirestoreSemesterSeason, this.$gtag);
+    async addSemester(season: string, year: number) {
+      await addSemester(year, season as FirestoreSemesterSeason, this.$gtag);
       this.openSemesterConfirmationModal(season as FirestoreSemesterSeason, year, true);
     },
-    deleteSemester(season: string, year: number) {
-      deleteSemester(year, season as FirestoreSemesterSeason, this.$gtag);
+    async deleteSemester(season: string, year: number) {
+      await deleteSemester(year, season as FirestoreSemesterSeason, this.$gtag);
       this.openSemesterConfirmationModal(season as FirestoreSemesterSeason, year, false);
     },
     courseOnClick(course: FirestoreSemesterCourse) {
@@ -211,6 +211,7 @@ export default defineComponent({
     margin-bottom: 1rem;
     min-height: 2.25rem;
     align-items: center;
+
     &--two {
       justify-content: space-between;
     }
@@ -280,6 +281,7 @@ export default defineComponent({
 
     a {
       color: $medGray;
+
       &:hover {
         text-decoration: underline $medGray;
       }
@@ -308,9 +310,11 @@ export default defineComponent({
     margin-top: 5.5rem;
     margin-left: 2.5rem;
     margin-right: 1rem;
+
     &-switch {
       padding-right: 0.75rem;
     }
+
     &-content {
       width: 100%;
       justify-content: center;

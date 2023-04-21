@@ -103,7 +103,7 @@ export default defineComponent({
     onDeleteModalOpen(): void {
       this.deleteModalVisible = true;
     },
-    onDeleteCourseModalClose(isDelete: boolean): void {
+    async onDeleteCourseModalClose(isDelete: boolean) {
       this.deleteModalVisible = false;
 
       if (isDelete) {
@@ -111,7 +111,7 @@ export default defineComponent({
           deleteTransferCredit(this.courseTaken.code);
         } else {
           const { uniqueId } = this.courseTaken;
-          if (typeof uniqueId === 'number') deleteCourseFromSemesters(uniqueId, this.$gtag);
+          if (typeof uniqueId === 'number') await deleteCourseFromSemesters(uniqueId, this.$gtag);
         }
       }
     },
@@ -152,6 +152,7 @@ export default defineComponent({
         margin-top: 0.6rem;
         margin-bottom: 0.6rem;
       }
+
       &-heading {
         &-wrapper {
           display: flex;
@@ -159,18 +160,21 @@ export default defineComponent({
           justify-content: space-between;
           margin-top: 0.6rem;
         }
+
         &-course {
           font-size: 14px;
           line-height: 17px;
           color: $lightPlaceholderGray;
         }
       }
+
       &-object {
         &-wrapper {
           display: flex;
           flex-direction: row;
           justify-content: space-between;
         }
+
         &-semester {
           font-size: 14px;
           line-height: 16px;

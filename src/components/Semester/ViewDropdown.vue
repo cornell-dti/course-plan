@@ -89,8 +89,8 @@ export default defineComponent({
   },
 
   methods: {
-    onOrderClick(orderByNewest: boolean) {
-      setOrderByNewest(orderByNewest);
+    async onOrderClick(orderByNewest: boolean) {
+      await setOrderByNewest(orderByNewest);
     },
     toggle() {
       this.open = !this.open;
@@ -107,33 +107,40 @@ export default defineComponent({
 
 <style scoped lang="scss">
 @import '@/assets/scss/_variables.scss';
+
 .dropdown {
   z-index: 1;
   position: relative;
   float: right;
+
   &-button {
     border: none;
     display: flex;
     align-items: center;
     padding-bottom: 0.5rem;
+
     &--label {
       :hover > & {
         color: $einBlue;
       }
+
       font-weight: 500;
       font-size: 19px;
       line-height: 19px;
       color: $medGray;
     }
+
     &--image {
       margin-right: 0.3rem;
       width: 1rem;
       content: url('@/assets/images/views/settings.svg');
+
       :hover > & {
         content: url('@/assets/images/views/settingsOnHover.svg');
       }
     }
   }
+
   &-content {
     display: flex;
     flex-direction: column;
@@ -149,6 +156,7 @@ export default defineComponent({
     box-sizing: border-box;
     box-shadow: 0px 5px 8px 2px $boxShadowGray;
     border-radius: 4px;
+
     &--hline {
       width: calc(100% - 2rem);
       height: 0;

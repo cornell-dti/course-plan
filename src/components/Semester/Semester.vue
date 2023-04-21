@@ -273,9 +273,9 @@ export default defineComponent({
        * attached to the course. We need to check the presence of this field and update requirement
        * choice accordingly.
        */
-      set(newCourses: readonly AppFirestoreSemesterCourseWithRequirementID[]) {
+      async set(newCourses: readonly AppFirestoreSemesterCourseWithRequirementID[]) {
         const courses = newCourses.map(({ requirementID: _, ...rest }) => rest);
-        editSemester(
+        await editSemester(
           this.year,
           this.season,
           (semester: FirestoreSemester): FirestoreSemester => ({
@@ -406,15 +406,15 @@ export default defineComponent({
       this.isConfirmationOpen = false;
     },
     // TODO @willespencer refactor the below methods after gatekeep removed (to only 1 method)
-    addCourse(data: CornellCourseRosterCourse, choice: FirestoreCourseOptInOptOutChoices) {
+    async addCourse(data: CornellCourseRosterCourse, choice: FirestoreCourseOptInOptOutChoices) {
       const newCourse = cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData(data);
       // Since the course is new, we know the old choice does not exist.
-      addCourseToSemester(this.year, this.season, newCourse, () => choice, this.$gtag);
+      await addCourseToSemester(this.year, this.season, newCourse, () => choice, this.$gtag);
 
       const courseCode = `${data.subject} ${data.catalogNbr}`;
       this.openConfirmationModal(`Added ${courseCode} to ${this.season} ${this.year}`);
     },
-    selectCourse(data: CornellCourseRosterCourse) {
+    async selectCourse(data: CornellCourseRosterCourse) {
       // only perform operations if the gatekeep is true
       if (this.handleRequirementConflicts) {
         const newCourse = cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData(data);
@@ -427,7 +427,7 @@ export default defineComponent({
         };
 
         // add the course to the semeser (with no choice made)
-        addCourseToSemester(this.year, this.season, newCourse, () => choice, this.$gtag);
+        await addCourseToSemester(this.year, this.season, newCourse, () => choice, this.$gtag);
         this.closeCourseModal();
 
         const conflicts = store.state.courseToRequirementsInConstraintViolations.get(
@@ -452,16 +452,16 @@ export default defineComponent({
     handleConflictsResolved(course: FirestoreSemesterCourse) {
       this.openConfirmationModal(`Added ${course.code} to ${this.season} ${this.year}`);
     },
-    deleteCourseWithoutModal(uniqueID: number) {
-      deleteCourseFromSemester(this.year, this.season, uniqueID, this.$gtag);
+    async deleteCourseWithoutModal(uniqueID: number) {
+      await deleteCourseFromSemester(this.year, this.season, uniqueID, this.$gtag);
     },
-    deleteCourse(courseCode: string, uniqueID: number) {
-      deleteCourseFromSemester(this.year, this.season, uniqueID, this.$gtag);
+    async deleteCourse(courseCode: string, uniqueID: number) {
+      await deleteCourseFromSemester(this.year, this.season, uniqueID, this.$gtag);
       // Update requirements menu
       this.openConfirmationModal(`Removed ${courseCode} from ${this.season} ${this.year}`);
     },
-    colorCourse(color: string, uniqueID: number, courseCode: string) {
-      editSemester(
+    async colorCourse(color: string, uniqueID: number, courseCode: string) {
+      await editSemester(
         this.year,
         this.season,
         (semester: FirestoreSemester): FirestoreSemester => ({
@@ -473,7 +473,7 @@ export default defineComponent({
       );
       this.openConfirmationModal(`Changed color for ${courseCode}`);
     },
-    colorSubject(color: string, courseCode: string) {
+    async colorSubject(color: string, courseCode: string) {
       const subject = courseCode.split(' ')[0];
       const updater = (semester: FirestoreSemester): FirestoreSemester => ({
         ...semester,
@@ -483,15 +483,15 @@ export default defineComponent({
             : course
         ),
       });
-      editSemesters(oldSemesters => oldSemesters.map(sem => updater(sem)));
+      await editSemesters(oldSemesters => oldSemesters.map(sem => updater(sem)));
       updateSubjectColorData(color, subject);
       this.openConfirmationModal(`Changed color for ${subject}`);
     },
     courseOnClick(course: FirestoreSemesterCourse) {
       this.$emit('course-onclick', course);
     },
-    editCourseCredit(credit: number, uniqueID: number) {
-      editSemester(
+    async editCourseCredit(credit: number, uniqueID: number) {
+      await editSemester(
         this.year,
         this.season,
         (semester: FirestoreSemester): FirestoreSemester => ({
@@ -539,8 +539,8 @@ export default defineComponent({
     closeEditSemesterModal() {
       this.isEditSemesterOpen = false;
     },
-    editSemester(seasonInput: string, yearInput: number) {
-      editSemester(
+    async editSemester(seasonInput: string, yearInput: number) {
+      await editSemester(
         this.year,
         this.season,
         (oldSemester: FirestoreSemester): FirestoreSemester => ({
@@ -556,8 +556,8 @@ export default defineComponent({
     closeClearSemesterModal() {
       this.isClearSemesterOpen = false;
     },
-    clearSemester() {
-      deleteAllCoursesFromSemester(this.year, this.season, this.$gtag);
+    async clearSemester() {
+      await deleteAllCoursesFromSemester(this.year, this.season, this.$gtag);
       this.openConfirmationModal(`Cleared ${this.season} ${this.year} in plan`);
     },
     walkthroughText() {
@@ -640,6 +640,7 @@ export default defineComponent({
     padding: 15px 0;
     display: flex;
     position: relative;
+
     &:hover,
     &:active,
     &:focus {
