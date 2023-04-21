@@ -199,9 +199,9 @@ export default defineComponent({
     },
   },
   methods: {
-    submitOnboarding() {
+    async submitOnboarding() {
       this.clearTransferCreditIfGraduate();
-      setAppOnboardingData(this.name, this.onboarding);
+      await setAppOnboardingData(this.name, this.onboarding);
       this.changed = false;
       this.$emit('onboard');
     },

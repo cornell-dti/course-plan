@@ -5,12 +5,12 @@ import { onboardingDataCollection } from '../firebase-config';
 import store from '../store';
 import setUsernameData from './user-name';
 
-export const setAppOnboardingData = (
+export const setAppOnboardingData = async (
   name: FirestoreUserName,
   onboarding: AppOnboardingData
-): void => {
-  setUsernameData(name);
-  setDoc(doc(onboardingDataCollection, store.state.currentFirebaseUser.email), {
+): Promise<void> => {
+  await setUsernameData(name);
+  await setDoc(doc(onboardingDataCollection, store.state.currentFirebaseUser.email), {
     gradYear: onboarding.gradYear,
     gradSem: onboarding.gradSem,
     entranceYear: onboarding.entranceYear,
@@ -29,22 +29,25 @@ export const setAppOnboardingData = (
   });
 };
 
-const updateTransferCredit = (exam: readonly FirestoreTransferExam[], tookSwim: 'yes' | 'no') => {
-  updateDoc(doc(onboardingDataCollection, store.state.currentFirebaseUser.email), {
+const updateTransferCredit = async (
+  exam: readonly FirestoreTransferExam[],
+  tookSwim: 'yes' | 'no'
+) => {
+  await updateDoc(doc(onboardingDataCollection, store.state.currentFirebaseUser.email), {
     exam,
     tookSwim,
   });
 };
 
-export const deleteTransferCredit = (code: string): void => {
+export const deleteTransferCredit = async (code: string): Promise<void> => {
   if (code === SWIM_TEST_CODE) {
-    updateTransferCredit(store.state.onboardingData.exam, 'no');
+    await updateTransferCredit(store.state.onboardingData.exam, 'no');
     return;
   }
   // Note: this assumes that the course code is `${examType} ${subject}`.
   // This needs to be updated if that changes.
   const [examType, subject] = code.split(/ (.*)/);
-  updateTransferCredit(
+  await updateTransferCredit(
     store.state.onboardingData.exam.filter(
       e => !(e.examType === examType && e.subject === subject)
     ),

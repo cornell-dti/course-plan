@@ -224,7 +224,7 @@ const autoRecomputeDerivedData = (): (() => void) =>
     }
   });
 
-export const initializeFirestoreListeners = (onLoad: () => void): (() => void) => {
+export const initializeFirestoreListeners = async (onLoad: () => void): Promise<() => void> => {
   const simplifiedUser = store.state.currentFirebaseUser;
 
   let userNameInitialLoadFinished = false;
@@ -280,13 +280,13 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
       emitOnLoadWhenLoaded();
     }
   );
-  getDoc(doc(fb.semestersCollection, simplifiedUser.email)).then(snapshot => {
+  await getDoc(doc(fb.semestersCollection, simplifiedUser.email)).then(async snapshot => {
     const data = snapshot.data();
     if (data) {
       const semesters = getFirstPlan(data);
       const { orderByNewest } = data;
       store.commit('setSemesters', semesters);
-      updateDoc(doc(fb.semestersCollection, simplifiedUser.email), {
+      await updateDoc(doc(fb.semestersCollection, simplifiedUser.email), {
         plans: [{ semesters }], // TODO: andxu282 update later
       });
       // if user hasn't yet chosen an ordering, choose true by default
@@ -298,7 +298,7 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
         courses: [],
       };
       store.commit('setSemesters', [newSemester]);
-      setDoc(doc(fb.semestersCollection, simplifiedUser.email), {
+      await setDoc(doc(fb.semestersCollection, simplifiedUser.email), {
         orderByNewest: true,
         plans: [{ semesters: [newSemester] }], // TODO: andxu282 update later
         semesters: [newSemester],
@@ -326,12 +326,12 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
       emitOnLoadWhenLoaded();
     }
   );
-  getDoc(doc(fb.subjectColorsCollection, simplifiedUser.email)).then(snapshot => {
+  await getDoc(doc(fb.subjectColorsCollection, simplifiedUser.email)).then(async snapshot => {
     const subjectColors = snapshot.data() || {};
     // Pre-allocate all subject colors during this initialization step.
     const newSubjectColors = allocateAllSubjectColor(subjectColors);
     store.commit('setSubjectColors', newSubjectColors);
-    setDoc(doc(fb.subjectColorsCollection, simplifiedUser.email), newSubjectColors);
+    await setDoc(doc(fb.subjectColorsCollection, simplifiedUser.email), newSubjectColors);
     subjectColorInitialLoadFinished = true;
     emitOnLoadWhenLoaded();
   });
@@ -357,14 +357,13 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
   return unsubscriber;
 };
 
-export const updateSubjectColorData = (color: string, code: string): void => {
+export const updateSubjectColorData = async (color: string, code: string): Promise<void> => {
   const simplifiedUser = store.state.currentFirebaseUser;
-  getDoc(doc(fb.subjectColorsCollection, simplifiedUser.email)).then(snapshot => {
-    const subjectColors = snapshot.data() || {};
-    const newSubjectColors = updateSubjectColor(subjectColors, color, code);
-    store.commit('setSubjectColors', newSubjectColors);
-    setDoc(doc(fb.subjectColorsCollection, simplifiedUser.email), newSubjectColors);
-  });
+  const snapshot = await getDoc(doc(fb.subjectColorsCollection, simplifiedUser.email));
+  const subjectColors = snapshot.data() || {};
+  const newSubjectColors = updateSubjectColor(subjectColors, color, code);
+  store.commit('setSubjectColors', newSubjectColors);
+  await setDoc(doc(fb.subjectColorsCollection, simplifiedUser.email), newSubjectColors);
 };
 
 export const isCourseConflict = (uniqueId: string | number): boolean =>

@@ -3,17 +3,20 @@ import { doc, setDoc } from 'firebase/firestore';
 import { toggleableRequirementChoicesCollection } from '../firebase-config';
 import store from '../store';
 
-const editToggleableRequirementChoices = (
+const editToggleableRequirementChoices = async (
   toggleableRequirementChoices: AppToggleableRequirementChoices
-): void => {
-  setDoc(
+): Promise<void> => {
+  await setDoc(
     doc(toggleableRequirementChoicesCollection, store.state.currentFirebaseUser.email),
     toggleableRequirementChoices
   );
 };
 
-const chooseToggleableRequirementOption = (requirementID: string, option: string): void => {
-  editToggleableRequirementChoices({
+const chooseToggleableRequirementOption = async (
+  requirementID: string,
+  option: string
+): Promise<void> => {
+  await editToggleableRequirementChoices({
     ...store.state.toggleableRequirementChoices,
     [requirementID]: option,
   });

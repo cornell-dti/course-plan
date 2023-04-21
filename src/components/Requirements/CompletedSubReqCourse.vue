@@ -108,7 +108,7 @@ export default defineComponent({
 
       if (isDelete) {
         if (this.isTransferCredit) {
-          deleteTransferCredit(this.courseTaken.code);
+          await deleteTransferCredit(this.courseTaken.code);
         } else {
           const { uniqueId } = this.courseTaken;
           if (typeof uniqueId === 'number') await deleteCourseFromSemesters(uniqueId, this.$gtag);

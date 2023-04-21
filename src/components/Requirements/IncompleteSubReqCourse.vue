@@ -130,16 +130,19 @@ export default defineComponent({
     margin-top: 0.6rem;
     margin-bottom: 0.6rem;
   }
+
   &-heading {
     display: flex;
     justify-content: space-between;
     margin-top: 0.75rem;
     margin-bottom: 0.5rem;
+
     &-label {
       font-size: 14px;
       line-height: 17px;
       color: $lightPlaceholderGray;
     }
+
     &-seeAll {
       font-size: 14px;
       line-height: 15px;
@@ -166,10 +169,12 @@ export default defineComponent({
     width: 10.25rem;
     max-width: 50%;
   }
+
   &-course {
     touch-action: none;
     cursor: grab;
   }
+
   &-course:active:hover {
     touch-action: none;
     cursor: grabbing;

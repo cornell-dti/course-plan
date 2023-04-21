@@ -3,11 +3,11 @@ import { doc, setDoc } from 'firebase/firestore';
 import { overriddenFulfillmentChoicesCollection } from '../firebase-config';
 import store from '../store';
 
-export const updateRequirementChoice = (
+export const updateRequirementChoice = async (
   courseUniqueID: string | number,
   choiceUpdater: (choice: FirestoreCourseOptInOptOutChoices) => FirestoreCourseOptInOptOutChoices
-): void => {
-  setDoc(doc(overriddenFulfillmentChoicesCollection, store.state.currentFirebaseUser.email), {
+): Promise<void> => {
+  await setDoc(doc(overriddenFulfillmentChoicesCollection, store.state.currentFirebaseUser.email), {
     ...store.state.overriddenFulfillmentChoices,
     [courseUniqueID]: choiceUpdater(
       store.state.overriddenFulfillmentChoices[courseUniqueID] || {
@@ -23,7 +23,7 @@ export const toggleRequirementChoice = (
   courseUniqueID: string | number,
   requirementID: string,
   relevantRequirementChoiceType: keyof FirestoreCourseOptInOptOutChoices
-): void =>
+): Promise<void> =>
   updateRequirementChoice(courseUniqueID, choice => {
     switch (relevantRequirementChoiceType) {
       case 'optOut':
@@ -41,25 +41,26 @@ export const toggleRequirementChoice = (
     }
   });
 
-export const updateRequirementChoices = (
+export const updateRequirementChoices = async (
   updater: (
     oldChoices: FirestoreOverriddenFulfillmentChoices
   ) => FirestoreOverriddenFulfillmentChoices
-): void => {
-  setDoc(
+): Promise<void> => {
+  await setDoc(
     doc(overriddenFulfillmentChoicesCollection, store.state.currentFirebaseUser.email),
     updater(store.state.overriddenFulfillmentChoices)
   );
 };
 
-export const deleteCourseFromRequirementChoices = (courseUniqueID: string | number): void =>
-  deleteCoursesFromRequirementChoices([courseUniqueID]);
+export const deleteCourseFromRequirementChoices = (
+  courseUniqueID: string | number
+): Promise<void> => deleteCoursesFromRequirementChoices([courseUniqueID]);
 
-export const deleteCoursesFromRequirementChoices = (
+export const deleteCoursesFromRequirementChoices = async (
   courseUniqueIds: readonly (string | number)[]
-): void => {
+): Promise<void> => {
   const courseUniqueIdStrings = new Set(courseUniqueIds.map(uniqueId => uniqueId.toString()));
-  setDoc(
+  await setDoc(
     doc(overriddenFulfillmentChoicesCollection, store.state.currentFirebaseUser.email),
     Object.fromEntries(
       Object.entries(store.state.overriddenFulfillmentChoices).filter(

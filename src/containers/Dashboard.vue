@@ -70,7 +70,7 @@
     <tour-window
       title="Let's get CoursePlanning!"
       text="There's more to explore as you start planning! CoursePlan is continously improving, so please use it as a guide and
-      also consult your advisors for more up to date information!"
+          also consult your advisors for more up to date information!"
       :isFinalStep="true"
       exit=""
       button-text="Get Started"
@@ -181,8 +181,8 @@ export default defineComponent({
   created() {
     window.addEventListener('resize', this.resizeEventHandler);
   },
-  mounted() {
-    listenerUnsubscriber = initializeFirestoreListeners(() => {
+  async mounted() {
+    listenerUnsubscriber = await initializeFirestoreListeners(() => {
       if (this.onboardingData.college !== '' || this.onboardingData.grad !== '') {
         this.loaded = true;
       } else {
@@ -295,16 +295,24 @@ export default defineComponent({
 
   /* The Modal (background) */
   &-onboarding {
-    position: fixed; /* Stay in place */
-    z-index: 4; /* Sit on top */
+    position: fixed;
+    /* Stay in place */
+    z-index: 4;
+    /* Sit on top */
     left: 0;
     top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgb(0, 0, 0); /* Fallback color */
-    background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+    width: 100%;
+    /* Full width */
+    height: 100%;
+    /* Full height */
+    overflow: auto;
+    /* Enable scroll if needed */
+    background-color: rgb(0, 0, 0);
+    /* Fallback color */
+    background-color: rgba(0, 0, 0, 0.4);
+    /* Black w/ opacity */
   }
+
   .emoji-text {
     height: 14px;
   }

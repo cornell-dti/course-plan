@@ -283,7 +283,7 @@ export default defineComponent({
             courses,
           })
         );
-        updateRequirementChoices(oldChoices => {
+        await updateRequirementChoices(oldChoices => {
           const choices = { ...oldChoices };
           newCourses.forEach(({ uniqueID, requirementID, crseId }) => {
             if (requirementID == null) {
@@ -484,7 +484,7 @@ export default defineComponent({
         ),
       });
       await editSemesters(oldSemesters => oldSemesters.map(sem => updater(sem)));
-      updateSubjectColorData(color, subject);
+      await updateSubjectColorData(color, subject);
       this.openConfirmationModal(`Changed color for ${subject}`);
     },
     courseOnClick(course: FirestoreSemesterCourse) {

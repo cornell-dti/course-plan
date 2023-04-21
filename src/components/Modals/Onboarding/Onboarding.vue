@@ -249,7 +249,7 @@ export default defineComponent({
     async submitOnboarding() {
       const revised = this.setASCollegeReqs();
       this.clearTransferCreditIfGraduate();
-      setAppOnboardingData(this.name, revised);
+      await setAppOnboardingData(this.name, revised);
       // indicates first time user onboarding
       if (!this.isEditingProfile) await populateSemesters(revised);
       this.$emit('onboard');

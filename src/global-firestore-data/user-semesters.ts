@@ -123,7 +123,7 @@ export const deleteCourseFromSemester = async (
   GTagEvent(gtag, 'delete-course');
   const semester = store.state.semesters.find(sem => semesterEquals(sem, year, season));
   if (semester) {
-    deleteCourseFromRequirementChoices(courseUniqueID);
+    await deleteCourseFromRequirementChoices(courseUniqueID);
     await editSemesters(oldSemesters =>
       oldSemesters.map(sem => ({
         ...sem,
@@ -166,7 +166,7 @@ export const deleteCourseFromSemesters = async (
       return { ...semester, courses: coursesWithoutDeleted };
     })
   );
-  deleteCourseFromRequirementChoices(courseUniqueID);
+  await deleteCourseFromRequirementChoices(courseUniqueID);
 };
 
 // exposed for testing
