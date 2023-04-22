@@ -36,6 +36,7 @@ export function genCourseEntries(data) {
     const v = data[i][0].str.trim();
     if (v.slice(0, 5) === 'Notes') {
       start = i + 1;
+      break;
     }
   }
   // assumes that the columns are ordered and there are no empty cells
