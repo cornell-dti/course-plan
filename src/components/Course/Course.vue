@@ -81,6 +81,8 @@ export default defineComponent({
     active: { type: Boolean, required: true },
     isReqCourse: { type: Boolean, required: true },
     semesterIndex: { type: Number, required: false, default: 0 },
+    season: { type: String, required: false, default: '' },
+    year: { type: Number, required: false, default: 0 },
   },
   emits: {
     'delete-course': (code: string, uniqueID: number) =>
@@ -164,7 +166,7 @@ export default defineComponent({
     courseOnClick() {
       if (!this.menuOpen) {
         this.$emit('course-on-click', this.courseObj);
-        addCourseToBottomBar(this.courseObj);
+        addCourseToBottomBar(this.courseObj, this.season, this.year);
       }
     },
     editCourseCredit(credit: number) {

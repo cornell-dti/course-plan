@@ -5,6 +5,8 @@ import {
   crseIdToCatalogNbrCollection,
 } from '../firebase-config';
 
+import { seasonAndYearToRosterIdentifier } from '../user-data-converter';
+
 /**
  * This function uses the subject and number of a course to retrieve the course information from 'courses' collection
  * @param season The season that the course is under in the user's semester view
@@ -59,7 +61,9 @@ const getLastOffering = async (subject: string, number: string) => {
   const latestCourse = await getDoc(
     doc(coursesCollection, `${availableRostersForCourse.rosters[lastRoster]}/${subject}/${number}`)
   );
-  return latestCourse.data()?.course;
+  const course: CornellCourseRosterCourseFullDetail = latestCourse.data()?.course;
+  course.roster = availableRostersForCourse.rosters[lastRoster];
+  return course;
 };
 
 /**
@@ -70,7 +74,7 @@ const getLastOffering = async (subject: string, number: string) => {
  * @param number The number of the course
  * @returns `Promise<CornellCourseRosterCourseFullDetail>`
  */
-const getCourse = async (
+export const getCourse = async (
   roster: string,
   subject: string,
   number: string
@@ -79,29 +83,18 @@ const getCourse = async (
   if (!course.exists()) {
     return getLastOffering(subject, number);
   }
-  return course.data()?.course;
+  const retrievedCourse: CornellCourseRosterCourseFullDetail = course.data()?.course;
+  retrievedCourse.roster = roster;
+  return retrievedCourse;
 };
-
-/**
- * This function transforms semester and year to a roster ID. EX: Spring 2023 -> SP23
- * */
-const seasonAndYearToRosterIdentifier = (season: FirestoreSemesterSeason, year: number): string => {
-  const seasonToSemesterMap = {
-    Fall: 'FA',
-    Spring: 'SP',
-    Winter: 'WI',
-    Summer: 'SU',
-  } as const;
-
-  return `${seasonToSemesterMap[season]}${year - 2000}`;
-};
-
 /**
  *
  * @param courseCode The course code (EX: 'CS 1110')
  * @returns A string[] containing the subject and number (EX: ['CS', '1110'])
  */
-const extractSubjectAndNumber = (courseCode: string): { subject: string; number: string } => {
+export const extractSubjectAndNumber = (
+  courseCode: string
+): { subject: string; number: string } => {
   if (courseCode.split(' ').length !== 2) {
     throw Error(
       `Invalid course format. Expected course to be of form subject and number. EX: CS 1110`

@@ -85,7 +85,7 @@ type FirestoreOverriddenFulfillmentChoices = {
 
 type FirestoreUserData = {
   readonly name: FirestoreUserName;
-  readonly semesters: readonlyFirestoreSemester[];
+  readonly semesters: FirestoreSemester[];
   readonly orderByNewest: boolean;
   readonly toggleableRequirementChoices: AppToggleableRequirementChoices;
   readonly subjectColors: { readonly [subject: string]: string };
@@ -145,7 +145,7 @@ interface CornellCourseRosterCourse {
   readonly catalogSatisfiesReq?: string;
   readonly catalogCourseSubfield?: string;
   readonly catalogAttribute?: string;
-  readonly roster: string;
+  roster: string;
   readonly acadCareer: string;
   readonly acadGroup: string;
 }
@@ -209,6 +209,7 @@ type AppBottomBarCourse = {
   overallRating: number;
   difficulty: number;
   workload: number;
+  currRoster: string;
 };
 
 // This is used for drag&drop between SubRequirement and Semester
