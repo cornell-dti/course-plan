@@ -36,7 +36,7 @@ type FirestoreSemester = {
 };
 
 type FirestoreSemestersData = {
-  readonly plans?: readonly { semesters: readonly FirestoreSemester[] }[];
+  readonly plans?: readonly Plan[];
   readonly semesters: readonly FirestoreSemester[];
   readonly orderByNewest: boolean;
 };
@@ -172,6 +172,11 @@ interface CornellCourseRosterCourseFullDetail extends CornellCourseRosterCourse 
   readonly catalogPrereqCoreq?: string;
   readonly catalogDistr?: string;
 }
+
+type Plan = {
+  readonly name: string;
+  readonly semesters: readonly FirestoreSemester[];
+};
 
 // college and grad are optional fields: grad can be undefined if the user hasn't selected a grad program, and college can be undefined if the user has only selected a grad program.
 type AppOnboardingData = {
