@@ -17,6 +17,7 @@ import {
 } from './utilities';
 import featureFlagCheckers from './feature-flags';
 import { setUserProperties } from './gtag';
+import getCourse from './global-firestore-data/courses';
 
 type SimplifiedFirebaseUser = { readonly displayName: string; readonly email: string };
 
@@ -31,6 +32,64 @@ type DerivedCoursesData = {
   // Mapping from course's unique ID to the semester object.
   readonly courseToSemesterMap: Readonly<Record<number, FirestoreSemester>>;
 };
+
+/**
+ * Given a course and a semester, return the populated course from course data.
+ * @param crs Course you want populated.
+ * @param sem Semester of the course.
+ * @returns a new FirestoreSemesterCourse populated from course data.
+ */
+
+async function popCourseCourseData(
+  crs: FirestoreSemesterCourse,
+  sem: FirestoreSemester
+): Promise<FirestoreSemesterCourse> {
+  const subject = crs.code.split(' ')[0];
+  const number = crs.code.split(' ')[1];
+  const fullCourse = await getCourse(sem.season, sem.year, subject, number);
+  return {
+    crseId: crs.crseId,
+    lastRoster: fullCourse.roster,
+    uniqueID: crs.uniqueID,
+    code: crs.code,
+    name: crs.name,
+    credits: fullCourse.enrollGroups[0].unitsMaximum,
+    creditRange: [fullCourse.enrollGroups[0].unitsMinimum, fullCourse.enrollGroups[0].unitsMaximum],
+    semesters: crs.semesters,
+    color: crs.color,
+  };
+}
+
+function isFirestoreSemesterCourse(obj: any): obj is FirestoreSemesterCourse {
+  return obj && obj.crseId !== undefined && obj.code !== undefined && obj.credits !== undefined;
+}
+
+/**
+ * Given a semester, go through all courses and populate them with default
+ * information from course data.
+ * @param sem The FirestoreSemester's courses you want populated with course data
+ * @returns A new FirestoreSemester with courses populated with course data.
+ */
+
+async function popSemCourseData(sem: FirestoreSemester): Promise<FirestoreSemester> {
+  const promises = [];
+  const newCourses = [];
+  for (let i = 0; i < sem.courses.length; i += 1) {
+    const aCourse = sem.courses[i];
+    if (isFirestoreSemesterCourse(aCourse)) {
+      promises.push(popCourseCourseData(aCourse, sem));
+    }
+  }
+  const results = await Promise.all(promises);
+  for (const result of results) {
+    newCourses.push(result);
+  }
+  return {
+    year: sem.year,
+    season: sem.season,
+    courses: newCourses,
+  };
+}
 
 export type VuexStoreState = {
   currentFirebaseUser: SimplifiedFirebaseUser;
@@ -97,7 +156,18 @@ const store: TypedVuexStore = new TypedVuexStore({
     uniqueIncrementer: 0,
     isTeleportModalOpen: false,
   },
-  actions: {},
+  actions: {
+    setSemesters(context, semester: readonly FirestoreSemester[]) {
+      const newSemesters = [];
+      for (let i = 0; i < semester.length; i += 1) {
+        const curSemester = semester[i];
+        newSemesters.push(popSemCourseData(curSemester));
+      }
+      context.commit('setSemesters', {
+        semester: newSemesters,
+      });
+    },
+  },
   mutations: {
     setCurrentFirebaseUser(state: VuexStoreState, user: SimplifiedFirebaseUser) {
       state.currentFirebaseUser = user;
@@ -285,6 +355,7 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
     if (data) {
       const semesters = getFirstPlan(data);
       const { orderByNewest } = data;
+      console.log('here');
       store.commit('setSemesters', semesters);
       updateDoc(doc(fb.semestersCollection, simplifiedUser.email), {
         plans: [{ semesters }], // TODO: andxu282 update later
