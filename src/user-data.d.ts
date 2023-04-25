@@ -84,7 +84,6 @@ type FirestoreOverriddenFulfillmentChoices = {
 };
 
 type FirestoreUserData = {
-  readonly id: number;
   readonly name: FirestoreUserName;
   readonly semesters: FirestoreSemester[];
   readonly orderByNewest: boolean;
