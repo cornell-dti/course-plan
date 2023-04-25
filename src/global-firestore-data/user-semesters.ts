@@ -12,11 +12,11 @@ import {
   deleteCoursesFromRequirementChoices,
 } from './user-overridden-fulfillment-choices';
 
-export const editSemesters = (
+export const editSemesters = async (
   updater: (oldSemesters: readonly FirestoreSemester[]) => readonly FirestoreSemester[]
-): void => {
+): Promise<void> => {
   const semesters = updater(store.state.semesters);
-  store.commit('setSemesters', semesters);
+  await store.dispatch('setSemesters', semesters);
   // TODO: update when multiple plans frontend implemented
   updateDoc(doc(semestersCollection, store.state.currentFirebaseUser.email), {
     semesters,

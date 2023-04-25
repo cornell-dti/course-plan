@@ -72,22 +72,19 @@ function isFirestoreSemesterCourse(obj: any): obj is FirestoreSemesterCourse {
  */
 
 async function popSemCourseData(sem: FirestoreSemester): Promise<FirestoreSemester> {
-  const promises = [];
-  const newCourses = [];
-  for (let i = 0; i < sem.courses.length; i += 1) {
-    const aCourse = sem.courses[i];
-    if (isFirestoreSemesterCourse(aCourse)) {
-      promises.push(popCourseCourseData(aCourse, sem));
-    }
-  }
+  const promises: Promise<FirestoreSemesterCourse>[] = [];
+
+  sem.courses.forEach(curCourse => {
+    if (isFirestoreSemesterCourse(curCourse))
+      promises.push(popCourseCourseData(curCourse, sem));
+  });
+
   const results = await Promise.all(promises);
-  for (const result of results) {
-    newCourses.push(result);
-  }
+  
   return {
     year: sem.year,
     season: sem.season,
-    courses: newCourses,
+    courses: results,
   };
 }
 
@@ -157,14 +154,17 @@ const store: TypedVuexStore = new TypedVuexStore({
     isTeleportModalOpen: false,
   },
   actions: {
-    setSemesters(context, semester: readonly FirestoreSemester[]) {
-      const newSemesters = [];
-      for (let i = 0; i < semester.length; i += 1) {
-        const curSemester = semester[i];
-        newSemesters.push(popSemCourseData(curSemester));
-      }
+    async setSemesters(context, semester: readonly FirestoreSemester[]) {
+      const promises : Promise<FirestoreSemester>[] = [];
+
+      semester.forEach(curSem => {
+        promises.push(popSemCourseData(curSem));
+      });
+
+      const results = await Promise.all(promises);
+      
       context.commit('setSemesters', {
-        semester: newSemesters,
+        semester: results
       });
     },
   },
@@ -231,15 +231,15 @@ const store: TypedVuexStore = new TypedVuexStore({
   },
 });
 
-const autoRecomputeDerivedData = (): (() => void) =>
-  store.subscribe((mutation, state) => {
+const autoRecomputeDerivedData = async (): Promise<() => void> =>
+  store.subscribe(async (mutation, state) => {
     switch (mutation.type) {
       case 'setOnboardingData': {
         setUserProperties(mutation.payload);
         break;
       }
       case 'setOrderByNewest': {
-        store.commit('setSemesters', sortedSemesters(state.semesters, state.orderByNewest));
+        await store.dispatch('setSemesters', sortedSemesters(state.semesters, state.orderByNewest));
         break;
       }
       case 'setSemesters': {
@@ -350,12 +350,12 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
       emitOnLoadWhenLoaded();
     }
   );
-  getDoc(doc(fb.semestersCollection, simplifiedUser.email)).then(snapshot => {
+  getDoc(doc(fb.semestersCollection, simplifiedUser.email)).then(async snapshot => {
     const data = snapshot.data();
     if (data) {
       const semesters = getFirstPlan(data);
       const { orderByNewest } = data;
-      store.commit('setSemesters', semesters);
+      await store.dispatch('setSemesters', semesters);
       updateDoc(doc(fb.semestersCollection, simplifiedUser.email), {
         plans: [{ semesters }], // TODO: andxu282 update later
       });
@@ -367,7 +367,7 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
         season: getCurrentSeason(),
         courses: [],
       };
-      store.commit('setSemesters', [newSemester]);
+      await store.dispatch('setSemesters', [newSemester]);
       setDoc(doc(fb.semestersCollection, simplifiedUser.email), {
         orderByNewest: true,
         plans: [{ semesters: [newSemester] }], // TODO: andxu282 update later
@@ -414,7 +414,7 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
       emitOnLoadWhenLoaded();
     }
   );
-  const derivedDataComputationUnsubscriber = autoRecomputeDerivedData();
+  const derivedDataComputationUnsubscriber = async () => await autoRecomputeDerivedData();
 
   const unsubscriber = () => {
     userNameUnsubscriber();
