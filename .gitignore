@@ -40,3 +40,11 @@ python/secret_api_keys.py
 
 # Pytest
 python/__pycache__
+#Training and Testing Files for Recommendation System
+src\rec-sys\leave_one_out_test_full.csv
+src\rec-sys\leave_one_out_test.csv
+src\rec-sys\test.csv
+src\rec-sys\test_full.csv
+src\rec-sys\train.csv
+src\rec-sys\.hypothesis
+
