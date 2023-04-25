@@ -16,14 +16,14 @@
         </div>
         <img
           class="courseMenu-arrow"
-          src="@/assets/images/sidearrow.svg"
+          src="@/assets/images/downarrow.svg"
           alt="arrow to expand edit course color"
         />
 
         <div
           v-if="displayColors"
           class="courseMenu-content courseMenu-colors"
-          :class="{ 'courseMenu-colors--left': isLeft }"
+          :style="{ zIndex: zIndexColors }"
         >
           <button
             v-for="(color, index) in colors"
@@ -69,13 +69,13 @@
         </div>
         <img
           class="courseMenu-arrow"
-          src="@/assets/images/sidearrow.svg"
+          src="@/assets/images/downarrow.svg"
           alt="arrow to expand edit course credits"
         />
         <div
           v-if="displayEditCourseCredits"
           class="courseMenu-content courseMenu-editCredits courseMenu-centerCredits"
-          :class="{ 'courseMenu-editCredits--left': isLeft }"
+          :style="{ zIndex: zIndexEditCredits }"
         >
           <div
             v-for="credit in makeCreditArary()"
@@ -129,6 +129,8 @@ export default defineComponent({
       displayColors: false,
       displayEditCourseCredits: false,
       tooltipColor: '',
+      zIndexColors: 1,
+      zIndexEditCredits: 1,
     };
   },
   computed: {
@@ -165,6 +167,12 @@ export default defineComponent({
     },
     setDisplayColors(bool: boolean) {
       this.displayColors = bool;
+      if (bool) {
+        this.zIndexColors = 3;
+        this.zIndexEditCredits = 1;
+      } else {
+        this.zIndexColors = 1;
+      }
     },
     setDisplayColorTooltip(bool: boolean, color: string) {
       if (bool) {
@@ -175,6 +183,12 @@ export default defineComponent({
     },
     setDisplayEditCourseCredits(bool: boolean) {
       this.displayEditCourseCredits = bool;
+      if (bool) {
+        this.zIndexEditCredits = 3;
+        this.zIndexColors = 1;
+      } else {
+        this.zIndexEditCredits = 1;
+      }
     },
     editCourseCredit(credit: number) {
       this.$emit('edit-course-credit', credit);
@@ -232,7 +246,8 @@ export default defineComponent({
       background-color: rgba(50, 160, 242, 0.15);
     }
 
-    &:first-child {
+    &:first-child:not(.courseMenu-editCredits > &),
+    &:only-child {
       border-top-left-radius: 9px;
       border-top-right-radius: 9px;
     }
@@ -296,26 +311,29 @@ export default defineComponent({
   &-colors {
     position: absolute;
     padding: 10px 5px 0px 5px;
-    right: -9rem;
-
-    &--left {
-      right: 8.87rem;
-    }
+    top: 100%;
+    z-index: 1;
+    width: calc(100% + 0.081rem);
+    left: -0.031rem;
+    border-radius: 0 0 9px 9px;
+    border-top: none;
+    box-sizing: border-box;
   }
 
   &-editCredits {
     position: absolute;
-    width: 2.75rem;
-    right: -2.75rem;
+    top: 100%;
+    width: calc(100% + 0.081rem);
+    left: -0.031rem;
     padding: auto;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
-
-    &--left {
-      right: 8.87rem;
-    }
+    z-index: 1;
+    border-radius: 0 0 9px 9px;
+    border-top: none;
+    box-sizing: border-box;
   }
 }
 
@@ -328,7 +346,7 @@ export default defineComponent({
     }
     &-colors {
       right: 0rem;
-      left: -9rem;
+      left: 0rem;
     }
   }
 }
