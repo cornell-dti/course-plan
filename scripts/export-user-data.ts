@@ -15,10 +15,9 @@ function getUserCourses(
 ): number[] {
   const userCourseIDs: number[] = [];
   const semesters = user.get('semesters');
-  for (const semester of semesters) {
-    const { courses } = semester;
-    for (const course of courses) {
-      userCourseIDs.push(course.crseId);
+  for (const { courses } of semesters) {
+    for (const { crseId } of courses) {
+      userCourseIDs.push(crseId);
     }
   }
   return userCourseIDs;
