@@ -23,6 +23,15 @@ export const editSemesters = (
   });
 };
 
+export const editPlans = async (
+  updater: (oldPlans: readonly Plan[]) => readonly Plan[]
+): Promise<void> => {
+  const plans = updater(store.state.plans);
+  store.commit('setPlans', plans);
+  await updateDoc(doc(semestersCollection, store.state.currentFirebaseUser.email), {
+    plans,
+  });
+};
 /**
  * Sets whether semesters are ordered by newest/oldest
  */
@@ -44,6 +53,10 @@ export const editSemester = (
   );
 };
 
+export const editPlan = (name: string, updater: (oldPlan: Plan) => Plan): void => {
+  editPlans(oldPlan => oldPlan.map(plan => (plan.name === name ? updater(plan) : plan)));
+};
+
 const createSemester = (
   year: number,
   season: FirestoreSemesterSeason,
@@ -56,6 +69,17 @@ const createSemester = (
   courses,
   season,
   year,
+});
+
+const createPlan = (
+  name: string,
+  semesters: FirestoreSemester[]
+): {
+  name: string;
+  semesters: FirestoreSemester[];
+} => ({
+  name,
+  semesters,
 });
 
 // exposed for testing
@@ -75,6 +99,15 @@ export const addSemester = (
   editSemesters(oldSemesters => [...oldSemesters, createSemester(year, season, courses)]);
 };
 
+export const addPlan = async (
+  name: string,
+  semesters: FirestoreSemester[],
+  gtag?: GTag
+): Promise<void> => {
+  GTagEvent(gtag, 'add-plan');
+  await editPlans(oldPlans => [...oldPlans, createPlan(name, semesters)]);
+};
+
 export const deleteSemester = (
   year: number,
   season: FirestoreSemesterSeason,
@@ -85,6 +118,13 @@ export const deleteSemester = (
   if (semester) {
     deleteCoursesFromRequirementChoices(semester.courses.map(course => course.uniqueID));
     editSemesters(oldSemesters => oldSemesters.filter(sem => !semesterEquals(sem, year, season)));
+  }
+};
+
+export const deletePlan = async (name: string, gtag?: GTag): Promise<void> => {
+  GTagEvent(gtag, 'delete-plan');
+  if (store.state.plans.some(p => p.name === name)) {
+    await editPlans(oldPlans => oldPlans.filter(p => p.name !== name));
   }
 };
 

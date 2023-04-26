@@ -37,6 +37,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import editPlan from '@/assets/images/editplan.svg';
+import store from '@/store';
 
 export default defineComponent({
   props: {
@@ -44,9 +45,7 @@ export default defineComponent({
   },
   data() {
     return {
-      plans: ['PLAN 1', 'PLAN 2', 'PLAN 3', 'PLAN 4'],
       shown: false,
-      currPlan: 'PLAN 1',
       editPlan,
     };
   },
@@ -54,6 +53,12 @@ export default defineComponent({
     otherPlans() {
       const filtered = this.plans.filter(plan => plan !== this.currPlan);
       return filtered.length === 0 ? ['No additional plans yet'] : filtered;
+    },
+    plans() {
+      return store.state.plans.map(plan => plan.name);
+    },
+    currPlan() {
+      return store.state.currentPlan.name;
     },
   },
   methods: {

@@ -49,6 +49,8 @@ export type VuexStoreState = {
   subjectColors: Readonly<Record<string, string>>;
   uniqueIncrementer: number;
   isTeleportModalOpen: boolean;
+  plans: readonly Plan[];
+  currentPlan: Plan;
 };
 
 export class TypedVuexStore extends Store<VuexStoreState> {}
@@ -95,6 +97,8 @@ const store: TypedVuexStore = new TypedVuexStore({
     subjectColors: {},
     uniqueIncrementer: 0,
     isTeleportModalOpen: false,
+    plans: [],
+    currentPlan: { name: '', semesters: [] },
   },
   actions: {},
   mutations: {
@@ -156,6 +160,12 @@ const store: TypedVuexStore = new TypedVuexStore({
     },
     setIsTeleportModalOpen(state: VuexStoreState, newTeleportModalValue: boolean) {
       state.isTeleportModalOpen = newTeleportModalValue;
+    },
+    setPlans(state: VuexStoreState, newPlans: readonly Plan[]) {
+      state.plans = newPlans;
+    },
+    setCurrentPlan(state: VuexStoreState, newCurrPlan: Plan) {
+      state.currentPlan = newCurrPlan;
     },
   },
 });
@@ -278,7 +288,7 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
       const { orderByNewest } = data;
       store.commit('setSemesters', semesters);
       updateDoc(doc(fb.semestersCollection, simplifiedUser.email), {
-        plans: [{ semesters }], // TODO: andxu282 update later
+        plans: [{ semesters, name: 'Plan x' }], // TODO: andxu282 update later
       });
       // if user hasn't yet chosen an ordering, choose true by default
       store.commit('setOrderByNewest', orderByNewest === undefined ? true : orderByNewest);
