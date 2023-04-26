@@ -1,19 +1,4 @@
-from recommenders.evaluation.python_evaluation import (rmse, mae, rsquared, exp_var, map_at_k, ndcg_at_k, precision_at_k,
-                                                       recall_at_k, get_top_k_items)
-from recommenders.utils.constants import SEED as DEFAULT_SEED
-from recommenders.models.ncf.dataset import Dataset as NCFDataset
 from recommenders.models.ncf.ncf_singlenode import NCF
-from recommenders.utils.timer import Timer
-import sys
-import os
-import shutil
-import papermill as pm
-import scrapbook as sb
-import pandas as pd
-import numpy as np
-import tensorflow as tf
-import argparse
-
 
 class NCFModel:
     def __init__(self, n_users, n_items, model_path, EPOCHS, BATCH_SIZE, SEED) -> None:
