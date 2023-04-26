@@ -45,9 +45,7 @@ export default defineComponent({
   },
   data() {
     return {
-      plans: store.state.plans.map(plan => plan.name),
       shown: false,
-      currPlan: 'PLAN 1',
       editPlan,
     };
   },
@@ -55,6 +53,12 @@ export default defineComponent({
     otherPlans() {
       const filtered = this.plans.filter(plan => plan !== this.currPlan);
       return filtered.length === 0 ? ['No additional plans yet'] : filtered;
+    },
+    plans() {
+      return store.state.plans.map(plan => plan.name);
+    },
+    currPlan() {
+      return store.state.currentPlan.name;
     },
   },
   methods: {
