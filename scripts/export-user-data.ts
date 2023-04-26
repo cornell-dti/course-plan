@@ -1,7 +1,7 @@
 import fs from 'fs';
 import { semestersCollection } from './firebase-config';
 
-function writeToCSV(userId: number, crseId: number, rating: number, timestamp: number) {
+function writeToRatingsCSV(userId: number, crseId: number, rating: number, timestamp: number) {
   const csv = `${userId},${crseId},${rating},${timestamp}\n`;
   try {
     fs.appendFileSync('src/rec-sys/ratings.csv', csv);
@@ -23,7 +23,7 @@ function getUserCourses(
   return userCourseIDs;
 }
 
-function createCSVHeaders() {
+function createRatingsCSVHeaders() {
   const csv = 'userID,itemID,rating,timestamp\n';
   try {
     fs.appendFileSync('src/rec-sys/ratings.csv', csv);
@@ -31,15 +31,17 @@ function createCSVHeaders() {
     console.error(err);
   }
 }
+
 const exportUserData = async () => {
   const userSnapshot = await semestersCollection.get();
-  createCSVHeaders();
+  createRatingsCSVHeaders();
   let id = 0;
   for (const user of userSnapshot.docs) {
+    await semestersCollection.doc(user.id).update({ id: id });
     const courses = getUserCourses(user);
     for (const course of courses) {
       if (course !== undefined) {
-        writeToCSV(id, course, 1, 0);
+        writeToRatingsCSV(id, course, 1, 0);
       }
     }
     id += 1;
