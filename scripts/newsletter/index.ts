@@ -45,6 +45,7 @@ const sendToUsers = async (...users: readonly string[]) => {
   const html = await readFile(sourcePath);
   for (const to of users) {
     await transport.sendMail({ ...mailOptions, html, to });
+    // To avoid exceeding Google's rate limit
     await wait(500);
   }
 };
@@ -62,7 +63,7 @@ const sendNewsletter = async () => {
  */
 const main = async () => {
   if (process.argv.length > 1) {
-    await sendToUsers(...process.argv.slice(1));
+    await sendToUsers(...process.argv.slice(2));
   } else {
     await sendNewsletter();
   }
