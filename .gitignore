@@ -34,3 +34,6 @@ serviceAccountProd.json
 
 # App-specific output files that should be ignored
 scripts/out
+
+# Newsletters
+newsletters/*

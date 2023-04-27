@@ -3,7 +3,7 @@ import nodemailer from 'nodemailer';
 import { google } from 'googleapis';
 import { config } from 'dotenv';
 import { readFile } from 'fs/promises';
-import parseArgs from 'minimist'
+import parseArgs from 'minimist';
 import { semestersCollection } from './firebase-config';
 
 config({ path: './.env.local' });
@@ -58,11 +58,11 @@ const sendNewsletter = async () => {
 
 /**
  * Usage: `npm run ts-node ./scripts/newsletter.ts --source src [-runOnDB] ...users`
- * 
+ *
  * Sends the newsletter with a given HTML source to users specified on the command
  * line. If the `-runOnDB` flag is provided, the newsletter will be sent to every user
  * in Firestore.
- * 
+ *
  * Put your credentials in a `.env.local` file in the root of the project for this to work!
  */
 const main = async () => {
