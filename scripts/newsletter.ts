@@ -3,7 +3,8 @@ import nodemailer from 'nodemailer';
 import { google } from 'googleapis';
 import { config } from 'dotenv';
 import { readFile } from 'fs/promises';
-import { semestersCollection } from '../firebase-config';
+import parseArgs from 'minimist'
+import { semestersCollection } from './firebase-config';
 
 config({ path: './.env.local' });
 
@@ -20,8 +21,6 @@ const mailOptions = {
   subject: 'CoursePlan Newsletter',
 };
 
-const sourcePath = './src/assets/newsletters/sp23.html';
-
 const oAuth2Client = new google.auth.OAuth2(
   process.env.CLIENT_ID,
   process.env.CLIENT_SECRET,
@@ -36,13 +35,15 @@ const wait = (time: number) =>
     setTimeout(() => resolve(), time);
   });
 
+const args = parseArgs(process.argv.slice(2));
+
 const sendToUsers = async (...users: readonly string[]) => {
   const accessToken = await oAuth2Client.getAccessToken();
   const transport = nodemailer.createTransport({
     service: 'gmail',
     auth: { ...auth, accessToken },
   });
-  const html = await readFile(sourcePath);
+  const html = await readFile(args.source);
   for (const to of users) {
     await transport.sendMail({ ...mailOptions, html, to });
     // To avoid exceeding Google's rate limit
@@ -56,15 +57,20 @@ const sendNewsletter = async () => {
 };
 
 /**
- * The newsletter will be sent to each email provided as a command line argument.
- * If no command line arguments are provided, it will send the newsletter to
- * every user in the database. Put your credentials in a .env.local file
- * in the root of the project for this to work.
+ * Usage: `npm run ts-node ./scripts/newsletter.ts --source src [-runOnDB] ...users`
+ * 
+ * Sends the newsletter with a given HTML source to users specified on the command
+ * line. If the `-runOnDB` flag is provided, the newsletter will be sent to every user
+ * in Firestore.
+ * 
+ * Put your credentials in a `.env.local` file in the root of the project for this to work!
  */
 const main = async () => {
-  if (process.argv.length > 1) {
-    await sendToUsers(...process.argv.slice(2));
-  } else {
+  if (args.source == null) {
+    throw new Error('Path to HTML source of newsletter must be provided via the --source argument');
+  }
+  await sendToUsers(...args._);
+  if (args.runOnDB) {
     await sendNewsletter();
   }
 };
