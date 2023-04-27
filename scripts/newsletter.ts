@@ -57,7 +57,7 @@ const sendNewsletter = async () => {
 };
 
 /**
- * Usage: `npm run ts-node ./scripts/newsletter.ts --source src [-runOnDB] ...users`
+ * Usage: `npm run ts-node ./scripts/newsletter.ts -- --source=src [-runOnDB] ...users`
  *
  * Sends the newsletter with a given HTML source to users specified on the command
  * line. If the `-runOnDB` flag is provided, the newsletter will be sent to every user
