@@ -113,15 +113,49 @@ export const cornellCourseRosterCourseDetailedInformationToPartialBottomCourseIn
   return { description, prereqs, enrollment, lectureTimes, instructors, distributions };
 };
 
-export const firestoreSemesterCourseToBottomBarCourse = ({
-  code,
-  name,
-  credits,
-  color,
-  lastRoster,
-  semesters,
-  uniqueID,
-}: FirestoreSemesterCourse): AppBottomBarCourse => ({
+/**
+ * This function transforms a roster ID to a season and year. EX: SP23 -> Spring 2023
+ * */
+export const rosterIdentifierToSeasonAndYear = (
+  roster: string
+): { season: FirestoreSemesterSeason; year: number } => {
+  const semester = roster.slice(0, 2);
+  const year = roster.slice(2, 4);
+  const semesterToSeasonMap = new Map([
+    ['FA', 'Fall'],
+    ['SP', 'Spring'],
+    ['WI', 'Winter'],
+    ['SU', 'Summer'],
+  ]);
+
+  return {
+    season: semesterToSeasonMap.get(semester) as FirestoreSemesterSeason,
+    year: parseInt(year, 10) + 2000,
+  };
+};
+
+/**
+ * This function transforms semester and year to a roster ID. EX: Spring 2023 -> SP23
+ * */
+export const seasonAndYearToRosterIdentifier = (
+  season: FirestoreSemesterSeason,
+  year: number
+): string => {
+  const seasonToSemesterMap = {
+    Fall: 'FA',
+    Spring: 'SP',
+    Winter: 'WI',
+    Summer: 'SU',
+  } as const;
+
+  return `${seasonToSemesterMap[season]}${year - 2000}`;
+};
+
+export const firestoreSemesterCourseToBottomBarCourse = (
+  { code, name, credits, color, lastRoster, semesters, uniqueID }: FirestoreSemesterCourse,
+  season: FirestoreSemesterSeason,
+  year: number
+): AppBottomBarCourse => ({
   code,
   name,
   credits,
@@ -138,6 +172,7 @@ export const firestoreSemesterCourseToBottomBarCourse = ({
   overallRating: 0,
   difficulty: 0,
   workload: 0,
+  currRoster: seasonAndYearToRosterIdentifier(season, year), // currRoster = lastRoster when course is not offered in currRoster
 });
 
 // set entranceSem to fall and gradSem to spring by default locally, saved to Firestore when Onboarding finished
