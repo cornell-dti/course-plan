@@ -6,13 +6,18 @@ const otherYesListURL =
   'https://apps.engineering.cornell.edu/liberalstudies/ApprovedLiberalStudies.pdf';
 
 // Fetch the other yes list and parse the returned data into a `CourseWithId`
-async function fetchOtherLiberalStudiesCourses() {
+export async function fetchOtherLiberalStudiesCoursesJSON() {
   const pdf = await genTextContextMatrix(otherYesListURL);
   return JSON.stringify(getValidCourses(pdf));
 }
 
-async function writeOtherLiberalStudiesCourses(path) {
-  const courses = await fetchOtherLiberalStudiesCourses();
+export async function fetchOtherLiberalStudiesCourses() {
+  const pdf = await genTextContextMatrix(otherYesListURL);
+  return getValidCourses(pdf);
+}
+
+export async function writeOtherLiberalStudiesCourses(path) {
+  const courses = await fetchOtherLiberalStudiesCoursesJSON();
   await writeFile(`${path}otherYesCourses.json`, courses);
 }
 
