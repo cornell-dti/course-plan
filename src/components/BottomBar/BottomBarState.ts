@@ -1,5 +1,4 @@
 import { reactive } from 'vue';
-// import { doc, getDoc } from 'firebase/firestore';
 import { VueGtag } from 'vue-gtag-next';
 import { GTagEvent } from '../../gtag';
 import { checkNotNull } from '../../utilities';
@@ -15,8 +14,6 @@ import {
   rosterIdentifierToSeasonAndYear,
   seasonAndYearToRosterIdentifier,
 } from '../../user-data-converter';
-
-// import { availableRostersForCoursesCollection } from '../../firebase-config';
 
 export type BottomBarState = {
   bottomCourses: readonly AppBottomBarCourse[];
