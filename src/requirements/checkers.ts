@@ -116,8 +116,7 @@ export const courseIsForeignLang = (course: Course): boolean =>
 export const hasCategory = (course: Course, distribution: string) => {
   const otherYesCourse = otherYesCourses.find((x: CourseWithId) => x.crseId === course.crseId);
   return (
-    course.catalogDistr?.includes(distribution) ||
-    otherYesCourse?.categories.includes(distribution)
+    course.catalogDistr?.includes(distribution) || otherYesCourse?.categories.includes(distribution)
   );
 };
 
