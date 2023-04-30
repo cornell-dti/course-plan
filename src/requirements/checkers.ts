@@ -115,10 +115,9 @@ export const courseIsForeignLang = (course: Course): boolean =>
  */
 export const hasCategory = (course: Course, distribution: string) => {
   const otherYesCourse = otherYesCourses.find((x: CourseWithId) => x.crseId === course.crseId);
-  // console.log(otherYesCourse?.categories?.includes(distribution));
   return (
     course.catalogDistr?.includes(distribution) ||
-    otherYesCourse?.categories?.includes(distribution)
+    otherYesCourse?.categories.includes(distribution)
   );
 };
 
