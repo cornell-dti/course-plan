@@ -27,21 +27,21 @@ import {
 import { Course, CourseFullDetail } from '../../src/requirements/types';
 
 /** A helper function to generate a wait promise. Used for cooldown to limit API usage. */
-const wait = (time: number) =>
+export const wait = (time: number) =>
   new Promise<void>(resolve => {
     setTimeout(() => resolve(), time);
   });
 
-const classRosterURL = 'https://classes.cornell.edu/api/2.0';
+export const classRosterURL = 'https://classes.cornell.edu/api/2.0';
 
 /* Retrieves the rosters available on the class roster API */
-const retrieveAvailableRosters = async () => {
+export const retrieveAvailableRosters = async () => {
   const res = await fetch(`${classRosterURL}/config/rosters.json`);
   return (await res.json()).data.rosters.map(jsonRoster => jsonRoster.slug);
 };
 
 /* Retrieves the subjects across for a roster and creates a list of {roster: string, subject: string} objects */
-const retrieveAvailableSubjects = async (
+export const retrieveAvailableSubjects = async (
   roster: string
 ): Promise<readonly { roster: string; subject: string }[]> => {
   const res = await fetch(
@@ -52,10 +52,10 @@ const retrieveAvailableSubjects = async (
 
 /* Retrieves and formats available courses for a {roster: string, subject: string} object */
 
-const cleanField = (value: string | null | undefined) =>
+export const cleanField = (value: string | null | undefined) =>
   value?.replace(/\u00a0/g, ' ') || undefined;
 
-const courseFieldFilter = ({
+export const courseFieldFilter = ({
   subject,
   crseId,
   catalogNbr,
@@ -89,7 +89,8 @@ const courseFieldFilter = ({
   acadCareer: cleanField(acadCareer) || '',
   acadGroup: cleanField(acadGroup) || '',
 });
-const retrieveAvailableCourses = async (
+
+export const retrieveAvailableCourses = async (
   roster: string,
   subject: string
 ): Promise<CourseFullDetail[]> => {
@@ -141,7 +142,7 @@ const populateCourses = (roster: string, subject: string, courses: CourseFullDet
 
   Also logs live status of script during execution.
 */
-const populate = async () => {
+export const populate = async () => {
   const rosterSubjectPairs = await retrieveAvailableRosters()
     .then(rosters => rosters.map(roster => retrieveAvailableSubjects(roster)))
     .then(subjectsPromise => Promise.all(subjectsPromise))
@@ -163,5 +164,3 @@ const populate = async () => {
 
   console.log(`There are ${coursesCount} total courses.`);
 };
-
-populate();

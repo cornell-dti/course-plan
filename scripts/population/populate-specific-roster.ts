@@ -24,81 +24,19 @@ import {
   availableRostersForCourseCollection,
   crseIdToCatalogNbrCollection,
 } from '../firebase-config';
-import { Course, CourseFullDetail } from '../../src/requirements/types';
-
-/** A helper function to generate a wait promise. Used for cooldown to limit API usage. */
-const wait = (time: number) =>
-  new Promise<void>(resolve => {
-    setTimeout(() => resolve(), time);
-  });
-
-const classRosterURL = 'https://classes.cornell.edu/api/2.0';
+import { CourseFullDetail } from '../../src/requirements/types';
+import {
+  classRosterURL,
+  retrieveAvailableSubjects,
+  retrieveAvailableCourses,
+  wait,
+} from './courses-populate';
 
 /* Retrieves the desired roster (e.g 'FA21'), returns the latest roster by default */
 const retrieveRoster = async (roster?: string) => {
   if (roster) return [roster];
   const res = await fetch(`${classRosterURL}/config/rosters.json`);
   return [(await res.json()).data.rosters.map(jsonRoster => jsonRoster.slug).at(-1)];
-};
-
-/* Retrieves the subjects across for a roster and creates a list of {roster: string, subject: string} objects */
-const retrieveAvailableSubjects = async (
-  roster: string
-): Promise<readonly { roster: string; subject: string }[]> => {
-  const res = await fetch(
-    `https://classes.cornell.edu/api/2.0/config/subjects.json?roster=${roster}`
-  );
-  return (await res.json()).data.subjects.map(({ value }) => ({ roster, subject: value }));
-};
-
-/* Retrieves and formats available courses for a {roster: string, subject: string} object */
-
-const cleanField = (value: string | null | undefined) =>
-  value?.replace(/\u00a0/g, ' ') || undefined;
-
-const courseFieldFilter = ({
-  subject,
-  crseId,
-  catalogNbr,
-  titleLong,
-  enrollGroups,
-  catalogWhenOffered,
-  catalogBreadth,
-  catalogDistr,
-  catalogComments,
-  catalogSatisfiesReq,
-  catalogCourseSubfield,
-  catalogAttribute,
-  acadCareer,
-  acadGroup,
-}: Course): Course => ({
-  subject: cleanField(subject) || '',
-  crseId,
-  catalogNbr: cleanField(catalogNbr) || '',
-  titleLong: cleanField(titleLong) || '',
-  enrollGroups: enrollGroups.map(({ unitsMaximum, unitsMinimum }) => ({
-    unitsMaximum,
-    unitsMinimum,
-  })),
-  catalogWhenOffered: cleanField(catalogWhenOffered),
-  catalogBreadth: cleanField(catalogBreadth),
-  catalogDistr: cleanField(catalogDistr),
-  catalogComments: cleanField(catalogComments),
-  catalogSatisfiesReq: cleanField(catalogSatisfiesReq),
-  catalogCourseSubfield: cleanField(catalogCourseSubfield),
-  catalogAttribute: cleanField(catalogAttribute),
-  acadCareer: cleanField(acadCareer) || '',
-  acadGroup: cleanField(acadGroup) || '',
-});
-
-const retrieveAvailableCourses = async (
-  roster: string,
-  subject: string
-): Promise<CourseFullDetail[]> => {
-  const res = await fetch(
-    `${classRosterURL}/search/classes.json?roster=${roster}&subject=${subject}`
-  );
-  return (await res.json()).data.classes.map(jsonCourse => courseFieldFilter(jsonCourse));
 };
 
 /* 
