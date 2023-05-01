@@ -75,7 +75,6 @@ import earthAndAtmosphericSciencesMinorRequirements, {
   easMinorAdvisors,
 } from './minors/earth-atmo';
 
-// import mengCSRequirements from './grad/meng-cs';
 import mpaRequirements, { mpaAdvisors } from './grad/mpa';
 
 import { MATH2940, CHEM2080 } from './specializations/en';
