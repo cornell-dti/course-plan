@@ -163,9 +163,7 @@ const store: TypedVuexStore = new TypedVuexStore({
 
       const results = await Promise.all(promises);
       
-      context.commit('setSemesters', {
-        semester: results
-      });
+      context.commit('setSemesters', results);
     },
   },
   mutations: {
@@ -396,12 +394,12 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
       emitOnLoadWhenLoaded();
     }
   );
-  getDoc(doc(fb.subjectColorsCollection, simplifiedUser.email)).then(snapshot => {
+  getDoc(doc(fb.subjectColorsCollection, simplifiedUser.email)).then(async snapshot => {
     const subjectColors = snapshot.data() || {};
     // Pre-allocate all subject colors during this initialization step.
     const newSubjectColors = allocateAllSubjectColor(subjectColors);
     store.commit('setSubjectColors', newSubjectColors);
-    setDoc(doc(fb.subjectColorsCollection, simplifiedUser.email), newSubjectColors);
+    await setDoc(doc(fb.subjectColorsCollection, simplifiedUser.email), newSubjectColors);
     subjectColorInitialLoadFinished = true;
     emitOnLoadWhenLoaded();
   });
@@ -427,9 +425,9 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
   return unsubscriber;
 };
 
-export const updateSubjectColorData = (color: string, code: string): void => {
+export const updateSubjectColorData = async (color: string, code: string): Promise<void> => {
   const simplifiedUser = store.state.currentFirebaseUser;
-  getDoc(doc(fb.subjectColorsCollection, simplifiedUser.email)).then(snapshot => {
+  await getDoc(doc(fb.subjectColorsCollection, simplifiedUser.email)).then(snapshot => {
     const subjectColors = snapshot.data() || {};
     const newSubjectColors = updateSubjectColor(subjectColors, color, code);
     store.commit('setSubjectColors', newSubjectColors);

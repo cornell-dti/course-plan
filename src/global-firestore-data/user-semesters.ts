@@ -133,16 +133,16 @@ export const deleteCourseFromSemester = (
   }
 };
 
-export const deleteAllCoursesFromSemester = (
+export const deleteAllCoursesFromSemester = async (
   year: number,
   season: FirestoreSemesterSeason,
   gtag?: VueGtag
-): void => {
+): Promise<void> => {
   GTagEvent(gtag, 'delete-semester-courses');
   const semester = store.state.semesters.find(sem => semesterEquals(sem, year, season));
   if (semester) {
     deleteCoursesFromRequirementChoices(semester.courses.map(course => course.uniqueID));
-    editSemesters(oldSemesters =>
+    await editSemesters(oldSemesters =>
       oldSemesters.map(sem => ({
         ...sem,
         courses: semesterEquals(sem, year, season) ? [] : sem.courses,
@@ -151,9 +151,9 @@ export const deleteAllCoursesFromSemester = (
   }
 };
 
-export const deleteCourseFromSemesters = (courseUniqueID: number, gtag?: VueGtag): void => {
+export const deleteCourseFromSemesters = async (courseUniqueID: number, gtag?: VueGtag): Promise<void> => {
   GTagEvent(gtag, 'delete-course');
-  editSemesters(oldSemesters =>
+  await editSemesters(oldSemesters =>
     oldSemesters.map(semester => {
       const coursesWithoutDeleted = semester.courses.filter(
         course => course.uniqueID !== courseUniqueID

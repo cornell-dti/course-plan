@@ -45,11 +45,11 @@ async function runOnUser(userEmail: string, runOnDB: boolean) {
   await subjectColorsCollection
     .doc(userEmail)
     .get()
-    .then(it => {
+    .then(async it => {
       const subjectColors = it.data() || {};
       const newSubjectColors = migrateSubjectColor(subjectColors);
       if (runOnDB) {
-        subjectColorsCollection.doc(userEmail).set(newSubjectColors);
+        await subjectColorsCollection.doc(userEmail).set(newSubjectColors);
       }
     });
 }

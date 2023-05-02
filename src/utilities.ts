@@ -31,13 +31,15 @@ export const getFirstPlan = ({
 export const sortedSemesters = (
   semesters: readonly FirestoreSemester[],
   orderByNewest = true
-): readonly FirestoreSemester[] =>
-  semesters.slice().sort((a, b) => {
+): readonly FirestoreSemester[] => {
+  console.log(typeof semesters);
+  console.log(orderByNewest);
+  return semesters.slice().sort((a, b) => {
     // sort in increasing order iff orderByNewest is false, increasing otherwise
     const order = orderByNewest ? -1 : 1;
     const byYear = a.year - b.year;
     return order * (byYear === 0 ? SeasonOrdinal[a.season] - SeasonOrdinal[b.season] : byYear);
-  });
+  })};
 
 export function checkNotNull<T>(value: T | null | undefined): T {
   if (value == null) throw new Error();

@@ -103,7 +103,7 @@ export default defineComponent({
     onDeleteModalOpen(): void {
       this.deleteModalVisible = true;
     },
-    onDeleteCourseModalClose(isDelete: boolean): void {
+    async onDeleteCourseModalClose(isDelete: boolean): Promise<void> {
       this.deleteModalVisible = false;
 
       if (isDelete) {
@@ -111,7 +111,7 @@ export default defineComponent({
           deleteTransferCredit(this.courseTaken.code);
         } else {
           const { uniqueId } = this.courseTaken;
-          if (typeof uniqueId === 'number') deleteCourseFromSemesters(uniqueId, this.$gtag);
+          if (typeof uniqueId === 'number') await deleteCourseFromSemesters(uniqueId, this.$gtag);
         }
       }
     },
