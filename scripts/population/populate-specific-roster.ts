@@ -31,6 +31,7 @@ import {
   retrieveAvailableCourses,
   wait,
 } from './courses-populate';
+import parseArgs from minimist;
 
 /* Retrieves the desired roster (e.g 'FA21'), returns the latest roster by default */
 const retrieveRoster = async (roster?: string) => {
@@ -105,4 +106,4 @@ const populate = async (roster?: string) => {
 };
 
 /* Enter the desired roster as a string argument (e.g 'FA21'). Fetches latest roster data by default */
-populate();
+populate(parseArgs(process.argv.slice(2)).roster);
