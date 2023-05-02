@@ -19,6 +19,7 @@
  */
 import fetch from 'node-fetch';
 import { FieldValue } from 'firebase-admin/firestore';
+import parseArgs from 'minimist';
 import {
   coursesCollection,
   availableRostersForCourseCollection,
@@ -31,7 +32,6 @@ import {
   retrieveAvailableCourses,
   wait,
 } from './courses-populate';
-import parseArgs from minimist;
 
 /* Retrieves the desired roster (e.g 'FA21'), returns the latest roster by default */
 const retrieveRoster = async (roster?: string) => {
