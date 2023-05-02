@@ -1,9 +1,10 @@
 /* eslint-disable no-console */
 /* eslint-disable no-await-in-loop */
+
 /**
- * This script retrieves data from all courses from all available
- * class rosters and pushes them to the 'courses' collection in
- * Firebase.
+ * This script retrieves data from all courses from a desired
+ * class roster (latest roster by default) and pushes them to the
+ * 'courses' collection in Firebase.
  *
  * This script also creates a mapping from courses to the rosters
  * that the course is available in.
@@ -16,88 +17,27 @@
  * for the 'courses' collection can be found here:
  * https://tinyurl.com/5n86j4p7
  */
-
 import fetch from 'node-fetch';
 import { FieldValue } from 'firebase-admin/firestore';
+import parseArgs from 'minimist';
 import {
   coursesCollection,
   availableRostersForCourseCollection,
   crseIdToCatalogNbrCollection,
 } from '../firebase-config';
-import { Course, CourseFullDetail } from '../../src/requirements/types';
+import { CourseFullDetail } from '../../src/requirements/types';
+import {
+  classRosterURL,
+  retrieveAvailableSubjects,
+  retrieveAvailableCourses,
+  wait,
+} from './courses-populate';
 
-/** A helper function to generate a wait promise. Used for cooldown to limit API usage. */
-export const wait = (time: number) =>
-  new Promise<void>(resolve => {
-    setTimeout(() => resolve(), time);
-  });
-
-export const classRosterURL = 'https://classes.cornell.edu/api/2.0';
-
-/* Retrieves the rosters available on the class roster API */
-export const retrieveAvailableRosters = async () => {
+/* Retrieves the desired roster (e.g 'FA21'), returns the latest roster by default */
+const retrieveRoster = async (roster?: string) => {
+  if (roster) return [roster];
   const res = await fetch(`${classRosterURL}/config/rosters.json`);
-  return (await res.json()).data.rosters.map(jsonRoster => jsonRoster.slug);
-};
-
-/* Retrieves the subjects across for a roster and creates a list of {roster: string, subject: string} objects */
-export const retrieveAvailableSubjects = async (
-  roster: string
-): Promise<readonly { roster: string; subject: string }[]> => {
-  const res = await fetch(
-    `https://classes.cornell.edu/api/2.0/config/subjects.json?roster=${roster}`
-  );
-  return (await res.json()).data.subjects.map(({ value }) => ({ roster, subject: value }));
-};
-
-/* Retrieves and formats available courses for a {roster: string, subject: string} object */
-
-export const cleanField = (value: string | null | undefined) =>
-  value?.replace(/\u00a0/g, ' ') || undefined;
-
-export const courseFieldFilter = ({
-  subject,
-  crseId,
-  catalogNbr,
-  titleLong,
-  enrollGroups,
-  catalogWhenOffered,
-  catalogBreadth,
-  catalogDistr,
-  catalogComments,
-  catalogSatisfiesReq,
-  catalogCourseSubfield,
-  catalogAttribute,
-  acadCareer,
-  acadGroup,
-}: Course): Course => ({
-  subject: cleanField(subject) || '',
-  crseId,
-  catalogNbr: cleanField(catalogNbr) || '',
-  titleLong: cleanField(titleLong) || '',
-  enrollGroups: enrollGroups.map(({ unitsMaximum, unitsMinimum }) => ({
-    unitsMaximum,
-    unitsMinimum,
-  })),
-  catalogWhenOffered: cleanField(catalogWhenOffered),
-  catalogBreadth: cleanField(catalogBreadth),
-  catalogDistr: cleanField(catalogDistr),
-  catalogComments: cleanField(catalogComments),
-  catalogSatisfiesReq: cleanField(catalogSatisfiesReq),
-  catalogCourseSubfield: cleanField(catalogCourseSubfield),
-  catalogAttribute: cleanField(catalogAttribute),
-  acadCareer: cleanField(acadCareer) || '',
-  acadGroup: cleanField(acadGroup) || '',
-});
-
-export const retrieveAvailableCourses = async (
-  roster: string,
-  subject: string
-): Promise<CourseFullDetail[]> => {
-  const res = await fetch(
-    `${classRosterURL}/search/classes.json?roster=${roster}&subject=${subject}`
-  );
-  return (await res.json()).data.classes.map(jsonCourse => courseFieldFilter(jsonCourse));
+  return [(await res.json()).data.rosters.map(jsonRoster => jsonRoster.slug).at(-1)];
 };
 
 /* 
@@ -142,9 +82,9 @@ const populateCourses = (roster: string, subject: string, courses: CourseFullDet
 
   Also logs live status of script during execution.
 */
-export const populate = async () => {
-  const rosterSubjectPairs = await retrieveAvailableRosters()
-    .then(rosters => rosters.map(roster => retrieveAvailableSubjects(roster)))
+const populate = async (roster?: string) => {
+  const rosterSubjectPairs = await retrieveRoster(roster)
+    .then(rosters => rosters.map(retrievedRoster => retrieveAvailableSubjects(retrievedRoster)))
     .then(subjectsPromise => Promise.all(subjectsPromise))
     .then(subjects => subjects.flat());
 
@@ -164,3 +104,6 @@ export const populate = async () => {
 
   console.log(`There are ${coursesCount} total courses.`);
 };
+
+/* Enter the desired roster as a string argument (e.g 'FA21'). Fetches latest roster data by default */
+populate(parseArgs(process.argv.slice(2)).roster);
