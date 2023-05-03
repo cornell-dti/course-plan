@@ -20,7 +20,7 @@ export const writeToFile = (value, fileName: string) => {
 
 /**
  * Strips Non-breaking space (NBS) from a string and returns the result
- * 
+ *
  * @param value the field to clean
  * @returns the cleansed field
  */
@@ -29,7 +29,7 @@ export const cleanField = (value: string | null | undefined) =>
 
 /**
  * Recursively strips NBS from an expression
- * 
+ *
  * @param field the field to clean
  * @returns the cleansed field
  */
@@ -40,10 +40,10 @@ export const clean = <E>(field: E) => {
     case 'object':
       if (field == null) return field;
       if (Array.isArray(field)) return field.map(clean);
-      return Object.fromEntries(Object.entries(field).map(([k, v]) => [k, clean(v)]))
+      return Object.fromEntries(Object.entries(field).map(([k, v]) => [k, clean(v)]));
     default:
       return field;
   }
-}
+};
 
 export default { writeToFile };
