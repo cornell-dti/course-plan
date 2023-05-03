@@ -23,7 +23,8 @@ enum Col {
 }
 
 // creates list of course entries
-export function genCourseEntries(data: string | any[]) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function genCourseEntries(data: any[]) {
   const courseEntries: Course[] = [];
   let c: Col = Col.CoursePrefix as Col;
   let subject = '';
@@ -76,7 +77,8 @@ export function genCourseEntries(data: string | any[]) {
   return courseEntries.filter(course => !Number.isNaN(course.catalogNbr));
 }
 
-export function getValidCourses(data: string | any[]) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function getValidCourses(data: any[]) {
   const courseEntries = genCourseEntries(data);
   const validCourses: CourseWithId[] = [];
 
