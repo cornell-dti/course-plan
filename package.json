@@ -11,8 +11,12 @@
     "courses-gen": "npm run ts-node -- src/requirements/courses-json-generator.ts",
     "req-gen": "npm run ts-node -- src/requirements/requirement-json-generator.ts",
     "track-users": "npm run ts-node -- scripts/track-users.ts",
+<<<<<<< HEAD
+    "courses-populate": "npm run ts-node -- scripts/population/courses-populate.ts",
+=======
     "courses-populate": "npm run ts-node -- scripts/population/populate.ts",
     "populate-specific-roster": "npm run ts-node -- scripts/population/populate-specific-roster.ts",
+>>>>>>> 5f0a73a6efe1643dc1a127033c14f18adaf506f9
     "lint": "eslint . --cache",
     "tsc": "tsc",
     "type-check": "vue-tsc --noEmit",
