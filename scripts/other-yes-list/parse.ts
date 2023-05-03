@@ -23,7 +23,7 @@ enum Col {
 }
 
 // creates list of course entries
-export function genCourseEntries(data: string | any[]) {
+export function genCourseEntries(data) {
   const courseEntries: Course[] = [];
   let c: Col = Col.CoursePrefix as Col;
   let subject = '';
@@ -36,6 +36,7 @@ export function genCourseEntries(data: string | any[]) {
     const v = data[i][0].str.trim();
     if (v.slice(0, 5) === 'Notes') {
       start = i + 1;
+      break;
     }
   }
   // assumes that the columns are ordered and there are no empty cells
@@ -75,7 +76,7 @@ export function genCourseEntries(data: string | any[]) {
   return courseEntries.filter(course => !Number.isNaN(course.catalogNbr));
 }
 
-export function getValidCourses(data: string | any[]) {
+export function getValidCourses(data) {
   const courseEntries = genCourseEntries(data);
   const validCourses: CourseWithId[] = [];
 

@@ -19,6 +19,11 @@ async function populateYesCategories() {
           .collection(course.subject)
           .doc(course.catalogNbr.toString())
           .update({ yesCategories: course.categories });
+      
+      console.log(coursesCollection
+        .doc(roster)
+        .collection(course.subject)
+        .doc(course.catalogNbr.toString()))
       }
     })
   );
