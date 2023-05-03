@@ -36,7 +36,6 @@ type FirestoreSemester = {
 };
 
 type FirestoreSemestersData = {
-  readonly plans?: readonly { semesters: readonly FirestoreSemester[] }[];
   readonly semesters: readonly FirestoreSemester[];
   readonly orderByNewest: boolean;
 };
@@ -85,7 +84,7 @@ type FirestoreOverriddenFulfillmentChoices = {
 
 type FirestoreUserData = {
   readonly name: FirestoreUserName;
-  readonly semesters: FirestoreSemester[];
+  readonly semesters: readonlyFirestoreSemester[];
   readonly orderByNewest: boolean;
   readonly toggleableRequirementChoices: AppToggleableRequirementChoices;
   readonly subjectColors: { readonly [subject: string]: string };
@@ -145,7 +144,7 @@ interface CornellCourseRosterCourse {
   readonly catalogSatisfiesReq?: string;
   readonly catalogCourseSubfield?: string;
   readonly catalogAttribute?: string;
-  roster: string;
+  readonly roster: string;
   readonly acadCareer: string;
   readonly acadGroup: string;
 }
@@ -171,11 +170,6 @@ interface CornellCourseRosterCourseFullDetail extends CornellCourseRosterCourse 
   }[];
   readonly catalogPrereqCoreq?: string;
   readonly catalogDistr?: string;
-}
-
-interface FullClassRosterCourseWithUniqueID extends CornellCourseRosterCourseFullDetail {
-  readonly userChosenCredits: number;
-  readonly uniqueID: number;
 }
 
 // college and grad are optional fields: grad can be undefined if the user hasn't selected a grad program, and college can be undefined if the user has only selected a grad program.
@@ -209,7 +203,6 @@ type AppBottomBarCourse = {
   overallRating: number;
   difficulty: number;
   workload: number;
-  currRoster: string;
 };
 
 // This is used for drag&drop between SubRequirement and Semester

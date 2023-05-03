@@ -23,7 +23,7 @@ auth.onAuthStateChanged(() => {
     app.use(router);
     // Enable Google analytics with custom events
     app.use(VueGtag, {
-      property: { id: 'G-BQ6CTZQPSF' },
+      property: { id: 'UA-124837875-2' },
     });
     app.use(store);
     app.mount('#app');

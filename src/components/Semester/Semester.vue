@@ -95,8 +95,6 @@
               <course
                 v-if="!isPlaceholderCourse(element)"
                 :courseObj="element"
-                :year="year"
-                :season="season"
                 :isReqCourse="false"
                 :compact="compact"
                 :active="activatedCourse.uniqueID === element.uniqueID"

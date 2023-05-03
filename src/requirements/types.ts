@@ -2,8 +2,6 @@ import { AdvisorGroup } from '../tools/advisors/types';
 
 export type Course = Omit<CornellCourseRosterCourse, 'roster'>;
 
-export type CourseFullDetail = CornellCourseRosterCourseFullDetail;
-
 export type BaseRequirement = RequirementCommon & RequirementFulfillmentInformation;
 
 export type RequirementChecker = (course: Course) => boolean;
@@ -28,7 +26,6 @@ export type Major<R> = Readonly<{
   /** College requirements that have been "specialized" for this major */
   specializations?: readonly R[];
   advisors?: AdvisorGroup;
-  readonly abbrev?: string;
 }>;
 
 export type MutableMajorRequirements<R> = {
