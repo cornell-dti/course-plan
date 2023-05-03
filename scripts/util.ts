@@ -19,7 +19,7 @@ export const writeToFile = (value, fileName: string) => {
 };
 
 /**
- * Strips NBS from a string and returns the result
+ * Strips Non-breaking space (NBS) from a string and returns the result
  * 
  * @param value the field to clean
  * @returns the cleansed field
