@@ -62,8 +62,6 @@ it('Check accessibility of the bottom bar', () => {
   // open the bottom bar
   cy.get('[data-cyId=semester-course]').eq(0).click();
 
-  // eslint-disable-next-line cypress/no-unnecessary-waiting
-  cy.wait(5000);
   cy.checkA11y('[data-cyId=bottombar]', null, null, true); // only check accessibility within the bottom bar
 });
 

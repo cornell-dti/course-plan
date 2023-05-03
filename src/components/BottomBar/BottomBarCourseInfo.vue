@@ -33,7 +33,7 @@
           </p>
         </div>
         <div class="section">
-          <h1 class="info-head">{{ courseObj.currRoster }} Lecture Information</h1>
+          <h1 class="info-head">{{ courseObj.lastRoster }} Lecture Information</h1>
           <p class="info-fact" v-for="latestLecInfo in courseLectureTimes" :key="latestLecInfo">
             {{ latestLecInfo }}
           </p>

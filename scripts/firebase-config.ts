@@ -31,7 +31,6 @@ const serviceAccount = JSON.parse(serviceAccountUnparsed);
 const databaseURL = isProd ? DATABASE_URL_PROD : DATABASE_URL_DEV;
 
 const db = getDatabase(serviceAccount, databaseURL);
-db.settings({ ignoreUndefinedProperties: true });
 
 const userCollections = {
   name: 'user-name',
@@ -42,7 +41,6 @@ const userCollections = {
   unique: 'user-unique-incrementer',
   onboarding: 'user-onboarding-data',
 };
-
 export const userCollectionNames = Object.values(userCollections);
 
 export const usernameCollection = db.collection(userCollections.name);
@@ -53,6 +51,3 @@ export const subjectColorsCollection = db.collection(userCollections.colors);
 export const uniqueIncrementerCollection = db.collection(userCollections.unique);
 export const onboardingDataCollection = db.collection(userCollections.onboarding);
 export const trackUsersCollection = db.collection('track-users');
-export const coursesCollection = db.collection('courses');
-export const availableRostersForCourseCollection = db.collection('available-rosters-for-course');
-export const crseIdToCatalogNbrCollection = db.collection('crseid-to-catalognbr');

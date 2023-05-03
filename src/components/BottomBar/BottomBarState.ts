@@ -1,18 +1,10 @@
 import { reactive } from 'vue';
-import { VueGtag } from 'vue-gtag-next';
-import { GTagEvent } from '../../gtag';
+import { GTag, GTagEvent } from '../../gtag';
 import { checkNotNull } from '../../utilities';
-import {
-  getCourseWithSeasonAndYear,
-  getCourse,
-  extractSubjectAndNumber,
-} from '../../global-firestore-data/courses';
 
 import {
   cornellCourseRosterCourseDetailedInformationToPartialBottomCourseInformation,
   firestoreSemesterCourseToBottomBarCourse,
-  rosterIdentifierToSeasonAndYear,
-  seasonAndYearToRosterIdentifier,
 } from '../../user-data-converter';
 
 export type BottomBarState = {
@@ -46,15 +38,13 @@ const getDetailedInformationForBottomBar = async (
   subject: string,
   number: string
 ) => {
-  const seasonAndYear = rosterIdentifierToSeasonAndYear(roster);
-  const course = await getCourseWithSeasonAndYear(
-    seasonAndYear.season,
-    seasonAndYear.year,
-    subject,
-    number
-  );
+  const courses: readonly CornellCourseRosterCourseFullDetail[] = (
+    await fetch(
+      `https://classes.cornell.edu/api/2.0/search/classes.json?roster=${roster}&subject=${subject}`
+    ).then(response => response.json())
+  ).data.classes;
   return cornellCourseRosterCourseDetailedInformationToPartialBottomCourseInformation(
-    checkNotNull(course)
+    checkNotNull(courses.find(it => it.catalogNbr === number))
   );
 };
 
@@ -79,11 +69,7 @@ const getReviews = (
       }
   );
 
-export const addCourseToBottomBar = async (
-  course: FirestoreSemesterCourse,
-  season: string,
-  year: number
-): Promise<void> => {
+export const addCourseToBottomBar = (course: FirestoreSemesterCourse): void => {
   vueForBottomBar.isExpanded = true;
 
   for (let i = 0; i < vueForBottomBar.bottomCourses.length; i += 1) {
@@ -94,19 +80,11 @@ export const addCourseToBottomBar = async (
       return;
     }
   }
-  const courseSubjectAndNumber = extractSubjectAndNumber(course.code);
-  const classRosterCourseData = await getCourse(
-    seasonAndYearToRosterIdentifier(season as FirestoreSemesterSeason, year),
-    courseSubjectAndNumber.subject,
-    courseSubjectAndNumber.number
-  );
-  const seasonAndYear = rosterIdentifierToSeasonAndYear(classRosterCourseData.roster);
 
   vueForBottomBar.bottomCourses = [
-    firestoreSemesterCourseToBottomBarCourse(course, seasonAndYear.season, seasonAndYear.year),
+    firestoreSemesterCourseToBottomBarCourse(course),
     ...vueForBottomBar.bottomCourses,
   ];
-
   vueForBottomBar.bottomCourseFocus = 0;
 
   const [subject, number] = course.code.split(' ');
@@ -121,29 +99,25 @@ export const addCourseToBottomBar = async (
         bottomBarCourse.workload = classWorkload;
       }
     }),
-    getDetailedInformationForBottomBar(
-      vueForBottomBar.bottomCourses[vueForBottomBar.bottomCourseFocus].currRoster,
-      subject,
-      number
-    ).then(({ description, prereqs, enrollment, lectureTimes, instructors, distributions }) => {
-      const bottomBarCourse = vueForBottomBar.bottomCourses.find(
-        ({ uniqueID, code }) => uniqueID === course.uniqueID && code === course.code
-      );
-      if (bottomBarCourse) {
-        Object.assign(bottomBarCourse, {
-          description,
-          prereqs,
-          enrollment,
-          lectureTimes,
-          instructors,
-          distributions,
-        });
+    getDetailedInformationForBottomBar(course.lastRoster, subject, number).then(
+      ({ description, prereqs, enrollment, lectureTimes, instructors, distributions }) => {
+        const bottomBarCourse = vueForBottomBar.bottomCourses.find(
+          ({ uniqueID, code }) => uniqueID === course.uniqueID && code === course.code
+        );
+        if (bottomBarCourse) {
+          bottomBarCourse.description = description;
+          bottomBarCourse.prereqs = prereqs;
+          bottomBarCourse.enrollment = enrollment;
+          bottomBarCourse.lectureTimes = lectureTimes;
+          bottomBarCourse.instructors = instructors;
+          bottomBarCourse.distributions = distributions;
+        }
       }
-    }),
+    ),
   ]);
 };
 
-export const toggleBottomBar = (gtag?: VueGtag): void => {
+export const toggleBottomBar = (gtag?: GTag): void => {
   vueForBottomBar.isExpanded = !vueForBottomBar.isExpanded;
   if (vueForBottomBar.isExpanded) {
     GTagEvent(gtag, 'bottom-bar-open');
@@ -152,7 +126,7 @@ export const toggleBottomBar = (gtag?: VueGtag): void => {
   }
 };
 
-export const closeBottomBar = (gtag?: VueGtag): void => {
+export const closeBottomBar = (gtag?: GTag): void => {
   vueForBottomBar.isExpanded = false;
   GTagEvent(gtag, 'bottom-bar-close');
 };
@@ -161,7 +135,7 @@ export const changeBottomBarCourseFocus = (index: number): void => {
   vueForBottomBar.bottomCourseFocus = index;
 };
 
-export const deleteBottomBarCourse = (index: number, gtag?: VueGtag): void => {
+export const deleteBottomBarCourse = (index: number, gtag?: GTag): void => {
   GTagEvent(gtag, 'bottom-bar-delete-tab');
   vueForBottomBar.bottomCourses = vueForBottomBar.bottomCourses.filter((_, i) => i !== index);
   if (vueForBottomBar.bottomCourseFocus >= vueForBottomBar.bottomCourses.length) {

@@ -1,5 +1,5 @@
 import { isPlaceholderCourse, isCourseTaken } from '../../utilities';
-import { getCollegeAbbrev, getMajorAbbrev, getMinorAbbrev, getGradAbbrev } from '../../data';
+import { getCollegeAbbrev } from '../../data';
 import store from '../../store';
 import { pdfColors } from '@/assets/constants/colors';
 import { SemesterRows, BubbleData } from './types';
@@ -56,12 +56,10 @@ export const getFulfilledReqs = (
         return getCollegeAbbrev(store.state.userRequirementsMap[req].sourceSpecificName);
       }
       case 'Grad':
-        return getGradAbbrev(store.state.userRequirementsMap[req].sourceSpecificName);
-      case 'Major': {
-        return getMajorAbbrev(store.state.userRequirementsMap[req].sourceSpecificName);
-      }
+        return 'grad';
+      case 'Major':
       case 'Minor': {
-        return getMinorAbbrev(store.state.userRequirementsMap[req].sourceSpecificName);
+        return store.state.userRequirementsMap[req].sourceSpecificName.toLowerCase();
       }
       default:
         throw new Error('group type not valid for bubble');
