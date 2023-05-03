@@ -1,5 +1,5 @@
 import { Store } from 'vuex';
-import { doc, getDoc, onSnapshot, setDoc } from 'firebase/firestore';
+import { doc, getDoc, onSnapshot, setDoc, updateDoc } from 'firebase/firestore';
 
 import * as fb from './firebase-config';
 import computeGroupedRequirementFulfillmentReports from './requirements/requirement-frontend-computation';
@@ -13,8 +13,10 @@ import {
   getCurrentYear,
   sortedSemesters,
   isPlaceholderCourse,
+  getFirstPlan,
 } from './utilities';
 import featureFlagCheckers from './feature-flags';
+import { setUserProperties } from './gtag';
 
 type SimplifiedFirebaseUser = { readonly displayName: string; readonly email: string };
 
@@ -160,45 +162,53 @@ const store: TypedVuexStore = new TypedVuexStore({
 });
 
 const autoRecomputeDerivedData = (): (() => void) =>
-  store.subscribe((payload, state) => {
-    if (payload.type === 'setOrderByNewest') {
-      store.commit('setSemesters', sortedSemesters(state.semesters, state.orderByNewest));
-    }
-    // Recompute courses
-    if (payload.type === 'setSemesters') {
-      const allCourseSet = new Set<string>();
-      const duplicatedCourseCodeSet = new Set<string>();
-      const courseMap: Record<number, FirestoreSemesterCourse> = {};
-      const courseToSemesterMap: Record<number, FirestoreSemester> = {};
-      state.semesters.forEach(semester => {
-        semester.courses.forEach(course => {
-          if (isPlaceholderCourse(course)) {
-            return;
-          }
+  store.subscribe((mutation, state) => {
+    switch (mutation.type) {
+      case 'setOnboardingData': {
+        setUserProperties(mutation.payload);
+        break;
+      }
+      case 'setOrderByNewest': {
+        store.commit('setSemesters', sortedSemesters(state.semesters, state.orderByNewest));
+        break;
+      }
+      case 'setSemesters': {
+        const allCourseSet = new Set<string>();
+        const duplicatedCourseCodeSet = new Set<string>();
+        const courseMap: Record<number, FirestoreSemesterCourse> = {};
+        const courseToSemesterMap: Record<number, FirestoreSemester> = {};
+        state.semesters.forEach(semester => {
+          semester.courses.forEach(course => {
+            if (isPlaceholderCourse(course)) {
+              return;
+            }
 
-          const { code } = course;
-          if (allCourseSet.has(code)) {
-            duplicatedCourseCodeSet.add(code);
-          } else {
-            allCourseSet.add(code);
-          }
-          courseMap[course.uniqueID] = course;
-          courseToSemesterMap[course.uniqueID] = semester;
+            const { code } = course;
+            if (allCourseSet.has(code)) {
+              duplicatedCourseCodeSet.add(code);
+            } else {
+              allCourseSet.add(code);
+            }
+            courseMap[course.uniqueID] = course;
+            courseToSemesterMap[course.uniqueID] = semester;
+          });
         });
-      });
-      const derivedCourseData: DerivedCoursesData = {
-        duplicatedCourseCodeSet,
-        courseMap,
-        courseToSemesterMap,
-      };
-      store.commit('setDerivedCourseData', derivedCourseData);
+        const derivedCourseData: DerivedCoursesData = {
+          duplicatedCourseCodeSet,
+          courseMap,
+          courseToSemesterMap,
+        };
+        store.commit('setDerivedCourseData', derivedCourseData);
+        break;
+      }
+      default:
     }
     // Recompute requirements
     if (
-      payload.type === 'setOnboardingData' ||
-      payload.type === 'setSemesters' ||
-      payload.type === 'setToggleableRequirementChoices' ||
-      payload.type === 'setOverriddenFulfillmentChoices'
+      mutation.type === 'setOnboardingData' ||
+      mutation.type === 'setSemesters' ||
+      mutation.type === 'setToggleableRequirementChoices' ||
+      mutation.type === 'setOverriddenFulfillmentChoices'
     ) {
       if (state.onboardingData.college !== '') {
         store.commit(
@@ -273,8 +283,12 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
   getDoc(doc(fb.semestersCollection, simplifiedUser.email)).then(snapshot => {
     const data = snapshot.data();
     if (data) {
-      const { orderByNewest, semesters } = data;
+      const semesters = getFirstPlan(data);
+      const { orderByNewest } = data;
       store.commit('setSemesters', semesters);
+      updateDoc(doc(fb.semestersCollection, simplifiedUser.email), {
+        plans: [{ semesters }], // TODO: andxu282 update later
+      });
       // if user hasn't yet chosen an ordering, choose true by default
       store.commit('setOrderByNewest', orderByNewest === undefined ? true : orderByNewest);
     } else {
@@ -286,6 +300,7 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
       store.commit('setSemesters', [newSemester]);
       setDoc(doc(fb.semestersCollection, simplifiedUser.email), {
         orderByNewest: true,
+        plans: [{ semesters: [newSemester] }], // TODO: andxu282 update later
         semesters: [newSemester],
       });
     }
