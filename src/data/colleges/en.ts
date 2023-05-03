@@ -5,6 +5,7 @@ import {
   includesWithSubRequirements,
   ifCodeMatch,
   courseIsForeignLang,
+  hasCategory,
 } from '../../requirements/checkers';
 import { AdvisorGroup } from '../../tools/advisors/types';
 import { lastNameRange, lastNameRanges } from '../../tools/advisors/checkers';
@@ -111,7 +112,7 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: [
       (course: Course): boolean =>
         engineeringLiberalArtsDistributions.some(
-          distribution => course.catalogDistr?.includes(distribution) ?? false
+          distribution => hasCategory(course, distribution) ?? false
         ) || courseIsForeignLang(course),
     ],
     fulfilledBy: 'courses',
@@ -125,7 +126,7 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
           ...engineeringLiberalArtsDistributions
             .filter(it => it !== 'LA' && it !== 'LAD')
             .map(distribution => (course: Course): boolean =>
-              course.catalogDistr?.includes(distribution) ?? false
+              hasCategory(course, distribution) ?? false
             ),
         ],
         fulfilledBy: 'courses',
@@ -140,7 +141,7 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
         checker: [
           (course: Course): boolean =>
             engineeringLiberalArtsDistributions.some(
-              distribution => course.catalogDistr?.includes(distribution) ?? false
+              distribution => hasCategory(course, distribution) ?? false
             ) || courseIsForeignLang(course),
         ],
         fulfilledBy: 'credits',
@@ -153,7 +154,7 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
             return (
               !ifCodeMatch(catalogNbr, '1***') &&
               (engineeringLiberalArtsDistributions.some(
-                category => course.catalogDistr?.includes(category) ?? false
+                category => hasCategory(course, category) ?? false
               ) ||
                 courseIsForeignLang(course))
             );
