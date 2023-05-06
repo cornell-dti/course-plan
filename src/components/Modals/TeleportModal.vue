@@ -23,7 +23,12 @@
         </div>
         <slot class="modal-body"></slot>
         <div v-if="!isSimpleModal" class="modal-buttonWrapper">
-          <button v-if="leftButtonText" class="modal-button" @click="leftButtonClicked">
+          <button
+            :class="{ 'modal-button--big': isPlanModal }"
+            v-if="leftButtonText"
+            class="modal-button"
+            @click="leftButtonClicked"
+          >
             {{ leftButtonText }}
           </button>
           <button
@@ -31,6 +36,7 @@
             :class="{
               'modal-button--disabled': rightButtonIsDisabled,
               'modal-button--highlighted': rightButtonIsHighlighted,
+              'modal-button--big': isPlanModal,
             }"
             @click="rightButtonClicked"
             data-cyId="modal-button"
@@ -227,6 +233,10 @@ store.commit('setIsTeleportModalOpen', true);
 
     &--highlighted {
       border: 2px solid $error;
+    }
+
+    &--big {
+      width: 7rem;
     }
   }
 }
