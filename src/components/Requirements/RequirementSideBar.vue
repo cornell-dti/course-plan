@@ -36,10 +36,32 @@
           >
             Open Requirement Debugger
           </button>
+
           <div class="multiple-plans">
-            <button class="add-plan-button" @click="addPlan()">+ Add Plan</button>
+            <add-plan-modal
+              v-if="isAddPlanOpen"
+              @close-plan-modal="toggleAddPlan"
+              @open-copy-modal="toggleCopyPlan"
+            />
+            <copy-plan-modal
+              v-if="isCopyPlanOpen"
+              @open-plan-modal="toggleAddPlan"
+              @close-copy-modal="toggleCopyPlan"
+              @open-name-modal="toggleNamePlan"
+            />
+            <name-plan-modal
+              v-if="isNamePlanOpen"
+              @open-copy-modal="toggleCopyPlan"
+              @close-name-modal="toggleNamePlan"
+            />
+            <edit-plan-modal
+              v-if="isEditPlanOpen"
+              @close-edit-modal="toggleEditPlan"
+              @close-name-modal="toggleNamePlan"
+            />
+            <button class="add-plan-button" @click="toggleAddPlan()">+ Add Plan</button>
             <div class="multiple-plans-dropdown">
-              <multiple-plans-dropdown />
+              <multiple-plans-dropdown @open-edit-modal="toggleEditPlan" />
             </div>
           </div>
 
@@ -152,7 +174,17 @@ import MultiplePlansDropdown from './MultiplePlansDropdown.vue';
 import clipboard from '@/assets/images/clipboard.svg';
 import warning from '@/assets/images/warning.svg';
 import store from '@/store';
-import { chooseToggleableRequirementOption, incrementUniqueID } from '@/global-firestore-data';
+import {
+  chooseToggleableRequirementOption,
+  incrementUniqueID,
+  editPlan,
+  deletePlan,
+  addPlan,
+} from '@/global-firestore-data';
+import AddPlanModal from '@/components/Modals/AddPlanModal.vue';
+import CopyPlanModal from '../Modals/CopyPlanModal.vue';
+import NamePlanModal from '../Modals/NamePlanModal.vue';
+import EditPlanModal from '../Modals/EditPlanModal.vue';
 
 export type ShowAllCourses = {
   readonly name: string;
@@ -169,6 +201,10 @@ type Data = {
   shouldShowAllCourses: boolean;
   showAllPage: number;
   tourStep: number;
+  isAddPlanOpen: boolean;
+  isCopyPlanOpen: boolean;
+  isNamePlanOpen: boolean;
+  isEditPlanOpen: boolean;
 };
 
 // This section will be revisited when we try to make first-time tooltips
@@ -192,6 +228,10 @@ export default defineComponent({
     RequirementGroup,
     TeleportModal,
     MultiplePlansDropdown,
+    AddPlanModal,
+    CopyPlanModal,
+    NamePlanModal,
+    EditPlanModal,
   },
   props: {
     startTour: { type: Boolean, required: true },
@@ -210,6 +250,10 @@ export default defineComponent({
       shouldShowAllCourses: false,
       showAllPage: 0,
       tourStep: 0,
+      isAddPlanOpen: false,
+      isCopyPlanOpen: false,
+      isNamePlanOpen: false,
+      isEditPlanOpen: false,
     };
   },
   watch: {
@@ -265,12 +309,46 @@ export default defineComponent({
     },
   },
   methods: {
-    addPlan() {
-      console.log('add plan clicked!');
+    toggleAddPlan() {
+      this.isAddPlanOpen = !this.isAddPlanOpen;
+    },
+    toggleCopyPlan() {
+      this.isCopyPlanOpen = !this.isCopyPlanOpen;
+    },
+    toggleNamePlan() {
+      this.isNamePlanOpen = !this.isNamePlanOpen;
+    },
+    toggleEditPlan() {
+      this.isEditPlanOpen = !this.isEditPlanOpen;
     },
     toggleDebugger(): void {
       this.displayDebugger = !this.displayDebugger;
     },
+    addPlan(name: string, copysem?: string) {
+      if (copysem) {
+        const { plans } = store.state;
+        const copiedSems = plans.find(plan => plan.name === copysem)?.semesters;
+        if (copiedSems !== undefined) {
+          addPlan(name, [...copiedSems]);
+        } else {
+          addPlan(name, []);
+        }
+      } else {
+        addPlan(name, []);
+      }
+    },
+    deletePlan(name: string) {
+      deletePlan(name);
+    },
+    editPlan(name: string, oldname: string) {
+      const { plans } = store.state;
+      const toEdit = plans.find(plan => plan.name === oldname);
+      const updater = (plan: Plan): Plan => ({ name, semesters: plan.semesters });
+      if (toEdit !== undefined) {
+        editPlan(oldname, updater);
+      }
+    },
+
     // TODO CHANGE FOR MULTIPLE COLLEGES & GRAD PROGRAMS
     showMajorOrMinorRequirements(id: number, group: string): boolean {
       // colleges and programs should always be shown as there can only be 1

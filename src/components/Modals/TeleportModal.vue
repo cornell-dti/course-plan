@@ -23,7 +23,12 @@
         </div>
         <slot class="modal-body"></slot>
         <div v-if="!isSimpleModal" class="modal-buttonWrapper">
-          <button v-if="leftButtonText" class="modal-button" @click="leftButtonClicked">
+          <button
+            :class="{ 'modal-button--big': isPlanModal }"
+            v-if="leftButtonText"
+            class="modal-button"
+            @click="leftButtonClicked"
+          >
             {{ leftButtonText }}
           </button>
           <button
@@ -31,6 +36,7 @@
             :class="{
               'modal-button--disabled': rightButtonIsDisabled,
               'modal-button--highlighted': rightButtonIsHighlighted,
+              'modal-button--big': isPlanModal,
             }"
             @click="rightButtonClicked"
             data-cyId="modal-button"
@@ -67,6 +73,7 @@ export default defineComponent({
     hasNoBackground: { type: Boolean, default: false }, // true for modals without the gray overlay behind them
     hasClickableTransparentBackground: { type: Boolean, default: false }, // modals without a gray overlay behind them AND clicking on the background closes the modal
     hasCustomPosition: { type: Boolean, default: false }, // true if you want to set custom position for modal
+    isPlanModal: { type: Boolean, default: false },
     position: {
       type: Object as PropType<{ x: number; y: number }>,
       default: () => ({ x: 0, y: 0 }),
@@ -210,6 +217,10 @@ export default defineComponent({
 
     &--highlighted {
       border: 2px solid $error;
+    }
+
+    &--big {
+      width: 7rem;
     }
   }
 }
