@@ -2,7 +2,7 @@ import { fetchOtherLiberalStudiesCourses } from './fetch-courses';
 import { coursesCollection, availableRostersForCourseCollection } from '../firebase-config';
 import { CourseWithId } from './parse';
 
-async function populateYesCategories() {
+export default async function populateYesCategories() {
   const yesCourses: CourseWithId[] = await fetchOtherLiberalStudiesCourses();
 
   Promise.all(
@@ -25,4 +25,3 @@ async function populateYesCategories() {
 }
 
 populateYesCategories();
-
