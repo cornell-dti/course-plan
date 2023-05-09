@@ -31,6 +31,7 @@ Then access http://localhost:8080/
 - **Pablo Raigoza** - Developer
 - **Noorejehan Umarn** - Designer
 - **Michelle Dai** - Designer
+- **Larrisa Chen** - Designer
 - **Jonathan Mak** - PMM
 - **Kaylin Chan** - APM
 - **Zak Kent** - TPM
