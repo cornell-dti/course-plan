@@ -355,7 +355,7 @@ const generateDecoratedRequirementsJson = (): DecoratedRequirementsJson => {
     };
   });
   Object.entries(major).forEach(([majorName, majorRequirement]) => {
-    const { requirements, advisors, specializations, ...rest } = majorRequirement;
+    const { requirements, advisors, specializations, abbrev: abbr, ...rest } = majorRequirement;
     decoratedJson.major[majorName] = {
       ...rest,
       requirements: decorateRequirements(requirements),
@@ -363,14 +363,14 @@ const generateDecoratedRequirementsJson = (): DecoratedRequirementsJson => {
     };
   });
   Object.entries(minor).forEach(([minorName, minorRequirement]) => {
-    const { requirements, advisors, ...rest } = minorRequirement;
+    const { requirements, advisors, abbrev: abbr, ...rest } = minorRequirement;
     decoratedJson.minor[minorName] = {
       ...rest,
       requirements: decorateRequirements(requirements),
     };
   });
   Object.entries(grad).forEach(([gradName, gradRequirement]) => {
-    const { requirements, advisors, ...rest } = gradRequirement;
+    const { requirements, advisors, abbrev, ...rest } = gradRequirement;
     decoratedJson.grad[gradName] = {
       ...rest,
       requirements: decorateRequirements(requirements),
