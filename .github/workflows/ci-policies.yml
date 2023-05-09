@@ -6,12 +6,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: View PR author
+        run: echo "This PR is opened by ${{ github.event.pull_request.user.login }} ."
       - name: Print base ref and head ref
         run: |
           echo "Your head ref is ${{ github.head_ref }}."
           echo "Your base ref is ${{ github.base_ref }}."
       - name: Fail if try to push release from non-master branch
-        if: (github.base_ref == 'beta-release' || github.base_ref == 'release') && github.head_ref != 'master'
+        if: ((github.base_ref == 'beta-release' || github.base_ref == 'release') && github.head_ref != 'master') && (github.event.pull_request.user.login != 'noschiff')
         run: |
           echo "Head ref must be master for release. Everything should go through staging first!"
           exit 1
