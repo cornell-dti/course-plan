@@ -24,7 +24,8 @@ import {
   availableRostersForCourseCollection,
   crseIdToCatalogNbrCollection,
 } from '../firebase-config';
-import { Course, CourseFullDetail } from '../../src/requirements/types';
+import { CourseFullDetail } from '../../src/requirements/types';
+import { clean } from '../util';
 
 /** A helper function to generate a wait promise. Used for cooldown to limit API usage. */
 export const wait = (time: number) =>
@@ -50,46 +51,7 @@ export const retrieveAvailableSubjects = async (
   return (await res.json()).data.subjects.map(({ value }) => ({ roster, subject: value }));
 };
 
-/* Retrieves and formats available courses for a {roster: string, subject: string} object */
-
-export const cleanField = (value: string | null | undefined) =>
-  value?.replace(/\u00a0/g, ' ') || undefined;
-
-export const courseFieldFilter = ({
-  subject,
-  crseId,
-  catalogNbr,
-  titleLong,
-  enrollGroups,
-  catalogWhenOffered,
-  catalogBreadth,
-  catalogDistr,
-  catalogComments,
-  catalogSatisfiesReq,
-  catalogCourseSubfield,
-  catalogAttribute,
-  acadCareer,
-  acadGroup,
-}: Course): Course => ({
-  subject: cleanField(subject) || '',
-  crseId,
-  catalogNbr: cleanField(catalogNbr) || '',
-  titleLong: cleanField(titleLong) || '',
-  enrollGroups: enrollGroups.map(({ unitsMaximum, unitsMinimum }) => ({
-    unitsMaximum,
-    unitsMinimum,
-  })),
-  catalogWhenOffered: cleanField(catalogWhenOffered),
-  catalogBreadth: cleanField(catalogBreadth),
-  catalogDistr: cleanField(catalogDistr),
-  catalogComments: cleanField(catalogComments),
-  catalogSatisfiesReq: cleanField(catalogSatisfiesReq),
-  catalogCourseSubfield: cleanField(catalogCourseSubfield),
-  catalogAttribute: cleanField(catalogAttribute),
-  acadCareer: cleanField(acadCareer) || '',
-  acadGroup: cleanField(acadGroup) || '',
-});
-
+/** Retrieves and formats available courses for a {roster: string, subject: string} object */
 export const retrieveAvailableCourses = async (
   roster: string,
   subject: string
@@ -97,7 +59,7 @@ export const retrieveAvailableCourses = async (
   const res = await fetch(
     `${classRosterURL}/search/classes.json?roster=${roster}&subject=${subject}`
   );
-  return (await res.json()).data.classes.map(jsonCourse => courseFieldFilter(jsonCourse));
+  return (await res.json()).data.classes.map(jsonCourse => clean(jsonCourse));
 };
 
 /* 
