@@ -29,7 +29,7 @@ Then access http://localhost:8080/
 - **Rohan Maheshwari** - Developer
 - **Elizabeth Tang** - Developer
 - **Pablo Raigoza** - Developer
-- **Noorejehan Umarn** - Designer
+- **Noorejehan Umar** - Designer
 - **Michelle Dai** - Designer
 - **Larrisa Chen** - Designer
 - **Jonathan Mak** - PMM
