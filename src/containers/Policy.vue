@@ -4,7 +4,7 @@
     <div class="content">
       <h2>Privacy Policy</h2>
       <p>
-        Your privacy is important to us. It is Cornell Design Tech Initiative&#39;s policy to
+        Your privacy is important to us. It is Cornell Digital Tech & Innovation&#39;s policy to
         respect your privacy and comply with any applicable law and regulation regarding any
         personal information we may collect about you, including across our website,
         <a href="https://courseplan.io/">https://courseplan.io/</a>, and other sites we own and
