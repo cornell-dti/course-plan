@@ -64,7 +64,7 @@
         <img class="semesterView-heart" src="@/assets/images/redHeart.svg" alt="heart" />
         by
         <a target="_blank" href="https://www.cornelldti.org/projects/courseplan/">
-          Cornell Design &amp; Tech Initiative
+          Cornell Digital Tech &amp; Innovation
         </a>
       </div>
     </div>
@@ -211,6 +211,7 @@ export default defineComponent({
     margin-bottom: 1rem;
     min-height: 2.25rem;
     align-items: center;
+
     &--two {
       justify-content: space-between;
     }
@@ -280,6 +281,7 @@ export default defineComponent({
 
     a {
       color: $medGray;
+
       &:hover {
         text-decoration: underline $medGray;
       }
@@ -308,9 +310,11 @@ export default defineComponent({
     margin-top: 5.5rem;
     margin-left: 2.5rem;
     margin-right: 1rem;
+
     &-switch {
       padding-right: 0.75rem;
     }
+
     &-content {
       width: 100%;
       justify-content: center;
