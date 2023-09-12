@@ -107,7 +107,7 @@ export default defineComponent({
     },
     rosterLink(): string {
       const [subject, number] = this.courseObj.code.split(' ');
-      return `https://classes.cornell.edu/browse/roster/${this.courseObj.lastRoster}/class/${subject}/${number}`;
+      return `https://classes.cornell.edu/browse/roster/${this.courseObj.currRoster}/class/${subject}/${number}`;
     },
   },
 
