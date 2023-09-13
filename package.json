@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "serve": "vite",
+    "serve:prod": "vite --mode production",
     "build": "vite build --mode production",
     "build:dev": "vite build --mode development",
     "serve:build": "serve --listen 8080 --single dist",
