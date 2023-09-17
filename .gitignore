@@ -34,3 +34,6 @@ serviceAccountProd.json
 
 # App-specific output files that should be ignored
 scripts/out
+
+# Secret API key
+python/secret_api_keys.py

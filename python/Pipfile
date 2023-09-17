@@ -8,6 +8,8 @@ verify_ssl = true
 [packages]
 langchain = "*"
 openai = "*"
+numpy = "*"
+parsec = "*"
 
 [requires]
 python_version = "3.11"
