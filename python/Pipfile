@@ -10,6 +10,8 @@ black = "23.9.1"
 pytest = "*"
 langchain = "*"
 openai = "*"
+numpy = "*"
+parsec = "*"
 
 [requires]
 python_version = "3.11"
