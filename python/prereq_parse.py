@@ -3,8 +3,7 @@ from langchain import PromptTemplate, LLMChain
 from langchain.output_parsers import ResponseSchema
 from langchain.output_parsers import StructuredOutputParser
 from langchain.chains import SequentialChain, TransformChain
-
-OPEN_AI_API_KEY = 'key'
+from secret_api_keys import OPEN_AI_API_KEY
 MODEL = 'gpt-3.5-turbo'
 verbose = False
 llm = ChatOpenAI(openai_api_key=OPEN_AI_API_KEY, temperature=0, model=MODEL)
@@ -181,4 +180,4 @@ def get_prereqs_coreqs(course_desc, verbose=False):
 
 
 if __name__ == '__main__':
-    get_prereqs_coreqs('Prerequisite: PHYS 2208 and CHEM 2080, or MATH 2130 or MATH 2310 or MATH 2220, or permission of instructor.')
+    print(get_prereqs_coreqs('Prerequisite: PHYS 2208 and CHEM 2080, or MATH 2130 or MATH 2310 or MATH 2220, or permission of instructor.'))
