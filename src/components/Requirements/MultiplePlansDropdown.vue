@@ -78,7 +78,11 @@ export default defineComponent({
       this.shown = !this.shown;
     },
     planClicked(plan: string) {
-      if (this.plans.length !== 1) this.currPlan = plan;
+      store.commit(
+        'setCurrentPlan',
+        store.state.plans.find(p => p.name === plan)
+      );
+      this.shown = !this.shown;
     },
     toggleEditPlan() {
       this.$emit('open-edit-modal');
