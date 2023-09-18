@@ -15,6 +15,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import store from '@/store';
 import TeleportModal from '@/components/Modals/TeleportModal.vue';
 
 export default defineComponent({
@@ -22,6 +23,19 @@ export default defineComponent({
   emits: {
     'close-plan-modal': () => true,
     'open-copy-modal': () => true,
+    'add-plan': (name: string) => typeof name === 'string',
+  },
+  computed: {
+    placeholder_name() {
+      const oldplans = store.state.plans.map(plan => plan.name);
+      let newplannum = 1;
+      for (let i = 0; i < oldplans.length; i += 1) {
+        if (oldplans.find(p => p === `New Plan ${i}`)) {
+          newplannum = i + 1;
+        }
+      }
+      return `New Plan ${newplannum}`;
+    },
   },
   data() {
     return { isDisabled: false, isCopyPlanOpen: false };
@@ -29,6 +43,7 @@ export default defineComponent({
   methods: {
     closeCurrentModal() {
       this.$emit('close-plan-modal');
+      this.$emit('add-plan', this.placeholder_name);
     },
     copyPlan() {
       this.$emit('open-copy-modal');

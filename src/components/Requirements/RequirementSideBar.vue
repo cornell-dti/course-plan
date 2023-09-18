@@ -42,6 +42,7 @@
               v-if="isAddPlanOpen"
               @close-plan-modal="toggleAddPlan"
               @open-copy-modal="toggleCopyPlan"
+              @add-plan="addPlan"
             />
             <copy-plan-modal
               v-if="isCopyPlanOpen"
