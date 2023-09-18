@@ -29,10 +29,9 @@ export default defineComponent({
     placeholder_name() {
       const oldplans = store.state.plans.map(plan => plan.name);
       let newplannum = 1;
-      for (let i = 0; i < oldplans.length; i += 1) {
-        if (oldplans.find(p => p === `New Plan ${i}`)) {
-          newplannum = i + 1;
-        }
+      // eslint-disable-next-line no-loop-func
+      while (oldplans.find(p => p === `New Plan ${newplannum}`)) {
+        newplannum += 1;
       }
       return `New Plan ${newplannum}`;
     },
