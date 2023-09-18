@@ -1,5 +1,5 @@
 <template>
-  <teleport-modal>
+  <teleport-modal content-class="content-plan">
     <div class="textInput">
       <label class="textInput-label">{{ label }}</label>
       <div class="textInput-wrapper">
