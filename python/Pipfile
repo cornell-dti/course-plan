@@ -11,7 +11,7 @@ pytest = "*"
 langchain = "*"
 openai = "*"
 numpy = "*"
-parsec = "*"
+parsy = "*"
 
 [requires]
 python_version = "3.11"
