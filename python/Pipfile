@@ -9,7 +9,7 @@ verify_ssl = true
 langchain = "*"
 openai = "*"
 numpy = "*"
-parsec = "*"
+parsy = "*"
 
 [requires]
 python_version = "3.11"
