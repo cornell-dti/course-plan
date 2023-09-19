@@ -4,12 +4,17 @@ from langchain.output_parsers import ResponseSchema
 from langchain.output_parsers import StructuredOutputParser
 from langchain.chains import SequentialChain, TransformChain
 from secret_api_keys import OPEN_AI_API_KEY
+from typing import Dict, Tuple
+
 MODEL = 'gpt-3.5-turbo'
 verbose = False
+# imports the open ai model into langchain
+# temperature of 0 means the responses will be less varied (which we want)
+# model is set to gpt 3.5
 llm = ChatOpenAI(openai_api_key=OPEN_AI_API_KEY, temperature=0, model=MODEL)
 
 
-def get_raw_prereqs_and_coreqs(verbose=False):
+def get_raw_prereqs_and_coreqs(verbose=False) -> SequentialChain:
     '''
     Returns a chain that takes in a course description and returns the prerequisites and corequisites as two separate lists.
     '''
@@ -53,11 +58,14 @@ def get_raw_prereqs_and_coreqs(verbose=False):
     # llm chain to turn course desc into prerequisites + corequisites
     llm_chain = LLMChain(prompt=prompt, llm=llm, output_key="prerequisites_corequisites_json_str")
 
-    # parse out prerequisites + corequisites from json string
-    def parse_prerequisites_corequisites(inputs):
+    # parse out prerequisites + corequisites from dict with one key value pair
+    # key is the output from the llm_chain, which is prerequisites_corequisites_json_str
+    # value is the json string that we want to parse into a dict
+    def parse_prerequisites_corequisites(inputs: Dict[str, str]):
         text = inputs["prerequisites_corequisites_json_str"]
         return output_parser.parse(text)
 
+    # pass in parse_prerequisites_corequisites as a function as input to the TransformChain
     parse_chain = TransformChain(
         input_variables=["prerequisites_corequisites_json_str"],
         output_variables=["prerequisites", "corequisites"],
@@ -74,7 +82,7 @@ def get_raw_prereqs_and_coreqs(verbose=False):
     return raw_prereqs_coreqs_chain
 
 
-def get_prereqs_coreqs(course_desc, verbose=False):
+def get_prereqs_coreqs(course_desc: str, verbose=False) -> Tuple[str]:
     '''
     Takes in a course description and returns a boolean expression with the course names representing the prerequisites and corequisites.
     '''
@@ -149,11 +157,15 @@ def get_prereqs_coreqs(course_desc, verbose=False):
         output_key="parsed_prerequisites_parsed_corequisites_json_str"
     )
 
-    # parse out parsed_prerequisites + parsed_corequisites from json string
-    def parse_prerequisites_corequisites(inputs):
+    # parse out parsed_prerequisites + parsed_corequisites from dict with one key value pair
+    # key is the output from the llm_chain, which is parsed_prerequisites_parsed_corequisites_json_str
+    # value is the json string that we want to parse into a dict
+    def parse_prerequisites_corequisites(inputs: Dict[str, str]):
         text = inputs["parsed_prerequisites_parsed_corequisites_json_str"]
         return output_parser.parse(text)
 
+    # transform chain that turns the json string and parses it into the desired dict
+    # with parsed_prerequisites and parsed_corequisites as keys
     parse_prereqs_coreqs_chain = TransformChain(
         input_variables=["parsed_prerequisites_parsed_corequisites_json_str"],
         output_variables=["parsed_prerequisites", "parsed_corequisites"],
