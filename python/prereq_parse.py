@@ -5,6 +5,7 @@ from langchain.output_parsers import StructuredOutputParser
 from langchain.chains import SequentialChain, TransformChain
 from secret_api_keys import OPEN_AI_API_KEY
 from typing import Dict, Tuple
+import parsy
 
 MODEL = 'gpt-3.5-turbo'
 verbose = False
@@ -186,8 +187,9 @@ def get_prereqs_coreqs(course_desc: str, verbose=False) -> Tuple[str]:
         print(response)
 
     # get final prereqs str and coreqs str
-    prereqs = response['parsed_prerequisites']
-    coreqs = response['parsed_corequisites']
+    prereqs_response = response['parsed_prerequisites']
+    coreqs_response = response['parsed_corequisites']
+    prereqs, coreqs = parse_prereqs_coreqs(prereqs_response, coreqs_response)
     return (prereqs, coreqs)
 
 
