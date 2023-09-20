@@ -10,6 +10,8 @@ langchain = "*"
 openai = "*"
 numpy = "*"
 parsy = "*"
+black = "*"
+pytest = "*"
 
 [requires]
 python_version = "3.11"
