@@ -14,22 +14,11 @@
     "skipLibCheck": true,
     "sourceMap": true,
     "baseUrl": ".",
-    "types": [
-      "node",
-      "jest",
-      "@types/gtag.js"
-    ],
+    "types": ["node", "jest", "@types/gtag.js"],
     "paths": {
-      "@/*": [
-        "src/*"
-      ]
+      "@/*": ["src/*"]
     },
-    "lib": [
-      "esnext",
-      "dom",
-      "dom.iterable",
-      "scripthost"
-    ]
+    "lib": ["esnext", "dom", "dom.iterable", "scripthost"]
   },
   "include": [
     "src/**/*.ts",
@@ -39,7 +28,5 @@
     "tests/**/*.tsx",
     "scripts/population/courses-json-generator.ts"
   ],
-  "exclude": [
-    "node_modules"
-  ]
+  "exclude": ["node_modules"]
 }

@@ -7,7 +7,10 @@ const allRequirementsWithIDs = [
   })),
   ...Object.entries(requirementJson.college)
     .map(([college, collegeReqs]) =>
-      collegeReqs.requirements.map(it => ({ id: `College-${college}-${it.name}`, requirement: it }))
+      collegeReqs.requirements.map(it => ({
+        id: `College-${college}-${it.name}`,
+        requirement: it,
+      }))
     )
     .flat(),
   ...Object.entries(requirementJson.major)

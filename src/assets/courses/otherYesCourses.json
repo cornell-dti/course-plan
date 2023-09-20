@@ -1,1 +1,2168 @@
-[{"subject":"HE","catalogNbr":1115,"categories":["KCM"],"crseId":350003},{"subject":"HE","catalogNbr":4060,"categories":["CA","SBA"],"crseId":350020},{"subject":"CRP","catalogNbr":1100,"categories":["SBA"],"crseId":350054},{"subject":"CRP","catalogNbr":2000,"categories":["CA","HA"],"crseId":350104},{"subject":"PE","catalogNbr":1150,"categories":["LA"],"crseId":350121},{"subject":"ILRLR","catalogNbr":1100,"categories":["CA","HA"],"crseId":350152},{"subject":"ANTHR","catalogNbr":1300,"categories":["SBA"],"crseId":350215},{"subject":"NES","catalogNbr":1312,"categories":["FL"],"crseId":350240},{"subject":"ILRLR","catalogNbr":4000,"categories":["HA","HST","SBA","SSC"],"crseId":350290},{"subject":"NBA","catalogNbr":5700,"categories":["SBA"],"crseId":350291},{"subject":"ILRLR","catalogNbr":4030,"categories":["SBA"],"crseId":350428},{"subject":"CRP","catalogNbr":5250,"categories":["SBA"],"crseId":350580},{"subject":"CHIN","catalogNbr":1101,"categories":["FL"],"crseId":351015},{"subject":"CHIN","catalogNbr":1102,"categories":["FL"],"crseId":351016},{"subject":"CHIN","catalogNbr":1109,"categories":["FL"],"crseId":351017},{"subject":"CHIN","catalogNbr":1110,"categories":["FL"],"crseId":351018},{"subject":"CHIN","catalogNbr":2201,"categories":["FL"],"crseId":351029},{"subject":"CHIN","catalogNbr":2202,"categories":["FL"],"crseId":351031},{"subject":"CHIN","catalogNbr":2209,"categories":["FL"],"crseId":351055},{"subject":"CHIN","catalogNbr":2210,"categories":["FL"],"crseId":351056},{"subject":"CHIN","catalogNbr":3301,"categories":["FL"],"crseId":351063},{"subject":"CHIN","catalogNbr":3302,"categories":["FL"],"crseId":351064},{"subject":"HINDI","catalogNbr":1101,"categories":["FL"],"crseId":351107},{"subject":"HINDI","catalogNbr":1102,"categories":["FL"],"crseId":351108},{"subject":"HINDI","catalogNbr":2202,"categories":["FL"],"crseId":351131},{"subject":"HINDI","catalogNbr":3301,"categories":["FL"],"crseId":351136},{"subject":"HINDI","catalogNbr":3302,"categories":["FL"],"crseId":351140},{"subject":"JAPAN","catalogNbr":1101,"categories":["FL"],"crseId":351152},{"subject":"JAPAN","catalogNbr":1102,"categories":["FL"],"crseId":351153},{"subject":"JAPAN","catalogNbr":2201,"categories":["FL"],"crseId":351163},{"subject":"JAPAN","catalogNbr":2202,"categories":["FL"],"crseId":351164},{"subject":"JAPAN","catalogNbr":4422,"categories":["LA"],"crseId":351190},{"subject":"KOREA","catalogNbr":1101,"categories":["FL"],"crseId":351225},{"subject":"KOREA","catalogNbr":1102,"categories":["FL"],"crseId":351226},{"subject":"KOREA","catalogNbr":1109,"categories":["FL"],"crseId":351227},{"subject":"KOREA","catalogNbr":1110,"categories":["FL"],"crseId":351228},{"subject":"KOREA","catalogNbr":2201,"categories":["FL"],"crseId":351230},{"subject":"KOREA","catalogNbr":2202,"categories":["FL"],"crseId":351233},{"subject":"KOREA","catalogNbr":2209,"categories":["FL"],"crseId":351234},{"subject":"KOREA","catalogNbr":2210,"categories":["FL"],"crseId":351237},{"subject":"KOREA","catalogNbr":3301,"categories":["FL"],"crseId":351243},{"subject":"KOREA","catalogNbr":3302,"categories":["FL"],"crseId":351245},{"subject":"NEPAL","catalogNbr":1101,"categories":["FL"],"crseId":351255},{"subject":"SANSK","catalogNbr":1131,"categories":["FL"],"crseId":351266},{"subject":"SINHA","catalogNbr":1121,"categories":["FL"],"crseId":351270},{"subject":"SINHA","catalogNbr":2202,"categories":["FL"],"crseId":351274},{"subject":"GERST","catalogNbr":1210,"categories":["FL"],"crseId":351318},{"subject":"GERST","catalogNbr":1220,"categories":["FL"],"crseId":351319},{"subject":"GERST","catalogNbr":1230,"categories":["FL"],"crseId":351320},{"subject":"PAM","catalogNbr":2000,"categories":["SBA"],"crseId":351447},{"subject":"HADM","catalogNbr":1910,"categories":["SBA"],"crseId":351448},{"subject":"AIRS","catalogNbr":2201,"categories":["HA"],"crseId":351454},{"subject":"NS","catalogNbr":1150,"categories":["SBA"],"crseId":351456},{"subject":"HADM","catalogNbr":2230,"categories":["SBA"],"crseId":351458},{"subject":"HADM","catalogNbr":2250,"categories":["SBA"],"crseId":351460},{"subject":"DEA","catalogNbr":1101,"categories":["LA"],"crseId":351470},{"subject":"HD","catalogNbr":1150,"categories":["SBA"],"crseId":351473},{"subject":"PSYCH","catalogNbr":2050,"categories":["KCM"],"crseId":351474},{"subject":"AIRS","catalogNbr":4401,"categories":["CA","KCM"],"crseId":351481},{"subject":"DEA","catalogNbr":1110,"categories":["SBA"],"crseId":351496},{"subject":"CRP","catalogNbr":1101,"categories":["CA"],"crseId":351501},{"subject":"HD","catalogNbr":2600,"categories":["SBA"],"crseId":351513},{"subject":"FSAD","catalogNbr":1250,"categories":["LA"],"crseId":351531},{"subject":"AIRS","catalogNbr":2202,"categories":["HA"],"crseId":351533},{"subject":"PAM","catalogNbr":2300,"categories":["SBA"],"crseId":351538},{"subject":"HD","catalogNbr":2820,"categories":["SBA"],"crseId":351567},{"subject":"HD","catalogNbr":4020,"categories":["SBA"],"crseId":351570},{"subject":"HADM","catalogNbr":3470,"categories":["KCM","SBA"],"crseId":351579},{"subject":"NS","catalogNbr":2470,"categories":["CA"],"crseId":351597},{"subject":"MILS","catalogNbr":3301,"categories":["SBA"],"crseId":351700},{"subject":"MILS","catalogNbr":4401,"categories":["SBA"],"crseId":351713},{"subject":"NAVS","catalogNbr":2201,"categories":["SBA"],"crseId":351726},{"subject":"MILS","catalogNbr":3302,"categories":["SBA"],"crseId":351734},{"subject":"MILS","catalogNbr":4402,"categories":["SBA"],"crseId":351738},{"subject":"NAVS","catalogNbr":1102,"categories":["HA"],"crseId":351763},{"subject":"LATIN","catalogNbr":1201,"categories":["FL"],"crseId":351788},{"subject":"LATIN","catalogNbr":1202,"categories":["FL"],"crseId":351790},{"subject":"DEA","catalogNbr":3510,"categories":["SBA"],"crseId":351811},{"subject":"HADM","catalogNbr":4380,"categories":["CA"],"crseId":351821},{"subject":"HD","catalogNbr":1170,"categories":["SBA"],"crseId":351838},{"subject":"HADM","catalogNbr":4300,"categories":["CA"],"crseId":351839},{"subject":"HADM","catalogNbr":4890,"categories":["KCM"],"crseId":351890},{"subject":"FSAD","catalogNbr":3250,"categories":["LA"],"crseId":351896},{"subject":"COGST","catalogNbr":3660,"categories":["KCM","SBA"],"crseId":351914},{"subject":"PAM","catalogNbr":2350,"categories":["SBA"],"crseId":351928},{"subject":"HADM","catalogNbr":4150,"categories":["KCM"],"crseId":352075},{"subject":"HADM","catalogNbr":4200,"categories":["CA","SBA"],"crseId":352082},{"subject":"HADM","catalogNbr":6090,"categories":["HA"],"crseId":352102},{"subject":"NAVS","catalogNbr":4402,"categories":["KCM"],"crseId":352145},{"subject":"LAW","catalogNbr":4051,"categories":["CA"],"crseId":352332},{"subject":"LING","catalogNbr":1111,"categories":["FL"],"crseId":352730},{"subject":"BEE","catalogNbr":6940,"categories":["SBA","CE"],"crseId":352872},{"subject":"MUSIC","catalogNbr":1100,"categories":["LA"],"crseId":352997},{"subject":"MUSIC","catalogNbr":3501,"categories":["LA"],"crseId":353043},{"subject":"MUSIC","catalogNbr":3602,"categories":["LA"],"crseId":353053},{"subject":"MUSIC","catalogNbr":3603,"categories":["LA"],"crseId":353054},{"subject":"MUSIC","catalogNbr":3631,"categories":["LA"],"crseId":353055},{"subject":"MUSIC","catalogNbr":3615,"categories":["LA"],"crseId":353057},{"subject":"MUSIC","catalogNbr":3621,"categories":["LA"],"crseId":353067},{"subject":"MUSIC","catalogNbr":4621,"categories":["LA"],"crseId":353081},{"subject":"MUSIC","catalogNbr":4616,"categories":["LA"],"crseId":353082},{"subject":"MUSIC","catalogNbr":3613,"categories":["LA"],"crseId":353084},{"subject":"MUSIC","catalogNbr":3612,"categories":["LA"],"crseId":353086},{"subject":"MUSIC","catalogNbr":4631,"categories":["LA"],"crseId":353088},{"subject":"MUSIC","catalogNbr":4615,"categories":["LA"],"crseId":353089},{"subject":"MUSIC","catalogNbr":4651,"categories":["LA"],"crseId":353090},{"subject":"MUSIC","catalogNbr":3604,"categories":["LA"],"crseId":353094},{"subject":"MUSIC","catalogNbr":4601,"categories":["LA"],"crseId":353096},{"subject":"FREN","catalogNbr":1210,"categories":["FL"],"crseId":353154},{"subject":"FREN","catalogNbr":1220,"categories":["FL"],"crseId":353156},{"subject":"FREN","catalogNbr":1230,"categories":["FL"],"crseId":353166},{"subject":"FREN","catalogNbr":2090,"categories":["FL"],"crseId":353172},{"subject":"FREN","catalogNbr":2095,"categories":["FL"],"crseId":353176},{"subject":"PORT","catalogNbr":1210,"categories":["LA"],"crseId":353306},{"subject":"SPAN","catalogNbr":1220,"categories":["FL"],"crseId":353396},{"subject":"SPAN","catalogNbr":1230,"categories":["FL"],"crseId":353397},{"subject":"SPAN","catalogNbr":3020,"categories":["FL"],"crseId":353403},{"subject":"HEBRW","catalogNbr":1101,"categories":["FL"],"crseId":353409},{"subject":"HEBRW","catalogNbr":1102,"categories":["FL"],"crseId":353410},{"subject":"HEBRW","catalogNbr":1103,"categories":["FL"],"crseId":353411},{"subject":"ARAB","catalogNbr":1201,"categories":["FL"],"crseId":353412},{"subject":"ARAB","catalogNbr":1202,"categories":["FL"],"crseId":353413},{"subject":"PERSN","catalogNbr":1320,"categories":["FL"],"crseId":353415},{"subject":"DEA","catalogNbr":1500,"categories":["SBA"],"crseId":353568},{"subject":"DEA","catalogNbr":2040,"categories":["SBA"],"crseId":353570},{"subject":"LING","catalogNbr":3315,"categories":["FL"],"crseId":353608},{"subject":"LING","catalogNbr":3316,"categories":["FL"],"crseId":353610},{"subject":"PMA","catalogNbr":1610,"categories":["LA"],"crseId":353868},{"subject":"POLSH","catalogNbr":1131,"categories":["FL"],"crseId":353873},{"subject":"POLSH","catalogNbr":2033,"categories":["FL"],"crseId":353874},{"subject":"RUSSA","catalogNbr":1103,"categories":["FL"],"crseId":353881},{"subject":"RUSSA","catalogNbr":1104,"categories":["FL"],"crseId":353887},{"subject":"RUSSA","catalogNbr":1121,"categories":["FL"],"crseId":353890},{"subject":"RUSSA","catalogNbr":1122,"categories":["FL"],"crseId":353891},{"subject":"RUSSA","catalogNbr":1125,"categories":["FL"],"crseId":353893},{"subject":"RUSSA","catalogNbr":1126,"categories":["FL"],"crseId":353894},{"subject":"RUSSA","catalogNbr":2203,"categories":["FL"],"crseId":353895},{"subject":"RUSSA","catalogNbr":2204,"categories":["FL"],"crseId":353900},{"subject":"RUSSA","catalogNbr":3303,"categories":["FL"],"crseId":353902},{"subject":"RUSSA","catalogNbr":3304,"categories":["FL"],"crseId":353903},{"subject":"RUSSA","catalogNbr":3305,"categories":["FL"],"crseId":353904},{"subject":"RUSSA","catalogNbr":3306,"categories":["FL"],"crseId":353905},{"subject":"RUSSA","catalogNbr":3309,"categories":["FL"],"crseId":353906},{"subject":"RUSSA","catalogNbr":4414,"categories":["FL"],"crseId":353911},{"subject":"RUSSA","catalogNbr":4491,"categories":["FL"],"crseId":353912},{"subject":"RUSSA","catalogNbr":6633,"categories":["CA,HA","FL"],"crseId":353913},{"subject":"RUSSA","catalogNbr":6634,"categories":["FL"],"crseId":353914},{"subject":"BCS","catalogNbr":1131,"categories":["FL"],"crseId":353932},{"subject":"FDSC","catalogNbr":2500,"categories":["CA"],"crseId":354026},{"subject":"LA","catalogNbr":1410,"categories":["LA"],"crseId":354091},{"subject":"ART","catalogNbr":2201,"categories":["LA"],"crseId":354267},{"subject":"ART","catalogNbr":2401,"categories":["LA"],"crseId":354272},{"subject":"ART","catalogNbr":2501,"categories":["LA"],"crseId":354273},{"subject":"ART","catalogNbr":2601,"categories":["LA"],"crseId":354277},{"subject":"ART","catalogNbr":2701,"categories":["LA"],"crseId":354281},{"subject":"PMA","catalogNbr":2610,"categories":["LA"],"crseId":354317},{"subject":"PLHRT","catalogNbr":2010,"categories":["LA"],"crseId":354397},{"subject":"BENGL","catalogNbr":1121,"categories":["FL"],"crseId":354524},{"subject":"BENGL","catalogNbr":1122,"categories":["FL"],"crseId":354526},{"subject":"BURM","catalogNbr":1121,"categories":["FL"],"crseId":354552},{"subject":"BURM","catalogNbr":1122,"categories":["FL"],"crseId":354554},{"subject":"ANSC","catalogNbr":4140,"categories":["KCM"],"crseId":354565},{"subject":"PMA","catalogNbr":1200,"categories":["LA"],"crseId":354574},{"subject":"PMA","catalogNbr":2220,"categories":["LA"],"crseId":354579},{"subject":"PMA","catalogNbr":3210,"categories":["LA"],"crseId":354584},{"subject":"PMA","catalogNbr":3220,"categories":["LA"],"crseId":354585},{"subject":"CRP","catalogNbr":5120,"categories":["SBA"],"crseId":354687},{"subject":"CRP","catalogNbr":3850,"categories":["SBA"],"crseId":354778},{"subject":"ARCH","catalogNbr":1103,"categories":["LA"],"crseId":354812},{"subject":"ARCH","catalogNbr":1110,"categories":["LA"],"crseId":354814},{"subject":"ARCH","catalogNbr":1300,"categories":["LA"],"crseId":354816},{"subject":"ARCH","catalogNbr":1301,"categories":["LA"],"crseId":354817},{"subject":"ARCH","catalogNbr":1501,"categories":["LA"],"crseId":354818},{"subject":"ARCH","catalogNbr":1502,"categories":["LA"],"crseId":354819},{"subject":"ARCH","catalogNbr":1801,"categories":["CA","HA"],"crseId":354820},{"subject":"ARCH","catalogNbr":1802,"categories":["CA","HA"],"crseId":354821},{"subject":"ARCH","catalogNbr":2301,"categories":["CA","HA"],"crseId":354823},{"subject":"ARCH","catalogNbr":3309,"categories":["HA"],"crseId":354858},{"subject":"EAS","catalogNbr":1109,"categories":["HA"],"crseId":354918},{"subject":"BIOEE","catalogNbr":1540,"categories":["KCM","SBA"],"crseId":354924},{"subject":"CRP","catalogNbr":3840,"categories":["HA"],"crseId":355144},{"subject":"ILRIC","catalogNbr":4330,"categories":["SBA"],"crseId":355581},{"subject":"ENGRC","catalogNbr":3500,"categories":["CE"],"crseId":355623},{"subject":"ENGRC","catalogNbr":3350,"categories":["CE"],"crseId":355624},{"subject":"PMA","catalogNbr":4660,"categories":["LA","ALC"],"crseId":357367},{"subject":"POLSH","catalogNbr":1132,"categories":["FL"],"crseId":357386},{"subject":"PERSN","catalogNbr":1321,"categories":["FL"],"crseId":357479},{"subject":"COGST","catalogNbr":2200,"categories":["KCM","ETM"],"crseId":357797},{"subject":"HD","catalogNbr":2300,"categories":["KCM"],"crseId":357798},{"subject":"HINDI","catalogNbr":2203,"categories":["FL"],"crseId":358243},{"subject":"HINDI","catalogNbr":2204,"categories":["FL"],"crseId":358244},{"subject":"MUSIC","catalogNbr":3502,"categories":["LA"],"crseId":358356},{"subject":"MUSIC","catalogNbr":3514,"categories":["LA"],"crseId":358356},{"subject":"PERSN","catalogNbr":1322,"categories":["FL"],"crseId":358367},{"subject":"CS","catalogNbr":1610,"categories":["LA"],"crseId":358516},{"subject":"ILROB","catalogNbr":1220,"categories":["SBA"],"crseId":358955},{"subject":"SPAN","catalogNbr":2070,"categories":["FL"],"crseId":359038},{"subject":"MUSIC","catalogNbr":3115,"categories":["LA"],"crseId":359072},{"subject":"SINHA","catalogNbr":3301,"categories":["FL"],"crseId":359129},{"subject":"SINHA","catalogNbr":4400,"categories":["FL"],"crseId":359131},{"subject":"ASRC","catalogNbr":1109,"categories":["FL"],"crseId":359151},{"subject":"SPAN","catalogNbr":1210,"categories":["FL"],"crseId":359165},{"subject":"SPAN","catalogNbr":2090,"categories":["FL"],"crseId":359167},{"subject":"SPAN","catalogNbr":2180,"categories":["FL"],"crseId":359172},{"subject":"NBA","catalogNbr":6150,"categories":["FL"],"crseId":359203},{"subject":"URDU","catalogNbr":2225,"categories":["FL"],"crseId":359229},{"subject":"HADM","catalogNbr":2410,"categories":["SBA"],"crseId":359336},{"subject":"SPAN","catalogNbr":2000,"categories":["FL"],"crseId":359453},{"subject":"ART","catalogNbr":2907,"categories":["LA"],"crseId":359541},{"subject":"CRP","catalogNbr":3860,"categories":["SBA"],"crseId":359547},{"subject":"ART","catalogNbr":1505,"categories":["LA"],"crseId":359560},{"subject":"GOVT","catalogNbr":3553,"categories":["SBA"],"crseId":359593},{"subject":"MUSIC","catalogNbr":3634,"categories":["LA"],"crseId":359617},{"subject":"RELST","catalogNbr":4489,"categories":["KCM","ETM"],"crseId":359643},{"subject":"ASIAN","catalogNbr":4404,"categories":["LA","CA"],"crseId":359644},{"subject":"HE","catalogNbr":4080,"categories":["CA","SBA"],"crseId":359722},{"subject":"ARCH","catalogNbr":4601,"categories":["LA"],"crseId":359758},{"subject":"ASIAN","catalogNbr":4437,"categories":["CA","HA"],"crseId":359822},{"subject":"ILRIC","catalogNbr":2350,"categories":["HA","SBA"],"crseId":360356},{"subject":"NS","catalogNbr":2600,"categories":["SBA"],"crseId":360490},{"subject":"PLBIO","catalogNbr":2400,"categories":["CA"],"crseId":361073},{"subject":"PHYS","catalogNbr":4484,"categories":["KCM"],"crseId":361089},{"subject":"ENGRG","catalogNbr":6780,"categories":["CE"],"crseId":361119},{"subject":"SPAN","catalogNbr":3170,"categories":["FL"],"crseId":361520},{"subject":"NBA","catalogNbr":5150,"categories":["SBA"],"crseId":361612},{"subject":"KOREA","catalogNbr":4401,"categories":["FL"],"crseId":361879},{"subject":"ENGRG","catalogNbr":3600,"categories":["KCM"],"crseId":362081},{"subject":"HIST","catalogNbr":2672,"categories":["HA"],"crseId":362139},{"subject":"FREN","catalogNbr":2092,"categories":["FL"],"crseId":362153},{"subject":"KOREA","catalogNbr":4402,"categories":["FL"],"crseId":362282},{"subject":"NS","catalogNbr":4600,"categories":["CA","KCM"],"crseId":362504},{"subject":"ILRLR","catalogNbr":1200,"categories":["CA","HA"],"crseId":362566},{"subject":"LAW","catalogNbr":4131,"categories":["CA","HA"],"crseId":362619},{"subject":"ASIAN","catalogNbr":3333,"categories":["HA"],"crseId":362690},{"subject":"ART","catalogNbr":1500,"categories":["LA"],"crseId":362723},{"subject":"ENGRG","catalogNbr":1020,"categories":["CE"],"crseId":362773},{"subject":"NS","catalogNbr":4630,"categories":["CA","SBA"],"crseId":362868},{"subject":"ART","catalogNbr":2301,"categories":["LA"],"crseId":363247},{"subject":"NBA","catalogNbr":6130,"categories":["CA","SBA"],"crseId":363365},{"subject":"CHIN","catalogNbr":4406,"categories":["FL"],"crseId":363486},{"subject":"ILRLR","catalogNbr":2300,"categories":["KCM"],"crseId":363570},{"subject":"PMA","catalogNbr":3351,"categories":["LA"],"crseId":363609},{"subject":"ILRLR","catalogNbr":4023,"categories":["CA"],"crseId":363648},{"subject":"NBA","catalogNbr":6860,"categories":["SBA"],"crseId":363709},{"subject":"ASIAN","catalogNbr":4446,"categories":["LA"],"crseId":363783},{"subject":"CRP","catalogNbr":3106,"categories":["CA"],"crseId":364063},{"subject":"MUSIC","catalogNbr":3609,"categories":["LA"],"crseId":364093},{"subject":"AMST","catalogNbr":2001,"categories":["HA"],"crseId":364259},{"subject":"ILRIC","catalogNbr":4360,"categories":["CA","SBA"],"crseId":364426},{"subject":"VIET","catalogNbr":1121,"categories":["FL"],"crseId":364462},{"subject":"NBA","catalogNbr":5980,"categories":["SBA"],"crseId":364466},{"subject":"ART","catalogNbr":3092,"categories":["CA","LA"],"crseId":364661},{"subject":"HIST","catalogNbr":2003,"categories":["HA","CE"],"crseId":364741},{"subject":"HIST","catalogNbr":2004,"categories":["SBA"],"crseId":364757},{"subject":"HE","catalogNbr":4923,"categories":["CA","SBA"],"crseId":364790},{"subject":"HE","catalogNbr":4921,"categories":["SBA"],"crseId":364791},{"subject":"HE","catalogNbr":4922,"categories":["CA","SBA"],"crseId":364792},{"subject":"HE","catalogNbr":4903,"categories":["CA","SBA"],"crseId":364793},{"subject":"VIET","catalogNbr":1122,"categories":["FL"],"crseId":364827},{"subject":"ILRLR","catalogNbr":3870,"categories":["HA","SBA"],"crseId":364837},{"subject":"ILRLR","catalogNbr":3820,"categories":["CA","SBA"],"crseId":364839},{"subject":"LAW","catalogNbr":3281,"categories":["SBA"],"crseId":364859},{"subject":"SWAHL","catalogNbr":2102,"categories":["FL"],"crseId":364948},{"subject":"PHYS","catalogNbr":4485,"categories":["KCM"],"crseId":365001},{"subject":"ARCH","catalogNbr":4621,"categories":["CA","SBA"],"crseId":365029},{"subject":"ILRLR","catalogNbr":3065,"categories":["CA","HA"],"crseId":365298},{"subject":"NBA","catalogNbr":6029,"categories":["SBA"],"crseId":365543},{"subject":"HADM","catalogNbr":4155,"categories":["CA","SBA"],"crseId":365551},{"subject":"HADM","catalogNbr":2740,"categories":["CE"],"crseId":365682},{"subject":"POLSH","catalogNbr":2103,"categories":["FL"],"crseId":365748},{"subject":"PORT","catalogNbr":2010,"categories":["FL"],"crseId":365749},{"subject":"PMA","catalogNbr":1410,"categories":["LA"],"crseId":365758},{"subject":"ILRID","catalogNbr":1700,"categories":["HA","SBA"],"crseId":365784},{"subject":"BME","catalogNbr":4440,"categories":["SBA"],"crseId":365923},{"subject":"PORT","catalogNbr":2020,"categories":["FL"],"crseId":365974},{"subject":"DEA","catalogNbr":4500,"categories":["SBA"],"crseId":366073},{"subject":"NBA","catalogNbr":6230,"categories":["SBA"],"crseId":366106},{"subject":"NBA","catalogNbr":6330,"categories":["SBA"],"crseId":366107},{"subject":"CEE","catalogNbr":4560,"categories":["CA","SBA"],"crseId":366119},{"subject":"ENGRG","catalogNbr":4990,"categories":["CE"],"crseId":366274},{"subject":"ENGRG","catalogNbr":3900,"categories":["CE,KCM,SBA"],"crseId":366283},{"subject":"DEA","catalogNbr":2900,"categories":["SBA"],"crseId":366372},{"subject":"ARCH","catalogNbr":3822,"categories":["HA"],"crseId":366385},{"subject":"NBA","catalogNbr":5410,"categories":["SBA"],"crseId":366549},{"subject":"ENGRG","catalogNbr":3910,"categories":["CA,CE,KCM,SBA"],"crseId":366587},{"subject":"ALS","catalogNbr":2000,"categories":["SBA"],"crseId":366607},{"subject":"ITAL","catalogNbr":1201,"categories":["FL"],"crseId":366732},{"subject":"ITAL","catalogNbr":1202,"categories":["FL"],"crseId":366733},{"subject":"ITAL","catalogNbr":2201,"categories":["FL"],"crseId":366734},{"subject":"ITAL","catalogNbr":2202,"categories":["FL"],"crseId":366735},{"subject":"WRIT","catalogNbr":4860,"categories":["CE"],"crseId":366860},{"subject":"ITAL","catalogNbr":1212,"categories":["CA"],"crseId":366920},{"subject":"ITAL","catalogNbr":1401,"categories":["FL"],"crseId":366922},{"subject":"SPAN","catalogNbr":1501,"categories":["FL"],"crseId":366924},{"subject":"SPAN","catalogNbr":2091,"categories":["FL"],"crseId":366926},{"subject":"ASIAN","catalogNbr":3308,"categories":["CA"],"crseId":366956},{"subject":"DEA","catalogNbr":2750,"categories":["CA"],"crseId":367174},{"subject":"CLASS","catalogNbr":1632,"categories":["LA","ALC"],"crseId":367198},{"subject":"SPAN","catalogNbr":2095,"categories":["FL"],"crseId":367246},{"subject":"DEA","catalogNbr":1200,"categories":["LA"],"crseId":367272},{"subject":"ILRLR","catalogNbr":3055,"categories":["HA","HST"],"crseId":367291},{"subject":"ASIAN","catalogNbr":3307,"categories":["CA"],"crseId":367319},{"subject":"ENGRG","catalogNbr":2750,"categories":["KCM"],"crseId":367375},{"subject":"FREN","catalogNbr":2180,"categories":["FL"],"crseId":367599},{"subject":"INDO","catalogNbr":1100,"categories":["FL"],"crseId":367608},{"subject":"HADM","catalogNbr":4133,"categories":["CA"],"crseId":367720},{"subject":"VIET","catalogNbr":1100,"categories":["CA","FL"],"crseId":367755},{"subject":"ILRLR","catalogNbr":2040,"categories":["SBA"],"crseId":367757},{"subject":"ILROB","catalogNbr":3730,"categories":["CA","SBA"],"crseId":367808},{"subject":"HD","catalogNbr":4790,"categories":["SBA"],"crseId":367814},{"subject":"NS","catalogNbr":3090,"categories":["SBA","GLC"],"crseId":367851},{"subject":"CLASS","catalogNbr":2810,"categories":["CA","HA"],"crseId":367880},{"subject":"ILRLR","catalogNbr":3300,"categories":["KCM"],"crseId":367939},{"subject":"SOC","catalogNbr":1900,"categories":["KCM"],"crseId":367980},{"subject":"BIOMS","catalogNbr":5665,"categories":["CA"],"crseId":368051},{"subject":"BIOMS","catalogNbr":5660,"categories":["CA","ALC"],"crseId":368052},{"subject":"CHIN","catalogNbr":1121,"categories":["FL"],"crseId":368089},{"subject":"ILROB","catalogNbr":3760,"categories":["SBA"],"crseId":368189},{"subject":"RUSSA","catalogNbr":1131,"categories":["FL"],"crseId":368440},{"subject":"RUSSA","catalogNbr":1132,"categories":["FL"],"crseId":368441},{"subject":"SPAN","catalogNbr":2130,"categories":["FL"],"crseId":368463},{"subject":"CHIN","catalogNbr":1122,"categories":["FL"],"crseId":368591},{"subject":"ILRLR","catalogNbr":4066,"categories":["SBA"],"crseId":368628},{"subject":"ILROB","catalogNbr":3770,"categories":["SBA","SSC"],"crseId":368730},{"subject":"HADM","catalogNbr":4375,"categories":["CA"],"crseId":368779},{"subject":"KANAD","catalogNbr":1100,"categories":["FL"],"crseId":368793},{"subject":"CHIN","catalogNbr":1123,"categories":["FL"],"crseId":368927},{"subject":"VTPEH","catalogNbr":6184,"categories":["SBA","SSC"],"crseId":369015},{"subject":"MUSIC","catalogNbr":3511,"categories":["LA"],"crseId":369148},{"subject":"MUSIC","catalogNbr":3512,"categories":["LA"],"crseId":369149},{"subject":"MUSIC","catalogNbr":3513,"categories":["LA"],"crseId":369150},{"subject":"COML","catalogNbr":2350,"categories":["HA"],"crseId":370023},{"subject":"PMA","catalogNbr":3213,"categories":["CA","ALC","SCD"],"crseId":370172},{"subject":"MUSIC","catalogNbr":1505,"categories":["CA"],"crseId":370193},{"subject":"FREN","catalogNbr":2080,"categories":["FL"],"crseId":370328},{"subject":"ITAL","catalogNbr":2240,"categories":["LA"],"crseId":370367},{"subject":"POLSH","catalogNbr":2034,"categories":["FL"],"crseId":370408},{"subject":"NES","catalogNbr":1776,"categories":["FL"],"crseId":370462},{"subject":"ASL","catalogNbr":1101,"categories":["FL"],"crseId":370466},{"subject":"WRIT","catalogNbr":1100,"categories":["CA"],"crseId":370504},{"subject":"PHIL","catalogNbr":1902,"categories":["KCM"],"crseId":370529},{"subject":"PMA","catalogNbr":3621,"categories":["LA"],"crseId":370588},{"subject":"ENGL","catalogNbr":2705,"categories":["CA","LA","ALC"],"crseId":370607},{"subject":"ENGL","catalogNbr":2706,"categories":["CA"],"crseId":370608},{"subject":"HEBRW","catalogNbr":1110,"categories":["FL"],"crseId":370646},{"subject":"ASL","catalogNbr":1102,"categories":["FL"],"crseId":370718},{"subject":"NES","catalogNbr":1777,"categories":["FL"],"crseId":370735},{"subject":"ENGRG","catalogNbr":1022,"categories":["SBA"],"crseId":370893},{"subject":"AAP","catalogNbr":1602,"categories":["LA"],"crseId":371055},{"subject":"LAW","catalogNbr":4081,"categories":["KCM"],"crseId":371124},{"subject":"ART","catalogNbr":1601,"categories":["LA"],"crseId":371151},{"subject":"ENGL","catalogNbr":3552,"categories":["LA","ALC"],"crseId":371170},{"subject":"ENGL","catalogNbr":2602,"categories":["LA","ALC"],"crseId":371200},{"subject":"EAS","catalogNbr":4441,"categories":["GLC"],"crseId":371236},{"subject":"ILRID","catalogNbr":4675,"categories":["SBA","SSC","SCD"],"crseId":371519},{"subject":"COML","catalogNbr":2762,"categories":["LA","ALC","SCD"],"crseId":371521},{"subject":"MUSIC","catalogNbr":1108,"categories":["LA","ALC"],"crseId":371536},{"subject":"ENGL","catalogNbr":2603,"categories":["LA","ALC"],"crseId":371597},{"subject":"CHEME","catalogNbr":2000,"categories":["SBA","SSC","SCD"],"crseId":371895},{"subject":"PHIL","catalogNbr":1918,"categories":["KCM","ETM"],"crseId":372455},{"subject":"GOVT","catalogNbr":2012,"categories":["KCM","SSC"],"crseId":372564}]
+[
+  {
+    "subject": "HE",
+    "catalogNbr": 1115,
+    "categories": ["KCM"],
+    "crseId": 350003
+  },
+  {
+    "subject": "HE",
+    "catalogNbr": 4060,
+    "categories": ["CA", "SBA"],
+    "crseId": 350020
+  },
+  {
+    "subject": "CRP",
+    "catalogNbr": 1100,
+    "categories": ["SBA"],
+    "crseId": 350054
+  },
+  {
+    "subject": "CRP",
+    "catalogNbr": 2000,
+    "categories": ["CA", "HA"],
+    "crseId": 350104
+  },
+  {
+    "subject": "PE",
+    "catalogNbr": 1150,
+    "categories": ["LA"],
+    "crseId": 350121
+  },
+  {
+    "subject": "ILRLR",
+    "catalogNbr": 1100,
+    "categories": ["CA", "HA"],
+    "crseId": 350152
+  },
+  {
+    "subject": "ANTHR",
+    "catalogNbr": 1300,
+    "categories": ["SBA"],
+    "crseId": 350215
+  },
+  {
+    "subject": "NES",
+    "catalogNbr": 1312,
+    "categories": ["FL"],
+    "crseId": 350240
+  },
+  {
+    "subject": "ILRLR",
+    "catalogNbr": 4000,
+    "categories": ["HA", "HST", "SBA", "SSC"],
+    "crseId": 350290
+  },
+  {
+    "subject": "NBA",
+    "catalogNbr": 5700,
+    "categories": ["SBA"],
+    "crseId": 350291
+  },
+  {
+    "subject": "ILRLR",
+    "catalogNbr": 4030,
+    "categories": ["SBA"],
+    "crseId": 350428
+  },
+  {
+    "subject": "CRP",
+    "catalogNbr": 5250,
+    "categories": ["SBA"],
+    "crseId": 350580
+  },
+  {
+    "subject": "CHIN",
+    "catalogNbr": 1101,
+    "categories": ["FL"],
+    "crseId": 351015
+  },
+  {
+    "subject": "CHIN",
+    "catalogNbr": 1102,
+    "categories": ["FL"],
+    "crseId": 351016
+  },
+  {
+    "subject": "CHIN",
+    "catalogNbr": 1109,
+    "categories": ["FL"],
+    "crseId": 351017
+  },
+  {
+    "subject": "CHIN",
+    "catalogNbr": 1110,
+    "categories": ["FL"],
+    "crseId": 351018
+  },
+  {
+    "subject": "CHIN",
+    "catalogNbr": 2201,
+    "categories": ["FL"],
+    "crseId": 351029
+  },
+  {
+    "subject": "CHIN",
+    "catalogNbr": 2202,
+    "categories": ["FL"],
+    "crseId": 351031
+  },
+  {
+    "subject": "CHIN",
+    "catalogNbr": 2209,
+    "categories": ["FL"],
+    "crseId": 351055
+  },
+  {
+    "subject": "CHIN",
+    "catalogNbr": 2210,
+    "categories": ["FL"],
+    "crseId": 351056
+  },
+  {
+    "subject": "CHIN",
+    "catalogNbr": 3301,
+    "categories": ["FL"],
+    "crseId": 351063
+  },
+  {
+    "subject": "CHIN",
+    "catalogNbr": 3302,
+    "categories": ["FL"],
+    "crseId": 351064
+  },
+  {
+    "subject": "HINDI",
+    "catalogNbr": 1101,
+    "categories": ["FL"],
+    "crseId": 351107
+  },
+  {
+    "subject": "HINDI",
+    "catalogNbr": 1102,
+    "categories": ["FL"],
+    "crseId": 351108
+  },
+  {
+    "subject": "HINDI",
+    "catalogNbr": 2202,
+    "categories": ["FL"],
+    "crseId": 351131
+  },
+  {
+    "subject": "HINDI",
+    "catalogNbr": 3301,
+    "categories": ["FL"],
+    "crseId": 351136
+  },
+  {
+    "subject": "HINDI",
+    "catalogNbr": 3302,
+    "categories": ["FL"],
+    "crseId": 351140
+  },
+  {
+    "subject": "JAPAN",
+    "catalogNbr": 1101,
+    "categories": ["FL"],
+    "crseId": 351152
+  },
+  {
+    "subject": "JAPAN",
+    "catalogNbr": 1102,
+    "categories": ["FL"],
+    "crseId": 351153
+  },
+  {
+    "subject": "JAPAN",
+    "catalogNbr": 2201,
+    "categories": ["FL"],
+    "crseId": 351163
+  },
+  {
+    "subject": "JAPAN",
+    "catalogNbr": 2202,
+    "categories": ["FL"],
+    "crseId": 351164
+  },
+  {
+    "subject": "JAPAN",
+    "catalogNbr": 4422,
+    "categories": ["LA"],
+    "crseId": 351190
+  },
+  {
+    "subject": "KOREA",
+    "catalogNbr": 1101,
+    "categories": ["FL"],
+    "crseId": 351225
+  },
+  {
+    "subject": "KOREA",
+    "catalogNbr": 1102,
+    "categories": ["FL"],
+    "crseId": 351226
+  },
+  {
+    "subject": "KOREA",
+    "catalogNbr": 1109,
+    "categories": ["FL"],
+    "crseId": 351227
+  },
+  {
+    "subject": "KOREA",
+    "catalogNbr": 1110,
+    "categories": ["FL"],
+    "crseId": 351228
+  },
+  {
+    "subject": "KOREA",
+    "catalogNbr": 2201,
+    "categories": ["FL"],
+    "crseId": 351230
+  },
+  {
+    "subject": "KOREA",
+    "catalogNbr": 2202,
+    "categories": ["FL"],
+    "crseId": 351233
+  },
+  {
+    "subject": "KOREA",
+    "catalogNbr": 2209,
+    "categories": ["FL"],
+    "crseId": 351234
+  },
+  {
+    "subject": "KOREA",
+    "catalogNbr": 2210,
+    "categories": ["FL"],
+    "crseId": 351237
+  },
+  {
+    "subject": "KOREA",
+    "catalogNbr": 3301,
+    "categories": ["FL"],
+    "crseId": 351243
+  },
+  {
+    "subject": "KOREA",
+    "catalogNbr": 3302,
+    "categories": ["FL"],
+    "crseId": 351245
+  },
+  {
+    "subject": "NEPAL",
+    "catalogNbr": 1101,
+    "categories": ["FL"],
+    "crseId": 351255
+  },
+  {
+    "subject": "SANSK",
+    "catalogNbr": 1131,
+    "categories": ["FL"],
+    "crseId": 351266
+  },
+  {
+    "subject": "SINHA",
+    "catalogNbr": 1121,
+    "categories": ["FL"],
+    "crseId": 351270
+  },
+  {
+    "subject": "SINHA",
+    "catalogNbr": 2202,
+    "categories": ["FL"],
+    "crseId": 351274
+  },
+  {
+    "subject": "GERST",
+    "catalogNbr": 1210,
+    "categories": ["FL"],
+    "crseId": 351318
+  },
+  {
+    "subject": "GERST",
+    "catalogNbr": 1220,
+    "categories": ["FL"],
+    "crseId": 351319
+  },
+  {
+    "subject": "GERST",
+    "catalogNbr": 1230,
+    "categories": ["FL"],
+    "crseId": 351320
+  },
+  {
+    "subject": "PAM",
+    "catalogNbr": 2000,
+    "categories": ["SBA"],
+    "crseId": 351447
+  },
+  {
+    "subject": "HADM",
+    "catalogNbr": 1910,
+    "categories": ["SBA"],
+    "crseId": 351448
+  },
+  {
+    "subject": "AIRS",
+    "catalogNbr": 2201,
+    "categories": ["HA"],
+    "crseId": 351454
+  },
+  {
+    "subject": "NS",
+    "catalogNbr": 1150,
+    "categories": ["SBA"],
+    "crseId": 351456
+  },
+  {
+    "subject": "HADM",
+    "catalogNbr": 2230,
+    "categories": ["SBA"],
+    "crseId": 351458
+  },
+  {
+    "subject": "HADM",
+    "catalogNbr": 2250,
+    "categories": ["SBA"],
+    "crseId": 351460
+  },
+  {
+    "subject": "DEA",
+    "catalogNbr": 1101,
+    "categories": ["LA"],
+    "crseId": 351470
+  },
+  {
+    "subject": "HD",
+    "catalogNbr": 1150,
+    "categories": ["SBA"],
+    "crseId": 351473
+  },
+  {
+    "subject": "PSYCH",
+    "catalogNbr": 2050,
+    "categories": ["KCM"],
+    "crseId": 351474
+  },
+  {
+    "subject": "AIRS",
+    "catalogNbr": 4401,
+    "categories": ["CA", "KCM"],
+    "crseId": 351481
+  },
+  {
+    "subject": "DEA",
+    "catalogNbr": 1110,
+    "categories": ["SBA"],
+    "crseId": 351496
+  },
+  {
+    "subject": "CRP",
+    "catalogNbr": 1101,
+    "categories": ["CA"],
+    "crseId": 351501
+  },
+  {
+    "subject": "HD",
+    "catalogNbr": 2600,
+    "categories": ["SBA"],
+    "crseId": 351513
+  },
+  {
+    "subject": "FSAD",
+    "catalogNbr": 1250,
+    "categories": ["LA"],
+    "crseId": 351531
+  },
+  {
+    "subject": "AIRS",
+    "catalogNbr": 2202,
+    "categories": ["HA"],
+    "crseId": 351533
+  },
+  {
+    "subject": "PAM",
+    "catalogNbr": 2300,
+    "categories": ["SBA"],
+    "crseId": 351538
+  },
+  {
+    "subject": "HD",
+    "catalogNbr": 2820,
+    "categories": ["SBA"],
+    "crseId": 351567
+  },
+  {
+    "subject": "HD",
+    "catalogNbr": 4020,
+    "categories": ["SBA"],
+    "crseId": 351570
+  },
+  {
+    "subject": "HADM",
+    "catalogNbr": 3470,
+    "categories": ["KCM", "SBA"],
+    "crseId": 351579
+  },
+  {
+    "subject": "NS",
+    "catalogNbr": 2470,
+    "categories": ["CA"],
+    "crseId": 351597
+  },
+  {
+    "subject": "MILS",
+    "catalogNbr": 3301,
+    "categories": ["SBA"],
+    "crseId": 351700
+  },
+  {
+    "subject": "MILS",
+    "catalogNbr": 4401,
+    "categories": ["SBA"],
+    "crseId": 351713
+  },
+  {
+    "subject": "NAVS",
+    "catalogNbr": 2201,
+    "categories": ["SBA"],
+    "crseId": 351726
+  },
+  {
+    "subject": "MILS",
+    "catalogNbr": 3302,
+    "categories": ["SBA"],
+    "crseId": 351734
+  },
+  {
+    "subject": "MILS",
+    "catalogNbr": 4402,
+    "categories": ["SBA"],
+    "crseId": 351738
+  },
+  {
+    "subject": "NAVS",
+    "catalogNbr": 1102,
+    "categories": ["HA"],
+    "crseId": 351763
+  },
+  {
+    "subject": "LATIN",
+    "catalogNbr": 1201,
+    "categories": ["FL"],
+    "crseId": 351788
+  },
+  {
+    "subject": "LATIN",
+    "catalogNbr": 1202,
+    "categories": ["FL"],
+    "crseId": 351790
+  },
+  {
+    "subject": "DEA",
+    "catalogNbr": 3510,
+    "categories": ["SBA"],
+    "crseId": 351811
+  },
+  {
+    "subject": "HADM",
+    "catalogNbr": 4380,
+    "categories": ["CA"],
+    "crseId": 351821
+  },
+  {
+    "subject": "HD",
+    "catalogNbr": 1170,
+    "categories": ["SBA"],
+    "crseId": 351838
+  },
+  {
+    "subject": "HADM",
+    "catalogNbr": 4300,
+    "categories": ["CA"],
+    "crseId": 351839
+  },
+  {
+    "subject": "HADM",
+    "catalogNbr": 4890,
+    "categories": ["KCM"],
+    "crseId": 351890
+  },
+  {
+    "subject": "FSAD",
+    "catalogNbr": 3250,
+    "categories": ["LA"],
+    "crseId": 351896
+  },
+  {
+    "subject": "COGST",
+    "catalogNbr": 3660,
+    "categories": ["KCM", "SBA"],
+    "crseId": 351914
+  },
+  {
+    "subject": "PAM",
+    "catalogNbr": 2350,
+    "categories": ["SBA"],
+    "crseId": 351928
+  },
+  {
+    "subject": "HADM",
+    "catalogNbr": 4150,
+    "categories": ["KCM"],
+    "crseId": 352075
+  },
+  {
+    "subject": "HADM",
+    "catalogNbr": 4200,
+    "categories": ["CA", "SBA"],
+    "crseId": 352082
+  },
+  {
+    "subject": "HADM",
+    "catalogNbr": 6090,
+    "categories": ["HA"],
+    "crseId": 352102
+  },
+  {
+    "subject": "NAVS",
+    "catalogNbr": 4402,
+    "categories": ["KCM"],
+    "crseId": 352145
+  },
+  {
+    "subject": "LAW",
+    "catalogNbr": 4051,
+    "categories": ["CA"],
+    "crseId": 352332
+  },
+  {
+    "subject": "LING",
+    "catalogNbr": 1111,
+    "categories": ["FL"],
+    "crseId": 352730
+  },
+  {
+    "subject": "BEE",
+    "catalogNbr": 6940,
+    "categories": ["SBA", "CE"],
+    "crseId": 352872
+  },
+  {
+    "subject": "MUSIC",
+    "catalogNbr": 1100,
+    "categories": ["LA"],
+    "crseId": 352997
+  },
+  {
+    "subject": "MUSIC",
+    "catalogNbr": 3501,
+    "categories": ["LA"],
+    "crseId": 353043
+  },
+  {
+    "subject": "MUSIC",
+    "catalogNbr": 3602,
+    "categories": ["LA"],
+    "crseId": 353053
+  },
+  {
+    "subject": "MUSIC",
+    "catalogNbr": 3603,
+    "categories": ["LA"],
+    "crseId": 353054
+  },
+  {
+    "subject": "MUSIC",
+    "catalogNbr": 3631,
+    "categories": ["LA"],
+    "crseId": 353055
+  },
+  {
+    "subject": "MUSIC",
+    "catalogNbr": 3615,
+    "categories": ["LA"],
+    "crseId": 353057
+  },
+  {
+    "subject": "MUSIC",
+    "catalogNbr": 3621,
+    "categories": ["LA"],
+    "crseId": 353067
+  },
+  {
+    "subject": "MUSIC",
+    "catalogNbr": 4621,
+    "categories": ["LA"],
+    "crseId": 353081
+  },
+  {
+    "subject": "MUSIC",
+    "catalogNbr": 4616,
+    "categories": ["LA"],
+    "crseId": 353082
+  },
+  {
+    "subject": "MUSIC",
+    "catalogNbr": 3613,
+    "categories": ["LA"],
+    "crseId": 353084
+  },
+  {
+    "subject": "MUSIC",
+    "catalogNbr": 3612,
+    "categories": ["LA"],
+    "crseId": 353086
+  },
+  {
+    "subject": "MUSIC",
+    "catalogNbr": 4631,
+    "categories": ["LA"],
+    "crseId": 353088
+  },
+  {
+    "subject": "MUSIC",
+    "catalogNbr": 4615,
+    "categories": ["LA"],
+    "crseId": 353089
+  },
+  {
+    "subject": "MUSIC",
+    "catalogNbr": 4651,
+    "categories": ["LA"],
+    "crseId": 353090
+  },
+  {
+    "subject": "MUSIC",
+    "catalogNbr": 3604,
+    "categories": ["LA"],
+    "crseId": 353094
+  },
+  {
+    "subject": "MUSIC",
+    "catalogNbr": 4601,
+    "categories": ["LA"],
+    "crseId": 353096
+  },
+  {
+    "subject": "FREN",
+    "catalogNbr": 1210,
+    "categories": ["FL"],
+    "crseId": 353154
+  },
+  {
+    "subject": "FREN",
+    "catalogNbr": 1220,
+    "categories": ["FL"],
+    "crseId": 353156
+  },
+  {
+    "subject": "FREN",
+    "catalogNbr": 1230,
+    "categories": ["FL"],
+    "crseId": 353166
+  },
+  {
+    "subject": "FREN",
+    "catalogNbr": 2090,
+    "categories": ["FL"],
+    "crseId": 353172
+  },
+  {
+    "subject": "FREN",
+    "catalogNbr": 2095,
+    "categories": ["FL"],
+    "crseId": 353176
+  },
+  {
+    "subject": "PORT",
+    "catalogNbr": 1210,
+    "categories": ["LA"],
+    "crseId": 353306
+  },
+  {
+    "subject": "SPAN",
+    "catalogNbr": 1220,
+    "categories": ["FL"],
+    "crseId": 353396
+  },
+  {
+    "subject": "SPAN",
+    "catalogNbr": 1230,
+    "categories": ["FL"],
+    "crseId": 353397
+  },
+  {
+    "subject": "SPAN",
+    "catalogNbr": 3020,
+    "categories": ["FL"],
+    "crseId": 353403
+  },
+  {
+    "subject": "HEBRW",
+    "catalogNbr": 1101,
+    "categories": ["FL"],
+    "crseId": 353409
+  },
+  {
+    "subject": "HEBRW",
+    "catalogNbr": 1102,
+    "categories": ["FL"],
+    "crseId": 353410
+  },
+  {
+    "subject": "HEBRW",
+    "catalogNbr": 1103,
+    "categories": ["FL"],
+    "crseId": 353411
+  },
+  {
+    "subject": "ARAB",
+    "catalogNbr": 1201,
+    "categories": ["FL"],
+    "crseId": 353412
+  },
+  {
+    "subject": "ARAB",
+    "catalogNbr": 1202,
+    "categories": ["FL"],
+    "crseId": 353413
+  },
+  {
+    "subject": "PERSN",
+    "catalogNbr": 1320,
+    "categories": ["FL"],
+    "crseId": 353415
+  },
+  {
+    "subject": "DEA",
+    "catalogNbr": 1500,
+    "categories": ["SBA"],
+    "crseId": 353568
+  },
+  {
+    "subject": "DEA",
+    "catalogNbr": 2040,
+    "categories": ["SBA"],
+    "crseId": 353570
+  },
+  {
+    "subject": "LING",
+    "catalogNbr": 3315,
+    "categories": ["FL"],
+    "crseId": 353608
+  },
+  {
+    "subject": "LING",
+    "catalogNbr": 3316,
+    "categories": ["FL"],
+    "crseId": 353610
+  },
+  {
+    "subject": "PMA",
+    "catalogNbr": 1610,
+    "categories": ["LA"],
+    "crseId": 353868
+  },
+  {
+    "subject": "POLSH",
+    "catalogNbr": 1131,
+    "categories": ["FL"],
+    "crseId": 353873
+  },
+  {
+    "subject": "POLSH",
+    "catalogNbr": 2033,
+    "categories": ["FL"],
+    "crseId": 353874
+  },
+  {
+    "subject": "RUSSA",
+    "catalogNbr": 1103,
+    "categories": ["FL"],
+    "crseId": 353881
+  },
+  {
+    "subject": "RUSSA",
+    "catalogNbr": 1104,
+    "categories": ["FL"],
+    "crseId": 353887
+  },
+  {
+    "subject": "RUSSA",
+    "catalogNbr": 1121,
+    "categories": ["FL"],
+    "crseId": 353890
+  },
+  {
+    "subject": "RUSSA",
+    "catalogNbr": 1122,
+    "categories": ["FL"],
+    "crseId": 353891
+  },
+  {
+    "subject": "RUSSA",
+    "catalogNbr": 1125,
+    "categories": ["FL"],
+    "crseId": 353893
+  },
+  {
+    "subject": "RUSSA",
+    "catalogNbr": 1126,
+    "categories": ["FL"],
+    "crseId": 353894
+  },
+  {
+    "subject": "RUSSA",
+    "catalogNbr": 2203,
+    "categories": ["FL"],
+    "crseId": 353895
+  },
+  {
+    "subject": "RUSSA",
+    "catalogNbr": 2204,
+    "categories": ["FL"],
+    "crseId": 353900
+  },
+  {
+    "subject": "RUSSA",
+    "catalogNbr": 3303,
+    "categories": ["FL"],
+    "crseId": 353902
+  },
+  {
+    "subject": "RUSSA",
+    "catalogNbr": 3304,
+    "categories": ["FL"],
+    "crseId": 353903
+  },
+  {
+    "subject": "RUSSA",
+    "catalogNbr": 3305,
+    "categories": ["FL"],
+    "crseId": 353904
+  },
+  {
+    "subject": "RUSSA",
+    "catalogNbr": 3306,
+    "categories": ["FL"],
+    "crseId": 353905
+  },
+  {
+    "subject": "RUSSA",
+    "catalogNbr": 3309,
+    "categories": ["FL"],
+    "crseId": 353906
+  },
+  {
+    "subject": "RUSSA",
+    "catalogNbr": 4414,
+    "categories": ["FL"],
+    "crseId": 353911
+  },
+  {
+    "subject": "RUSSA",
+    "catalogNbr": 4491,
+    "categories": ["FL"],
+    "crseId": 353912
+  },
+  {
+    "subject": "RUSSA",
+    "catalogNbr": 6633,
+    "categories": ["CA,HA", "FL"],
+    "crseId": 353913
+  },
+  {
+    "subject": "RUSSA",
+    "catalogNbr": 6634,
+    "categories": ["FL"],
+    "crseId": 353914
+  },
+  {
+    "subject": "BCS",
+    "catalogNbr": 1131,
+    "categories": ["FL"],
+    "crseId": 353932
+  },
+  {
+    "subject": "FDSC",
+    "catalogNbr": 2500,
+    "categories": ["CA"],
+    "crseId": 354026
+  },
+  {
+    "subject": "LA",
+    "catalogNbr": 1410,
+    "categories": ["LA"],
+    "crseId": 354091
+  },
+  {
+    "subject": "ART",
+    "catalogNbr": 2201,
+    "categories": ["LA"],
+    "crseId": 354267
+  },
+  {
+    "subject": "ART",
+    "catalogNbr": 2401,
+    "categories": ["LA"],
+    "crseId": 354272
+  },
+  {
+    "subject": "ART",
+    "catalogNbr": 2501,
+    "categories": ["LA"],
+    "crseId": 354273
+  },
+  {
+    "subject": "ART",
+    "catalogNbr": 2601,
+    "categories": ["LA"],
+    "crseId": 354277
+  },
+  {
+    "subject": "ART",
+    "catalogNbr": 2701,
+    "categories": ["LA"],
+    "crseId": 354281
+  },
+  {
+    "subject": "PMA",
+    "catalogNbr": 2610,
+    "categories": ["LA"],
+    "crseId": 354317
+  },
+  {
+    "subject": "PLHRT",
+    "catalogNbr": 2010,
+    "categories": ["LA"],
+    "crseId": 354397
+  },
+  {
+    "subject": "BENGL",
+    "catalogNbr": 1121,
+    "categories": ["FL"],
+    "crseId": 354524
+  },
+  {
+    "subject": "BENGL",
+    "catalogNbr": 1122,
+    "categories": ["FL"],
+    "crseId": 354526
+  },
+  {
+    "subject": "BURM",
+    "catalogNbr": 1121,
+    "categories": ["FL"],
+    "crseId": 354552
+  },
+  {
+    "subject": "BURM",
+    "catalogNbr": 1122,
+    "categories": ["FL"],
+    "crseId": 354554
+  },
+  {
+    "subject": "ANSC",
+    "catalogNbr": 4140,
+    "categories": ["KCM"],
+    "crseId": 354565
+  },
+  {
+    "subject": "PMA",
+    "catalogNbr": 1200,
+    "categories": ["LA"],
+    "crseId": 354574
+  },
+  {
+    "subject": "PMA",
+    "catalogNbr": 2220,
+    "categories": ["LA"],
+    "crseId": 354579
+  },
+  {
+    "subject": "PMA",
+    "catalogNbr": 3210,
+    "categories": ["LA"],
+    "crseId": 354584
+  },
+  {
+    "subject": "PMA",
+    "catalogNbr": 3220,
+    "categories": ["LA"],
+    "crseId": 354585
+  },
+  {
+    "subject": "CRP",
+    "catalogNbr": 5120,
+    "categories": ["SBA"],
+    "crseId": 354687
+  },
+  {
+    "subject": "CRP",
+    "catalogNbr": 3850,
+    "categories": ["SBA"],
+    "crseId": 354778
+  },
+  {
+    "subject": "ARCH",
+    "catalogNbr": 1103,
+    "categories": ["LA"],
+    "crseId": 354812
+  },
+  {
+    "subject": "ARCH",
+    "catalogNbr": 1110,
+    "categories": ["LA"],
+    "crseId": 354814
+  },
+  {
+    "subject": "ARCH",
+    "catalogNbr": 1300,
+    "categories": ["LA"],
+    "crseId": 354816
+  },
+  {
+    "subject": "ARCH",
+    "catalogNbr": 1301,
+    "categories": ["LA"],
+    "crseId": 354817
+  },
+  {
+    "subject": "ARCH",
+    "catalogNbr": 1501,
+    "categories": ["LA"],
+    "crseId": 354818
+  },
+  {
+    "subject": "ARCH",
+    "catalogNbr": 1502,
+    "categories": ["LA"],
+    "crseId": 354819
+  },
+  {
+    "subject": "ARCH",
+    "catalogNbr": 1801,
+    "categories": ["CA", "HA"],
+    "crseId": 354820
+  },
+  {
+    "subject": "ARCH",
+    "catalogNbr": 1802,
+    "categories": ["CA", "HA"],
+    "crseId": 354821
+  },
+  {
+    "subject": "ARCH",
+    "catalogNbr": 2301,
+    "categories": ["CA", "HA"],
+    "crseId": 354823
+  },
+  {
+    "subject": "ARCH",
+    "catalogNbr": 3309,
+    "categories": ["HA"],
+    "crseId": 354858
+  },
+  {
+    "subject": "EAS",
+    "catalogNbr": 1109,
+    "categories": ["HA"],
+    "crseId": 354918
+  },
+  {
+    "subject": "BIOEE",
+    "catalogNbr": 1540,
+    "categories": ["KCM", "SBA"],
+    "crseId": 354924
+  },
+  {
+    "subject": "CRP",
+    "catalogNbr": 3840,
+    "categories": ["HA"],
+    "crseId": 355144
+  },
+  {
+    "subject": "ILRIC",
+    "catalogNbr": 4330,
+    "categories": ["SBA"],
+    "crseId": 355581
+  },
+  {
+    "subject": "ENGRC",
+    "catalogNbr": 3500,
+    "categories": ["CE"],
+    "crseId": 355623
+  },
+  {
+    "subject": "ENGRC",
+    "catalogNbr": 3350,
+    "categories": ["CE"],
+    "crseId": 355624
+  },
+  {
+    "subject": "PMA",
+    "catalogNbr": 4660,
+    "categories": ["LA", "ALC"],
+    "crseId": 357367
+  },
+  {
+    "subject": "POLSH",
+    "catalogNbr": 1132,
+    "categories": ["FL"],
+    "crseId": 357386
+  },
+  {
+    "subject": "PERSN",
+    "catalogNbr": 1321,
+    "categories": ["FL"],
+    "crseId": 357479
+  },
+  {
+    "subject": "COGST",
+    "catalogNbr": 2200,
+    "categories": ["KCM", "ETM"],
+    "crseId": 357797
+  },
+  {
+    "subject": "HD",
+    "catalogNbr": 2300,
+    "categories": ["KCM"],
+    "crseId": 357798
+  },
+  {
+    "subject": "HINDI",
+    "catalogNbr": 2203,
+    "categories": ["FL"],
+    "crseId": 358243
+  },
+  {
+    "subject": "HINDI",
+    "catalogNbr": 2204,
+    "categories": ["FL"],
+    "crseId": 358244
+  },
+  {
+    "subject": "MUSIC",
+    "catalogNbr": 3502,
+    "categories": ["LA"],
+    "crseId": 358356
+  },
+  {
+    "subject": "MUSIC",
+    "catalogNbr": 3514,
+    "categories": ["LA"],
+    "crseId": 358356
+  },
+  {
+    "subject": "PERSN",
+    "catalogNbr": 1322,
+    "categories": ["FL"],
+    "crseId": 358367
+  },
+  {
+    "subject": "CS",
+    "catalogNbr": 1610,
+    "categories": ["LA"],
+    "crseId": 358516
+  },
+  {
+    "subject": "ILROB",
+    "catalogNbr": 1220,
+    "categories": ["SBA"],
+    "crseId": 358955
+  },
+  {
+    "subject": "SPAN",
+    "catalogNbr": 2070,
+    "categories": ["FL"],
+    "crseId": 359038
+  },
+  {
+    "subject": "MUSIC",
+    "catalogNbr": 3115,
+    "categories": ["LA"],
+    "crseId": 359072
+  },
+  {
+    "subject": "SINHA",
+    "catalogNbr": 3301,
+    "categories": ["FL"],
+    "crseId": 359129
+  },
+  {
+    "subject": "SINHA",
+    "catalogNbr": 4400,
+    "categories": ["FL"],
+    "crseId": 359131
+  },
+  {
+    "subject": "ASRC",
+    "catalogNbr": 1109,
+    "categories": ["FL"],
+    "crseId": 359151
+  },
+  {
+    "subject": "SPAN",
+    "catalogNbr": 1210,
+    "categories": ["FL"],
+    "crseId": 359165
+  },
+  {
+    "subject": "SPAN",
+    "catalogNbr": 2090,
+    "categories": ["FL"],
+    "crseId": 359167
+  },
+  {
+    "subject": "SPAN",
+    "catalogNbr": 2180,
+    "categories": ["FL"],
+    "crseId": 359172
+  },
+  {
+    "subject": "NBA",
+    "catalogNbr": 6150,
+    "categories": ["FL"],
+    "crseId": 359203
+  },
+  {
+    "subject": "URDU",
+    "catalogNbr": 2225,
+    "categories": ["FL"],
+    "crseId": 359229
+  },
+  {
+    "subject": "HADM",
+    "catalogNbr": 2410,
+    "categories": ["SBA"],
+    "crseId": 359336
+  },
+  {
+    "subject": "SPAN",
+    "catalogNbr": 2000,
+    "categories": ["FL"],
+    "crseId": 359453
+  },
+  {
+    "subject": "ART",
+    "catalogNbr": 2907,
+    "categories": ["LA"],
+    "crseId": 359541
+  },
+  {
+    "subject": "CRP",
+    "catalogNbr": 3860,
+    "categories": ["SBA"],
+    "crseId": 359547
+  },
+  {
+    "subject": "ART",
+    "catalogNbr": 1505,
+    "categories": ["LA"],
+    "crseId": 359560
+  },
+  {
+    "subject": "GOVT",
+    "catalogNbr": 3553,
+    "categories": ["SBA"],
+    "crseId": 359593
+  },
+  {
+    "subject": "MUSIC",
+    "catalogNbr": 3634,
+    "categories": ["LA"],
+    "crseId": 359617
+  },
+  {
+    "subject": "RELST",
+    "catalogNbr": 4489,
+    "categories": ["KCM", "ETM"],
+    "crseId": 359643
+  },
+  {
+    "subject": "ASIAN",
+    "catalogNbr": 4404,
+    "categories": ["LA", "CA"],
+    "crseId": 359644
+  },
+  {
+    "subject": "HE",
+    "catalogNbr": 4080,
+    "categories": ["CA", "SBA"],
+    "crseId": 359722
+  },
+  {
+    "subject": "ARCH",
+    "catalogNbr": 4601,
+    "categories": ["LA"],
+    "crseId": 359758
+  },
+  {
+    "subject": "ASIAN",
+    "catalogNbr": 4437,
+    "categories": ["CA", "HA"],
+    "crseId": 359822
+  },
+  {
+    "subject": "ILRIC",
+    "catalogNbr": 2350,
+    "categories": ["HA", "SBA"],
+    "crseId": 360356
+  },
+  {
+    "subject": "NS",
+    "catalogNbr": 2600,
+    "categories": ["SBA"],
+    "crseId": 360490
+  },
+  {
+    "subject": "PLBIO",
+    "catalogNbr": 2400,
+    "categories": ["CA"],
+    "crseId": 361073
+  },
+  {
+    "subject": "PHYS",
+    "catalogNbr": 4484,
+    "categories": ["KCM"],
+    "crseId": 361089
+  },
+  {
+    "subject": "ENGRG",
+    "catalogNbr": 6780,
+    "categories": ["CE"],
+    "crseId": 361119
+  },
+  {
+    "subject": "SPAN",
+    "catalogNbr": 3170,
+    "categories": ["FL"],
+    "crseId": 361520
+  },
+  {
+    "subject": "NBA",
+    "catalogNbr": 5150,
+    "categories": ["SBA"],
+    "crseId": 361612
+  },
+  {
+    "subject": "KOREA",
+    "catalogNbr": 4401,
+    "categories": ["FL"],
+    "crseId": 361879
+  },
+  {
+    "subject": "ENGRG",
+    "catalogNbr": 3600,
+    "categories": ["KCM"],
+    "crseId": 362081
+  },
+  {
+    "subject": "HIST",
+    "catalogNbr": 2672,
+    "categories": ["HA"],
+    "crseId": 362139
+  },
+  {
+    "subject": "FREN",
+    "catalogNbr": 2092,
+    "categories": ["FL"],
+    "crseId": 362153
+  },
+  {
+    "subject": "KOREA",
+    "catalogNbr": 4402,
+    "categories": ["FL"],
+    "crseId": 362282
+  },
+  {
+    "subject": "NS",
+    "catalogNbr": 4600,
+    "categories": ["CA", "KCM"],
+    "crseId": 362504
+  },
+  {
+    "subject": "ILRLR",
+    "catalogNbr": 1200,
+    "categories": ["CA", "HA"],
+    "crseId": 362566
+  },
+  {
+    "subject": "LAW",
+    "catalogNbr": 4131,
+    "categories": ["CA", "HA"],
+    "crseId": 362619
+  },
+  {
+    "subject": "ASIAN",
+    "catalogNbr": 3333,
+    "categories": ["HA"],
+    "crseId": 362690
+  },
+  {
+    "subject": "ART",
+    "catalogNbr": 1500,
+    "categories": ["LA"],
+    "crseId": 362723
+  },
+  {
+    "subject": "ENGRG",
+    "catalogNbr": 1020,
+    "categories": ["CE"],
+    "crseId": 362773
+  },
+  {
+    "subject": "NS",
+    "catalogNbr": 4630,
+    "categories": ["CA", "SBA"],
+    "crseId": 362868
+  },
+  {
+    "subject": "ART",
+    "catalogNbr": 2301,
+    "categories": ["LA"],
+    "crseId": 363247
+  },
+  {
+    "subject": "NBA",
+    "catalogNbr": 6130,
+    "categories": ["CA", "SBA"],
+    "crseId": 363365
+  },
+  {
+    "subject": "CHIN",
+    "catalogNbr": 4406,
+    "categories": ["FL"],
+    "crseId": 363486
+  },
+  {
+    "subject": "ILRLR",
+    "catalogNbr": 2300,
+    "categories": ["KCM"],
+    "crseId": 363570
+  },
+  {
+    "subject": "PMA",
+    "catalogNbr": 3351,
+    "categories": ["LA"],
+    "crseId": 363609
+  },
+  {
+    "subject": "ILRLR",
+    "catalogNbr": 4023,
+    "categories": ["CA"],
+    "crseId": 363648
+  },
+  {
+    "subject": "NBA",
+    "catalogNbr": 6860,
+    "categories": ["SBA"],
+    "crseId": 363709
+  },
+  {
+    "subject": "ASIAN",
+    "catalogNbr": 4446,
+    "categories": ["LA"],
+    "crseId": 363783
+  },
+  {
+    "subject": "CRP",
+    "catalogNbr": 3106,
+    "categories": ["CA"],
+    "crseId": 364063
+  },
+  {
+    "subject": "MUSIC",
+    "catalogNbr": 3609,
+    "categories": ["LA"],
+    "crseId": 364093
+  },
+  {
+    "subject": "AMST",
+    "catalogNbr": 2001,
+    "categories": ["HA"],
+    "crseId": 364259
+  },
+  {
+    "subject": "ILRIC",
+    "catalogNbr": 4360,
+    "categories": ["CA", "SBA"],
+    "crseId": 364426
+  },
+  {
+    "subject": "VIET",
+    "catalogNbr": 1121,
+    "categories": ["FL"],
+    "crseId": 364462
+  },
+  {
+    "subject": "NBA",
+    "catalogNbr": 5980,
+    "categories": ["SBA"],
+    "crseId": 364466
+  },
+  {
+    "subject": "ART",
+    "catalogNbr": 3092,
+    "categories": ["CA", "LA"],
+    "crseId": 364661
+  },
+  {
+    "subject": "HIST",
+    "catalogNbr": 2003,
+    "categories": ["HA", "CE"],
+    "crseId": 364741
+  },
+  {
+    "subject": "HIST",
+    "catalogNbr": 2004,
+    "categories": ["SBA"],
+    "crseId": 364757
+  },
+  {
+    "subject": "HE",
+    "catalogNbr": 4923,
+    "categories": ["CA", "SBA"],
+    "crseId": 364790
+  },
+  {
+    "subject": "HE",
+    "catalogNbr": 4921,
+    "categories": ["SBA"],
+    "crseId": 364791
+  },
+  {
+    "subject": "HE",
+    "catalogNbr": 4922,
+    "categories": ["CA", "SBA"],
+    "crseId": 364792
+  },
+  {
+    "subject": "HE",
+    "catalogNbr": 4903,
+    "categories": ["CA", "SBA"],
+    "crseId": 364793
+  },
+  {
+    "subject": "VIET",
+    "catalogNbr": 1122,
+    "categories": ["FL"],
+    "crseId": 364827
+  },
+  {
+    "subject": "ILRLR",
+    "catalogNbr": 3870,
+    "categories": ["HA", "SBA"],
+    "crseId": 364837
+  },
+  {
+    "subject": "ILRLR",
+    "catalogNbr": 3820,
+    "categories": ["CA", "SBA"],
+    "crseId": 364839
+  },
+  {
+    "subject": "LAW",
+    "catalogNbr": 3281,
+    "categories": ["SBA"],
+    "crseId": 364859
+  },
+  {
+    "subject": "SWAHL",
+    "catalogNbr": 2102,
+    "categories": ["FL"],
+    "crseId": 364948
+  },
+  {
+    "subject": "PHYS",
+    "catalogNbr": 4485,
+    "categories": ["KCM"],
+    "crseId": 365001
+  },
+  {
+    "subject": "ARCH",
+    "catalogNbr": 4621,
+    "categories": ["CA", "SBA"],
+    "crseId": 365029
+  },
+  {
+    "subject": "ILRLR",
+    "catalogNbr": 3065,
+    "categories": ["CA", "HA"],
+    "crseId": 365298
+  },
+  {
+    "subject": "NBA",
+    "catalogNbr": 6029,
+    "categories": ["SBA"],
+    "crseId": 365543
+  },
+  {
+    "subject": "HADM",
+    "catalogNbr": 4155,
+    "categories": ["CA", "SBA"],
+    "crseId": 365551
+  },
+  {
+    "subject": "HADM",
+    "catalogNbr": 2740,
+    "categories": ["CE"],
+    "crseId": 365682
+  },
+  {
+    "subject": "POLSH",
+    "catalogNbr": 2103,
+    "categories": ["FL"],
+    "crseId": 365748
+  },
+  {
+    "subject": "PORT",
+    "catalogNbr": 2010,
+    "categories": ["FL"],
+    "crseId": 365749
+  },
+  {
+    "subject": "PMA",
+    "catalogNbr": 1410,
+    "categories": ["LA"],
+    "crseId": 365758
+  },
+  {
+    "subject": "ILRID",
+    "catalogNbr": 1700,
+    "categories": ["HA", "SBA"],
+    "crseId": 365784
+  },
+  {
+    "subject": "BME",
+    "catalogNbr": 4440,
+    "categories": ["SBA"],
+    "crseId": 365923
+  },
+  {
+    "subject": "PORT",
+    "catalogNbr": 2020,
+    "categories": ["FL"],
+    "crseId": 365974
+  },
+  {
+    "subject": "DEA",
+    "catalogNbr": 4500,
+    "categories": ["SBA"],
+    "crseId": 366073
+  },
+  {
+    "subject": "NBA",
+    "catalogNbr": 6230,
+    "categories": ["SBA"],
+    "crseId": 366106
+  },
+  {
+    "subject": "NBA",
+    "catalogNbr": 6330,
+    "categories": ["SBA"],
+    "crseId": 366107
+  },
+  {
+    "subject": "CEE",
+    "catalogNbr": 4560,
+    "categories": ["CA", "SBA"],
+    "crseId": 366119
+  },
+  {
+    "subject": "ENGRG",
+    "catalogNbr": 4990,
+    "categories": ["CE"],
+    "crseId": 366274
+  },
+  {
+    "subject": "ENGRG",
+    "catalogNbr": 3900,
+    "categories": ["CE,KCM,SBA"],
+    "crseId": 366283
+  },
+  {
+    "subject": "DEA",
+    "catalogNbr": 2900,
+    "categories": ["SBA"],
+    "crseId": 366372
+  },
+  {
+    "subject": "ARCH",
+    "catalogNbr": 3822,
+    "categories": ["HA"],
+    "crseId": 366385
+  },
+  {
+    "subject": "NBA",
+    "catalogNbr": 5410,
+    "categories": ["SBA"],
+    "crseId": 366549
+  },
+  {
+    "subject": "ENGRG",
+    "catalogNbr": 3910,
+    "categories": ["CA,CE,KCM,SBA"],
+    "crseId": 366587
+  },
+  {
+    "subject": "ALS",
+    "catalogNbr": 2000,
+    "categories": ["SBA"],
+    "crseId": 366607
+  },
+  {
+    "subject": "ITAL",
+    "catalogNbr": 1201,
+    "categories": ["FL"],
+    "crseId": 366732
+  },
+  {
+    "subject": "ITAL",
+    "catalogNbr": 1202,
+    "categories": ["FL"],
+    "crseId": 366733
+  },
+  {
+    "subject": "ITAL",
+    "catalogNbr": 2201,
+    "categories": ["FL"],
+    "crseId": 366734
+  },
+  {
+    "subject": "ITAL",
+    "catalogNbr": 2202,
+    "categories": ["FL"],
+    "crseId": 366735
+  },
+  {
+    "subject": "WRIT",
+    "catalogNbr": 4860,
+    "categories": ["CE"],
+    "crseId": 366860
+  },
+  {
+    "subject": "ITAL",
+    "catalogNbr": 1212,
+    "categories": ["CA"],
+    "crseId": 366920
+  },
+  {
+    "subject": "ITAL",
+    "catalogNbr": 1401,
+    "categories": ["FL"],
+    "crseId": 366922
+  },
+  {
+    "subject": "SPAN",
+    "catalogNbr": 1501,
+    "categories": ["FL"],
+    "crseId": 366924
+  },
+  {
+    "subject": "SPAN",
+    "catalogNbr": 2091,
+    "categories": ["FL"],
+    "crseId": 366926
+  },
+  {
+    "subject": "ASIAN",
+    "catalogNbr": 3308,
+    "categories": ["CA"],
+    "crseId": 366956
+  },
+  {
+    "subject": "DEA",
+    "catalogNbr": 2750,
+    "categories": ["CA"],
+    "crseId": 367174
+  },
+  {
+    "subject": "CLASS",
+    "catalogNbr": 1632,
+    "categories": ["LA", "ALC"],
+    "crseId": 367198
+  },
+  {
+    "subject": "SPAN",
+    "catalogNbr": 2095,
+    "categories": ["FL"],
+    "crseId": 367246
+  },
+  {
+    "subject": "DEA",
+    "catalogNbr": 1200,
+    "categories": ["LA"],
+    "crseId": 367272
+  },
+  {
+    "subject": "ILRLR",
+    "catalogNbr": 3055,
+    "categories": ["HA", "HST"],
+    "crseId": 367291
+  },
+  {
+    "subject": "ASIAN",
+    "catalogNbr": 3307,
+    "categories": ["CA"],
+    "crseId": 367319
+  },
+  {
+    "subject": "ENGRG",
+    "catalogNbr": 2750,
+    "categories": ["KCM"],
+    "crseId": 367375
+  },
+  {
+    "subject": "FREN",
+    "catalogNbr": 2180,
+    "categories": ["FL"],
+    "crseId": 367599
+  },
+  {
+    "subject": "INDO",
+    "catalogNbr": 1100,
+    "categories": ["FL"],
+    "crseId": 367608
+  },
+  {
+    "subject": "HADM",
+    "catalogNbr": 4133,
+    "categories": ["CA"],
+    "crseId": 367720
+  },
+  {
+    "subject": "VIET",
+    "catalogNbr": 1100,
+    "categories": ["CA", "FL"],
+    "crseId": 367755
+  },
+  {
+    "subject": "ILRLR",
+    "catalogNbr": 2040,
+    "categories": ["SBA"],
+    "crseId": 367757
+  },
+  {
+    "subject": "ILROB",
+    "catalogNbr": 3730,
+    "categories": ["CA", "SBA"],
+    "crseId": 367808
+  },
+  {
+    "subject": "HD",
+    "catalogNbr": 4790,
+    "categories": ["SBA"],
+    "crseId": 367814
+  },
+  {
+    "subject": "NS",
+    "catalogNbr": 3090,
+    "categories": ["SBA", "GLC"],
+    "crseId": 367851
+  },
+  {
+    "subject": "CLASS",
+    "catalogNbr": 2810,
+    "categories": ["CA", "HA"],
+    "crseId": 367880
+  },
+  {
+    "subject": "ILRLR",
+    "catalogNbr": 3300,
+    "categories": ["KCM"],
+    "crseId": 367939
+  },
+  {
+    "subject": "SOC",
+    "catalogNbr": 1900,
+    "categories": ["KCM"],
+    "crseId": 367980
+  },
+  {
+    "subject": "BIOMS",
+    "catalogNbr": 5665,
+    "categories": ["CA"],
+    "crseId": 368051
+  },
+  {
+    "subject": "BIOMS",
+    "catalogNbr": 5660,
+    "categories": ["CA", "ALC"],
+    "crseId": 368052
+  },
+  {
+    "subject": "CHIN",
+    "catalogNbr": 1121,
+    "categories": ["FL"],
+    "crseId": 368089
+  },
+  {
+    "subject": "ILROB",
+    "catalogNbr": 3760,
+    "categories": ["SBA"],
+    "crseId": 368189
+  },
+  {
+    "subject": "RUSSA",
+    "catalogNbr": 1131,
+    "categories": ["FL"],
+    "crseId": 368440
+  },
+  {
+    "subject": "RUSSA",
+    "catalogNbr": 1132,
+    "categories": ["FL"],
+    "crseId": 368441
+  },
+  {
+    "subject": "SPAN",
+    "catalogNbr": 2130,
+    "categories": ["FL"],
+    "crseId": 368463
+  },
+  {
+    "subject": "CHIN",
+    "catalogNbr": 1122,
+    "categories": ["FL"],
+    "crseId": 368591
+  },
+  {
+    "subject": "ILRLR",
+    "catalogNbr": 4066,
+    "categories": ["SBA"],
+    "crseId": 368628
+  },
+  {
+    "subject": "ILROB",
+    "catalogNbr": 3770,
+    "categories": ["SBA", "SSC"],
+    "crseId": 368730
+  },
+  {
+    "subject": "HADM",
+    "catalogNbr": 4375,
+    "categories": ["CA"],
+    "crseId": 368779
+  },
+  {
+    "subject": "KANAD",
+    "catalogNbr": 1100,
+    "categories": ["FL"],
+    "crseId": 368793
+  },
+  {
+    "subject": "CHIN",
+    "catalogNbr": 1123,
+    "categories": ["FL"],
+    "crseId": 368927
+  },
+  {
+    "subject": "VTPEH",
+    "catalogNbr": 6184,
+    "categories": ["SBA", "SSC"],
+    "crseId": 369015
+  },
+  {
+    "subject": "MUSIC",
+    "catalogNbr": 3511,
+    "categories": ["LA"],
+    "crseId": 369148
+  },
+  {
+    "subject": "MUSIC",
+    "catalogNbr": 3512,
+    "categories": ["LA"],
+    "crseId": 369149
+  },
+  {
+    "subject": "MUSIC",
+    "catalogNbr": 3513,
+    "categories": ["LA"],
+    "crseId": 369150
+  },
+  {
+    "subject": "COML",
+    "catalogNbr": 2350,
+    "categories": ["HA"],
+    "crseId": 370023
+  },
+  {
+    "subject": "PMA",
+    "catalogNbr": 3213,
+    "categories": ["CA", "ALC", "SCD"],
+    "crseId": 370172
+  },
+  {
+    "subject": "MUSIC",
+    "catalogNbr": 1505,
+    "categories": ["CA"],
+    "crseId": 370193
+  },
+  {
+    "subject": "FREN",
+    "catalogNbr": 2080,
+    "categories": ["FL"],
+    "crseId": 370328
+  },
+  {
+    "subject": "ITAL",
+    "catalogNbr": 2240,
+    "categories": ["LA"],
+    "crseId": 370367
+  },
+  {
+    "subject": "POLSH",
+    "catalogNbr": 2034,
+    "categories": ["FL"],
+    "crseId": 370408
+  },
+  {
+    "subject": "NES",
+    "catalogNbr": 1776,
+    "categories": ["FL"],
+    "crseId": 370462
+  },
+  {
+    "subject": "ASL",
+    "catalogNbr": 1101,
+    "categories": ["FL"],
+    "crseId": 370466
+  },
+  {
+    "subject": "WRIT",
+    "catalogNbr": 1100,
+    "categories": ["CA"],
+    "crseId": 370504
+  },
+  {
+    "subject": "PHIL",
+    "catalogNbr": 1902,
+    "categories": ["KCM"],
+    "crseId": 370529
+  },
+  {
+    "subject": "PMA",
+    "catalogNbr": 3621,
+    "categories": ["LA"],
+    "crseId": 370588
+  },
+  {
+    "subject": "ENGL",
+    "catalogNbr": 2705,
+    "categories": ["CA", "LA", "ALC"],
+    "crseId": 370607
+  },
+  {
+    "subject": "ENGL",
+    "catalogNbr": 2706,
+    "categories": ["CA"],
+    "crseId": 370608
+  },
+  {
+    "subject": "HEBRW",
+    "catalogNbr": 1110,
+    "categories": ["FL"],
+    "crseId": 370646
+  },
+  {
+    "subject": "ASL",
+    "catalogNbr": 1102,
+    "categories": ["FL"],
+    "crseId": 370718
+  },
+  {
+    "subject": "NES",
+    "catalogNbr": 1777,
+    "categories": ["FL"],
+    "crseId": 370735
+  },
+  {
+    "subject": "ENGRG",
+    "catalogNbr": 1022,
+    "categories": ["SBA"],
+    "crseId": 370893
+  },
+  {
+    "subject": "AAP",
+    "catalogNbr": 1602,
+    "categories": ["LA"],
+    "crseId": 371055
+  },
+  {
+    "subject": "LAW",
+    "catalogNbr": 4081,
+    "categories": ["KCM"],
+    "crseId": 371124
+  },
+  {
+    "subject": "ART",
+    "catalogNbr": 1601,
+    "categories": ["LA"],
+    "crseId": 371151
+  },
+  {
+    "subject": "ENGL",
+    "catalogNbr": 3552,
+    "categories": ["LA", "ALC"],
+    "crseId": 371170
+  },
+  {
+    "subject": "ENGL",
+    "catalogNbr": 2602,
+    "categories": ["LA", "ALC"],
+    "crseId": 371200
+  },
+  {
+    "subject": "EAS",
+    "catalogNbr": 4441,
+    "categories": ["GLC"],
+    "crseId": 371236
+  },
+  {
+    "subject": "ILRID",
+    "catalogNbr": 4675,
+    "categories": ["SBA", "SSC", "SCD"],
+    "crseId": 371519
+  },
+  {
+    "subject": "COML",
+    "catalogNbr": 2762,
+    "categories": ["LA", "ALC", "SCD"],
+    "crseId": 371521
+  },
+  {
+    "subject": "MUSIC",
+    "catalogNbr": 1108,
+    "categories": ["LA", "ALC"],
+    "crseId": 371536
+  },
+  {
+    "subject": "ENGL",
+    "catalogNbr": 2603,
+    "categories": ["LA", "ALC"],
+    "crseId": 371597
+  },
+  {
+    "subject": "CHEME",
+    "catalogNbr": 2000,
+    "categories": ["SBA", "SSC", "SCD"],
+    "crseId": 371895
+  },
+  {
+    "subject": "PHIL",
+    "catalogNbr": 1918,
+    "categories": ["KCM", "ETM"],
+    "crseId": 372455
+  },
+  {
+    "subject": "GOVT",
+    "catalogNbr": 2012,
+    "categories": ["KCM", "SSC"],
+    "crseId": 372564
+  }
+]

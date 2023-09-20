@@ -6,7 +6,6 @@ except ModuleNotFoundError:
     OPEN_AI_API_KEY = None
 
 
-
 def get_llm(model: str, temperature=0):
     if OPEN_AI_API_KEY is None:
         return None

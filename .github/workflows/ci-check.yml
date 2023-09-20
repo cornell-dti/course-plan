@@ -1,5 +1,5 @@
 name: CI Check
-on: 
+on:
   push:
   workflow_dispatch:
 

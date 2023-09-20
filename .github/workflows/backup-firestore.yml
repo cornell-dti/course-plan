@@ -2,7 +2,7 @@ name: Backup Firestore
 
 on:
   schedule:
-    - cron:  '5 4 11 1,7 *' # 4:05am on 1/11 and 7/11
+    - cron: '5 4 11 1,7 *' # 4:05am on 1/11 and 7/11
   workflow_dispatch:
 
 env:
@@ -13,9 +13,9 @@ jobs:
   backup:
     runs-on: ubuntu-latest
     steps:
-    - uses: google-github-actions/setup-gcloud@v0
-      with:
-        service_account_key: ${{ secrets.GCP_SERVICE_ACCOUNT_FIRESTORE_BACKUP_CORNELLDTI_COURSEPLAN_PROD }}
-        export_default_credentials: true
-    - run: gcloud config set project $PROJECT_ID
-    - run: gcloud firestore export $BUCKET/$(date +"%Y-%m-%d")
+      - uses: google-github-actions/setup-gcloud@v0
+        with:
+          service_account_key: ${{ secrets.GCP_SERVICE_ACCOUNT_FIRESTORE_BACKUP_CORNELLDTI_COURSEPLAN_PROD }}
+          export_default_credentials: true
+      - run: gcloud config set project $PROJECT_ID
+      - run: gcloud firestore export $BUCKET/$(date +"%Y-%m-%d")

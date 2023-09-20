@@ -32,9 +32,9 @@ jobs:
         id: cpr
         uses: peter-evans/create-pull-request@v4
         with:
-          title: "[Automated] Update Courses (${{ github.event.inputs.semester }})"
-          body: "Ran `npm run courses-gen` and `npm run req-gen`, as part of the update-courses workflow."
-          commit-message: "[Automated] Update Courses (${{ github.event.inputs.semester }})"
+          title: '[Automated] Update Courses (${{ github.event.inputs.semester }})'
+          body: 'Ran `npm run courses-gen` and `npm run req-gen`, as part of the update-courses workflow.'
+          commit-message: '[Automated] Update Courses (${{ github.event.inputs.semester }})'
           committer: Cornell DTI GitHub Bot <admin@cornelldti.org>
           branch: update-courses/${{ github.event.inputs.semester }}
           delete-branch: true
