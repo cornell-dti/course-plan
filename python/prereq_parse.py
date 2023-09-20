@@ -16,7 +16,6 @@ verbose = False
 llm = ChatOpenAI(openai_api_key=OPEN_AI_API_KEY, temperature=0, model=MODEL)
 
 
-
 def get_raw_prereqs_and_coreqs(verbose=False) -> SequentialChain:
     """
     Returns a chain that takes in a course description and returns the prerequisites and corequisites as two separate lists.
