@@ -58,6 +58,7 @@ jobs:
           export RUN_LANGCHAIN_TESTS=false
           cd python
           python -m pip install --upgrade pip setuptools wheel
+          pip install langchain
       - name: Lint with black
         run: |
           pip install black
