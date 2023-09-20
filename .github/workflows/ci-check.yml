@@ -55,6 +55,7 @@ jobs:
           python-version: '3.11'
       - name: Install dependencies
         run: |
+          export RUN_LANGCHAIN_TESTS=false
           cd python
           python -m pip install --upgrade pip setuptools wheel
       - name: Lint with black
@@ -68,4 +69,5 @@ jobs:
       - name: Run tests
         run: |
           pipenv install
+          pipenv shell
           pipenv run pytest

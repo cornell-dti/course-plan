@@ -1,19 +1,15 @@
-from langchain.chat_models import ChatOpenAI
 from langchain import PromptTemplate, LLMChain
 from langchain.output_parsers import ResponseSchema
 from langchain.output_parsers import StructuredOutputParser
 from langchain.chains import SequentialChain, TransformChain
-from secret_api_keys import OPEN_AI_API_KEY
 from typing import Dict, Tuple
+from gpt_utils import get_llm
 
 # import parsy
+verbose = False
 
 MODEL = "gpt-3.5-turbo"
-verbose = False
-# imports the open ai model into langchain
-# temperature of 0 means the responses will be less varied (which we want)
-# model is set to gpt 3.5
-llm = ChatOpenAI(openai_api_key=OPEN_AI_API_KEY, temperature=0, model=MODEL)
+llm = get_llm(MODEL)
 
 
 def get_raw_prereqs_and_coreqs(verbose=False) -> SequentialChain:
