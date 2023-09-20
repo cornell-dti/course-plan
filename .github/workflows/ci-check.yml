@@ -55,8 +55,8 @@ jobs:
           python-version: '3.11'
       - name: Install dependencies
         run: |
-        cd python
-        python -m pip install --upgrade pip setuptools wheel
+          cd python
+          python -m pip install --upgrade pip setuptools wheel
       - name: Lint with black
         run: |
           pip install black
