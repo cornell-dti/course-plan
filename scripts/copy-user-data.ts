@@ -18,6 +18,7 @@
  */
 
 import parseArgs from 'minimist';
+
 import {
   DATABASE_URL_DEV,
   DATABASE_URL_PROD,
