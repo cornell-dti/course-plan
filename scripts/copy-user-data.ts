@@ -17,7 +17,6 @@
  * EXAMPLE: `npm run ts-node -- scripts/copy-user-data.ts -f dev/dummyaccount -t dev/newdummyaccount -o "log.json"`
  */
 
-
 import parseArgs from 'minimist';
 import {
   DATABASE_URL_DEV,
