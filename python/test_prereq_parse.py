@@ -1,6 +1,9 @@
 from prereq_parse import get_raw_prereqs_and_coreqs, get_prereqs_coreqs
+import pytest
+import os
 
 
+@pytest.mark.skipif(not os.environ.get("RUN_LANGCHAIN_TESTS"), reason="marked to skip")
 def test_raw_prereqs_coreqs(verbose=False):
     test_cases = [
         ("Recommended prerequisite: GOVT 1111.", ([], [])),
@@ -81,16 +84,22 @@ def test_raw_prereqs_coreqs(verbose=False):
     total = len(test_cases)
     for test in test_cases:
         (course_desc, answer) = test
-        response = get_raw_prereqs_and_coreqs(course_desc)
+        chain = get_raw_prereqs_and_coreqs(verbose)
+        response = chain({"course_desc": course_desc}, return_only_outputs=True)
+        response = (response["prerequisites"], response["corequisites"])
         if response == answer:
             if verbose:
                 print("CORRECT")
             correct += 1
         elif verbose:
             print(f"WRONG Answer: {answer} Got: {response}")
-    print(f"{correct / total * 100}%")
+    percent_correct = correct / total * 100
+    if verbose:
+        print(f"{percent_correct}%")
+    assert percent_correct == 100
 
 
+@pytest.mark.skipif(not os.environ.get("RUN_LANGCHAIN_TESTS"), reason="marked to skip")
 def test_prereqs_coreqs(index=None, shorten=False, verbose=False, hard=False):
     test_cases = [
         ("Recommended prerequisite: GOVT 1111.", ("", "")),
@@ -169,8 +178,7 @@ def test_prereqs_coreqs(index=None, shorten=False, verbose=False, hard=False):
             correct += 1
         elif verbose:
             print(f"WRONG Answer: {answer} Got: {response}")
-    print(f"{correct / total * 100}%")
-
-
-if __name__ == "__main__":
-    test_prereqs_coreqs(verbose=True)
+    percent_correct = correct / total * 100
+    if verbose:
+        print(f"{percent_correct}%")
+    assert percent_correct > 90
