@@ -22,9 +22,7 @@
     "test": "jest",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",
-    "cypress:e2e": "npm run build:dev && concurrently \"npm run serve:build\" \"wait-on http-get://localhost:8080 && npm run cypress:run\" --kill-others --success first",
-    "precommit": "pretty-quick --staged",
-    "prepare": "husky install .husky"
+    "cypress:e2e": "npm run build:dev && concurrently \"npm run serve:build\" \"wait-on http-get://localhost:8080 && npm run cypress:run\" --kill-others --success first"
   },
   "dependencies": {
     "@types/intro.js": "^3.0.0",
@@ -71,7 +69,6 @@
     "eslint-import-resolver-node": "^0.3.6",
     "eslint-plugin-cypress": "^2.12.1",
     "eslint-plugin-vue": "^8.0.3",
-    "husky": "^8.0.3",
     "jest": "^26.6.3",
     "minimist": "^1.2.6",
     "pdf-to-excel": "^0.3.2",
