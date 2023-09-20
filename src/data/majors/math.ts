@@ -48,7 +48,7 @@ const mathRequirements: readonly CollegeOrMajorRequirement[] = [
       'MATH 4500',
       'MATH 4560',
       'MATH 3360',
-      'MATH 4315'
+      'MATH 4315',
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [2],
@@ -71,7 +71,7 @@ const mathRequirements: readonly CollegeOrMajorRequirement[] = [
       'MATH 4220',
       'MATH 4250',
       'MATH 4260',
-      'MATH 4280'
+      'MATH 4280',
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [2],
@@ -101,7 +101,7 @@ const mathRequirements: readonly CollegeOrMajorRequirement[] = [
             'MATH 4550',
             'MATH 4560',
           ],
-          ['MATH 3610', 'CS 2110', 'PHYS 1116', 'PHYS 2208', 'PHYS 2213', 'PHYS 2217']
+          ['MATH 3610', 'CS 2110', 'PHYS 1116', 'PHYS 2208', 'PHYS 2213', 'PHYS 2217'],
         ),
         perSlotMinCount: [3, 1, 1],
         slotNames: ['3000+ Math Course', 'Geometry/Topology Course', 'Mathematical Models Course'],
@@ -119,7 +119,7 @@ const mathRequirements: readonly CollegeOrMajorRequirement[] = [
         counting: 'courses',
         checker: includesWithSubRequirements(
           ['MATH 3***', 'MATH 4***', 'MATH 5***', 'MATH 6***', 'MATH 7***'],
-          ['MATH 3610', 'CS 2110', 'PHYS 1116', 'PHYS 2208', 'PHYS 2213', 'PHYS 2217']
+          ['MATH 3610', 'CS 2110', 'PHYS 1116', 'PHYS 2208', 'PHYS 2213', 'PHYS 2217'],
         ),
         perSlotMinCount: [4, 1],
         slotNames: ['3000+ Math Course', 'Mathematical Models Course'],
@@ -184,7 +184,7 @@ const mathRequirements: readonly CollegeOrMajorRequirement[] = [
             'MATH 5***',
             'MATH 6***',
             'MATH 7***',
-          ]
+          ],
         ),
         perSlotMinCount: [1, 3, 1],
         slotNames: ['3000+ Math Course', 'Mathematical CS Course', 'MATH or CS Course'],
@@ -247,7 +247,7 @@ const mathRequirements: readonly CollegeOrMajorRequirement[] = [
             'MATH 5***',
             'MATH 6***',
             'MATH 7***',
-          ]
+          ],
         ),
         perSlotMinCount: [1, 3, 1],
         slotNames: ['3000+ MATH Course', 'Mathematical ECON Course', 'ORIE, ECON, or MATH Course'],
@@ -279,7 +279,7 @@ const mathRequirements: readonly CollegeOrMajorRequirement[] = [
             'NTRES 6110',
             'NTRES 6120',
           ],
-          ['MATH 3***', 'MATH 4***', 'MATH 5***', 'MATH 6***', 'MATH 7***']
+          ['MATH 3***', 'MATH 4***', 'MATH 5***', 'MATH 6***', 'MATH 7***'],
         ),
         perSlotMinCount: [3, 2],
         slotNames: ['Mathematical Biology Course', '3000+ MATH Course'],
@@ -326,7 +326,7 @@ const mathRequirements: readonly CollegeOrMajorRequirement[] = [
             'MATH 5***',
             'MATH 6***',
             'MATH 7***',
-          ]
+          ],
         ),
         perSlotMinCount: [1, 3, 1],
         slotNames: ['3000+ MATH Course', 'Physics Course', 'MATH or Physics Course'],
@@ -373,7 +373,7 @@ const mathRequirements: readonly CollegeOrMajorRequirement[] = [
             'MATH 5***',
             'MATH 6***',
             'MATH 7***',
-          ]
+          ],
         ),
         perSlotMinCount: [1, 3, 1],
         slotNames: ['3000+ MATH Course', 'ORIE Course', 'MATH or ORIE Course'],
@@ -408,7 +408,7 @@ const mathRequirements: readonly CollegeOrMajorRequirement[] = [
             'STSCI 4550',
             'STSCI 4740',
             'STSCI 4780',
-          ]
+          ],
         ),
         perSlotMinCount: [1, 1, 1, 2],
         slotNames: ['MATH 4710', 'MATH 4720', '3000+ MATH Course', 'Statistics Course'],

@@ -24,7 +24,7 @@ const aerospaceMinorRequirements: readonly CollegeOrMajorRequirement[] = [
         'MAE 4510',
         'MAE 5070',
         'MAE 5510',
-      ]
+      ],
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 3],
@@ -100,7 +100,7 @@ const aerospaceMinorRequirements: readonly CollegeOrMajorRequirement[] = [
         'ECE 2100',
         'ENGRD 2100',
         'PHYS 3360',
-      ]
+      ],
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1, 1],

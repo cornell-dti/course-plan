@@ -11,15 +11,15 @@ import { AdvisorChecker } from './types';
  * @returns a single checker that checks whether this individual advisor works with the user
  */
 
-export const lastNameRange = (startLetter: string, endLetter: string): AdvisorChecker => (
-  user: FirestoreUserName
-): boolean => {
-  if (user.lastName) {
-    const lastInitial = user.lastName.trim().charAt(0).toLowerCase();
-    return lastInitial >= startLetter.toLowerCase() && lastInitial <= endLetter.toLowerCase();
-  }
-  return true;
-};
+export const lastNameRange =
+  (startLetter: string, endLetter: string): AdvisorChecker =>
+  (user: FirestoreUserName): boolean => {
+    if (user.lastName) {
+      const lastInitial = user.lastName.trim().charAt(0).toLowerCase();
+      return lastInitial >= startLetter.toLowerCase() && lastInitial <= endLetter.toLowerCase();
+    }
+    return true;
+  };
 
 /**
  * This function returns a checker that checks whether an advisor works with the user
@@ -33,17 +33,17 @@ export const lastNameRange = (startLetter: string, endLetter: string): AdvisorCh
  *
  * @returns a single checker that checks whether this individual advisor works with the user
  */
-export const lastNameRanges = (range: [string, string][]): AdvisorChecker => (
-  user: FirestoreUserName
-): boolean => {
-  if (user.lastName) {
-    const lastInitial = user.lastName.trim().charAt(0).toLowerCase();
-    for (const [start, end] of range) {
-      if (lastInitial >= start.toLowerCase() && lastInitial <= end.toLowerCase()) {
-        return true;
+export const lastNameRanges =
+  (range: [string, string][]): AdvisorChecker =>
+  (user: FirestoreUserName): boolean => {
+    if (user.lastName) {
+      const lastInitial = user.lastName.trim().charAt(0).toLowerCase();
+      for (const [start, end] of range) {
+        if (lastInitial >= start.toLowerCase() && lastInitial <= end.toLowerCase()) {
+          return true;
+        }
       }
+      return false; // if there is a last name, but it doesn't fit any range
     }
-    return false; // if there is a last name, but it doesn't fit any range
-  }
-  return true; // if no last name, show all options
-};
+    return true; // if no last name, show all options
+  };

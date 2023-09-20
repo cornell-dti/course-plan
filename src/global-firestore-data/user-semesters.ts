@@ -13,7 +13,7 @@ import {
 } from './user-overridden-fulfillment-choices';
 
 export const editSemesters = (
-  updater: (oldSemesters: readonly FirestoreSemester[]) => readonly FirestoreSemester[]
+  updater: (oldSemesters: readonly FirestoreSemester[]) => readonly FirestoreSemester[],
 ): void => {
   const semesters = updater(store.state.semesters);
   store.commit('setSemesters', semesters);
@@ -38,17 +38,17 @@ export const setOrderByNewest = (orderByNewest: boolean): void => {
 export const editSemester = (
   year: number,
   season: FirestoreSemesterSeason,
-  updater: (oldSemester: FirestoreSemester) => FirestoreSemester
+  updater: (oldSemester: FirestoreSemester) => FirestoreSemester,
 ): void => {
   editSemesters(oldSemesters =>
-    oldSemesters.map(sem => (semesterEquals(sem, year, season) ? updater(sem) : sem))
+    oldSemesters.map(sem => (semesterEquals(sem, year, season) ? updater(sem) : sem)),
   );
 };
 
 const createSemester = (
   year: number,
   season: FirestoreSemesterSeason,
-  courses: readonly FirestoreSemesterCourse[]
+  courses: readonly FirestoreSemesterCourse[],
 ): {
   year: number;
   season: FirestoreSemesterSeason;
@@ -63,14 +63,14 @@ const createSemester = (
 export const semesterEquals = (
   semester: FirestoreSemester,
   year: number,
-  season: FirestoreSemesterSeason
+  season: FirestoreSemesterSeason,
 ): boolean => semester.year === year && semester.season === season;
 
 export const addSemester = (
   year: number,
   season: FirestoreSemesterSeason,
   gtag?: VueGtag,
-  courses: readonly FirestoreSemesterCourse[] = []
+  courses: readonly FirestoreSemesterCourse[] = [],
 ): void => {
   GTagEvent(gtag, 'add-semester');
   editSemesters(oldSemesters => [...oldSemesters, createSemester(year, season, courses)]);
@@ -79,7 +79,7 @@ export const addSemester = (
 export const deleteSemester = (
   year: number,
   season: FirestoreSemesterSeason,
-  gtag?: VueGtag
+  gtag?: VueGtag,
 ): void => {
   GTagEvent(gtag, 'delete-semester');
   const semester = store.state.semesters.find(sem => semesterEquals(sem, year, season));
@@ -94,7 +94,7 @@ export const addCourseToSemester = (
   season: FirestoreSemesterSeason,
   newCourse: FirestoreSemesterCourse,
   choiceUpdater: (choice: FirestoreCourseOptInOptOutChoices) => FirestoreCourseOptInOptOutChoices,
-  gtag?: VueGtag
+  gtag?: VueGtag,
 ): void => {
   GTagEvent(gtag, 'add-course');
   editSemesters(oldSemesters => {
@@ -116,7 +116,7 @@ export const deleteCourseFromSemester = (
   year: number,
   season: FirestoreSemesterSeason,
   courseUniqueID: number,
-  gtag?: VueGtag
+  gtag?: VueGtag,
 ): void => {
   GTagEvent(gtag, 'delete-course');
   const semester = store.state.semesters.find(sem => semesterEquals(sem, year, season));
@@ -128,7 +128,7 @@ export const deleteCourseFromSemester = (
         courses: semesterEquals(sem, year, season)
           ? sem.courses.filter(course => course.uniqueID !== courseUniqueID)
           : sem.courses,
-      }))
+      })),
     );
   }
 };
@@ -136,7 +136,7 @@ export const deleteCourseFromSemester = (
 export const deleteAllCoursesFromSemester = (
   year: number,
   season: FirestoreSemesterSeason,
-  gtag?: VueGtag
+  gtag?: VueGtag,
 ): void => {
   GTagEvent(gtag, 'delete-semester-courses');
   const semester = store.state.semesters.find(sem => semesterEquals(sem, year, season));
@@ -146,7 +146,7 @@ export const deleteAllCoursesFromSemester = (
       oldSemesters.map(sem => ({
         ...sem,
         courses: semesterEquals(sem, year, season) ? [] : sem.courses,
-      }))
+      })),
     );
   }
 };
@@ -156,10 +156,10 @@ export const deleteCourseFromSemesters = (courseUniqueID: number, gtag?: VueGtag
   editSemesters(oldSemesters =>
     oldSemesters.map(semester => {
       const coursesWithoutDeleted = semester.courses.filter(
-        course => course.uniqueID !== courseUniqueID
+        course => course.uniqueID !== courseUniqueID,
       );
       return { ...semester, courses: coursesWithoutDeleted };
-    })
+    }),
   );
   deleteCourseFromRequirementChoices(courseUniqueID);
 };
@@ -169,7 +169,7 @@ export const getActiveSemesters = (
   entranceYear: number,
   entranceSem: FirestoreSemesterSeason,
   gradYear: number,
-  gradSem: FirestoreSemesterSeason
+  gradSem: FirestoreSemesterSeason,
 ): readonly FirestoreSemester[] => {
   const sems = [createSemester(entranceYear, 'Fall', []), createSemester(gradYear, 'Spring', [])];
   if (entranceYear !== gradYear && entranceSem === 'Spring')

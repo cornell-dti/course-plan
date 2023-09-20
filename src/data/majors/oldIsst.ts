@@ -41,7 +41,7 @@ const oldIsstRequirements: readonly CollegeOrMajorRequirement[] = [
       ['MATH 1910'],
       ['MATH 1920'],
       ['MATH 2940'],
-      ['MATH 2930', 'MATH 3040', 'CS 2800']
+      ['MATH 2930', 'MATH 3040', 'CS 2800'],
     ),
     allowCourseDoubleCounting: true,
     fulfilledBy: 'courses',
@@ -250,7 +250,7 @@ const oldIsstRequirements: readonly CollegeOrMajorRequirement[] = [
             'STS 3440',
             // Other
             'INFO 4900',
-          ]
+          ],
         ),
         perSlotMinCount: [3, 1, 3, 2],
         slotNames: ['Group A', 'Group B', 'Group C', 'Group D'],
@@ -386,7 +386,7 @@ const oldIsstRequirements: readonly CollegeOrMajorRequirement[] = [
             'STS 3440',
             // Other
             'INFO 4900',
-          ]
+          ],
         ),
         perSlotMinCount: [4, 1, 2, 2],
         slotNames: ['Group A', 'Group B', 'Group C', 'Group D'],

@@ -7,7 +7,7 @@ import setUsernameData from './user-name';
 
 export const setAppOnboardingData = (
   name: FirestoreUserName,
-  onboarding: AppOnboardingData
+  onboarding: AppOnboardingData,
 ): void => {
   setUsernameData(name);
   setDoc(doc(onboardingDataCollection, store.state.currentFirebaseUser.email), {
@@ -46,8 +46,8 @@ export const deleteTransferCredit = (code: string): void => {
   const [examType, subject] = code.split(/ (.*)/);
   updateTransferCredit(
     store.state.onboardingData.exam.filter(
-      e => !(e.examType === examType && e.subject === subject)
+      e => !(e.examType === examType && e.subject === subject),
     ),
-    store.state.onboardingData.tookSwim
+    store.state.onboardingData.tookSwim,
   );
 };

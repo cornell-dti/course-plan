@@ -125,7 +125,7 @@ export default defineComponent({
     selectedRequirementName(): string {
       if (this.selectedRequirementID === '') return '';
       const requirements = [...this.relatedRequirements, ...this.potentialRequirements].filter(
-        it => it.id === this.selectedRequirementID
+        it => it.id === this.selectedRequirementID,
       );
       return requirements[0].name;
     },

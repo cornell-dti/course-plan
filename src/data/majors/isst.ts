@@ -18,7 +18,7 @@ const isstRequirements: readonly CollegeOrMajorRequirement[] = [
       ['ORIE 3120'],
       ['INFO 2040'],
       ['INFO 2450'],
-      ['ORIE 4740', 'CS 4780', 'CS 4786', 'STSCI 4740']
+      ['ORIE 4740', 'CS 4780', 'CS 4786', 'STSCI 4740'],
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1, 1, 1, 1, 1],
@@ -41,7 +41,7 @@ const isstRequirements: readonly CollegeOrMajorRequirement[] = [
       ['MATH 1910'],
       ['MATH 1920'],
       ['MATH 2940'],
-      ['MATH 2930', 'MATH 3040', 'CS 2800']
+      ['MATH 2930', 'MATH 3040', 'CS 2800'],
     ),
     allowCourseDoubleCounting: true,
     fulfilledBy: 'courses',
@@ -92,7 +92,15 @@ const isstRequirements: readonly CollegeOrMajorRequirement[] = [
             'ENGL 3778',
             'STS 3440',
           ],
-          ['INFO 4310', 'COMM 3150', 'COMM 3189', 'COMM 4200', 'COMM 4860', 'GOVT 2169', 'SOC 3580']
+          [
+            'INFO 4310',
+            'COMM 3150',
+            'COMM 3189',
+            'COMM 4200',
+            'COMM 4860',
+            'GOVT 2169',
+            'SOC 3580',
+          ],
         ),
         perSlotMinCount: [1, 1, 1, 1],
         slotNames: ['Group A', 'Group B', 'Group C', 'Group D'],
@@ -152,7 +160,7 @@ const isstRequirements: readonly CollegeOrMajorRequirement[] = [
             'INFO 4430',
             'INFO 4940',
             'CS 4752',
-          ]
+          ],
         ),
         perSlotMinCount: [1, 1, 1, 1],
         slotNames: ['Group A', 'Group B', 'Group C', 'Group D'],
@@ -174,7 +182,7 @@ const isstRequirements: readonly CollegeOrMajorRequirement[] = [
             'SOC 3080',
           ],
           ['INFO 3300', 'INFO 4300', 'CS 4740', 'CS 4780', 'CS 4786', 'ECON 3120', 'ECON 3140'],
-          ['INFO 3561', 'INFO 4200', 'INFO 4240', 'INFO 4250', 'INFO 4940', 'STS 3440']
+          ['INFO 3561', 'INFO 4200', 'INFO 4240', 'INFO 4250', 'INFO 4940', 'STS 3440'],
         ),
         perSlotMinCount: [2, 1, 1],
         slotNames: ['Group A', 'Group B', 'Group C'],
@@ -243,7 +251,15 @@ const isstRequirements: readonly CollegeOrMajorRequirement[] = [
             'ENGL 3778',
             'STS 3440',
           ],
-          ['INFO 4310', 'COMM 3150', 'COMM 3189', 'COMM 4200', 'COMM 4860', 'GOVT 2169', 'SOC 3580']
+          [
+            'INFO 4310',
+            'COMM 3150',
+            'COMM 3189',
+            'COMM 4200',
+            'COMM 4860',
+            'GOVT 2169',
+            'SOC 3580',
+          ],
         ),
         perSlotMinCount: [1, 1, 1],
         slotNames: ['Group A', 'Group B', 'Group C'],
@@ -293,7 +309,7 @@ const isstRequirements: readonly CollegeOrMajorRequirement[] = [
             'COML 3115',
             'ENGL 3741',
             'HIST 2293',
-          ]
+          ],
         ),
         perSlotMinCount: [1, 1, 1],
         slotNames: ['Group A', 'Group B', 'Group C'],
@@ -316,7 +332,7 @@ const isstRequirements: readonly CollegeOrMajorRequirement[] = [
             'INFO 4940',
             'STS 3440',
             'STS 4040',
-          ]
+          ],
         ),
         perSlotMinCount: [1, 1, 1],
         slotNames: ['Group A', 'Group B', 'Group C'],
@@ -351,7 +367,7 @@ const isstRequirements: readonly CollegeOrMajorRequirement[] = [
             'INFO 4430',
             'INFO 4940',
             'CS 4752',
-          ]
+          ],
         ),
         perSlotMinCount: [1, 1, 1],
         slotNames: ['Group A', 'Group B', 'Group C'],
@@ -373,7 +389,7 @@ const isstRequirements: readonly CollegeOrMajorRequirement[] = [
             'SOC 3080',
           ],
           ['INFO 3300', 'INFO 4300', 'CS 4740', 'CS 4780', 'CS 4786', 'ECON 3120', 'ECON 3140'],
-          ['INFO 3561', 'INFO 4200', 'INFO 4240', 'INFO 4250', 'INFO 4940', 'STS 3440']
+          ['INFO 3561', 'INFO 4200', 'INFO 4240', 'INFO 4250', 'INFO 4940', 'STS 3440'],
         ),
         perSlotMinCount: [1, 1, 1],
         slotNames: ['Group A', 'Group B', 'Group C'],
@@ -387,7 +403,7 @@ const isstRequirements: readonly CollegeOrMajorRequirement[] = [
         checker: includesWithSubRequirements(
           ['INFO 3450', 'INFO 4400', 'INFO 4410'],
           ['INFO 2921', 'INFO 4240', 'INFO 4420', 'INFO 4940', 'ENGL 3741'],
-          ['INFO 3400', 'INFO 3460', 'INFO 4430', 'INFO 4450', 'COMM 4380', 'PSYCH 3420']
+          ['INFO 3400', 'INFO 3460', 'INFO 4430', 'INFO 4450', 'COMM 4380', 'PSYCH 3420'],
         ),
         perSlotMinCount: [1, 1, 1],
         slotNames: ['Group A', 'Group B', 'Group C'],
@@ -493,7 +509,7 @@ const isstRequirements: readonly CollegeOrMajorRequirement[] = [
       'ORIE 4350',
       'STS 3440',
       // Other
-      'INFO 4900'
+      'INFO 4900',
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [2],

@@ -52,7 +52,7 @@ const ilrRequirements: readonly CollegeOrMajorRequirement[] = [
       ['ILROB 1220'],
       ['ILRLR 1100'],
       ['ECON 1110'],
-      ['ECON 1120']
+      ['ECON 1120'],
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1, 1, 1],
@@ -69,7 +69,7 @@ const ilrRequirements: readonly CollegeOrMajorRequirement[] = [
       ['ILRLR 2010'],
       ['ILRHR 2600'],
       ['ILRLR 2050'],
-      ['ILRLE 2400']
+      ['ILRLE 2400'],
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1, 1, 1],
@@ -102,7 +102,7 @@ const ilrRequirements: readonly CollegeOrMajorRequirement[] = [
       'ILRLE 2400',
       'ILRLR 2060',
       'ILROB 2230',
-      'ENGL 2880'
+      'ENGL 2880',
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],

@@ -36,14 +36,14 @@ export function convertFirestoreSemesterCourseToCourseTaken({
 export const getFilterForRequirementFulfillment = (
   userRequirementsMap: Readonly<Record<string, RequirementWithIDSourceType>>,
   toggleableRequirementChoices: AppToggleableRequirementChoices,
-  requirementId: string
+  requirementId: string,
 ): ((course: CornellCourseRosterCourse) => boolean) => {
   const requirement = userRequirementsMap[requirementId];
   // If we cannot find the relevant requirement, then default to true to be permissive.
   if (requirement == null) return () => true;
   const requirementSpec = getMatchedRequirementFulfillmentSpecification(
     requirement,
-    toggleableRequirementChoices
+    toggleableRequirementChoices,
   );
   // If a requirement is truly self-check, then all courses can be used.
   if (requirementSpec == null) return () => true;
@@ -59,14 +59,14 @@ export function canFulfillChecker(
   userRequirementsMap: Readonly<Record<string, RequirementWithIDSourceType>>,
   toggleableRequirementChoices: AppToggleableRequirementChoices,
   requirementId: string,
-  crseId: number
+  crseId: number,
 ): boolean {
   const requirement = userRequirementsMap[requirementId];
   // If we cannot find the relevant requirement, then default to true to be permissive.
   if (requirement == null) return true;
   const requirementSpec = getMatchedRequirementFulfillmentSpecification(
     requirement,
-    toggleableRequirementChoices
+    toggleableRequirementChoices,
   );
   // If a requirement is truly self-check, then all courses can be used.
   if (requirementSpec == null) return true;
@@ -84,7 +84,7 @@ export function canFulfillChecker(
  */
 export function allowCourseDoubleCountingBetweenRequirements(
   requirementA: RequirementWithIDSourceType,
-  requirementB: RequirementWithIDSourceType
+  requirementB: RequirementWithIDSourceType,
 ): boolean {
   const allowCourseDoubleCounting =
     requirementA.allowCourseDoubleCounting || requirementB.allowCourseDoubleCounting || false;
@@ -138,7 +138,7 @@ const fieldOfStudyReqs = (sourceType: 'Major' | 'Minor', fields: readonly string
             id: `${sourceType}-${field}-${it.name}`,
             sourceType,
             sourceSpecificName: field,
-          } as const) ?? [])
+          }) as const) ?? [],
       );
     })
     .flat();
@@ -173,7 +173,7 @@ const specializedForCollege = (collegeName: string, majorNames: readonly string[
         id: `College-${collegeName}-${req.name}`,
         sourceType: 'College',
         sourceSpecificName: collegeName,
-      } as const)
+      }) as const,
   );
 };
 
@@ -197,7 +197,7 @@ export function getUserRequirements({
             id: `College-UNI-${it.name}`,
             sourceType: 'College',
             sourceSpecificName: college,
-          } as const)
+          }) as const,
       )
     : [];
   const collegeReqs = college ? specializedForCollege(college, majors) : [];
@@ -211,7 +211,7 @@ export function getUserRequirements({
             id: `Grad-${grad}-${it.name}`,
             sourceType: 'Grad',
             sourceSpecificName: grad,
-          } as const)
+          }) as const,
       )
     : [];
   // flatten all requirements into single array
@@ -255,12 +255,12 @@ type MatchedRequirementFulfillmentSpecification =
  */
 export function getMatchedRequirementFulfillmentSpecification(
   requirement: RequirementWithIDSourceType,
-  toggleableRequirementChoices: AppToggleableRequirementChoices
+  toggleableRequirementChoices: AppToggleableRequirementChoices,
 ): MatchedRequirementFulfillmentSpecification {
   const { sourceType, sourceSpecificName } = requirement;
   const filterEligibleCoursesByRequirementConditions = (
     coursesList: readonly (readonly number[])[],
-    conditions: RequirementCourseConditions | undefined
+    conditions: RequirementCourseConditions | undefined,
   ) =>
     coursesList.map(courses =>
       courses.filter(courseId => {
@@ -278,7 +278,7 @@ export function getMatchedRequirementFulfillmentSpecification(
           return false;
         // course passes all conditions
         return true;
-      })
+      }),
     );
   /**
    * Given a map of additional requirements, keep the requirement name key, but extract out the
@@ -304,14 +304,14 @@ export function getMatchedRequirementFulfillmentSpecification(
                 hasRequirementCheckerWarning: false,
                 eligibleCourses: filterEligibleCoursesByRequirementConditions(
                   subRequirement.courses,
-                  subRequirement.conditions
+                  subRequirement.conditions,
                 ),
                 perSlotMinCount: subRequirement.perSlotMinCount,
                 slotNames,
                 minNumberOfSlots: subRequirement.minNumberOfSlots,
               },
             ];
-          })
+          }),
         );
 
   const hasRequirementCheckerWarning = requirement.checkerWarning != null;
@@ -324,7 +324,7 @@ export function getMatchedRequirementFulfillmentSpecification(
         hasRequirementCheckerWarning,
         eligibleCourses: filterEligibleCoursesByRequirementConditions(
           requirement.courses,
-          requirement.conditions
+          requirement.conditions,
         ),
         additionalRequirements: convertAdditionalRequirements(requirement.additionalRequirements),
         perSlotMinCount: requirement.perSlotMinCount,
@@ -337,7 +337,7 @@ export function getMatchedRequirementFulfillmentSpecification(
         hasRequirementCheckerWarning,
         eligibleCourses: filterEligibleCoursesByRequirementConditions(
           requirement.courses,
-          requirement.conditions
+          requirement.conditions,
         ),
         additionalRequirements: convertAdditionalRequirements(requirement.additionalRequirements),
         perSlotMinCount: requirement.perSlotMinCount,
@@ -355,7 +355,7 @@ export function getMatchedRequirementFulfillmentSpecification(
         hasRequirementCheckerWarning,
         eligibleCourses: filterEligibleCoursesByRequirementConditions(
           option.courses,
-          option.conditions
+          option.conditions,
         ),
         perSlotMinCount: option.perSlotMinCount,
         slotNames: option.counting === 'courses' ? option.slotNames : [],
@@ -378,7 +378,7 @@ const computeFulfillmentStatistics = (
     perSlotMinCount,
     slotNames,
     minNumberOfSlots,
-  }: MatchedRequirementFulfillmentSpecificationBase
+  }: MatchedRequirementFulfillmentSpecificationBase,
 ): RequirementFulfillmentStatisticsWithCourses => {
   const coursesThatFulfilledSubRequirements: CourseTaken[][] = eligibleCourses.map(() => []);
   const subRequirementProgress: number[] = eligibleCourses.map(() => 0);
@@ -426,7 +426,7 @@ const computeFulfillmentStatistics = (
   if (minNumberOfSlots != null) {
     const minCountFulfilled = subRequirementProgress.reduce(
       (acc, progress, index) => acc + (progress >= perSlotMinCount[index] ? 1 : 0),
-      0
+      0,
     );
     return {
       fulfilledBy,
@@ -456,11 +456,11 @@ export function computeFulfillmentCoursesAndStatistics(
   requirement: RequirementWithIDSourceType,
   coursesTaken: readonly CourseTaken[],
   toggleableRequirementChoices: AppToggleableRequirementChoices,
-  overriddenFulfillmentChoices: FirestoreOverriddenFulfillmentChoices
+  overriddenFulfillmentChoices: FirestoreOverriddenFulfillmentChoices,
 ): RequirementFulfillmentStatisticsWithCoursesWithAdditionalRequirements {
   const spec = getMatchedRequirementFulfillmentSpecification(
     requirement,
-    toggleableRequirementChoices
+    toggleableRequirementChoices,
   );
   if (spec == null) {
     // Give self-check 1 required course and 0 fulfilled to prevent it from being fulfilled.
@@ -470,7 +470,7 @@ export function computeFulfillmentCoursesAndStatistics(
     requirement.id,
     coursesTaken,
     overriddenFulfillmentChoices,
-    spec
+    spec,
   );
   if (spec.additionalRequirements == null) return base;
   return {
@@ -479,7 +479,7 @@ export function computeFulfillmentCoursesAndStatistics(
       Object.entries(spec.additionalRequirements).map(([name, subSpec]) => [
         name,
         computeFulfillmentStatistics(name, coursesTaken, overriddenFulfillmentChoices, subSpec),
-      ])
+      ]),
     ),
   };
 }
@@ -494,14 +494,14 @@ export function getRelatedRequirementIdsForCourseOptOut(
   associatedRequirementId: string,
   groupedRequirements: readonly GroupedRequirementFulfillmentReport[],
   toggleableRequirementChoices: AppToggleableRequirementChoices,
-  userRequirementsMap: Readonly<Record<string, RequirementWithIDSourceType>>
+  userRequirementsMap: Readonly<Record<string, RequirementWithIDSourceType>>,
 ): readonly string[] {
   const requirements = groupedRequirements
     .flatMap(it => it.reqs)
     .flatMap(({ requirement }) => {
       const spec = getMatchedRequirementFulfillmentSpecification(
         requirement,
-        toggleableRequirementChoices
+        toggleableRequirementChoices,
       );
       if (spec == null) return [];
       const allEligibleCourses = spec.eligibleCourses.flat();
@@ -521,12 +521,12 @@ export function getRelatedRequirementIdsForCourseOptOut(
     (reqA, reqB) =>
       allowCourseDoubleCountingBetweenRequirements(
         userRequirementsMap[reqA],
-        userRequirementsMap[reqB]
-      )
+        userRequirementsMap[reqB],
+      ),
   );
   // order does not need to be preserved
   return Array.from(requirementsThatDoNotAllowDoubleCounting).filter(
-    it => it !== associatedRequirementId
+    it => it !== associatedRequirementId,
   );
 }
 
@@ -553,7 +553,7 @@ export function getRelatedUnfulfilledRequirements(
   onboardingData: AppOnboardingData,
   toggleableRequirementChoices: AppToggleableRequirementChoices,
   overriddenFulfillmentChoices: FirestoreOverriddenFulfillmentChoices,
-  userRequirementsMap: Readonly<Record<string, RequirementWithIDSourceType>>
+  userRequirementsMap: Readonly<Record<string, RequirementWithIDSourceType>>,
 ): {
   readonly relatedRequirements: readonly RequirementWithIDSourceType[];
   readonly selfCheckRequirements: readonly RequirementWithIDSourceType[];
@@ -564,7 +564,7 @@ export function getRelatedUnfulfilledRequirements(
   const selfCheckRequirements: RequirementWithIDSourceType[] = [];
   for (let i = 0; i < groupedRequirements.length; i += 1) {
     const subreqs = groupedRequirements[i].reqs.filter(
-      it => it.fulfillment.safeMinCountFulfilled < it.fulfillment.minCountRequired
+      it => it.fulfillment.safeMinCountFulfilled < it.fulfillment.minCountRequired,
     );
     for (let j = 0; j < subreqs.length; j += 1) {
       const {
@@ -577,7 +577,7 @@ export function getRelatedUnfulfilledRequirements(
       const existingCourses = existingCoursesInSlots.flat();
       const requirementSpec = getMatchedRequirementFulfillmentSpecification(
         subRequirement,
-        toggleableRequirementChoices
+        toggleableRequirementChoices,
       );
       // potential self-check requirements
       if (requirementSpec != null) {
@@ -596,7 +596,7 @@ export function getRelatedUnfulfilledRequirements(
                 optOut: [],
                 arbitraryOptIn: {},
               },
-            }
+            },
           );
           if (fulfillmentStatisticsWithNewCourse.minCountFulfilled > existingMinCountFulfilled) {
             if (subRequirement.checkerWarning == null) {
@@ -618,11 +618,11 @@ export function getRelatedUnfulfilledRequirements(
     (reqA, reqB) =>
       allowCourseDoubleCountingBetweenRequirements(
         userRequirementsMap[reqA],
-        userRequirementsMap[reqB]
-      )
+        userRequirementsMap[reqB],
+      ),
   );
   const automaticallyFulfilledRequirements = relatedRequirements.filter(
-    ({ id }) => !requirementsThatDoNotAllowDoubleCounting.has(id)
+    ({ id }) => !requirementsThatDoNotAllowDoubleCounting.has(id),
   );
 
   return { relatedRequirements, selfCheckRequirements, automaticallyFulfilledRequirements };

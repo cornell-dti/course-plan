@@ -18,7 +18,7 @@ const roboticsMinorRequirements: readonly CollegeOrMajorRequirement[] = [
       'MAE 3780',
       'ECE 3400',
       'CS 4700',
-      'CS 4754'
+      'CS 4754',
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [3],
@@ -42,7 +42,7 @@ const roboticsMinorRequirements: readonly CollegeOrMajorRequirement[] = [
           'ECE 6970',
           'CS 4700',
           'MAE 4180',
-          'MAE 6710'
+          'MAE 6710',
         ),
         perSlotMinCount: [3],
         slotNames: ['Course'],
@@ -57,7 +57,7 @@ const roboticsMinorRequirements: readonly CollegeOrMajorRequirement[] = [
           'CS 4752',
           'MAE 6760',
           'MAE 6770',
-          'MAE 6780'
+          'MAE 6780',
         ),
         perSlotMinCount: [3],
         slotNames: ['Course'],
@@ -71,7 +71,7 @@ const roboticsMinorRequirements: readonly CollegeOrMajorRequirement[] = [
           'MAE 6790',
           'MAE 4180',
           'ECE 4320',
-          'MAE 6760'
+          'MAE 6760',
         ),
         perSlotMinCount: [3],
         slotNames: ['Course'],
@@ -90,7 +90,7 @@ const roboticsMinorRequirements: readonly CollegeOrMajorRequirement[] = [
           'INFO 4420',
           'ECE 5725',
           'DEA 6210',
-          'MAE 6710'
+          'MAE 6710',
         ),
         perSlotMinCount: [3],
         slotNames: ['Course'],

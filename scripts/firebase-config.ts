@@ -15,7 +15,7 @@ export const getDatabase = (serviceAccount: string, databaseURL: string, appName
       credential,
       databaseURL,
     },
-    appName
+    appName,
   );
   return getFirestore(app);
 };

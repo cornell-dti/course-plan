@@ -153,7 +153,7 @@ export default defineComponent({
         } else if (
           req.fulfillment.additionalRequirements != null &&
           Object.values(req.fulfillment.additionalRequirements).some(
-            it => it.safeMinCountFulfilled < it.minCountRequired
+            it => it.safeMinCountFulfilled < it.minCountRequired,
           )
         ) {
           ongoing.push(req);

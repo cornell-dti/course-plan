@@ -16,7 +16,7 @@ const featureFlagCheckers: FeatureFlagCheckers = registerFeatureFlagChecker(
   'RequirementConflicts',
   'RequirementDebugger',
   'ToggleRequirementsBarBtn',
-  'Profile'
+  'Profile',
   /* 'AddYourFeatureFlagNameHere' */
 );
 export default featureFlagCheckers;
@@ -30,7 +30,7 @@ type FeatureFlagCheckers = Record<`is${FeatureFlagName}Enabled`, () => boolean>;
  * @returns a checker function to tell whether the feature flag is enabled.
  */
 function registerFeatureFlagChecker(...flagNames: readonly FeatureFlagName[]): FeatureFlagCheckers {
-  return (Object.fromEntries(
+  return Object.fromEntries(
     flagNames.map(flagName => {
       const localStorageKey = `CP_GK-${flagName}`;
       GateKeeperTogglers[`enable${flagName}`] = () => {
@@ -42,8 +42,8 @@ function registerFeatureFlagChecker(...flagNames: readonly FeatureFlagName[]): F
         window.location.reload();
       };
       return [`is${flagName}Enabled`, () => localStorage.getItem(localStorageKey) === 'true'];
-    })
-  ) as unknown) as FeatureFlagCheckers;
+    }),
+  ) as unknown as FeatureFlagCheckers;
 }
 
 declare global {

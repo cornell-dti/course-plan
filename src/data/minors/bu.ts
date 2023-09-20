@@ -33,7 +33,7 @@ const buMinorRequirements: readonly CollegeOrMajorRequirement[] = [
       'STSCI 2200',
       'STSCI 3080',
       'STSCI 3110',
-      'SOC 3010'
+      'SOC 3010',
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],

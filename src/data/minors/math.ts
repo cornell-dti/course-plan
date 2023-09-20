@@ -14,7 +14,7 @@ const mathMinorRequirements: readonly CollegeOrMajorRequirement[] = [
     source: 'https://math.cornell.edu/minor',
     checker: includesWithSubRequirements(
       ['MATH 2210', 'MATH 2230', 'MATH 2940'],
-      ['MATH 2220', 'MATH 2240', 'MATH 1920']
+      ['MATH 2220', 'MATH 2240', 'MATH 1920'],
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1],
@@ -46,7 +46,7 @@ const mathMinorRequirements: readonly CollegeOrMajorRequirement[] = [
           'MATH 4340',
           'MATH 4370',
           'MATH 4500',
-          'MATH 4560'
+          'MATH 4560',
         ),
         fulfilledBy: 'courses',
         perSlotMinCount: [1],
@@ -65,7 +65,7 @@ const mathMinorRequirements: readonly CollegeOrMajorRequirement[] = [
           'MATH 4220',
           'MATH 4250',
           'MATH 4260',
-          'MATH 4280'
+          'MATH 4280',
         ),
         fulfilledBy: 'courses',
         perSlotMinCount: [1],

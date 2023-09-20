@@ -94,30 +94,27 @@ export default defineComponent({
       this.$emit('close-course-modal');
     },
     getReqsRelatedToCourse(selectedCourse: CornellCourseRosterCourse) {
-      const {
-        relatedRequirements,
-        selfCheckRequirements,
-        automaticallyFulfilledRequirements,
-      } = getRelatedUnfulfilledRequirements(
-        selectedCourse,
-        store.state.groupedRequirementFulfillmentReport,
-        store.state.onboardingData,
-        store.state.toggleableRequirementChoices,
-        store.state.overriddenFulfillmentChoices,
-        store.state.userRequirementsMap
-      );
+      const { relatedRequirements, selfCheckRequirements, automaticallyFulfilledRequirements } =
+        getRelatedUnfulfilledRequirements(
+          selectedCourse,
+          store.state.groupedRequirementFulfillmentReport,
+          store.state.onboardingData,
+          store.state.toggleableRequirementChoices,
+          store.state.overriddenFulfillmentChoices,
+          store.state.userRequirementsMap,
+        );
       const automaticallyFulfilledRequirementIds = new Set(
-        automaticallyFulfilledRequirements.map(({ id }) => id)
+        automaticallyFulfilledRequirements.map(({ id }) => id),
       );
 
       this.automaticallyFulfilledRequirements = automaticallyFulfilledRequirements.map(
-        ({ name }) => name
+        ({ name }) => name,
       );
       this.relatedRequirements = relatedRequirements.filter(
-        req => !automaticallyFulfilledRequirementIds.has(req.id)
+        req => !automaticallyFulfilledRequirementIds.has(req.id),
       );
       this.selfCheckRequirements = selfCheckRequirements.filter(
-        req => !automaticallyFulfilledRequirementIds.has(req.id)
+        req => !automaticallyFulfilledRequirementIds.has(req.id),
       );
       if (this.relatedRequirements.length > 0) {
         this.selectedRequirementID = this.relatedRequirements[0].id;
@@ -140,7 +137,7 @@ export default defineComponent({
           this.selectedRequirementID,
           store.state.groupedRequirementFulfillmentReport,
           store.state.toggleableRequirementChoices,
-          store.state.userRequirementsMap
+          store.state.userRequirementsMap,
         ),
         // Only include the selected requirement from opt-in.
         acknowledgedCheckerWarningOptIn: this.selfCheckRequirements

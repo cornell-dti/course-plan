@@ -17,7 +17,7 @@ const asRequirements: readonly CollegeOrMajorRequirement[] = [
       ['EAS 3420'],
       ['EAS 3520'],
       ['EAS 4470'],
-      ['EAS 4510']
+      ['EAS 4510'],
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1, 1, 1, 1],
@@ -41,7 +41,7 @@ const asRequirements: readonly CollegeOrMajorRequirement[] = [
       'EAS 4800',
       'EAS 4860',
       'EAS 4960',
-      'EAS 4980'
+      'EAS 4980',
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [2],
@@ -56,7 +56,7 @@ const asRequirements: readonly CollegeOrMajorRequirement[] = [
       ['MATH 1110'],
       ['MATH 1120'],
       ['MATH 1920', 'MATH 2130'],
-      ['MATH 2930']
+      ['MATH 2930'],
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1, 1],

@@ -14,7 +14,7 @@ const mpaRequirements: readonly CollegeOrMajorRequirement[] = [
       ['PADM 5210', 'PADM 5470'],
       ['PADM 5220', 'PAM 5130', 'PAM 5170', 'PAM 5400'],
       ['PADM 5310', 'PAM 5690'],
-      ['PADM 5320', 'PADM 5340', 'PADM 5345', 'PAM 5300']
+      ['PADM 5320', 'PADM 5340', 'PADM 5345', 'PAM 5300'],
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1, 1, 1, 1],

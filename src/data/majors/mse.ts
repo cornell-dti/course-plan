@@ -119,7 +119,7 @@ const mseRequirements: readonly CollegeOrMajorRequirement[] = [
       ['MSE 3030'],
       ['MSE 3040'],
       ['MSE 3050'],
-      ['MSE 4020']
+      ['MSE 4020'],
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1, 1, 1, 1],
@@ -219,8 +219,10 @@ const mseRequirements: readonly CollegeOrMajorRequirement[] = [
     source:
       'https://www.mse.cornell.edu/mse/programs/undergraduate-programs/major/major-curriculum/electives',
     checker: [
-      ...applicationElectives.map(categoryCourses => (course: Course): boolean =>
-        categoryCourses?.includes(`${course.subject} ${course.catalogNbr}`) ?? false
+      ...applicationElectives.map(
+        categoryCourses =>
+          (course: Course): boolean =>
+            categoryCourses?.includes(`${course.subject} ${course.catalogNbr}`) ?? false,
       ),
     ],
     fulfilledBy: 'courses',
@@ -294,7 +296,7 @@ const mseRequirements: readonly CollegeOrMajorRequirement[] = [
       'PHYS 6553',
       'STSCI 3080',
       'STSCI 3100',
-      'STSCI 4120'
+      'STSCI 4120',
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],

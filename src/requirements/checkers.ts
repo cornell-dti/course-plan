@@ -211,6 +211,7 @@ export const includesWithSingleRequirement = (
 export const includesWithSubRequirements = (
   ...includes: readonly string[][]
 ): readonly ((course: Course) => boolean)[] =>
-  includes.map(subRequirementInclude => (course: Course) =>
-    courseMatchesCodeOptions(course, subRequirementInclude)
+  includes.map(
+    subRequirementInclude => (course: Course) =>
+      courseMatchesCodeOptions(course, subRequirementInclude),
   );

@@ -19,7 +19,7 @@ const lingRequirements: readonly CollegeOrMajorRequirement[] = [
       ['LING 1101'],
       ['LING 3302'],
       ['LING 3303'],
-      ['LING 3314']
+      ['LING 3314'],
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1, 1],

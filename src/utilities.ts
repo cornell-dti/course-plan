@@ -30,7 +30,7 @@ export const getFirstPlan = ({
  */
 export const sortedSemesters = (
   semesters: readonly FirestoreSemester[],
-  orderByNewest = true
+  orderByNewest = true,
 ): readonly FirestoreSemester[] =>
   semesters.slice().sort((a, b) => {
     // sort in increasing order iff orderByNewest is false, increasing otherwise
@@ -123,14 +123,13 @@ function getAllSubjects(): ReadonlySet<string> {
 }
 
 export function allocateAllSubjectColor(
-  subjectColors: Record<string, string>
+  subjectColors: Record<string, string>,
 ): Record<string, string> {
   const subjectsColorsCopy = { ...subjectColors };
   getAllSubjects().forEach(subject => {
     if (subjectsColorsCopy[subject]) return;
-    subjectsColorsCopy[subject] = coursesColorSet[
-      Math.floor(Math.random() * coursesColorSet.length)
-    ].hex.substring(1);
+    subjectsColorsCopy[subject] =
+      coursesColorSet[Math.floor(Math.random() * coursesColorSet.length)].hex.substring(1);
   });
   return subjectsColorsCopy;
 }
@@ -138,7 +137,7 @@ export function allocateAllSubjectColor(
 export function updateSubjectColor(
   subjectColors: Record<string, string>,
   color: string,
-  code: string
+  code: string,
 ): Record<string, string> {
   const subjectsColorsCopy = { ...subjectColors };
   getAllSubjects().forEach(subject => {
@@ -202,13 +201,13 @@ export function getReqColor(groupName: string, onboardingData: AppOnboardingData
 
 // Determines whether the given element in a FirestoreSemester list is a Placeholder or not
 export const isPlaceholderCourse = (
-  element: FirestoreSemesterPlaceholder | FirestoreSemesterCourse | CourseTaken
+  element: FirestoreSemesterPlaceholder | FirestoreSemesterCourse | CourseTaken,
 ): element is FirestoreSemesterPlaceholder =>
   !!(element as FirestoreSemesterPlaceholder).startingSemester;
 
 // Determines whether the given element used in CourseCaution is CourseTaken
 export const isCourseTaken = (
-  element: FirestoreSemesterPlaceholder | FirestoreSemesterCourse | CourseTaken
+  element: FirestoreSemesterPlaceholder | FirestoreSemesterCourse | CourseTaken,
 ): element is CourseTaken => !!(element as CourseTaken).uniqueId;
 
 /**

@@ -7,7 +7,7 @@ import { cornellCourseRosterCourseToFirebaseSemesterCourse } from '../user-data-
 import incrementUniqueID from './user-unique-incrementer';
 
 export const cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData = (
-  course: CornellCourseRosterCourse
+  course: CornellCourseRosterCourse,
 ): FirestoreSemesterCourse =>
   cornellCourseRosterCourseToFirebaseSemesterCourse(course, store, incrementUniqueID);
 

@@ -26,7 +26,7 @@ const eceMinorRequirements: readonly CollegeOrMajorRequirement[] = [
       'ECE 3140',
       'ECE 3100',
       'ECE 3150',
-      'ECE 3250'
+      'ECE 3250',
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [2],

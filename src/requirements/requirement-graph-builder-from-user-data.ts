@@ -14,7 +14,7 @@ export default function buildRequirementFulfillmentGraphFromUserData(
   coursesTaken: readonly CourseTaken[],
   onboardingData: AppOnboardingData,
   toggleableRequirementChoices: AppToggleableRequirementChoices,
-  overriddenFulfillmentChoices: FirestoreOverriddenFulfillmentChoices
+  overriddenFulfillmentChoices: FirestoreOverriddenFulfillmentChoices,
 ): {
   readonly userRequirements: readonly RequirementWithIDSourceType[];
   readonly userRequirementsMap: Readonly<Record<string, RequirementWithIDSourceType>>;
@@ -42,7 +42,7 @@ export default function buildRequirementFulfillmentGraphFromUserData(
           const courses = requirement.fulfillmentOptions[optionName].courses.flat();
           return [requirement.id, courses] as const;
         })
-        .filter((it): it is [string, number[]] => it != null)
+        .filter((it): it is [string, number[]] => it != null),
     ),
     userChoiceOnRequirementOverrides: Object.fromEntries(
       coursesTaken.flatMap(course => {
@@ -57,13 +57,13 @@ export default function buildRequirementFulfillmentGraphFromUserData(
                 new Set([
                   ...Object.keys(choice.arbitraryOptIn),
                   ...choice.acknowledgedCheckerWarningOptIn,
-                ])
+                ]),
               ),
               optOut: choice.optOut,
             },
           ],
         ];
-      })
+      }),
     ),
     getAllCoursesThatCanPotentiallySatisfyRequirement: requirementID => {
       const requirement = userRequirementsMap[requirementID];
@@ -71,7 +71,7 @@ export default function buildRequirementFulfillmentGraphFromUserData(
       // All edges will be explictly opt-in only from stage 3.
       const spec = getMatchedRequirementFulfillmentSpecification(
         requirement,
-        toggleableRequirementChoices
+        toggleableRequirementChoices,
       );
       if (spec == null || spec.hasRequirementCheckerWarning) {
         return [];
@@ -80,20 +80,18 @@ export default function buildRequirementFulfillmentGraphFromUserData(
     },
   };
   const dangerousRequirementFulfillmentGraph = buildRequirementFulfillmentGraph(
-    requirementGraphBuilderParameters
+    requirementGraphBuilderParameters,
   );
   const safeRequirementFulfillmentGraph = dangerousRequirementFulfillmentGraph.copy();
-  const {
-    doubleCountedCourseUniqueIDSet,
-    courseToRequirementsInConstraintViolations,
-  } = removeIllegalEdgesFromRequirementFulfillmentGraph(
-    safeRequirementFulfillmentGraph,
-    (reqA, reqB) =>
-      allowCourseDoubleCountingBetweenRequirements(
-        userRequirementsMap[reqA],
-        userRequirementsMap[reqB]
-      )
-  );
+  const { doubleCountedCourseUniqueIDSet, courseToRequirementsInConstraintViolations } =
+    removeIllegalEdgesFromRequirementFulfillmentGraph(
+      safeRequirementFulfillmentGraph,
+      (reqA, reqB) =>
+        allowCourseDoubleCountingBetweenRequirements(
+          userRequirementsMap[reqA],
+          userRequirementsMap[reqB],
+        ),
+    );
 
   return {
     userRequirements,

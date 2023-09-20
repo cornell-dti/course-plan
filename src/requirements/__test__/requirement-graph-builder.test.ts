@@ -11,7 +11,7 @@ const MATH4710 = { uniqueId: 4710, courseId: 3 };
 const requirements = ['CS3410/CS3420', 'Probability', 'Elective'];
 
 const getAllCoursesThatCanPotentiallySatisfyRequirement = (
-  requirement: string
+  requirement: string,
 ): readonly number[] => {
   switch (requirement) {
     case 'CS3410/CS3420':
@@ -152,9 +152,9 @@ it('removeIllegalEdgesFromRequirementFulfillmentGraph tests', () => {
     Array.from(
       removeIllegalEdgesFromRequirementFulfillmentGraph(
         graph,
-        (rA, rB) => doubleCountable.includes(rA) || doubleCountable.includes(rB)
-      ).doubleCountedCourseUniqueIDSet
-    )
+        (rA, rB) => doubleCountable.includes(rA) || doubleCountable.includes(rB),
+      ).doubleCountedCourseUniqueIDSet,
+    ),
   ).toEqual([1]);
 
   // Illegal double counting edges R2-1, R3-1 removed

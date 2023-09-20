@@ -15,7 +15,7 @@ const epRequirements: readonly CollegeOrMajorRequirement[] = [
       ['AEP 3550'],
       ['AEP 3610'],
       ['AEP 4230'],
-      ['AEP 3560', 'AEP 3620', 'AEP 4340']
+      ['AEP 3560', 'AEP 3620', 'AEP 4340'],
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1, 1, 1, 1, 2],
@@ -72,7 +72,7 @@ const epRequirements: readonly CollegeOrMajorRequirement[] = [
           'The remaining two credits can be satisfied by taking PHYS 4400 for two credits, provided that the experiments in PHYS 4400 do not overlap with those in AEP 3300/PHYS 3330 or ASTRO 4410 or PHYS 3310.',
         checker: includesWithSubRequirements(
           ['AEP 3300', 'ASTRO 4410', 'PHYS 3310'],
-          ['PHYS 4400']
+          ['PHYS 4400'],
         ),
         counting: 'courses',
         perSlotMinCount: [1, 1],

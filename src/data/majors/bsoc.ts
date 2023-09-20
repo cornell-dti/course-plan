@@ -18,7 +18,7 @@ const biologyAndSocietyRequirements: readonly CollegeOrMajorRequirement[] = [
       ['BIOG 1440', 'BIOG 1445'],
       ['BIOEE 1610', 'BIOSM 1610'],
       ['BIOMG 1350'],
-      ['BIOEE 1780', 'BIOSM 1780']
+      ['BIOEE 1780', 'BIOSM 1780'],
     ),
     slotNames: [
       'BioG 1440 or BioG 1445',
@@ -39,7 +39,7 @@ const biologyAndSocietyRequirements: readonly CollegeOrMajorRequirement[] = [
       'MATH 1920',
       'MATH 2130',
       'MATH 2220',
-      'MATH 2240'
+      'MATH 2240',
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
@@ -56,7 +56,7 @@ const biologyAndSocietyRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: includesWithSubRequirements(
       ['CHEM 1560'],
       ['CHEM 2070', 'CHEM 2080'],
-      ['CHEM 2150', 'CHEM 2160']
+      ['CHEM 2150', 'CHEM 2160'],
     ),
     slotNames: ['CHEM 1560', 'CHEM 2070 and CHEM 2080', 'CHEM 2150 and CHEM 2160'],
   },
@@ -101,7 +101,7 @@ const biologyAndSocietyRequirements: readonly CollegeOrMajorRequirement[] = [
       ['BSOC 3311', 'PAM 2350', 'PAM 3780', 'STS 3241', 'STS 3911'],
       ['COMM 3210', 'STS 2851', 'STS 3020', 'STS 4661'],
       ['COML 2035', 'ENGL 2780'],
-      ['ANTHR 2201', 'ANTHR 2245', 'ANTHR 2420']
+      ['ANTHR 2201', 'ANTHR 2245', 'ANTHR 2420'],
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1, 1, 1, 1, 1],
@@ -144,7 +144,7 @@ const biologyAndSocietyRequirements: readonly CollegeOrMajorRequirement[] = [
       ],
       ['BIOMG 2800', 'NTRES 2830', 'PLBRG 2250'],
       ['BIONB 2220'],
-      ['NS 1150', 'NS 1220']
+      ['NS 1150', 'NS 1220'],
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1, 1, 1, 1, 1],
@@ -179,7 +179,7 @@ const biologyAndSocietyRequirements: readonly CollegeOrMajorRequirement[] = [
       'PAM 2100',
       'PSYCH 2500',
       'SOC 3010',
-      'STSCI 2150'
+      'STSCI 2150',
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
@@ -194,7 +194,7 @@ const biologyAndSocietyRequirements: readonly CollegeOrMajorRequirement[] = [
       'BSOC 2468',
       'BSOC 3011',
       'BSOC 2821',
-      'NTRES 2320'
+      'NTRES 2320',
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
@@ -298,7 +298,7 @@ const biologyAndSocietyRequirements: readonly CollegeOrMajorRequirement[] = [
         'STS 4041',
         'STS 4661',
         'STS 4751',
-      ]
+      ],
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [2, 2, 1],

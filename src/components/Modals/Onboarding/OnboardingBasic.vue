@@ -215,7 +215,7 @@ export default defineComponent({
       majorAcronyms: readonly string[],
       minorAcronyms: readonly string[],
       gradAcronym: string,
-      name: FirestoreUserName
+      name: FirestoreUserName,
     ) {
       return (
         typeof gradYear === 'string' &&
@@ -306,7 +306,7 @@ export default defineComponent({
     },
     gradPrograms(): Readonly<Record<string, string>> {
       return Object.fromEntries(
-        Object.entries(reqsData.grad).map(([key, { name }]) => [key, name])
+        Object.entries(reqsData.grad).map(([key, { name }]) => [key, name]),
       );
     },
     suggestedEntranceSem(): Readonly<number> {
@@ -354,7 +354,7 @@ export default defineComponent({
           firstName: this.firstName,
           middleName: this.middleName,
           lastName: this.lastName,
-        }
+        },
       );
     },
     // Clear a major if a new college is selected and the major is not in it
@@ -405,13 +405,13 @@ export default defineComponent({
     },
     selectMajor(acronym: string, i: number) {
       this.majorAcronyms = this.majorAcronyms.map((dropdown, index) =>
-        index === i ? acronym : dropdown
+        index === i ? acronym : dropdown,
       );
       this.updateBasic();
     },
     selectMinor(acronym: string, i: number) {
       this.minorAcronyms = this.minorAcronyms.map((dropdown, index) =>
-        index === i ? acronym : dropdown
+        index === i ? acronym : dropdown,
       );
       this.updateBasic();
     },

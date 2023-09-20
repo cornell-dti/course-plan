@@ -49,7 +49,7 @@ const eceRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: includesWithSubRequirements(
       ['ECE 3030', 'ECE 3150'],
       ['ECE 3100', 'ECE 3250'],
-      ['ECE 3140']
+      ['ECE 3140'],
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1],

@@ -2,7 +2,7 @@ import { semesterEquals, getActiveSemesters } from '../user-semesters';
 
 const semestersEqual = (
   expected: readonly FirestoreSemester[],
-  actual: readonly FirestoreSemester[]
+  actual: readonly FirestoreSemester[],
 ) =>
   expected.length === actual.length &&
   [...actual.keys()].every(i => semesterEquals(actual[i], expected[i].year, expected[i].season));

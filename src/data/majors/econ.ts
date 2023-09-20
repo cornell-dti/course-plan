@@ -27,7 +27,7 @@ const economicsRequirements: readonly CollegeOrMajorRequirement[] = [
       ['ECON 3030'],
       ['ECON 3040'],
       ['ECON 3110', 'ECON 3130'],
-      ['ECON 3120', 'ECON 3140']
+      ['ECON 3120', 'ECON 3140'],
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1, 1],
@@ -67,7 +67,7 @@ const economicsRequirements: readonly CollegeOrMajorRequirement[] = [
       'ECON 3***',
       'ECON 4***',
       'ECON 5***',
-      'ECON 6***'
+      'ECON 6***',
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [12],

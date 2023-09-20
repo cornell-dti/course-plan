@@ -55,13 +55,13 @@ export default defineComponent({
         toggleRequirementChoice(
           this.selectedCourse.uniqueID,
           store.state.userRequirementsMap[reqName].id,
-          'acknowledgedCheckerWarningOptIn'
+          'acknowledgedCheckerWarningOptIn',
         );
       } else {
         toggleRequirementChoice(
           this.selectedCourse.uniqueID,
           store.state.userRequirementsMap[reqName].id,
-          'optOut'
+          'optOut',
         );
       }
     },
@@ -78,7 +78,7 @@ export default defineComponent({
     getPillColor(reqId: string) {
       const color = getReqColor(
         store.state.userRequirementsMap[reqId].sourceType,
-        store.state.onboardingData
+        store.state.onboardingData,
       );
       return `#${color}`;
     },

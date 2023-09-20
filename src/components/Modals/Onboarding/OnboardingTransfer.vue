@@ -140,7 +140,7 @@ export default defineComponent({
     },
     selectSubject(subject: string, i: number, examType: TransferExamType) {
       this.exams[examType] = this.exams[examType].map((exam, index) =>
-        index === i ? { ...exam, subject } : exam
+        index === i ? { ...exam, subject } : exam,
       );
       this.updateTransfer();
     },
@@ -159,7 +159,7 @@ export default defineComponent({
     },
     selectScore(score: string | number, i: number, examType: TransferExamType) {
       this.exams[examType] = this.exams[examType].map((exam, index) =>
-        index === i ? { ...exam, score } : exam
+        index === i ? { ...exam, score } : exam,
       );
       this.updateTransfer();
     },
@@ -200,7 +200,7 @@ export default defineComponent({
       this.$emit(
         'updateTransfer',
         [...this.exams.AP, ...this.exams.IB, ...this.exams.CASE],
-        this.tookSwimTest
+        this.tookSwimTest,
       );
     },
     onCourseSelection(id: number, course: CornellCourseRosterCourse) {

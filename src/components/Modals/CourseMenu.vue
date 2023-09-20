@@ -110,7 +110,7 @@ import { coursesColorSet } from '@/assets/constants/colors';
 export default defineComponent({
   props: {
     getCreditRange: {
-      type: (Array as PropType<readonly number[]>) as PropType<readonly [number, number]>,
+      type: Array as PropType<readonly number[]> as PropType<readonly [number, number]>,
       required: true,
     },
     semesterIndex: { type: Number, required: true },

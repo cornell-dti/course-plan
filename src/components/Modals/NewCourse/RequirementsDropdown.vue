@@ -105,7 +105,7 @@ export default defineComponent({
     selected(): string {
       if (this.selectedID === '') return '';
       const chosenRequirement = [...this.relatedRequirements, ...this.potentialRequirements].filter(
-        it => it.id === this.selectedID
+        it => it.id === this.selectedID,
       );
       return chosenRequirement[0].name;
     },

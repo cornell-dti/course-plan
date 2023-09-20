@@ -14,4 +14,4 @@ import decoratedRequirementJson from './decorated-requirements.json';
 //    - To help webpack to avoid bundling the giant `filtered-all-courses.json`.
 
 /** The generated requirement json that contains all pre-computed courses that satisfy each requirement. */
-export default (decoratedRequirementJson as unknown) as DecoratedRequirementsJson;
+export default decoratedRequirementJson as unknown as DecoratedRequirementsJson;

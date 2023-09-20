@@ -106,7 +106,7 @@ const psychRequirements: readonly CollegeOrMajorRequirement[] = [
         'PSYCH 4840',
         'PSYCH 4850',
         'PSYCH 4910',
-      ]
+      ],
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1],

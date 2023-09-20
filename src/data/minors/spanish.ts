@@ -26,7 +26,7 @@ const spanishMinorRequirements: readonly CollegeOrMajorRequirement[] = [
       'SPAN 2230',
       'SPAN 2235',
       'SPAN 2240',
-      'PORT 2800'
+      'PORT 2800',
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],

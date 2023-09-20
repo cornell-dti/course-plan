@@ -42,7 +42,7 @@ type RequirementGraphForDisplay = {
 
 function computeRequirementGraphForDisplay(
   graph: RequirementFulfillmentGraph<string, CourseTaken>,
-  onlyNodeToKeepEdge: string | number | null
+  onlyNodeToKeepEdge: string | number | null,
 ): RequirementGraphForDisplay {
   const requirements = graph.getAllRequirements();
   const courses = graph.getAllCourses();
@@ -92,14 +92,14 @@ export default defineComponent({
     itemSize(): number {
       return Math.max(
         this.requirementGraphForDisplay.requirements.length,
-        this.requirementGraphForDisplay.courses.length
+        this.requirementGraphForDisplay.courses.length,
       );
     },
     lines(): readonly string[] {
       return this.requirementGraphForDisplay.edges.map(
         ({ requirementIndex, courseIndex }) =>
           // See https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths
-          `M 300 ${requirementIndex * 48 + 32} L 600 ${courseIndex * 48 + 32}`
+          `M 300 ${requirementIndex * 48 + 32} L 600 ${courseIndex * 48 + 32}`,
       );
     },
   },

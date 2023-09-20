@@ -25,7 +25,7 @@ const createCourseCreditRange = (course: CornellCourseRosterCourse): readonly [n
 export const cornellCourseRosterCourseToFirebaseSemesterCourseWithCustomIDAndColor = (
   course: CornellCourseRosterCourse,
   uniqueID: number,
-  color: string
+  color: string,
 ): FirestoreSemesterCourse => {
   const { subject, catalogNbr: number, titleLong: name, roster: lastRoster } = course;
 
@@ -56,16 +56,16 @@ export const cornellCourseRosterCourseToFirebaseSemesterCourseWithCustomIDAndCol
 export const cornellCourseRosterCourseToFirebaseSemesterCourse = (
   course: CornellCourseRosterCourse,
   store: TypedVuexStore,
-  incrementUniqueID: () => number
+  incrementUniqueID: () => number,
 ): FirestoreSemesterCourse =>
   cornellCourseRosterCourseToFirebaseSemesterCourseWithCustomIDAndColor(
     course,
     incrementUniqueID(),
-    store.state.subjectColors[course.subject]
+    store.state.subjectColors[course.subject],
   );
 
 export const cornellCourseRosterCourseDetailedInformationToPartialBottomCourseInformation = (
-  course: CornellCourseRosterCourseFullDetail
+  course: CornellCourseRosterCourseFullDetail,
 ): Pick<
   AppBottomBarCourse,
   'description' | 'prereqs' | 'enrollment' | 'lectureTimes' | 'instructors' | 'distributions'
@@ -100,7 +100,7 @@ export const cornellCourseRosterCourseDetailedInformationToPartialBottomCourseIn
   const enrollment = Object.keys(enrollmentMap);
   const lectureTimes = Object.keys(lectureTimesMap);
   const instructors = Object.keys(instructorsMap).map(
-    netid => `${instructorsMap[netid]} (${netid})`
+    netid => `${instructorsMap[netid]} (${netid})`,
   );
 
   // Distribution of course (e.g. MQR-AS)
@@ -117,7 +117,7 @@ export const cornellCourseRosterCourseDetailedInformationToPartialBottomCourseIn
  * This function transforms a roster ID to a season and year. EX: SP23 -> Spring 2023
  * */
 export const rosterIdentifierToSeasonAndYear = (
-  roster: string
+  roster: string,
 ): { season: FirestoreSemesterSeason; year: number } => {
   const semester = roster.slice(0, 2);
   const year = roster.slice(2, 4);
@@ -139,7 +139,7 @@ export const rosterIdentifierToSeasonAndYear = (
  * */
 export const seasonAndYearToRosterIdentifier = (
   season: FirestoreSemesterSeason,
-  year: number
+  year: number,
 ): string => {
   const seasonToSemesterMap = {
     Fall: 'FA',
@@ -154,7 +154,7 @@ export const seasonAndYearToRosterIdentifier = (
 export const firestoreSemesterCourseToBottomBarCourse = (
   { code, name, credits, color, lastRoster, semesters, uniqueID }: FirestoreSemesterCourse,
   season: FirestoreSemesterSeason,
-  year: number
+  year: number,
 ): AppBottomBarCourse => ({
   code,
   name,

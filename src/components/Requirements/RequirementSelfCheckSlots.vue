@@ -39,9 +39,10 @@ export default defineComponent({
     fulfilledSelfCheckCourses(): readonly CourseTaken[] {
       // selectedCourses are courses that fulfill the requirement based on user-choice
       // they are taken from requirement graph
-      const selectedCourses = store.state.dangerousRequirementFulfillmentGraph.getConnectedCoursesFromRequirement(
-        this.requirementFulfillment.requirement.id
-      );
+      const selectedCourses =
+        store.state.dangerousRequirementFulfillmentGraph.getConnectedCoursesFromRequirement(
+          this.requirementFulfillment.requirement.id,
+        );
 
       // fulfillableCourses are the courses that can fulfill this requirement
       // this is necessary to compute because ap/ib data is not stored in selectable requirement choices collection
@@ -50,12 +51,12 @@ export default defineComponent({
         this.requirementFulfillment.requirement,
         {
           [this.requirementFulfillment.requirement.id]: this.toggleableRequirementChoice,
-        }
+        },
       );
       if (requirementFulfillmentSpec !== null) {
         if (requirementFulfillmentSpec.fulfilledBy === 'credits') {
           this.requirementFulfillment.fulfillment.dangerousCourses[0].forEach(completedCourse =>
-            fulfillableCourses.push(completedCourse)
+            fulfillableCourses.push(completedCourse),
           );
         } else {
           this.requirementFulfillment.fulfillment.dangerousCourses.forEach(
@@ -66,7 +67,7 @@ export default defineComponent({
                   fulfillableCourses.push(requirementFulfillmentCourseSlot[j]);
                 }
               }
-            }
+            },
           );
         }
       }

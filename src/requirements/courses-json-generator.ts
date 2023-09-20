@@ -74,11 +74,11 @@ const courseFieldFilter = ({
 /** @returns a list of all course objects in a semester for a given subject. */
 const getCoursesInSemesterAndSubject = async <T extends keyof Course>(
   semester: string,
-  subject: string
+  subject: string,
 ): Promise<readonly Pick<Course, T>[]> => {
   try {
     const response = await fetch(
-      `${PREFIX}/search/classes.json?roster=${semester}&subject=${subject}`
+      `${PREFIX}/search/classes.json?roster=${semester}&subject=${subject}`,
     );
     const json = await response.json();
     return json.data.classes.map(courseFieldFilter);
@@ -91,7 +91,7 @@ const getCoursesInSemesterAndSubject = async <T extends keyof Course>(
 const getAllCoursesInSemester = async (
   semester: string,
   coolingTimeMs = 50,
-  doPrintDebuggingInfo = false
+  doPrintDebuggingInfo = false,
 ): Promise<readonly Course[]> => {
   const courses: Course[] = [];
   const subjects = await getSubjects(semester);
@@ -144,12 +144,12 @@ type AllCourses = { [semester: string]: readonly Course[] };
 /** @returns a mapping from semester to all courses in that semester. */
 const generateSemesterJSONs = async (
   coolingTimeMs = 50,
-  doPrintDebuggingInfo = true
+  doPrintDebuggingInfo = true,
 ): Promise<AllCourses> => {
   const startTime = new Date().getTime();
   // Filter away all semester data before 2017
   const semesters = (await getSemesters()).filter(
-    semester => parseInt(semester.substring(2), 10) >= 17
+    semester => parseInt(semester.substring(2), 10) >= 17,
   );
   writeFileSync('src/assets/courses/rosters.json', `${JSON.stringify(semesters)}\n`);
   if (doPrintDebuggingInfo) {
@@ -161,7 +161,7 @@ const generateSemesterJSONs = async (
     const semesterCourses = await getAllCoursesInSemester(
       semester,
       coolingTimeMs,
-      doPrintDebuggingInfo
+      doPrintDebuggingInfo,
     );
     courses[semester] = semesterCourses;
     semesterCount += 1;
@@ -189,7 +189,7 @@ type CourseCodeToDataAndOfferedMap = Map<string, readonly [string, Course]>;
  * ```
  */
 const getCoursesWithLastOfferingData = (
-  filteredAllCourses: AllCourses
+  filteredAllCourses: AllCourses,
 ): CourseCodeToDataAndOfferedMap => {
   const courseCodeToDataAndOfferedMap = new Map<string, readonly [string, Course]>();
 
@@ -226,7 +226,7 @@ const getFullCourseJson = (courseCodeToDataAndOfferedMap: CourseCodeToDataAndOff
     const existingArray: (Course & { roster: string })[] = json[course.crseId] || [];
     existingArray.push({ ...course, roster });
     json[course.crseId] = existingArray.sort((a, b) =>
-      `${a.subject} ${a.catalogNbr}`.localeCompare(`${b.subject} ${b.catalogNbr}`)
+      `${a.subject} ${a.catalogNbr}`.localeCompare(`${b.subject} ${b.catalogNbr}`),
     );
   });
 
@@ -240,7 +240,7 @@ generateSemesterJSONs()
     // The typed version is provided at src/assets/courses/typed-full-courses.ts
     writeFileSync(
       'src/assets/courses/full-courses.json',
-      JSON.stringify(getFullCourseJson(courseCodeToDataAndOfferedMap), undefined, 2)
+      JSON.stringify(getFullCourseJson(courseCodeToDataAndOfferedMap), undefined, 2),
     );
 
     console.log('All course JSONs generated.');

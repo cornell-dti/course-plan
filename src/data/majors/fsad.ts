@@ -96,7 +96,7 @@ const fashionDesignRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: [
       (course: Course): boolean =>
         fashionDesignNaturalScienceRequirements.some(
-          distribution => course.catalogDistr?.includes(distribution) ?? false
+          distribution => course.catalogDistr?.includes(distribution) ?? false,
         ),
     ],
     fulfilledBy: 'credits',
@@ -164,7 +164,7 @@ const fashionDesignRequirements: readonly CollegeOrMajorRequirement[] = [
       ['FSAD 2660'],
       ['FSAD 3770'],
       ['FSAD 4700'],
-      ['FSAD 4770']
+      ['FSAD 4770'],
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -225,7 +225,7 @@ const fashionDesignRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: [
       (course: Course): boolean =>
         fashionDesignAdditionalRequirements.some(
-          distribution => course.catalogDistr?.includes(distribution) ?? false
+          distribution => course.catalogDistr?.includes(distribution) ?? false,
         ) || courseIsForeignLang(course),
     ],
     fulfilledBy: 'credits',

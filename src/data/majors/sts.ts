@@ -84,7 +84,7 @@ const stsRequirements: readonly CollegeOrMajorRequirement[] = [
         stsScienceRequirement.some(
           distribution =>
             ((course.catalogDistr?.includes(distribution) ?? false) || course.acadGroup === 'EN') &&
-            course.enrollGroups.some(group => group.unitsMinimum >= 3)
+            course.enrollGroups.some(group => group.unitsMinimum >= 3),
         ),
     ],
     fulfilledBy: 'courses',

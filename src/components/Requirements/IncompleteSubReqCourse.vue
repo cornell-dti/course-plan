@@ -104,7 +104,7 @@ export default defineComponent({
       if (!this.scrollable) event.preventDefault();
     },
     cloneCourse(
-      courseWithDummyUniqueID: AppFirestoreSemesterCourseWithRequirementID
+      courseWithDummyUniqueID: AppFirestoreSemesterCourseWithRequirementID,
     ): AppFirestoreSemesterCourseWithRequirementID {
       return { ...courseWithDummyUniqueID, uniqueID: incrementUniqueID() };
     },

@@ -45,7 +45,7 @@ firebase.initializeApp(fbConfig);
 
 Cypress.Commands.add(
   'clickOutside',
-  () => cy.get('body').click(0, 0) // clicks at (0, 0)
+  () => cy.get('body').click(0, 0), // clicks at (0, 0)
 );
 
 // attach custom firebase commands to cypress from the cypress-firebase package

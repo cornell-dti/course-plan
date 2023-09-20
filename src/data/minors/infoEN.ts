@@ -41,7 +41,7 @@ const infoENMinorRequirements: readonly CollegeOrMajorRequirement[] = [
             'INFO 3450',
             'INFO 4240',
             'INFO 4400',
-          ]
+          ],
         ),
         perSlotMinCount: [1, 3],
         slotNames: ['INFO 2450', 'Elective'],
@@ -84,7 +84,7 @@ const infoENMinorRequirements: readonly CollegeOrMajorRequirement[] = [
             'COMM 4860',
             'GOVT 2169',
             'SOC 3580',
-          ]
+          ],
         ),
         perSlotMinCount: [1, 3],
         slotNames: ['INFO 2950', 'Elective'],
@@ -120,7 +120,7 @@ const infoENMinorRequirements: readonly CollegeOrMajorRequirement[] = [
             'COML 3115',
             'ENGL 3741',
             'HIST 2293',
-          ]
+          ],
         ),
         perSlotMinCount: [1, 3],
         slotNames: ['INFO 3561', 'Elective'],
@@ -157,7 +157,7 @@ const infoENMinorRequirements: readonly CollegeOrMajorRequirement[] = [
             'INFO 4120',
             'INFO 4130',
             'INFO 4300',
-          ]
+          ],
         ),
         perSlotMinCount: [1, 3],
         slotNames: ['INFO 1200/1260', 'Elective'],
@@ -189,7 +189,7 @@ const infoENMinorRequirements: readonly CollegeOrMajorRequirement[] = [
             'INFO 4430',
             'INFO 4940',
             'CS 4752',
-          ]
+          ],
         ),
         perSlotMinCount: [1, 3],
         slotNames: ['INFO 4120/4320', 'Elective'],
@@ -224,7 +224,7 @@ const infoENMinorRequirements: readonly CollegeOrMajorRequirement[] = [
             'INFO 4250',
             'INFO 4940',
             'STS 3440',
-          ]
+          ],
         ),
         perSlotMinCount: [1, 3],
         slotNames: ['INFO 2040', 'Elective'],
@@ -258,7 +258,7 @@ const infoENMinorRequirements: readonly CollegeOrMajorRequirement[] = [
             'INFO 4320',
             'INFO 4340',
             'CS 5150',
-          ]
+          ],
         ),
         perSlotMinCount: [1, 3],
         slotNames: ['INFO 2450', 'Elective'],

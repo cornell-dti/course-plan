@@ -181,7 +181,7 @@ it('Add a course with the new add modal (CS 1110)', () => {
 
   // confirm that the results of the add modal are expected
   cy.get('[data-cyId=newCourse-selectedCourse]').contains(
-    'CS 1110: Introduction to Computing Using Python'
+    'CS 1110: Introduction to Computing Using Python',
   );
   cy.get('[data-cyId=newCourse-requirements]').contains('Introductory Programming');
 

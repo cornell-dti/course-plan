@@ -19,7 +19,7 @@ const setAdd = <T>(set: Set<T>, value: T) => {
   } else if (
     Array.isArray(value) &&
     ![...set].some(
-      nestedList => Array.isArray(nestedList) && setEquals(new Set(nestedList), new Set(value))
+      nestedList => Array.isArray(nestedList) && setEquals(new Set(nestedList), new Set(value)),
     )
   ) {
     set.add(value);
@@ -31,7 +31,7 @@ const setAdd = <T>(set: Set<T>, value: T) => {
 export const getConstraintViolationsForSingleCourse = <Requirement extends string>(
   course: CourseWithUniqueId,
   requirements: readonly Requirement[],
-  requirementConstraintHolds: (requirementA: Requirement, requirementB: Requirement) => boolean
+  requirementConstraintHolds: (requirementA: Requirement, requirementB: Requirement) => boolean,
 ): RequirementFulfillmentGraphConstraintViolations<Requirement> => {
   const constraintViolationsGraph = new RequirementFulfillmentGraph<
     Requirement,
@@ -45,13 +45,13 @@ export const getConstraintViolationsForSingleCourse = <Requirement extends strin
       requirements.filter(
         otherRequirement =>
           requirement !== otherRequirement &&
-          !requirementConstraintHolds(requirement, otherRequirement)
-      )
+          !requirementConstraintHolds(requirement, otherRequirement),
+      ),
     );
     if (constraintViolatingRequirementsForCurrentRequirement.size > 0) {
       constraintViolatingRequirements.set(
         requirement,
-        constraintViolatingRequirementsForCurrentRequirement
+        constraintViolatingRequirementsForCurrentRequirement,
       );
       constraintViolationsGraph.addRequirementNode(requirement);
       constraintViolationsGraph.addEdge(requirement, course);
@@ -64,14 +64,14 @@ export const getConstraintViolationsForSingleCourse = <Requirement extends strin
     setAdd(
       courseToRequirementsInConstraintViolationsForSingleCourse,
       // use the original requirements list to maintain order
-      requirements.filter(requirement => requirement === k || v.has(requirement))
+      requirements.filter(requirement => requirement === k || v.has(requirement)),
     );
   });
   const courseToRequirementsInConstraintViolations = new Map<string | number, Set<Requirement[]>>();
   if (courseToRequirementsInConstraintViolationsForSingleCourse.size > 0) {
     courseToRequirementsInConstraintViolations.set(
       course.uniqueId,
-      courseToRequirementsInConstraintViolationsForSingleCourse
+      courseToRequirementsInConstraintViolationsForSingleCourse,
     );
   }
   return {
@@ -84,7 +84,7 @@ export const getConstraintViolationsForSingleCourse = <Requirement extends strin
 
 export const getConstraintViolations = <Requirement extends string>(
   graph: RequirementFulfillmentGraph<Requirement, CourseWithUniqueId>,
-  requirementConstraintHolds: (requirementA: Requirement, requirementB: Requirement) => boolean
+  requirementConstraintHolds: (requirementA: Requirement, requirementB: Requirement) => boolean,
 ): RequirementFulfillmentGraphConstraintViolations<Requirement> => {
   const constraintViolationsGraph = new RequirementFulfillmentGraph<
     Requirement,
@@ -96,23 +96,25 @@ export const getConstraintViolations = <Requirement extends string>(
   graph.getAllCourses().forEach(course => {
     const {
       constraintViolationsGraph: constraintViolationsGraphForSingleCourse,
-      courseToRequirementsInConstraintViolations: courseToRequirementsInConstraintViolationsForSingleCourse,
+      courseToRequirementsInConstraintViolations:
+        courseToRequirementsInConstraintViolationsForSingleCourse,
       doubleCountedCourseUniqueIDSet: doubleCountedCourseUniqueIDSetForSingleCourse,
-      requirementsThatDoNotAllowDoubleCounting: requirementsThatDoNotAllowDoubleCountingForSingleCourse,
+      requirementsThatDoNotAllowDoubleCounting:
+        requirementsThatDoNotAllowDoubleCountingForSingleCourse,
     } = getConstraintViolationsForSingleCourse(
       course,
       graph.getConnectedRequirementsFromCourse(course),
-      requirementConstraintHolds
+      requirementConstraintHolds,
     );
     constraintViolationsGraph.addGraph(constraintViolationsGraphForSingleCourse);
     courseToRequirementsInConstraintViolationsForSingleCourse.forEach((v, k) =>
-      courseToRequirementsInConstraintViolations.set(k, v)
+      courseToRequirementsInConstraintViolations.set(k, v),
     );
     doubleCountedCourseUniqueIDSetForSingleCourse.forEach(id =>
-      doubleCountedCourseUniqueIDSet.add(id)
+      doubleCountedCourseUniqueIDSet.add(id),
     );
     requirementsThatDoNotAllowDoubleCountingForSingleCourse.forEach(req =>
-      requirementsThatDoNotAllowDoubleCounting.add(req)
+      requirementsThatDoNotAllowDoubleCounting.add(req),
     );
   });
   return {

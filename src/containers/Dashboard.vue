@@ -104,15 +104,15 @@ import {
 
 const smallBreakpointPixels = parseInt(
   smallBreakpoint.substring(0, smallBreakpoint.length - 2),
-  10
+  10,
 );
 const mediumBreakpointPixels = parseInt(
   mediumBreakpoint.substring(0, mediumBreakpoint.length - 2),
-  10
+  10,
 );
 const veryLargeBreakpointPixels = parseInt(
   veryLargeBreakpoint.substring(0, veryLargeBreakpoint.length - 2),
-  10
+  10,
 );
 
 const getMaxButtonBarTabs = () => {

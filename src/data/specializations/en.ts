@@ -28,7 +28,7 @@ const CHEM2080: CollegeOrMajorRequirement = {
       'ECON 3130',
       'MATH 2930',
       'MATH 4710',
-    ]
+    ],
   ),
   fulfilledBy: 'courses',
   perSlotMinCount: [1, 1],

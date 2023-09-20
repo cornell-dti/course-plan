@@ -30,7 +30,7 @@ import { fullCoursesArray } from '@/assets/courses/typed-full-courses';
 
 const getMatchingCourses = (
   searchText: string,
-  filter?: (course: CornellCourseRosterCourse) => boolean
+  filter?: (course: CornellCourseRosterCourse) => boolean,
 ): readonly CornellCourseRosterCourse[] => {
   // search after value length of 2 to reduce search times of courses
   if (!searchText || searchText.length < 2) return [];
@@ -60,7 +60,7 @@ export default defineComponent({
     searchBoxClassName: { type: String, required: true },
     placeholder: { type: String, required: true },
     courseFilter: {
-      type: (Function as unknown) as PropType<
+      type: Function as unknown as PropType<
         ((course: CornellCourseRosterCourse) => boolean) | undefined
       >,
       default: undefined,

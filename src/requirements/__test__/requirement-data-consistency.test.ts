@@ -10,7 +10,7 @@ const allRequirementsWithIDs = [
       collegeReqs.requirements.map(it => ({
         id: `College-${college}-${it.name}`,
         requirement: it,
-      }))
+      })),
     )
     .flat(),
   ...Object.entries(requirementJson.major)
@@ -18,7 +18,7 @@ const allRequirementsWithIDs = [
       majorRequirement.requirements.map(it => ({
         id: `Major-${major}-${it.name}`,
         requirement: it,
-      }))
+      })),
     )
     .flat(),
   ...Object.entries(requirementJson.minor)
@@ -26,7 +26,7 @@ const allRequirementsWithIDs = [
       minorRequirement.requirements.map(it => ({
         id: `Minor-${minor}-${it.name}`,
         requirement: it,
-      }))
+      })),
     )
     .flat(),
   ...Object.entries(requirementJson.grad)
@@ -34,7 +34,7 @@ const allRequirementsWithIDs = [
       gradRequirement.requirements.map(it => ({
         id: `Grad-${grad}-${it.name}`,
         requirement: it,
-      }))
+      })),
     )
     .flat(),
 ].sort((a, b) => a.id.localeCompare(b.id));

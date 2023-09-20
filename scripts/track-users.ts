@@ -47,7 +47,7 @@ function isOld(semester: { year: number; season: string }) {
 // Need to look at requirements data and add each to the map with 0 frequency to do so.
 function addToFrequencyDictionary(
   categories: readonly { readonly acronym: string }[],
-  freqDict: Record<string, number>
+  freqDict: Record<string, number>,
 ) {
   // if no colleges/programs/majors/minors for this doc, skip
   if (!categories) {

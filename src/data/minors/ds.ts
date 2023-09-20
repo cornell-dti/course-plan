@@ -21,7 +21,7 @@ const dsMinorRequirements: readonly CollegeOrMajorRequirement[] = [
       'ORIE 3500',
       'STSCI 3080',
       'STSCI 3110',
-      'STSCI 2200'
+      'STSCI 2200',
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
@@ -45,7 +45,7 @@ const dsMinorRequirements: readonly CollegeOrMajorRequirement[] = [
       'ORIE 3120',
       'STSCI 3040',
       'STSCI 4060',
-      'STSCI 4520'
+      'STSCI 4520',
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
@@ -174,7 +174,7 @@ const dsMinorRequirements: readonly CollegeOrMajorRequirement[] = [
       'PLSCS 4110',
       'PLSCS 4200',
       'PLSCS 4650',
-      'STS 4040'
+      'STS 4040',
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [4],
@@ -304,7 +304,7 @@ const dsMinorRequirements: readonly CollegeOrMajorRequirement[] = [
             'PLSCS 4200',
             'PLSCS 4650',
             'STS 4040',
-          ]
+          ],
         ),
         fulfilledBy: 'courses',
         perSlotMinCount: [1, 1, 1, 1],

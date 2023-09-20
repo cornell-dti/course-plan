@@ -4,22 +4,22 @@ const allRequirementsIDs = [
   ...requirementJson.university.UNI.requirements.map(it => `College-UNI-${it.name}`),
   ...Object.entries(requirementJson.college)
     .map(([college, collegeReqs]) =>
-      collegeReqs.requirements.map(it => `College-${college}-${it.name}`)
+      collegeReqs.requirements.map(it => `College-${college}-${it.name}`),
     )
     .flat(),
   ...Object.entries(requirementJson.major)
     .map(([major, majorRequirement]) =>
-      majorRequirement.requirements.map(it => `Major-${major}-${it.name}`)
+      majorRequirement.requirements.map(it => `Major-${major}-${it.name}`),
     )
     .flat(),
   ...Object.entries(requirementJson.minor)
     .map(([minor, minorRequirement]) =>
-      minorRequirement.requirements.map(it => `Minor-${minor}-${it.name}`)
+      minorRequirement.requirements.map(it => `Minor-${minor}-${it.name}`),
     )
     .flat(),
   ...Object.entries(requirementJson.grad)
     .map(([grad, gradRequirement]) =>
-      gradRequirement.requirements.map(it => `Grad-${grad}-${it.name}`)
+      gradRequirement.requirements.map(it => `Grad-${grad}-${it.name}`),
     )
     .flat(),
 ].sort((a, b) => a.localeCompare(b));

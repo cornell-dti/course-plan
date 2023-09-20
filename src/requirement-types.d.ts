@@ -133,11 +133,12 @@ type RequirementFulfillmentStatisticsWithCourses = RequirementFulfillmentStatist
   readonly courses: readonly (readonly CourseTaken[])[];
 };
 
-type RequirementFulfillmentStatisticsWithCoursesWithAdditionalRequirements = RequirementFulfillmentStatisticsWithCourses & {
-  readonly additionalRequirements?: {
-    readonly [name: string]: RequirementFulfillmentStatisticsWithCourses;
+type RequirementFulfillmentStatisticsWithCoursesWithAdditionalRequirements =
+  RequirementFulfillmentStatisticsWithCourses & {
+    readonly additionalRequirements?: {
+      readonly [name: string]: RequirementFulfillmentStatisticsWithCourses;
+    };
   };
-};
 type MixedRequirementFulfillmentStatistics = {
   readonly fulfilledBy: 'courses' | 'credits' | 'self-check';
   readonly safeCourses: readonly (readonly CourseTaken[])[];
@@ -148,11 +149,12 @@ type MixedRequirementFulfillmentStatistics = {
   readonly dangerousMinCountFulfilled: number;
   readonly minCountRequired: number;
 };
-type MixedRequirementFulfillmentStatisticsWithAdditionalRequirements = MixedRequirementFulfillmentStatistics & {
-  readonly additionalRequirements?: {
-    readonly [name: string]: MixedRequirementFulfillmentStatistics;
+type MixedRequirementFulfillmentStatisticsWithAdditionalRequirements =
+  MixedRequirementFulfillmentStatistics & {
+    readonly additionalRequirements?: {
+      readonly [name: string]: MixedRequirementFulfillmentStatistics;
+    };
   };
-};
 
 type RequirementFulfillment = {
   /** The original requirement object. */
