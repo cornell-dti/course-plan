@@ -1,0 +1,6 @@
+repos:
+  - repo: https://github.com/prettier/prettier
+    rev: 3.0.3
+    hooks:
+      - id: prettier
+        files: '\.(js|jsx|ts|tsx|vue)$'
