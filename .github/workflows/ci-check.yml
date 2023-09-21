@@ -61,7 +61,7 @@ jobs:
       - name: Install pipenv, black, and pytest
         run: |
           pip install pipenv
-          pip install black
+          pip install black==23.9.1
           pip install pytest
       - name: Pipenv Install
         run: pipenv install
