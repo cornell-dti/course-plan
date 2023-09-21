@@ -58,13 +58,16 @@ jobs:
           export RUN_LANGCHAIN_TESTS=false
           cd python
           python -m pip install --upgrade pip setuptools wheel
-      - name: Install pipenv
-        run: pip install pipenv
+      - name: Install pipenv, black, and pytest
+        run: |
+          pip install pipenv
+          pip install black
+          pip install pytest
       - name: Pipenv Install
         run: pipenv install
       # - name: Check that pipenv is up to date
       #   run: exit $(git status --porcelain | wc -l)
       - name: Run black
-        run: pipenv run black . --check
+        run: black . --check
       - name: Run tests
-        run: pipenv run pytest
+        run: pytest
