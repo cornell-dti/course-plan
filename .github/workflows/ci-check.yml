@@ -1,5 +1,5 @@
 name: CI Check
-on: 
+on:
   push:
   workflow_dispatch:
 
@@ -53,21 +53,18 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: '3.11'
-      - name: Install dependencies
+      - name: Install pip
         run: |
           export RUN_LANGCHAIN_TESTS=false
           cd python
           python -m pip install --upgrade pip setuptools wheel
-          pip install langchain
-      - name: Lint with black
-        run: |
-          pip install black
-          black . --check
-      - name: Install pipenv and pytest
-        run: |
-          pip install pipenv
-          pip install pytest
+      - name: Install pipenv
+        run: pip install pipenv
+      - name: Pipenv Install
+        run: pipenv install
+      - name: Check that pipenv is up to date
+        run: exit $(git status --porcelain | wc -l)
+      - name: Run black
+        run: pipenv run black . --check
       - name: Run tests
-        run: |
-          pipenv install
-          pipenv run pytest
+        run: pipenv run pytest
