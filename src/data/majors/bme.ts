@@ -37,7 +37,7 @@ const biomedicalEngineeringRequirements: readonly CollegeOrMajorRequirement[] = 
       ['BME 4010'],
       ['BME 4020'],
       ['BME 4080'],
-      ['BME 4090']
+      ['BME 4090'],
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -70,7 +70,7 @@ const biomedicalEngineeringRequirements: readonly CollegeOrMajorRequirement[] = 
           ['CHEM 1570'],
           ['BME 3020'],
           ['BME 4190'],
-          ['BME 5830', 'BME 5850', 'BTRY 4381', 'BTRY 4840', 'CHEM 4810', 'CHEME 5430', 'CS 4780']
+          ['BME 5830', 'BME 5850', 'BTRY 4381', 'BTRY 4840', 'CHEM 4810', 'CHEME 5430', 'CS 4780'],
         ),
         counting: 'courses',
         perSlotMinCount: [1, 1, 1, 6],
@@ -95,7 +95,7 @@ const biomedicalEngineeringRequirements: readonly CollegeOrMajorRequirement[] = 
             'MAE 4640',
             'MSE 4020',
             'MSE 4610',
-          ]
+          ],
         ),
         counting: 'courses',
         perSlotMinCount: [1, 1, 1, 6],
@@ -122,7 +122,7 @@ const biomedicalEngineeringRequirements: readonly CollegeOrMajorRequirement[] = 
             'ECE 4910',
             'ECE 5470',
             'ECE 5780',
-          ]
+          ],
         ),
         counting: 'courses',
         perSlotMinCount: [1, 1, 1, 6],
@@ -144,7 +144,7 @@ const biomedicalEngineeringRequirements: readonly CollegeOrMajorRequirement[] = 
             'MAE 4640',
             'MAE 4651',
             'MSE 4020',
-          ]
+          ],
         ),
         counting: 'courses',
         perSlotMinCount: [1, 1, 1, 6],

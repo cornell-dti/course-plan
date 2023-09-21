@@ -51,10 +51,10 @@ export default defineComponent({
           ? getAdvisor(this.onboardingData.college, 'college', this.userInfo)
           : []),
         ...this.onboardingData.major.flatMap(acronym =>
-          getAdvisor(acronym, 'major', this.userInfo)
+          getAdvisor(acronym, 'major', this.userInfo),
         ),
         ...this.onboardingData.minor.flatMap(acronym =>
-          getAdvisor(acronym, 'minor', this.userInfo)
+          getAdvisor(acronym, 'minor', this.userInfo),
         ),
       ].slice(0, this.maxItems);
     },

@@ -11,7 +11,7 @@ const civilRequirements: readonly CollegeOrMajorRequirement[] = [
     source: 'http://courses.cornell.edu/preview_program.php?catoid=41&poid=19826',
     checker: includesWithSubRequirements(
       ['ENGRD 2020'],
-      ['ENGRD 2610', 'ENGRD 2210', 'ENGRD 2110', 'ENGRD 2510']
+      ['ENGRD 2610', 'ENGRD 2210', 'ENGRD 2110', 'ENGRD 2510'],
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1],
@@ -33,7 +33,7 @@ const civilRequirements: readonly CollegeOrMajorRequirement[] = [
       ['CEE 3410'],
       ['BEE 2510'],
       ['CEE 3610'],
-      ['CEE 3710']
+      ['CEE 3710'],
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1, 1, 1, 1, 1, 1, 1],

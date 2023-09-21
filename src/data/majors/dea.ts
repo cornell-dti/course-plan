@@ -20,7 +20,7 @@ const deaRequirements: readonly CollegeOrMajorRequirement[] = [
       ['DEA 2730'],
       ['DEA 3590'],
       ['DEA 4040'],
-      ['DEA 5304']
+      ['DEA 5304'],
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -119,7 +119,7 @@ const deaRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: [
       (course: Course): boolean =>
         ['PBS', 'BIOLS', 'BIONLS', 'SBA', 'KCM', 'MQR', 'LA', 'CA', 'HA', 'FL'].some(
-          distribution => course.catalogDistr?.includes(distribution) ?? false
+          distribution => course.catalogDistr?.includes(distribution) ?? false,
         ) || courseIsForeignLang(course),
     ],
     fulfilledBy: 'courses',
@@ -187,7 +187,7 @@ const deaRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: [
       (course: Course): boolean =>
         ['PBS', 'BIOLS-AG', 'BIONLS-AG '].some(
-          distribution => course.catalogDistr?.includes(distribution) ?? false
+          distribution => course.catalogDistr?.includes(distribution) ?? false,
         ),
     ],
     fulfilledBy: 'credits',
@@ -202,7 +202,7 @@ const deaRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: [
       (course: Course): boolean =>
         ['PBS', 'BIOLS-AG', 'BIONLS-AG', 'SBA', 'KCM', 'MQR', 'LA', 'CA', 'HA', 'FL'].some(
-          distribution => course.catalogDistr?.includes(distribution) ?? false
+          distribution => course.catalogDistr?.includes(distribution) ?? false,
         ),
     ],
     fulfilledBy: 'credits',

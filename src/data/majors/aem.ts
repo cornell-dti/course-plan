@@ -18,7 +18,7 @@ const aemRequirements: readonly CollegeOrMajorRequirement[] = [
       (course: Course): boolean =>
         ['AG'].includes(course.acadGroup) ||
         ['AEM', 'BIOEE', 'BIOMG', 'BIOMI', 'BIONB', 'BSOC', 'EAS', 'INFO', 'NS', 'STSCI'].includes(
-          course.subject
+          course.subject,
         ),
     ],
     fulfilledBy: 'credits',
@@ -55,7 +55,7 @@ const aemRequirements: readonly CollegeOrMajorRequirement[] = [
             'AEM 4560',
             'NBA 5090',
             'NBA 5110',
-          ]
+          ],
         ),
         perSlotMinCount: [1, 1, 3],
         slotNames: ['AEM 3360', 'AEM 3370', '9 credits from the list below'],
@@ -78,7 +78,7 @@ const aemRequirements: readonly CollegeOrMajorRequirement[] = [
             'AEM 4310',
             'AEM 4510',
             'AEM 4560',
-          ]
+          ],
         ),
         perSlotMinCount: [1, 1, 3],
         slotNames: ['AEM 3020', 'HADM 2810 or ILRHR 2600', 'Additional AEM courses'],
@@ -136,7 +136,7 @@ const aemRequirements: readonly CollegeOrMajorRequirement[] = [
             'ECON 4020',
             'ILRST 2110',
             'ILRST 3110',
-          ]
+          ],
         ),
         perSlotMinCount: [1, 4, 1],
         slotNames: ['ECON 3040', 'Applied Economics Requirement', 'Quantitative Methods'],
@@ -161,7 +161,7 @@ const aemRequirements: readonly CollegeOrMajorRequirement[] = [
             'AEM ',
             'AEM ',
             'AEM ',
-          ]
+          ],
         ),
         perSlotMinCount: [1, 1, 1, 2],
         slotNames: [
@@ -219,7 +219,7 @@ const aemRequirements: readonly CollegeOrMajorRequirement[] = [
             'PLSCS 4200',
             'STSCI 4060',
             'HADM 4010',
-          ]
+          ],
         ),
         perSlotMinCount: [1, 1, 1, 2, 1],
         slotNames: [
@@ -249,7 +249,7 @@ const aemRequirements: readonly CollegeOrMajorRequirement[] = [
             'AEM 4630',
             'AEM 4680',
             'AEM 4681',
-          ]
+          ],
         ),
         perSlotMinCount: [1, 1, 1, 2],
         slotNames: [
@@ -267,7 +267,7 @@ const aemRequirements: readonly CollegeOrMajorRequirement[] = [
           ['AEM 2480'],
           ['AEM 3340', 'HADM 3470'],
           ['AEM 4400'],
-          ['AEM 3270', 'AEM 4150', 'AEM 4460']
+          ['AEM 3270', 'AEM 4150', 'AEM 4460'],
         ),
         perSlotMinCount: [1, 1, 1, 2],
         slotNames: [
@@ -293,7 +293,7 @@ const aemRequirements: readonly CollegeOrMajorRequirement[] = [
             'AEM 4485',
             'AEM 4545',
             'AEM 4640',
-          ]
+          ],
         ),
         perSlotMinCount: [1, 4],
         slotNames: ['AEM 2300 or AEM 2350', '12 credits from the list below'],
@@ -318,7 +318,7 @@ const aemRequirements: readonly CollegeOrMajorRequirement[] = [
             'AEM 4435',
             'AEM 4495',
             'AEM 4550',
-          ]
+          ],
         ),
         perSlotMinCount: [1, 1, 3],
         slotNames: ['AEM 3440 or HADM 3470', 'AEM 4410', '9 credits from the list below'],
@@ -339,7 +339,7 @@ const aemRequirements: readonly CollegeOrMajorRequirement[] = [
             'AEM 4080',
             'AEM 4580',
             'AEM 4421',
-          ]
+          ],
         ),
         perSlotMinCount: [2, 3],
         slotNames: ['6 credits from the list below', '9 credits from the list below'],
@@ -359,7 +359,7 @@ const aemRequirements: readonly CollegeOrMajorRequirement[] = [
       ['AEM 2420'],
       ['AEM 2601'],
       ['AEM 3200'],
-      ['AEM 3230']
+      ['AEM 3230'],
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1, 1, 1, 1, 1],
@@ -405,7 +405,7 @@ const aemRequirements: readonly CollegeOrMajorRequirement[] = [
       'ECON 3140',
       'ECON 4020',
       'ILRST 2110',
-      'ILRST 3110'
+      'ILRST 3110',
     ),
     fulfilledBy: 'credits',
     perSlotMinCount: [3],
@@ -431,7 +431,7 @@ const aemRequirements: readonly CollegeOrMajorRequirement[] = [
         'AEM 4485',
         'AEM 4545',
       ],
-      ['AEM 4150', 'AEM 4210', 'AEM 4310']
+      ['AEM 4150', 'AEM 4210', 'AEM 4310'],
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1, 1],
@@ -455,7 +455,7 @@ const aemRequirements: readonly CollegeOrMajorRequirement[] = [
       'AEM 2555',
       'AEM 2800',
       'AEM 2805',
-      'AEM 4940'
+      'AEM 4940',
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],

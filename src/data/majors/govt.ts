@@ -13,7 +13,7 @@ const governmentRequirements: readonly CollegeOrMajorRequirement[] = [
       'GOVT 1313',
       'GOVT 1615',
       'GOVT 1616',
-      'GOVT 1817'
+      'GOVT 1817',
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [2],

@@ -96,7 +96,7 @@ const easRequirements: readonly CollegeOrMajorRequirement[] = [
       'BIOEE 1780',
       'BIOMG 1350',
       'BIOSM 1610',
-      'BIOSM 1780'
+      'BIOSM 1780',
     ),
     perSlotMinCount: [1],
     slotNames: ['Course'],
@@ -156,7 +156,7 @@ const easRequirements: readonly CollegeOrMajorRequirement[] = [
             'EAS 5555',
             'BEE 2000',
             'BEE 4110',
-          ]
+          ],
         ),
         perSlotMinCount: [1, 1, 1, 5],
         slotNames: ['EAS 3050', 'EAS 3410', 'EAS 3420', 'Concentration Course'],
@@ -181,7 +181,7 @@ const easRequirements: readonly CollegeOrMajorRequirement[] = [
             'BEE 4270',
             'BEE 4730',
             'BEE 4750',
-          ]
+          ],
         ),
         perSlotMinCount: [1, 1, 1, 5],
         slotNames: ['EAS 3090', 'EAS 3030', 'EAS 3450', 'Concentration Course'],
@@ -210,7 +210,7 @@ const easRequirements: readonly CollegeOrMajorRequirement[] = [
             'EAS 4740',
             'EAS 5770',
             'EAS 5780',
-          ]
+          ],
         ),
         perSlotMinCount: [1, 1, 1, 5],
         slotNames: ['EAS 3090', 'EAS 3880', 'EAS 3010', 'Concentration Course'],
@@ -237,7 +237,7 @@ const easRequirements: readonly CollegeOrMajorRequirement[] = [
             'EAS 4620',
             'BIOSM 3210',
             'BIOSM 3830',
-          ]
+          ],
         ),
         perSlotMinCount: [1, 1, 1, 5],
         slotNames: ['EAS 3050', 'EAS 3530', 'EAS 3010', 'Concentration Course'],

@@ -11,7 +11,7 @@ const bioRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: includesWithSubRequirements(
       ['BIOMG 1350'],
       ['BIOG 1440', 'BIOG 1445'],
-      ['BIOEE 1610', 'BIOSM 1610']
+      ['BIOEE 1610', 'BIOSM 1610'],
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1],
@@ -78,7 +78,7 @@ const bioRequirements: readonly CollegeOrMajorRequirement[] = [
         'PSYCH 2500',
         'ECON 3130',
         'SOC 3010',
-      ]
+      ],
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1],
@@ -92,7 +92,7 @@ const bioRequirements: readonly CollegeOrMajorRequirement[] = [
       ['CHEM 1570'],
       ['CHEM 3570', 'CHEM 3580'],
       ['CHEM 3590', 'CHEM 3600'],
-      ['CHEM 3530']
+      ['CHEM 3530'],
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 2, 2, 1],
@@ -106,7 +106,7 @@ const bioRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: includesWithSubRequirements(
       ['PHYS 1101', 'PHYS 1102'],
       ['PHYS 2207', 'PHYS 2208'],
-      ['PHYS 1112', 'PHYS 2213']
+      ['PHYS 1112', 'PHYS 2213'],
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [2, 2, 2],
@@ -131,7 +131,7 @@ const bioRequirements: readonly CollegeOrMajorRequirement[] = [
       ['BIOMG 3300'],
       ['BIOMG 3310', 'BIOMG 3320'],
       ['BIOMG 3330'],
-      ['BIOMG 3350']
+      ['BIOMG 3350'],
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 2, 1, 1],
@@ -169,7 +169,7 @@ const bioRequirements: readonly CollegeOrMajorRequirement[] = [
             'BIONB 3920',
             'NS 3310',
           ],
-          ['BIOAP 4130', 'BIOAP 3190', 'BIOMG 4400', 'BIONB 4300']
+          ['BIOAP 4130', 'BIOAP 3190', 'BIOMG 4400', 'BIONB 4300'],
         ),
         perSlotMinCount: [1, 1, 1, 1],
         slotNames: [
@@ -194,7 +194,7 @@ const bioRequirements: readonly CollegeOrMajorRequirement[] = [
           ['BIOMG 4320'],
           ['BIOMG 4400'],
           ['CHEM 2870', 'CHEM 2880', 'CHEM 3890', 'CHEM 3900'],
-          ['BIOMG 4380', 'BIOMG 6310', 'CHEM 4500', 'BIOG 4990']
+          ['BIOMG 4380', 'BIOMG 6310', 'CHEM 4500', 'BIOG 4990'],
         ),
         perSlotMinCount: [1, 2, 1, 1, 1, 1],
         slotNames: [
@@ -237,7 +237,7 @@ const bioRequirements: readonly CollegeOrMajorRequirement[] = [
             'ENTOM 2120',
             'ENTOM 3311',
             'PLPPM 3190',
-          ]
+          ],
         ),
         perSlotMinCount: [2, 1, 2],
         slotNames: ['Group A', 'Group B', 'Lab Course'],
@@ -293,7 +293,7 @@ const bioRequirements: readonly CollegeOrMajorRequirement[] = [
             'MATH 4740',
             'ORIE 3500',
             'ORIE 3510',
-          ]
+          ],
         ),
         perSlotMinCount: [1, 1, 1, 1],
         slotNames: ['Computer Programming', 'Mathematics', 'Bridging Course', 'Advanced Course'],
@@ -369,7 +369,7 @@ const bioRequirements: readonly CollegeOrMajorRequirement[] = [
             'PLBIO 4400',
             'PLHRT 4730',
             'PLSCS 4660',
-          ]
+          ],
         ),
         perSlotMinCount: [1, 1, 1, 1],
         slotNames: ['BIOEE 1610 or BIOSM 1610', 'Group A', 'Group B', 'Group C'],
@@ -447,7 +447,7 @@ const bioRequirements: readonly CollegeOrMajorRequirement[] = [
             'NS 6140',
             'NS 6310',
             'NS 6320',
-          ]
+          ],
         ),
         perSlotMinCount: [1, 3],
         slotNames: ['NS 3310', '9 credits from the list below'],
@@ -473,7 +473,7 @@ const bioRequirements: readonly CollegeOrMajorRequirement[] = [
             'ENTOM 4610',
             'ENTOM 4700',
             'ENTOM 4900',
-          ]
+          ],
         ),
         perSlotMinCount: [1, 1, 2],
         slotNames: ['ENTOM 2120', 'Group A', 'Group B'],
@@ -510,7 +510,7 @@ const bioRequirements: readonly CollegeOrMajorRequirement[] = [
             'NTRES 3110',
             'NTRES 3111',
             'NTRES 4110',
-          ]
+          ],
         ),
         perSlotMinCount: [1, 4],
         slotNames: ['Introductory Course', '12 credits from the list below'],
@@ -537,7 +537,7 @@ const bioRequirements: readonly CollegeOrMajorRequirement[] = [
             'BIOMI 6904',
             'BIOMI 6905',
             'BIOMI 6906',
-          ]
+          ],
         ),
         perSlotMinCount: [1, 1, 3],
         slotNames: ['BIOMI 2900', 'BIOMI 2911', '7 credits from the list below'],
@@ -581,7 +581,7 @@ const bioRequirements: readonly CollegeOrMajorRequirement[] = [
             'PLBIO 4220',
             'PLBIO 4440',
             'PLBIO 4620',
-          ]
+          ],
         ),
         perSlotMinCount: [1, 2, 1, 1, 2],
         slotNames: ['Group A', 'Group B', 'Group C', 'Group D', 'Group E'],
@@ -629,7 +629,7 @@ const bioRequirements: readonly CollegeOrMajorRequirement[] = [
             'BIONB 7210',
             'BIONB 7212',
             'BIONB 7640',
-          ]
+          ],
         ),
         perSlotMinCount: [1, 1, 2],
         slotNames: ['BIONB 2210', 'BIONB 2220', '7 additional credits from the list'],
@@ -679,7 +679,7 @@ const bioRequirements: readonly CollegeOrMajorRequirement[] = [
             'PLBIO 4841',
             'PLBRG 4030',
             'PLBRG 4070',
-          ]
+          ],
         ),
         perSlotMinCount: [3, 3, 3, 3],
         slotNames: [

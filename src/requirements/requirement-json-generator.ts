@@ -31,20 +31,20 @@ const specialCourses: Course[] = Object.entries(SPECIAL_COURSES)
   .filter(({ crseId }) => crseId !== NO_FULFILLMENTS_COURSE_ID);
 
 type InitialRequirementDecorator = (
-  requirement: CollegeOrMajorRequirement
+  requirement: CollegeOrMajorRequirement,
 ) => DecoratedCollegeOrMajorRequirement;
 type RequirementDecorator = (
-  requirement: DecoratedCollegeOrMajorRequirement
+  requirement: DecoratedCollegeOrMajorRequirement,
 ) => DecoratedCollegeOrMajorRequirement;
 
 const getEligibleCoursesFromRequirementCheckers = (
-  checkers: readonly RequirementChecker[]
+  checkers: readonly RequirementChecker[],
 ): readonly (readonly number[])[] =>
   checkers.map(oneRequirementChecker => {
     const courseIdSet = new Set(
       [...fullCoursesArray, ...specialCourses]
         .filter(course => oneRequirementChecker(course))
-        .map(course => course.crseId)
+        .map(course => course.crseId),
     );
     return Array.from(courseIdSet);
   });
@@ -79,8 +79,8 @@ const decorateRequirementWithCourses: InitialRequirementDecorator = requirement 
                   ...additionalRequirementRest,
                   courses: getEligibleCoursesFromRequirementCheckers(additionalChecker),
                 },
-              ]
-            )
+              ],
+            ),
           ),
       };
     }
@@ -93,7 +93,7 @@ const decorateRequirementWithCourses: InitialRequirementDecorator = requirement 
             const { checker, ...rest } = option;
             const courses = getEligibleCoursesFromRequirementCheckers(checker);
             return [optionName, { ...rest, courses }];
-          })
+          }),
         ),
       };
     }
@@ -104,7 +104,7 @@ const decorateRequirementWithCourses: InitialRequirementDecorator = requirement 
 
 const equivalentCourseIds = new Set(Object.keys(courseToExamMapping));
 const generateExamCourseIdsFromEquivalentCourses = (
-  courses: readonly number[]
+  courses: readonly number[],
 ): { examCourseIds: Set<number>; examEquivalentCourses: Set<string> } => {
   const examCourseIds = new Set<number>();
   const examEquivalentCourses = new Set<string>();
@@ -142,7 +142,7 @@ const computeConditionsForExams = (courses: readonly (readonly number[])[]) => {
     }
   > = {};
   const { examCourseIds, examEquivalentCourses } = generateExamCourseIdsFromEquivalentCourses(
-    courses.flat()
+    courses.flat(),
   );
   examCourseIds.forEach(exam => {
     const { collegeConditions, majorsExcluded } = examRequirementsMapping[exam];
@@ -192,7 +192,7 @@ const decorateRequirementWithExams: RequirementDecorator = requirement => {
                 },
               ]) => {
                 const additionalRequirementExamConditions = computeConditionsForExams(
-                  additionalRequirementCourses
+                  additionalRequirementCourses,
                 );
                 const additionalRequirementNewConditions = {
                   ...additionalRequirementConditions,
@@ -208,8 +208,8 @@ const decorateRequirementWithExams: RequirementDecorator = requirement => {
                     }),
                   },
                 ];
-              }
-            )
+              },
+            ),
           ),
       };
     }
@@ -233,7 +233,7 @@ const decorateRequirementWithExams: RequirementDecorator = requirement => {
                 ...(Object.keys(newConditions).length !== 0 && { conditions: newConditions }),
               },
             ];
-          })
+          }),
         ),
       };
     }
@@ -266,8 +266,8 @@ const sortRequirementCourses: RequirementDecorator = requirement => {
                   ...additionalRequirementRest,
                   courses: additionalRequirementsCourses.map(c => [...c].sort((a, b) => a - b)),
                 },
-              ]
-            )
+              ],
+            ),
           ),
       };
     }
@@ -285,7 +285,7 @@ const sortRequirementCourses: RequirementDecorator = requirement => {
                 courses: courses.map(c => [...c].sort((a, b) => a - b)),
               },
             ];
-          })
+          }),
         ),
       };
     }
@@ -338,7 +338,7 @@ const generateDecoratedRequirementsJson = (): DecoratedRequirementsJson => {
       requirements,
       decorateRequirementWithCourses,
       decorateRequirementWithExams,
-      sortRequirementCourses
+      sortRequirementCourses,
     );
   Object.entries(university).forEach(([universityName, universityRequirement]) => {
     const { requirements, advisors, abbrev: abbr, ...rest } = universityRequirement;
@@ -380,19 +380,19 @@ const generateDecoratedRequirementsJson = (): DecoratedRequirementsJson => {
   // Check no duplicate requirement identifier
   const allRequirementIDs = [
     ...Object.entries(decoratedJson.college).map(
-      ([code, requirements]) => ['COLLEGE', code, requirements] as const
+      ([code, requirements]) => ['COLLEGE', code, requirements] as const,
     ),
     ...Object.entries(decoratedJson.major).map(
-      ([code, requirements]) => ['MAJOR', code, requirements] as const
+      ([code, requirements]) => ['MAJOR', code, requirements] as const,
     ),
     ...Object.entries(decoratedJson.minor).map(
-      ([code, requirements]) => ['MINOR', code, requirements] as const
+      ([code, requirements]) => ['MINOR', code, requirements] as const,
     ),
     ...Object.entries(decoratedJson.grad).map(
-      ([code, requirements]) => ['GRAD', code, requirements] as const
+      ([code, requirements]) => ['GRAD', code, requirements] as const,
     ),
   ].flatMap(([category, code, { requirements }]) =>
-    requirements.map(it => `${category}-${code}-${it.name}`)
+    requirements.map(it => `${category}-${code}-${it.name}`),
   );
   const idSet = new Set(allRequirementIDs);
   if (idSet.size !== allRequirementIDs.length) {

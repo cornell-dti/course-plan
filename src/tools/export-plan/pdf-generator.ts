@@ -80,7 +80,7 @@ const generatePDF = async (): Promise<void> => {
       store.state.userName.middleName ? `${store.state.userName.middleName} ` : ''
     }${store.state.userName.lastName}`,
     100.3,
-    76
+    76,
   );
   doc.text(getCollegeFullName(store.state.onboardingData.college), 100.3, 93.2);
 
@@ -103,7 +103,7 @@ const generatePDF = async (): Promise<void> => {
     doc.setTextColor(lightPlaceholderGray);
 
     const [majors, textHeight] = truncatePrograms(
-      store.state.onboardingData.major.map(major => getMajorFullName(major))
+      store.state.onboardingData.major.map(major => getMajorFullName(major)),
     );
     doc.text(majors, 100.3, programY);
     programY += textHeight;
@@ -115,7 +115,7 @@ const generatePDF = async (): Promise<void> => {
     doc.setTextColor(lightPlaceholderGray);
 
     const [minors, textHeight] = truncatePrograms(
-      store.state.onboardingData.minor.map(minor => getMinorFullName(minor))
+      store.state.onboardingData.minor.map(minor => getMinorFullName(minor)),
     );
     doc.text(minors, 100.3, programY);
     programY += textHeight;
@@ -124,12 +124,12 @@ const generatePDF = async (): Promise<void> => {
   doc.text(
     `${store.state.onboardingData.entranceSem} ${store.state.onboardingData.entranceYear}`.trim(),
     448,
-    76
+    76,
   );
   doc.text(
     `${store.state.onboardingData.gradSem} ${store.state.onboardingData.gradYear}`.trim(),
     448,
-    93.2
+    93.2,
   );
 
   doc.setTextColor('#000000');
@@ -208,7 +208,7 @@ const generatePDF = async (): Promise<void> => {
     footerX + doc.getTextWidth('downloaded from '),
     footerY + 3,
     footerX + doc.getTextWidth('downloaded from courseplan.io'),
-    footerY + 3
+    footerY + 3,
   );
 
   const pdfName = `${store.state.userName.firstName}_CoursePlan`;
@@ -246,7 +246,7 @@ const renderTable = (
   rows: SemesterRows,
   tableX: number,
   tableY: number,
-  header: string[][] = tableHeader
+  header: string[][] = tableHeader,
 ): number => {
   doc.setFont('ProximaNova-Regular', 'normal');
 

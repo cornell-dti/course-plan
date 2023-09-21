@@ -15,7 +15,7 @@ const commRequirements: readonly CollegeOrMajorRequirement[] = [
       ['COMM 1101'],
       ['COMM 1300'],
       ['COMM 2010'],
-      ['COMM 2310']
+      ['COMM 2310'],
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1, 1],
@@ -57,7 +57,7 @@ const commRequirements: readonly CollegeOrMajorRequirement[] = [
       'COMM 39**',
       'COMM 4***',
       'COMM 5***',
-      'COMM 6***'
+      'COMM 6***',
     ),
     fulfilledBy: 'credits',
     perSlotMinCount: [6],
@@ -110,7 +110,7 @@ const commRequirements: readonly CollegeOrMajorRequirement[] = [
       'COMM 4860',
       'COMM 4940',
       'COMM 4970',
-      'COMM 4990'
+      'COMM 4990',
     ),
     fulfilledBy: 'credits',
     perSlotMinCount: [9],
@@ -143,7 +143,7 @@ const commRequirements: readonly CollegeOrMajorRequirement[] = [
       'MATH 1710',
       'PAM 2101',
       'PSYCH 2500',
-      'SOC 3010'
+      'SOC 3010',
     ),
     fulfilledBy: 'courses',
     allowCourseDoubleCounting: true,

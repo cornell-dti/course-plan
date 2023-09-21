@@ -19,7 +19,7 @@ const csMinorRequirements: readonly CollegeOrMajorRequirement[] = [
       'CS 2112',
       'ENGRD 2112',
       'ENGRD 2140',
-      'ECE 2400'
+      'ECE 2400',
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],

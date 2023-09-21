@@ -17,7 +17,7 @@ const ormsMinorRequirements: readonly CollegeOrMajorRequirement[] = [
       'ORIE 3310',
       'ORIE 3500',
       'ORIE 3510',
-      'ORIE 4580'
+      'ORIE 4580',
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [3],

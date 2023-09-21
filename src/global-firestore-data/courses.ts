@@ -19,7 +19,7 @@ export const getCourseWithSeasonAndYear = async (
   season: FirestoreSemesterSeason,
   year: number,
   subject: string,
-  number: string
+  number: string,
 ): Promise<CornellCourseRosterCourseFullDetail> => {
   const roster = seasonAndYearToRosterIdentifier(season, year);
   return getCourse(roster, subject, number);
@@ -33,7 +33,7 @@ export const getCourseWithSeasonAndYear = async (
  */
 export const getCourseWithCrseIdAndRoster = async (
   roster: string,
-  crseId: number
+  crseId: number,
 ): Promise<CornellCourseRosterCourseFullDetail> => {
   // use crseId to retrieve course subject and code
   const courseSubjectAndNumber = (
@@ -59,7 +59,7 @@ const getLastOffering = async (subject: string, number: string) => {
   ).data() as { rosters: string[] };
   const lastRoster = availableRostersForCourse.rosters.length - 1;
   const latestCourse = await getDoc(
-    doc(coursesCollection, `${availableRostersForCourse.rosters[lastRoster]}/${subject}/${number}`)
+    doc(coursesCollection, `${availableRostersForCourse.rosters[lastRoster]}/${subject}/${number}`),
   );
   const course: CornellCourseRosterCourseFullDetail = latestCourse.data()?.course;
   course.roster = availableRostersForCourse.rosters[lastRoster];
@@ -77,7 +77,7 @@ const getLastOffering = async (subject: string, number: string) => {
 export const getCourse = async (
   roster: string,
   subject: string,
-  number: string
+  number: string,
 ): Promise<CornellCourseRosterCourseFullDetail> => {
   const course = await getDoc(doc(coursesCollection, `${roster}/${subject}/${number}`));
   if (!course.exists()) {
@@ -93,11 +93,11 @@ export const getCourse = async (
  * @returns A string[] containing the subject and number (EX: ['CS', '1110'])
  */
 export const extractSubjectAndNumber = (
-  courseCode: string
+  courseCode: string,
 ): { subject: string; number: string } => {
   if (courseCode.split(' ').length !== 2) {
     throw Error(
-      `Invalid course format. Expected course to be of form subject and number. EX: CS 1110`
+      `Invalid course format. Expected course to be of form subject and number. EX: CS 1110`,
     );
   } else {
     return { subject: courseCode.split(' ')[0], number: courseCode.split(' ')[1] };

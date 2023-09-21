@@ -43,10 +43,10 @@ export const retrieveAvailableRosters = async () => {
 
 /* Retrieves the subjects across for a roster and creates a list of {roster: string, subject: string} objects */
 export const retrieveAvailableSubjects = async (
-  roster: string
+  roster: string,
 ): Promise<readonly { roster: string; subject: string }[]> => {
   const res = await fetch(
-    `https://classes.cornell.edu/api/2.0/config/subjects.json?roster=${roster}`
+    `https://classes.cornell.edu/api/2.0/config/subjects.json?roster=${roster}`,
   );
   return (await res.json()).data.subjects.map(({ value }) => ({ roster, subject: value }));
 };
@@ -54,10 +54,10 @@ export const retrieveAvailableSubjects = async (
 /** Retrieves and formats available courses for a {roster: string, subject: string} object */
 export const retrieveAvailableCourses = async (
   roster: string,
-  subject: string
+  subject: string,
 ): Promise<CourseFullDetail[]> => {
   const res = await fetch(
-    `${classRosterURL}/search/classes.json?roster=${roster}&subject=${subject}`
+    `${classRosterURL}/search/classes.json?roster=${roster}&subject=${subject}`,
   );
   return (await res.json()).data.classes.map(jsonCourse => clean(jsonCourse));
 };
@@ -95,7 +95,7 @@ const populateCourses = (roster: string, subject: string, courses: CourseFullDet
         .collection(subject)
         .doc(course.catalogNbr)
         .set({ course });
-    })
+    }),
   );
 
 /* 
@@ -119,7 +119,7 @@ export const populate = async () => {
     coursesCount += subjectCourses.length;
     subjectCount += 1;
     console.log(
-      `There are ${subjectCourses.length} courses in ${subject.subject} in ${subject.roster}.`
+      `There are ${subjectCourses.length} courses in ${subject.subject} in ${subject.roster}.`,
     );
     console.log(`We fetched ${subjectCount} out of ${rosterSubjectPairs.length} subjects`);
   }

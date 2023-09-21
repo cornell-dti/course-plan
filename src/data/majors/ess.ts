@@ -33,7 +33,7 @@ const environmentAndSustainability: readonly CollegeOrMajorRequirement[] = [
       'BIOSM 1610',
       'BIOEE 1780',
       'BIOEE 1781',
-      'BIOSM 1780'
+      'BIOSM 1780',
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
@@ -60,7 +60,7 @@ const environmentAndSustainability: readonly CollegeOrMajorRequirement[] = [
       'STSCI 2200',
       'MATH 1710',
       'STSCI 2100',
-      'STSCI 2150'
+      'STSCI 2150',
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
@@ -82,7 +82,7 @@ const environmentAndSustainability: readonly CollegeOrMajorRequirement[] = [
       'NTRES 2320',
       'NTRES 3320',
       'NTRES 3330',
-      'PHIL 1440'
+      'PHIL 1440',
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
@@ -108,7 +108,7 @@ const environmentAndSustainability: readonly CollegeOrMajorRequirement[] = [
       'NTRES 2400',
       'NTRES 3260',
       'NTRES 4560',
-      'BIOSM 2500'
+      'BIOSM 2500',
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
@@ -132,7 +132,7 @@ const environmentAndSustainability: readonly CollegeOrMajorRequirement[] = [
       'ENVS 4444',
       'ENVS 4940',
       'NTRES 4600',
-      'BIOSM 3750'
+      'BIOSM 3750',
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
@@ -168,7 +168,7 @@ const environmentAndSustainability: readonly CollegeOrMajorRequirement[] = [
             'ILRST 2110',
             'PLSCS 2200',
             'STSCI 4060',
-          ]
+          ],
         ),
         perSlotMinCount: [1, 1, 1, 1, 1, 2, 1],
         slotNames: [
@@ -212,7 +212,7 @@ const environmentAndSustainability: readonly CollegeOrMajorRequirement[] = [
           'STS 3181',
           'STS 4131',
           'STS 4460',
-          'PHIL 1440'
+          'PHIL 1440',
         ),
         perSlotMinCount: [7],
         minNumberOfSlots: 1,
@@ -320,7 +320,7 @@ const environmentAndSustainability: readonly CollegeOrMajorRequirement[] = [
             'SOC 3650',
             'STS 3181',
             'STS 4131',
-          ]
+          ],
         ),
         perSlotMinCount: [1, 1, 1, 1, 1, 1, 1],
         slotNames: [
@@ -465,7 +465,7 @@ const environmentAndSustainability: readonly CollegeOrMajorRequirement[] = [
             'PLHRT 4730',
             'PLSCS 4660',
             'PLSCS 4720',
-          ]
+          ],
         ),
         perSlotMinCount: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
         slotNames: [
@@ -622,7 +622,7 @@ const environmentAndSustainability: readonly CollegeOrMajorRequirement[] = [
             'PLPPM 4010',
             'PLSCS 3150',
             'PLSCS 4130',
-          ]
+          ],
         ),
         perSlotMinCount: [1, 1, 1, 2, 1, 1, 1, 1, 1, 1],
         slotNames: [

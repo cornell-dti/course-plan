@@ -308,7 +308,7 @@ export default defineComponent({
 
       this.showAllPage += 1;
       this.showAllCourses.shownCourses = this.findPotentialSeeAllCourses(
-        this.showAllCourses.allCourses
+        this.showAllCourses.allCourses,
       );
     },
     prevPage() {
@@ -318,16 +318,16 @@ export default defineComponent({
 
       this.showAllPage -= 1;
       this.showAllCourses.shownCourses = this.findPotentialSeeAllCourses(
-        this.showAllCourses.allCourses
+        this.showAllCourses.allCourses,
       );
     },
     // return an array consisting of the courses to display on the see all menu, depending on the showAllPage and maxSeeAllCoursesPerPage
     findPotentialSeeAllCourses(
-      courses: readonly FirestoreSemesterCourse[]
+      courses: readonly FirestoreSemesterCourse[],
     ): FirestoreSemesterCourse[] {
       const allPotentialCourses = courses.slice(
         this.showAllPage * maxSeeAllCoursesPerPage,
-        (this.showAllPage + 1) * maxSeeAllCoursesPerPage
+        (this.showAllPage + 1) * maxSeeAllCoursesPerPage,
       );
       return allPotentialCourses;
     },

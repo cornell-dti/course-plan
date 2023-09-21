@@ -70,7 +70,7 @@ async function execute(
     toEnv: 'prod' | 'dev';
     execute: boolean;
     output: string;
-  }>
+  }>,
 ): Promise<void> {
   let fromDb;
   let toDb;

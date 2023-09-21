@@ -38,7 +38,7 @@ const chemERequirements: readonly CollegeOrMajorRequirement[] = [
       ['MATH 2930'],
       ['PHYS 2213'],
       ['CHEM 3890'],
-      ['ENGRD 2190']
+      ['ENGRD 2190'],
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1, 1],
@@ -53,7 +53,7 @@ const chemERequirements: readonly CollegeOrMajorRequirement[] = [
       ['MATH 2940', 'CEE 3040', 'ENGRD 2700'],
       ['CHEME 3230'],
       ['CHEM 3090'],
-      ['CHEM 2900']
+      ['CHEM 2900'],
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1, 1],
@@ -128,7 +128,7 @@ const chemERequirements: readonly CollegeOrMajorRequirement[] = [
       ['CHEM 3570', 'CHEM 3530', 'CHEM 3590'],
       ['CHEM 2510'],
       ['CHEME 3130'],
-      ['CHEME 3240']
+      ['CHEME 3240'],
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1, 1, 1],
@@ -174,7 +174,7 @@ const chemERequirements: readonly CollegeOrMajorRequirement[] = [
       ['CHEME 3010'],
       ['CHEME 3320'],
       ['CHEME 3720'],
-      ['CHEME 3900']
+      ['CHEME 3900'],
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1, 1, 1],
@@ -215,7 +215,7 @@ const chemERequirements: readonly CollegeOrMajorRequirement[] = [
         'CHEME 6650',
         'CHEME 6660',
         'CHEME 6800',
-      ]
+      ],
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1],
@@ -230,7 +230,7 @@ const chemERequirements: readonly CollegeOrMajorRequirement[] = [
       ['CHEM 3570', 'CHEM 3530', 'CHEM 3590'],
       ['CHEM 2510'],
       ['CHEME 3130'],
-      ['CHEME 3240']
+      ['CHEME 3240'],
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1, 1, 1],

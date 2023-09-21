@@ -112,7 +112,7 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: [
       (course: Course): boolean =>
         engineeringLiberalArtsDistributions.some(
-          distribution => hasCategory(course, distribution) ?? false
+          distribution => hasCategory(course, distribution) ?? false,
         ) || courseIsForeignLang(course),
     ],
     fulfilledBy: 'courses',
@@ -125,8 +125,10 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
             (course.catalogDistr?.includes('LA') || course.catalogDistr?.includes('LAD')) ?? false,
           ...engineeringLiberalArtsDistributions
             .filter(it => it !== 'LA' && it !== 'LAD')
-            .map(distribution => (course: Course): boolean =>
-              hasCategory(course, distribution) ?? false
+            .map(
+              distribution =>
+                (course: Course): boolean =>
+                  hasCategory(course, distribution) ?? false,
             ),
         ],
         fulfilledBy: 'courses',
@@ -141,7 +143,7 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
         checker: [
           (course: Course): boolean =>
             engineeringLiberalArtsDistributions.some(
-              distribution => hasCategory(course, distribution) ?? false
+              distribution => hasCategory(course, distribution) ?? false,
             ) || courseIsForeignLang(course),
         ],
         fulfilledBy: 'credits',
@@ -154,7 +156,7 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
             return (
               !ifCodeMatch(catalogNbr, '1***') &&
               (engineeringLiberalArtsDistributions.some(
-                category => hasCategory(course, category) ?? false
+                category => hasCategory(course, category) ?? false,
               ) ||
                 courseIsForeignLang(course))
             );
@@ -220,7 +222,7 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
       'MSE 4030',
       'MSE 4040',
       'MSE 4050',
-      'MSE 4060'
+      'MSE 4060',
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],

@@ -32,7 +32,9 @@ export default defineComponent({
   width: max-content;
   background: #ffffff;
   border-radius: 6px;
-  box-shadow: -4px -4px 10px #efefef, 4px 4px 10px #efefef;
+  box-shadow:
+    -4px -4px 10px #efefef,
+    4px 4px 10px #efefef;
   display: flex;
   flex-direction: row;
   pointer-events: auto;

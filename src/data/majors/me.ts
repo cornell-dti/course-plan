@@ -33,7 +33,7 @@ const mechanicalEngineeringRequirements: readonly CollegeOrMajorRequirement[] = 
       ['MAE 3270'],
       ['MAE 3780', 'ENGRD 2100', 'PHYS 3360'],
       ['MAE 4272'],
-      ['MAE 4300']
+      ['MAE 4300'],
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -101,7 +101,7 @@ const mechanicalEngineeringRequirements: readonly CollegeOrMajorRequirement[] = 
       'MAE 3050',
       'MAE 4250',
       'MAE 4860',
-      'MAE 5070'
+      'MAE 5070',
     ),
     fulfilledBy: 'credits',
     perSlotMinCount: [9],
@@ -125,7 +125,7 @@ const mechanicalEngineeringRequirements: readonly CollegeOrMajorRequirement[] = 
       'MAE 4641',
       'MAE 4651',
       'MAE 4701',
-      'MAE 4861'
+      'MAE 4861',
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
@@ -145,7 +145,7 @@ const mechanicalEngineeringRequirements: readonly CollegeOrMajorRequirement[] = 
       'ENGRD 3200',
       'BTRY 3010',
       'CS 2800',
-      'CS 4750'
+      'CS 4750',
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],

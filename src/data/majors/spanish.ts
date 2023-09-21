@@ -15,7 +15,7 @@ const spanishRequirements: readonly CollegeOrMajorRequirement[] = [
       ['SPAN 2140', 'SPAN 2235'],
       ['SPAN 2150', 'SPAN 2205'],
       ['SPAN 2170'],
-      ['SPAN 2180']
+      ['SPAN 2180'],
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1, 1],

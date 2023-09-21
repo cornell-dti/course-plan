@@ -76,12 +76,12 @@ const casPreFA2020Requirements: readonly CollegeOrMajorRequirement[] = [
     checker: [
       (course: Course): boolean =>
         ['PBS-AS', 'PBSS-AS'].some(
-          distribution => course.catalogDistr?.includes(distribution) ?? false
+          distribution => course.catalogDistr?.includes(distribution) ?? false,
         ),
       (course: Course): boolean => course.catalogDistr?.includes('MQR-AS') ?? false,
       (course: Course): boolean =>
         ['PBS-AS', 'PBSS-AS', 'MQR-AS'].some(
-          distribution => course.catalogDistr?.includes(distribution) ?? false
+          distribution => course.catalogDistr?.includes(distribution) ?? false,
         ),
     ],
     fulfilledBy: 'courses',

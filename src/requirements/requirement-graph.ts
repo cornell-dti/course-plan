@@ -14,15 +14,13 @@ export interface CourseWithUniqueId {
  */
 export default class RequirementFulfillmentGraph<
   Requirement extends string,
-  Course extends CourseWithUniqueId
+  Course extends CourseWithUniqueId,
 > {
   // Internally, we use a two hash map to represent the bidirection relation
   // between requirement and courses.
 
-  private readonly requirementToCoursesMap: Map<
-    Requirement,
-    Map<string | number, Course>
-  > = new Map();
+  private readonly requirementToCoursesMap: Map<Requirement, Map<string | number, Course>> =
+    new Map();
 
   private readonly courseToRequirementsMap: Map<string | number, Set<Requirement>> = new Map();
 
@@ -116,7 +114,7 @@ export default class RequirementFulfillmentGraph<
 
   // does not subtract requirement nodes
   public subtractGraphEdges(
-    graph: RequirementFulfillmentGraph<Requirement, CourseWithUniqueId>
+    graph: RequirementFulfillmentGraph<Requirement, CourseWithUniqueId>,
   ): void {
     graph.getAllEdges().forEach(([req, course]) => {
       this.removeEdge(req, course);

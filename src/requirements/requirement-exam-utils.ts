@@ -8,7 +8,7 @@ import { NO_FULFILLMENTS_COURSE_ID } from '../data/constants';
 type ExamSubjects = Record<TransferExamType, string[]>;
 
 const getExamFulfillment = (
-  userExam: FirestoreTransferExam
+  userExam: FirestoreTransferExam,
 ): ExamFulfillmentBase | ExamFulfillmentWithMinimumScore | undefined => {
   switch (userExam.examType) {
     case 'AP':
@@ -19,7 +19,7 @@ const getExamFulfillment = (
       return apibExamFulfillments.reduce(
         (
           prev: ExamFulfillmentWithMinimumScore | undefined,
-          curr: ExamFulfillmentWithMinimumScore
+          curr: ExamFulfillmentWithMinimumScore,
         ) => {
           // check if score is high enough
           if (score >= curr.minimumScore) {
@@ -30,13 +30,13 @@ const getExamFulfillment = (
           }
           return prev;
         },
-        undefined
+        undefined,
       );
     }
     case 'CASE': {
       const caseExamFulfillments = examData[userExam.examType][userExam.subject];
       return caseExamFulfillments.find(
-        fulfillment => userExam.score.toString() === fulfillment.score
+        fulfillment => userExam.score.toString() === fulfillment.score,
       );
     }
     default:
@@ -114,7 +114,7 @@ export const getExamScores = (examType: string, subject: string): string[] | num
 };
 
 export const getExamScoresFromExamTaken = (
-  examTaken: FirestoreTransferExam
+  examTaken: FirestoreTransferExam,
 ): string[] | number[] => {
   const { examType, subject } = examTaken;
   return getExamScores(examType, subject);

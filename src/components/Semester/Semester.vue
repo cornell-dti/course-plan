@@ -283,7 +283,7 @@ export default defineComponent({
           (semester: FirestoreSemester): FirestoreSemester => ({
             ...semester,
             courses,
-          })
+          }),
         );
         updateRequirementChoices(oldChoices => {
           const choices = { ...oldChoices };
@@ -308,7 +308,7 @@ export default defineComponent({
               requirementID,
               store.state.groupedRequirementFulfillmentReport,
               store.state.toggleableRequirementChoices,
-              store.state.userRequirementsMap
+              store.state.userRequirementsMap,
             );
             choices[uniqueID] = { ...choice, optOut };
           });
@@ -379,7 +379,7 @@ export default defineComponent({
     openConflictModal(
       course: FirestoreSemesterCourse,
       conflicts: Set<string[]>,
-      selfCheckRequirements: readonly RequirementWithIDSourceType[]
+      selfCheckRequirements: readonly RequirementWithIDSourceType[],
     ) {
       this.conflictCourse = course;
       this.courseConflicts = conflicts;
@@ -433,7 +433,7 @@ export default defineComponent({
         this.closeCourseModal();
 
         const conflicts = store.state.courseToRequirementsInConstraintViolations.get(
-          newCourse.uniqueID
+          newCourse.uniqueID,
         );
 
         const { selfCheckRequirements } = getRelatedUnfulfilledRequirements(
@@ -442,7 +442,7 @@ export default defineComponent({
           store.state.onboardingData,
           store.state.toggleableRequirementChoices,
           store.state.overriddenFulfillmentChoices,
-          store.state.userRequirementsMap
+          store.state.userRequirementsMap,
         );
 
         // only open conflict modal if conflicts exist
@@ -469,9 +469,9 @@ export default defineComponent({
         (semester: FirestoreSemester): FirestoreSemester => ({
           ...semester,
           courses: this.courses.map(course =>
-            course.uniqueID === uniqueID ? { ...course, color } : course
+            course.uniqueID === uniqueID ? { ...course, color } : course,
           ),
-        })
+        }),
       );
       this.openConfirmationModal(`Changed color for ${courseCode}`);
     },
@@ -482,7 +482,7 @@ export default defineComponent({
         courses: semester.courses.map(course =>
           !isPlaceholderCourse(course) && course.code.split(' ')[0] === subject
             ? { ...course, color }
-            : course
+            : course,
         ),
       });
       editSemesters(oldSemesters => oldSemesters.map(sem => updater(sem)));
@@ -499,9 +499,9 @@ export default defineComponent({
         (semester: FirestoreSemester): FirestoreSemester => ({
           ...semester,
           courses: this.courses.map(course =>
-            course.uniqueID === uniqueID ? { ...course, credits: credit } : course
+            course.uniqueID === uniqueID ? { ...course, credits: credit } : course,
           ),
-        })
+        }),
       );
     },
     dragListener(event: Event) {
@@ -511,7 +511,7 @@ export default defineComponent({
       this.isSemesterMinimized = !this.isSemesterMinimized;
       localStorage.setItem(
         JSON.stringify(this.semesterIndex),
-        JSON.stringify(this.isSemesterMinimized)
+        JSON.stringify(this.isSemesterMinimized),
       );
     },
     openSemesterMenu() {
@@ -549,7 +549,7 @@ export default defineComponent({
           ...oldSemester,
           season: seasonInput as FirestoreSemesterSeason,
           year: yearInput,
-        })
+        }),
       );
     },
     openClearSemesterModal() {

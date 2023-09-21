@@ -52,7 +52,7 @@ export default defineComponent({
     'add-course': (
       selected: CornellCourseRosterCourse,
       season: FirestoreSemesterSeason,
-      year: number
+      year: number,
     ) => typeof selected === 'object' && typeof season === 'string' && typeof year === 'number',
   },
   data() {
@@ -80,7 +80,7 @@ export default defineComponent({
       return getFilterForRequirementFulfillment(
         store.state.userRequirementsMap,
         store.state.toggleableRequirementChoices,
-        this.requirementId
+        this.requirementId,
       );
     },
   },

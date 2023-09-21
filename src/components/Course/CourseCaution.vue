@@ -57,7 +57,7 @@ type CourseCautions = {
 
 const getCourseCautions = (
   course: FirestoreSemesterCourse | FirestoreSemesterPlaceholder | CourseTaken,
-  semesterIndex: number
+  semesterIndex: number,
 ): CourseCautions => {
   const {
     safeRequirementFulfillmentGraph,

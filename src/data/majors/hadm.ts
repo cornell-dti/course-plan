@@ -24,7 +24,7 @@ const hotelAdminRequirements: readonly CollegeOrMajorRequirement[] = [
       ['HADM 1210'],
       ['HADM 2210'],
       ['HADM 2220'],
-      ['HADM 3210']
+      ['HADM 3210'],
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1, 1],
@@ -74,7 +74,7 @@ const hotelAdminRequirements: readonly CollegeOrMajorRequirement[] = [
       ['HADM 1350'],
       ['HADM 1360'],
       ['HADM 2010'],
-      ['HADM 3010']
+      ['HADM 3010'],
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1, 1],

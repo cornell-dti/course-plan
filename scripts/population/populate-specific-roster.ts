@@ -73,7 +73,7 @@ const populateCourses = (roster: string, subject: string, courses: CourseFullDet
         .collection(subject)
         .doc(course.catalogNbr)
         .set({ course });
-    })
+    }),
   );
 
 /* 
@@ -97,7 +97,7 @@ const populate = async (roster?: string) => {
     coursesCount += subjectCourses.length;
     subjectCount += 1;
     console.log(
-      `There are ${subjectCourses.length} courses in ${subject.subject} in ${subject.roster}.`
+      `There are ${subjectCourses.length} courses in ${subject.subject} in ${subject.roster}.`,
     );
     console.log(`We fetched ${subjectCount} out of ${rosterSubjectPairs.length} subjects`);
   }

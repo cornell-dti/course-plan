@@ -119,13 +119,13 @@ const store: TypedVuexStore = new TypedVuexStore({
     },
     setToggleableRequirementChoices(
       state: VuexStoreState,
-      toggleableRequirementChoices: AppToggleableRequirementChoices
+      toggleableRequirementChoices: AppToggleableRequirementChoices,
     ) {
       state.toggleableRequirementChoices = toggleableRequirementChoices;
     },
     setOverriddenFulfillmentChoices(
       state: VuexStoreState,
-      overriddenFulfillmentChoices: FirestoreOverriddenFulfillmentChoices
+      overriddenFulfillmentChoices: FirestoreOverriddenFulfillmentChoices,
     ) {
       state.overriddenFulfillmentChoices = overriddenFulfillmentChoices;
     },
@@ -139,7 +139,7 @@ const store: TypedVuexStore = new TypedVuexStore({
         | 'courseToRequirementsInConstraintViolations'
         | 'doubleCountedCourseUniqueIDSet'
         | 'groupedRequirementFulfillmentReport'
-      >
+      >,
     ) {
       state.userRequirementsMap = data.userRequirementsMap;
       state.dangerousRequirementFulfillmentGraph = data.dangerousRequirementFulfillmentGraph;
@@ -217,8 +217,8 @@ const autoRecomputeDerivedData = (): (() => void) =>
             state.semesters,
             state.onboardingData,
             state.toggleableRequirementChoices,
-            state.overriddenFulfillmentChoices
-          )
+            state.overriddenFulfillmentChoices,
+          ),
         );
       }
     }
@@ -267,7 +267,7 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
       }
       userNameInitialLoadFinished = true;
       emitOnLoadWhenLoaded();
-    }
+    },
   );
   const onboardingDataUnsubscriber = onSnapshot(
     doc(fb.onboardingDataCollection, simplifiedUser.email),
@@ -278,7 +278,7 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
       }
       onboardingDataInitialLoadFinished = true;
       emitOnLoadWhenLoaded();
-    }
+    },
   );
   getDoc(doc(fb.semestersCollection, simplifiedUser.email)).then(snapshot => {
     const data = snapshot.data();
@@ -315,7 +315,7 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
       store.commit('setToggleableRequirementChoices', toggleableRequirementChoices);
       toggleableRequirementChoiceInitialLoadFinished = true;
       emitOnLoadWhenLoaded();
-    }
+    },
   );
   const overriddenFulfillmentChoiceUnsubscriber = onSnapshot(
     doc(fb.overriddenFulfillmentChoicesCollection, simplifiedUser.email),
@@ -324,7 +324,7 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
       store.commit('setOverriddenFulfillmentChoices', overriddenFulfillmentChoices);
       overriddenFulfillmentChoiceInitialLoadFinished = true;
       emitOnLoadWhenLoaded();
-    }
+    },
   );
   getDoc(doc(fb.subjectColorsCollection, simplifiedUser.email)).then(snapshot => {
     const subjectColors = snapshot.data() || {};
@@ -342,7 +342,7 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
       store.commit('setUniqueIncrementer', data == null ? 0 : data.uniqueIncrementer);
       uniqueIncrementerInitialLoadFinished = true;
       emitOnLoadWhenLoaded();
-    }
+    },
   );
   const derivedDataComputationUnsubscriber = autoRecomputeDerivedData();
 

@@ -4,7 +4,7 @@ import { AdvisorPackage } from './types';
 export default function getAdvisor(
   acronym: string,
   type: AdvisorPackage['type'],
-  userName: FirestoreUserName
+  userName: FirestoreUserName,
 ): AdvisorPackage[] {
   const advisors = extractAdvisors(type, acronym);
   if (advisors) {

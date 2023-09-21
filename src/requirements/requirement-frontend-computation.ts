@@ -23,7 +23,7 @@ const courseIsAllEligible = (course: CourseTaken): boolean => {
 
 const getTotalCreditsFulfillmentStatistics = (
   college: string,
-  courses: readonly CourseTaken[]
+  courses: readonly CourseTaken[],
 ): RequirementFulfillment | null => {
   const requirementCommon = {
     sourceType: 'College',
@@ -129,7 +129,7 @@ const getTotalCreditsFulfillmentStatistics = (
 
 export function getCourseCodesArray(
   semesters: readonly FirestoreSemester[],
-  onboardingData: AppOnboardingData
+  onboardingData: AppOnboardingData,
 ): readonly CourseTaken[] {
   const courses: CourseTaken[] = [];
   if (onboardingData.tookSwim === 'yes') {
@@ -153,7 +153,7 @@ export function getCourseCodesArray(
 
 function mergeRequirementFulfillmentStatisticsWithAdditionalRequirements(
   dangerous: RequirementFulfillmentStatisticsWithCoursesWithAdditionalRequirements,
-  safe: RequirementFulfillmentStatisticsWithCoursesWithAdditionalRequirements
+  safe: RequirementFulfillmentStatisticsWithCoursesWithAdditionalRequirements,
 ): MixedRequirementFulfillmentStatisticsWithAdditionalRequirements {
   function mergeRequirementFulfillmentStatistics(
     {
@@ -165,7 +165,7 @@ function mergeRequirementFulfillmentStatisticsWithAdditionalRequirements(
     {
       minCountFulfilled: safeMinCountFulfilled,
       courses: safeCourses,
-    }: RequirementFulfillmentStatisticsWithCourses
+    }: RequirementFulfillmentStatisticsWithCourses,
   ): MixedRequirementFulfillmentStatistics {
     return {
       fulfilledBy,
@@ -183,15 +183,15 @@ function mergeRequirementFulfillmentStatisticsWithAdditionalRequirements(
   return {
     ...base,
     additionalRequirements: Object.fromEntries(
-      Object.entries(
-        dangerous.additionalRequirements
-      ).map(([key, dangerousAdditionalRequirement]) => [
-        key,
-        mergeRequirementFulfillmentStatistics(
-          dangerousAdditionalRequirement,
-          safeAdditionalRequirements[key]
-        ),
-      ])
+      Object.entries(dangerous.additionalRequirements).map(
+        ([key, dangerousAdditionalRequirement]) => [
+          key,
+          mergeRequirementFulfillmentStatistics(
+            dangerousAdditionalRequirement,
+            safeAdditionalRequirements[key],
+          ),
+        ],
+      ),
     ),
   };
 }
@@ -201,7 +201,7 @@ export default function computeGroupedRequirementFulfillmentReports(
   semesters: readonly FirestoreSemester[],
   onboardingData: AppOnboardingData,
   toggleableRequirementChoices: AppToggleableRequirementChoices,
-  overriddenFulfillmentChoices: FirestoreOverriddenFulfillmentChoices
+  overriddenFulfillmentChoices: FirestoreOverriddenFulfillmentChoices,
 ): {
   readonly userRequirementsMap: Readonly<Record<string, RequirementWithIDSourceType>>;
   readonly dangerousRequirementFulfillmentGraph: RequirementFulfillmentGraph<string, CourseTaken>;
@@ -224,7 +224,7 @@ export default function computeGroupedRequirementFulfillmentReports(
     coursesTaken,
     onboardingData,
     toggleableRequirementChoices,
-    overriddenFulfillmentChoices
+    overriddenFulfillmentChoices,
   );
 
   const collegeFulfillmentStatistics: RequirementFulfillment[] = [];
@@ -242,19 +242,19 @@ export default function computeGroupedRequirementFulfillmentReports(
       requirement,
       dangerousRequirementFulfillmentGraph.getConnectedCoursesFromRequirement(requirement.id),
       toggleableRequirementChoices,
-      overriddenFulfillmentChoices
+      overriddenFulfillmentChoices,
     );
     const safeRequirementFulfillmentStatistics = computeFulfillmentCoursesAndStatistics(
       requirement,
       safeRequirementFulfillmentGraph.getConnectedCoursesFromRequirement(requirement.id),
       toggleableRequirementChoices,
-      overriddenFulfillmentChoices
+      overriddenFulfillmentChoices,
     );
     const fulfillmentStatistics: RequirementFulfillment = {
       requirement,
       fulfillment: mergeRequirementFulfillmentStatisticsWithAdditionalRequirements(
         dangerousRequirementFulfillmentStatistics,
-        safeRequirementFulfillmentStatistics
+        safeRequirementFulfillmentStatistics,
       ),
     };
 
@@ -301,15 +301,15 @@ export default function computeGroupedRequirementFulfillmentReports(
   const groupedRequirementFulfillmentReport: GroupedRequirementFulfillmentReport[] = [
     ...Array.from(majorFulfillmentStatisticsMap.entries()).map(
       ([majorName, fulfillmentStatistics]) =>
-        ({ groupName: 'Major', specific: majorName, reqs: fulfillmentStatistics } as const)
+        ({ groupName: 'Major', specific: majorName, reqs: fulfillmentStatistics }) as const,
     ),
     ...Array.from(minorFulfillmentStatisticsMap.entries()).map(
       ([minorName, fulfillmentStatistics]) =>
-        ({ groupName: 'Minor', specific: minorName, reqs: fulfillmentStatistics } as const)
+        ({ groupName: 'Minor', specific: minorName, reqs: fulfillmentStatistics }) as const,
     ),
     ...Array.from(gradFulfillmentStatisticsMap.entries()).map(
       ([gradName, fulfillmentStatistics]) =>
-        ({ groupName: 'Grad', specific: gradName, reqs: fulfillmentStatistics } as const)
+        ({ groupName: 'Grad', specific: gradName, reqs: fulfillmentStatistics }) as const,
     ),
   ];
 
@@ -336,7 +336,7 @@ export default function computeGroupedRequirementFulfillmentReports(
 // number of fully fulfilled requirements, including those with courses that have conflicts
 // note pure self-checks are never fulfilled
 export function groupedRequirementDangerouslyFulfilled(
-  groupedRequirementFulfillmentReport: GroupedRequirementFulfillmentReport
+  groupedRequirementFulfillmentReport: GroupedRequirementFulfillmentReport,
 ): number {
   let fulfilled = 0;
   groupedRequirementFulfillmentReport.reqs.forEach(req => {
@@ -354,7 +354,7 @@ export function groupedRequirementDangerouslyFulfilled(
         ) {
           fulfilled += 1;
         }
-      }
+      },
     );
   });
   return fulfilled;
@@ -362,7 +362,7 @@ export function groupedRequirementDangerouslyFulfilled(
 
 // number of requirements that can be fulfilled (so no pure self-checks)
 export function groupedRequirementTotalRequired(
-  groupedRequirementFulfillmentReport: GroupedRequirementFulfillmentReport
+  groupedRequirementFulfillmentReport: GroupedRequirementFulfillmentReport,
 ): number {
   let totalRequired = 0;
   groupedRequirementFulfillmentReport.reqs.forEach(req => {
@@ -374,7 +374,7 @@ export function groupedRequirementTotalRequired(
 
 // the sum of the progress of each requirement (outside of pure self-check), maxed out at 1, excluding conflicts
 export function groupedRequirementTotalSafeRequirementProgress(
-  groupedRequirementFulfillmentReport: GroupedRequirementFulfillmentReport
+  groupedRequirementFulfillmentReport: GroupedRequirementFulfillmentReport,
 ): number {
   let fulfilled = 0;
   groupedRequirementFulfillmentReport.reqs.forEach(req => {
@@ -385,7 +385,7 @@ export function groupedRequirementTotalSafeRequirementProgress(
         } else {
           fulfilled += reqOrNestedReq.safeMinCountFulfilled / reqOrNestedReq.minCountRequired;
         }
-      }
+      },
     );
   });
   return fulfilled;
@@ -393,7 +393,7 @@ export function groupedRequirementTotalSafeRequirementProgress(
 
 // sum of the progress of each requirement, including requirements fulfilled dangerously, maxed out at 1
 export function groupedRequirementTotalDangerousRequirementProgress(
-  groupedRequirementFulfillmentReport: GroupedRequirementFulfillmentReport
+  groupedRequirementFulfillmentReport: GroupedRequirementFulfillmentReport,
 ): number {
   let fulfilled = 0;
   groupedRequirementFulfillmentReport.reqs.forEach(req => {
@@ -404,7 +404,7 @@ export function groupedRequirementTotalDangerousRequirementProgress(
         } else {
           fulfilled += reqOrNestedReq.dangerousMinCountFulfilled / reqOrNestedReq.minCountRequired;
         }
-      }
+      },
     );
   });
   return fulfilled;

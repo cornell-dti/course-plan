@@ -91,7 +91,7 @@ export default defineComponent({
   computed: {
     foundChoices(): [string, string][] {
       return Object.entries(this.availableChoices).filter(v =>
-        v[1].toLowerCase().startsWith(this.curQuery.toLowerCase())
+        v[1].toLowerCase().startsWith(this.curQuery.toLowerCase()),
       );
     },
   },

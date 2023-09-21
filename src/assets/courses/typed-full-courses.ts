@@ -1,6 +1,6 @@
 import json from './full-courses.json';
 
-const fullCoursesJsonWithStringKey = (json as unknown) as Readonly<
+const fullCoursesJsonWithStringKey = json as unknown as Readonly<
   Record<string, readonly CornellCourseRosterCourse[]>
 >;
 
@@ -20,7 +20,7 @@ export const fullCoursesJson: FullCourseJson = Object.fromEntries(
   Object.entries(fullCoursesJsonWithStringKey).map(([stringCourseID, courses]) => [
     parseInt(stringCourseID, 10),
     courses,
-  ])
+  ]),
 );
 
 /**
@@ -31,5 +31,5 @@ export const fullCoursesJson: FullCourseJson = Object.fromEntries(
  * ```
  */
 export const fullCoursesArray: readonly CornellCourseRosterCourse[] = Object.values(
-  fullCoursesJsonWithStringKey
+  fullCoursesJsonWithStringKey,
 ).flat();

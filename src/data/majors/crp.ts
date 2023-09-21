@@ -28,11 +28,11 @@ const crpRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: [
       (course: Course): boolean =>
         ['PBS-AS', 'PBSS-AS', 'BIO-AG', 'BIOLS-AG', 'BIONLS-AG', 'OPHLS-AG', 'PBS', 'PBS-HE'].some(
-          distribution => course.catalogDistr?.includes(distribution) ?? false
+          distribution => course.catalogDistr?.includes(distribution) ?? false,
         ),
       (course: Course): boolean =>
         ['MQR-AS', 'MQR-AAP', 'MQR-HE'].some(
-          distribution => course.catalogDistr?.includes(distribution) ?? false
+          distribution => course.catalogDistr?.includes(distribution) ?? false,
         ),
       (course: Course): boolean =>
         [
@@ -101,7 +101,7 @@ const crpRequirements: readonly CollegeOrMajorRequirement[] = [
       ['CRP 1101'],
       ['CRP 2000'],
       ['CRP 2010'],
-      ['CRP 3210']
+      ['CRP 3210'],
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1, 1, 1],

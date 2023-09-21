@@ -41,7 +41,7 @@ const envEngineeringRequirements: readonly CollegeOrMajorRequirement[] = [
       'BIOMG 1350',
       'BIOEE 1780',
       'BIOG 1440',
-      'BIOG 1445'
+      'BIOG 1445',
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
@@ -80,7 +80,7 @@ const envEngineeringRequirements: readonly CollegeOrMajorRequirement[] = [
       ['CEE 3510'],
       ['CEE 4510'],
       ['BEE 4750'],
-      ['CEE 3230']
+      ['CEE 3230'],
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1, 1, 1, 1],
@@ -100,7 +100,7 @@ const envEngineeringRequirements: readonly CollegeOrMajorRequirement[] = [
       'EAS 4800',
       'NTRES 3240',
       'PLSCS 2600',
-      'PLSCS 3650'
+      'PLSCS 3650',
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
@@ -133,7 +133,7 @@ const envEngineeringRequirements: readonly CollegeOrMajorRequirement[] = [
       'CEE 4640',
       'CEE 6370',
       'MAE 4020',
-      'MAE 4021'
+      'MAE 4021',
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [3],

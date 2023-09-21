@@ -28,7 +28,7 @@ const dbmeMinorRequirements: readonly CollegeOrMajorRequirement[] = [
       'NCC 5580',
       'ORIE 4152',
       'ENGRG 4610',
-      'MAE 4610'
+      'MAE 4610',
     ),
     fulfilledBy: 'credits',
     perSlotMinCount: [3],
@@ -104,7 +104,7 @@ const dbmeMinorRequirements: readonly CollegeOrMajorRequirement[] = [
       'AEM 4160',
       'AEM 4190',
       'AEM 4300',
-      'AEM 4550'
+      'AEM 4550',
     ),
     fulfilledBy: 'credits',
     perSlotMinCount: [3],

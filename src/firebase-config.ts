@@ -51,11 +51,11 @@ export const auth = getAuth(app);
 export const db = getFirestore(app);
 
 export const usernameCollection = collection(db, 'user-name').withConverter(
-  getTypedFirestoreDataConverter<FirestoreUserName>()
+  getTypedFirestoreDataConverter<FirestoreUserName>(),
 );
 
 export const semestersCollection = collection(db, 'user-semesters').withConverter(
-  getTypedFirestoreDataConverter<FirestoreSemestersData>()
+  getTypedFirestoreDataConverter<FirestoreSemestersData>(),
 );
 
 export const coursesCollection = collection(db, 'courses');
@@ -66,26 +66,26 @@ export const crseIdToCatalogNbrCollection = collection(db, 'crseid-to-catalognbr
 
 export const toggleableRequirementChoicesCollection = collection(
   db,
-  'user-toggleable-requirement-choices'
+  'user-toggleable-requirement-choices',
 ).withConverter(getTypedFirestoreDataConverter<AppToggleableRequirementChoices>());
 
 export const overriddenFulfillmentChoicesCollection = collection(
   db,
-  'user-overridden-fulfillment-choices'
+  'user-overridden-fulfillment-choices',
 ).withConverter(getTypedFirestoreDataConverter<FirestoreOverriddenFulfillmentChoices>());
 
 export const subjectColorsCollection = collection(db, 'user-subject-colors').withConverter(
-  getTypedFirestoreDataConverter<Readonly<Record<string, string>>>()
+  getTypedFirestoreDataConverter<Readonly<Record<string, string>>>(),
 );
 
 export const uniqueIncrementerCollection = collection(db, 'user-unique-incrementer').withConverter(
-  getTypedFirestoreDataConverter<FirestoreUniqueIncrementer>()
+  getTypedFirestoreDataConverter<FirestoreUniqueIncrementer>(),
 );
 
 export const onboardingDataCollection = collection(db, 'user-onboarding-data').withConverter(
-  getTypedFirestoreDataConverter<FirestoreOnboardingUserData>()
+  getTypedFirestoreDataConverter<FirestoreOnboardingUserData>(),
 );
 
 export const trackUsersCollection = collection(db, 'track-users').withConverter(
-  getTypedFirestoreDataConverter<FirestoreTrackUsersData>()
+  getTypedFirestoreDataConverter<FirestoreTrackUsersData>(),
 );

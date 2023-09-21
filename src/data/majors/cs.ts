@@ -17,7 +17,7 @@ const csRequirements: readonly CollegeOrMajorRequirement[] = [
     allowCourseDoubleCounting: true,
     checker: includesWithSubRequirements(
       ['CS 1110', 'CS 1112', 'CS 1114', 'CS 1115'],
-      ['CS 2110', 'CS 2112']
+      ['CS 2110', 'CS 2112'],
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1],
@@ -32,7 +32,7 @@ const csRequirements: readonly CollegeOrMajorRequirement[] = [
       ['CS 3110'],
       ['CS 3410', 'CS 3420'],
       ['CS 4820'],
-      ['CS 4410', 'CS 4414']
+      ['CS 4410', 'CS 4414'],
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1, 1, 1],
@@ -90,7 +90,7 @@ const csRequirements: readonly CollegeOrMajorRequirement[] = [
       'CS 5414',
       'CS 5431',
       'CS 5625',
-      'CS 5643'
+      'CS 5643',
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],

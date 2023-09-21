@@ -7,7 +7,7 @@ interface CourseForRequirementGraph extends CourseWithUniqueId {
 
 export type BuildRequirementFulfillmentGraphParameters<
   Requirement extends string,
-  Course extends CourseForRequirementGraph
+  Course extends CourseForRequirementGraph,
 > = {
   /**
    * A list of applicable requirements in the system. e.g. if the user is CS major
@@ -46,13 +46,13 @@ export type BuildRequirementFulfillmentGraphParameters<
    * fulfillment strategies, it will return the union of all pre-computed course list.
    */
   readonly getAllCoursesThatCanPotentiallySatisfyRequirement: (
-    requirement: Requirement
+    requirement: Requirement,
   ) => readonly number[];
 };
 
 export const buildRequirementFulfillmentGraph = <
   Requirement extends string,
-  Course extends CourseForRequirementGraph
+  Course extends CourseForRequirementGraph,
 >({
   requirements,
   userCourses,
@@ -81,7 +81,7 @@ export const buildRequirementFulfillmentGraph = <
     graph.addRequirementNode(requirement);
     getAllCoursesThatCanPotentiallySatisfyRequirement(requirement).forEach(courseId => {
       (userCourseCourseIDToCourseMap.get(courseId) || []).forEach(userCourse =>
-        graph.addEdge(requirement, userCourse)
+        graph.addEdge(requirement, userCourse),
       );
     });
   });
@@ -99,7 +99,7 @@ export const buildRequirementFulfillmentGraph = <
             graph.removeEdge(correspondingRequirement, connectedCourse);
           }
         });
-    }
+    },
   );
 
   // Phase 3: Respect user's choices on opt-in/opt-out.
@@ -120,10 +120,10 @@ export const buildRequirementFulfillmentGraph = <
 
 export const removeIllegalEdgesFromRequirementFulfillmentGraph = <
   Requirement extends string,
-  Course extends CourseForRequirementGraph
+  Course extends CourseForRequirementGraph,
 >(
   graph: RequirementFulfillmentGraph<Requirement, Course>,
-  requirementConstraintHolds: (requirementA: Requirement, requirementB: Requirement) => boolean
+  requirementConstraintHolds: (requirementA: Requirement, requirementB: Requirement) => boolean,
 ): {
   courseToRequirementsInConstraintViolations: Map<string | number, Set<Requirement[]>>;
   doubleCountedCourseUniqueIDSet: ReadonlySet<string | number>;

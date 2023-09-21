@@ -113,7 +113,7 @@ const hdRequirements: readonly CollegeOrMajorRequirement[] = [
         'HD 4720',
         'HD 4765',
         'HD 4790',
-      ]
+      ],
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1],
@@ -214,7 +214,7 @@ const hdRequirements: readonly CollegeOrMajorRequirement[] = [
       'STSCI 2100',
       'MATH 1710',
       'PAM 2100',
-      'PSYCH 2500'
+      'PSYCH 2500',
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
@@ -241,7 +241,7 @@ const hdRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: [
       (course: Course): boolean =>
         ['PBS', 'BIOLS-AG', 'BIONLS-AG'].some(
-          distribution => course.catalogDistr?.includes(distribution) ?? false
+          distribution => course.catalogDistr?.includes(distribution) ?? false,
         ) && courseMeetsCreditMinimum(course, 3),
     ],
     fulfilledBy: 'courses',
@@ -258,7 +258,7 @@ const hdRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: [
       (course: Course): boolean =>
         ['PBS', 'BIOLS-AG', 'BIONLS-AG', 'SBA', 'KCM', 'MQR', 'LA', 'CA', 'HA', 'FL'].some(
-          distribution => course.catalogDistr?.includes(distribution) ?? false
+          distribution => course.catalogDistr?.includes(distribution) ?? false,
         ) || courseIsForeignLang(course),
     ],
     fulfilledBy: 'credits',

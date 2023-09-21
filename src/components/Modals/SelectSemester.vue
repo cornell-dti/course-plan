@@ -267,7 +267,7 @@ export default defineComponent({
       this.$emit(
         'updateSemProps',
         this.seasonText || this.seasonPlaceholder,
-        this.yearText || Number(this.yearPlaceholder)
+        this.yearText || Number(this.yearPlaceholder),
       );
     },
     selectSeason(season: string) {

@@ -5,7 +5,7 @@ import store from '../store';
 
 export const updateRequirementChoice = (
   courseUniqueID: string | number,
-  choiceUpdater: (choice: FirestoreCourseOptInOptOutChoices) => FirestoreCourseOptInOptOutChoices
+  choiceUpdater: (choice: FirestoreCourseOptInOptOutChoices) => FirestoreCourseOptInOptOutChoices,
 ): void => {
   setDoc(doc(overriddenFulfillmentChoicesCollection, store.state.currentFirebaseUser.email), {
     ...store.state.overriddenFulfillmentChoices,
@@ -14,7 +14,7 @@ export const updateRequirementChoice = (
         arbitraryOptIn: {},
         acknowledgedCheckerWarningOptIn: [],
         optOut: [],
-      }
+      },
     ),
   });
 };
@@ -22,7 +22,7 @@ export const updateRequirementChoice = (
 export const toggleRequirementChoice = (
   courseUniqueID: string | number,
   requirementID: string,
-  relevantRequirementChoiceType: keyof FirestoreCourseOptInOptOutChoices
+  relevantRequirementChoiceType: keyof FirestoreCourseOptInOptOutChoices,
 ): void =>
   updateRequirementChoice(courseUniqueID, choice => {
     switch (relevantRequirementChoiceType) {
@@ -43,12 +43,12 @@ export const toggleRequirementChoice = (
 
 export const updateRequirementChoices = (
   updater: (
-    oldChoices: FirestoreOverriddenFulfillmentChoices
-  ) => FirestoreOverriddenFulfillmentChoices
+    oldChoices: FirestoreOverriddenFulfillmentChoices,
+  ) => FirestoreOverriddenFulfillmentChoices,
 ): void => {
   setDoc(
     doc(overriddenFulfillmentChoicesCollection, store.state.currentFirebaseUser.email),
-    updater(store.state.overriddenFulfillmentChoices)
+    updater(store.state.overriddenFulfillmentChoices),
   );
 };
 
@@ -56,15 +56,15 @@ export const deleteCourseFromRequirementChoices = (courseUniqueID: string | numb
   deleteCoursesFromRequirementChoices([courseUniqueID]);
 
 export const deleteCoursesFromRequirementChoices = (
-  courseUniqueIds: readonly (string | number)[]
+  courseUniqueIds: readonly (string | number)[],
 ): void => {
   const courseUniqueIdStrings = new Set(courseUniqueIds.map(uniqueId => uniqueId.toString()));
   setDoc(
     doc(overriddenFulfillmentChoicesCollection, store.state.currentFirebaseUser.email),
     Object.fromEntries(
       Object.entries(store.state.overriddenFulfillmentChoices).filter(
-        ([uniqueId]) => !courseUniqueIdStrings.has(uniqueId)
-      )
-    )
+        ([uniqueId]) => !courseUniqueIdStrings.has(uniqueId),
+      ),
+    ),
   );
 };

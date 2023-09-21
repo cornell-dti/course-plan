@@ -72,7 +72,7 @@ const bioEngineeringRequirements: readonly CollegeOrMajorRequirement[] = [
       ['BEE 3310'],
       ['BEE 3400'],
       ['BEE 3600'],
-      ['BEE 4500']
+      ['BEE 4500'],
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1, 1, 1, 1],
@@ -94,7 +94,7 @@ const bioEngineeringRequirements: readonly CollegeOrMajorRequirement[] = [
       'https://courses.cornell.edu/preview_program.php?catoid=41&poid=19795#BiologicalEngineering',
     checker: includesWithSubRequirements(
       ['BEE 2220', 'ENGRD 2210', 'CHEME 3130', 'MSE 3030'],
-      ['CEE 3040', 'ENGRD 2700']
+      ['CEE 3040', 'ENGRD 2700'],
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1],
@@ -176,7 +176,7 @@ const bioEngineeringRequirements: readonly CollegeOrMajorRequirement[] = [
       'BEE 4810',
       'BEE 4870',
       'BEE 4880',
-      'BEE 7540'
+      'BEE 7540',
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [4],

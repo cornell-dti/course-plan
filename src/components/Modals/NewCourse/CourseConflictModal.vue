@@ -88,7 +88,7 @@ export default defineComponent({
       const reqsInConflict = this.getReqsInConflict(
         this.selectedCourse.uniqueID,
         conflictReqIds,
-        selectableReqIds
+        selectableReqIds,
       );
 
       // filter out self checks that are not in conflict with the other reqs
@@ -181,7 +181,7 @@ export default defineComponent({
     getReqsInConflict(
       uniqueID: string | number,
       conflictReqIds: string[],
-      selectableReqIds: string[]
+      selectableReqIds: string[],
     ): string[] {
       const selectableReqIdsInConflict: string[] = [];
       selectableReqIds.forEach(selectableReqId => {
@@ -191,8 +191,8 @@ export default defineComponent({
           (reqA, reqB) =>
             allowCourseDoubleCountingBetweenRequirements(
               store.state.userRequirementsMap[reqA],
-              store.state.userRequirementsMap[reqB]
-            )
+              store.state.userRequirementsMap[reqB],
+            ),
         );
 
         // if selectable req is not in conflict with conflictReqIds, it will be missing from requirementsThatDoNotAllowDoubleCounting

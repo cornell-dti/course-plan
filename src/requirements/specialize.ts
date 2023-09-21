@@ -11,7 +11,7 @@ import { Major } from './types';
  */
 export default function specialized<R extends RequirementCommon>(
   collegeReqs: readonly R[],
-  majors: readonly Major<R>[]
+  majors: readonly Major<R>[],
 ) {
   const allSpecializations = majors.flatMap(({ specializations }) => specializations ?? []);
   const specializationMap = new Map(allSpecializations.map(it => [it.name, it]));

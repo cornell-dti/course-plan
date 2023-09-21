@@ -23,7 +23,7 @@ const pamRequirements: readonly CollegeOrMajorRequirement[] = [
       ['PAM 2101'],
       ['PAM 2300'],
       ['PAM 3100'],
-      ['PAM 3300']
+      ['PAM 3300'],
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1, 1, 1, 1, 1],
@@ -144,7 +144,7 @@ const pamRequirements: readonly CollegeOrMajorRequirement[] = [
       'PHYS 1101',
       'PHYS 2207',
       'PHYS 1102',
-      'PHYS 2208'
+      'PHYS 2208',
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
@@ -159,7 +159,7 @@ const pamRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: [
       (course: Course): boolean =>
         ['PBS', 'BIOLS-AG', 'BIONLS-AG'].some(
-          distribution => course.catalogDistr?.includes(distribution) ?? false
+          distribution => course.catalogDistr?.includes(distribution) ?? false,
         ) && courseMeetsCreditMinimum(course, 3),
     ],
     fulfilledBy: 'courses',
@@ -195,7 +195,7 @@ const pamRequirements: readonly CollegeOrMajorRequirement[] = [
       'PHIL 2441',
       'PHIL 3410',
       'PHIL 3460',
-      'PHIL 3480'
+      'PHIL 3480',
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
@@ -210,7 +210,7 @@ const pamRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: [
       (course: Course): boolean =>
         ['PBS', 'BIOLS-AG', 'BIONLS-AG', 'SBA', 'KCM', 'MQR', 'LA', 'CA', 'HA', 'FL'].some(
-          distribution => course.catalogDistr?.includes(distribution) ?? false
+          distribution => course.catalogDistr?.includes(distribution) ?? false,
         ) || courseIsForeignLang(course),
     ],
     fulfilledBy: 'credits',

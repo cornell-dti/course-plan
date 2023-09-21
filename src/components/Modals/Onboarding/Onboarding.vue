@@ -294,7 +294,7 @@ export default defineComponent({
       major: readonly string[],
       minor: readonly string[],
       grad: string,
-      name: FirestoreUserName
+      name: FirestoreUserName,
     ) {
       this.name = name;
       this.onboarding = {
@@ -317,7 +317,7 @@ export default defineComponent({
     },
     updateTransfer(exams: readonly FirestoreTransferExam[], tookSwim: 'yes' | 'no') {
       const userExams = exams.filter(
-        ({ subject, score }) => !!score && subject !== placeholderText
+        ({ subject, score }) => !!score && subject !== placeholderText,
       );
       this.onboarding = {
         ...this.onboarding,

@@ -31,36 +31,36 @@ export const immutableBottomBarState: Readonly<BottomBarState> = vueForBottomBar
 
 export const reportCourseColorChange = (courseUniqueID: number, color: string): void => {
   vueForBottomBar.bottomCourses = vueForBottomBar.bottomCourses.map(course =>
-    course.uniqueID === courseUniqueID ? { ...course, color } : course
+    course.uniqueID === courseUniqueID ? { ...course, color } : course,
   );
 };
 
 export const reportSubjectColorChange = (code: string, color: string): void => {
   vueForBottomBar.bottomCourses = vueForBottomBar.bottomCourses.map(course =>
-    course.code.split(' ')[0] === code.split(' ')[0] ? { ...course, color } : course
+    course.code.split(' ')[0] === code.split(' ')[0] ? { ...course, color } : course,
   );
 };
 
 const getDetailedInformationForBottomBar = async (
   roster: string,
   subject: string,
-  number: string
+  number: string,
 ) => {
   const seasonAndYear = rosterIdentifierToSeasonAndYear(roster);
   const course = await getCourseWithSeasonAndYear(
     seasonAndYear.season,
     seasonAndYear.year,
     subject,
-    number
+    number,
   );
   return cornellCourseRosterCourseDetailedInformationToPartialBottomCourseInformation(
-    checkNotNull(course)
+    checkNotNull(course),
   );
 };
 
 const getReviews = (
   subject: string,
-  number: string
+  number: string,
 ): Promise<{
   classRating: number;
   classDifficulty: number;
@@ -76,13 +76,13 @@ const getReviews = (
         classRating: null,
         classDifficulty: null,
         classWorkload: null,
-      }
+      },
   );
 
 export const addCourseToBottomBar = async (
   course: FirestoreSemesterCourse,
   season: string,
-  year: number
+  year: number,
 ): Promise<void> => {
   vueForBottomBar.isExpanded = true;
 
@@ -98,7 +98,7 @@ export const addCourseToBottomBar = async (
   const classRosterCourseData = await getCourse(
     seasonAndYearToRosterIdentifier(season as FirestoreSemesterSeason, year),
     courseSubjectAndNumber.subject,
-    courseSubjectAndNumber.number
+    courseSubjectAndNumber.number,
   );
   const seasonAndYear = rosterIdentifierToSeasonAndYear(classRosterCourseData.roster);
 
@@ -113,7 +113,7 @@ export const addCourseToBottomBar = async (
   Promise.all([
     getReviews(subject, number).then(({ classRating, classDifficulty, classWorkload }) => {
       const bottomBarCourse = vueForBottomBar.bottomCourses.find(
-        ({ uniqueID, code }) => uniqueID === course.uniqueID && code === course.code
+        ({ uniqueID, code }) => uniqueID === course.uniqueID && code === course.code,
       );
       if (bottomBarCourse) {
         bottomBarCourse.overallRating = classRating;
@@ -124,10 +124,10 @@ export const addCourseToBottomBar = async (
     getDetailedInformationForBottomBar(
       vueForBottomBar.bottomCourses[vueForBottomBar.bottomCourseFocus].currRoster,
       subject,
-      number
+      number,
     ).then(({ description, prereqs, enrollment, lectureTimes, instructors, distributions }) => {
       const bottomBarCourse = vueForBottomBar.bottomCourses.find(
-        ({ uniqueID, code }) => uniqueID === course.uniqueID && code === course.code
+        ({ uniqueID, code }) => uniqueID === course.uniqueID && code === course.code,
       );
       if (bottomBarCourse) {
         Object.assign(bottomBarCourse, {

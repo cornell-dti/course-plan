@@ -86,18 +86,17 @@ export default defineComponent({
               store.state.userRequirementsMap,
               store.state.toggleableRequirementChoices,
               this.subReqId,
-              course.crseId
+              course.crseId,
             )
           ) {
             // If the course can't help fulfill the checker (or is a placeholder), do not add to choices.
             return;
           }
 
-          const currentlyMatchedRequirements = store.state.safeRequirementFulfillmentGraph.getConnectedRequirementsFromCourse(
-            {
+          const currentlyMatchedRequirements =
+            store.state.safeRequirementFulfillmentGraph.getConnectedRequirementsFromCourse({
               uniqueId: course.uniqueID,
-            }
-          );
+            });
           if (currentlyMatchedRequirements.includes(this.subReqId)) {
             // If the course is already matched to the current requirement, do not add to choices.
             return;
@@ -107,9 +106,10 @@ export default defineComponent({
              we should allow the constraint violation to be broken, i.e. don't return early */
           const currentRequirementAllowDoubleCounting =
             store.state.userRequirementsMap[this.subReqCourseId]?.allowCourseDoubleCounting;
-          const allOtherRequirementsAllowDoubleCounting = store.state.safeRequirementFulfillmentGraph
-            .getConnectedRequirementsFromCourse({ uniqueId: course.uniqueID })
-            .every(reqID => store.state.userRequirementsMap[reqID]?.allowCourseDoubleCounting);
+          const allOtherRequirementsAllowDoubleCounting =
+            store.state.safeRequirementFulfillmentGraph
+              .getConnectedRequirementsFromCourse({ uniqueId: course.uniqueID })
+              .every(reqID => store.state.userRequirementsMap[reqID]?.allowCourseDoubleCounting);
           if (!currentRequirementAllowDoubleCounting && !allOtherRequirementsAllowDoubleCounting) {
             // At this point, we need to consider double counting issues.
             // There are 2 ways we can add the course to the requirement without double counting violations:
@@ -149,7 +149,7 @@ export default defineComponent({
         // Since we edit from a self-check requirement,
         // we know it must be `acknowledgedCheckerWarningOptIn`.
         acknowledgedCheckerWarningOptIn: Array.from(
-          new Set([...choice.acknowledgedCheckerWarningOptIn, this.subReqId])
+          new Set([...choice.acknowledgedCheckerWarningOptIn, this.subReqId]),
         ),
         // Keep existing behavior of keeping it connected to at most one requirement.
         optOut: getRelatedRequirementIdsForCourseOptOut(
@@ -157,7 +157,7 @@ export default defineComponent({
           this.subReqId,
           store.state.groupedRequirementFulfillmentReport,
           store.state.toggleableRequirementChoices,
-          store.state.userRequirementsMap
+          store.state.userRequirementsMap,
         ),
       }));
     },
@@ -182,10 +182,10 @@ export default defineComponent({
             this.subReqId,
             store.state.groupedRequirementFulfillmentReport,
             store.state.toggleableRequirementChoices,
-            store.state.userRequirementsMap
+            store.state.userRequirementsMap,
           ),
         }),
-        this.$gtag
+        this.$gtag,
       );
     },
     openCourseModal() {

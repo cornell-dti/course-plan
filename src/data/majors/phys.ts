@@ -16,7 +16,7 @@ const physRequirements: readonly CollegeOrMajorRequirement[] = [
       ['PHYS 1112', 'PHYS 1116', 'PHYS 2207'],
       // New requirement not checked: PHYS 1110 Intro. to Experimental Physics
       ['PHYS 2213', 'PHYS 2217'],
-      ['PHYS 2214', 'PHYS 2218']
+      ['PHYS 2214', 'PHYS 2218'],
       // New requirement not checked: PHYS 2216 or PHYS 2210
     ),
     fulfilledBy: 'courses',
@@ -32,7 +32,7 @@ const physRequirements: readonly CollegeOrMajorRequirement[] = [
       ['MATH 1120', 'MATH 1910', 'MATH 1220'],
       ['MATH 1920', 'MATH 2220', 'MATH 2240'],
       ['MATH 3230', 'MATH 2930'],
-      ['MATH 2210', 'MATH 2230', 'MATH 2940']
+      ['MATH 2210', 'MATH 2230', 'MATH 2940'],
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1, 1],
@@ -63,7 +63,7 @@ const physRequirements: readonly CollegeOrMajorRequirement[] = [
       'PHYS 4410',
       'AEP 2640',
       'ASTRO 4410',
-      'BEE 4500'
+      'BEE 4500',
     ),
     fulfilledBy: 'credits',
     perSlotMinCount: [3],

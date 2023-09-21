@@ -4,11 +4,11 @@ import { toggleableRequirementChoicesCollection } from '../firebase-config';
 import store from '../store';
 
 const editToggleableRequirementChoices = (
-  toggleableRequirementChoices: AppToggleableRequirementChoices
+  toggleableRequirementChoices: AppToggleableRequirementChoices,
 ): void => {
   setDoc(
     doc(toggleableRequirementChoicesCollection, store.state.currentFirebaseUser.email),
-    toggleableRequirementChoices
+    toggleableRequirementChoices,
   );
 };
 

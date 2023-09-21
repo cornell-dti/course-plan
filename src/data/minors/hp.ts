@@ -34,7 +34,7 @@ const hpMinorRequirements: readonly CollegeOrMajorRequirement[] = [
       'PAM 5500',
       'PAM 5740',
       'PAM 5760',
-      'PAM 5900'
+      'PAM 5900',
     ),
     fulfilledBy: 'credits',
     perSlotMinCount: [9],

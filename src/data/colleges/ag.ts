@@ -19,7 +19,7 @@ const calsCreditsRequirement: CollegeOrMajorRequirement = {
     (course: Course): boolean =>
       ['AG'].includes(course.acadGroup) ||
       ['AEM', 'BIOEE', 'BIOMG', 'BIOMI', 'BIONB', 'BSOC', 'EAS', 'INFO', 'NS', 'STSCI'].includes(
-        course.subject
+        course.subject,
       ),
   ],
   fulfilledBy: 'credits',
@@ -96,7 +96,7 @@ const calsIntroductoryLifeSciencesOrBiologyRequirement: CollegeOrMajorRequiremen
     'PLSCI 4190',
     'PLSCS 1120',
     'STS 2871',
-    'VIEN 2204'
+    'VIEN 2204',
   ),
   fulfilledBy: 'credits',
   perSlotMinCount: [6],
@@ -543,7 +543,7 @@ const calsPhysicalAndLifeSciencesRequirement: CollegeOrMajorRequirement = {
     'STSCI 5990',
     'VIEN 2204',
     'VIEN 4300',
-    'VIEN 4600'
+    'VIEN 4600',
   ),
   fulfilledBy: 'credits',
   perSlotMinCount: [18],
@@ -624,8 +624,8 @@ const calsWrittenAndOralExpressionRequirement: CollegeOrMajorRequirement = {
   checker: [
     courseIsFWS ||
       ((course: Course): boolean =>
-        ['written expression', 'oral expression', 'First-Year Writing Seminar'].some(keyword =>
-          course.catalogSatisfiesReq?.includes(keyword)
+        ['written expression', 'oral expression', 'First-Year Writing Seminar'].some(
+          keyword => course.catalogSatisfiesReq?.includes(keyword),
         )),
   ],
   fulfilledBy: 'credits',
@@ -641,7 +641,7 @@ const calsWrittenExpressionRequirement: CollegeOrMajorRequirement = {
     courseIsFWS ||
       ((course: Course): boolean =>
         ['written expression', 'First-Year Writing Seminar'].some(
-          keyword => course.catalogSatisfiesReq?.includes(keyword) ?? false
+          keyword => course.catalogSatisfiesReq?.includes(keyword) ?? false,
         )),
   ],
   fulfilledBy: 'credits',

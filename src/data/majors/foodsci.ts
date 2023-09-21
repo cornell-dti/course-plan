@@ -18,7 +18,7 @@ const foodSciRequirements: readonly CollegeOrMajorRequirement[] = [
       'BIOEE 1610',
       'BIOEE 1780',
       'BIOAP 1100',
-      'PLSCI 1115'
+      'PLSCI 1115',
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [2],
@@ -74,7 +74,7 @@ const foodSciRequirements: readonly CollegeOrMajorRequirement[] = [
       'STSCI 2150',
       'STSCI 2200',
       'MATH 1710',
-      'PSYCH 3500'
+      'PSYCH 3500',
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
@@ -125,7 +125,7 @@ const foodSciRequirements: readonly CollegeOrMajorRequirement[] = [
       ['FDSC 3960'],
       ['FDSC 4000'],
       ['FDSC 4170'],
-      ['FDSC 4210']
+      ['FDSC 4210'],
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -184,7 +184,7 @@ const foodSciRequirements: readonly CollegeOrMajorRequirement[] = [
             'FDSC 4220',
             'FDSC 4250',
             'FDSC 4400',
-          ]
+          ],
         ),
         perSlotMinCount: [1, 1, 1, 1, 1, 1, 1],
         slotNames: [
@@ -222,7 +222,7 @@ const foodSciRequirements: readonly CollegeOrMajorRequirement[] = [
             'FDSC 4500',
             'FDSC 4880',
             'FDSC 5400',
-          ]
+          ],
         ),
         perSlotMinCount: [1, 1, 1, 1, 1, 1, 1],
         slotNames: [
@@ -268,7 +268,7 @@ const foodSciRequirements: readonly CollegeOrMajorRequirement[] = [
             'NBA 5070',
             'AEM 2480',
             'HADM 3470',
-          ]
+          ],
         ),
         perSlotMinCount: [1, 1, 1, 1, 1, 1, 1, 1, 2],
         slotNames: [

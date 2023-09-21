@@ -20,11 +20,11 @@ export const trimEmptySems = (sems: readonly FirestoreSemester[]): readonly Fire
 const reqsToFilterOut = ['A&S Credits'];
 
 export const getCourseRows = (
-  courses: readonly (FirestoreSemesterCourse | FirestoreSemesterPlaceholder | CourseTaken)[]
+  courses: readonly (FirestoreSemesterCourse | FirestoreSemesterPlaceholder | CourseTaken)[],
 ): SemesterRows => {
   const rows: [string[], BubbleData[]][] = courses
     .filter(
-      (course): course is FirestoreSemesterCourse | CourseTaken => !isPlaceholderCourse(course)
+      (course): course is FirestoreSemesterCourse | CourseTaken => !isPlaceholderCourse(course),
     )
     .map(course => {
       const [reqs, bubbles] = getFulfilledReqs(course);
@@ -41,7 +41,7 @@ export const getCourseRows = (
 };
 
 export const getFulfilledReqs = (
-  course: FirestoreSemesterCourse | CourseTaken
+  course: FirestoreSemesterCourse | CourseTaken,
 ): readonly [string[], BubbleData[]] => {
   const reqsFulfilled = store.state.safeRequirementFulfillmentGraph
     .getConnectedRequirementsFromCourse({

@@ -10,7 +10,7 @@ const astroRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: includesWithSubRequirements(
       ['PHYS 1112', 'PHYS 1116'],
       ['PHYS 2213', 'PHYS 2217'],
-      ['PHYS 2214', 'PHYS 2218']
+      ['PHYS 2214', 'PHYS 2218'],
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1],
@@ -23,7 +23,7 @@ const astroRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: includesWithSubRequirements(
       ['MATH 1910', 'MATH 1120', 'MATH 1220'],
       ['MATH 1920', 'MATH 2220', 'MATH 2240'],
-      ['MATH 2930', 'MATH 4710', 'ASTRO 3340']
+      ['MATH 2930', 'MATH 4710', 'ASTRO 3340'],
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1],
@@ -58,7 +58,7 @@ const astroRequirements: readonly CollegeOrMajorRequirement[] = [
           ['PHYS 4230', 'AEP 4230'],
           ['PHYS 3316', 'PHYS 3318', 'PHYS 3327', 'PHYS 4443'],
           ['MATH 2940', 'MATH 2210', 'MATH 2230'],
-          ['MATH ****']
+          ['MATH ****'],
         ),
         perSlotMinCount: [2, 1, 4, 1, 2],
         slotNames: [
@@ -77,7 +77,7 @@ const astroRequirements: readonly CollegeOrMajorRequirement[] = [
           ['ASTRO 2211', 'ASTRO 2212'],
           ['ASTRO 3301', 'ASTRO 3302', 'ASTRO 3303'],
           // TODO: it's these classes or any other classes approved by DUS
-          ['ASTRO 2290', 'ASTRO 2299', 'ASTRO 4445']
+          ['ASTRO 2290', 'ASTRO 2299', 'ASTRO 4445'],
           // TODO: missing ability to combine class and credit requirements in concentrations.
           // Missing additional fifteen credit hours in a complementary area.
         ),

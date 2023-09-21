@@ -13,7 +13,7 @@ export const writeToFile = (value, fileName: string) => {
   } finally {
     writeFileSync(
       path.join(DEFAULT_OUTPUT_DIRECTORY, fileName),
-      JSON.stringify(value, undefined, 2)
+      JSON.stringify(value, undefined, 2),
     );
   }
 };

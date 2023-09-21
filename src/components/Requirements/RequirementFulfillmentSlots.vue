@@ -48,7 +48,7 @@ type SubReqCourseSlot = CompletedSubReqCourseSlot | IncompleteSubReqCourseSlot;
 const generateSubReqIncompleteCourses = (
   allTakenCourseIds: ReadonlySet<number>,
   eligibleCourseIds: readonly number[],
-  requirementID: string
+  requirementID: string,
 ): readonly AppFirestoreSemesterCourseWithRequirementID[] => {
   const rosterCourses = eligibleCourseIds
     .filter(courseID => !allTakenCourseIds.has(courseID))
@@ -57,8 +57,8 @@ const generateSubReqIncompleteCourses = (
     cornellCourseRosterCourseToFirebaseSemesterCourseWithCustomIDAndColor(
       rosterCourse,
       -1,
-      store.state.subjectColors[rosterCourse.subject]
-    )
+      store.state.subjectColors[rosterCourse.subject],
+    ),
   );
   return coursesWithDummyUniqueID.map(course => ({
     ...course,
@@ -99,7 +99,7 @@ export default defineComponent({
         this.requirementFulfillment.requirement,
         {
           [this.requirementFulfillment.requirement.id]: this.toggleableRequirementChoice,
-        }
+        },
       );
       if (requirementFulfillmentSpec === null) return [];
       /**
@@ -124,7 +124,7 @@ export default defineComponent({
       ).dangerousCourses;
 
       const allTakenCourseIds: ReadonlySet<number> = new Set(
-        matchedCourses.flat().map(course => course.courseId)
+        matchedCourses.flat().map(course => course.courseId),
       );
       const slots: SubReqCourseSlot[] = [];
 
@@ -141,7 +141,7 @@ export default defineComponent({
             courses: generateSubReqIncompleteCourses(
               allTakenCourseIds,
               requirementFulfillmentEligibleCourses[0],
-              this.requirementFulfillment.requirement.id
+              this.requirementFulfillment.requirement.id,
             ),
           });
         }
@@ -166,7 +166,7 @@ export default defineComponent({
                 courses: generateSubReqIncompleteCourses(
                   allTakenCourseIds,
                   requirementFulfillmentEligibleCourses[i],
-                  this.requirementFulfillment.requirement.id
+                  this.requirementFulfillment.requirement.id,
                 ),
               });
             }

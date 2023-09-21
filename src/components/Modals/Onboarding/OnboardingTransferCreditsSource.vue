@@ -80,7 +80,7 @@ export default defineComponent({
       selectedExams: readonly FirestoreTransferExam[],
       // array of ap/ib exams
       allSubjects: readonly string[],
-      choice: string
+      choice: string,
     ) {
       const selectedExamsNames = selectedExams.map(exam => exam.subject);
       const selectableOptions: string[] = [];
