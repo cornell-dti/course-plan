@@ -8,6 +8,7 @@ verify_ssl = true
 [packages]
 black = "*"
 pytest = "*"
+langchain = "*"
 
 [requires]
 python_version = "3.11"
