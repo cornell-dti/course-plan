@@ -60,8 +60,6 @@ jobs:
       - name: Install pipenv, black, and pytest
         run: |
           pip install pipenv
-          pip install black==23.9.1
-          pip install pytest
       - name: Pipenv Install
         working-directory: python
         run: pipenv install
@@ -69,6 +67,6 @@ jobs:
         run: |
           exit $(git status --porcelain | wc -l)
       - name: Run black
-        run: black . --check
+        run: pipenv run black . --check
       - name: Run tests
-        run: pytest
+        run: pipenv run pytest
