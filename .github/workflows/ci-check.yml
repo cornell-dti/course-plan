@@ -53,9 +53,11 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: '3.11'
+      - name: Export langchain tests false var
+        run: export RUN_LANGCHAIN_TESTS=false
       - name: Install pip
         run: |
-          export RUN_LANGCHAIN_TESTS=false
+          ls
           cd python
           ls
           python -m pip install --upgrade pip setuptools wheel
