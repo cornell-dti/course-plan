@@ -22,6 +22,18 @@ Then access http://localhost:8080/
 
 ## Contributors
 
+### FA23
+- **Nidhi Mylavarapu** - Developer
+- **Jerry Wang** - Developer
+- **Miranda Yu** - Developer
+- **Elizabeth Tang** - Developer
+- **Pablo Raigoza** - Developer
+- **Michelle Dai** - Designer
+- **Joanna Chen** - Designer
+- **Jonathan Mak** - PMM
+- **Kaylin Chan** - PM
+- **Zak Kent** - TPM
+
 ### SP23
 
 - **Jerry Wang** - Developer
