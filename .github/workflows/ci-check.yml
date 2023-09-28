@@ -63,14 +63,14 @@ jobs:
           pip install pipenv
           pip install black==23.9.1
           pip install pytest
-          echo $(cat > Pipfile)
-          echo $(cat > Pipfile.lock)
+          cat Pipfile
+          cat Pipfile.lock
       - name: Pipenv Install
         run: pipenv install
       - name: Check that pipenv is up to date
         run: |
-          echo $(cat > Pipfile)
-          echo $(cat > Pipfile.lock)
+          cat Pipfile
+          cat Pipfile.lock
           exit $(git status --porcelain | wc -l)
       - name: Run black
         run: black . --check
