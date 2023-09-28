@@ -66,7 +66,7 @@ jobs:
       - name: Pipenv Install
         run: pipenv install
       - name: Check that pipenv is up to date
-        run: echo $(git status --porcelain)
+        run: exit $(git status --porcelain | wc -l)
       - name: Run black
         run: black . --check
       - name: Run tests
