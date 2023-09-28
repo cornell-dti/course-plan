@@ -53,26 +53,20 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: '3.11'
-      - name: Export langchain tests false var
-        run: export RUN_LANGCHAIN_TESTS=false
-      - name: cd python
-        run: cd python
       - name: Install pip
-        run: python -m pip install --upgrade pip setuptools wheel
+        run: |
+          export RUN_LANGCHAIN_TESTS=false
+          python -m pip install --upgrade pip setuptools wheel
       - name: Install pipenv, black, and pytest
         run: |
           pip install pipenv
           pip install black==23.9.1
           pip install pytest
-          ls
-          cat Pipfile
-          cat Pipfile.lock
       - name: Pipenv Install
+        working-directory: python
         run: pipenv install
       - name: Check that pipenv is up to date
         run: |
-          cat Pipfile
-          cat Pipfile.lock
           exit $(git status --porcelain | wc -l)
       - name: Run black
         run: black . --check
