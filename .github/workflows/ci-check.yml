@@ -55,12 +55,10 @@ jobs:
           python-version: '3.11'
       - name: Export langchain tests false var
         run: export RUN_LANGCHAIN_TESTS=false
+      - name: cd python
+        run: cd python
       - name: Install pip
-        run: |
-          ls
-          cd python
-          ls
-          python -m pip install --upgrade pip setuptools wheel
+        run: python -m pip install --upgrade pip setuptools wheel
       - name: Install pipenv, black, and pytest
         run: |
           pip install pipenv
