@@ -63,6 +63,7 @@ jobs:
           pip install pipenv
           pip install black==23.9.1
           pip install pytest
+          ls
           cat Pipfile
           cat Pipfile.lock
       - name: Pipenv Install
