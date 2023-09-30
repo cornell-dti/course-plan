@@ -75,12 +75,11 @@ async function popSemCourseData(sem: FirestoreSemester): Promise<FirestoreSemest
   const promises: Promise<FirestoreSemesterCourse>[] = [];
 
   sem.courses.forEach(curCourse => {
-    if (isFirestoreSemesterCourse(curCourse))
-      promises.push(popCourseCourseData(curCourse, sem));
+    if (isFirestoreSemesterCourse(curCourse)) promises.push(popCourseCourseData(curCourse, sem));
   });
 
   const results = await Promise.all(promises);
-  
+
   return {
     year: sem.year,
     season: sem.season,
@@ -155,14 +154,14 @@ const store: TypedVuexStore = new TypedVuexStore({
   },
   actions: {
     async setSemesters(context, semester: readonly FirestoreSemester[]) {
-      const promises : Promise<FirestoreSemester>[] = [];
+      const promises: Promise<FirestoreSemester>[] = [];
 
       semester.forEach(curSem => {
         promises.push(popSemCourseData(curSem));
       });
 
       const results = await Promise.all(promises);
-      
+
       context.commit('setSemesters', results);
     },
   },
@@ -412,7 +411,7 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
       emitOnLoadWhenLoaded();
     }
   );
-  const derivedDataComputationUnsubscriber = async () => await autoRecomputeDerivedData();
+  const derivedDataComputationUnsubscriber = async () => autoRecomputeDerivedData();
 
   const unsubscriber = () => {
     userNameUnsubscriber();

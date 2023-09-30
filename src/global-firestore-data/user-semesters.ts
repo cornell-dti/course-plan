@@ -151,7 +151,10 @@ export const deleteAllCoursesFromSemester = async (
   }
 };
 
-export const deleteCourseFromSemesters = async (courseUniqueID: number, gtag?: VueGtag): Promise<void> => {
+export const deleteCourseFromSemesters = async (
+  courseUniqueID: number,
+  gtag?: VueGtag
+): Promise<void> => {
   GTagEvent(gtag, 'delete-course');
   await editSemesters(oldSemesters =>
     oldSemesters.map(semester => {
