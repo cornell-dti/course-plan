@@ -50,6 +50,8 @@ export type VuexStoreState = {
   subjectColors: Readonly<Record<string, string>>;
   uniqueIncrementer: number;
   isTeleportModalOpen: boolean;
+  plans: readonly Plan[];
+  currentPlan: Plan;
 };
 
 export class TypedVuexStore extends Store<VuexStoreState> {}
@@ -96,6 +98,8 @@ const store: TypedVuexStore = new TypedVuexStore({
     subjectColors: {},
     uniqueIncrementer: 0,
     isTeleportModalOpen: false,
+    plans: [],
+    currentPlan: { name: '', semesters: [] },
   },
   actions: {},
   mutations: {
@@ -333,7 +337,7 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
       store.commit('setSemesters', [newSemester]);
       setDoc(doc(fb.semestersCollection, simplifiedUser.email), {
         orderByNewest: true,
-        plans: [{ semesters: [newSemester] }], // TODO: andxu282 update later
+        plans: [{ name: 'Plan 1', semesters: [newSemester] }], // TODO: andxu282 update later
         semesters: [newSemester],
       });
     }
