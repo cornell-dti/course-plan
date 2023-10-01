@@ -13,17 +13,22 @@ import {
 } from './user-overridden-fulfillment-choices';
 
 export const editSemesters = (
+  plan: Plan,
   updater: (oldSemesters: readonly FirestoreSemester[]) => readonly FirestoreSemester[]
 ): void => {
-  const semesters = updater(store.state.semesters);
-  store.commit('setSemesters', semesters);
-  // TODO: update when multiple plans frontend implemented
-  updateDoc(doc(semestersCollection, store.state.currentFirebaseUser.email), {
-    semesters,
-    plans: [{ semesters }],
-  });
+  const editedPlan = (p: Plan): Plan => ({ name: p.name, semesters: updater(p.semesters) });
+  editPlan(plan.name, editedPlan);
 };
 
+export const editPlans = async (
+  updater: (oldPlans: readonly Plan[]) => readonly Plan[]
+): Promise<void> => {
+  const plans = updater(store.state.plans);
+  store.commit('setPlans', plans);
+  await updateDoc(doc(semestersCollection, store.state.currentFirebaseUser.email), {
+    plans,
+  });
+};
 /**
  * Sets whether semesters are ordered by newest/oldest
  */
@@ -36,11 +41,12 @@ export const setOrderByNewest = (orderByNewest: boolean): void => {
 };
 
 export const editSemester = (
+  plan: Plan,
   year: number,
   season: FirestoreSemesterSeason,
   updater: (oldSemester: FirestoreSemester) => FirestoreSemester
 ): void => {
-  editSemesters(oldSemesters =>
+  editSemesters(plan, oldSemesters =>
     oldSemesters.map(sem => (semesterEquals(sem, year, season) ? updater(sem) : sem))
   );
 };
@@ -67,6 +73,7 @@ export const semesterEquals = (
 ): boolean => semester.year === year && semester.season === season;
 
 export const addSemester = (
+  plan: Plan,
   year: number,
   season: FirestoreSemesterSeason,
   gtag?: VueGtag,
@@ -76,20 +83,41 @@ export const addSemester = (
   editSemesters(oldSemesters => [...oldSemesters, createSemester(year, season, courses)]);
 };
 
+export const addPlan = async (
+  name: string,
+  semesters: FirestoreSemester[],
+  gtag?: GTag
+): Promise<void> => {
+  GTagEvent(gtag, 'add-plan');
+  await editPlans(oldPlans => [...oldPlans, createPlan(name, semesters)]);
+};
+
 export const deleteSemester = (
+  plan: Plan,
   year: number,
   season: FirestoreSemesterSeason,
   gtag?: VueGtag
 ): void => {
   GTagEvent(gtag, 'delete-semester');
-  const semester = store.state.semesters.find(sem => semesterEquals(sem, year, season));
+  const semester = (
+    store.state.plans.find(p => p === store.state.currentPlan)?.semesters ??
+    store.state.plans[0].semesters
+  ).find(sem => semesterEquals(sem, year, season));
   if (semester) {
     deleteCoursesFromRequirementChoices(semester.courses.map(course => course.uniqueID));
     editSemesters(oldSemesters => oldSemesters.filter(sem => !semesterEquals(sem, year, season)));
   }
 };
 
+export const deletePlan = async (name: string, gtag?: GTag): Promise<void> => {
+  GTagEvent(gtag, 'delete-plan');
+  if (store.state.plans.some(p => p.name === name)) {
+    await editPlans(oldPlans => oldPlans.filter(p => p.name !== name));
+  }
+};
+
 export const addCourseToSemester = (
+  plan: Plan,
   year: number,
   season: FirestoreSemesterSeason,
   newCourse: FirestoreSemesterCourse,
@@ -97,7 +125,7 @@ export const addCourseToSemester = (
   gtag?: VueGtag
 ): void => {
   GTagEvent(gtag, 'add-course');
-  editSemesters(oldSemesters => {
+  editSemesters(plan, oldSemesters => {
     let semesterFound = false;
     const newSemestersWithCourse = oldSemesters.map(sem => {
       if (semesterEquals(sem, year, season)) {
@@ -113,16 +141,20 @@ export const addCourseToSemester = (
 };
 
 export const deleteCourseFromSemester = (
+  plan: Plan,
   year: number,
   season: FirestoreSemesterSeason,
   courseUniqueID: number,
   gtag?: VueGtag
 ): void => {
   GTagEvent(gtag, 'delete-course');
-  const semester = store.state.semesters.find(sem => semesterEquals(sem, year, season));
+  const semester = (
+    store.state.plans.find(p => p === store.state.currentPlan)?.semesters ??
+    store.state.plans[0].semesters
+  ).find(sem => semesterEquals(sem, year, season));
   if (semester) {
     deleteCourseFromRequirementChoices(courseUniqueID);
-    editSemesters(oldSemesters =>
+    editSemesters(plan, oldSemesters =>
       oldSemesters.map(sem => ({
         ...sem,
         courses: semesterEquals(sem, year, season)
@@ -134,15 +166,19 @@ export const deleteCourseFromSemester = (
 };
 
 export const deleteAllCoursesFromSemester = (
+  plan: Plan,
   year: number,
   season: FirestoreSemesterSeason,
   gtag?: VueGtag
 ): void => {
   GTagEvent(gtag, 'delete-semester-courses');
-  const semester = store.state.semesters.find(sem => semesterEquals(sem, year, season));
+  const semester = (
+    store.state.plans.find(p => p === store.state.currentPlan)?.semesters ??
+    store.state.plans[0].semesters
+  ).find(sem => semesterEquals(sem, year, season));
   if (semester) {
     deleteCoursesFromRequirementChoices(semester.courses.map(course => course.uniqueID));
-    editSemesters(oldSemesters =>
+    editSemesters(plan, oldSemesters =>
       oldSemesters.map(sem => ({
         ...sem,
         courses: semesterEquals(sem, year, season) ? [] : sem.courses,
@@ -151,9 +187,13 @@ export const deleteAllCoursesFromSemester = (
   }
 };
 
-export const deleteCourseFromSemesters = (courseUniqueID: number, gtag?: VueGtag): void => {
+export const deleteCourseFromSemesters = (
+  plan: Plan,
+  courseUniqueID: number,
+  gtag?: GTag
+): void => {
   GTagEvent(gtag, 'delete-course');
-  editSemesters(oldSemesters =>
+  editSemesters(plan, oldSemesters =>
     oldSemesters.map(semester => {
       const coursesWithoutDeleted = semester.courses.filter(
         course => course.uniqueID !== courseUniqueID
@@ -185,7 +225,7 @@ export const getActiveSemesters = (
 };
 
 // add empty semesters based on entrance and graduation time
-export const populateSemesters = (onboarding: AppOnboardingData): void => {
+export const populateSemesters = (plan: Plan, onboarding: AppOnboardingData): void => {
   const entranceYear = parseInt(onboarding.entranceYear, 10);
   const gradYear = parseInt(onboarding.gradYear, 10);
 
@@ -194,5 +234,5 @@ export const populateSemesters = (onboarding: AppOnboardingData): void => {
     : 'Fall';
   const gradSem: FirestoreSemesterSeason = onboarding.gradSem ? onboarding.gradSem : 'Spring';
 
-  editSemesters(() => getActiveSemesters(entranceYear, entranceSem, gradYear, gradSem));
+  editSemesters(plan, () => getActiveSemesters(entranceYear, entranceSem, gradYear, gradSem));
 };
