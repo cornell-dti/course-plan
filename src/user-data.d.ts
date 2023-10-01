@@ -77,7 +77,7 @@ type FirestoreCourseOptInOptOutChoices = {
    * It's for attaching completely unknown courses to a requirement
    * (e.g. opt-in CS 2112 for history requirement).
    */
-  readonly arbitraryOptIn: readonly { readonly [requirement: string]: readonly string[] };
+  readonly arbitraryOptIn: { readonly [requirement: string]: readonly string[] };
 };
 type FirestoreOverriddenFulfillmentChoices = {
   readonly [courseUniqueId: string]: FirestoreCourseOptInOptOutChoices;
@@ -219,3 +219,8 @@ type AppFirestoreSemesterCourseWithRequirementID = FirestoreSemesterCourse & {
 
 /** Map from requirement ID to option chosen */
 type AppToggleableRequirementChoices = Readonly<Record<string, string>>;
+
+type Plan = {
+  readonly name: string;
+  readonly semesters: readonly FirestoreSemester[];
+};
