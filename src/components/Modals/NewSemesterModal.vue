@@ -37,7 +37,10 @@ export default defineComponent({
   },
   computed: {
     semesters(): readonly FirestoreSemester[] {
-      return store.state.semesters;
+      return (
+        store.state.plans.find(p => p === store.state.currentPlan)?.semesters ??
+        store.state.plans[0].semesters
+      );
     },
   },
   methods: {
