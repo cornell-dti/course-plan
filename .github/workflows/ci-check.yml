@@ -45,7 +45,7 @@ jobs:
         with:
           name: recorded-videos
           path: cypress/videos/
-  python-tests:
+  python-check:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -66,8 +66,8 @@ jobs:
       - name: Check that pipenv is up to date
         run: |
           exit $(git status --porcelain | wc -l)
+      - name: Run black linting
+        run: pipenv run black . --check
       - name: Run black and tests
         working-directory: python
-        run: |
-          pipenv run black . --check
-          pipenv run pytest
+        run: pipenv run pytest
