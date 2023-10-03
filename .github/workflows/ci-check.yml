@@ -67,6 +67,7 @@ jobs:
         run: |
           exit $(git status --porcelain | wc -l)
       - name: Run black linting
+        working-directory: python
         run: pipenv run black . --check
       - name: Run black and tests
         working-directory: python
