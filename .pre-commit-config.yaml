@@ -4,3 +4,8 @@ repos:
     hooks:
       - id: prettier
         exclude: 'src/requirements/decorated-requirements.json'
+  - repo: https://github.com/ambv/black
+    rev: 23.9.1
+    hooks:
+      - id: black
+        language_version: python3.11
