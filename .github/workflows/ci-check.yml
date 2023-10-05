@@ -57,6 +57,7 @@ jobs:
         run: |
           export RUN_LANGCHAIN_TESTS=false
           python -m pip install --upgrade pip setuptools wheel
+          echo $RUN_LANGCHAIN_TESTS
       - name: Install pipenv
         run: pip install pipenv
       - name: Pipenv Install
