@@ -57,9 +57,11 @@ jobs:
         run: |
           export RUN_LANGCHAIN_TESTS=false
           python -m pip install --upgrade pip setuptools wheel
-      - name: Install pipenv, black, and pytest
+      - name: Install pipenv, typing-extensions, async-timeout
         run: |
           pip install pipenv
+          pip install typing-extensions
+          pip install async-timeout
       - name: Pipenv Install
         working-directory: python
         run: pipenv install

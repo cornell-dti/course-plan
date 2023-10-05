@@ -12,7 +12,6 @@ langchain = "*"
 openai = "*"
 numpy = "*"
 parsy = "*"
-typing-extensions = "*"
 
 [requires]
 python_version = "3.11"
