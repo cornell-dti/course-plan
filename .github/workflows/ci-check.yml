@@ -59,13 +59,14 @@ jobs:
           python -m pip install --upgrade pip setuptools wheel
           echo $RUN_LANGCHAIN_TESTS
       - name: Install pipenv
-        run: pip install pipenv
+        run: |
+          pip install pipenv
+          pip install typing-extensions
       - name: Pipenv Install
         working-directory: python
         run: pipenv install
       - name: Check that pipenv is up to date
-        run: |
-          exit $(git status --porcelain | wc -l)
+        run: exit $(git status --porcelain | wc -l)
       - name: Run black linting
         working-directory: python
         run: pipenv run black . --check
