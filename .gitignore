@@ -35,14 +35,11 @@ serviceAccountProd.json
 # App-specific output files that should be ignored
 scripts/out
 
-<<<<<<< HEAD
 # Secret API key
 python/secret_api_keys.py
 
 # Pytest
 python/__pycache__
-=======
->>>>>>> db2aa9a3b1473b468c1b30a5f8297c87b65bb755
 #Training and Testing Files for Recommendation System
 src\rec-sys\leave_one_out_test_full.csv
 src\rec-sys\leave_one_out_test.csv
