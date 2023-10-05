@@ -1,6 +1,11 @@
 from prereq_parse import get_raw_prereqs_and_coreqs, get_prereqs_coreqs
+import os
+import pytest
 
 
+@pytest.mark.skipif(
+    os.environ.get("RUN_LANGCHAIN_TESTS") == "false", reason="skip langchain tests"
+)
 def test_raw_prereqs_coreqs(verbose=False):
     test_cases = [
         ("Recommended prerequisite: GOVT 1111.", ([], [])),
@@ -91,6 +96,9 @@ def test_raw_prereqs_coreqs(verbose=False):
     print(f"{correct / total * 100}%")
 
 
+@pytest.mark.skipif(
+    os.environ.get("RUN_LANGCHAIN_TESTS") == "false", reason="skip langchain tests"
+)
 def test_prereqs_coreqs(index=None, shorten=False, verbose=False, hard=False):
     test_cases = [
         ("Recommended prerequisite: GOVT 1111.", ("", "")),

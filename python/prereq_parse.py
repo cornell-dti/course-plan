@@ -1,8 +1,8 @@
 from langchain.chat_models import ChatOpenAI
-from langchain import PromptTemplate, LLMChain
+from langchain.prompts import PromptTemplate
 from langchain.output_parsers import ResponseSchema
 from langchain.output_parsers import StructuredOutputParser
-from langchain.chains import SequentialChain, TransformChain
+from langchain.chains import SequentialChain, TransformChain, LLMChain
 from secret_api_keys import OPEN_AI_API_KEY
 from typing import Dict, Tuple
 
