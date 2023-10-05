@@ -92,7 +92,6 @@ print("MAP:\t%f" % eval_map,
       "Precision@K:\t%f" % eval_precision,
       "Recall@K:\t%f" % eval_recall, sep='\n')
 
-
 assert (eval_map < 0.1)
 assert (eval_ndcg < 0.25)
 assert (eval_precision < 0.2)
