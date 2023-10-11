@@ -178,7 +178,3 @@ def test_prereqs_coreqs(index=None, shorten=False, verbose=False, hard=False):
         elif verbose:
             print(f"WRONG Answer: {answer} Got: {response}")
     print(f"{correct / total * 100}%")
-
-
-if __name__ == "__main__":
-    test_prereqs_coreqs(verbose=True)
