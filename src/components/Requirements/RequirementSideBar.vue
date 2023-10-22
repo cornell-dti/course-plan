@@ -49,16 +49,21 @@
               @open-plan-modal="toggleAddPlan"
               @close-copy-modal="toggleCopyPlan"
               @open-name-modal="toggleNamePlan"
+              @copy-plan="copyPlan"
             />
             <name-plan-modal
               v-if="isNamePlanOpen"
               @open-copy-modal="toggleCopyPlan"
               @close-name-modal="toggleNamePlan"
+              @add-plan="addPlan"
+              :selectedPlanCopy="selectedPlanCopy"
             />
             <edit-plan-modal
               v-if="isEditPlanOpen"
               @close-edit-modal="toggleEditPlan"
               @close-name-modal="toggleNamePlan"
+              @edit-plan="editPlan"
+              @delete-plan="deletePlan"
             />
             <button class="add-plan-button" @click="toggleAddPlan()">+ Add Plan</button>
             <div class="multiple-plans-dropdown">
@@ -206,6 +211,7 @@ type Data = {
   isCopyPlanOpen: boolean;
   isNamePlanOpen: boolean;
   isEditPlanOpen: boolean;
+  selectedPlanCopy: string;
 };
 
 // This section will be revisited when we try to make first-time tooltips
@@ -255,6 +261,7 @@ export default defineComponent({
       isCopyPlanOpen: false,
       isNamePlanOpen: false,
       isEditPlanOpen: false,
+      selectedPlanCopy: '',
     };
   },
   watch: {
@@ -348,6 +355,13 @@ export default defineComponent({
       if (toEdit !== undefined) {
         editPlan(oldname, updater);
       }
+      store.commit(
+        'setCurrentPlan',
+        store.state.plans.find(plan => plan.name === name)
+      );
+    },
+    copyPlan(selectedPlan: string) {
+      this.selectedPlanCopy = selectedPlan;
     },
 
     // TODO CHANGE FOR MULTIPLE COLLEGES & GRAD PROGRAMS

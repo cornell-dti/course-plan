@@ -235,7 +235,8 @@ const autoRecomputeDerivedData = (): (() => void) =>
       mutation.type === 'setOnboardingData' ||
       mutation.type === 'setSemesters' ||
       mutation.type === 'setToggleableRequirementChoices' ||
-      mutation.type === 'setOverriddenFulfillmentChoices'
+      mutation.type === 'setOverriddenFulfillmentChoices' ||
+      mutation.type === 'setCurrentPlan'
     ) {
       if (state.onboardingData.college !== '') {
         store.commit(
@@ -316,8 +317,6 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
       const plan = getFirstPlan(data);
       store.commit('setPlans', data.plans);
       store.commit('setCurrentPlan', plan);
-      console.log(store.state.currentPlan.name);
-      console.log(data);
       const { orderByNewest } = data;
       store.commit('setSemesters', plan.semesters);
       updateDoc(doc(fb.semestersCollection, simplifiedUser.email), {
@@ -329,7 +328,6 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
       const plans = [{ name: 'Plan 1', semesters: [] }];
       store.commit('setPlans', plans);
       store.commit('setCurrentPlan', plans[0]);
-      console.log(store.state.currentPlan.name);
       const newSemester: FirestoreSemester = {
         year: getCurrentYear(),
         season: getCurrentSeason(),

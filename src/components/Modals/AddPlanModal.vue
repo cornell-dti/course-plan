@@ -5,7 +5,7 @@
     left-button-text="Create Blank"
     right-button-text="Make a Copy"
     @modal-closed="closeCurrentModal"
-    @left-button-clicked="closeCurrentModal"
+    @left-button-clicked="blankPlan"
     @right-button-clicked="copyPlan"
     :isPlanModal="true"
   >
@@ -41,6 +41,9 @@ export default defineComponent({
   },
   methods: {
     closeCurrentModal() {
+      this.$emit('close-plan-modal');
+    },
+    blankPlan() {
       this.$emit('close-plan-modal');
       this.$emit('add-plan', this.placeholder_name);
     },

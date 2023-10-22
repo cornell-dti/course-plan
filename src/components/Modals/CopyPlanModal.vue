@@ -16,7 +16,7 @@
             class="multiplePlansModal-dropdown-placeholder wrapper"
             @click="closeDropdownIfOpen()"
           >
-            <div class="multiplePlansModal-dropdown-placeholder plan">{{ currPlan }}</div>
+            <div class="multiplePlansModal-dropdown-placeholder plan">{{ selectedPlan }}</div>
             <img
               class="multiplePlansModal-dropdown-placeholder up-arrow"
               v-if="shown"
@@ -58,9 +58,10 @@ export default defineComponent({
     'close-copy-modal': () => true,
     'open-plan-modal': () => true,
     'open-name-modal': () => true,
+    'copy-plan': (selectedPlan: string) => typeof selectedPlan === 'string',
   },
   data() {
-    return { isDisabled: false, shown: false };
+    return { isDisabled: false, shown: false, selectedPlan: store.state.currentPlan.name };
   },
   methods: {
     closeCurrentModal() {
@@ -70,7 +71,7 @@ export default defineComponent({
       this.shown = !this.shown;
     },
     planClicked(plan: string) {
-      if (this.plans.length !== 1) this.currPlan = plan;
+      if (this.plans.length !== 1) this.selectedPlan = plan;
     },
     backAddPlan() {
       this.$emit('open-plan-modal');
@@ -78,19 +79,17 @@ export default defineComponent({
     },
     namePlan() {
       this.$emit('open-name-modal');
+      this.$emit('copy-plan', this.selectedPlan);
       this.$emit('close-copy-modal');
     },
   },
   computed: {
     otherPlans() {
-      const filtered = this.plans.filter(plan => plan !== this.currPlan);
+      const filtered = this.plans.filter(plan => plan !== this.selectedPlan);
       return filtered.length === 0 ? ['No additional plans yet'] : filtered;
     },
     plans() {
       return store.state.plans.map(plan => plan.name);
-    },
-    currPlan() {
-      return store.state.currentPlan.name;
     },
   },
 });
