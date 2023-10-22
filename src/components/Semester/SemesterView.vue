@@ -107,14 +107,10 @@ export default defineComponent({
   },
   computed: {
     semesters(): readonly FirestoreSemester[] {
-      console.log(store.state.plans);
       if (store.state.plans.length === 0) {
         return [];
       }
-      return (
-        store.state.plans.find(p => p === store.state.currentPlan)?.semesters ??
-        store.state.plans[0].semesters
-      );
+      return store.getters.getCurrentPlanSemesters;
     },
     noSemesters(): boolean {
       return this.semesters.length === 0;
