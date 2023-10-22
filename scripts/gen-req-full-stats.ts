@@ -3,91 +3,98 @@ import {
   semestersCollection,
   toggleableRequirementChoicesCollection,
   overriddenFulfillmentChoicesCollection,
+  courseFulfillmentStats,
 } from './firebase-config';
 
 import computeGroupedRequirementFulfillmentReports from '../src/requirements/requirement-frontend-computation';
+import { computeFulfillmentStats } from '../src/requirements/fulfillment-stats';
+import { createAppOnboardingData } from '../src/user-data-converter';
 
-import { RequirementFulfillment, CourseTaken } from '../src/requirement-types.d';
 
-const idRequirementFrequency = new Map<string, Map<number, number>[]>();
+import '../src/requirements/decorated-requirements.json';
 
+let idRequirementFrequency = new Map<string, Map<number, number>[]>();
+let counter = 0;
 /**
  * Prints to console.out the json string of frequencies each course take to
  * fulfill a given requirement
  */
-async function computeRequirementFullfillmentStatistics() {
-  await semestersCollection.get().then(semQuerySnapshot => {
-    // Query a user's semesters
-    semQuerySnapshot.forEach(async doc => {
+async function computeRequirementFullfillmentStatistics(_callback) {
+  const semQuerySnapshot = await semestersCollection.get();
+  semQuerySnapshot.forEach(async doc => {
       // obtain the user's semesters, onboarding data, etc...
-      const semestersAndPlans = doc.data();
-      const onboardingData = await onboardingDataCollection.doc(doc.id).get();
-      const toggleableRequirementChoices = await toggleableRequirementChoicesCollection
-        .doc(doc.id)
-        .get();
-      const overriddenFulfillmentChoices = await overriddenFulfillmentChoicesCollection
-        .doc(doc.id)
-        .get();
+      const semestersAndPlans = await doc.data();
+      const onboardingData = (await onboardingDataCollection.doc(doc.id).get()).data();
+      const toggleableRequirementChoices = (await toggleableRequirementChoicesCollection.doc(doc.id).get()).data() ?? {};
+      const overriddenFulfillmentChoices = (await overriddenFulfillmentChoicesCollection.doc(doc.id).get()).data() ?? {};
 
-      // For the given users semesters compute the requirements they fulfill
-      // and which course it took for them to fulfill them
-      const res = computeGroupedRequirementFulfillmentReports(
-        semestersAndPlans.semester,
-        onboardingData,
-        toggleableRequirementChoices,
-        overriddenFulfillmentChoices
-      );
-
-      res.groupedRequirementFulfillmentReport.forEach(currentGroup => {
-        const currentGroupReqs: RequirementFulfillment[] = currentGroup.reqs;
-
-        // For a given group of requirements, we iterate through all courses
-        // that were needed to fulfill each slot
-        currentGroupReqs.forEach(reqFulfillment => {
-          const key: string = reqFulfillment.requirement.id;
-
-          const fulfillment: readonly CourseTaken[][] = reqFulfillment.fulfillment
-            .safeCourses as readonly CourseTaken[][];
-
-          // Obtain the frequency list for this particular group's requirements
-          const freqList: Map<number, number>[] = idRequirementFrequency.has(key)
-            ? (idRequirementFrequency.get(key) as Map<number, number>[])
-            : [];
-
-          // Iterate over all slots in the requirement group
-          for (let slotNumber = 0; slotNumber < fulfillment.length; slotNumber += 1) {
-            if (freqList.length === slotNumber) {
-              freqList.push(new Map<number, number>());
-            }
-            const currentCourseSlot: CourseTaken[] = fulfillment[slotNumber];
-            const currentRequirementSlotFreq = freqList[slotNumber];
-
-            // Iterate over all courses taken to fulfill the req-slot
-            for (let j = 0; j < currentCourseSlot.length; j += 1) {
-              const currentCourseId = currentCourseSlot[j].courseId;
-
-              const pastFreq = currentRequirementSlotFreq.has(currentCourseId)
-                ? (currentRequirementSlotFreq.get(currentCourseId) as number)
-                : 0;
-              // Increase frequency each time a course is used to fulfill
-              // a specific requirement slot
-              currentRequirementSlotFreq.set(currentCourseId, pastFreq + 1);
-            }
-          }
-        });
-      });
+        
+      if (onboardingData !== undefined && 
+        semestersAndPlans.semesters !== undefined &&
+        toggleableRequirementChoices !== undefined &&
+        overriddenFulfillmentChoices !== undefined) { // if the user has onboarding data
+        try {
+          const newOnboardingData = await createAppOnboardingData(onboardingData); // convert to new format
+          const res = await computeGroupedRequirementFulfillmentReports( // compute fulfillment stats
+            semestersAndPlans.semesters,
+            newOnboardingData,
+            toggleableRequirementChoices,
+            overriddenFulfillmentChoices
+            );
+            idRequirementFrequency = await computeFulfillmentStats(res.groupedRequirementFulfillmentReport, idRequirementFrequency); // compute fulfillment stats
+        } catch {
+          console.log(counter, " : Error in computing fulfillment stats for user: " + doc.id);
+          counter++;
+        }
+      }      
     });
-  });
 
-  // Serialize the large hashmap into a JSON  object
-  const returnObject = {};
-  for (const [key, value] of idRequirementFrequency) {
-    returnObject[key] = value.map(item => ({ ...item }));
-  }
-
-  // Turn the JSON object into a string to output to the console
-  const returnString = JSON.stringify(returnObject, null, 2);
-  console.log(returnString);
+  setTimeout (_callback, 3600*1000); // wait for all the data to be processed
 }
 
-computeRequirementFullfillmentStatistics();
+async function storeComputedRequirementFullfillmentStatistics() {
+  console.log("Keeping only the top fifty courses for each slot");
+  // iterate through all the keys in the idRequirementFrequency hashmap
+  for (let [reqID, slots] of idRequirementFrequency) {
+    let newSlots : Map<number,number>[] = [];
+    for (let slot of slots) {
+      let newSlot = new Map<number, number>();
+      let sorted = [...slot.entries()].sort((a, b) => b[1] - a[1]);
+      let count = 0;
+      for (let [course, freq] of sorted) {
+        if (count === 50) {
+          break;
+        }
+        newSlot.set(course, freq);
+        count++;
+      }
+      newSlots.push(newSlot);
+    }
+    idRequirementFrequency.set(reqID, newSlots);
+  }
+
+  console.log("Storing fulfillment stats in firestore");
+  // iterate through all the keys in the idRequirementFrequency hashmap
+  for (let [reqID, slots] of idRequirementFrequency) {
+    let json = {};
+    
+    let i = 0;
+    for (let slot of slots) {
+      let tempJson = {};
+      for (let [course, freq] of slot) {
+        tempJson[course] = freq;
+      }
+      json[i] = [tempJson];
+      i++;
+    }
+    
+    const data = {
+      reqID: reqID,
+      slots: json,
+    }
+    await courseFulfillmentStats.doc().set(data);
+  }
+   
+}
+
+computeRequirementFullfillmentStatistics(storeComputedRequirementFullfillmentStatistics);

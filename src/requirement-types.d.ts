@@ -101,7 +101,7 @@ type DecoratedCollegeOrMajorRequirement = RequirementCommon &
  * It's a significantly simplified version of FirestoreSemesterCourse to make it easy to mock for
  * the purpose of requirement computation.
  */
-export type CourseTaken = {
+type CourseTaken = {
   /** The course ID from course roster, or our dummy id to denote special courses like FWS equiv. */
   readonly courseId: number;
   /** Using the unique ID of firestore course for real course, string for swim test and AP/IB. */
@@ -154,7 +154,7 @@ type MixedRequirementFulfillmentStatisticsWithAdditionalRequirements = MixedRequ
   };
 };
 
-export type RequirementFulfillment = {
+type RequirementFulfillment = {
   /** The original requirement object. */
   readonly requirement: RequirementWithIDSourceType;
   readonly fulfillment: MixedRequirementFulfillmentStatisticsWithAdditionalRequirements;
