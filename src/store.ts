@@ -36,7 +36,6 @@ export type VuexStoreState = {
   currentFirebaseUser: SimplifiedFirebaseUser;
   userName: FirestoreUserName;
   onboardingData: AppOnboardingData;
-  // semesters: readonly FirestoreSemester[];
   orderByNewest: boolean;
   derivedCoursesData: DerivedCoursesData;
   toggleableRequirementChoices: AppToggleableRequirementChoices;
@@ -78,7 +77,6 @@ const store: TypedVuexStore = new TypedVuexStore({
       tookSwim: 'no',
     },
     orderByNewest: true,
-    // semesters: [],
     derivedCoursesData: {
       duplicatedCourseCodeSet: new Set(),
       courseMap: {},
@@ -102,6 +100,13 @@ const store: TypedVuexStore = new TypedVuexStore({
     currentPlan: { name: '', semesters: [] },
   },
   actions: {},
+  getters: {
+    getCurrentPlanSemesters(state: VuexStoreState): readonly FirestoreSemester[] {
+      return state.plans.length === 0
+        ? []
+        : state.plans.find(p => p === state.currentPlan)?.semesters ?? state.plans[0].semesters;
+    },
+  },
   mutations: {
     setCurrentFirebaseUser(state: VuexStoreState, user: SimplifiedFirebaseUser) {
       state.currentFirebaseUser = user;
@@ -187,13 +192,7 @@ const autoRecomputeDerivedData = (): (() => void) =>
       case 'setOrderByNewest': {
         store.commit(
           'setSemesters',
-          sortedSemesters(
-            state.plans.length === 0
-              ? []
-              : state.plans.find(p => p === state.currentPlan)?.semesters ??
-                  state.plans[0].semesters,
-            state.orderByNewest
-          )
+          sortedSemesters(store.getters.getCurrentPlanSemesters, state.orderByNewest)
         );
         break;
       }
@@ -314,14 +313,15 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
   getDoc(doc(fb.semestersCollection, simplifiedUser.email)).then(snapshot => {
     const data = snapshot.data();
     if (data) {
-      store.commit('setPlans', data.plans);
-      store.commit('setCurrentPlan', data.plans[0]);
-
       const plan = getFirstPlan(data);
+      store.commit('setPlans', data.plans);
+      store.commit('setCurrentPlan', plan);
+      console.log(store.state.currentPlan.name);
+      console.log(data);
       const { orderByNewest } = data;
       store.commit('setSemesters', plan.semesters);
       updateDoc(doc(fb.semestersCollection, simplifiedUser.email), {
-        plans: [plan], // TODO: andxu282 update later
+        plans: [plan],
       });
       // if user hasn't yet chosen an ordering, choose true by default
       store.commit('setOrderByNewest', orderByNewest === undefined ? true : orderByNewest);
@@ -329,6 +329,7 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
       const plans = [{ name: 'Plan 1', semesters: [] }];
       store.commit('setPlans', plans);
       store.commit('setCurrentPlan', plans[0]);
+      console.log(store.state.currentPlan.name);
       const newSemester: FirestoreSemester = {
         year: getCurrentYear(),
         season: getCurrentSeason(),
@@ -337,7 +338,7 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
       store.commit('setSemesters', [newSemester]);
       setDoc(doc(fb.semestersCollection, simplifiedUser.email), {
         orderByNewest: true,
-        plans: [{ name: 'Plan 1', semesters: [newSemester] }], // TODO: andxu282 update later
+        plans: [{ name: 'Plan 1', semesters: [newSemester] }],
         semesters: [newSemester],
       });
     }

@@ -224,10 +224,7 @@ export default defineComponent({
       return featureFlagCheckers.isRequirementDebuggerEnabled();
     },
     semesters(): readonly FirestoreSemester[] {
-      return (
-        store.state.plans.find(p => p === store.state.currentPlan)?.semesters ??
-        store.state.plans[0].semesters
-      );
+      return store.getters.getCurrentPlanSemesters(store.state);
     },
     onboardingData(): AppOnboardingData {
       return store.state.onboardingData;
