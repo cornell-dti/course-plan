@@ -1,12 +1,23 @@
-type EventPayload = { event_category: string; event_label: string; value: number };
-type LoginEventPayload = { method: string };
+import { VueGtag, query } from 'vue-gtag-next';
 
-export type GTag = {
-  event(eventType: string, eventPayload: LoginEventPayload | EventPayload): void;
+type EventPayload = { event_category: string; event_label: string; value: number };
+
+/**
+ * Set a user's properties for analytics
+ *
+ * @param gtag the `VueGtag` instance to query
+ * @param properties the user's properties
+ */
+export const setUserProperties = (onboardingData: AppOnboardingData) => {
+  const gtag = query as Gtag.Gtag;
+  gtag('set', 'user_properties', {
+    major: onboardingData.major,
+    gradYear: onboardingData.gradYear,
+  });
 };
 
 /** GTagLoginEvent represents the gtag that tracks when users login. */
-export const GTagLoginEvent = (gtag: GTag | undefined, method: string): void => {
+export const GTagLoginEvent = (gtag: VueGtag | undefined, method: string): void => {
   if (!gtag) return;
   gtag.event('login', { method });
 };
@@ -43,7 +54,7 @@ type EventType =
  * @param gtag is the global site tag that sends events to Google Analytics
  * @param eventType specifies the type of event that the gtag sends
  */
-export const GTagEvent = (gtag: GTag | undefined, eventType: EventType): void => {
+export const GTagEvent = (gtag: VueGtag | undefined, eventType: EventType): void => {
   if (!gtag) return;
   let eventPayload: EventPayload | undefined;
   switch (eventType) {

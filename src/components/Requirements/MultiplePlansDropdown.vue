@@ -1,19 +1,28 @@
 <template>
   <div>
     <div class="multiplePlans-dropdown">
-      <div
-        class="multiplePlans-dropdown-placeholder wrapper"
-        @click="closeDropdownIfOpen()"
-        data-cyId="multiplePlans-dropdown"
-      >
-        <img :src="editPlan" class="multiplePlans-dropdown-placeholder editimg" alt="edit plans" />
+      <div class="multiplePlans-dropdown-placeholder wrapper" data-cyId="multiplePlans-dropdown">
+        <button>
+          <img
+            :src="editPlan"
+            class="multiplePlans-dropdown-placeholder editimg"
+            alt="edit plans"
+            @click="toggleEditPlan()"
+          />
+        </button>
         <div class="multiplePlans-dropdown-placeholder plan">{{ currPlan }}</div>
         <img
           class="multiplePlans-dropdown-placeholder up-arrow"
           v-if="shown"
           alt="close dropdown"
+          @click="closeDropdownIfOpen()"
         />
-        <img class="multiplePlans-dropdown-placeholder down-arrow" v-else alt="open dropdown" />
+        <img
+          class="multiplePlans-dropdown-placeholder down-arrow"
+          v-else
+          alt="open dropdown"
+          @click="closeDropdownIfOpen()"
+        />
       </div>
       <div
         class="multiplePlans-dropdown-content"
@@ -43,6 +52,9 @@ export default defineComponent({
   props: {
     plan: { type: String, default: 'No additional plans yet' },
   },
+  emits: {
+    'open-edit-modal': () => true,
+  },
   data() {
     return {
       shown: false,
@@ -66,7 +78,14 @@ export default defineComponent({
       this.shown = !this.shown;
     },
     planClicked(plan: string) {
-      if (this.plans.length !== 1) this.currPlan = plan;
+      store.commit(
+        'setCurrentPlan',
+        store.state.plans.find(p => p.name === plan)
+      );
+      this.shown = !this.shown;
+    },
+    toggleEditPlan() {
+      this.$emit('open-edit-modal');
     },
   },
 });

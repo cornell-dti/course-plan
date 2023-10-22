@@ -13,9 +13,13 @@ export const cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData = (
 
 export { setAppOnboardingData, deleteTransferCredit } from './user-onboarding-data';
 export {
+  editPlans,
+  editPlan,
   editSemesters,
   editSemester,
   addSemester,
+  addPlan,
+  deletePlan,
   deleteSemester,
   addCourseToSemester,
   deleteCourseFromSemester,

@@ -36,7 +36,7 @@ type FirestoreSemester = {
 };
 
 type FirestoreSemestersData = {
-  readonly plans?: readonly Plan[];
+  readonly plans: readonly Plan[];
   readonly semesters: readonly FirestoreSemester[];
   readonly orderByNewest: boolean;
 };
@@ -77,7 +77,7 @@ type FirestoreCourseOptInOptOutChoices = {
    * It's for attaching completely unknown courses to a requirement
    * (e.g. opt-in CS 2112 for history requirement).
    */
-  readonly arbitraryOptIn: readonly { readonly [requirement: string]: readonly string[] };
+  readonly arbitraryOptIn: { readonly [requirement: string]: readonly string[] };
 };
 type FirestoreOverriddenFulfillmentChoices = {
   readonly [courseUniqueId: string]: FirestoreCourseOptInOptOutChoices;
@@ -85,7 +85,6 @@ type FirestoreOverriddenFulfillmentChoices = {
 
 type FirestoreUserData = {
   readonly name: FirestoreUserName;
-  readonly semesters: readonlyFirestoreSemester[];
   readonly orderByNewest: boolean;
   readonly toggleableRequirementChoices: AppToggleableRequirementChoices;
   readonly subjectColors: { readonly [subject: string]: string };
@@ -145,7 +144,7 @@ interface CornellCourseRosterCourse {
   readonly catalogSatisfiesReq?: string;
   readonly catalogCourseSubfield?: string;
   readonly catalogAttribute?: string;
-  readonly roster: string;
+  roster: string;
   readonly acadCareer: string;
   readonly acadGroup: string;
 }
@@ -171,6 +170,11 @@ interface CornellCourseRosterCourseFullDetail extends CornellCourseRosterCourse 
   }[];
   readonly catalogPrereqCoreq?: string;
   readonly catalogDistr?: string;
+}
+
+interface FullClassRosterCourseWithUniqueID extends CornellCourseRosterCourseFullDetail {
+  readonly userChosenCredits: number;
+  readonly uniqueID: number;
 }
 
 type Plan = {
@@ -209,6 +213,7 @@ type AppBottomBarCourse = {
   overallRating: number;
   difficulty: number;
   workload: number;
+  currRoster: string;
 };
 
 // This is used for drag&drop between SubRequirement and Semester
@@ -218,3 +223,8 @@ type AppFirestoreSemesterCourseWithRequirementID = FirestoreSemesterCourse & {
 
 /** Map from requirement ID to option chosen */
 type AppToggleableRequirementChoices = Readonly<Record<string, string>>;
+
+type Plan = {
+  readonly name: string;
+  readonly semesters: readonly FirestoreSemester[];
+};
