@@ -7,6 +7,7 @@
     "jsx": "preserve",
     "importHelpers": true,
     "moduleResolution": "node",
+    "resolveJsonModule": true,
     "allowJs": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
@@ -15,7 +16,8 @@
     "baseUrl": ".",
     "types": [
       "node",
-      "jest"
+      "jest",
+      "@types/gtag.js"
     ],
     "paths": {
       "@/*": [
@@ -34,7 +36,8 @@
     "src/**/*.tsx",
     "src/**/*.vue",
     "tests/**/*.ts",
-    "tests/**/*.tsx"
+    "tests/**/*.tsx",
+    "scripts/population/courses-json-generator.ts"
   ],
   "exclude": [
     "node_modules"

@@ -124,6 +124,7 @@ import {
 import timeline1Text from '@/assets/images/timeline1text.svg';
 import timeline2Text from '@/assets/images/timeline2text.svg';
 import timeline3Text from '@/assets/images/timeline3text.svg';
+import store from '@/store';
 
 const timelineTexts = [timeline1Text, timeline2Text, timeline3Text];
 
@@ -251,7 +252,7 @@ export default defineComponent({
       this.clearTransferCreditIfGraduate();
       setAppOnboardingData(this.name, revised);
       // indicates first time user onboarding
-      if (!this.isEditingProfile) populateSemesters(revised);
+      if (!this.isEditingProfile) populateSemesters(store.state.currentPlan, revised);
       this.$emit('onboard');
     },
     goBack() {

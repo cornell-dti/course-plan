@@ -49,6 +49,7 @@ import spanishRequirements, { spanishAdvisors } from './majors/spanish';
 import psychRequirements, { psychAdvisors } from './majors/psych';
 import stsRequirements, { stsAdvisors } from './majors/sts';
 import aerospaceMinorRequirements, { aerospaceMinorAdvisors } from './minors/aerospace';
+import animalSciRequirements, { animalSciAdvisors } from './minors/animal-sci';
 import appliedMathMinorRequirements, { appliedMathMinorAdvisors } from './minors/applied-math';
 import buMinorRequirements, { buMinorAdvisors } from './minors/bu';
 import cogsciMinorRequirements, { cogsciMinorAdvisors } from './minors/cogsci';
@@ -74,7 +75,6 @@ import earthAndAtmosphericSciencesMinorRequirements, {
   easMinorAdvisors,
 } from './minors/earth-atmo';
 
-// import mengCSRequirements from './grad/meng-cs';
 import mpaRequirements, { mpaAdvisors } from './grad/mpa';
 
 import { MATH2940, CHEM2080 } from './specializations/en';
@@ -427,6 +427,13 @@ const json: RequirementsJson = {
       requirements: aerospaceMinorRequirements,
       advisors: aerospaceMinorAdvisors,
       abbrev: 'AeroEng',
+    },
+    ANIMALSCIENCE: {
+      name: 'Animal Science',
+      schools: ['AG'],
+      requirements: animalSciRequirements,
+      advisors: animalSciAdvisors,
+      abbrev: 'AnimalSci',
     },
     APPLIEDECON: {
       name: 'Applied Economics',

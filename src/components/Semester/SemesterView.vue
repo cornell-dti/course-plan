@@ -64,7 +64,7 @@
         <img class="semesterView-heart" src="@/assets/images/redHeart.svg" alt="heart" />
         by
         <a target="_blank" href="https://www.cornelldti.org/projects/courseplan/">
-          Cornell Design &amp; Tech Initiative
+          Cornell Digital Tech &amp; Innovation
         </a>
       </div>
     </div>
@@ -107,7 +107,10 @@ export default defineComponent({
   },
   computed: {
     semesters(): readonly FirestoreSemester[] {
-      return store.state.semesters;
+      if (store.state.plans.length === 0) {
+        return [];
+      }
+      return store.getters.getCurrentPlanSemesters;
     },
     noSemesters(): boolean {
       return this.semesters.length === 0;
@@ -145,11 +148,11 @@ export default defineComponent({
       this.isSemesterModalOpen = false;
     },
     addSemester(season: string, year: number) {
-      addSemester(year, season as FirestoreSemesterSeason, this.$gtag);
+      addSemester(store.state.currentPlan, year, season as FirestoreSemesterSeason, this.$gtag);
       this.openSemesterConfirmationModal(season as FirestoreSemesterSeason, year, true);
     },
     deleteSemester(season: string, year: number) {
-      deleteSemester(year, season as FirestoreSemesterSeason, this.$gtag);
+      deleteSemester(store.state.currentPlan, year, season as FirestoreSemesterSeason, this.$gtag);
       this.openSemesterConfirmationModal(season as FirestoreSemesterSeason, year, false);
     },
     courseOnClick(course: FirestoreSemesterCourse) {
@@ -211,6 +214,7 @@ export default defineComponent({
     margin-bottom: 1rem;
     min-height: 2.25rem;
     align-items: center;
+
     &--two {
       justify-content: space-between;
     }
@@ -280,6 +284,7 @@ export default defineComponent({
 
     a {
       color: $medGray;
+
       &:hover {
         text-decoration: underline $medGray;
       }
@@ -308,9 +313,11 @@ export default defineComponent({
     margin-top: 5.5rem;
     margin-left: 2.5rem;
     margin-right: 1rem;
+
     &-switch {
       padding-right: 0.75rem;
     }
+
     &-content {
       width: 100%;
       justify-content: center;

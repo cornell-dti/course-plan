@@ -46,7 +46,7 @@ export default defineComponent({
   },
   computed: {
     semesters(): readonly FirestoreSemester[] {
-      return store.state.semesters;
+      return store.getters.getCurrentPlanSemesters;
     },
   },
   methods: {

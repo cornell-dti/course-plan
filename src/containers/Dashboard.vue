@@ -169,7 +169,7 @@ export default defineComponent({
       return store.state.onboardingData;
     },
     semesters(): readonly FirestoreSemester[] {
-      return store.state.semesters;
+      return store.getters.getCurrentPlanSemesters;
     },
     hasBottomCourses(): boolean {
       return immutableBottomBarState.bottomCourses.length > 0;

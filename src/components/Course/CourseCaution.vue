@@ -98,7 +98,8 @@ const getCourseCautions = (
     isPlaceholderCourse(course) &&
     ((!store.state.orderByNewest && semesterIndex !== course.startingSemester) ||
       (store.state.orderByNewest &&
-        store.state.semesters.length - semesterIndex + 1 !== course.startingSemester));
+        store.getters.getCurrentPlanSemesters.length - semesterIndex + 1 !==
+          course.startingSemester));
   return {
     noMatchedRequirement,
     typicallyOfferedWarning,
