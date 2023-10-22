@@ -5,6 +5,7 @@
     left-button-text="Back"
     right-button-text="Add Plan"
     label="Name"
+    @plan-name="copyPlanName"
     @modal-closed="closeCurrentModal"
     @left-button-clicked="backCopyPlan"
     @right-button-clicked="addPlan"
@@ -20,14 +21,17 @@ import TextInputModal from './TextInputModal.vue';
 export default defineComponent({
   props: {
     plan: { type: String, default: 'No additional plans yet' },
+    selectedPlanCopy: { type: String, default: '' },
   },
   components: { TextInputModal },
   emits: {
     'close-name-modal': () => true,
     'open-copy-modal': () => true,
+    'add-plan': (name: string, copysem: string) =>
+      typeof name === 'string' && typeof copysem === 'string',
   },
   data() {
-    return { isDisabled: false, shown: false };
+    return { isDisabled: false, shown: false, planName: '' };
   },
   methods: {
     closeCurrentModal() {
@@ -44,7 +48,11 @@ export default defineComponent({
       this.$emit('close-name-modal');
     },
     addPlan() {
+      this.$emit('add-plan', this.planName, this.selectedPlanCopy);
       this.$emit('close-name-modal');
+    },
+    copyPlanName(planName: string) {
+      this.planName = planName;
     },
   },
   computed: {

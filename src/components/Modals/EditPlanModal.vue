@@ -6,11 +6,12 @@
     right-button-text="Save Changes"
     @modal-closed="closeCurrentModal"
     @left-button-clicked="closeCurrentModal"
-    @right-button-clicked="addPlan"
+    @right-button-clicked="saveChanges"
+    @plan-name="setPlanName"
     :isPlanModal="true"
     label="Name"
   >
-    <button class="editPlan-delete">DELETE PLAN</button>
+    <button class="editPlan-delete" @click="deletePlan">DELETE PLAN</button>
   </text-input-modal>
 </template>
 
@@ -27,26 +28,31 @@ export default defineComponent({
   emits: {
     'close-edit-modal': () => true,
     'open-copy-modal': () => true,
+    'delete-plan': (name: string) => typeof name === 'string',
+    'edit-plan': (name: string, oldname: string) =>
+      typeof name === 'string' && typeof oldname === 'string',
   },
   data() {
-    return { isDisabled: false, shown: false };
+    return { isDisabled: false, shown: false, planName: '' };
   },
   methods: {
     closeCurrentModal() {
       this.$emit('close-edit-modal');
     },
-    closeDropdownIfOpen() {
-      this.shown = !this.shown;
-    },
-    planClicked(plan: string) {
-      if (this.plans.length !== 1) this.currPlan = plan;
-    },
     backCopyPlan() {
       this.$emit('open-copy-modal');
       this.$emit('close-edit-modal');
     },
-    addPlan() {
+    saveChanges() {
+      this.$emit('edit-plan', this.planName, this.currPlan);
       this.$emit('close-edit-modal');
+    },
+    deletePlan() {
+      this.$emit('delete-plan', this.currPlan);
+      this.$emit('close-edit-modal');
+    },
+    setPlanName(planName: string) {
+      this.planName = planName;
     },
   },
   computed: {

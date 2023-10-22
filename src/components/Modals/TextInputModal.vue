@@ -6,7 +6,7 @@
         <input
           class="textInput-userinput"
           maxlength="charLimit"
-          :value="planName"
+          v-model="planName"
           @input="rightPlanClicked"
         />
       </div>
@@ -23,17 +23,18 @@ export default defineComponent({
   props: {
     charLimit: { type: Number, default: 100 },
     label: { type: String, default: '' },
-    planName: { type: String, default: 'Plan Name' },
   },
   components: { TeleportModal },
-  emits: ['update:planName'],
+  emits: {
+    'plan-name': (planName: string) => typeof planName === 'string',
+  },
   methods: {
     rightPlanClicked(): void {
-      this.$emit('update:planName');
+      this.$emit('plan-name', this.planName);
     },
   },
   data() {
-    return { isDisabled: false, shown: false };
+    return { isDisabled: false, shown: false, planName: '' };
   },
 });
 </script>

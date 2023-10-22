@@ -105,6 +105,10 @@ export const addPlan = async (
 ): Promise<void> => {
   GTagEvent(gtag, 'add-plan');
   await editPlans(oldPlans => [...oldPlans, createPlan(name, semesters)]);
+  store.commit(
+    'setCurrentPlan',
+    store.state.plans.find(plan => plan.name === name)
+  );
 };
 
 export const deleteSemester = (
@@ -130,6 +134,7 @@ export const deletePlan = async (name: string, gtag?: VueGtag): Promise<void> =>
   if (store.state.plans.some(p => p.name === name)) {
     await editPlans(oldPlans => oldPlans.filter(p => p.name !== name));
   }
+  store.commit('setCurrentPlan', store.state.plans[0]);
 };
 
 export const addCourseToSemester = (
