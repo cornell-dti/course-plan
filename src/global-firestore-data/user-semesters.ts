@@ -98,14 +98,10 @@ export const addSemester = (
   editSemesters(plan, oldSemesters => [...oldSemesters, createSemester(year, season, courses)]);
 };
 
-export const addPlan = async (name: string, semesters: FirestoreSemester[]): Promise<void> => {
-  await editPlans(oldPlans => [...oldPlans, createPlan(name, semesters)]);
-};
-
 export const addPlan = async (
   name: string,
   semesters: FirestoreSemester[],
-  gtag?: GTag
+  gtag?: VueGtag
 ): Promise<void> => {
   GTagEvent(gtag, 'add-plan');
   await editPlans(oldPlans => [...oldPlans, createPlan(name, semesters)]);
@@ -129,13 +125,7 @@ export const deleteSemester = (
   }
 };
 
-export const deletePlan = async (name: string): Promise<void> => {
-  if (store.state.plans.some(p => p.name === name)) {
-    await editPlans(oldPlans => oldPlans.filter(p => p.name !== name));
-  }
-};
-
-export const deletePlan = async (name: string, gtag?: GTag): Promise<void> => {
+export const deletePlan = async (name: string, gtag?: VueGtag): Promise<void> => {
   GTagEvent(gtag, 'delete-plan');
   if (store.state.plans.some(p => p.name === name)) {
     await editPlans(oldPlans => oldPlans.filter(p => p.name !== name));
