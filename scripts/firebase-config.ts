@@ -44,12 +44,12 @@ const userCollections = {
 };
 
 const helperCollections = {
-  track : 'track-users',
-  courses : 'courses',
-  availableRostersForCourse : 'available-rosters-for-course',
-  crseIdToCatalogNbr : 'crseid-to-catalognbr',
-  courseFulfillmentStats : 'course-fulfillment-stats',
-}
+  track: 'track-users',
+  courses: 'courses',
+  availableRostersForCourse: 'available-rosters-for-course',
+  crseIdToCatalogNbr: 'crseid-to-catalognbr',
+  courseFulfillmentStats: 'course-fulfillment-stats',
+};
 
 export const userCollectionNames = Object.values(userCollections);
 
@@ -62,6 +62,8 @@ export const uniqueIncrementerCollection = db.collection(userCollections.unique)
 export const onboardingDataCollection = db.collection(userCollections.onboarding);
 export const trackUsersCollection = db.collection(helperCollections.track);
 export const coursesCollection = db.collection(helperCollections.courses);
-export const availableRostersForCourseCollection = db.collection(helperCollections.availableRostersForCourse);
+export const availableRostersForCourseCollection = db.collection(
+  helperCollections.availableRostersForCourse
+);
 export const crseIdToCatalogNbrCollection = db.collection(helperCollections.crseIdToCatalogNbr);
 export const courseFulfillmentStats = db.collection(helperCollections.courseFulfillmentStats);
