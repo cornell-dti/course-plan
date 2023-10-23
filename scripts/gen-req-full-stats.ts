@@ -26,7 +26,7 @@ let idRequirementFrequency = new Map<string, Map<number, number>[]>();
  * requirement. computeFulfillmentStats then computes the frequency of each course in each slot
  * of the requirement and stores it in idRequirementFrequency.
  * @param _callback
- * @throws Error when computeGroupedRequirementFulfillmentReports fails to compute the fulfillment stats 
+ * @throws Error when computeGroupedRequirementFulfillmentReports fails to compute the fulfillment stats
  */
 async function computeRequirementFullfillmentStatistics(_callback) {
   const semQuerySnapshot = await semestersCollection.get();
@@ -50,7 +50,7 @@ async function computeRequirementFullfillmentStatistics(_callback) {
       try {
         // use createAppOnboardingData to convert the onboarding data to the format used by the frontend
         const newOnboardingData = await createAppOnboardingData(onboardingData);
-        
+
         // compute the fulfillment stats
         const res = await computeGroupedRequirementFulfillmentReports(
           semestersAndPlans.semesters,
@@ -82,18 +82,18 @@ async function computeRequirementFullfillmentStatistics(_callback) {
  */
 async function storeComputedRequirementFullfillmentStatistics() {
   // Change the hashmap to only keep the top fifty courses for each slot
-  
+
   for (const [reqID, slots] of idRequirementFrequency) {
     const newSlots: Map<number, number>[] = [];
     for (const slot of slots) {
       const newSlot = new Map<number, number>();
       const sorted = [...slot.entries()].sort((a, b) => b[1] - a[1]);
-      
+
       for (let i = 0; i < 50; i += 1) {
         const [course, freq] = sorted[i];
         newSlot.set(course, freq);
       }
-      
+
       newSlots.push(newSlot);
     }
     idRequirementFrequency.set(reqID, newSlots);

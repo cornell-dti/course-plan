@@ -1,25 +1,25 @@
 /**
  * @brief This function computes the frequency of courses taken to fulfill a requirement
- * 
+ *
  * @param groups A list of requirement groups containing the courses taken to fulfill the requirements
  * @param idRequirementFrequency A hashmap of requirement id to a list of frequency maps
  * @returns A hashmap of requirement id to a list of frequency maps
- * 
+ *
  * @details
  * This function computes the frequency of courses taken to fulfill a requirement.
  * The hashmap is of the form: requirement id -> list of frequency maps
  * The list of frequency maps is of the form: slot number -> course id -> frequency
- * 
+ *
  * @note
  * The hashmap is passed in as a parameter to avoid creating a new hashmap every time this function is called.
  * This function is called multiple times in the main algorithm.
- * 
+ *
  * @warning
  * This function assumes that the hashmap passed in is empty.
- * 
+ *
  * @bug
  * None known
- * 
+ *
  * @todo
  * None
  */
