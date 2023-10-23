@@ -153,10 +153,10 @@ const nsRequirements: readonly CollegeOrMajorRequirement[] = [
         return true;
       },
     ],
-    fulfilledBy: 'courses',
-    perSlotMinCount: [1, 1, 1],
-    slotNames: ['Communcations Course 1', 'Communcations Course 2', 'Communcations Course 3'],
+    perSlotMinCount: [3],
+    slotNames: ['Communcations Courses'],
     minNumberOfSlots: 1,
+    fulfilledBy: 'courses',
     additionalRequirements: {
       'Courses must have at least 9 credits.': {
         checker: [
