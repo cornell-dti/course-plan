@@ -92,6 +92,7 @@ def test_raw_prereqs_coreqs(verbose=False):
         elif verbose:
             print(f"WRONG Answer: {answer} Got: {response}")
     print(f"{correct / total * 100}%")
+    assert correct / total * 100 == 100
 
 
 @pytest.mark.skipif(os.environ.get("RUN_LANGCHAIN_TESTS") == "false", reason="skip")
@@ -174,3 +175,4 @@ def test_prereqs_coreqs(index=None, shorten=False, verbose=False, hard=False):
         elif verbose:
             print(f"WRONG Answer: {answer} Got: {response}")
     print(f"{correct / total * 100}%")
+    assert correct / total * 100 == 100
