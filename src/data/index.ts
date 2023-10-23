@@ -78,6 +78,7 @@ import earthAndAtmosphericSciencesMinorRequirements, {
 import mpaRequirements, { mpaAdvisors } from './grad/mpa';
 
 import { MATH2940, CHEM2080 } from './specializations/en';
+import nsRequirements, { nsAdvisors } from './majors/ns';
 
 const json: RequirementsJson = {
   university: {
@@ -376,6 +377,13 @@ const json: RequirementsJson = {
       requirements: mseRequirements,
       advisors: mseAdvisors,
       abbrev: 'MSE',
+    },
+    NS: {
+      name: 'Nutritional Sciences',
+      schools: ['AG'],
+      requirements: nsRequirements,
+      advisors: nsAdvisors,
+      abbrev: 'NS',
     },
     ORIE: {
       name: 'Operations Research and Engineering',
