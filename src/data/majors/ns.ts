@@ -154,9 +154,21 @@ const nsRequirements: readonly CollegeOrMajorRequirement[] = [
       },
     ],
     fulfilledBy: 'courses',
-    perSlotMinCount: [1],
-    slotNames: ['MATH 1105 OR MATH 1106 OR MATH 1110 OR MATH 1120'],
+    perSlotMinCount: [1, 1, 1],
+    slotNames: ['Communcations Course 1', 'Communcations Course 2', 'Communcations Course 3'],
     minNumberOfSlots: 1,
+    additionalRequirements: {
+      'Courses must have at least 9 credits.': {
+        checker: [
+          (course: Course): boolean =>
+            nsSocialSciencesHumanities.some(
+              distribution => hasCategory(course, distribution) ?? false
+            ),
+        ],
+        fulfilledBy: 'credits',
+        perSlotMinCount: [9],
+      },
+    },
   },
   {
     name: 'Social Sciences and Humanities',
