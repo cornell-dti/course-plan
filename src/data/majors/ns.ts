@@ -120,7 +120,7 @@ const nsRequirements: readonly CollegeOrMajorRequirement[] = [
       ['NS 2450'],
       ['NS 3450'],
       ['NS 3310'],
-      ['NS3320']
+      ['NS 3320'],
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1, 1, 1],
