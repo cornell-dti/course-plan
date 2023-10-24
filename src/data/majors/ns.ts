@@ -12,22 +12,21 @@ const nsSocialSciencesHumanities: readonly string[] = ['CA', 'D', 'FL', 'HA', 'K
 const nsRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'Introductory Chemistry',
-    description: 'Must take both CHEM2070 & CHEM2080',
+    description: 'Must take both CHEM 2070 & CHEM 2080.',
     source: 'https://courses.cornell.edu/preview_program.php?catoid=55&poid=28314#majorrequire',
-    checker: includesWithSubRequirements(['CHEM2070'], ['CHEM2080']),
+    checker: includesWithSubRequirements(['CHEM 2070'], ['CHEM 2080']),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1],
     slotNames: ['CHEM 2070', 'CHEM 2080'],
-    minNumberOfSlots: 2,
   },
   {
     name: 'Introductory Biology',
     description:
-      'Must complete one bio lab and two bio lectures. One of the following labs: BIOG1500, BIOSM1500. Two of the following three lecture options: 1) BIOMG1350 2) BIOG1440 OR BIOG1445 (cannot take both 1440 and 1445 to fulfill this requirement) 3) BIOEE1610 OR BIOEE1780 (cannot take both 1610 and 1780 to fulfill this requirement) ',
+      'Must complete one bio lab and two bio lectures. One of the following labs: BIOG1500, BIOSM1500. Two of the following three lecture options: 1) BIOMG1350 2) BIOG1440 OR BIOG1445 3) BIOEE1610 OR BIOEE1780',
     source: 'https://courses.cornell.edu/preview_program.php?catoid=55&poid=28314#majorrequire',
     checker: includesWithSubRequirements(
-      ['BIOG1500', 'BIOSM1500'],
-      ['BIOMG1350', 'BIOG1440', 'BIOG1445', 'BIOEE1610', 'BIOEE1780']
+      ['BIOG 1500', 'BIOSM 1500'],
+      ['BIOMG 1350', 'BIOG 1440', 'BIOG 1445', 'BIOEE 1610', 'BIOEE 1780']
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 2],
@@ -50,16 +49,16 @@ const nsRequirements: readonly CollegeOrMajorRequirement[] = [
   },
   {
     name: 'Organic Chemistry Lab',
-    description: 'Either CHEM2510 (Intro to Exp Org. Chem) or CHEM3010 (Honors Exp. Chem I)',
+    description: 'Either CHEM 2510 (Intro to Exp Org. Chem) or CHEM 3010 (Honors Exp. Chem I)',
     source: 'https://courses.cornell.edu/preview_program.php?catoid=55&poid=28314',
-    checker: includesWithSubRequirements(['CHEM2510', 'CHEM3010']),
+    checker: includesWithSubRequirements(['CHEM 2510', 'CHEM 3010']),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
     slotNames: ['Organic Chem Lab'],
   },
   {
     name: 'Physiology',
-    description: 'Choose one of the two physiology courses: NS3410, BIOAP3110',
+    description: 'Choose one of the two physiology courses: NS 3410, BIOAP 3110',
     source: 'https://courses.cornell.edu/preview_program.php?catoid=55&poid=28314',
     checker: includesWithSubRequirements(['NS 3410', 'BIOAP 3110']),
     fulfilledBy: 'courses',
@@ -70,23 +69,44 @@ const nsRequirements: readonly CollegeOrMajorRequirement[] = [
     name: 'Biochemistry',
     description: 'NS3200 OR BIOMG3300 OR BIOMG3310 & 3320 OR BIOMG3310 & 2900 OR BIOMG3350',
     source: 'https://courses.cornell.edu/preview_program.php?catoid=55&poid=28314',
-    checker: includesWithSubRequirements(
-      ['NS 3200'],
-      ['BIOMG 3300'],
-      ['BIOMG 3310', 'BIOMG 3320'],
-      ['BIOMG 3310', 'BIOMG 2900'],
-      ['BIOMG 3350']
-    ),
-    fulfilledBy: 'courses',
-    perSlotMinCount: [1, 1, 2, 2, 1],
-    slotNames: [
-      'NS3200',
-      'BIOMG 3300',
-      'BIOMG3310 & BIOMG3320',
-      'BIOMG3310 & BIOMG3320',
-      'BIOMG3350',
-    ],
-    minNumberOfSlots: 1,
+    fulfilledBy: 'toggleable',
+    fulfillmentOptions: {
+      'Option 1': {
+        description: 'NS 3200: Introduction to Human Biochemistry',
+        checker: includesWithSubRequirements(['NS 3200']),
+        counting: 'courses',
+        perSlotMinCount: [1],
+        slotNames: ['NS 3200'],
+      },
+      'Option 2': {
+        description: 'BIOMG 3300: Principles of Biochemistry, Individualized Instruction',
+        checker: includesWithSubRequirements(['BIOMG 3300']),
+        counting: 'courses',
+        perSlotMinCount: [1],
+        slotNames: ['BIOMG 3300'],
+      },
+      'Option 3': {
+        description: 'BIOMG 3310: (Principles of Biochemistry: Proteins and Metabolism) & BIOMG 3320: (Principles of Biochemistry: Molecular Biology)',
+        checker: includesWithSubRequirements(['BIOMG 3310', 'BIOMG 3320']),
+        counting: 'courses',
+        perSlotMinCount: [2],
+        slotNames: ['BIOMG 3310 & BIOMG 3320'],
+      },
+      'Option 4': {
+        description: 'BIOMG 3310: (Principles of Biochemistry: Proteins and Metabolism) & BIOMI 2900: (General Microbiology Lectures)',
+        checker: includesWithSubRequirements(['BIOMG 3310', 'BIOMI 2900']),
+        counting: 'courses',
+        perSlotMinCount: [2],
+        slotNames: ['BIOMG 3310 & BIOMI 2900'],
+      },
+      'Option 5': {
+        description: 'BIOMG 3350: Principles of Biochemistry, Proteins, Metabolism, and Molecular Biology',
+        checker: includesWithSubRequirements(['BIOMG 3350']),
+        counting: 'courses',
+        perSlotMinCount: [1],
+        slotNames: ['BIOMG 3350'],
+      },
+    },
   },
   {
     name: 'Nutritional Sciences Core Courses',
@@ -97,7 +117,7 @@ const nsRequirements: readonly CollegeOrMajorRequirement[] = [
       ['NS 2450'],
       ['NS 3450'],
       ['NS 3310'],
-      ['NS3320']
+      ['NS3320'],
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1, 1, 1],
@@ -216,7 +236,7 @@ const nsRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: includesWithSubRequirements(['MATH 1105', 'MATH 1106', 'MATH 1110', 'MATH 1120']),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
-    slotNames: ['MATH 1105 OR MATH 1106 OR MATH 1110 OR MATH 1120'],
+    slotNames: ['MATH 1105, MATH 1106, MATH 1110 or MATH 1120'],
     minNumberOfSlots: 1,
   },
   {
@@ -253,5 +273,5 @@ const nsRequirements: readonly CollegeOrMajorRequirement[] = [
 export default nsRequirements;
 
 export const nsAdvisors: AdvisorGroup = {
-  advisors: [{ name: 'Emily Fenuccio', email: 'dnsstudentservices@cornell.edu' }],
+  advisors: [{ name: 'Terry Mingle', email: 'tpm2@cornell.edu' }],
 };
