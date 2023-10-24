@@ -86,21 +86,24 @@ const nsRequirements: readonly CollegeOrMajorRequirement[] = [
         slotNames: ['BIOMG 3300'],
       },
       'Option 3': {
-        description: 'BIOMG 3310: (Principles of Biochemistry: Proteins and Metabolism) & BIOMG 3320: (Principles of Biochemistry: Molecular Biology)',
+        description:
+          'BIOMG 3310: (Principles of Biochemistry: Proteins and Metabolism) & BIOMG 3320: (Principles of Biochemistry: Molecular Biology)',
         checker: includesWithSubRequirements(['BIOMG 3310', 'BIOMG 3320']),
         counting: 'courses',
         perSlotMinCount: [2],
         slotNames: ['BIOMG 3310 & BIOMG 3320'],
       },
       'Option 4': {
-        description: 'BIOMG 3310: (Principles of Biochemistry: Proteins and Metabolism) & BIOMI 2900: (General Microbiology Lectures)',
+        description:
+          'BIOMG 3310: (Principles of Biochemistry: Proteins and Metabolism) & BIOMI 2900: (General Microbiology Lectures)',
         checker: includesWithSubRequirements(['BIOMG 3310', 'BIOMI 2900']),
         counting: 'courses',
         perSlotMinCount: [2],
         slotNames: ['BIOMG 3310 & BIOMI 2900'],
       },
       'Option 5': {
-        description: 'BIOMG 3350: Principles of Biochemistry, Proteins, Metabolism, and Molecular Biology',
+        description:
+          'BIOMG 3350: Principles of Biochemistry, Proteins, Metabolism, and Molecular Biology',
         checker: includesWithSubRequirements(['BIOMG 3350']),
         counting: 'courses',
         perSlotMinCount: [1],
@@ -117,7 +120,7 @@ const nsRequirements: readonly CollegeOrMajorRequirement[] = [
       ['NS 2450'],
       ['NS 3450'],
       ['NS 3310'],
-      ['NS3320'],
+      ['NS3320']
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1, 1, 1],
