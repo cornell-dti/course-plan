@@ -9,7 +9,7 @@ type AnalyticsData = {
 
 const trackUsersRef = collection(db, 'track-users');
 
-const retrieveAnalytics = (): Promise<AnalyticsData> =>
+const retrieveAnalytics = async (): Promise<AnalyticsData> =>
   getDocs(query(trackUsersRef, orderBy('timestamp', 'desc'), limit(1))).then(querySnapshot => {
     let newestDocData = {};
     let newestDocDate = new Date(0);

@@ -281,7 +281,7 @@ async function trackUsers() {
     timestamp: date,
   };
 
-  trackUsersCollection.doc(docId).set(outputData);
+  await trackUsersCollection.doc(docId).set(outputData);
 }
 
 trackUsers();

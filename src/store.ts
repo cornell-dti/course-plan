@@ -17,6 +17,7 @@ import {
 } from './utilities';
 import featureFlagCheckers from './feature-flags';
 import { setUserProperties } from './gtag';
+import getCourse from './global-firestore-data/courses';
 
 type SimplifiedFirebaseUser = { readonly displayName: string; readonly email: string };
 
@@ -31,6 +32,60 @@ type DerivedCoursesData = {
   // Mapping from course's unique ID to the semester object.
   readonly courseToSemesterMap: Readonly<Record<number, FirestoreSemester>>;
 };
+
+/**
+ * Given a course and a semester, return the populated course from course data.
+ * @param crs Course you want populated.
+ * @param sem Semester of the course.
+ * @returns a new FirestoreSemesterCourse populated from course data.
+ */
+
+async function popCourseCourseData(
+  crs: FirestoreSemesterCourse,
+  sem: FirestoreSemester
+): Promise<FirestoreSemesterCourse> {
+  const subject = crs.code.split(' ')[0];
+  const number = crs.code.split(' ')[1];
+  const fullCourse = await getCourse(sem.season, sem.year, subject, number);
+  return {
+    crseId: crs.crseId,
+    lastRoster: fullCourse.roster,
+    uniqueID: crs.uniqueID,
+    code: crs.code,
+    name: crs.name,
+    credits: fullCourse.enrollGroups[0].unitsMaximum,
+    creditRange: [fullCourse.enrollGroups[0].unitsMinimum, fullCourse.enrollGroups[0].unitsMaximum],
+    semesters: crs.semesters,
+    color: crs.color,
+  };
+}
+
+function isFirestoreSemesterCourse(obj: any): obj is FirestoreSemesterCourse {
+  return obj && obj.crseId !== undefined && obj.code !== undefined && obj.credits !== undefined;
+}
+
+/**
+ * Given a semester, go through all courses and populate them with default
+ * information from course data.
+ * @param sem The FirestoreSemester's courses you want populated with course data
+ * @returns A new FirestoreSemester with courses populated with course data.
+ */
+
+async function popSemCourseData(sem: FirestoreSemester): Promise<FirestoreSemester> {
+  const promises: Promise<FirestoreSemesterCourse>[] = [];
+
+  sem.courses.forEach(curCourse => {
+    if (isFirestoreSemesterCourse(curCourse)) promises.push(popCourseCourseData(curCourse, sem));
+  });
+
+  const results = await Promise.all(promises);
+
+  return {
+    year: sem.year,
+    season: sem.season,
+    courses: results,
+  };
+}
 
 export type VuexStoreState = {
   currentFirebaseUser: SimplifiedFirebaseUser;
@@ -97,7 +152,19 @@ const store: TypedVuexStore = new TypedVuexStore({
     uniqueIncrementer: 0,
     isTeleportModalOpen: false,
   },
-  actions: {},
+  actions: {
+    async setSemesters(context, semester: readonly FirestoreSemester[]) {
+      const promises: Promise<FirestoreSemester>[] = [];
+
+      semester.forEach(curSem => {
+        promises.push(popSemCourseData(curSem));
+      });
+
+      const results = await Promise.all(promises);
+
+      context.commit('setSemesters', results);
+    },
+  },
   mutations: {
     setCurrentFirebaseUser(state: VuexStoreState, user: SimplifiedFirebaseUser) {
       state.currentFirebaseUser = user;
@@ -161,15 +228,15 @@ const store: TypedVuexStore = new TypedVuexStore({
   },
 });
 
-const autoRecomputeDerivedData = (): (() => void) =>
-  store.subscribe((mutation, state) => {
+const autoRecomputeDerivedData = async (): Promise<() => void> =>
+  store.subscribe(async (mutation, state) => {
     switch (mutation.type) {
       case 'setOnboardingData': {
         setUserProperties(mutation.payload);
         break;
       }
       case 'setOrderByNewest': {
-        store.commit('setSemesters', sortedSemesters(state.semesters, state.orderByNewest));
+        await store.dispatch('setSemesters', sortedSemesters(state.semesters, state.orderByNewest));
         break;
       }
       case 'setSemesters': {
@@ -280,12 +347,12 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
       emitOnLoadWhenLoaded();
     }
   );
-  getDoc(doc(fb.semestersCollection, simplifiedUser.email)).then(snapshot => {
+  getDoc(doc(fb.semestersCollection, simplifiedUser.email)).then(async snapshot => {
     const data = snapshot.data();
     if (data) {
       const semesters = getFirstPlan(data);
       const { orderByNewest } = data;
-      store.commit('setSemesters', semesters);
+      await store.dispatch('setSemesters', semesters);
       updateDoc(doc(fb.semestersCollection, simplifiedUser.email), {
         plans: [{ semesters }], // TODO: andxu282 update later
       });
@@ -297,7 +364,7 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
         season: getCurrentSeason(),
         courses: [],
       };
-      store.commit('setSemesters', [newSemester]);
+      await store.dispatch('setSemesters', [newSemester]);
       setDoc(doc(fb.semestersCollection, simplifiedUser.email), {
         orderByNewest: true,
         plans: [{ semesters: [newSemester] }], // TODO: andxu282 update later
@@ -326,12 +393,12 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
       emitOnLoadWhenLoaded();
     }
   );
-  getDoc(doc(fb.subjectColorsCollection, simplifiedUser.email)).then(snapshot => {
+  getDoc(doc(fb.subjectColorsCollection, simplifiedUser.email)).then(async snapshot => {
     const subjectColors = snapshot.data() || {};
     // Pre-allocate all subject colors during this initialization step.
     const newSubjectColors = allocateAllSubjectColor(subjectColors);
     store.commit('setSubjectColors', newSubjectColors);
-    setDoc(doc(fb.subjectColorsCollection, simplifiedUser.email), newSubjectColors);
+    await setDoc(doc(fb.subjectColorsCollection, simplifiedUser.email), newSubjectColors);
     subjectColorInitialLoadFinished = true;
     emitOnLoadWhenLoaded();
   });
@@ -344,7 +411,7 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
       emitOnLoadWhenLoaded();
     }
   );
-  const derivedDataComputationUnsubscriber = autoRecomputeDerivedData();
+  const derivedDataComputationUnsubscriber = async () => autoRecomputeDerivedData();
 
   const unsubscriber = () => {
     userNameUnsubscriber();
@@ -357,9 +424,9 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
   return unsubscriber;
 };
 
-export const updateSubjectColorData = (color: string, code: string): void => {
+export const updateSubjectColorData = async (color: string, code: string): Promise<void> => {
   const simplifiedUser = store.state.currentFirebaseUser;
-  getDoc(doc(fb.subjectColorsCollection, simplifiedUser.email)).then(snapshot => {
+  await getDoc(doc(fb.subjectColorsCollection, simplifiedUser.email)).then(snapshot => {
     const subjectColors = snapshot.data() || {};
     const newSubjectColors = updateSubjectColor(subjectColors, color, code);
     store.commit('setSubjectColors', newSubjectColors);

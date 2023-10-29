@@ -161,10 +161,14 @@ export default defineComponent({
         ),
       }));
     },
-    addNewCourse(course: CornellCourseRosterCourse, season: FirestoreSemesterSeason, year: number) {
+    async addNewCourse(
+      course: CornellCourseRosterCourse,
+      season: FirestoreSemesterSeason,
+      year: number
+    ) {
       this.showDropdown = false;
       const newCourse = cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData(course);
-      addCourseToSemester(
+      await addCourseToSemester(
         year,
         season,
         newCourse,
