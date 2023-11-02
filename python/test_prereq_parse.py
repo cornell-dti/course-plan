@@ -84,19 +84,10 @@ def test_raw_prereqs_coreqs(verbose=False):
             (["MATH 2930", "MSE 2610"], []),
         ),
     ]
-    correct = 0
-    total = len(test_cases)
     for test in test_cases:
         (course_desc, answer) = test
         response = get_raw_prereqs_and_coreqs(course_desc)
-        if response == answer:
-            if verbose:
-                print("CORRECT")
-            correct += 1
-        elif verbose:
-            print(f"WRONG Answer: {answer} Got: {response}")
-    print(f"{correct / total * 100}%")
-    assert correct / total * 100 == 100
+        assert response == answer
 
 
 @pytest.mark.skipif(os.environ.get("RUN_LANGCHAIN_TESTS") == "false", reason="skip")
@@ -161,25 +152,10 @@ def test_prereqs_coreqs(index=None, shorten=False, verbose=False, hard=False):
             ("MATH 2930 AND MSE 2610", ""),
         ),
     ]
-    if index is not None:
-        test_cases = [test_cases[index]]
-    if shorten:
-        test_cases = test_cases[:3]
-    if hard:
-        test_cases = test_cases[-6:]
-    correct = 0
-    total = len(test_cases)
     for test in test_cases:
         (course_desc, answer) = test
         response = get_prereqs_coreqs(course_desc)
-        if response == answer:
-            if verbose:
-                print("CORRECT")
-            correct += 1
-        elif verbose:
-            print(f"WRONG Answer: {answer} Got: {response}")
-    print(f"{correct / total * 100}%")
-    assert correct / total * 100 == 100
+        assert response == answer
 
 
 def test_parse_boolean_string(verbose=False):
@@ -330,23 +306,10 @@ def test_parse_boolean_string(verbose=False):
         ),
     ]
 
-    correct = 0
-    total = len(test_cases)
     for test in test_cases:
         (boolean_string, answer) = test
-        try:
-            response = parse_boolean_string(boolean_string)
-        except:
-            print("PARSING ERROR")
-            continue
-        if response == answer:
-            if verbose:
-                print("CORRECT")
-            correct += 1
-        elif verbose:
-            print(f"WRONG Answer: {answer} Got: {response}")
-    print(f"{correct / total * 100}%")
-    assert correct / total * 100 == 100
+        response = parse_boolean_string(boolean_string)
+        assert response == answer
 
 
 if __name__ == "__main__":
