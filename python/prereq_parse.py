@@ -206,65 +206,29 @@ def get_prereqs_coreqs(course_desc: str, verbose=False) -> Tuple[str]:
 
 
 def parse_boolean_string(raw_output: str):
-    course = regex("[A-Z]{2,6} \d{4}")
+    if raw_output == "":
+        return {}
+    course = regex("[A-Z]{2,6} \d{4}").map(lambda x: {"type": "ATOM", "exprs": x})
     expr = forward_declaration()
-    clause = expr.sep_by(sep=string(" AND ") | string(" OR "), min=2).map(
+    and_clause = expr.sep_by(sep=string(" AND "), min=2).map(
         lambda x: {"type": "AND", "exprs": x}
     )
-    clause_wrapped = string("(") >> clause << string(")")
-    expr.become(course | clause_wrapped | clause)
-    output = clause.parse(raw_output)
+    and_clause_wrapped = string("(") >> and_clause << string(")")
+    or_clause = expr.sep_by(sep=string(" OR "), min=2).map(
+        lambda x: {"type": "OR", "exprs": x}
+    )
+    or_clause_wrapped = string("(") >> or_clause << string(")")
+    expr.become(and_clause_wrapped | or_clause_wrapped | course)
+    try:
+        output = expr.parse(raw_output)
+    except:
+        output = expr.parse(f"({raw_output})")
     return output
 
 
 if __name__ == "__main__":
     # ((PHYS 2208 AND CHEM 2080) OR (MATH 2130 OR MATH 2310 OR MATH 2220))
     result = parse_boolean_string(
-        "(PHYS 2208 AND (CHEM 2080 OR MATH 2090)) OR (MATH 2130 OR MATH 2310 OR MATH 2220)"
+        "((PHYS 2208 AND (CHEM 2080 OR MATH 2090)) OR (MATH 2130 OR MATH 2310 OR MATH 2220))"
     )
     print(result)
-
-
-# def test_fun(input):
-#     lparen = string('(')
-#     rparen = string(')')
-#     expr = forward_declaration()
-#     simple = regex('[0-9]+')
-#     and_clause = simple.sep_by(string(' AND '))
-#     or_clause = expr.sep_by(string(' OR '))
-#     # group_a = lparen >> and_clause << rparen
-#     # group_b = lparen >> or_clause  << rparen
-#     expr.become(and_clause | or_clause | simple)
-#     return expr.parse(input)
-
-
-# def s_expression(input):
-#     expr = forward_declaration()
-#     simple = regex('[0-9]+').map(int)
-#     grp = expr.sep_by(string(' '))
-#     group = string('(') >> expr.sep_by(string(' ')) << string(')')
-#     expr.become(simple | grp | group)
-#     return expr.parse(input)
-
-# def gpt_fun():
-#     # Define parsers for the logical operators (AND, OR, etc.) and variable names.
-#     operator = parsy.string(" AND ") | parsy.string(" OR ")  # You can add more operators as needed
-#     variable_name = parsy.letter
-
-#     # Define a parser for expressions.
-#     expression = variable_name.sep_by(operator)
-
-#     # Define a function to convert the parsed result into the desired dictionary format.
-#     def to_dict(parsed_result):
-#         operator, variables = parsed_result
-#         return {'type': operator, 'list': variables}
-
-#     # Parse the input string.
-#     input_string = 'a AND b'
-#     result = expression.parse(input_string)
-
-#     # Convert the parsed result to a dictionary.
-#     parsed_dict = to_dict(result)
-
-#     # Print the result.
-#     print(parsed_dict)
