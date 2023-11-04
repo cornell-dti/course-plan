@@ -7,20 +7,13 @@ from typing import Dict, Tuple
 from parsy import (
     regex,
     string,
-    generate,
-    match_item,
     forward_declaration,
-    decimal_digit,
-    seq,
 )
-import parsy
 
 try:
     from secret_api_keys import OPEN_AI_API_KEY
 except ImportError:
     OPEN_AI_API_KEY = "<key>"
-
-# import parsy
 
 MODEL = "gpt-3.5-turbo"
 verbose = False
@@ -224,11 +217,3 @@ def parse_boolean_string(raw_output: str):
     except:
         output = expr.parse(f"({raw_output})")
     return output
-
-
-if __name__ == "__main__":
-    # ((PHYS 2208 AND CHEM 2080) OR (MATH 2130 OR MATH 2310 OR MATH 2220))
-    result = parse_boolean_string(
-        "((PHYS 2208 AND (CHEM 2080 OR MATH 2090)) OR (MATH 2130 OR MATH 2310 OR MATH 2220))"
-    )
-    print(result)
