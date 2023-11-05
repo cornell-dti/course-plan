@@ -3,7 +3,6 @@
  *
  * @param groups A list of requirement groups containing the courses taken to fulfill the requirements
  * @param idRequirementFrequency A hashmap of requirement id to a list of frequency maps
- * @returns A hashmap of requirement id to a list of frequency maps
  *
  * @details
  * This function computes the frequency of courses taken to fulfill a requirement.
@@ -13,22 +12,12 @@
  * @note
  * The hashmap is passed in as a parameter to avoid creating a new hashmap every time this function is called.
  * This function is called multiple times in the main algorithm.
- *
- * @warning
- * This function assumes that the hashmap passed in is empty.
- *
- * @bug
- * None known
- *
- * @todo
- * None
  */
 export default function computeFulfillmentStats(
   groups: readonly GroupedRequirementFulfillmentReport[],
   idRequirementFrequency: Map<string, Map<number, number>[]>
 ) {
   // Iterate over all groups
-  const res = idRequirementFrequency;
   groups.forEach(currentGroup => {
     // Iterate over all requirements in the group
     const { reqs } = currentGroup;
@@ -38,13 +27,13 @@ export default function computeFulfillmentStats(
       const { safeCourses } = reqFulfillment.fulfillment;
 
       // Obtain the frequency list for this particular group's requirements
-      const freqList = res.get(key) ?? [];
+      const freqList = idRequirementFrequency.get(key) ?? [];
 
       // Iterate over all slots in the requirement group
       // console.log(safeCourses.length);
       for (let slotNumber = 0; slotNumber < safeCourses.length; slotNumber += 1) {
         if (freqList.length === slotNumber) {
-          freqList.push(new Map<number, number>());
+          freqList.push(new Map());
         }
         const currentCourseSlot = safeCourses[slotNumber];
         const currentRequirementSlotFreq = freqList[slotNumber];
@@ -57,9 +46,7 @@ export default function computeFulfillmentStats(
         }
         freqList[slotNumber] = currentRequirementSlotFreq; // Update the frequency list
       }
-      res.set(key, freqList); // Update the hashmap with the new frequency list
+      idRequirementFrequency.set(key, freqList); // Update the hashmap with the new frequency list
     });
   });
-
-  return res; // return the hashmap
 }
