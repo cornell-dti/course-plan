@@ -71,7 +71,7 @@ const anthrRequirements: readonly CollegeOrMajorRequirement[] = [
       },
     ],
     checkerWarning:
-      'We do not check a course is of seminar style with a research paper / project component.',
+      'We do not check if a course is of seminar style with a research paper / project component.',
     fulfilledBy: 'courses',
     perSlotMinCount: [2],
     slotNames: ['Course'],
