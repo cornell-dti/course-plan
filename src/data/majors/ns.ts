@@ -3,6 +3,7 @@ import {
   courseIsFWS,
   hasCategory,
   ifCodeMatch,
+  includesWithSingleRequirement,
   includesWithSubRequirements,
 } from '../../requirements/checkers';
 import { AdvisorGroup } from '../../tools/advisors/types';
@@ -51,7 +52,7 @@ const nsRequirements: readonly CollegeOrMajorRequirement[] = [
     name: 'Organic Chemistry Lab',
     description: 'Either CHEM 2510 (Intro to Exp Org. Chem) or CHEM 3010 (Honors Exp. Chem I)',
     source: 'https://courses.cornell.edu/preview_program.php?catoid=55&poid=28314',
-    checker: includesWithSubRequirements(['CHEM 2510', 'CHEM 3010']),
+    checker: includesWithSingleRequirement('CHEM 2510', 'CHEM 3010'),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
     slotNames: ['Organic Chem Lab'],
@@ -184,9 +185,7 @@ const nsRequirements: readonly CollegeOrMajorRequirement[] = [
       'Courses must have at least 9 credits.': {
         checker: [
           (course: Course): boolean =>
-            nsSocialSciencesHumanities.some(
-              distribution => hasCategory(course, distribution) ?? false
-            ),
+            nsSocialSciencesHumanities.some(distribution => hasCategory(course, distribution)),
         ],
         fulfilledBy: 'credits',
         perSlotMinCount: [9],
@@ -236,7 +235,7 @@ const nsRequirements: readonly CollegeOrMajorRequirement[] = [
     description:
       'Choose one of the following math courses: MATH 1105, MATH 1106, MATH 1110, MATH 1120',
     source: 'https://courses.cornell.edu/preview_program.php?catoid=55&poid=28314',
-    checker: includesWithSubRequirements(['MATH 1105', 'MATH 1106', 'MATH 1110', 'MATH 1120']),
+    checker: includesWithSingleRequirement('MATH 1105', 'MATH 1106', 'MATH 1110', 'MATH 1120'),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
     slotNames: ['MATH 1105, MATH 1106, MATH 1110 or MATH 1120'],
