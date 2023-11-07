@@ -23,7 +23,7 @@ verbose = False
 llm = ChatOpenAI(openai_api_key=OPEN_AI_API_KEY, temperature=0, model=MODEL)
 
 
-def get_raw_prereqs_and_coreqs(verbose=False) -> SequentialChain:
+def _get_raw_prereqs_and_coreqs(verbose=False) -> SequentialChain:
     """
     Returns a chain that takes in a course description and returns the prerequisites and corequisites as two separate lists.
     """
@@ -89,11 +89,11 @@ def get_raw_prereqs_and_coreqs(verbose=False) -> SequentialChain:
     return raw_prereqs_coreqs_chain
 
 
-def get_prereqs_coreqs(course_desc: str, verbose=False) -> Tuple[str]:
+def _get_prereqs_coreqs(course_desc: str, verbose=False) -> Tuple[str]:
     """
     Takes in a course description and returns a boolean expression with the course names representing the prerequisites and corequisites.
     """
-    raw_prereqs_coreqs_chain = get_raw_prereqs_and_coreqs(verbose)
+    raw_prereqs_coreqs_chain = _get_raw_prereqs_and_coreqs(verbose)
 
     template = """
     You are given the course description for a course.
@@ -198,7 +198,7 @@ def get_prereqs_coreqs(course_desc: str, verbose=False) -> Tuple[str]:
     return (prereqs_response, coreqs_response)
 
 
-def parse_boolean_string(raw_output: str):
+def _parse_boolean_string(raw_output: str):
     if raw_output == "":
         return {}
     course = regex("[A-Z]{2,6} \d{4}").map(lambda x: {"type": "ATOM", "exprs": x})
@@ -217,3 +217,43 @@ def parse_boolean_string(raw_output: str):
     except:
         output = expr.parse(f"({raw_output})")
     return output
+
+
+def parse_prereq_coreq_string(course_desc):
+    """
+    Takes in the raw prerequisite/corequisite string and returns a parsed
+    dictionary representing the string. Returns a tuple with two values, one
+    dict for the prerequisites and the other for the corequisite.
+
+    e.g.
+    input: 'Prerequisite: general chemistry (CHEM 1560, CHEM 2070, and/or CHEM 2080), organic chemistry (CHEM 1570, CHEM 3570, and/or CHEM 3580), and Food Chemistry I (FDSC 4170).'
+    output: (
+                {
+                    "type": "AND",
+                    "exprs": [
+                        {
+                            "type": "OR",
+                            "exprs": [
+                                {"type": "ATOM", "exprs": "CHEM 1560"},
+                                {"type": "ATOM", "exprs": "CHEM 2070"},
+                                {"type": "ATOM", "exprs": "CHEM 2080"},
+                            ],
+                        },
+                        {
+                            "type": "OR",
+                            "exprs": [
+                                {"type": "ATOM", "exprs": "CHEM 1570"},
+                                {"type": "ATOM", "exprs": "CHEM 3570"},
+                                {"type": "ATOM", "exprs": "CHEM 3580"},
+                            ],
+                        },
+                        {"type": "ATOM", "exprs": "FDSC 4170"},
+                    ],
+                },
+                {}
+            )
+    """
+    (prereqs_response, coreqs_response) = _get_prereqs_coreqs(course_desc)
+    parsed_prereqs = _parse_boolean_string(prereqs_response)
+    parsed_coreqs = _parse_boolean_string(coreqs_response)
+    return (parsed_prereqs, parsed_coreqs)
