@@ -1,5 +1,7 @@
 import { Course, RequirementChecker } from './types';
+import { CourseWithId } from '../../scripts/other-yes-list/parse';
 import { FWS_COURSE_ID } from '../data/constants';
+import otherYesCourses from '../../scripts/other-yes-list/otherYesCourses.json';
 
 // course codes representing foreign languages from: https://lrc.cornell.edu/languages-cornell
 // codes are commented out if they cannot count for the A&S language requirement
@@ -103,6 +105,20 @@ export const courseIsFWS = (course: Course): boolean =>
  */
 export const courseIsForeignLang = (course: Course): boolean =>
   FLcourses.some(language => course.subject?.includes(language) ?? false);
+
+/**
+ * Call this function to check whether distribution is included in the course
+ * or if the course is on the Other Yes List.
+ *
+ * @param course course object with useful information retrived from Cornell courses API.
+ * @returns if the distribution is included
+ */
+export const hasCategory = (course: Course, distribution: string) => {
+  const otherYesCourse = otherYesCourses.find((x: CourseWithId) => x.crseId === course.crseId);
+  return (
+    course.catalogDistr?.includes(distribution) || otherYesCourse?.categories.includes(distribution)
+  );
+};
 
 /**
  * This function checks whether a course's maximum number of credits reaches a specified minimum

@@ -1,8 +1,9 @@
 import { doc, updateDoc } from 'firebase/firestore';
 
+import { VueGtag } from 'vue-gtag-next';
 import { semestersCollection } from '../firebase-config';
 import store from '../store';
-import { GTag, GTagEvent } from '../gtag';
+import { GTagEvent } from '../gtag';
 import { sortedSemesters } from '../utilities';
 
 import {
@@ -92,7 +93,7 @@ export const semesterEquals = (
 export const addSemester = (
   year: number,
   season: FirestoreSemesterSeason,
-  gtag?: GTag,
+  gtag?: VueGtag,
   courses: readonly FirestoreSemesterCourse[] = []
 ): void => {
   GTagEvent(gtag, 'add-semester');
@@ -111,7 +112,7 @@ export const addPlan = async (
 export const deleteSemester = (
   year: number,
   season: FirestoreSemesterSeason,
-  gtag?: GTag
+  gtag?: VueGtag
 ): void => {
   GTagEvent(gtag, 'delete-semester');
   const semester = store.state.semesters.find(sem => semesterEquals(sem, year, season));
@@ -133,7 +134,7 @@ export const addCourseToSemester = (
   season: FirestoreSemesterSeason,
   newCourse: FirestoreSemesterCourse,
   choiceUpdater: (choice: FirestoreCourseOptInOptOutChoices) => FirestoreCourseOptInOptOutChoices,
-  gtag?: GTag
+  gtag?: VueGtag
 ): void => {
   GTagEvent(gtag, 'add-course');
   editSemesters(oldSemesters => {
@@ -155,7 +156,7 @@ export const deleteCourseFromSemester = (
   year: number,
   season: FirestoreSemesterSeason,
   courseUniqueID: number,
-  gtag?: GTag
+  gtag?: VueGtag
 ): void => {
   GTagEvent(gtag, 'delete-course');
   const semester = store.state.semesters.find(sem => semesterEquals(sem, year, season));
@@ -175,7 +176,7 @@ export const deleteCourseFromSemester = (
 export const deleteAllCoursesFromSemester = (
   year: number,
   season: FirestoreSemesterSeason,
-  gtag?: GTag
+  gtag?: VueGtag
 ): void => {
   GTagEvent(gtag, 'delete-semester-courses');
   const semester = store.state.semesters.find(sem => semesterEquals(sem, year, season));
@@ -190,7 +191,7 @@ export const deleteAllCoursesFromSemester = (
   }
 };
 
-export const deleteCourseFromSemesters = (courseUniqueID: number, gtag?: GTag): void => {
+export const deleteCourseFromSemesters = (courseUniqueID: number, gtag?: VueGtag): void => {
   GTagEvent(gtag, 'delete-course');
   editSemesters(oldSemesters =>
     oldSemesters.map(semester => {
