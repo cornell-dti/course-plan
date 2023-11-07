@@ -5,6 +5,16 @@ from typing import List
 prefix = "https://classes.cornell.edu/api/2.0"
 
 
+def get_semesters():
+    """
+    Returns all valid semesters from the roster
+    """
+    json_str = requests.get(f"{prefix}/config/rosters.json").text
+    json_dict = json.loads(json_str)
+    semesters = json_dict["data"]["rosters"]
+    return [semester["slugs"] for semester in semesters]
+
+
 def _get_subjects(semester: str):
     """
     Gets subjects based on semester (like MATH or PE)
