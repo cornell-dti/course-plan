@@ -9,7 +9,7 @@ DATABASE_URL_PROD = "https://cornell-courseplan.firebaseio.com"
 DATABASE_URL_DEV = "https://cornelldti-courseplan-dev.firebaseio.com"
 
 
-def get_database(service_account: str, databaseURL: str, app_name: str):
+def get_database(service_account: str, databaseURL: str, app_name="courseplan-dev"):
     cred = credentials.Certificate(service_account)
     app = firebase_admin.initialize_app(
         credential=cred, options={"databaseURL": databaseURL}, name=app_name
@@ -20,14 +20,14 @@ def get_database(service_account: str, databaseURL: str, app_name: str):
 is_prod = os.environ.get("PROD") == "true"
 service_account_filename = SERVICE_ACCOUNT_PROD if is_prod else SERVICE_ACCOUNT_DEV
 if os.environ.get("SERVICE_ACCOUNT") is not None:
+    service_account_unparsed = os.environ.get("SERVICE_ACCOUNT")
+else:
     service_account_unparsed = open(
         os.path.join(os.getcwd(), "..", service_account_filename)
     )
 service_account = json.load(service_account_unparsed)
 databaseURL = DATABASE_URL_PROD if is_prod else DATABASE_URL_DEV
 db = get_database(service_account, databaseURL)
-db.settings({"ignoreUndefinedProperties": True})
-
 
 user_collections = {
     "name": "user-name",

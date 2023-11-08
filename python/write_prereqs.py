@@ -19,3 +19,23 @@ def write_prereqs(semester):
         )
         course_ref.update({"prereqs": prereqs})
         course_ref.update({"coreqs": coreqs})
+
+
+def write_cs_4780():
+    course = "CS 4780"
+    prereqs = "Prereqs"
+    coreqs = "Coreqs"
+    subject = course.split(" ")[0]
+    course_number = course.split(" ")[1]
+    course_ref = (
+        courses_collection.document("FA23").collection(subject).document(course_number)
+    )
+    print("have course_ref")
+    course_ref.update({"prereqs": prereqs})
+    print("updated prereqs")
+    course_ref.update({"coreqs": coreqs})
+    print("updated coreqs")
+
+
+if __name__ == "__main__":
+    write_cs_4780()
