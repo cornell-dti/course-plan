@@ -33,8 +33,8 @@ def write_cs_4780():
     print("have course_ref")
     course_ref.update({"prereqs": prereqs})
     print("updated prereqs")
-    course_ref.update({"coreqs": coreqs})
-    print("updated coreqs")
+    # course_ref.update({"coreqs": coreqs})
+    # print("updated coreqs")
 
 
 if __name__ == "__main__":

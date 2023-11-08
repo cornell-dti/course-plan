@@ -22,10 +22,9 @@ service_account_filename = SERVICE_ACCOUNT_PROD if is_prod else SERVICE_ACCOUNT_
 if os.environ.get("SERVICE_ACCOUNT") is not None:
     service_account_unparsed = os.environ.get("SERVICE_ACCOUNT")
 else:
-    service_account_unparsed = open(
-        os.path.join(os.getcwd(), "..", service_account_filename)
-    )
-service_account = json.load(service_account_unparsed)
+    with open(os.path.join(os.getcwd(), "..", service_account_filename)) as f:
+        service_account_unparsed = f.read()
+service_account = json.loads(service_account_unparsed)
 databaseURL = DATABASE_URL_PROD if is_prod else DATABASE_URL_DEV
 db = get_database(service_account, databaseURL)
 
