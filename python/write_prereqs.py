@@ -13,16 +13,16 @@ def write_prereqs(semester):
         subject = course.split(" ")[0]
         course_number = course.split(" ")[1]
         course_ref = (
-            courses_collection.document(semester)
-            .document(subject)
+            courses_collection.document("FA23")
+            .collection(subject)
             .document(course_number)
         )
-        course_ref.update({"prereqs": prereqs})
-        course_ref.update({"coreqs": coreqs})
+        course_ref.set({"course": {"prereqs": prereqs}}, merge=True)
+        course_ref.set({"course": {"coreqs": coreqs}}, merge=True)
 
 
-def write_cs_4780():
-    course = "CS 4780"
+def write_cs_4787():
+    course = "CS 4787"
     prereqs = "Prereqs"
     coreqs = "Coreqs"
     subject = course.split(" ")[0]
@@ -30,12 +30,9 @@ def write_cs_4780():
     course_ref = (
         courses_collection.document("FA23").collection(subject).document(course_number)
     )
-    print("have course_ref")
-    course_ref.update({"prereqs": prereqs})
-    print("updated prereqs")
-    # course_ref.update({"coreqs": coreqs})
-    # print("updated coreqs")
+    course_ref.set({"course": {"prereqs": prereqs}}, merge=True)
+    course_ref.set({"course": {"coreqs": coreqs}}, merge=True)
 
 
 if __name__ == "__main__":
-    write_cs_4780()
+    write_cs_4787()

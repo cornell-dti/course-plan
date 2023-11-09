@@ -9,11 +9,16 @@ DATABASE_URL_PROD = "https://cornell-courseplan.firebaseio.com"
 DATABASE_URL_DEV = "https://cornelldti-courseplan-dev.firebaseio.com"
 
 
-def get_database(service_account: str, databaseURL: str, app_name="courseplan-dev"):
+def get_database(service_account: dict, databaseURL: str, app_name=None):
     cred = credentials.Certificate(service_account)
-    app = firebase_admin.initialize_app(
-        credential=cred, options={"databaseURL": databaseURL}, name=app_name
-    )
+    if app_name is None:
+        app = firebase_admin.initialize_app(
+            credential=cred, options={"databaseURL": databaseURL}
+        )
+    else:
+        app = firebase_admin.initialize_app(
+            credential=cred, options={"databaseURL": databaseURL}, name=app_name
+        )
     return firestore.client(app)
 
 
