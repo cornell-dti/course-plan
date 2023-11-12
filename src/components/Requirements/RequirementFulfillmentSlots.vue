@@ -11,7 +11,7 @@
         <incomplete-sub-req-course
           :subReq="requirementFulfillment"
           :slotName="requirementFulfillmentCourseSlot.name"
-          :courses="requirementFulfillmentCourseSlot.courses.slice(0, 4)"
+          :courses="requirementFulfillmentCourseSlot.courses.slice(0, 2)"
           :displayDescription="displayDescription"
           :showSeeAllLabel="requirementFulfillmentCourseSlot.courses.length > 4"
           @onShowAllCourses="onShowAllCourses(id)"

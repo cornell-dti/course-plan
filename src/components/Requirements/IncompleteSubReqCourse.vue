@@ -70,9 +70,9 @@ export default defineComponent({
   emits: ['onShowAllCourses'],
   computed: {
     addCourseLabel(): string {
-      let label = 'Add Course';
+      let label = 'Popular Courses';
       if (this.subReq.fulfillment.fulfilledBy === 'courses') {
-        label = `Add ${this.slotName}`;
+        label += ` for ${this.slotName}`;
       }
       return label;
     },
@@ -86,7 +86,7 @@ export default defineComponent({
       return '34';
     },
     seeAll(): string {
-      return 'See all >';
+      return 'See all courses >';
     },
     coursesWithoutRequirementID(): readonly FirestoreSemesterCourse[] {
       return this.courses.map(({ requirementID: _, ...rest }) => rest);
@@ -164,7 +164,7 @@ export default defineComponent({
   &-courseWrapper {
     padding: 0.2rem;
     width: 10.25rem;
-    max-width: 50%;
+    width: 100%;
   }
   &-course {
     touch-action: none;

@@ -81,29 +81,22 @@
         </div>
         <div class="see-all-padding-x py-3">
           <h1 class="title">{{ showAllCourses.name }}</h1>
-          <div class="see-all-pages" v-if="numPages > 1">
-            <span class="see-all-pageCount">{{ pageText }}</span>
-            <div class="see-all-buttonWrapper">
-              <button
-                class="see-all-button"
-                :class="{ 'see-all-button--disabled': !hasPrevPage }"
-                :disabled="!hasPrevPage"
-                @click="prevPage()"
-              >
-                <span class="see-all-button-text">Prev</span>
-              </button>
-              <button
-                class="see-all-button"
-                :class="{ 'see-all-button--disabled': !hasNextPage }"
-                :disabled="!hasNextPage"
-                @click="nextPage()"
-              >
-                <span class="see-all-button-text">Next</span>
-              </button>
-            </div>
-          </div>
+
+          <p>
+            Courses are sorted by most popular to least popular classes used to fulfill this
+            requirement.
+          </p>
+
+          <h2>Search Courses</h2>
+          <input
+            v-model="searchText"
+            class="search-box"
+            @focus="clearDefault"
+            @blur="restoreDefault"
+          />
+
           <draggable
-            :modelValue="showAllCourses.shownCourses"
+            :modelValue="filteredCourses"
             :clone="cloneCourse"
             item-key="code"
             :group="{ name: 'draggable-semester-courses', put: false }"
@@ -158,8 +151,9 @@ type Data = {
   numOfColleges: number;
   showAllCourses: ShowAllCourses;
   shouldShowAllCourses: boolean;
-  showAllPage: number;
   tourStep: number;
+  defaultText: string;
+  searchText: string;
 };
 
 // This section will be revisited when we try to make first-time tooltips
@@ -170,9 +164,6 @@ tour.setOptions({
   nextLabel: 'Next',
   exitOnOverlayClick: false,
 });
-
-// show 24 courses per page of the see all menu
-const maxSeeAllCoursesPerPage = 24;
 
 export default defineComponent({
   components: {
@@ -198,8 +189,10 @@ export default defineComponent({
       numOfColleges: 1,
       showAllCourses: { name: '', shownCourses: [], allCourses: [] },
       shouldShowAllCourses: false,
-      showAllPage: 0,
+      // showAllPage: 0,
       tourStep: 0,
+      defaultText: '"CS 1110", "Multivariable Calculus", etc.',
+      searchText: '"CS 1110", "Multivariable Calculus", etc.',
     };
   },
   watch: {
@@ -220,6 +213,20 @@ export default defineComponent({
     },
   },
   computed: {
+    filteredCourses() {
+      if (this.searchText.trim() === '' || this.searchText === this.defaultText) {
+        return this.showAllCourses.allCourses.slice(0, 50); // Show all courses if search text is empty
+      }
+      const search = this.searchText.toLowerCase();
+
+      // only filter for first 50 courses
+      const res = this.showAllCourses.allCourses.filter(
+        course =>
+          course.name.toLowerCase().includes(search) || course.code.toLowerCase().includes(search)
+      );
+
+      return res.slice(0, 50);
+    },
     debuggerAllowed(): boolean {
       return featureFlagCheckers.isRequirementDebuggerEnabled();
     },
@@ -235,23 +242,25 @@ export default defineComponent({
     groupedRequirementFulfillmentReports(): readonly GroupedRequirementFulfillmentReport[] {
       return store.state.groupedRequirementFulfillmentReport;
     },
-    numPages(): number {
-      return Math.ceil(this.showAllCourses.allCourses.length / maxSeeAllCoursesPerPage);
-    },
-    hasNextPage(): boolean {
-      return this.showAllPage + 1 < this.numPages;
-    },
-    hasPrevPage(): boolean {
-      return this.showAllPage > 0;
-    },
-    pageText(): string {
-      return `Page ${this.showAllPage + 1}/${this.numPages}`;
-    },
     showToggleRequirementsBtn(): boolean {
       return !this.isMobile && featureFlagCheckers.isToggleRequirementsBarBtnEnabled();
     },
   },
   methods: {
+    filterCourses() {
+      // Triggered on input change in the search box
+      // This will automatically update the filteredCourses computed property
+    },
+    clearDefault() {
+      if (this.searchText === this.defaultText) {
+        this.searchText = ''; // Clear the default value when input is focused
+      }
+    },
+    restoreDefault() {
+      if (!this.searchText) {
+        this.searchText = this.defaultText; // Restore default value if no input
+      }
+    },
     toggleDebugger(): void {
       this.displayDebugger = !this.displayDebugger;
     },
@@ -297,44 +306,15 @@ export default defineComponent({
 
       this.showAllCourses = {
         name: showAllCourses.requirementName,
-        shownCourses: this.findPotentialSeeAllCourses(showAllCourses.subReqCoursesArray),
+        // shownCourses: this.findPotentialSeeAllCourses(showAllCourses.subReqCoursesArray),
+        shownCourses: showAllCourses.subReqCoursesArray,
         allCourses: showAllCourses.subReqCoursesArray,
       };
-    },
-    nextPage() {
-      if (!this.hasNextPage) {
-        return;
-      }
-
-      this.showAllPage += 1;
-      this.showAllCourses.shownCourses = this.findPotentialSeeAllCourses(
-        this.showAllCourses.allCourses
-      );
-    },
-    prevPage() {
-      if (!this.hasPrevPage) {
-        return;
-      }
-
-      this.showAllPage -= 1;
-      this.showAllCourses.shownCourses = this.findPotentialSeeAllCourses(
-        this.showAllCourses.allCourses
-      );
-    },
-    // return an array consisting of the courses to display on the see all menu, depending on the showAllPage and maxSeeAllCoursesPerPage
-    findPotentialSeeAllCourses(
-      courses: readonly FirestoreSemesterCourse[]
-    ): FirestoreSemesterCourse[] {
-      const allPotentialCourses = courses.slice(
-        this.showAllPage * maxSeeAllCoursesPerPage,
-        (this.showAllPage + 1) * maxSeeAllCoursesPerPage
-      );
-      return allPotentialCourses;
     },
     backFromSeeAll() {
       this.shouldShowAllCourses = false;
       this.showAllCourses = { name: '', shownCourses: [], allCourses: [] };
-      this.showAllPage = 0;
+      // this.showAllPage = 0;
     },
     cloneCourse(courseWithDummyUniqueID: FirestoreSemesterCourse): FirestoreSemesterCourse {
       return { ...courseWithDummyUniqueID, uniqueID: incrementUniqueID() };
@@ -507,6 +487,17 @@ h1.title {
 
 .requirements-course {
   width: 21.375rem;
+}
+
+@import '@/assets/scss/_variables.scss';
+
+.search-box {
+  border: 1px solid transparent;
+  background-color: $searchBoxWhite;
+  padding: 10px;
+  font-size: 16px;
+  width: 100%;
+  color: $lightPlaceholderGray;
 }
 
 @media only screen and (max-width: $large-breakpoint) {
