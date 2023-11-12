@@ -213,8 +213,12 @@ export default defineComponent({
     },
   },
   computed: {
+    /**
+     * @brief Filters courses based on search text and returns the first 50 courses that match the search text 
+     * @return {readonly FirestoreSemesterCourse[]} filtered courses
+     */
     filteredCourses() {
-      if (this.searchText.trim() === '' || this.searchText === this.defaultText) {
+      if (this.searchText.trim() === '' || this.searchText === this.defaultText) { 
         return this.showAllCourses.allCourses.slice(0, 50); // Show all courses if search text is empty
       }
       const search = this.searchText.toLowerCase();
@@ -225,23 +229,47 @@ export default defineComponent({
           course.name.toLowerCase().includes(search) || course.code.toLowerCase().includes(search)
       );
 
-      return res.slice(0, 50);
+      return res.slice(0, 50); // Only show first 50 courses
     },
+    /**
+     * @brief Checks if debugger is allowed to be displayed (feature flag) 
+     * @return {boolean} true if debugger is allowed
+     */
     debuggerAllowed(): boolean {
       return featureFlagCheckers.isRequirementDebuggerEnabled();
     },
+    /**
+     * @brief Returns semesters from store
+     * @return {readonly FirestoreSemester[]} semesters
+     */
     semesters(): readonly FirestoreSemester[] {
       return store.state.semesters;
     },
+    /**
+     * @brief Returns onboarding data
+     * @return {AppOnboardingData} onboarding data
+     */
     onboardingData(): AppOnboardingData {
       return store.state.onboardingData;
     },
+    /**
+     * @brief Returns toggleable requirement choices
+     * @return {AppToggleableRequirementChoices} toggleable requirement choices
+     */
     toggleableRequirementChoices(): AppToggleableRequirementChoices {
       return store.state.toggleableRequirementChoices;
     },
+    /**
+     * @brief Returns grouped requirement fulfillment reports
+     * @return {readonly GroupedRequirementFulfillmentReport[]} grouped requirement fulfillment reports
+     */
     groupedRequirementFulfillmentReports(): readonly GroupedRequirementFulfillmentReport[] {
       return store.state.groupedRequirementFulfillmentReport;
     },
+    /**
+     * @brief Returns true if the toggle requirements bar button should be shown
+     * @return {boolean} true if the toggle requirements bar button should be shown
+     */
     showToggleRequirementsBtn(): boolean {
       return !this.isMobile && featureFlagCheckers.isToggleRequirementsBarBtnEnabled();
     },
@@ -251,20 +279,35 @@ export default defineComponent({
       // Triggered on input change in the search box
       // This will automatically update the filteredCourses computed property
     },
+    /**
+     * @brief Clears the default text in the search box
+     */
     clearDefault() {
       if (this.searchText === this.defaultText) {
         this.searchText = ''; // Clear the default value when input is focused
       }
     },
+    /**
+     * @brief Restores the default text in the search box
+     */
     restoreDefault() {
       if (!this.searchText) {
         this.searchText = this.defaultText; // Restore default value if no input
       }
     },
+    /**
+     * @brief Toggles the debugger
+     */
     toggleDebugger(): void {
       this.displayDebugger = !this.displayDebugger;
     },
     // TODO CHANGE FOR MULTIPLE COLLEGES & GRAD PROGRAMS
+    /**
+     * @brief Returns true if the requirement should be shown
+     * @param {number} id requirement id
+     * @param {string} group requirement group
+     * @return {boolean} true if the requirement should be shown
+     */
     showMajorOrMinorRequirements(id: number, group: string): boolean {
       // colleges and programs should always be shown as there can only be 1
       if (group === 'College' || group === 'Grad') {
@@ -279,25 +322,47 @@ export default defineComponent({
         id === this.displayedMinorIndex + this.numOfColleges + this.onboardingData.major.length
       );
     },
+    /**
+     * @brief Chooses a toggleable requirement option
+     */
     chooseToggleableRequirementOption(requirementID: string, option: string): void {
       chooseToggleableRequirementOption(requirementID, option);
     },
+    /**
+     * @brief Activates a major
+     * @param {number} id major id
+     */
     activateMajor(id: number) {
       this.displayedMajorIndex = id;
     },
+    /**
+     * @brief Activates a minor
+     * @param {number} id minor id
+     */
     activateMinor(id: number) {
       this.displayedMinorIndex = id;
     },
+    /**
+     * @brief Returns the requirements tooltip text
+     * @return {string} requirements tooltip text
+     */
     getRequirementsTooltipText() {
       return `<div class="introjs-tooltipTop"><div class="introjs-customTitle">Meet your Requirements Bar <img src="${clipboard}" class = "introjs-emoji introjs-emoji-text" alt="clipboard icon"/>
           </div><div class="introjs-customProgress">1/4</div></div><div class = "introjs-bodytext">Based on your school and major/minor, we’ve compiled your requirements and
           required courses.<br><img src="${warning}" class = "introjs-emoji-text" alt="warning icon"/> Some requirements
           aren’t fully tracked by us yet, so pay attention to the warnings.</div>`;
     },
+    /**
+     * @brief Returns tooltip text for courses
+     */
     getCoursesTooltipText() {
       return `<div class="introjs-tooltipTop"><div class="introjs-customTitle">These are your Courses</div><div class="introjs-customProgress">2/4</div>
       </div><div class = "introjs-bodytext">Drag and drop courses into your schedule! Click on them to learn more information like their descriptions.</div>`;
     },
+    /**
+     * @brief Modify this.state.showAllCourses to show all courses based on showAllCourses object
+     * @param {ShowAllCourses} showAllCourses show all courses object
+     */
     onShowAllCourses(showAllCourses: {
       requirementName: string;
       subReqCoursesArray: readonly FirestoreSemesterCourse[];
@@ -306,19 +371,28 @@ export default defineComponent({
 
       this.showAllCourses = {
         name: showAllCourses.requirementName,
-        // shownCourses: this.findPotentialSeeAllCourses(showAllCourses.subReqCoursesArray),
         shownCourses: showAllCourses.subReqCoursesArray,
         allCourses: showAllCourses.subReqCoursesArray,
       };
     },
+    /**
+     * @brief Changes showAllCourses to false because user clicked back button and showAllCourses to empty object
+     */
     backFromSeeAll() {
       this.shouldShowAllCourses = false;
       this.showAllCourses = { name: '', shownCourses: [], allCourses: [] };
-      // this.showAllPage = 0;
     },
+    /**
+     * @brief Clones a course
+     * @param {FirestoreSemesterCourse} courseWithDummyUniqueID course with dummy unique id
+     * @return {FirestoreSemesterCourse} cloned course
+     */
     cloneCourse(courseWithDummyUniqueID: FirestoreSemesterCourse): FirestoreSemesterCourse {
       return { ...courseWithDummyUniqueID, uniqueID: incrementUniqueID() };
     },
+    /**
+     * @brief Toggles the minimized state
+     */
     toggleMinimized() {
       this.$emit('toggleMinimized');
     },
