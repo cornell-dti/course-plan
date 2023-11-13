@@ -23,10 +23,10 @@ export type CollegeRequirements<R> = {
 
 type migration = {
   entryYear: number;
-  type: string; 
-  field: string; /** Modify or Deletion Migration? This field must already exist in requirements file */
-  newValue?: CollegeOrMajorRequirement /** Required for modify migrations */
-}
+  type: string;
+  field: string /** Modify or Deletion Migration? This field must already exist in requirements file */;
+  newValue?: CollegeOrMajorRequirement /** Required for modify migrations */;
+};
 
 export type Major<R> = Readonly<{
   name: string;

@@ -258,13 +258,13 @@ const json: RequirementsJson = {
       requirements: eceRequirements,
       advisors: eceAdvisors,
       abbrev: 'ECE',
-      // export migration from ece 
+      // export migration from ece
       migrations: [
-        { 
-          "entryYear": 2020,
-          "type": "modify",
-          "field": "Core Courses",
-          "newValue": {
+        {
+          entryYear: 2020,
+          type: 'modify',
+          field: 'Core Courses',
+          newValue: {
             name: 'Core Courses',
             description: 'ECE 2100, ECE 2200, & ECE 3400',
             source:
@@ -274,8 +274,8 @@ const json: RequirementsJson = {
             perSlotMinCount: [1, 1, 1],
             slotNames: ['ECE 2100', 'ECE 2200', 'ECE 3400'],
           },
-        }
-      ]
+        },
+      ],
     },
     ENGL: {
       name: 'English',

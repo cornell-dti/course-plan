@@ -36,9 +36,9 @@ const eceRequirements: readonly CollegeOrMajorRequirement[] = [
     description: 'ECE 2100, ECE 2720',
     source:
       'https://www.ece.cornell.edu/ece/programs/undergraduate-programs/majors/program-requirements',
-    checker: includesWithSubRequirements(['ECE 2100'], ['ECE 2720'],),
+    checker: includesWithSubRequirements(['ECE 2100'], ['ECE 2720']),
     fulfilledBy: 'courses',
-    perSlotMinCount: [1, 1,],
+    perSlotMinCount: [1, 1],
     slotNames: ['ECE 2100', 'ECE 2720'],
   },
   {
