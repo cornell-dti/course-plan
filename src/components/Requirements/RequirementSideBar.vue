@@ -36,7 +36,7 @@
           >
             Open Requirement Debugger
           </button>
-
+          <confirmation :text="confirmationText" v-if="isConfirmationOpen" />
           <div class="multiple-plans">
             <add-plan-modal
               v-if="isAddPlanOpen"
@@ -171,6 +171,7 @@ import introJs from 'intro.js';
 import featureFlagCheckers from '@/feature-flags';
 
 import Course from '@/components/Course/Course.vue';
+import Confirmation from '@/components/Modals/Confirmation.vue';
 import TeleportModal from '@/components/Modals/TeleportModal.vue';
 import RequirementDebugger from '@/components/Requirements/RequirementDebugger.vue';
 import RequirementGroup from '@/components/Requirements/RequirementGroup.vue';
@@ -211,7 +212,9 @@ type Data = {
   isCopyPlanOpen: boolean;
   isNamePlanOpen: boolean;
   isEditPlanOpen: boolean;
+  isConfirmationOpen: boolean;
   selectedPlanCopy: string;
+  confirmationText: string;
 };
 
 // This section will be revisited when we try to make first-time tooltips
@@ -230,6 +233,7 @@ export default defineComponent({
   components: {
     draggable,
     Course,
+    Confirmation,
     DropDownArrow,
     RequirementDebugger,
     RequirementGroup,
@@ -261,7 +265,9 @@ export default defineComponent({
       isCopyPlanOpen: false,
       isNamePlanOpen: false,
       isEditPlanOpen: false,
+      isConfirmationOpen: false,
       selectedPlanCopy: '',
+      confirmationText: '',
     };
   },
   watch: {
@@ -344,9 +350,19 @@ export default defineComponent({
       } else {
         addPlan(name, []);
       }
+      this.confirmationText = `${name} has been added!`;
+      this.isConfirmationOpen = true;
+      setTimeout(() => {
+        this.isConfirmationOpen = false;
+      }, 2000);
     },
     deletePlan(name: string) {
       deletePlan(name);
+      this.confirmationText = `${name} has been deleted!`;
+      this.isConfirmationOpen = true;
+      setTimeout(() => {
+        this.isConfirmationOpen = false;
+      }, 2000);
     },
     editPlan(name: string, oldname: string) {
       const { plans } = store.state;
@@ -359,6 +375,11 @@ export default defineComponent({
         'setCurrentPlan',
         store.state.plans.find(plan => plan.name === name)
       );
+      this.confirmationText = `${oldname} has been renamed to ${name}!`;
+      this.isConfirmationOpen = true;
+      setTimeout(() => {
+        this.isConfirmationOpen = false;
+      }, 2000);
     },
     copyPlan(selectedPlan: string) {
       this.selectedPlanCopy = selectedPlan;
