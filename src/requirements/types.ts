@@ -21,6 +21,13 @@ export type CollegeRequirements<R> = {
   };
 };
 
+type migration = {
+  entryYear: number;
+  type: string; 
+  field: string; /** Modify or Deletion Migration? This field must already exist in requirements file */
+  newValue?: CollegeOrMajorRequirement /** Required for modify migrations */
+}
+
 export type Major<R> = Readonly<{
   name: string;
   schools: readonly string[];
@@ -29,6 +36,7 @@ export type Major<R> = Readonly<{
   specializations?: readonly R[];
   advisors?: AdvisorGroup;
   readonly abbrev?: string;
+  migrations?: migration[];
 }>;
 
 export type MutableMajorRequirements<R> = {

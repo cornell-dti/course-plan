@@ -78,6 +78,7 @@ import earthAndAtmosphericSciencesMinorRequirements, {
 import mpaRequirements, { mpaAdvisors } from './grad/mpa';
 
 import { MATH2940, CHEM2080 } from './specializations/en';
+import { includesWithSubRequirements } from '@/requirements/checkers';
 
 const json: RequirementsJson = {
   university: {
@@ -257,6 +258,24 @@ const json: RequirementsJson = {
       requirements: eceRequirements,
       advisors: eceAdvisors,
       abbrev: 'ECE',
+      // export migration from ece 
+      migrations: [
+        { 
+          "entryYear": 2020,
+          "type": "modify",
+          "field": "Core Courses",
+          "newValue": {
+            name: 'Core Courses',
+            description: 'ECE 2100, ECE 2200, & ECE 3400',
+            source:
+              'https://www.ece.cornell.edu/ece/programs/undergraduate-programs/majors/program-requirements',
+            checker: includesWithSubRequirements(['ECE 2100'], ['ECE 2200'], ['ECE 3400']),
+            fulfilledBy: 'courses',
+            perSlotMinCount: [1, 1, 1],
+            slotNames: ['ECE 2100', 'ECE 2200', 'ECE 3400'],
+          },
+        }
+      ]
     },
     ENGL: {
       name: 'English',

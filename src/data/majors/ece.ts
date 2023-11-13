@@ -33,13 +33,13 @@ const eceRequirements: readonly CollegeOrMajorRequirement[] = [
   },
   {
     name: 'Core Courses',
-    description: 'ECE 2100, ECE 2200 ECE 3400',
+    description: 'ECE 2100, ECE 2720',
     source:
       'https://www.ece.cornell.edu/ece/programs/undergraduate-programs/majors/program-requirements',
-    checker: includesWithSubRequirements(['ECE 2100'], ['ECE 2200'], ['ECE 3400']),
+    checker: includesWithSubRequirements(['ECE 2100'], ['ECE 2720'],),
     fulfilledBy: 'courses',
-    perSlotMinCount: [1, 1, 1],
-    slotNames: ['ECE 2100', 'ECE 2200', 'ECE 3400'],
+    perSlotMinCount: [1, 1,],
+    slotNames: ['ECE 2100', 'ECE 2720'],
   },
   {
     name: 'Foundation Courses',
