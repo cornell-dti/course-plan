@@ -59,6 +59,7 @@ jobs:
         run: |
           pip install pipenv
           pip install typing-extensions
+          pip install --upgrade openai
       - name: Pipenv Install
         working-directory: python
         run: pipenv install
