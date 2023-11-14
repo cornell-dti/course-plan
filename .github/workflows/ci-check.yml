@@ -59,6 +59,8 @@ jobs:
         run: |
           pip install pipenv
           pip install typing-extensions
+          pip install pytest
+          pip install --upgrade openai
       - name: Pipenv Install
         working-directory: python
         run: pipenv install
@@ -72,4 +74,4 @@ jobs:
         run: |
           export RUN_LANGCHAIN_TESTS=false
           echo $RUN_LANGCHAIN_TESTS
-          pipenv run pytest
+          pytest .
