@@ -1,7 +1,7 @@
 from prereq_parse import (
-    get_raw_prereqs_and_coreqs,
-    get_prereqs_coreqs,
-    parse_boolean_string,
+    _get_raw_prereqs_and_coreqs,
+    _get_prereqs_coreqs,
+    _parse_boolean_string,
 )
 import os
 import pytest
@@ -86,7 +86,7 @@ def test_raw_prereqs_coreqs(verbose=False):
     ]
     for test in test_cases:
         (course_desc, answer) = test
-        response = get_raw_prereqs_and_coreqs(course_desc)
+        response = _get_raw_prereqs_and_coreqs(course_desc)
         assert response == answer
 
 
@@ -154,7 +154,7 @@ def test_prereqs_coreqs(index=None, shorten=False, verbose=False, hard=False):
     ]
     for test in test_cases:
         (course_desc, answer) = test
-        response = get_prereqs_coreqs(course_desc)
+        response = _get_prereqs_coreqs(course_desc)
         assert response == answer
 
 
@@ -308,7 +308,7 @@ def test_parse_boolean_string(verbose=False):
 
     for test in test_cases:
         (boolean_string, answer) = test
-        response = parse_boolean_string(boolean_string)
+        response = _parse_boolean_string(boolean_string)
         assert response == answer
 
 
