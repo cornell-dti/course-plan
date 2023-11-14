@@ -35,6 +35,7 @@ db.settings({ ignoreUndefinedProperties: true });
 
 const userCollections = {
   name: 'user-name',
+  ids: 'user-ids',
   semesters: 'user-semesters',
   toggleable: 'user-toggleable-requirement-choices',
   overridden: 'user-overridden-fulfillment-choices',
@@ -44,7 +45,7 @@ const userCollections = {
 };
 
 export const userCollectionNames = Object.values(userCollections);
-
+export const userIDCollection = db.collection(userCollections.ids);
 export const usernameCollection = db.collection(userCollections.name);
 export const semestersCollection = db.collection(userCollections.semesters);
 export const toggleableRequirementChoicesCollection = db.collection(userCollections.toggleable);

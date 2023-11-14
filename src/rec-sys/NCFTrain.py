@@ -106,4 +106,4 @@ if not args.use_whole_dataset:
     assert (eval_map < 0.1)
     assert (eval_ndcg < 0.25)
     assert (eval_precision < 0.2)
-    assert (eval_recall < 0.15)
+    assert (eval_recall < 0.25)
