@@ -61,6 +61,7 @@ jobs:
           pip install typing-extensions
           pip install pytest
           pip install --upgrade openai
+          pip install langchain
       - name: Pipenv Install
         working-directory: python
         run: pipenv install
