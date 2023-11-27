@@ -21,11 +21,13 @@ export type CollegeRequirements<R> = {
   };
 };
 
-type migration = {
-  entryYear: number;
-  type: string;
-  field: string /** Modify or Deletion Migration? This field must already exist in requirements file */;
-  newValue?: CollegeOrMajorRequirement /** Required for modify migrations */;
+export type typeOfMigration = 'Modify' | 'Delete' | 'Add';
+
+export type migration = {
+  entryYear: number /** This migration applies to students with an entryYear equal to or EARLIER this entry year */;
+  type: typeOfMigration /** Modify or Delete Migration? This field must already exist in requirements file */;
+  fieldName: string;
+  newValue?: CollegeOrMajorRequirement /** Required for modify and add migrations */;
 };
 
 export type Major<R> = Readonly<{
@@ -35,8 +37,8 @@ export type Major<R> = Readonly<{
   /** College requirements that have been "specialized" for this major */
   specializations?: readonly R[];
   advisors?: AdvisorGroup;
-  readonly abbrev?: string;
   migrations?: migration[];
+  readonly abbrev?: string;
 }>;
 
 export type MutableMajorRequirements<R> = {

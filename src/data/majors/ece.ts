@@ -1,4 +1,4 @@
-import { Course, CollegeOrMajorRequirement } from '../../requirements/types';
+import { Course, CollegeOrMajorRequirement, migration } from '../../requirements/types';
 import {
   ifCodeMatch,
   includesWithSubRequirements,
@@ -175,3 +175,21 @@ export default eceRequirements;
 export const eceAdvisors: AdvisorGroup = {
   advisors: [{ name: 'Sharif Ewais-Orozco', email: 'ugrad-coordinator@ece.cornell.edu' }],
 };
+
+export const eceMigrations: migration[] = [
+  {
+    entryYear: '2020', // For students with an entry year of 2020 or earlier, this requirement applies. For students with an entry year of 2021 or later, the above Core Courses requirement applies
+    type: 'Modify',
+    fieldName: 'Core Courses',
+    newValue: {
+      name: 'Core Courses',
+      description: 'ECE 2100, ECE 2200, & ECE 3400',
+      source:
+        'https://www.ece.cornell.edu/ece/programs/undergraduate-programs/majors/program-requirements',
+      checker: includesWithSubRequirements(['ECE 2100'], ['ECE 2200'], ['ECE 3400']),
+      fulfilledBy: 'courses',
+      perSlotMinCount: [1, 1, 1],
+      slotNames: ['ECE 2100', 'ECE 2200', 'ECE 3400'],
+    },
+  },
+];

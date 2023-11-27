@@ -24,7 +24,7 @@ import csRequirements, { csAdvisors } from './majors/cs';
 import deaRequirements, { deaAdvisors } from './majors/dea';
 import easRequirements, { easAdvisors } from './majors/eas';
 import economicsRequirements, { economicsAdvisors } from './majors/econ';
-import eceRequirements, { eceAdvisors } from './majors/ece';
+import eceRequirements, { eceAdvisors, eceMigrations } from './majors/ece';
 import essRequirements, { essAdvisors } from './majors/ess';
 import englishRequirements, { englishAdvisors } from './majors/engl';
 import envEngineeringRequirements, { envEngineeringAdvisors } from './majors/envE';
@@ -78,7 +78,6 @@ import earthAndAtmosphericSciencesMinorRequirements, {
 import mpaRequirements, { mpaAdvisors } from './grad/mpa';
 
 import { MATH2940, CHEM2080 } from './specializations/en';
-import { includesWithSubRequirements } from '@/requirements/checkers';
 
 const json: RequirementsJson = {
   university: {
@@ -257,25 +256,8 @@ const json: RequirementsJson = {
       schools: ['EN'],
       requirements: eceRequirements,
       advisors: eceAdvisors,
+      migrations: eceMigrations,
       abbrev: 'ECE',
-      // export migration from ece
-      migrations: [
-        {
-          entryYear: 2020,
-          type: 'modify',
-          field: 'Core Courses',
-          newValue: {
-            name: 'Core Courses',
-            description: 'ECE 2100, ECE 2200, & ECE 3400',
-            source:
-              'https://www.ece.cornell.edu/ece/programs/undergraduate-programs/majors/program-requirements',
-            checker: includesWithSubRequirements(['ECE 2100'], ['ECE 2200'], ['ECE 3400']),
-            fulfilledBy: 'courses',
-            perSlotMinCount: [1, 1, 1],
-            slotNames: ['ECE 2100', 'ECE 2200', 'ECE 3400'],
-          },
-        },
-      ],
     },
     ENGL: {
       name: 'English',
