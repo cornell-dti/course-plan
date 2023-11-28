@@ -77,7 +77,7 @@ export default defineComponent({
       return label;
     },
     defaultNumberofLoadingCards(): number {
-      return 4;
+      return 2;
     },
     loadingCoursePixelWidth(): string {
       return '160';

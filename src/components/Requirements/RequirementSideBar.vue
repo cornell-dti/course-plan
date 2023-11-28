@@ -214,11 +214,11 @@ export default defineComponent({
   },
   computed: {
     /**
-     * @brief Filters courses based on search text and returns the first 50 courses that match the search text 
+     * @brief Filters courses based on search text and returns the first 50 courses that match the search text
      * @return {readonly FirestoreSemesterCourse[]} filtered courses
      */
     filteredCourses() {
-      if (this.searchText.trim() === '' || this.searchText === this.defaultText) { 
+      if (this.searchText.trim() === '' || this.searchText === this.defaultText) {
         return this.showAllCourses.allCourses.slice(0, 50); // Show all courses if search text is empty
       }
       const search = this.searchText.toLowerCase();
@@ -232,7 +232,7 @@ export default defineComponent({
       return res.slice(0, 50); // Only show first 50 courses
     },
     /**
-     * @brief Checks if debugger is allowed to be displayed (feature flag) 
+     * @brief Checks if debugger is allowed to be displayed (feature flag)
      * @return {boolean} true if debugger is allowed
      */
     debuggerAllowed(): boolean {
