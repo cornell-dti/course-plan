@@ -23,7 +23,8 @@
     "test": "jest",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",
-    "cypress:e2e": "npm run build:dev && concurrently \"npm run serve:build\" \"wait-on http-get://localhost:8080 && npm run cypress:run\" --kill-others --success first"
+    "cypress:e2e": "npm run build:dev && concurrently \"npm run serve:build\" \"wait-on http-get://localhost:8080 && npm run cypress:run\" --kill-others --success first",
+    "all-tests" : "npm run lint && npm run type-check && npm run test && npm run format:check"
   },
   "dependencies": {
     "@types/intro.js": "^3.0.0",
