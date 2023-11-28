@@ -17,6 +17,7 @@ import '../src/requirements/decorated-requirements.json';
 // The map is a hashmap where the key is the course ID and the value is the frequency of the course
 // in the slot.
 const idRequirementFrequency = new Map<string, Map<number, number>[]>();
+
 /**
  * Computes the requirement fulfillment statistics for all users. This is done by iterating through
  * all the users and computing the computeGroupedRequirementFulfillmentReports for each user.
@@ -31,7 +32,7 @@ const idRequirementFrequency = new Map<string, Map<number, number>[]>();
 async function computeRequirementFullfillmentStatistics(_callback) {
   let numberOfErrors = 0;
   const semQuerySnapshot = await semestersCollection.get();
-  await semQuerySnapshot.forEach(async doc => {
+  const promises = semQuerySnapshot.docs.map(async doc => {
     // obtain the user's semesters, onboarding data, etc...
     const semesters = (await doc.data()).semesters ?? {};
     const onboardingData = (await onboardingDataCollection.doc(doc.id).get()).data() ?? {};
@@ -64,7 +65,8 @@ async function computeRequirementFullfillmentStatistics(_callback) {
     }
   });
 
-  setTimeout(_callback, 120 * 1000);
+  await Promise.all(promises);
+  _callback();
 }
 
 /**
@@ -77,7 +79,6 @@ async function computeRequirementFullfillmentStatistics(_callback) {
  */
 async function storeComputedRequirementFullfillmentStatistics() {
   // Change the hashmap to only keep the top fifty courses for each slot
-
   for (const [reqID, slots] of idRequirementFrequency) {
     const newSlots: Map<number, number>[] = [];
     for (const slot of slots) {
