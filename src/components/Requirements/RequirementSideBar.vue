@@ -189,7 +189,6 @@ export default defineComponent({
       numOfColleges: 1,
       showAllCourses: { name: '', shownCourses: [], allCourses: [] },
       shouldShowAllCourses: false,
-      // showAllPage: 0,
       tourStep: 0,
       defaultText: '"CS 1110", "Multivariable Calculus", etc.',
       searchText: '"CS 1110", "Multivariable Calculus", etc.',
