@@ -83,9 +83,17 @@ export function canFulfillChecker(
  * If false, edges from course c to requirementA and requirementB cause a constraint violation (c,(rA,rB)).
  */
 export function allowCourseDoubleCountingBetweenRequirements(
+
   requirementA: RequirementWithIDSourceType,
   requirementB: RequirementWithIDSourceType
 ): boolean {
+  // console.log("Entered allow course double counting thing")
+  if (!requirementA || !requirementB) {
+    // If requirement is undefined, handle accordingly
+    return false; // Or any other value, or skip this item
+  }
+  // console.log(requirementA)
+  // console.log(requirementB)
   const allowCourseDoubleCounting =
     requirementA.allowCourseDoubleCounting || requirementB.allowCourseDoubleCounting || false;
 
@@ -125,61 +133,58 @@ export function allowCourseDoubleCountingBetweenRequirements(
  * @param fields the names of the majors/minors
  * @returns An array of requirements corresponding to every field of study in `fields`
  */
-const fieldOfStudyReqs = (
-  sourceType: 'Major' | 'Minor',
-  fields: readonly string[],
-  entryYear: string
-): RequirementWithIDSourceType[] => {
-  const parsedEntryYear = parseInt(entryYear, 10); // parse the entryYear to an integer
+const fieldOfStudyReqs = (sourceType: 'Major' | 'Minor', fields: readonly string[], entryYear: string) => {
+
+  const parsedEntryYear = parseInt(entryYear, 10); // Parse entryYear to an integer
+
+
 
   const jsonKey = sourceType.toLowerCase() as 'major' | 'minor';
   const fieldRequirements = requirementJson[jsonKey];
 
-  const result: RequirementWithIDSourceType[] = [];
 
-  fields.forEach(field => {
-    const fieldRequirement = fieldRequirements[field];
-    const migrationRequirements = fieldRequirement?.migrations || [];
 
-    fieldRequirement?.requirements.forEach(requirement => {
-      const matchingMigration = migrationRequirements.find(
-        migration =>
-          migration.fieldName === requirement.name && parsedEntryYear <= migration.entryYear
-      );
+  return fields
+    .map(field => {
+      // console.log(field); // Major ECE
+      const fieldRequirement = fieldRequirements[field];
+      // console.log(fieldRequirement);
+      const requirementMigrations = fieldRequirement?.migrations || [];
+      console.log(requirementMigrations);
+      return fieldRequirement?.requirements
+        .filter(requirement => {
+          const matchingMigration = requirementMigrations.find(migration =>
 
-      if (matchingMigration) {
-        if (matchingMigration.type === 'Delete') {
-          // skip this requirement
-          return;
-        }
-
-        if (matchingMigration.type === 'Modify' && matchingMigration.newValue !== undefined) {
-
-          const decoratedRequirement: RequirementWithIDSourceType = {
-            ...matchingMigration.newValue,
+            migration.fieldName === requirement.name && parsedEntryYear <= migration.entryYear
+          );
+          if (matchingMigration) {
+            // Check typeOfMigration and handle accordingly
+            if (matchingMigration.type === 'Modify') {
+              return true; // Use the newValue from the migration instead of the original requirement
+            } if (matchingMigration.type === 'Delete') {
+              // Skip this requirement
+              return false;
+            }
+          }
+          // Include requirements that are not in migrations or have type 'Add'
+          return matchingMigration?.type === 'Add' || !matchingMigration;
+        })
+        .map(requirement => {
+          const matchingMigration = requirementMigrations.find(migration =>
+            migration.fieldName === requirement.name && parsedEntryYear <= migration.entryYear
+          );
+          if (matchingMigration && matchingMigration.type === 'Modify') {
+            return matchingMigration.newValue;
+          }
+          return {
+            ...requirement,
             id: `${sourceType}-${field}-${requirement.name}-${entryYear}`,
             sourceType,
             sourceSpecificName: field,
           };
-
-          result.push(decoratedRequirement);
-          return;
-        }
-      }
-
-      // include requirements that are not in migrations or have type 'Add'
-      if (matchingMigration?.type === 'Add' || !matchingMigration) {
-        result.push({
-          ...requirement,
-          id: `${sourceType}-${field}-${requirement.name}-${entryYear}`,
-          sourceType,
-          sourceSpecificName: field,
         });
-      }
-    });
-  });
-
-  return result;
+    })
+    .flat();
 };
 
 /**
@@ -254,7 +259,7 @@ export function getUserRequirements({
     )
     : [];
   // flatten all requirements into single array
-  return [uniReqs, collegeReqs, majorReqs, minorReqs, gradReqs].flat();
+  return [uniReqs, collegeReqs, majorReqs, minorReqs, ...gradReqs].flat().filter(Boolean) as RequirementWithIDSourceType[];
 }
 
 /**

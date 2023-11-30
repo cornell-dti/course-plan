@@ -5,6 +5,7 @@ import {
   RequirementChecker,
   Course,
   MutableMajorRequirements,
+  RequirementMigration,
 } from './types';
 import sourceRequirements, { colleges } from '../data';
 import { NO_FULFILLMENTS_COURSE_ID, SPECIAL_COURSES } from '../data/constants';
@@ -36,6 +37,7 @@ type InitialRequirementDecorator = (
 type RequirementDecorator = (
   requirement: DecoratedCollegeOrMajorRequirement
 ) => DecoratedCollegeOrMajorRequirement;
+type MigrationRequirementDecorator = (migration: RequirementMigration) => MigrationWithDecoratedRequirement;
 
 const getEligibleCoursesFromRequirementCheckers = (
   checkers: readonly RequirementChecker[]
@@ -101,6 +103,8 @@ const decorateRequirementWithCourses: InitialRequirementDecorator = requirement 
       throw new Error();
   }
 };
+
+
 
 const equivalentCourseIds = new Set(Object.keys(courseToExamMapping));
 const generateExamCourseIdsFromEquivalentCourses = (
@@ -261,12 +265,12 @@ const sortRequirementCourses: RequirementDecorator = requirement => {
                 name,
                 { courses: additionalRequirementsCourses, ...additionalRequirementRest },
               ]) => [
-                name,
-                {
-                  ...additionalRequirementRest,
-                  courses: additionalRequirementsCourses.map(c => [...c].sort((a, b) => a - b)),
-                },
-              ]
+                  name,
+                  {
+                    ...additionalRequirementRest,
+                    courses: additionalRequirementsCourses.map(c => [...c].sort((a, b) => a - b)),
+                  },
+                ]
             )
           ),
       };
@@ -293,6 +297,20 @@ const sortRequirementCourses: RequirementDecorator = requirement => {
       throw new Error();
   }
 };
+
+const decorateMigrationValue: MigrationRequirementDecorator = migration => {
+  if (migration.newValue) {
+    const decoratedValue = decorateRequirementWithCourses(migration.newValue);
+    return decorateRequirementWithExams(decoratedValue);
+  }
+  return migration;
+}
+
+const decorateMigrations = (
+  migrations: readonly RequirementMigration[],
+): readonly MigrationWithDecoratedRequirement[] =>
+  migrations.map(decorateMigrationValue);
+
 
 const generateDecoratedRequirementsJson = (): DecoratedRequirementsJson => {
   const { university, college, major, minor, grad } = sourceRequirements;
@@ -355,15 +373,16 @@ const generateDecoratedRequirementsJson = (): DecoratedRequirementsJson => {
     };
   });
   Object.entries(major).forEach(([majorName, majorRequirement]) => {
-    const { requirements, advisors, specializations, abbrev: abbr, ...rest } = majorRequirement;
+    const { requirements, migrations, advisors, specializations, abbrev: abbr, ...rest } = majorRequirement;
     decoratedJson.major[majorName] = {
       ...rest,
       requirements: decorateRequirements(requirements),
+      migrations: migrations ? (decorateMigrations(migrations) as RequirementMigration[]) : undefined,
       specializations: specializations && decorateRequirements(specializations),
     };
   });
   Object.entries(minor).forEach(([minorName, minorRequirement]) => {
-    const { requirements, advisors, abbrev: abbr, ...rest } = minorRequirement;
+    const { requirements, migrations, advisors, abbrev: abbr, ...rest } = minorRequirement;
     decoratedJson.minor[minorName] = {
       ...rest,
       requirements: decorateRequirements(requirements),

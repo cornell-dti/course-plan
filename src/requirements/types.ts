@@ -23,7 +23,7 @@ export type CollegeRequirements<R> = {
 
 export type typeOfMigration = 'Modify' | 'Delete' | 'Add';
 
-export type migration = {
+export type RequirementMigration = {
   entryYear: number /** This migration applies to students with an entryYear equal to or EARLIER this entry year */;
   type: typeOfMigration /** Modify or Delete Migration? This field must already exist in requirements file */;
   fieldName: string;
@@ -37,7 +37,7 @@ export type Major<R> = Readonly<{
   /** College requirements that have been "specialized" for this major */
   specializations?: readonly R[];
   advisors?: AdvisorGroup;
-  migrations?: migration[];
+  migrations?: RequirementMigration[];
   readonly abbrev?: string;
 }>;
 

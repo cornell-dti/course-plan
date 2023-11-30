@@ -1,4 +1,4 @@
-import { Course, CollegeOrMajorRequirement, migration } from '../../requirements/types';
+import { Course, CollegeOrMajorRequirement, RequirementMigration } from '../../requirements/types';
 import {
   ifCodeMatch,
   includesWithSubRequirements,
@@ -176,9 +176,9 @@ export const eceAdvisors: AdvisorGroup = {
   advisors: [{ name: 'Sharif Ewais-Orozco', email: 'ugrad-coordinator@ece.cornell.edu' }],
 };
 
-export const eceMigrations: migration[] = [
+export const eceMigrations: RequirementMigration[] = [
   {
-    entryYear: '2020', // For students with an entry year of 2020 or earlier, this requirement applies. For students with an entry year of 2021 or later, the above Core Courses requirement applies
+    entryYear: 2020, // For students with an entry year of 2020 or earlier, this requirement applies. For students with an entry year of 2021 or later, the above Core Courses requirement applies
     type: 'Modify',
     fieldName: 'Core Courses',
     newValue: {
