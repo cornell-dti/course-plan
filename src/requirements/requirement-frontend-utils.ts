@@ -83,7 +83,6 @@ export function canFulfillChecker(
  * If false, edges from course c to requirementA and requirementB cause a constraint violation (c,(rA,rB)).
  */
 export function allowCourseDoubleCountingBetweenRequirements(
-
   requirementA: RequirementWithIDSourceType,
   requirementB: RequirementWithIDSourceType
 ): boolean {
@@ -133,56 +132,56 @@ export function allowCourseDoubleCountingBetweenRequirements(
  * @param fields the names of the majors/minors
  * @returns An array of requirements corresponding to every field of study in `fields`
  */
-const fieldOfStudyReqs = (sourceType: 'Major' | 'Minor', fields: readonly string[], entryYear: string) => {
-
-  const parsedEntryYear = parseInt(entryYear, 10); // Parse entryYear to an integer
-
-
-
+const fieldOfStudyReqs = (
+  sourceType: 'Major' | 'Minor',
+  fields: readonly string[],
+  entryYear: string
+) => {
   const jsonKey = sourceType.toLowerCase() as 'major' | 'minor';
   const fieldRequirements = requirementJson[jsonKey];
-
-
-
   return fields
     .map(field => {
-      // console.log(field); // Major ECE
       const fieldRequirement = fieldRequirements[field];
-      // console.log(fieldRequirement);
       const requirementMigrations = fieldRequirement?.migrations || [];
-      console.log(requirementMigrations);
-      return fieldRequirement?.requirements
-        .filter(requirement => {
-          const matchingMigration = requirementMigrations.find(migration =>
 
-            migration.fieldName === requirement.name && parsedEntryYear <= migration.entryYear
+      // Filter migrations based on entryYear
+      const filteredMigrations = requirementMigrations.filter(
+        migration => parseInt(entryYear, 10) <= migration.entryYear
+      );
+
+      const addMigrationNewValues = filteredMigrations
+        .filter(migration => migration.type === 'Add')
+        .map(migration => migration.newValue);
+
+      const modifyMigrationNewValues = filteredMigrations
+        .filter(migration => migration.type === 'Modify')
+        .map(migration => migration.newValue);
+
+      return fieldRequirement?.requirements
+        .filter(it => {
+          const matchingMigration = filteredMigrations.find(
+            migration => migration.fieldName === it.name
           );
+
           if (matchingMigration) {
-            // Check typeOfMigration and handle accordingly
-            if (matchingMigration.type === 'Modify') {
-              return true; // Use the newValue from the migration instead of the original requirement
-            } if (matchingMigration.type === 'Delete') {
-              // Skip this requirement
+            if (matchingMigration.type === 'Delete' || matchingMigration.type === 'Modify') {
               return false;
             }
           }
-          // Include requirements that are not in migrations or have type 'Add'
-          return matchingMigration?.type === 'Add' || !matchingMigration;
+          return true;
         })
-        .map(requirement => {
-          const matchingMigration = requirementMigrations.find(migration =>
-            migration.fieldName === requirement.name && parsedEntryYear <= migration.entryYear
-          );
-          if (matchingMigration && matchingMigration.type === 'Modify') {
-            return matchingMigration.newValue;
-          }
-          return {
-            ...requirement,
-            id: `${sourceType}-${field}-${requirement.name}-${entryYear}`,
+
+        .concat(modifyMigrationNewValues.filter(Boolean) as DecoratedCollegeOrMajorRequirement[])
+        .concat(addMigrationNewValues.filter(Boolean) as DecoratedCollegeOrMajorRequirement[])
+        .map(
+          it =>
+          (({
+            ...it,
+            id: `${sourceType}-${field}-${it.name}`,
             sourceType,
             sourceSpecificName: field,
-          };
-        });
+          } as const) ?? [])
+        );
     })
     .flat();
 };
@@ -259,7 +258,9 @@ export function getUserRequirements({
     )
     : [];
   // flatten all requirements into single array
-  return [uniReqs, collegeReqs, majorReqs, minorReqs, ...gradReqs].flat().filter(Boolean) as RequirementWithIDSourceType[];
+  return [uniReqs, collegeReqs, majorReqs, minorReqs, ...gradReqs]
+    .flat()
+    .filter(Boolean) as RequirementWithIDSourceType[];
 }
 
 /**
