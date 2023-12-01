@@ -265,12 +265,12 @@ const sortRequirementCourses: RequirementDecorator = requirement => {
                 name,
                 { courses: additionalRequirementsCourses, ...additionalRequirementRest },
               ]) => [
-                  name,
-                  {
-                    ...additionalRequirementRest,
-                    courses: additionalRequirementsCourses.map(c => [...c].sort((a, b) => a - b)),
-                  },
-                ]
+                name,
+                {
+                  ...additionalRequirementRest,
+                  courses: additionalRequirementsCourses.map(c => [...c].sort((a, b) => a - b)),
+                },
+              ]
             )
           ),
       };

@@ -175,12 +175,12 @@ const fieldOfStudyReqs = (
         .concat(addMigrationNewValues.filter(Boolean) as DecoratedCollegeOrMajorRequirement[])
         .map(
           it =>
-          (({
-            ...it,
-            id: `${sourceType}-${field}-${it.name}`,
-            sourceType,
-            sourceSpecificName: field,
-          } as const) ?? [])
+            (({
+              ...it,
+              id: `${sourceType}-${field}-${it.name}`,
+              sourceType,
+              sourceSpecificName: field,
+            } as const) ?? [])
         );
     })
     .flat();
@@ -210,12 +210,12 @@ const specializedForCollege = (collegeName: string, majorNames: readonly string[
   const spec = specialized(collegeReqs, majors);
   return spec.map(
     req =>
-    ({
-      ...req,
-      id: `College-${collegeName}-${req.name}`,
-      sourceType: 'College',
-      sourceSpecificName: collegeName,
-    } as const)
+      ({
+        ...req,
+        id: `College-${collegeName}-${req.name}`,
+        sourceType: 'College',
+        sourceSpecificName: collegeName,
+      } as const)
   );
 };
 
@@ -234,28 +234,28 @@ export function getUserRequirements({
   // University requirements only added if college is defined, i.e. if the user has selected an undergraduate program.
   const uniReqs = college
     ? rawUniReqs.requirements.map(
-      it =>
-      ({
-        ...it,
-        id: `College-UNI-${it.name}`,
-        sourceType: 'College',
-        sourceSpecificName: college,
-      } as const)
-    )
+        it =>
+          ({
+            ...it,
+            id: `College-UNI-${it.name}`,
+            sourceType: 'College',
+            sourceSpecificName: college,
+          } as const)
+      )
     : [];
   const collegeReqs = college ? specializedForCollege(college, majors) : [];
   const majorReqs = fieldOfStudyReqs('Major', majors, entranceYear);
   const minorReqs = fieldOfStudyReqs('Minor', minors, entranceYear);
   const gradReqs = grad
     ? requirementJson.grad[grad].requirements.map(
-      it =>
-      ({
-        ...it,
-        id: `Grad-${grad}-${it.name}`,
-        sourceType: 'Grad',
-        sourceSpecificName: grad,
-      } as const)
-    )
+        it =>
+          ({
+            ...it,
+            id: `Grad-${grad}-${it.name}`,
+            sourceType: 'Grad',
+            sourceSpecificName: grad,
+          } as const)
+      )
     : [];
   // flatten all requirements into single array
   return [uniReqs, collegeReqs, majorReqs, minorReqs, ...gradReqs]
@@ -285,10 +285,10 @@ type MatchedRequirementFulfillmentSpecificationBase = {
  */
 type MatchedRequirementFulfillmentSpecification =
   | (MatchedRequirementFulfillmentSpecificationBase & {
-    readonly additionalRequirements?: {
-      readonly [name: string]: MatchedRequirementFulfillmentSpecificationBase;
-    };
-  })
+      readonly additionalRequirements?: {
+        readonly [name: string]: MatchedRequirementFulfillmentSpecificationBase;
+      };
+    })
   | null;
 
 /**
@@ -339,25 +339,25 @@ export function getMatchedRequirementFulfillmentSpecification(
     additionalRequirements == null
       ? undefined
       : Object.fromEntries(
-        Object.entries(additionalRequirements).map(([name, subRequirement]) => {
-          const slotNames =
-            subRequirement.fulfilledBy === 'courses' ? subRequirement.slotNames : [];
-          return [
-            name,
-            {
-              fulfilledBy: subRequirement.fulfilledBy,
-              hasRequirementCheckerWarning: false,
-              eligibleCourses: filterEligibleCoursesByRequirementConditions(
-                subRequirement.courses,
-                subRequirement.conditions
-              ),
-              perSlotMinCount: subRequirement.perSlotMinCount,
-              slotNames,
-              minNumberOfSlots: subRequirement.minNumberOfSlots,
-            },
-          ];
-        })
-      );
+          Object.entries(additionalRequirements).map(([name, subRequirement]) => {
+            const slotNames =
+              subRequirement.fulfilledBy === 'courses' ? subRequirement.slotNames : [];
+            return [
+              name,
+              {
+                fulfilledBy: subRequirement.fulfilledBy,
+                hasRequirementCheckerWarning: false,
+                eligibleCourses: filterEligibleCoursesByRequirementConditions(
+                  subRequirement.courses,
+                  subRequirement.conditions
+                ),
+                perSlotMinCount: subRequirement.perSlotMinCount,
+                slotNames,
+                minNumberOfSlots: subRequirement.minNumberOfSlots,
+              },
+            ];
+          })
+        );
 
   const hasRequirementCheckerWarning = requirement.checkerWarning != null;
   switch (requirement.fulfilledBy) {
@@ -392,8 +392,8 @@ export function getMatchedRequirementFulfillmentSpecification(
     case 'toggleable': {
       const option =
         requirement.fulfillmentOptions[
-        toggleableRequirementChoices[requirement.id] ||
-        Object.keys(requirement.fulfillmentOptions)[0]
+          toggleableRequirementChoices[requirement.id] ||
+            Object.keys(requirement.fulfillmentOptions)[0]
         ];
       return {
         fulfilledBy: option.counting,
