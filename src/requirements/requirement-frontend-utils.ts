@@ -161,36 +161,44 @@ const fieldOfStudyReqs = (
         migration => parseInt(entryYear, 10) <= migration.entryYear
       );
 
+      // Collect all requirements corresponding to 'Add' migrations in one array
       const addMigrationNewValues = filteredMigrations
         .filter(migration => migration.type === 'Add')
         .map(migration => migration.newValue);
 
-      return fieldRequirement?.requirements
-        .filter(it => {
-          const matchingMigration = filteredMigrations.find(
-            migration => migration.fieldName === it.name
-          );
+      return (
+        fieldRequirement?.requirements
+          // Find migrations that match existing requirements - must be 'Delete' or 'Modify'
+          .filter(it => {
+            const matchingMigration = filteredMigrations.find(
+              migration => migration.fieldName === it.name
+            );
 
-          if (matchingMigration) {
-            if (matchingMigration.type === 'Delete') {
-              return false;
+            // If a reqiurement matches a 'Delete' migration, return false (filter it out of overall requirements)
+            if (matchingMigration) {
+              if (matchingMigration.type === 'Delete') {
+                return false;
+              }
             }
-          }
-          return true;
-        })
-        .map(it => {
-          const matchingMigration = filteredMigrations.find(
-            migration => migration.fieldName === it.name
-          );
-          if (matchingMigration) {
-            if (matchingMigration.type === 'Modify') {
-              return matchingMigration.newValue as DecoratedCollegeOrMajorRequirement;
+            return true;
+          })
+          .map(it => {
+            const matchingMigration = filteredMigrations.find(
+              migration => migration.fieldName === it.name
+            );
+
+            // If a requirement matches a 'Modify' migration, map it to it's new value
+            if (matchingMigration) {
+              if (matchingMigration.type === 'Modify') {
+                return matchingMigration.newValue as DecoratedCollegeOrMajorRequirement;
+              }
             }
-          }
-          return it;
-        })
-        .concat(addMigrationNewValues.filter(Boolean) as DecoratedCollegeOrMajorRequirement[])
-        .map(it => reqWithSourceInfo(it, sourceType, field));
+            return it;
+          })
+          .concat(addMigrationNewValues.filter(Boolean) as DecoratedCollegeOrMajorRequirement[])
+          // Use helper to map requirements to requirements with source info
+          .map(it => reqWithSourceInfo(it, sourceType, field))
+      );
     })
     .flat();
 };
