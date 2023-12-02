@@ -153,10 +153,6 @@ const fieldOfStudyReqs = (
         .filter(migration => migration.type === 'Add')
         .map(migration => migration.newValue);
 
-      const modifyMigrationNewValues = filteredMigrations
-        .filter(migration => migration.type === 'Modify')
-        .map(migration => migration.newValue);
-
       return fieldRequirement?.requirements
         .filter(it => {
           const matchingMigration = filteredMigrations.find(
@@ -164,14 +160,23 @@ const fieldOfStudyReqs = (
           );
 
           if (matchingMigration) {
-            if (matchingMigration.type === 'Delete' || matchingMigration.type === 'Modify') {
+            if (matchingMigration.type === 'Delete') {
               return false;
             }
           }
           return true;
         })
-
-        .concat(modifyMigrationNewValues.filter(Boolean) as DecoratedCollegeOrMajorRequirement[])
+        .map(it => {
+          const matchingMigration = filteredMigrations.find(
+            migration => migration.fieldName === it.name
+          );
+          if (matchingMigration) {
+            if (matchingMigration.type === 'Modify') {
+              return matchingMigration.newValue as DecoratedCollegeOrMajorRequirement;
+            }
+          }
+          return it;
+        })
         .concat(addMigrationNewValues.filter(Boolean) as DecoratedCollegeOrMajorRequirement[])
         .map(
           it =>
