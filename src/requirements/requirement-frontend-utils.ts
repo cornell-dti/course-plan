@@ -125,6 +125,17 @@ export function allowCourseDoubleCountingBetweenRequirements(
   return false;
 }
 
+const reqWithSourceInfo = (
+  req: DecoratedCollegeOrMajorRequirement,
+  sourceType: 'Major' | 'Minor',
+  sourceSpecificName: string
+) => ({
+  ...req,
+  id: `${sourceType}-${sourceSpecificName}-${req.name}`,
+  sourceType,
+  sourceSpecificName,
+});
+
 /**
  * Get the requirements for a provided collection of majors/minors
  *
@@ -139,6 +150,7 @@ const fieldOfStudyReqs = (
 ) => {
   const jsonKey = sourceType.toLowerCase() as 'major' | 'minor';
   const fieldRequirements = requirementJson[jsonKey];
+
   return fields
     .map(field => {
       const fieldRequirement = fieldRequirements[field];
@@ -178,15 +190,7 @@ const fieldOfStudyReqs = (
           return it;
         })
         .concat(addMigrationNewValues.filter(Boolean) as DecoratedCollegeOrMajorRequirement[])
-        .map(
-          it =>
-            (({
-              ...it,
-              id: `${sourceType}-${field}-${it.name}`,
-              sourceType,
-              sourceSpecificName: field,
-            } as const) ?? [])
-        );
+        .map(it => reqWithSourceInfo(it, sourceType, field));
     })
     .flat();
 };
