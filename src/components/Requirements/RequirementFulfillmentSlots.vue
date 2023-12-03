@@ -77,6 +77,7 @@ export default defineComponent({
     isCompleted: { type: Boolean, required: true },
     displayDescription: { type: Boolean, required: true },
     toggleableRequirementChoice: { type: String, default: null },
+    requirement: { type: Object as PropType<RequirementWithIDSourceType>, required: true },
   },
   emits: {
     onShowAllCourses(courses: {
@@ -174,7 +175,48 @@ export default defineComponent({
         });
       }
 
-      return slots;
+      const completedReq: CompletedSubReqCourseSlot[] = [];
+      const incompleteReq: IncompleteSubReqCourseSlot[] = [];
+      slots.forEach(slot => {
+        if (slot.isCompleted) {
+          completedReq.push(slot);
+        } else {
+          incompleteReq.push(slot);
+        }
+      });
+
+      const sortedIncompleteReq: IncompleteSubReqCourseSlot[] = [];
+      const ranking = store.state.requirementRanking.get(this.requirement.id);
+      if (ranking) {
+        for (let k = 0; k < incompleteReq.length; k+=1) {
+          const slot = incompleteReq[k];
+
+          const courses = [...slot.courses];
+          const sortedCourses = courses.sort((a, b) => {
+            let aRank = 0;
+            let bRank = 0;
+            for (let i = 0; i < ranking.length; i+=1) {
+              if (a.crseId === ranking[i]) {
+                aRank = i;
+              }
+              if (b.crseId === ranking[i]) {
+                bRank = i;
+              }
+            }
+            // sorted by who has the higher rank
+            return aRank - bRank;
+          });
+          sortedIncompleteReq.push({
+            name: slot.name,
+            isCompleted: false,
+            courses: sortedCourses,
+          });
+        }
+      } else {
+        // ranking data not yet computed. Need to run '/script/gen-req-full-stats.ts'
+      }
+
+      return (completedReq as SubReqCourseSlot[]).concat(sortedIncompleteReq as SubReqCourseSlot[]);
     },
   },
   methods: {

@@ -1,5 +1,5 @@
 import { Store } from 'vuex';
-import { doc, getDoc, onSnapshot, setDoc, updateDoc } from 'firebase/firestore';
+import { doc, getDoc, getDocs, onSnapshot, setDoc, updateDoc } from 'firebase/firestore';
 
 import * as fb from './firebase-config';
 import computeGroupedRequirementFulfillmentReports from './requirements/requirement-frontend-computation';
@@ -50,6 +50,7 @@ export type VuexStoreState = {
   subjectColors: Readonly<Record<string, string>>;
   uniqueIncrementer: number;
   isTeleportModalOpen: boolean;
+  requirementRanking: ReadonlyMap<string, number[]>;
 };
 
 export class TypedVuexStore extends Store<VuexStoreState> {}
@@ -96,6 +97,7 @@ const store: TypedVuexStore = new TypedVuexStore({
     subjectColors: {},
     uniqueIncrementer: 0,
     isTeleportModalOpen: false,
+    requirementRanking: new Map(),
   },
   actions: {},
   mutations: {
@@ -157,6 +159,12 @@ const store: TypedVuexStore = new TypedVuexStore({
     },
     setIsTeleportModalOpen(state: VuexStoreState, newTeleportModalValue: boolean) {
       state.isTeleportModalOpen = newTeleportModalValue;
+    },
+    setRequirementRanking(
+      state: VuexStoreState,
+      requirementRanking: ReadonlyMap<string, number[]>
+    ) {
+      state.requirementRanking = requirementRanking;
     },
   },
 });
@@ -354,6 +362,22 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
     uniqueIncrementerUnsubscriber();
     derivedDataComputationUnsubscriber();
   };
+
+  getDocs(fb.courseFulfillmentCollection).then(snapshot => {
+    const requirementRanking: Map<string, number[]> = new Map();
+    for (let i = 0; i < snapshot.docs.length; i+=1) {
+      const {id, data} = snapshot.docs[i];
+
+      const ranking: number[] = [];
+      for (let j = 0; j < Object.entries(data).length; j+=1) {
+        const crseId = Object.entries(data)[j][1];
+        ranking.push(crseId);
+      }
+
+      requirementRanking.set(id, ranking);
+    }
+    store.commit('setRequirementRanking', requirementRanking);
+  });
   return unsubscriber;
 };
 

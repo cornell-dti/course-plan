@@ -29,6 +29,7 @@
         :isCompleted="isCompleted"
         :displayDescription="displayDescription"
         :toggleableRequirementChoice="toggleableRequirementChoice"
+        :requirement="requirementFulfillment.requirement"
         @onShowAllCourses="onShowAllCourses"
       />
       <requirement-self-check-slots
