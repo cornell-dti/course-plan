@@ -101,6 +101,12 @@ const store: TypedVuexStore = new TypedVuexStore({
   },
   actions: {},
   mutations: {
+    setRequirementRanking(
+      state: VuexStoreState,
+      requirementRanking: ReadonlyMap<string, number[]>
+    ) {
+      state.requirementRanking = requirementRanking;
+    },
     setCurrentFirebaseUser(state: VuexStoreState, user: SimplifiedFirebaseUser) {
       state.currentFirebaseUser = user;
     },
@@ -159,12 +165,6 @@ const store: TypedVuexStore = new TypedVuexStore({
     },
     setIsTeleportModalOpen(state: VuexStoreState, newTeleportModalValue: boolean) {
       state.isTeleportModalOpen = newTeleportModalValue;
-    },
-    setRequirementRanking(
-      state: VuexStoreState,
-      requirementRanking: ReadonlyMap<string, number[]>
-    ) {
-      state.requirementRanking = requirementRanking;
     },
   },
 });
@@ -365,11 +365,11 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
 
   getDocs(fb.courseFulfillmentCollection).then(snapshot => {
     const requirementRanking: Map<string, number[]> = new Map();
-    for (let i = 0; i < snapshot.docs.length; i+=1) {
-      const {id, data} = snapshot.docs[i];
+    for (let i = 0; i < snapshot.docs.length; i += 1) {
+      const { id, data } = snapshot.docs[i];
 
       const ranking: number[] = [];
-      for (let j = 0; j < Object.entries(data).length; j+=1) {
+      for (let j = 0; j < Object.entries(data).length; j += 1) {
         const crseId = Object.entries(data)[j][1];
         ranking.push(crseId);
       }

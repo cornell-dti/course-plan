@@ -188,14 +188,14 @@ export default defineComponent({
       const sortedIncompleteReq: IncompleteSubReqCourseSlot[] = [];
       const ranking = store.state.requirementRanking.get(this.requirement.id);
       if (ranking) {
-        for (let k = 0; k < incompleteReq.length; k+=1) {
+        for (let k = 0; k < incompleteReq.length; k += 1) {
           const slot = incompleteReq[k];
 
           const courses = [...slot.courses];
           const sortedCourses = courses.sort((a, b) => {
             let aRank = 0;
             let bRank = 0;
-            for (let i = 0; i < ranking.length; i+=1) {
+            for (let i = 0; i < ranking.length; i += 1) {
               if (a.crseId === ranking[i]) {
                 aRank = i;
               }
