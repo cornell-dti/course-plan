@@ -45,6 +45,15 @@ type IncompleteSubReqCourseSlot = {
 
 type SubReqCourseSlot = CompletedSubReqCourseSlot | IncompleteSubReqCourseSlot;
 
+/**
+ * Generate a list of incomplete courses for a requirement. This is used to display the courses
+ * that the user has not taken yet for a requirement. The courses are generated from the list of
+ * eligible courses for the requirement.
+ * @param allTakenCourseIds A set of all course IDs that the user has taken.
+ * @param eligibleCourseIds A list of course IDs that are eligible for the requirement.
+ * @param requirementID The ID of the requirement.
+ * @returns A list of incomplete courses for the requirement.
+ */
 const generateSubReqIncompleteCourses = (
   allTakenCourseIds: ReadonlySet<number>,
   eligibleCourseIds: readonly number[],
@@ -77,6 +86,7 @@ export default defineComponent({
     isCompleted: { type: Boolean, required: true },
     displayDescription: { type: Boolean, required: true },
     toggleableRequirementChoice: { type: String, default: null },
+    requirement: { type: Object as PropType<RequirementWithIDSourceType>, required: true },
   },
   emits: {
     onShowAllCourses(courses: {
@@ -174,10 +184,69 @@ export default defineComponent({
         });
       }
 
-      return slots;
+      // The following code block is to sort the courses in each slot by the ranking of the courses.
+      // The ranking is stored in the Vuex store. The ranking is an array of course IDs, sorted by
+      // the number of students who have taken the course. The course with the most students who
+      // have taken the course is ranked first, and the course with the least students who have
+      // taken the course is ranked last.
+      // The ranking is computed by the script '/script/gen-req-full-stats.ts'.
+
+      // Sort the incomplete slots by ranking
+      const sortedIncompleteReq: SubReqCourseSlot[] = [];
+      // Get the ranking from the Vuex store for the requirement ID
+      const ranking = store.state.requirementRanking.get(
+        this.requirement.id.replace('[FORWARD_SLASH]', '/')
+      );
+      // If the ranking exists, sort the courses in each slot by the ranking
+      if (ranking) {
+        // Sort the slots incomplete slots by ranking, and push them to the sortedIncompleteReq
+        // NOTE: The completed slots are not sorted by ranking because they are already completed
+        // We must use a for loop instead of a foreach loop because order matters
+        // slots in rankings are in specific order
+        for (let k = 0; k < slots.length; k += 1) {
+          const slot = slots[k];
+
+          // If the slot is completed, push it to the sortedIncompleteReq
+          if (slot.isCompleted) {
+            sortedIncompleteReq.push(slot);
+          } else {
+            // Sort the courses in the slot by ranking
+            const courses = [...slot.courses];
+            const sortedCourses = courses.sort((a, b) => {
+              let aRank = 0;
+              let bRank = 0;
+              // Find the ranking of the course
+              for (let i = 0; i < ranking.length; i += 1) {
+                if (a.crseId === ranking[i]) {
+                  aRank = i;
+                }
+                if (b.crseId === ranking[i]) {
+                  bRank = i;
+                }
+              }
+              // sorted by who has the higher rank
+              return aRank - bRank;
+            });
+            // Push the sorted slot to the sortedIncompleteReq
+            sortedIncompleteReq.push({
+              name: slot.name,
+              isCompleted: false,
+              courses: sortedCourses,
+            });
+          }
+        }
+      } else {
+        // ranking data not yet computed. Need to run '/script/gen-req-full-stats.ts'
+      }
+
+      return sortedIncompleteReq; // return the sorted slots
     },
   },
   methods: {
+    /**
+     * Emit an event to show all courses for a requirement.
+     * @param subReqIndex The index of the sub-requirement.
+     */
     onShowAllCourses(subReqIndex: number) {
       this.$emit('onShowAllCourses', {
         requirementName: this.requirementFulfillment.requirement.name,

@@ -1,5 +1,5 @@
 import { Store } from 'vuex';
-import { doc, getDoc, onSnapshot, setDoc, updateDoc } from 'firebase/firestore';
+import { doc, getDoc, getDocs, onSnapshot, setDoc, updateDoc } from 'firebase/firestore';
 
 import * as fb from './firebase-config';
 import computeGroupedRequirementFulfillmentReports from './requirements/requirement-frontend-computation';
@@ -50,6 +50,7 @@ export type VuexStoreState = {
   subjectColors: Readonly<Record<string, string>>;
   uniqueIncrementer: number;
   isTeleportModalOpen: boolean;
+  requirementRanking: ReadonlyMap<string, number[]>;
 };
 
 export class TypedVuexStore extends Store<VuexStoreState> {}
@@ -96,9 +97,21 @@ const store: TypedVuexStore = new TypedVuexStore({
     subjectColors: {},
     uniqueIncrementer: 0,
     isTeleportModalOpen: false,
+    requirementRanking: new Map(),
   },
   actions: {},
   mutations: {
+    /**
+     * Sets the requirementRanking in the store.
+     * @param state The Vuex store state.
+     * @param requirementRanking The requirementRanking to set.
+     */
+    setRequirementRanking(
+      state: VuexStoreState,
+      requirementRanking: ReadonlyMap<string, number[]>
+    ) {
+      state.requirementRanking = requirementRanking;
+    },
     setCurrentFirebaseUser(state: VuexStoreState, user: SimplifiedFirebaseUser) {
       state.currentFirebaseUser = user;
     },
@@ -224,6 +237,11 @@ const autoRecomputeDerivedData = (): (() => void) =>
     }
   });
 
+/**
+ * Initializes the Firestore listeners for the current user.
+ * @param onLoad Callback to be called when all Firestore listeners are loaded.
+ * @returns A function to unsubscribe all Firestore listeners.
+ */
 export const initializeFirestoreListeners = (onLoad: () => void): (() => void) => {
   const simplifiedUser = store.state.currentFirebaseUser;
 
@@ -354,6 +372,24 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
     uniqueIncrementerUnsubscriber();
     derivedDataComputationUnsubscriber();
   };
+
+  // Populate the Vuex store with requirementRankgs
+  getDocs(fb.courseFulfillmentCollection).then(snapshot => {
+    const requirementRanking: Map<string, number[]> = new Map();
+    for (let i = 0; i < snapshot.docs.length; i += 1) {
+      const { id, data } = snapshot.docs[i];
+
+      // For each requirement, create a ranking of courses
+      const ranking: number[] = [];
+      for (let j = 0; j < Object.entries(data).length; j += 1) {
+        const crseId = Object.entries(data)[j][1]; // crseId is the course ID
+        ranking.push(crseId); // push the course ID into the ranking
+      }
+
+      requirementRanking.set(id, ranking); // set the ranking for the requirement
+    }
+    store.commit('setRequirementRanking', requirementRanking); // set the requirementRanking in the store
+  });
   return unsubscriber;
 };
 
