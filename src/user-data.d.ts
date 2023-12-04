@@ -77,7 +77,7 @@ type FirestoreCourseOptInOptOutChoices = {
    * It's for attaching completely unknown courses to a requirement
    * (e.g. opt-in CS 2112 for history requirement).
    */
-  readonly arbitraryOptIn: readonly { readonly [requirement: string]: readonly string[] };
+  readonly arbitraryOptIn: { readonly [requirement: string]: readonly string[] };
 };
 type FirestoreOverriddenFulfillmentChoices = {
   readonly [courseUniqueId: string]: FirestoreCourseOptInOptOutChoices;
@@ -85,7 +85,6 @@ type FirestoreOverriddenFulfillmentChoices = {
 
 type FirestoreUserData = {
   readonly name: FirestoreUserName;
-  // readonly semesters: readonlyFirestoreSemester[];
   readonly orderByNewest: boolean;
   readonly toggleableRequirementChoices: AppToggleableRequirementChoices;
   readonly subjectColors: { readonly [subject: string]: string };
@@ -178,6 +177,11 @@ interface FullClassRosterCourseWithUniqueID extends CornellCourseRosterCourseFul
   readonly uniqueID: number;
 }
 
+type Plan = {
+  readonly name: string;
+  readonly semesters: readonly FirestoreSemester[];
+};
+
 // college and grad are optional fields: grad can be undefined if the user hasn't selected a grad program, and college can be undefined if the user has only selected a grad program.
 type AppOnboardingData = {
   readonly gradYear: string;
@@ -219,3 +223,8 @@ type AppFirestoreSemesterCourseWithRequirementID = FirestoreSemesterCourse & {
 
 /** Map from requirement ID to option chosen */
 type AppToggleableRequirementChoices = Readonly<Record<string, string>>;
+
+type Plan = {
+  readonly name: string;
+  readonly semesters: readonly FirestoreSemester[];
+};

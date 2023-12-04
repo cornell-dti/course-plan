@@ -68,10 +68,7 @@ export default defineComponent({
   }),
   computed: {
     semesters(): readonly FirestoreSemester[] {
-      return (
-        store.state.plans.find(p => p === store.state.currentPlan)?.semesters ??
-        store.state.plans[0].semesters
-      );
+      return store.getters.getCurrentPlanSemesters;
     },
     isTransferCredit(): boolean {
       const { uniqueId } = this.courseTaken;

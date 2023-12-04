@@ -98,8 +98,17 @@ export const addSemester = (
   editSemesters(plan, oldSemesters => [...oldSemesters, createSemester(year, season, courses)]);
 };
 
-export const addPlan = async (name: string, semesters: FirestoreSemester[]): Promise<void> => {
+export const addPlan = async (
+  name: string,
+  semesters: FirestoreSemester[],
+  gtag?: VueGtag
+): Promise<void> => {
+  GTagEvent(gtag, 'add-plan');
   await editPlans(oldPlans => [...oldPlans, createPlan(name, semesters)]);
+  store.commit(
+    'setCurrentPlan',
+    store.state.plans.find(plan => plan.name === name)
+  );
 };
 
 export const deleteSemester = (
@@ -109,10 +118,9 @@ export const deleteSemester = (
   gtag?: VueGtag
 ): void => {
   GTagEvent(gtag, 'delete-semester');
-  const semester = (
-    store.state.plans.find(p => p === store.state.currentPlan)?.semesters ??
-    store.state.plans[0].semesters
-  ).find(sem => semesterEquals(sem, year, season));
+  const semester: FirestoreSemester = store.getters.getCurrentPlanSemesters.find(
+    (sem: FirestoreSemester) => semesterEquals(sem, year, season)
+  );
   if (semester) {
     deleteCoursesFromRequirementChoices(semester.courses.map(course => course.uniqueID));
     editSemesters(plan, oldSemesters =>
@@ -121,10 +129,12 @@ export const deleteSemester = (
   }
 };
 
-export const deletePlan = async (name: string): Promise<void> => {
+export const deletePlan = async (name: string, gtag?: VueGtag): Promise<void> => {
+  GTagEvent(gtag, 'delete-plan');
   if (store.state.plans.some(p => p.name === name)) {
     await editPlans(oldPlans => oldPlans.filter(p => p.name !== name));
   }
+  store.commit('setCurrentPlan', store.state.plans[0]);
 };
 
 export const addCourseToSemester = (
@@ -159,10 +169,9 @@ export const deleteCourseFromSemester = (
   gtag?: VueGtag
 ): void => {
   GTagEvent(gtag, 'delete-course');
-  const semester = (
-    store.state.plans.find(p => p === store.state.currentPlan)?.semesters ??
-    store.state.plans[0].semesters
-  ).find(sem => semesterEquals(sem, year, season));
+  const semester: FirestoreSemester = store.getters.getCurrentPlanSemesters.find(
+    (sem: FirestoreSemester) => semesterEquals(sem, year, season)
+  );
   if (semester) {
     deleteCourseFromRequirementChoices(courseUniqueID);
     editSemesters(plan, oldSemesters =>
@@ -183,10 +192,9 @@ export const deleteAllCoursesFromSemester = (
   gtag?: VueGtag
 ): void => {
   GTagEvent(gtag, 'delete-semester-courses');
-  const semester = (
-    store.state.plans.find(p => p === store.state.currentPlan)?.semesters ??
-    store.state.plans[0].semesters
-  ).find(sem => semesterEquals(sem, year, season));
+  const semester: FirestoreSemester = store.getters.getCurrentPlanSemesters.find(
+    (sem: FirestoreSemester) => semesterEquals(sem, year, season)
+  );
   if (semester) {
     deleteCoursesFromRequirementChoices(semester.courses.map(course => course.uniqueID));
     editSemesters(plan, oldSemesters =>
