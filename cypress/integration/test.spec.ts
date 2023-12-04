@@ -241,10 +241,10 @@ it('Minimize a semester', () => {
 it('Multiple plans dropdown open/close', () => {
   // dropdown initially closed
   cy.get('[data-cyId=multiplePlans-dropdown-content]').should('not.exist');
-  cy.get('[data-cyId=multiplePlans-dropdown]').click();
+  cy.get('[data-cyId=multiplePlans-dropdown-open]').click();
   // dropdown opens
   cy.get('[data-cyId=multiplePlans-dropdown-content]').should('be.visible');
-  cy.get('[data-cyId=multiplePlans-dropdown]').click();
+  cy.get('[data-cyId=multiplePlans-dropdown-close]').click();
   // dropdown closed again
   cy.get('[data-cyId=multiplePlans-dropdown-content]').should('not.exist');
 });
