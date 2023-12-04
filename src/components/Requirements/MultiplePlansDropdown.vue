@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="multiplePlans-dropdown">
-      <div class="multiplePlans-dropdown-placeholder wrapper" data-cyId="multiplePlans-dropdown">
+      <div class="multiplePlans-dropdown-placeholder wrapper">
         <button>
           <img
             :src="editPlan"
@@ -15,12 +15,14 @@
           class="multiplePlans-dropdown-placeholder up-arrow"
           v-if="shown"
           alt="close dropdown"
+          data-cyId="multiplePlans-dropdown-close"
           @click="closeDropdownIfOpen()"
         />
         <img
           class="multiplePlans-dropdown-placeholder down-arrow"
           v-else
           alt="open dropdown"
+          data-cyId="multiplePlans-dropdown-open"
           @click="closeDropdownIfOpen()"
         />
       </div>
