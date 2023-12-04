@@ -104,7 +104,8 @@ const store: TypedVuexStore = new TypedVuexStore({
     getCurrentPlanSemesters(state: VuexStoreState): readonly FirestoreSemester[] {
       return state.plans.length === 0
         ? []
-        : state.plans.find(p => p === state.currentPlan)?.semesters ?? state.plans[0].semesters;
+        : state.plans.find(p => p.name === state.currentPlan.name)?.semesters ??
+            state.plans[0].semesters;
     },
   },
   mutations: {
