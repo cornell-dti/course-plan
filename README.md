@@ -24,6 +24,7 @@ Then access http://localhost:8080/
 
 ### FA23
 - **Nidhi Mylavarapu** - Developer
+- **Simon Ilincev** - Developer
 - **Jerry Wang** - Developer
 - **Miranda Yu** - Developer
 - **Elizabeth Tang** - Developer
