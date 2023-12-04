@@ -101,6 +101,11 @@ const store: TypedVuexStore = new TypedVuexStore({
   },
   actions: {},
   mutations: {
+    /**
+     * Sets the requirementRanking in the store.
+     * @param state The Vuex store state.
+     * @param requirementRanking The requirementRanking to set.
+     */
     setRequirementRanking(
       state: VuexStoreState,
       requirementRanking: ReadonlyMap<string, number[]>
@@ -232,6 +237,11 @@ const autoRecomputeDerivedData = (): (() => void) =>
     }
   });
 
+/**
+ * Initializes the Firestore listeners for the current user.
+ * @param onLoad Callback to be called when all Firestore listeners are loaded.
+ * @returns A function to unsubscribe all Firestore listeners.
+ */
 export const initializeFirestoreListeners = (onLoad: () => void): (() => void) => {
   const simplifiedUser = store.state.currentFirebaseUser;
 
@@ -363,20 +373,22 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
     derivedDataComputationUnsubscriber();
   };
 
+  // Populate the Vuex store with requirementRankgs
   getDocs(fb.courseFulfillmentCollection).then(snapshot => {
     const requirementRanking: Map<string, number[]> = new Map();
     for (let i = 0; i < snapshot.docs.length; i += 1) {
       const { id, data } = snapshot.docs[i];
 
+      // For each requirement, create a ranking of courses
       const ranking: number[] = [];
       for (let j = 0; j < Object.entries(data).length; j += 1) {
-        const crseId = Object.entries(data)[j][1];
-        ranking.push(crseId);
+        const crseId = Object.entries(data)[j][1]; // crseId is the course ID
+        ranking.push(crseId); // push the course ID into the ranking
       }
 
-      requirementRanking.set(id, ranking);
+      requirementRanking.set(id, ranking); // set the ranking for the requirement
     }
-    store.commit('setRequirementRanking', requirementRanking);
+    store.commit('setRequirementRanking', requirementRanking); // set the requirementRanking in the store
   });
   return unsubscriber;
 };
