@@ -55,6 +55,8 @@
         class="profilePage"
         :onboardingData="onboardingData"
         :userName="userName"
+        @set-profile-changed="setProfileChanged"
+        @set-profile-unchanged="setProfileUnchanged"
         v-if="isProfileOpen"
       />
     </div>
@@ -77,6 +79,11 @@
       @closeTourWindow="closeTour"
       v-if="showTourEndWindow"
     />
+    <profile-save-reminder
+      v-if="isProfileSaveReminderOpen"
+      @confirm-leave="confirmLeaveProfile"
+      @cancel-leave="cancelLeaveProfile"
+    />
   </div>
 </template>
 
@@ -92,6 +99,7 @@ import Onboarding from '@/components/Modals/Onboarding/Onboarding.vue';
 import TourWindow from '@/components/Modals/TourWindow.vue';
 import ToolsContainer from '@/containers/Tools.vue';
 import ProfileEditor from '@/containers/Profile.vue';
+import ProfileSaveReminder from '@/components/Modals/ProfileSaveReminder.vue';
 import featureFlagCheckers from '@/feature-flags';
 
 import store, { initializeFirestoreListeners } from '@/store';
@@ -141,6 +149,7 @@ export default defineComponent({
     TourWindow,
     ToolsContainer,
     ProfileEditor,
+    ProfileSaveReminder,
   },
   data() {
     return {
@@ -159,6 +168,9 @@ export default defineComponent({
       showTourEndWindow: false,
       showToolsPage: false,
       isProfileOpen: false,
+      isProfileSaveReminderOpen: false,
+      shouldOpenTools: false,
+      profileChanged: false,
     };
   },
   computed: {
@@ -241,16 +253,6 @@ export default defineComponent({
       }
     },
 
-    openPlan() {
-      this.showToolsPage = false;
-      this.isProfileOpen = false;
-    },
-
-    openTools() {
-      this.showToolsPage = true;
-      this.isProfileOpen = false;
-    },
-
     editProfile() {
       this.isEditingProfile = true;
       this.startOnboarding();
@@ -263,6 +265,51 @@ export default defineComponent({
       } else {
         this.editProfile();
       }
+    },
+
+    openPlan() {
+      this.closeProfile();
+      if (!this.isProfileOpen) {
+        this.showToolsPage = false;
+      }
+    },
+    openTools() {
+      if (this.isProfileOpen) {
+        this.shouldOpenTools = true;
+        this.closeProfile();
+        this.showToolsPage = true;
+      } else {
+        this.showToolsPage = true;
+      }
+    },
+
+    closeProfile() {
+      if (this.isProfileOpen && this.profileChanged) {
+        this.isProfileSaveReminderOpen = true;
+      }
+      this.isProfileOpen = false;
+    },
+
+    confirmLeaveProfile() {
+      this.isProfileSaveReminderOpen = false;
+      this.isProfileOpen = false;
+      this.showToolsPage = this.shouldOpenTools;
+      this.shouldOpenTools = false;
+      this.profileChanged = false;
+    },
+
+    cancelLeaveProfile() {
+      this.isProfileSaveReminderOpen = false;
+      this.showToolsPage = false;
+      this.isProfileOpen = true;
+    },
+
+    setProfileChanged() {
+      this.profileChanged = true;
+    },
+
+    setProfileUnchanged() {
+      this.profileChanged = false;
     },
 
     closeWelcome() {

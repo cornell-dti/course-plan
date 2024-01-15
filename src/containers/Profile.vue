@@ -88,7 +88,7 @@ export default defineComponent({
       required: true,
     },
   },
-  emits: ['onboard', 'cancelOnboarding'],
+  emits: ['onboard', 'cancelOnboarding', 'set-profile-changed', 'set-profile-unchanged'],
   data() {
     return {
       currentPage: 1,
@@ -204,6 +204,7 @@ export default defineComponent({
       setAppOnboardingData(this.name, this.onboarding);
       this.changed = false;
       this.$emit('onboard');
+      this.$emit('set-profile-unchanged');
     },
     updateBasic(
       gradYear: string,
@@ -229,6 +230,7 @@ export default defineComponent({
         grad,
       };
       this.changed = true;
+      this.$emit('set-profile-changed');
     },
     // clear transfer credits if the student is only in a graduate program, but previously set transfer credits
     clearTransferCreditIfGraduate() {
@@ -246,6 +248,7 @@ export default defineComponent({
         tookSwim,
       };
       this.changed = true;
+      this.$emit('set-profile-changed');
     },
     openBasicInfo() {
       this.currentPage = 1;
