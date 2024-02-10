@@ -1,8 +1,11 @@
 <template>
   <div>
     <nav class="navbar" v-click-outside="closeMenuIfOpen">
-      <div class="navbar-iconWrapper hamburger full-opacity-on-hover" data-cyId="navbar-menuButton"
-        @click="menuOpen = !menuOpen"></div>
+      <div
+        class="navbar-iconWrapper hamburger full-opacity-on-hover"
+        data-cyId="navbar-menuButton"
+        @click="menuOpen = !menuOpen"
+      ></div>
       <div class="navbar-top">
         <div class="navbar-iconWrapper course-plan-logo no-hover">
           <img class="navbar-icon" src="@/assets/images/branding/logo.svg" alt="Courseplan logo" />
@@ -36,10 +39,17 @@
         </div>
       </div>
       <div class="navbar-bottom">
-        <button class="navbar-iconWrapper desktop logout-icon full-opacity-on-hover" @click="logout" />
+        <button
+          class="navbar-iconWrapper desktop logout-icon full-opacity-on-hover"
+          @click="logout"
+        />
       </div>
       <div v-if="menuOpen" class="navbar-menu" data-cyId="navbar-menu">
-        <button class="nav-mobile-button" data-cyId="navbar-viewRequirements" @click="toggleRequirementsMobile">
+        <button
+          class="nav-mobile-button"
+          data-cyId="navbar-viewRequirements"
+          @click="toggleRequirementsMobile"
+        >
           <div class="navbar-iconWrapper requirements-bar" />
           <span class="nav-mobile-button-text">
             {{ isDisplayingRequirementsMobile ? 'View Schedule' : 'View Requirements' }}
@@ -62,8 +72,13 @@
           <span class="nav-mobile-button-text">Log Out</span>
         </button>
         <div class="nav-menu-spacing" />
-        <a class="nav-menu-dti-link" href="https://www.cornelldti.org/projects/courseplan/" target="_black"
-          rel="noopener noreferrer">Cornell DTI @ 2021</a>
+        <a
+          class="nav-menu-dti-link"
+          href="https://www.cornelldti.org/projects/courseplan/"
+          target="_black"
+          rel="noopener noreferrer"
+          >Cornell DTI @ 2021</a
+        >
       </div>
     </nav>
     <div v-if="menuOpen" class="navbar-menu-background-shadow" />
