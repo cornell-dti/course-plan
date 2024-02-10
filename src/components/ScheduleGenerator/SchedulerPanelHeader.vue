@@ -192,6 +192,7 @@ export default defineComponent({
 }
 .credit-limit-input[type='number'] {
   -moz-appearance: textfield;
+  appearance: textfield;
 }
 
 .credit-limit-container {
