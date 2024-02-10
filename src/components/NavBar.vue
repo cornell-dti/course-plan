@@ -1,11 +1,8 @@
 <template>
   <div>
     <nav class="navbar" v-click-outside="closeMenuIfOpen">
-      <div
-        class="navbar-iconWrapper hamburger full-opacity-on-hover"
-        data-cyId="navbar-menuButton"
-        @click="menuOpen = !menuOpen"
-      ></div>
+      <div class="navbar-iconWrapper hamburger full-opacity-on-hover" data-cyId="navbar-menuButton"
+        @click="menuOpen = !menuOpen"></div>
       <div class="navbar-top">
         <div class="navbar-iconWrapper course-plan-logo no-hover">
           <img class="navbar-icon" src="@/assets/images/branding/logo.svg" alt="Courseplan logo" />
@@ -31,19 +28,18 @@
             <span>Profile</span>
           </div>
         </div>
+        <div class="navbar-buttonWrapper desktop" @click="openTools" data-cyId="openTools">
+          <button class="navbar-iconWrapper schedule-builder-icon full-opacity-on-hover" />
+          <div class="navbar-iconText">
+            <span>Sched</span>
+          </div>
+        </div>
       </div>
       <div class="navbar-bottom">
-        <button
-          class="navbar-iconWrapper desktop logout-icon full-opacity-on-hover"
-          @click="logout"
-        />
+        <button class="navbar-iconWrapper desktop logout-icon full-opacity-on-hover" @click="logout" />
       </div>
       <div v-if="menuOpen" class="navbar-menu" data-cyId="navbar-menu">
-        <button
-          class="nav-mobile-button"
-          data-cyId="navbar-viewRequirements"
-          @click="toggleRequirementsMobile"
-        >
+        <button class="nav-mobile-button" data-cyId="navbar-viewRequirements" @click="toggleRequirementsMobile">
           <div class="navbar-iconWrapper requirements-bar" />
           <span class="nav-mobile-button-text">
             {{ isDisplayingRequirementsMobile ? 'View Schedule' : 'View Requirements' }}
@@ -66,13 +62,8 @@
           <span class="nav-mobile-button-text">Log Out</span>
         </button>
         <div class="nav-menu-spacing" />
-        <a
-          class="nav-menu-dti-link"
-          href="https://www.cornelldti.org/projects/courseplan/"
-          target="_black"
-          rel="noopener noreferrer"
-          >Cornell DTI @ 2021</a
-        >
+        <a class="nav-menu-dti-link" href="https://www.cornelldti.org/projects/courseplan/" target="_black"
+          rel="noopener noreferrer">Cornell DTI @ 2021</a>
       </div>
     </nav>
     <div v-if="menuOpen" class="navbar-menu-background-shadow" />
@@ -160,20 +151,28 @@ $mobile-navbar-height: 4.5rem;
   &-buttonWrapper {
     cursor: pointer;
     margin-bottom: 1.5rem;
+
     &:hover,
     &:focus,
     &:active {
       .navbar-iconText {
         color: #0d7acb;
       }
+
       .plan-icon {
         background-image: url('@/assets/images/navbar/planIconBlue.svg');
       }
+
       .tools-icon {
         background-image: url('@/assets/images/navbar/toolboxIconBlue.svg');
       }
+
       .profile-icon {
         background-image: url('@/assets/images/navbar/profileIconBlue.svg');
+      }
+
+      .schedule-builder-icon {
+        background-image: url('@/assets/images/navbar/scheduleBuilderIconBlue.svg');
       }
     }
   }
@@ -203,6 +202,10 @@ $mobile-navbar-height: 4.5rem;
 
   .profile-icon {
     background-image: url('@/assets/images/navbar/profileIcon.svg');
+  }
+
+  .schedule-builder-icon {
+    background-image: url('@/assets/images/navbar/scheduleBuilderIconBlue.svg');
   }
 
   .requirements-bar {
