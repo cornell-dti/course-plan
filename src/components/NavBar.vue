@@ -28,10 +28,10 @@
             <span>Profile</span>
           </div>
         </div>
-        <div class="navbar-buttonWrapper desktop" @click="openTools" data-cyId="openTools">
+        <div class="navbar-buttonWrapper desktop">
           <button class="navbar-iconWrapper schedule-builder-icon full-opacity-on-hover" />
           <div class="navbar-iconText">
-            <span>Sched</span>
+            <span>Schedule Builder</span>
           </div>
         </div>
       </div>
@@ -146,12 +146,13 @@ $mobile-navbar-height: 4.5rem;
     background-repeat: no-repeat;
     background-size: auto;
     background-position: center;
+    justify-content: center;
   }
 
   &-buttonWrapper {
     cursor: pointer;
     margin-bottom: 1.5rem;
-
+    justify-content: center;
     &:hover,
     &:focus,
     &:active {
@@ -205,7 +206,7 @@ $mobile-navbar-height: 4.5rem;
   }
 
   .schedule-builder-icon {
-    background-image: url('@/assets/images/navbar/scheduleBuilderIconBlue.svg');
+    background-image: url('@/assets/images/navbar/scheduleBuilderIcon.svg');
   }
 
   .requirements-bar {
