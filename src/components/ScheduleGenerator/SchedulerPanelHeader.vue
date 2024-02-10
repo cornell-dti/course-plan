@@ -4,11 +4,14 @@
     <div class="semester">
       <button class="semester-title-button semester-title full-opacity-on-hover" :disabled="true">
         <p class="semester-title-top">
+          <!-- Example: "Spring 2025", as on Figma. -->
           {{ selectedSemester }}
         </p>
       </button>
     </div>
+    <!-- NOTE: you cannot generate a schedule if you have not inputted any requirements. -->
     <button class="generate-schedule-button" :disabled="generateScheduleButtonDisabled">
+      <!-- Tools SVG icon placed inline with the text. -->
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="24"
@@ -26,12 +29,19 @@
     <div class="credit-limit-container">
       <div>
         <label class="credit-limit-label">Credit Limit</label>
-        <!-- NOTE: min and max are only semantic here, to enforce need JS. -->
+        <!--
+          NOTE: min and max are only semantic here.
+          
+          That is to say, they would only be enforced using the up and down arrows, which have been purposefully removed for aesthetic reasons.
+
+          As such, if we want to enforce the credit limit here, would have to implement some sort of reactive JavaScript listener.
+        -->
         <input type="number" placeholder='"18"' min="0" max="30" class="credit-limit-input" />
       </div>
       <button class="add-requirement-button">+ Requirement</button>
     </div>
     <hr />
+    <!-- The Figma wrote the below as 'No Requirements added' but I believe that was a capitalization mistake. -->
     <p class="no-requirements-added">No requirements added.</p>
   </div>
 </template>
@@ -41,7 +51,9 @@ import { defineComponent } from 'vue';
 
 export default defineComponent({
   props: {
+    // current semester being generated for
     selectedSemester: { type: String, required: true },
+    // (linked with requirements) whether any requirements have been added
     generateScheduleButtonDisabled: { type: Boolean, required: true },
   },
 });
@@ -49,6 +61,11 @@ export default defineComponent({
 
 <style scoped lang="scss">
 @import '@/assets/scss/_variables.scss';
+
+/*
+  NOTE: There is a fair amount of overlap between the styles here and the styles in
+  @/components/Requirements/RequirementHeader.vue.
+*/
 
 .top {
   margin: 1.5rem 0 1rem 0;
@@ -122,6 +139,7 @@ export default defineComponent({
   color: $emGreen;
 }
 
+/* This is the actual text warning message. */
 .no-requirements-added {
   color: #cecece;
   font-size: 14px;
@@ -146,7 +164,7 @@ export default defineComponent({
   margin-bottom: 12px;
   border: 1px solid $emGreen;
   background: $emGreen;
-  cursor: pointer;
+  cursor: pointer; /* otherwise uses default cursor */
 }
 
 .generate-schedule-button:disabled {
@@ -184,7 +202,7 @@ export default defineComponent({
   color: $darkPlaceholderGray;
 }
 
-/* Remove the arrows from number input */
+/* Removes the default HTML up-and-down arrows from the number input. */
 .credit-limit-input::-webkit-outer-spin-button,
 .credit-limit-input::-webkit-inner-spin-button {
   -webkit-appearance: none;
