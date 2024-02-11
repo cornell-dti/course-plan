@@ -31,6 +31,12 @@
             <span>Profile</span>
           </div>
         </div>
+        <div class="navbar-buttonWrapper desktop" @click="openPlan" data-cyId="openPlan">
+          <button class="navbar-iconWrapper saved-courses-icon full-opacity-on-hover" />
+          <div class="navbar-iconText">
+            <span>Saved</span>
+          </div>
+        </div>
       </div>
       <div class="navbar-bottom">
         <button
@@ -175,6 +181,9 @@ $mobile-navbar-height: 4.5rem;
       .profile-icon {
         background-image: url('@/assets/images/navbar/profileIconBlue.svg');
       }
+      .saved-courses-icon {
+        background-image: url('@/assets/images/navbar/savedCoursesBlue.svg');
+      }
     }
   }
 
@@ -203,6 +212,10 @@ $mobile-navbar-height: 4.5rem;
 
   .profile-icon {
     background-image: url('@/assets/images/navbar/profileIcon.svg');
+  }
+
+  .saved-courses-icon {
+    background-image: url('@/assets/images/navbar/savedCoursesIcon.svg');
   }
 
   .requirements-bar {
