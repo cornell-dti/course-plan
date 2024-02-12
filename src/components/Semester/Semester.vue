@@ -278,7 +278,6 @@ export default defineComponent({
       set(newCourses: readonly AppFirestoreSemesterCourseWithRequirementID[]) {
         const courses = newCourses.map(({ requirementID: _, ...rest }) => rest);
         editSemester(
-          store.state.currentPlan,
           this.year,
           this.season,
           (semester: FirestoreSemester): FirestoreSemester => ({
@@ -412,14 +411,7 @@ export default defineComponent({
     addCourse(data: CornellCourseRosterCourse, choice: FirestoreCourseOptInOptOutChoices) {
       const newCourse = cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData(data);
       // Since the course is new, we know the old choice does not exist.
-      addCourseToSemester(
-        store.state.currentPlan,
-        this.year,
-        this.season,
-        newCourse,
-        () => choice,
-        this.$gtag
-      );
+      addCourseToSemester(this.year, this.season, newCourse, () => choice, this.$gtag);
 
       const courseCode = `${data.subject} ${data.catalogNbr}`;
       this.openConfirmationModal(`Added ${courseCode} to ${this.season} ${this.year}`);
@@ -437,14 +429,7 @@ export default defineComponent({
         };
 
         // add the course to the semeser (with no choice made)
-        addCourseToSemester(
-          store.state.currentPlan,
-          this.year,
-          this.season,
-          newCourse,
-          () => choice,
-          this.$gtag
-        );
+        addCourseToSemester(this.year, this.season, newCourse, () => choice, this.$gtag);
         this.closeCourseModal();
 
         const conflicts = store.state.courseToRequirementsInConstraintViolations.get(
@@ -470,28 +455,15 @@ export default defineComponent({
       this.openConfirmationModal(`Added ${course.code} to ${this.season} ${this.year}`);
     },
     deleteCourseWithoutModal(uniqueID: number) {
-      deleteCourseFromSemester(
-        store.state.currentPlan,
-        this.year,
-        this.season,
-        uniqueID,
-        this.$gtag
-      );
+      deleteCourseFromSemester(this.year, this.season, uniqueID, this.$gtag);
     },
     deleteCourse(courseCode: string, uniqueID: number) {
-      deleteCourseFromSemester(
-        store.state.currentPlan,
-        this.year,
-        this.season,
-        uniqueID,
-        this.$gtag
-      );
+      deleteCourseFromSemester(this.year, this.season, uniqueID, this.$gtag);
       // Update requirements menu
       this.openConfirmationModal(`Removed ${courseCode} from ${this.season} ${this.year}`);
     },
     colorCourse(color: string, uniqueID: number, courseCode: string) {
       editSemester(
-        store.state.currentPlan,
         this.year,
         this.season,
         (semester: FirestoreSemester): FirestoreSemester => ({
@@ -513,7 +485,7 @@ export default defineComponent({
             : course
         ),
       });
-      editSemesters(store.state.currentPlan, oldSemesters => oldSemesters.map(sem => updater(sem)));
+      editSemesters(oldSemesters => oldSemesters.map(sem => updater(sem)));
       updateSubjectColorData(color, subject);
       this.openConfirmationModal(`Changed color for ${subject}`);
     },
@@ -522,7 +494,6 @@ export default defineComponent({
     },
     editCourseCredit(credit: number, uniqueID: number) {
       editSemester(
-        store.state.currentPlan,
         this.year,
         this.season,
         (semester: FirestoreSemester): FirestoreSemester => ({
@@ -572,7 +543,6 @@ export default defineComponent({
     },
     editSemester(seasonInput: string, yearInput: number) {
       editSemester(
-        store.state.currentPlan,
         this.year,
         this.season,
         (oldSemester: FirestoreSemester): FirestoreSemester => ({
@@ -589,7 +559,7 @@ export default defineComponent({
       this.isClearSemesterOpen = false;
     },
     clearSemester() {
-      deleteAllCoursesFromSemester(store.state.currentPlan, this.year, this.season, this.$gtag);
+      deleteAllCoursesFromSemester(this.year, this.season, this.$gtag);
       this.openConfirmationModal(`Cleared ${this.season} ${this.year} in plan`);
     },
     walkthroughText() {

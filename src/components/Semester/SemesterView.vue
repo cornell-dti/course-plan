@@ -107,14 +107,7 @@ export default defineComponent({
   },
   computed: {
     semesters(): readonly FirestoreSemester[] {
-      console.log(store.state.plans);
-      if (store.state.plans.length === 0) {
-        return [];
-      }
-      return (
-        store.state.plans.find(p => p === store.state.currentPlan)?.semesters ??
-        store.state.plans[0].semesters
-      );
+      return store.state.semesters;
     },
     noSemesters(): boolean {
       return this.semesters.length === 0;
@@ -152,11 +145,11 @@ export default defineComponent({
       this.isSemesterModalOpen = false;
     },
     addSemester(season: string, year: number) {
-      addSemester(store.state.currentPlan, year, season as FirestoreSemesterSeason, this.$gtag);
+      addSemester(year, season as FirestoreSemesterSeason, this.$gtag);
       this.openSemesterConfirmationModal(season as FirestoreSemesterSeason, year, true);
     },
     deleteSemester(season: string, year: number) {
-      deleteSemester(store.state.currentPlan, year, season as FirestoreSemesterSeason, this.$gtag);
+      deleteSemester(year, season as FirestoreSemesterSeason, this.$gtag);
       this.openSemesterConfirmationModal(season as FirestoreSemesterSeason, year, false);
     },
     courseOnClick(course: FirestoreSemesterCourse) {

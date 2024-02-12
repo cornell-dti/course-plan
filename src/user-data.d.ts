@@ -36,7 +36,7 @@ type FirestoreSemester = {
 };
 
 type FirestoreSemestersData = {
-  readonly plans: readonly Plan[];
+  readonly plans?: readonly { semesters: readonly FirestoreSemester[] }[];
   readonly semesters: readonly FirestoreSemester[];
   readonly orderByNewest: boolean;
 };
@@ -85,7 +85,7 @@ type FirestoreOverriddenFulfillmentChoices = {
 
 type FirestoreUserData = {
   readonly name: FirestoreUserName;
-  // readonly semesters: readonlyFirestoreSemester[];
+  readonly semesters: FirestoreSemester[];
   readonly orderByNewest: boolean;
   readonly toggleableRequirementChoices: AppToggleableRequirementChoices;
   readonly subjectColors: { readonly [subject: string]: string };

@@ -68,10 +68,7 @@ export default defineComponent({
   }),
   computed: {
     semesters(): readonly FirestoreSemester[] {
-      return (
-        store.state.plans.find(p => p === store.state.currentPlan)?.semesters ??
-        store.state.plans[0].semesters
-      );
+      return store.state.semesters;
     },
     isTransferCredit(): boolean {
       const { uniqueId } = this.courseTaken;
@@ -114,8 +111,7 @@ export default defineComponent({
           deleteTransferCredit(this.courseTaken.code);
         } else {
           const { uniqueId } = this.courseTaken;
-          if (typeof uniqueId === 'number')
-            deleteCourseFromSemesters(store.state.currentPlan, uniqueId, this.$gtag);
+          if (typeof uniqueId === 'number') deleteCourseFromSemesters(uniqueId, this.$gtag);
         }
       }
     },

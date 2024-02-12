@@ -135,11 +135,11 @@ async function trackUsers() {
         return;
       }
 
-      const plan = getFirstPlan(doc.data());
+      const semesters = getFirstPlan(doc.data());
 
       let oldSemesterCount = 0;
       let newSemesterCount = 0;
-      plan.semesters.forEach((semester: { year: number; season: string }) => {
+      semesters.forEach((semester: { year: number; season: string }) => {
         if (isOld(semester)) {
           oldSemesterCount += 1;
         } else {
@@ -152,7 +152,7 @@ async function trackUsers() {
         activeUsersCount += 1;
       }
 
-      numSemestersPerUser.push(plan.semesters.length);
+      numSemestersPerUser.push(semesters.length);
       oldSemesters.push(oldSemesterCount);
       newSemesters.push(newSemesterCount);
     });
