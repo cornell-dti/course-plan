@@ -182,7 +182,7 @@ $mobile-navbar-height: 4.5rem;
         background-image: url('@/assets/images/navbar/profileIconBlue.svg');
       }
       .saved-courses-icon {
-        background-image: url('@/assets/images/navbar/savedCoursesBlue.svg');
+        background-image: url('@/assets/images/navbar/savedCoursesIconBlue.svg');
       }
     }
   }
