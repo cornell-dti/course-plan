@@ -69,13 +69,8 @@ import OnboardingBasic from '@/components/Modals/Onboarding/OnboardingBasic.vue'
 import OnboardingTransfer from '@/components/Modals/Onboarding/OnboardingTransfer.vue';
 import { setAppOnboardingData } from '@/global-firestore-data';
 import ProfileConfirmation from '@/components/Modals/ProfileConfirmation.vue';
-import {
-  getMajorFullName,
-  getMinorFullName,
-  getGradFullName,
-  computeGradYears,
-  SeasonOrdinal,
-} from '@/utilities';
+import { computeGradYears, SeasonOrdinal } from '@/utilities';
+import { getMajorFullName, getMinorFullName, getGradFullName } from '@/store-utilities';
 import store from '@/store';
 
 const placeholderText = 'Select one';

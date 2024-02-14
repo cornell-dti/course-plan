@@ -1,8 +1,8 @@
-import requirementJson from './typed-requirement-json';
 import specialized from './specialize';
 import { examCourseIds } from './requirement-exam-mapping';
 import { getConstraintViolationsForSingleCourse } from './requirement-constraints-utils';
 import featureFlagCheckers from '../feature-flags';
+import { DecoratedRequirementsJson } from './types';
 
 /**
  * A collection of helper functions
@@ -121,11 +121,16 @@ export function allowCourseDoubleCountingBetweenRequirements(
 /**
  * Get the requirements for a provided collection of majors/minors
  *
+ * @param requirementJson a json object carrying user-specific requirements
  * @param sourceType The type of the field of study, e.g. 'Major' or 'Minor'
  * @param fields the names of the majors/minors
  * @returns An array of requirements corresponding to every field of study in `fields`
  */
-const fieldOfStudyReqs = (sourceType: 'Major' | 'Minor', fields: readonly string[]) => {
+const fieldOfStudyReqs = (
+  requirementJson: DecoratedRequirementsJson,
+  sourceType: 'Major' | 'Minor',
+  fields: readonly string[]
+) => {
   const jsonKey = sourceType.toLowerCase() as 'major' | 'minor';
   const fieldRequirements = requirementJson[jsonKey];
   return fields
@@ -147,23 +152,29 @@ const fieldOfStudyReqs = (sourceType: 'Major' | 'Minor', fields: readonly string
 /**
  * Get the majors corresponding to a list of major names
  *
+ * @param requirementJson a json object carrying user-specific requirements
  * @param majorNames the majors of the majors
  * @returns An array of `Major<DecoratedCollegeOrMajorRequirement>` representing
  * with the provided names. Names corresponding to no known major are ignored.
  */
-const getMajors = (majorNames: readonly string[]) =>
+const getMajors = (requirementJson: DecoratedRequirementsJson, majorNames: readonly string[]) =>
   majorNames.map(name => requirementJson.major[name]).filter(major => major !== undefined);
 
 /**
  * Get the specialized requirements for a college given a list of majors
  *
+ * @param requirementJson a json object carrying user-specific requirements
  * @param collegeName the name of the college the user is enrolled in
  * @param majorNames an array of the names of the majors the user is planning for
  * @returns An array of college requirements specialized for the user based on
  * their majors
  */
-const specializedForCollege = (collegeName: string, majorNames: readonly string[]) => {
-  const majors = getMajors(majorNames);
+const specializedForCollege = (
+  requirementJson: DecoratedRequirementsJson,
+  collegeName: string,
+  majorNames: readonly string[]
+) => {
+  const majors = getMajors(requirementJson, majorNames);
   const collegeReqs = requirementJson.college[collegeName].requirements;
   const spec = specialized(collegeReqs, majors);
   return spec.map(
@@ -177,12 +188,13 @@ const specializedForCollege = (collegeName: string, majorNames: readonly string[
   );
 };
 
-export function getUserRequirements({
-  college,
-  major: majors,
-  minor: minors,
-  grad,
-}: AppOnboardingData): readonly RequirementWithIDSourceType[] {
+export function getUserRequirements(
+  { college, major: majors, minor: minors, grad }: AppOnboardingData,
+  requirementJson: DecoratedRequirementsJson
+): readonly RequirementWithIDSourceType[] {
+  // Since we are doing computing after page load.
+  if (!requirementJson.college) return [];
+
   // check university & college & major & minor requirements
   if (college && !(college in requirementJson.college))
     throw new Error(`College ${college} not found.`);
@@ -200,9 +212,9 @@ export function getUserRequirements({
           } as const)
       )
     : [];
-  const collegeReqs = college ? specializedForCollege(college, majors) : [];
-  const majorReqs = fieldOfStudyReqs('Major', majors);
-  const minorReqs = fieldOfStudyReqs('Minor', minors);
+  const collegeReqs = college ? specializedForCollege(requirementJson, college, majors) : [];
+  const majorReqs = fieldOfStudyReqs(requirementJson, 'Major', majors);
+  const minorReqs = fieldOfStudyReqs(requirementJson, 'Minor', minors);
   const gradReqs = grad
     ? requirementJson.grad[grad].requirements.map(
         it =>

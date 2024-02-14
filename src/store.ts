@@ -17,6 +17,8 @@ import {
 } from './utilities';
 import featureFlagCheckers from './feature-flags';
 import { setUserProperties } from './gtag';
+import { DecoratedRequirementsJson } from './requirements/types';
+import getDecoratedRequirementsJson from './requirements/filter-from-api';
 
 type SimplifiedFirebaseUser = { readonly displayName: string; readonly email: string };
 
@@ -35,6 +37,7 @@ type DerivedCoursesData = {
 export type VuexStoreState = {
   currentFirebaseUser: SimplifiedFirebaseUser;
   userName: FirestoreUserName;
+  storedRequirementsJSON: DecoratedRequirementsJson;
   onboardingData: AppOnboardingData;
   semesters: readonly FirestoreSemester[];
   orderByNewest: boolean;
@@ -63,6 +66,7 @@ const store: TypedVuexStore = new TypedVuexStore({
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     currentFirebaseUser: null!,
     userName: { firstName: '', middleName: '', lastName: '' },
+    storedRequirementsJSON: {} as DecoratedRequirementsJson,
     onboardingData: {
       gradYear: '',
       gradSem: '',
@@ -104,6 +108,12 @@ const store: TypedVuexStore = new TypedVuexStore({
     },
     setUserName(state: VuexStoreState, userName: FirestoreUserName) {
       state.userName = userName;
+    },
+    async setStoredRequirementsJSON(
+      state: VuexStoreState,
+      storedRequirementsJSON: DecoratedRequirementsJson
+    ) {
+      state.storedRequirementsJSON = storedRequirementsJSON;
     },
     setOnboardingData(state: VuexStoreState, onboardingData: AppOnboardingData) {
       state.onboardingData = onboardingData;
@@ -162,7 +172,7 @@ const store: TypedVuexStore = new TypedVuexStore({
 });
 
 const autoRecomputeDerivedData = (): (() => void) =>
-  store.subscribe((mutation, state) => {
+  store.subscribe(async (mutation, state) => {
     switch (mutation.type) {
       case 'setOnboardingData': {
         setUserProperties(mutation.payload);
@@ -210,12 +220,24 @@ const autoRecomputeDerivedData = (): (() => void) =>
       mutation.type === 'setToggleableRequirementChoices' ||
       mutation.type === 'setOverriddenFulfillmentChoices'
     ) {
+      if (mutation.type === 'setOnboardingData') {
+        store.commit(
+          'setStoredRequirementsJSON',
+          await getDecoratedRequirementsJson(
+            state.onboardingData.major,
+            state.onboardingData.minor,
+            state.onboardingData.college,
+            state.onboardingData.grad
+          )
+        );
+      }
       if (state.onboardingData.college !== '') {
         store.commit(
           'setRequirementData',
           computeGroupedRequirementFulfillmentReports(
             state.semesters,
             state.onboardingData,
+            state.storedRequirementsJSON,
             state.toggleableRequirementChoices,
             state.overriddenFulfillmentChoices
           )

@@ -177,14 +177,9 @@
 
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
-import reqsData from '@/requirements/typed-requirement-json';
-import {
-  clickOutside,
-  getCurrentYear,
-  getCollegeFullName,
-  computeGradYears,
-  computeEntranceYears,
-} from '@/utilities';
+import store from '@/store';
+import { clickOutside, getCurrentYear, computeGradYears, computeEntranceYears } from '@/utilities';
+import { getCollegeFullName } from '@/store-utilities';
 import OnboardingBasicMultiDropdown from './OnboardingBasicMultiDropdown.vue';
 import OnboardingBasicSingleDropdown from './OnboardingBasicSingleDropdown.vue';
 
@@ -274,7 +269,7 @@ export default defineComponent({
       return computeGradYears(this.entranceYear);
     },
     colleges(): Readonly<Record<string, string>> {
-      const base = Object.entries(reqsData.college)
+      const base = Object.entries(store.state.storedRequirementsJSON.college)
         .filter(college => !college[0].startsWith('AS'))
         .map(([key, { name }]) => [key, name]);
       base.push(['AS', getCollegeFullName('AS')]);
@@ -283,7 +278,7 @@ export default defineComponent({
     },
     majors(): Readonly<Record<string, string>> {
       const majors: Record<string, string> = {};
-      const majorJSON = reqsData.major;
+      const majorJSON = store.state.storedRequirementsJSON.major;
       const acr = this.collegeAcronym !== 'AS' ? this.collegeAcronym : 'AS2';
       Object.keys(majorJSON).forEach(key => {
         // only show majors for schools the user is in
@@ -295,7 +290,7 @@ export default defineComponent({
     },
     minors(): Readonly<Record<string, string>> {
       const minors: Record<string, string> = {};
-      const minorJSON = reqsData.minor;
+      const minorJSON = store.state.storedRequirementsJSON.minor;
       Object.keys(minorJSON).forEach(key => {
         // show no minors if the user is not in a college
         if (this.collegeAcronym) {
@@ -306,7 +301,7 @@ export default defineComponent({
     },
     gradPrograms(): Readonly<Record<string, string>> {
       return Object.fromEntries(
-        Object.entries(reqsData.grad).map(([key, { name }]) => [key, name])
+        Object.entries(store.state.storedRequirementsJSON.grad).map(([key, { name }]) => [key, name])
       );
     },
     suggestedEntranceSem(): Readonly<number> {
@@ -359,7 +354,7 @@ export default defineComponent({
     },
     // Clear a major if a new college is selected and the major is not in it
     clearMajorIfNotInCollege() {
-      const majorJSON = reqsData.major;
+      const majorJSON = store.state.storedRequirementsJSON.major;
       for (let x = 0; x < this.majorAcronyms.length; x += 1) {
         const majorAcronym = this.majorAcronyms[x];
         let foundCollege = false;
