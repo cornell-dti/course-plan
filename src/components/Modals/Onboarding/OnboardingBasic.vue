@@ -301,7 +301,10 @@ export default defineComponent({
     },
     gradPrograms(): Readonly<Record<string, string>> {
       return Object.fromEntries(
-        Object.entries(store.state.storedRequirementsJSON.grad).map(([key, { name }]) => [key, name])
+        Object.entries(store.state.storedRequirementsJSON.grad).map(([key, { name }]) => [
+          key,
+          name,
+        ])
       );
     },
     suggestedEntranceSem(): Readonly<number> {
