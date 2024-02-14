@@ -86,6 +86,7 @@ export function allowCourseDoubleCountingBetweenRequirements(
   requirementA: RequirementWithIDSourceType,
   requirementB: RequirementWithIDSourceType
 ): boolean {
+  if (!requirementA || !requirementB) return false;
   const allowCourseDoubleCounting =
     requirementA.allowCourseDoubleCounting || requirementB.allowCourseDoubleCounting || false;
 

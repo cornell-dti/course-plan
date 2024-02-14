@@ -7,9 +7,22 @@ export default async function getDecoratedRequirementsJson(
   grad?: string
 ): Promise<DecoratedRequirementsJson> {
   try {
-    const route = `http://localhost:3000/requirements/?major=${(major ?? []).join(',')}&minor=${(
-      minor ?? []
-    ).join(',')}&college=${college}&grad=${grad}`;
+    let formattedMajors = (major ?? []).join(',');
+    if (formattedMajors.length === 0) {
+      formattedMajors = 'skip-this';
+    }
+
+    let formattedMinors = (minor ?? []).join(',');
+    if (formattedMinors.length === 0) {
+      formattedMinors = 'skip-this';
+    }
+
+    let formattedGrad = grad;
+    if (!grad) {
+      formattedGrad = 'skip-this';
+    }
+
+    const route = `http://localhost:3000/requirements/?major=${formattedMajors}&minor=${formattedMinors}&college=${college}&grad=${formattedGrad}`;
     const response = await fetch(route);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);

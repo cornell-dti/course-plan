@@ -406,3 +406,39 @@ const decoratedRequirements = generateDecoratedRequirementsJson();
 const decoratedRequirementsString = JSON.stringify(decoratedRequirements, undefined, 2);
 
 writeFileSync('src/requirements/decorated-requirements.json', decoratedRequirementsString);
+
+const majors = Object.keys(decoratedRequirements.major).map(major => [
+  major,
+  decoratedRequirements.major[major].name,
+  decoratedRequirements.major[major].schools,
+]);
+
+writeFileSync('src/requirements/majors.json', JSON.stringify(majors, undefined, 2));
+
+const minors = Object.keys(decoratedRequirements.minor).map(minor => [
+  minor,
+  decoratedRequirements.minor[minor].name,
+  decoratedRequirements.minor[minor].schools,
+]);
+
+writeFileSync('src/requirements/minors.json', JSON.stringify(minors, undefined, 2));
+
+const collegesOut = Object.keys(decoratedRequirements.college)
+  .map(college => [college, decoratedRequirements.college[college].name])
+  .filter(([college]) => college !== 'AS1')
+  .map(([college, name]) => {
+    if (college === 'AS2') {
+      return ['AS', 'Arts and Sciences'];
+    }
+
+    return [college, name];
+  });
+
+writeFileSync('src/requirements/colleges.json', JSON.stringify(collegesOut, undefined, 2));
+
+const grad = Object.keys(decoratedRequirements.grad).map(gr => [
+  gr,
+  decoratedRequirements.grad[gr].name,
+]);
+
+writeFileSync('src/requirements/grad.json', JSON.stringify(grad, undefined, 2));

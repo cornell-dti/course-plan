@@ -1,0 +1,316 @@
+[
+  [
+    "AEM",
+    "Applied Economics and Management",
+    [
+      "AG",
+      "BU"
+    ]
+  ],
+  [
+    "ANTHR",
+    "Anthropology",
+    [
+      "AS1",
+      "AS2"
+    ]
+  ],
+  [
+    "AS",
+    "Atmospheric Science",
+    [
+      "AG"
+    ]
+  ],
+  [
+    "ASTRO",
+    "Astronomy",
+    [
+      "AS1",
+      "AS2"
+    ]
+  ],
+  [
+    "BIO",
+    "Biological Sciences",
+    [
+      "AG",
+      "AS1",
+      "AS2"
+    ]
+  ],
+  [
+    "BSOC",
+    "Biology and Society",
+    [
+      "AG",
+      "AS1",
+      "AS2"
+    ]
+  ],
+  [
+    "BME",
+    "Biomedical Engineering",
+    [
+      "EN"
+    ]
+  ],
+  [
+    "BE",
+    "Biological Engineering",
+    [
+      "EN"
+    ]
+  ],
+  [
+    "CE",
+    "Civil Engineering",
+    [
+      "EN"
+    ]
+  ],
+  [
+    "CHEM",
+    "Chemistry",
+    [
+      "AS1",
+      "AS2"
+    ]
+  ],
+  [
+    "CHEME",
+    "Chemical and Biomolecular Engineering",
+    [
+      "EN"
+    ]
+  ],
+  [
+    "COMM",
+    "Communication",
+    [
+      "AG"
+    ]
+  ],
+  [
+    "CRP",
+    "City and Regional Planning",
+    [
+      "AR"
+    ]
+  ],
+  [
+    "CS",
+    "Computer Science",
+    [
+      "EN",
+      "AS1",
+      "AS2"
+    ]
+  ],
+  [
+    "DEA",
+    "Design and Environmental Analysis",
+    [
+      "HE"
+    ]
+  ],
+  [
+    "EAS",
+    "Earth and Atmospheric Sciences",
+    [
+      "AG",
+      "AS1",
+      "AS2",
+      "EN"
+    ]
+  ],
+  [
+    "ECON",
+    "Economics",
+    [
+      "AS1",
+      "AS2"
+    ]
+  ],
+  [
+    "ECE",
+    "Electrical and Computer Engineering",
+    [
+      "EN"
+    ]
+  ],
+  [
+    "ENGL",
+    "English",
+    [
+      "AS1",
+      "AS2"
+    ]
+  ],
+  [
+    "ENV",
+    "Environmental Engineering",
+    [
+      "EN"
+    ]
+  ],
+  [
+    "ESS",
+    "Environment and Sustainability",
+    [
+      "AG",
+      "AS1",
+      "AS2"
+    ]
+  ],
+  [
+    "EP",
+    "Engineering Physics",
+    [
+      "EN"
+    ]
+  ],
+  [
+    "FSAD",
+    "Fashion Design",
+    [
+      "HE"
+    ]
+  ],
+  [
+    "FDSC",
+    "Food Science",
+    [
+      "AG"
+    ]
+  ],
+  [
+    "GOVT",
+    "Government",
+    [
+      "AS1",
+      "AS2"
+    ]
+  ],
+  [
+    "HADM",
+    "Hotel Administration",
+    [
+      "BU"
+    ]
+  ],
+  [
+    "HD",
+    "Human Development",
+    [
+      "HE"
+    ]
+  ],
+  [
+    "HIST",
+    "History",
+    [
+      "AS1",
+      "AS2"
+    ]
+  ],
+  [
+    "INFO",
+    "Information Science",
+    [
+      "AS1",
+      "AG",
+      "AS2"
+    ]
+  ],
+  [
+    "ISST1",
+    "Information Science, Systems, and Technology [before Fall 2020]",
+    [
+      "EN"
+    ]
+  ],
+  [
+    "ISST2",
+    "Information Science, Systems, and Technology [Fall 2020 and after]",
+    [
+      "EN"
+    ]
+  ],
+  [
+    "LING",
+    "Linguistics",
+    [
+      "AS1",
+      "AS2"
+    ]
+  ],
+  [
+    "MATH",
+    "Math",
+    [
+      "AS1",
+      "AS2"
+    ]
+  ],
+  [
+    "ME",
+    "Mechanical Engineering",
+    [
+      "EN"
+    ]
+  ],
+  [
+    "MSE",
+    "Materials Science & Engineering",
+    [
+      "EN"
+    ]
+  ],
+  [
+    "ORIE",
+    "Operations Research and Engineering",
+    [
+      "EN"
+    ]
+  ],
+  [
+    "PAM",
+    "Policy Analysis and Management",
+    [
+      "HE"
+    ]
+  ],
+  [
+    "PHYS",
+    "Physics",
+    [
+      "AS1",
+      "AS2"
+    ]
+  ],
+  [
+    "PSYCH",
+    "Psychology",
+    [
+      "AS1",
+      "AS2"
+    ]
+  ],
+  [
+    "SPAN",
+    "Spanish",
+    [
+      "AS1",
+      "AS2"
+    ]
+  ],
+  [
+    "STS",
+    "Science & Technology Studies",
+    [
+      "AS1",
+      "AS2"
+    ]
+  ]
+]

@@ -179,7 +179,6 @@
 import { PropType, defineComponent } from 'vue';
 import store from '@/store';
 import { clickOutside, getCurrentYear, computeGradYears, computeEntranceYears } from '@/utilities';
-import { getCollegeFullName } from '@/store-utilities';
 import OnboardingBasicMultiDropdown from './OnboardingBasicMultiDropdown.vue';
 import OnboardingBasicSingleDropdown from './OnboardingBasicSingleDropdown.vue';
 
@@ -187,6 +186,11 @@ import fall from '@/assets/images/fallEmoji.svg';
 import spring from '@/assets/images/springEmoji.svg';
 import winter from '@/assets/images/winterEmoji.svg';
 import summer from '@/assets/images/summerEmoji.svg';
+
+import majors from '@/requirements/majors.json';
+import minors from '@/requirements/minors.json';
+import colleges from '@/requirements/colleges.json';
+import grad from '@/requirements/grad.json';
 
 const placeholderText = 'Select one';
 
@@ -269,43 +273,22 @@ export default defineComponent({
       return computeGradYears(this.entranceYear);
     },
     colleges(): Readonly<Record<string, string>> {
-      const base = Object.entries(store.state.storedRequirementsJSON.college)
-        .filter(college => !college[0].startsWith('AS'))
-        .map(([key, { name }]) => [key, name]);
-      base.push(['AS', getCollegeFullName('AS')]);
-      base.sort((c1, c2) => c1[1].localeCompare(c2[1]));
-      return Object.fromEntries(base);
+      return Object.fromEntries(colleges);
     },
     majors(): Readonly<Record<string, string>> {
-      const majors: Record<string, string> = {};
-      const majorJSON = store.state.storedRequirementsJSON.major;
+      // only majors in the user's college
       const acr = this.collegeAcronym !== 'AS' ? this.collegeAcronym : 'AS2';
-      Object.keys(majorJSON).forEach(key => {
-        // only show majors for schools the user is in
-        if (majorJSON[key].schools.includes(acr)) {
-          majors[key] = majorJSON[key].name;
-        }
-      });
-      return majors;
+      return Object.fromEntries(majors.filter(it => it[2].includes(acr)));
     },
     minors(): Readonly<Record<string, string>> {
-      const minors: Record<string, string> = {};
-      const minorJSON = store.state.storedRequirementsJSON.minor;
-      Object.keys(minorJSON).forEach(key => {
-        // show no minors if the user is not in a college
-        if (this.collegeAcronym) {
-          minors[key] = minorJSON[key].name;
-        }
-      });
-      return minors;
+      // show no minors if the user is not in a college
+      if (!this.collegeAcronym) {
+        return {};
+      }
+      return Object.fromEntries(minors);
     },
     gradPrograms(): Readonly<Record<string, string>> {
-      return Object.fromEntries(
-        Object.entries(store.state.storedRequirementsJSON.grad).map(([key, { name }]) => [
-          key,
-          name,
-        ])
-      );
+      return Object.fromEntries(grad);
     },
     suggestedEntranceSem(): Readonly<number> {
       return getCurrentYear();

@@ -1,0 +1,185 @@
+[
+  [
+    "AEROSPACE",
+    "Aerospace Engineering",
+    [
+      "EN"
+    ]
+  ],
+  [
+    "ANIMALSCIENCE",
+    "Animal Science",
+    [
+      "AG"
+    ]
+  ],
+  [
+    "APPLIEDECON",
+    "Applied Economics",
+    [
+      "AG",
+      "BU"
+    ]
+  ],
+  [
+    "APPLIEDMATH",
+    "Applied Mathematics",
+    [
+      "EN"
+    ]
+  ],
+  [
+    "BU",
+    "Business",
+    [
+      "BU"
+    ]
+  ],
+  [
+    "COGSCI",
+    "Cognitive Science",
+    [
+      "AS1",
+      "AS2"
+    ]
+  ],
+  [
+    "CS",
+    "Computer Science",
+    [
+      "EN",
+      "AS1",
+      "AS2"
+    ]
+  ],
+  [
+    "DS",
+    "Data Science",
+    [
+      "EN",
+      "AG",
+      "AS2"
+    ]
+  ],
+  [
+    "DBME",
+    "Dyson Business Minor for Engineers",
+    [
+      "BU"
+    ]
+  ],
+  [
+    "DEA",
+    "Design and Environmental Analysis",
+    [
+      "HE"
+    ]
+  ],
+  [
+    "EAS",
+    "Earth and Atmospheric Sciences",
+    [
+      "EN",
+      "AG"
+    ]
+  ],
+  [
+    "ECE",
+    "Electrical and Computer Engineering",
+    [
+      "EN"
+    ]
+  ],
+  [
+    "GAMEDESIGN",
+    "Game Design",
+    [
+      "EN",
+      "AS1",
+      "AS2"
+    ]
+  ],
+  [
+    "HP",
+    "Health Policy",
+    [
+      "HE"
+    ]
+  ],
+  [
+    "HD",
+    "Human Development",
+    [
+      "HE"
+    ]
+  ],
+  [
+    "INEQ",
+    "Inequality Studies",
+    [
+      "AS1",
+      "AS2"
+    ]
+  ],
+  [
+    "ISST",
+    "Information Science [Engineering]",
+    [
+      "EN"
+    ]
+  ],
+  [
+    "LING",
+    "Linguistics",
+    [
+      "AS1",
+      "AS2"
+    ]
+  ],
+  [
+    "MATH",
+    "Mathematics",
+    [
+      "AS1",
+      "AS2"
+    ]
+  ],
+  [
+    "ORMS",
+    "Operations Research and Management Science",
+    [
+      "EN"
+    ]
+  ],
+  [
+    "POLICY",
+    "Public Policy",
+    [
+      "AS1",
+      "AS2"
+    ]
+  ],
+  [
+    "PSYCH",
+    "Psychology",
+    [
+      "AS1",
+      "AS2"
+    ]
+  ],
+  [
+    "ROBOTICS",
+    "Robotics",
+    [
+      "EN"
+    ]
+  ],
+  [
+    "SPAN",
+    "Spanish",
+    [
+      "AS1",
+      "AS2"
+    ]
+  ]
+]
