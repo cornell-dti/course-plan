@@ -170,7 +170,7 @@ export default defineComponent({
      *
      * @returns true if onboarding contains a major, minor, or program that is not in
      * requirementsJSON on this branch, false otherwise.
-     * 
+     *
      * FIXME: the requirement graph is not generated for the chosen major / minor / grad
      * etc. and so cannot tell if the user has chosen a valid major / minor / grad.
      */
