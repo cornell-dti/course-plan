@@ -1,5 +1,8 @@
 import { DecoratedRequirementsJson } from './types';
 
+// TODO: update to real firebase function URL
+const BASE_URL = 'http://127.0.0.1:5001/advanced-todos-73680/us-central1/api/requirements';
+
 export default async function getDecoratedRequirementsJson(
   major?: readonly string[],
   minor?: readonly string[],
@@ -22,7 +25,7 @@ export default async function getDecoratedRequirementsJson(
       formattedGrad = 'skip-this';
     }
 
-    const route = `http://localhost:3000/requirements/?major=${formattedMajors}&minor=${formattedMinors}&college=${college}&grad=${formattedGrad}`;
+    const route = `${BASE_URL}?major=${formattedMajors}&minor=${formattedMinors}&college=${college}&grad=${formattedGrad}`;
     const response = await fetch(route);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
