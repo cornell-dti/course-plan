@@ -247,7 +247,7 @@ export default defineComponent({
     submitOnboarding() {
       const revised = this.setASCollegeReqs();
       this.clearTransferCreditIfGraduate();
-      setAppOnboardingData(this.name, revised);
+      // setAppOnboardingData(this.name, revised); // now done when you navigate to the page
       // indicates first time user onboarding
       if (!this.isEditingProfile) populateSemesters(revised);
       this.$emit('onboard');
@@ -277,9 +277,16 @@ export default defineComponent({
       ) {
         // special case: if the user has a graduate program (and not an undergrad program), skip the transfer page
         if (this.onboarding.grad !== '' && !this.onboarding.college && this.currentPage === 1) {
+          const revised = this.setASCollegeReqs();
+          this.clearTransferCreditIfGraduate();
+          setAppOnboardingData(this.name, revised);
           this.currentPage += 2;
-        } else {
-          this.currentPage = this.currentPage === FINAL_PAGE ? FINAL_PAGE : this.currentPage + 1;
+        } else if (this.currentPage !== FINAL_PAGE) {
+          // Needs to be done ahead of time.
+          const revised = this.setASCollegeReqs();
+          this.clearTransferCreditIfGraduate();
+          setAppOnboardingData(this.name, revised);
+          this.currentPage += 1;
         }
       }
     },
