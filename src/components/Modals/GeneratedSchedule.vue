@@ -104,14 +104,14 @@ input {
   &-description {
     font-weight: 300;
     font-size: 18px;
-    line-height: 18px;
+    line-height: 36px;
     color: $onboardingGray;
     text-align: center;
   }
 
   &-content {
     position: relative;
-    padding: 2.5rem 2.5rem 0 2.5rem;
+    padding: 1rem 1.5rem 1rem 1.5rem;
   }
 }
 </style>
