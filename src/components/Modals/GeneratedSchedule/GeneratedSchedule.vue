@@ -111,7 +111,7 @@ input {
 
   &-content {
     position: relative;
-    padding: 1rem 1.5rem 1rem 1.5rem;
+    padding: 1.5rem 2rem 1.5rem 2rem;
   }
 }
 </style>
