@@ -105,7 +105,7 @@ import Onboarding from '@/components/Modals/Onboarding/Onboarding.vue';
 import TourWindow from '@/components/Modals/TourWindow.vue';
 import ToolsContainer from '@/containers/Tools.vue';
 import ProfileEditor from '@/containers/Profile.vue';
-import GeneratedSchedule from '@/components/Modals/GeneratedSchedule.vue';
+import GeneratedSchedule from '@/components/Modals/GeneratedSchedule/GeneratedSchedule.vue';
 import featureFlagCheckers from '@/feature-flags';
 
 import store, { initializeFirestoreListeners } from '@/store';
