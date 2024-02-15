@@ -9,6 +9,11 @@
       @onboard="endOnboarding"
       @cancelOnboarding="cancelOnboarding"
     />
+    <generated-schedule
+      class="dashboard-onboarding"
+      v-if="isGeneratedScheduleOpen"
+      @closeGeneratedSchedule="closeGeneratedSchedule"
+    />
     <div class="dashboard-mainView">
       <div class="dashboard-menus">
         <nav-bar
@@ -100,6 +105,7 @@ import Onboarding from '@/components/Modals/Onboarding/Onboarding.vue';
 import TourWindow from '@/components/Modals/TourWindow.vue';
 import ToolsContainer from '@/containers/Tools.vue';
 import ProfileEditor from '@/containers/Profile.vue';
+import GeneratedSchedule from '@/components/Modals/GeneratedSchedule.vue';
 import featureFlagCheckers from '@/feature-flags';
 
 import store, { initializeFirestoreListeners } from '@/store';
@@ -145,6 +151,7 @@ export default defineComponent({
     NavBar,
     ScheduleGeneratorSideBar,
     Onboarding,
+    GeneratedSchedule,
     RequirementSideBar,
     SemesterView,
     TourWindow,
@@ -285,6 +292,15 @@ export default defineComponent({
       } else {
         this.editProfile();
       }
+    },
+
+    openGeneratedSchedule() {
+      // TODO: do feature flag check
+      this.isGeneratedScheduleOpen = true;
+    },
+
+    closeGeneratedSchedule() {
+      this.isGeneratedScheduleOpen = false;
     },
 
     closeWelcome() {
