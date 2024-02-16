@@ -37,7 +37,7 @@
             <div class="schedule-generate-subHeader schedule-generate-subHeader--indent">
               {{ selectedSemester }}
             </div>
-            <schedule :classesSchedule="classesSchedule" />
+            <schedule ref="calendar" :classesSchedule="classesSchedule" />
           </div>
         </div>
       </div>
@@ -309,12 +309,22 @@ input {
     margin-top: -0.5rem;
     background-color: $white;
 
-    &--smallerIndent {
-      margin-left: 1.25rem;
-      font-size: 18px;
+    &--font {
+      color: $black;
+      flex-direction: row;
+      background-color: $white;
+      padding: 0rem 0.5rem 0rem 0.5rem;
+    }
+    &--review {
+      font-weight: normal;
+      padding: 5px;
+      margin-left: 10px;
+      background-color: $white;
+      color: $lightPlaceholderGray;
+      font-size: 16px;
     }
     &--indent {
-      margin-left: 2rem;
+      padding-left: 3rem;
       font-size: 18px;
     }
   }
