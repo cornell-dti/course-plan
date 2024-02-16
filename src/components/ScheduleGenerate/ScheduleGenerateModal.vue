@@ -324,7 +324,7 @@ input {
       font-size: 16px;
     }
     &--indent {
-      padding-left: 3rem;
+      padding-left: 2rem;
       font-size: 18px;
     }
   }
