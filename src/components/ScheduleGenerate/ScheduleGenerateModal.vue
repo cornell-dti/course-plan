@@ -26,6 +26,28 @@
             Please download before closing or it won't be saved!
           </div>
         </div>
+        <div class="generated-schedule-body">
+          <div class="generated-schedule-section-courses">
+            <div class="generated-schedule-subHeader generated-schedule-subHeader--indent">
+              <span class="generated-schedule-subHeader--font">Your Courses</span>
+            </div>
+            <div class="generated-schedule-inputs">
+              <div class="generated-schedule-inputWrapper">
+                <schedule-courses />
+              </div>
+            </div>
+          </div>
+          <div class="generated-schedule-section-schedule">
+            <div class="generated-schedule-subHeader generated-schedule-subHeader--indent">
+              <span class="generated-schedule-subHeader--font">Fall 2024</span>
+            </div>
+            <div class="generated-schedule-inputs">
+              <div class="generated-schedule-inputWrapper">
+                <schedule />
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="schedule-generate-bottom"></div>
     </div>
@@ -34,8 +56,14 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import Schedule from '@/components/Modals/GeneratedSchedule/Schedule.vue';
+import ScheduleCourses from '@/components/Modals/GeneratedSchedule/ScheduleCourses.vue';
 
 export default defineComponent({
+  components: {
+    Schedule,
+    ScheduleCourses,
+  },
   emits: ['closeScheduleGenerateModal'],
   methods: {
     cancel() {
@@ -66,7 +94,7 @@ input {
     border-radius: 9px;
     margin-left: auto;
     margin-right: auto;
-    width: 46rem;
+    width: 69rem;
   }
 
   &-cancel {
@@ -106,6 +134,60 @@ input {
   &-content {
     position: relative;
     padding: 1.5rem 2rem 1.5rem 2rem;
+  }
+
+  &-body {
+    padding: 0rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  &-section {
+    margin-bottom: 1rem;
+    &-courses {
+      width: 250px;
+      margin-right: 2rem;
+    }
+    &-schedule {
+      flex: 1;
+    }
+  }
+
+  &-subHeader {
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 22px;
+    position: relative;
+    top: 23px;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    /* identical to box height */
+    display: flex;
+    align-items: center;
+    text-align: center;
+    justify-content: space-between;
+    color: $darkGray2;
+    margin-bottom: 0.75rem;
+
+    &--font {
+      color: $black;
+      flex-direction: row;
+      background-color: $white;
+      padding: 0rem 0.5rem 0rem 0.5rem;
+    }
+    &--review {
+      font-weight: normal;
+      padding: 5px;
+      margin-left: 10px;
+      background-color: $white;
+      color: $lightPlaceholderGray;
+      font-size: 16px;
+    }
+    &--indent {
+      padding-left: 3rem;
+      font-size: 18px;
+    }
   }
 }
 </style>
