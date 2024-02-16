@@ -9,6 +9,7 @@ import engineeringRequirements, { engineeringAdvisors } from './colleges/en';
 import humanEcologyRequirements, { humanEcologyAdvisors } from './colleges/he';
 import ilrRequirements, { ilrAdvisors } from './colleges/il';
 import aemRequirements, { aemAdvisors } from './majors/aem';
+import anthrRequirements, { anthrAdvisors } from './majors/anthr';
 import asRequirements, { asAdvisors } from './majors/as';
 import astroRequrements, { astroAdvisors } from './majors/astro';
 import bioRequirements, { bioAdvisors } from './majors/bio';
@@ -144,6 +145,13 @@ const json: RequirementsJson = {
       requirements: aemRequirements,
       advisors: aemAdvisors,
       abbrev: 'AEM',
+    },
+    ANTHR: {
+      name: 'Anthropology',
+      schools: ['AS1', 'AS2'],
+      requirements: anthrRequirements,
+      advisors: anthrAdvisors,
+      abbrev: 'Anthr',
     },
     AS: {
       name: 'Atmospheric Science',
