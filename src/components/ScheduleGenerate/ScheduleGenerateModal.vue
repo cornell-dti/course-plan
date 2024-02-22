@@ -323,6 +323,10 @@ input {
       color: $lightPlaceholderGray;
       font-size: 16px;
     }
+    &--smallerIndent {
+      padding-left: 1.25rem;
+      font-size: 18px;
+    }
     &--indent {
       padding-left: 2rem;
       font-size: 18px;
