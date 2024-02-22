@@ -28,12 +28,48 @@
         </div>
         <div class="generated-schedule-body">
           <div class="generated-schedule-section-courses">
-            <div class="generated-schedule-subHeader generated-schedule-subHeader--indent">
+            <div class="generated-schedule-subHeader generated-schedule-subHeader--smallerIndent">
               <span class="generated-schedule-subHeader--font">Your Courses</span>
             </div>
             <div class="generated-schedule-inputs">
               <div class="generated-schedule-inputWrapper">
-                <schedule-courses />
+                <schedule-courses
+                  :num-credits="12"
+                  :classes="[
+                    {
+                      title: 'Introductory Programming',
+                      name: 'CS 1110',
+                      color: '#FF3B30', // eventually want to use coursescolorset
+                      // and match with the right component of this modal
+                    },
+                    {
+                      title: 'Information Science Major Concentration Group A',
+                      name: 'INFO 2450',
+                      color: '#34C759',
+                    },
+                    {
+                      title: 'Information Science Major Core Courses',
+                      name: 'INFO 1260',
+                      color: '#32A0F2',
+                    },
+                    {
+                      title: 'Information Science Major Electives',
+                      name: 'INFO 2300',
+                      color: '#AF52DE',
+                    },
+                    {
+                      title: 'College Requirements Human Diversity (D)',
+                      name: 'DSOC 1101',
+                      color: '#FF9500',
+                    },
+                    {
+                      title: 'No Requirement',
+                      name: 'ART 2301',
+                      color: '#B155E0',
+                    },
+                    // question: what if # of courses overflows the box? not in designs iirc
+                  ]"
+                />
               </div>
             </div>
           </div>
@@ -183,6 +219,10 @@ input {
       background-color: $white;
       color: $lightPlaceholderGray;
       font-size: 16px;
+    }
+    &--smallerIndent {
+      padding-left: 1.25rem;
+      font-size: 18px;
     }
     &--indent {
       padding-left: 2rem;
