@@ -224,7 +224,7 @@ export default defineComponent({
       return featureFlagCheckers.isRequirementDebuggerEnabled();
     },
     semesters(): readonly FirestoreSemester[] {
-      return store.state.semesters;
+      return store.getters.getCurrentPlanSemesters;
     },
     onboardingData(): AppOnboardingData {
       return store.state.onboardingData;

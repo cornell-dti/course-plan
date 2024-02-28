@@ -36,7 +36,7 @@ type FirestoreSemester = {
 };
 
 type FirestoreSemestersData = {
-  readonly plans?: readonly { semesters: readonly FirestoreSemester[] }[];
+  readonly plans: readonly Plan[];
   readonly semesters: readonly FirestoreSemester[];
   readonly orderByNewest: boolean;
 };
@@ -77,7 +77,7 @@ type FirestoreCourseOptInOptOutChoices = {
    * It's for attaching completely unknown courses to a requirement
    * (e.g. opt-in CS 2112 for history requirement).
    */
-  readonly arbitraryOptIn: readonly { readonly [requirement: string]: readonly string[] };
+  readonly arbitraryOptIn: { readonly [requirement: string]: readonly string[] };
 };
 type FirestoreOverriddenFulfillmentChoices = {
   readonly [courseUniqueId: string]: FirestoreCourseOptInOptOutChoices;
@@ -85,7 +85,6 @@ type FirestoreOverriddenFulfillmentChoices = {
 
 type FirestoreUserData = {
   readonly name: FirestoreUserName;
-  readonly semesters: FirestoreSemester[];
   readonly orderByNewest: boolean;
   readonly toggleableRequirementChoices: AppToggleableRequirementChoices;
   readonly subjectColors: { readonly [subject: string]: string };
@@ -219,3 +218,8 @@ type AppFirestoreSemesterCourseWithRequirementID = FirestoreSemesterCourse & {
 
 /** Map from requirement ID to option chosen */
 type AppToggleableRequirementChoices = Readonly<Record<string, string>>;
+
+type Plan = {
+  readonly name: string;
+  readonly semesters: readonly FirestoreSemester[];
+};
