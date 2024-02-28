@@ -144,7 +144,7 @@ $mobile-navbar-height: 4.5rem;
 
 .navbar {
   background-color: #f7f7f7;
-  width: 4.5rem;
+  width: 5.5rem;
   height: 100vh;
   display: flex;
   position: sticky;
@@ -153,6 +153,7 @@ $mobile-navbar-height: 4.5rem;
   flex-direction: column;
   justify-content: space-between;
   padding-top: 2.25rem;
+  padding-left: 1.5rem;
   padding-bottom: 2rem;
 
   &-iconWrapper {
