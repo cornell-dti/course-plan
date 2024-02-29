@@ -133,6 +133,10 @@ export default defineComponent({
     },
     openProfile() {
       this.menuOpen = false;
+      this.$emit('openProfile');
+    },
+    openGeneratedSchedule() {
+      this.menuOpen = false;
       this.$emit('openGeneratedSchedule');
     },
     openScheduleGenerate() {
