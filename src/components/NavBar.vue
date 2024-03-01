@@ -108,7 +108,6 @@ export default defineComponent({
     'toggleRequirementsMobile',
     'openProfile',
     'openScheduleGenerate',
-    'openScheduleGenerateModal',
   ],
   data() {
     return {

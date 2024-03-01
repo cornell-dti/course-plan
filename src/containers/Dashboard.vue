@@ -24,7 +24,6 @@
           @openTools="openTools"
           @openProfile="openProfile"
           @openScheduleGenerate="openScheduleGenerate"
-          @openScheduleGenerateModal="openScheduleGenerateModal"
           @toggleRequirementsMobile="toggleRequirementsMobile"
         />
         <requirement-side-bar
@@ -43,6 +42,7 @@
           v-if="loaded && !showToolsPage && !isProfileOpen && isScheduleGenerateOpen"
           selected-semester="Spring 2025"
           :generate-schedule-button-disabled="isScheduleGenerateButtonDisabled"
+          @openScheduleGenerateModal="openScheduleGenerateModal"
         />
         <bottom-bar
           v-if="!(isTablet && requirementsIsDisplayedMobile) && !showToolsPage && !isProfileOpen"

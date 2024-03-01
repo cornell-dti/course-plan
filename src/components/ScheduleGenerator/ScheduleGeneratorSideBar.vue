@@ -60,11 +60,11 @@ export default defineComponent({
     // (linked with requirements) whether any requirements have been added
     generateScheduleButtonDisabled: { type: Boolean, required: true },
   },
+  emits: ['openScheduleGenerateModal'],
   methods: {
     openScheduleGenerateModal() {
-      console.log('here');
       this.menuOpen = false;
-      this.$parent.$emit('openScheduleGenerateModal');
+      this.$emit('openScheduleGenerateModal');
     },
   },
 });
