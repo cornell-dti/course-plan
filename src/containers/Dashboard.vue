@@ -9,10 +9,10 @@
       @onboard="endOnboarding"
       @cancelOnboarding="cancelOnboarding"
     />
-    <generated-schedule
+    <schedule-generate-modal
       class="dashboard-onboarding"
-      v-if="isGeneratedScheduleOpen"
-      @closeGeneratedSchedule="closeGeneratedSchedule"
+      v-if="isScheduleGenerateModalOpen"
+      @closeScheduleGenerateModal="closeScheduleGenerateModal"
     />
     <div class="dashboard-mainView">
       <div class="dashboard-menus">
@@ -24,6 +24,7 @@
           @openTools="openTools"
           @openProfile="openProfile"
           @openScheduleGenerate="openScheduleGenerate"
+          @openScheduleGenerateModal="openScheduleGenerateModal"
           @toggleRequirementsMobile="toggleRequirementsMobile"
         />
         <requirement-side-bar
@@ -101,11 +102,11 @@ import RequirementSideBar from '@/components/Requirements/RequirementSideBar.vue
 import BottomBar from '@/components/BottomBar/BottomBar.vue';
 import NavBar from '@/components/NavBar.vue';
 import ScheduleGeneratorSideBar from '@/components/ScheduleGenerator/ScheduleGeneratorSideBar.vue';
+import ScheduleGenerateModal from '@/components/ScheduleGenerator/ScheduleGenerateModal.vue';
 import Onboarding from '@/components/Modals/Onboarding/Onboarding.vue';
 import TourWindow from '@/components/Modals/TourWindow.vue';
 import ToolsContainer from '@/containers/Tools.vue';
 import ProfileEditor from '@/containers/Profile.vue';
-import GeneratedSchedule from '@/components/Modals/GeneratedSchedule/GeneratedSchedule.vue';
 import featureFlagCheckers from '@/feature-flags';
 
 import store, { initializeFirestoreListeners } from '@/store';
@@ -151,7 +152,7 @@ export default defineComponent({
     NavBar,
     ScheduleGeneratorSideBar,
     Onboarding,
-    GeneratedSchedule,
+    ScheduleGenerateModal,
     RequirementSideBar,
     SemesterView,
     TourWindow,
@@ -178,6 +179,7 @@ export default defineComponent({
       isProfileOpen: false,
       isScheduleGenerateButtonDisabled: false,
       isScheduleGenerateOpen: false,
+      isScheduleGenerateModalOpen: false,
     };
   },
   computed: {
@@ -294,13 +296,13 @@ export default defineComponent({
       }
     },
 
-    openGeneratedSchedule() {
+    openScheduleGenerateModal() {
       // TODO: do feature flag check
-      this.isGeneratedScheduleOpen = true;
+      this.isScheduleGenerateModalOpen = true;
     },
 
-    closeGeneratedSchedule() {
-      this.isGeneratedScheduleOpen = false;
+    closeScheduleGenerateModal() {
+      this.isScheduleGenerateModalOpen = false;
     },
 
     closeWelcome() {

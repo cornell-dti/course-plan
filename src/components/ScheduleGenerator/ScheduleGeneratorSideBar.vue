@@ -10,7 +10,11 @@
       </button>
     </div>
     <!-- NOTE: you cannot generate a schedule if you have not inputted any requirements. -->
-    <button class="generate-schedule-button" :disabled="generateScheduleButtonDisabled">
+    <button
+      class="generate-schedule-button"
+      :disabled="generateScheduleButtonDisabled"
+      @click="openScheduleGenerateModal"
+    >
       <!-- Tools SVG icon placed inline with the text. -->
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -55,6 +59,13 @@ export default defineComponent({
     selectedSemester: { type: String, required: true },
     // (linked with requirements) whether any requirements have been added
     generateScheduleButtonDisabled: { type: Boolean, required: true },
+  },
+  methods: {
+    openScheduleGenerateModal() {
+      console.log('here');
+      this.menuOpen = false;
+      this.$parent.$emit('openScheduleGenerateModal');
+    },
   },
 });
 </script>
