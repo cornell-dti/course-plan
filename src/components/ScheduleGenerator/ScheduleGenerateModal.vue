@@ -41,11 +41,11 @@
 import { defineComponent } from 'vue';
 
 export default defineComponent({
-  emits: ['closeGeneratedSchedule'],
+  emits: ['closeScheduleGenerateModal'],
   computed: {},
   methods: {
     cancel() {
-      this.$emit('closeGeneratedSchedule');
+      this.$emit('closeScheduleGenerateModal');
     },
     checkClickOutside(e: MouseEvent) {
       if (e.target === this.$refs.modalBackground) {
