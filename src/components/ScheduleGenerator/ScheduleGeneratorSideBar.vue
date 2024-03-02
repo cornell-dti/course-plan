@@ -1,5 +1,5 @@
 <template>
-  <div class="requirementheader">
+  <div class="generatorheader">
     <h1 class="top header-title">Semester Schedule Builder</h1>
     <div class="semester">
       <button class="semester-title-button semester-title full-opacity-on-hover" :disabled="true">
@@ -61,6 +61,12 @@ export default defineComponent({
 
 <style scoped lang="scss">
 @import '@/assets/scss/_variables.scss';
+
+.generatorheader {
+  width: 25rem;
+  background-color: $white;
+  padding: 1.625rem 1.5rem;
+}
 
 /*
   NOTE: There is a fair amount of overlap between the styles here and the styles in
