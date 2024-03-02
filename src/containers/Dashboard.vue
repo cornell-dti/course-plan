@@ -37,7 +37,7 @@
           :startTour="startTour"
           @showTourEndWindow="showTourEnd"
         />
-        <schedule-generator-side-bar
+        <schedule-generate-side-bar
           v-if="loaded && !showToolsPage && !isProfileOpen && isScheduleGenerateOpen"
           selected-semester="Spring 2025"
           :generate-schedule-button-disabled="isScheduleGenerateButtonDisabled"
@@ -100,8 +100,8 @@ import SemesterView from '@/components/Semester/SemesterView.vue';
 import RequirementSideBar from '@/components/Requirements/RequirementSideBar.vue';
 import BottomBar from '@/components/BottomBar/BottomBar.vue';
 import NavBar from '@/components/NavBar.vue';
-import ScheduleGeneratorSideBar from '@/components/ScheduleGenerator/ScheduleGeneratorSideBar.vue';
-import ScheduleGenerateModal from '@/components/ScheduleGenerator/ScheduleGenerateModal.vue';
+import ScheduleGenerateSideBar from '@/components/ScheduleGenerate/ScheduleGenerateSideBar.vue';
+import ScheduleGenerateModal from '@/components/ScheduleGenerate/ScheduleGenerateModal.vue';
 import Onboarding from '@/components/Modals/Onboarding/Onboarding.vue';
 import TourWindow from '@/components/Modals/TourWindow.vue';
 import ToolsContainer from '@/containers/Tools.vue';
@@ -149,7 +149,7 @@ export default defineComponent({
   components: {
     BottomBar,
     NavBar,
-    ScheduleGeneratorSideBar,
+    ScheduleGenerateSideBar,
     Onboarding,
     ScheduleGenerateModal,
     RequirementSideBar,
