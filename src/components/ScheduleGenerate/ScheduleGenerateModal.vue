@@ -1,38 +1,38 @@
 <template>
   <div
-    class="generated-schedule"
+    class="schedule-generate"
     @click="checkClickOutside"
     ref="modalBackground"
-    data-cyId="generated-schedule"
+    data-cyId="schedule-generate"
   >
-    <div class="generated-schedule-main">
-      <div class="generated-schedule-content">
-        <div class="generated-schedule-cancel">
-          <button data-cyId="generated-schedule-cancel" @click="cancel">
+    <div class="schedule-generate-main">
+      <div class="schedule-generate-content">
+        <div class="schedule-generate-cancel">
+          <button data-cyId="schedule-generate-cancel" @click="cancel">
             <img
-              class="generated-schedule-cancel-icon"
+              class="schedule-generate-cancel-icon"
               src="@/assets/images/x.svg"
               alt="x to close modal"
             />
           </button>
         </div>
-        <div class="generated-schedule-top">
-          <div class="generated-schedule-header">
+        <div class="schedule-generate-top">
+          <div class="schedule-generate-header">
             <span
               ><img
-                class="generated-schedule-header-emoji"
+                class="schedule-generate-header-emoji"
                 src="@/assets/images/waveEmoji.svg"
                 alt="wave"
               />
               Say hello to your generated schedule!</span
             >
           </div>
-          <div class="generated-schedule-description">
+          <div class="schedule-generate-description">
             Please download before closing or it won't be saved!
           </div>
         </div>
       </div>
-      <div class="generated-schedule-bottom"></div>
+      <div class="schedule-generate-bottom"></div>
     </div>
   </div>
 </template>
@@ -63,7 +63,7 @@ button:hover {
 input {
   background-color: none;
 }
-.generated-schedule {
+.schedule-generate {
   padding: 1rem;
   width: 100%;
   &-main {
