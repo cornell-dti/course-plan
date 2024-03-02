@@ -63,7 +63,6 @@ export default defineComponent({
   emits: ['openScheduleGenerateModal'],
   methods: {
     openScheduleGenerateModal() {
-      this.menuOpen = false;
       this.$emit('openScheduleGenerateModal');
     },
   },

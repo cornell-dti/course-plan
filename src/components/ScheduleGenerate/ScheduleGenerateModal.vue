@@ -42,7 +42,6 @@ import { defineComponent } from 'vue';
 
 export default defineComponent({
   emits: ['closeScheduleGenerateModal'],
-  computed: {},
   methods: {
     cancel() {
       this.$emit('closeScheduleGenerateModal');
