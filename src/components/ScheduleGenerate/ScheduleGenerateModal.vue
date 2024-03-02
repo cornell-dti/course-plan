@@ -92,8 +92,8 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import Schedule from '@/components/Modals/GeneratedSchedule/Schedule.vue';
-import ScheduleCourses from '@/components/Modals/GeneratedSchedule/ScheduleCourses.vue';
+import Schedule from '@/components/ScheduleGenerator/Schedule.vue';
+import ScheduleCourses from '@/components/ScheduleGenerator/ScheduleCourses.vue';
 
 export default defineComponent({
   components: {
