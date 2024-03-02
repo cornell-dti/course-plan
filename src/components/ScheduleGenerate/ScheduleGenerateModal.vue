@@ -26,13 +26,13 @@
             Please download before closing or it won't be saved!
           </div>
         </div>
-        <div class="generated-schedule-body">
-          <div class="generated-schedule-section-courses">
-            <div class="generated-schedule-subHeader generated-schedule-subHeader--smallerIndent">
-              <span class="generated-schedule-subHeader--font">Your Courses</span>
+        <div class="schedule-generate-body">
+          <div class="schedule-generate-section-courses">
+            <div class="schedule-generate-subHeader schedule-generate-subHeader--smallerIndent">
+              <span class="schedule-generate-subHeader--font">Your Courses</span>
             </div>
-            <div class="generated-schedule-inputs">
-              <div class="generated-schedule-inputWrapper">
+            <div class="schedule-generate-inputs">
+              <div class="schedule-generate-inputWrapper">
                 <schedule-courses
                   :num-credits="12"
                   :classes="[
@@ -73,12 +73,12 @@
               </div>
             </div>
           </div>
-          <div class="generated-schedule-section-schedule">
-            <div class="generated-schedule-subHeader generated-schedule-subHeader--indent">
-              <span class="generated-schedule-subHeader--font">Fall 2024</span>
+          <div class="schedule-generate-section-schedule">
+            <div class="schedule-generate-subHeader schedule-generate-subHeader--indent">
+              <span class="schedule-generate-subHeader--font">Fall 2024</span>
             </div>
-            <div class="generated-schedule-inputs">
-              <div class="generated-schedule-inputWrapper">
+            <div class="schedule-generate-inputs">
+              <div class="schedule-generate-inputWrapper">
                 <schedule />
               </div>
             </div>
