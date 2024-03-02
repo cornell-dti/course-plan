@@ -10,7 +10,7 @@
       @cancelOnboarding="cancelOnboarding"
     />
     <schedule-generate-modal
-      class="dashboard-onboarding"
+      class="dashboard-modal"
       v-if="isScheduleGenerateModalOpen"
       @closeScheduleGenerateModal="closeScheduleGenerateModal"
     />
