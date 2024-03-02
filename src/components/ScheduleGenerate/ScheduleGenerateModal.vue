@@ -1,14 +1,9 @@
 <template>
-  <div
-    class="schedule-generate"
-    @click="checkClickOutside"
-    ref="modalBackground"
-    data-cyId="schedule-generate"
-  >
+  <div class="schedule-generate" @click="checkClickOutside" ref="modalBackground">
     <div class="schedule-generate-main">
       <div class="schedule-generate-content">
         <div class="schedule-generate-cancel">
-          <button data-cyId="schedule-generate-cancel" @click="cancel">
+          <button @click="cancel">
             <img
               class="schedule-generate-cancel-icon"
               src="@/assets/images/x.svg"
