@@ -27,7 +27,15 @@
       <div class="course-main">
         <div class="course-top">
           <div class="course-left">
-            <div class="course-code" data-cyId="courseCode">{{ courseObj.code }}</div>
+            <div
+              class="course-code"
+              data-cyId="courseCode"
+              :style="{
+                color: compact ? '#3d3d3d' : '#858585',
+              }"
+            >
+              {{ courseObj.code }}
+            </div>
             <course-caution
               v-if="!isReqCourse && compact"
               :course="courseObj"
@@ -186,7 +194,7 @@ export default defineComponent({
 
 .course {
   box-sizing: border-box;
-  border-radius: 0.5rem;
+  border-radius: 0.6rem;
   display: flex;
   flex-direction: row;
   background-color: $white;
@@ -219,7 +227,7 @@ export default defineComponent({
 
   &-color {
     width: $colored-grabber-width;
-    border-radius: 0.42rem 0 0 0.42rem;
+    border-radius: 0.52rem 0 0 0.52rem;
     background-color: var(--bg-color);
     display: flex;
     align-items: center;
@@ -260,12 +268,13 @@ export default defineComponent({
 
   &-code {
     font-size: 14px;
-    line-height: 17px;
+    line-height: 16px;
     color: $primaryGray;
   }
 
   &-name {
     font-size: 16px;
+    font-weight: bold;
     line-height: 19px;
     color: $primaryGray;
     margin-top: 0.25rem;
