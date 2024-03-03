@@ -3,8 +3,8 @@
     <div class="courseMenu-content">
       <div
         class="courseMenu-section"
-        @mouseover="setDisplayColors(true)"
-        @mouseleave="setDisplayColors(false)"
+        @click="toggleDisplayColors"
+        :class="{ 'is-active': displayColors }"
       >
         <div class="courseMenu-left">
           <img
@@ -54,8 +54,8 @@
       </div>
       <div
         class="courseMenu-section"
-        @mouseover="setDisplayEditCourseCredits(true)"
-        @mouseleave="setDisplayEditCourseCredits(false)"
+        @click="toggleDisplayEditCourseCredits"
+        :class="{ 'is-active': displayColors }"
         v-if="getCreditRange && getCreditRange[0] != getCreditRange[1]"
       >
         <div class="courseMenu-left">
@@ -159,6 +159,24 @@ export default defineComponent({
     'edit-course-credit': (credit: number) => typeof credit === 'number',
   },
   methods: {
+    toggleDisplayColors() {
+      this.displayColors = !this.displayColors;
+      if (this.displayColors) {
+        this.zIndexColors = 3;
+      } else {
+        this.zIndexColors = 1;
+      }
+      this.displayEditCourseCredits = false;
+    },
+    toggleDisplayEditCourseCredits() {
+      this.displayEditCourseCredits = !this.displayEditCourseCredits;
+      if (this.displayEditCourseCredits) {
+        this.zIndexEditCredits = 3;
+      } else {
+        this.zIndexEditCredits = 1;
+      }
+      this.displayColors = false;
+    },
     deleteCourse() {
       this.$emit('delete-course');
     },
@@ -242,6 +260,7 @@ export default defineComponent({
     width: 100%;
     &:hover,
     &:active,
+    &.is-active,
     &:focus {
       background-color: rgba(50, 160, 242, 0.15);
     }
