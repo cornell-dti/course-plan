@@ -49,7 +49,7 @@ import physRequirements, { physAdvisors } from './majors/phys';
 import spanishRequirements, { spanishAdvisors } from './majors/spanish';
 import psychRequirements, { psychAdvisors } from './majors/psych';
 import stsRequirements, { stsAdvisors } from './majors/sts';
-import vienRequirements from './majors/vien';
+import vienRequirements, { vienAdvisors } from './majors/vien';
 import aerospaceMinorRequirements, { aerospaceMinorAdvisors } from './minors/aerospace';
 import animalSciRequirements, { animalSciAdvisors } from './minors/animal-sci';
 import appliedMathMinorRequirements, { appliedMathMinorAdvisors } from './minors/applied-math';
