@@ -34,7 +34,7 @@
         <div class="navbar-buttonWrapper desktop">
           <button class="navbar-iconWrapper schedule-builder-icon full-opacity-on-hover" />
           <div class="navbar-iconText">
-            <span>Schedule Builder</span>
+            <span>Generate</span>
           </div>
         </div>
       </div>
@@ -197,6 +197,8 @@ $mobile-navbar-height: 4.5rem;
   &-iconText {
     display: flex;
     justify-content: center;
+    align-items: center; 
+    flex-direction: row;
     color: #808080;
   }
 

@@ -19,6 +19,7 @@ const featureFlagCheckers: FeatureFlagCheckers = registerFeatureFlagChecker(
   'ToggleRequirementsBarBtn',
   'Profile',
   'Schedule Generator'
+
   /* 'AddYourFeatureFlagNameHere' */
 );
 export default featureFlagCheckers;
