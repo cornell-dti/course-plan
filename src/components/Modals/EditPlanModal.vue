@@ -8,10 +8,12 @@
     @left-button-clicked="closeCurrentModal"
     @right-button-clicked="saveChanges"
     @plan-name="setPlanName"
+    @warn-state="isWarn"
     :isPlanModal="true"
     label="Name"
+    warning="A plan with that name already exists."
   >
-    <button class="editPlan-delete" @click="deletePlan">DELETE PLAN</button>
+    <button class="editPlan-delete" @click="deletePlan" :disabled="!canDelete">DELETE PLAN</button>
   </text-input-modal>
 </template>
 
@@ -33,7 +35,7 @@ export default defineComponent({
       typeof name === 'string' && typeof oldname === 'string',
   },
   data() {
-    return { isDisabled: false, shown: false, planName: '' };
+    return { isDisabled: false, shown: false, planName: '', warn: false };
   },
   methods: {
     closeCurrentModal() {
@@ -44,15 +46,22 @@ export default defineComponent({
       this.$emit('close-edit-modal');
     },
     saveChanges() {
-      this.$emit('edit-plan', this.planName, this.currPlan);
-      this.$emit('close-edit-modal');
+      if (!this.warn) {
+        this.$emit('edit-plan', this.planName, this.currPlan);
+        this.$emit('close-edit-modal');
+      }
     },
     deletePlan() {
-      this.$emit('delete-plan', this.currPlan);
-      this.$emit('close-edit-modal');
+      if (this.canDelete) {
+        this.$emit('delete-plan', this.currPlan);
+        this.$emit('close-edit-modal');
+      }
     },
     setPlanName(planName: string) {
       this.planName = planName;
+    },
+    isWarn(warn: boolean) {
+      this.warn = warn;
     },
   },
   computed: {
@@ -66,6 +75,9 @@ export default defineComponent({
     currPlan() {
       return store.state.currentPlan.name;
     },
+    canDelete() {
+      return store.state.plans.length > 1;
+    },
   },
 });
 </script>
@@ -76,9 +88,14 @@ export default defineComponent({
 .editPlan {
   &-delete {
     position: relative;
-    bottom: 0.5rem;
+    bottom: 0.25rem;
     width: 100%;
     color: $primary;
+    font-weight: 800;
+    :disabled {
+      color: $disabledGray;
+      cursor: not-allowed;
+    }
   }
 }
 
