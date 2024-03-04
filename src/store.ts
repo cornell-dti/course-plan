@@ -321,7 +321,7 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
       const { orderByNewest } = data;
       store.commit('setSemesters', plan.semesters);
       updateDoc(doc(fb.semestersCollection, simplifiedUser.email), {
-        plans: [plan],
+        plans: data.plans,
       });
       // if user hasn't yet chosen an ordering, choose true by default
       store.commit('setOrderByNewest', orderByNewest === undefined ? true : orderByNewest);

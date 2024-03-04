@@ -1,13 +1,16 @@
 <template>
   <div>
     <div class="multiplePlans-dropdown">
-      <div class="multiplePlans-dropdown-placeholder wrapper">
+      <div class="multiplePlans-dropdown-placeholder wrapper" @click="closeDropdownIfOpen()">
         <button>
           <img
             :src="editPlan"
             class="multiplePlans-dropdown-placeholder editimg"
             alt="edit plans"
-            @click="toggleEditPlan()"
+            @click="
+              toggleEditPlan();
+              closeDropdownIfOpen();
+            "
           />
         </button>
         <div class="multiplePlans-dropdown-placeholder plan">{{ currPlan }}</div>
@@ -16,14 +19,12 @@
           v-if="shown"
           alt="close dropdown"
           data-cyId="multiplePlans-dropdown-close"
-          @click="closeDropdownIfOpen()"
         />
         <img
           class="multiplePlans-dropdown-placeholder down-arrow"
           v-else
           alt="open dropdown"
           data-cyId="multiplePlans-dropdown-open"
-          @click="closeDropdownIfOpen()"
         />
       </div>
       <div
@@ -80,11 +81,14 @@ export default defineComponent({
       this.shown = !this.shown;
     },
     planClicked(plan: string) {
-      store.commit(
-        'setCurrentPlan',
-        store.state.plans.find(p => p.name === plan)
-      );
-      this.shown = !this.shown;
+      const filtered = this.plans.filter(p => p !== this.currPlan);
+      if (filtered.length > 0) {
+        store.commit(
+          'setCurrentPlan',
+          store.state.plans.find(p => p.name === plan)
+        );
+        this.shown = !this.shown;
+      }
     },
     toggleEditPlan() {
       this.$emit('open-edit-modal');

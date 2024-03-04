@@ -5,10 +5,13 @@
       <div class="textInput-wrapper">
         <input
           class="textInput-userinput"
-          maxlength="charLimit"
+          maxlength="15"
           v-model="planName"
           @input="rightPlanClicked"
         />
+        <div class="warning" v-if="ifWarn">
+          {{ warning }}
+        </div>
       </div>
       <slot />
     </div>
@@ -18,23 +21,31 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import TeleportModal from '@/components/Modals/TeleportModal.vue';
+import store from '@/store';
 
 export default defineComponent({
   props: {
-    charLimit: { type: Number, default: 100 },
     label: { type: String, default: '' },
+    warning: { type: String, default: '' },
   },
   components: { TeleportModal },
   emits: {
     'plan-name': (planName: string) => typeof planName === 'string',
+    'warn-state': (warn: boolean) => typeof warn === 'boolean',
   },
   methods: {
     rightPlanClicked(): void {
       this.$emit('plan-name', this.planName);
+      this.$emit('warn-state', this.ifWarn);
     },
   },
   data() {
     return { isDisabled: false, shown: false, planName: '' };
+  },
+  computed: {
+    ifWarn() {
+      return store.state.plans.some(plan => plan.name === this.planName);
+    },
   },
 });
 </script>
@@ -57,6 +68,7 @@ export default defineComponent({
     position: relative;
     width: 100%;
     height: 2rem;
+    padding-left: 0.5rem;
   }
 }
 
@@ -71,5 +83,11 @@ export default defineComponent({
   &--flex {
     display: flex;
   }
+}
+
+.warning {
+  color: $primary;
+  position: relative;
+  top: 0.5rem;
 }
 </style>

@@ -177,11 +177,6 @@ interface FullClassRosterCourseWithUniqueID extends CornellCourseRosterCourseFul
   readonly uniqueID: number;
 }
 
-type Plan = {
-  readonly name: string;
-  readonly semesters: readonly FirestoreSemester[];
-};
-
 // college and grad are optional fields: grad can be undefined if the user hasn't selected a grad program, and college can be undefined if the user has only selected a grad program.
 type AppOnboardingData = {
   readonly gradYear: string;

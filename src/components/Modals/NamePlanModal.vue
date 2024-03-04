@@ -5,10 +5,12 @@
     left-button-text="Back"
     right-button-text="Add Plan"
     label="Name"
+    warning="A plan with that name already exists."
     @plan-name="copyPlanName"
     @modal-closed="closeCurrentModal"
     @left-button-clicked="backCopyPlan"
     @right-button-clicked="addPlan"
+    @warn-state="isWarn"
   >
   </text-input-modal>
 </template>
@@ -31,7 +33,7 @@ export default defineComponent({
       typeof name === 'string' && typeof copysem === 'string',
   },
   data() {
-    return { isDisabled: false, shown: false, planName: '' };
+    return { isDisabled: false, shown: false, planName: '', warn: false };
   },
   methods: {
     closeCurrentModal() {
@@ -40,19 +42,21 @@ export default defineComponent({
     closeDropdownIfOpen() {
       this.shown = !this.shown;
     },
-    planClicked(plan: string) {
-      if (this.plans.length !== 1) this.currPlan = plan;
-    },
     backCopyPlan() {
       this.$emit('open-copy-modal');
       this.$emit('close-name-modal');
     },
     addPlan() {
-      this.$emit('add-plan', this.planName, this.selectedPlanCopy);
-      this.$emit('close-name-modal');
+      if (!this.warn) {
+        this.$emit('add-plan', this.planName, this.selectedPlanCopy);
+        this.$emit('close-name-modal');
+      }
     },
     copyPlanName(planName: string) {
       this.planName = planName;
+    },
+    isWarn(warn: boolean) {
+      this.warn = warn;
     },
   },
   computed: {
