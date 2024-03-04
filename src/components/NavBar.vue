@@ -34,7 +34,7 @@
         <div class="navbar-buttonWrapper desktop">
           <button class="navbar-iconWrapper schedule-builder-icon full-opacity-on-hover" />
           <div class="navbar-iconText">
-            <span>Generate</span>
+            <span>Builder</span>
           </div>
         </div>
       </div>
@@ -144,7 +144,7 @@ $mobile-navbar-height: 4.5rem;
 
 .navbar {
   background-color: #f7f7f7;
-  width: 5.5rem;
+  width: 4.5rem;
   height: 100vh;
   display: flex;
   position: sticky;
@@ -153,7 +153,6 @@ $mobile-navbar-height: 4.5rem;
   flex-direction: column;
   justify-content: space-between;
   padding-top: 2.25rem;
-  padding-left: 1.5rem;
   padding-bottom: 2rem;
 
   &-iconWrapper {
@@ -162,32 +161,26 @@ $mobile-navbar-height: 4.5rem;
     background-repeat: no-repeat;
     background-size: auto;
     background-position: center;
-    justify-content: center;
   }
 
   &-buttonWrapper {
     cursor: pointer;
     margin-bottom: 1.5rem;
-    justify-content: center;
     &:hover,
     &:focus,
     &:active {
       .navbar-iconText {
         color: #0d7acb;
       }
-
       .plan-icon {
         background-image: url('@/assets/images/navbar/planIconBlue.svg');
       }
-
       .tools-icon {
         background-image: url('@/assets/images/navbar/toolboxIconBlue.svg');
       }
-
       .profile-icon {
         background-image: url('@/assets/images/navbar/profileIconBlue.svg');
       }
-
       .schedule-builder-icon {
         background-image: url('@/assets/images/navbar/scheduleBuilderIconBlue.svg');
       }
@@ -197,8 +190,6 @@ $mobile-navbar-height: 4.5rem;
   &-iconText {
     display: flex;
     justify-content: center;
-    align-items: center; 
-    flex-direction: row;
     color: #808080;
   }
 
