@@ -31,6 +31,12 @@
             <span>Profile</span>
           </div>
         </div>
+        <div class="navbar-buttonWrapper desktop">
+          <button class="navbar-iconWrapper schedule-builder-icon full-opacity-on-hover" />
+          <div class="navbar-iconText">
+            <span>Builder</span>
+          </div>
+        </div>
       </div>
       <div class="navbar-bottom">
         <button
@@ -59,7 +65,11 @@
         </button>
         <button class="nav-mobile-button" data-cyId="navbar-editProfile" @click="openProfile">
           <div class="navbar-iconWrapper profile-mobile-icon" />
-          <span class="nav-mobile-button-text">Edit Profile</span>
+          <span class="nav-mobile-button-text">Profile</span>
+        </button>
+        <button class="nav-mobile-button" @click="openProfile">
+          <div class="navbar-iconWrapper schedule-builder-mobile-icon" />
+          <span class="nav-mobile-button-text">Builder</span>
         </button>
         <button class="nav-mobile-button" @click="logout">
           <div class="navbar-iconWrapper logout-mobile-icon" />
@@ -175,6 +185,9 @@ $mobile-navbar-height: 4.5rem;
       .profile-icon {
         background-image: url('@/assets/images/navbar/profileIconBlue.svg');
       }
+      .schedule-builder-icon {
+        background-image: url('@/assets/images/navbar/scheduleBuilderIconBlue.svg');
+      }
     }
   }
 
@@ -203,6 +216,10 @@ $mobile-navbar-height: 4.5rem;
 
   .profile-icon {
     background-image: url('@/assets/images/navbar/profileIcon.svg');
+  }
+
+  .schedule-builder-icon {
+    background-image: url('@/assets/images/navbar/scheduleBuilderIcon.svg');
   }
 
   .requirements-bar {
@@ -263,6 +280,10 @@ $mobile-navbar-height: 4.5rem;
 
   .profile-mobile-icon {
     background-image: url('@/assets/images/navbar/profile-mobile-icon.svg');
+  }
+
+  .schedule-builder-mobile-icon {
+    background-image: url('@/assets/images/navbar/schedule-builder-mobile.svg');
   }
 
   .logout-mobile-icon {
