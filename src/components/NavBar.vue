@@ -32,7 +32,10 @@
           </div>
         </div>
         <div class="navbar-buttonWrapper desktop">
-          <button class="navbar-iconWrapper schedule-builder-icon full-opacity-on-hover" />
+          <button
+            class="navbar-iconWrapper schedule-builder-icon full-opacity-on-hover"
+            @click="openScheduleGenerate"
+          />
           <div class="navbar-iconText">
             <span>Builder</span>
           </div>
@@ -99,7 +102,13 @@ export default defineComponent({
   props: {
     isDisplayingRequirementsMobile: { type: Boolean, required: true },
   },
-  emits: ['openPlan', 'openTools', 'toggleRequirementsMobile', 'openProfile'],
+  emits: [
+    'openPlan',
+    'openTools',
+    'toggleRequirementsMobile',
+    'openProfile',
+    'openScheduleGenerate',
+  ],
   data() {
     return {
       menuOpen: false,
@@ -125,6 +134,10 @@ export default defineComponent({
     openProfile() {
       this.menuOpen = false;
       this.$emit('openProfile');
+    },
+    openScheduleGenerate() {
+      this.menuOpen = false;
+      this.$emit('openScheduleGenerate');
     },
     toggleRequirementsMobile() {
       this.menuOpen = false;
