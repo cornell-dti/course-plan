@@ -18,12 +18,13 @@
           @openPlan="openPlan"
           @openTools="openTools"
           @openProfile="openProfile"
+          @openScheduleGenerate="openScheduleGenerate"
           @toggleRequirementsMobile="toggleRequirementsMobile"
         />
         <requirement-side-bar
           class="dashboard-reqs"
           data-cyId="reqsSidebar"
-          v-if="loaded && !showToolsPage && !isProfileOpen"
+          v-if="loaded && !showToolsPage && !isProfileOpen && !isScheduleGenerateOpen"
           :isMobile="isTablet"
           :isDisplayingMobile="requirementsIsDisplayedMobile"
           :isMinimized="requirementsIsMinimized"
@@ -31,6 +32,11 @@
           :startTour="startTour"
           @showTourEndWindow="showTourEnd"
           :startNewFeatureTour="startNewFeatureTour"
+        />
+        <schedule-generator-side-bar
+          v-if="loaded && !showToolsPage && !isProfileOpen && isScheduleGenerateOpen"
+          selected-semester="Spring 2025"
+          :generate-schedule-button-disabled="isScheduleGenerateButtonDisabled"
         />
         <bottom-bar
           v-if="!(isTablet && requirementsIsDisplayedMobile) && !showToolsPage && !isProfileOpen"
@@ -89,6 +95,7 @@ import SemesterView from '@/components/Semester/SemesterView.vue';
 import RequirementSideBar from '@/components/Requirements/RequirementSideBar.vue';
 import BottomBar from '@/components/BottomBar/BottomBar.vue';
 import NavBar from '@/components/NavBar.vue';
+import ScheduleGeneratorSideBar from '@/components/ScheduleGenerator/ScheduleGeneratorSideBar.vue';
 import Onboarding from '@/components/Modals/Onboarding/Onboarding.vue';
 import TourWindow from '@/components/Modals/TourWindow.vue';
 import ToolsContainer from '@/containers/Tools.vue';
@@ -136,6 +143,7 @@ export default defineComponent({
   components: {
     BottomBar,
     NavBar,
+    ScheduleGeneratorSideBar,
     Onboarding,
     RequirementSideBar,
     SemesterView,
@@ -161,6 +169,8 @@ export default defineComponent({
       showTourEndWindow: false,
       showToolsPage: false,
       isProfileOpen: false,
+      isScheduleGenerateButtonDisabled: false,
+      isScheduleGenerateOpen: false,
     };
   },
   computed: {
@@ -249,11 +259,18 @@ export default defineComponent({
     openPlan() {
       this.showToolsPage = false;
       this.isProfileOpen = false;
+      this.isScheduleGenerateOpen = false;
     },
 
     openTools() {
       this.showToolsPage = true;
       this.isProfileOpen = false;
+    },
+
+    openScheduleGenerate() {
+      this.showToolsPage = false;
+      this.isProfileOpen = false;
+      this.isScheduleGenerateOpen = true;
     },
 
     editProfile() {
