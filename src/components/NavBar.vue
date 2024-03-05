@@ -67,7 +67,7 @@
           <div class="navbar-iconWrapper profile-mobile-icon" />
           <span class="nav-mobile-button-text">Profile</span>
         </button>
-        <button class="nav-mobile-button" data-cyId="navbar-editProfile" @click="openProfile">
+        <button class="nav-mobile-button" @click="openProfile">
           <div class="navbar-iconWrapper schedule-builder-mobile-icon" />
           <span class="nav-mobile-button-text">Builder</span>
         </button>
