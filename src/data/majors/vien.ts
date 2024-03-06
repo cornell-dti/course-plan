@@ -49,6 +49,24 @@ const vienRequirements: readonly CollegeOrMajorRequirement[] = [
     perSlotMinCount: [1, 1],
     slotNames: ['PLBIO 2410', 'PLSCS 2600'],
   },
+
+  {
+    // TODO: crosslisting for VIEN 4700/4710 (then edit perSlotMinCount)
+    // TODO: maybe I should separate this into multiple modules instead of one... yeah i shouold LMAO
+    name: 'Viticulture & Enology Core',
+    description: 'some description',
+    source: 'https://courses.cornell.edu/preview_program.php?catoid=55&poid=28379#Coursework',
+    checker: includesWithSubRequirements(
+      ['VIEN 1104', 'VIEN 1105'],
+      ['VIEN 2204', 'VIEN 2205', 'FDSC 2110', 'VIEN 2400'],
+      ['VIEN 3610'],
+      ['VIEN 4700', 'VIEN 4710', 'VIEN 4980'],
+      ['VIEN 3300', 'VIEN 3200']
+    ),
+    fulfilledBy: 'courses',
+    perSlotMinCount: [2, 4, 1, 3, 1],
+    slotNames: ['Course 1XXX', 'Course 2XXX', 'VIEN 3610', 'Course 4XXX', 'VIEN 3300 or VIEN 3200'],
+  },
 ];
 
 export default vienRequirements;
