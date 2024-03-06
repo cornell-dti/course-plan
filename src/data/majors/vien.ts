@@ -30,6 +30,15 @@ const vienRequirements: readonly CollegeOrMajorRequirement[] = [
     perSlotMinCount: [1, 1, 1],
     slotNames: ['CHEM 1560', 'CHEM 1570', 'Biochemistry'],
   },
+  {
+    name: 'Statitics',
+    description: 'some description',
+    source: 'https://courses.cornell.edu/preview_program.php?catoid=55&poid=28379#Coursework',
+    checker: includesWithSubRequirements(['NTRES 3130', 'STSCI 2200', 'STSCI 2100', 'STSCI 2150']),
+    fulfilledBy: 'courses',
+    perSlotMinCount: [1],
+    slotNames: ['Introductory Statistics Course'],
+  },
 ];
 
 export default vienRequirements;
