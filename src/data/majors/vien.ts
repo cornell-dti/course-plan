@@ -31,13 +31,23 @@ const vienRequirements: readonly CollegeOrMajorRequirement[] = [
     slotNames: ['CHEM 1560', 'CHEM 1570', 'Biochemistry'],
   },
   {
-    name: 'Statitics',
+    // TODO: NTRES/STSCI 2200, should I keep both or just replace one with the other?
+    name: 'Statistics',
     description: 'some description',
     source: 'https://courses.cornell.edu/preview_program.php?catoid=55&poid=28379#Coursework',
     checker: includesWithSubRequirements(['NTRES 3130', 'STSCI 2200', 'STSCI 2100', 'STSCI 2150']),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
     slotNames: ['Introductory Statistics Course'],
+  },
+  {
+    name: 'Plant Science',
+    description: 'some description',
+    source: 'https://courses.cornell.edu/preview_program.php?catoid=55&poid=28379#Coursework',
+    checker: includesWithSubRequirements(['PLBIO 2410'], ['PLSCS 2600']),
+    fulfilledBy: 'courses',
+    perSlotMinCount: [1, 1],
+    slotNames: ['PLBIO 2410', 'PLSCS 2600'],
   },
 ];
 
