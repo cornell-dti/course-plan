@@ -32,6 +32,7 @@ const vienRequirements: readonly CollegeOrMajorRequirement[] = [
   },
   {
     // TODO: NTRES/STSCI 2200, should I keep both or just replace one with the other?
+    // look if these are the same course or not
     name: 'Statistics',
     description: 'some description',
     source: 'https://courses.cornell.edu/preview_program.php?catoid=55&poid=28379#Coursework',
@@ -51,8 +52,7 @@ const vienRequirements: readonly CollegeOrMajorRequirement[] = [
   },
 
   {
-    // TODO: crosslisting for VIEN 4700/4710 (then edit perSlotMinCount)
-    // TODO: maybe I should separate this into multiple modules instead of one... yeah i shouold LMAO
+    // TODO: VIEN 4700/4710 (lecture and lab based must be taken together)
     name: 'Viticulture & Enology Core',
     description: 'some description',
     source: 'https://courses.cornell.edu/preview_program.php?catoid=55&poid=28379#Coursework',
@@ -66,6 +66,37 @@ const vienRequirements: readonly CollegeOrMajorRequirement[] = [
     fulfilledBy: 'courses',
     perSlotMinCount: [2, 4, 1, 3, 1],
     slotNames: ['Course 1XXX', 'Course 2XXX', 'VIEN 3610', 'Course 4XXX', 'VIEN 3300 or VIEN 3200'],
+  },
+  {
+    name: 'Major Electives',
+    description:
+      'Need a mininum of 17 credits. At least 5 credits of major electives must be VIEN classes. There are Electives with Enology Focus, and Electives with Viticulture Focus.',
+    source: 'https://courses.cornell.edu/preview_program.php?catoid=55&poid=28379#Coursework',
+    checker: includesWithSubRequirements(
+      ['VIEN 2310', 'VIEN 4310'],
+      ['VIEN 2360', 'VIEN 4360'],
+      ['VIEN 2340', 'VIEN 4340'],
+      ['VIEN 4500', 'VIEN 4510'],
+      [
+        'BIOMI 2911',
+        'FDSC 2206',
+        'FDSC 3940',
+        'FDSC 3950',
+        'FDSC 4040',
+        'FDSC 4100',
+        'FDSC 4110',
+        'FDSC 4170',
+        'FDSC 4190',
+        'FDSC 4220',
+        'VIEN 4400',
+        'HADM 4430',
+        'VIEN 4650',
+        'VIEN 5660',
+      ]
+    ),
+    checkerWarning: `We will not list of major electives for this major. Please check with the Course of Studies for all major electives for this major.`,
+    fulfilledBy: 'credits',
+    perSlotMinCount: [17],
   },
 ];
 
