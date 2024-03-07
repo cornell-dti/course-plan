@@ -86,6 +86,13 @@ export function allowCourseDoubleCountingBetweenRequirements(
   requirementA: RequirementWithIDSourceType,
   requirementB: RequirementWithIDSourceType
 ): boolean {
+  // console.log("Entered allow course double counting thing")
+  if (!requirementA || !requirementB) {
+    // If requirement is undefined, handle accordingly
+    return false; // Or any other value, or skip this item
+  }
+  // console.log(requirementA)
+  // console.log(requirementB)
   const allowCourseDoubleCounting =
     requirementA.allowCourseDoubleCounting || requirementB.allowCourseDoubleCounting || false;
 
@@ -118,6 +125,17 @@ export function allowCourseDoubleCountingBetweenRequirements(
   return false;
 }
 
+const reqWithSourceInfo = (
+  req: DecoratedCollegeOrMajorRequirement,
+  sourceType: 'Major' | 'Minor',
+  sourceSpecificName: string
+) => ({
+  ...req,
+  id: `${sourceType}-${sourceSpecificName}-${req.name}`,
+  sourceType,
+  sourceSpecificName,
+});
+
 /**
  * Get the requirements for a provided collection of majors/minors
  *
@@ -125,20 +143,61 @@ export function allowCourseDoubleCountingBetweenRequirements(
  * @param fields the names of the majors/minors
  * @returns An array of requirements corresponding to every field of study in `fields`
  */
-const fieldOfStudyReqs = (sourceType: 'Major' | 'Minor', fields: readonly string[]) => {
+const fieldOfStudyReqs = (
+  sourceType: 'Major' | 'Minor',
+  fields: readonly string[],
+  entryYear: string
+) => {
   const jsonKey = sourceType.toLowerCase() as 'major' | 'minor';
   const fieldRequirements = requirementJson[jsonKey];
+
   return fields
     .map(field => {
       const fieldRequirement = fieldRequirements[field];
-      return fieldRequirement?.requirements.map(
-        it =>
-          (({
-            ...it,
-            id: `${sourceType}-${field}-${it.name}`,
-            sourceType,
-            sourceSpecificName: field,
-          } as const) ?? [])
+      const requirementMigrations = fieldRequirement?.migrations || [];
+
+      // Filter migrations based on entryYear
+      const filteredMigrations = requirementMigrations.filter(
+        migration => parseInt(entryYear, 10) <= migration.entryYear
+      );
+
+      // Collect all requirements corresponding to 'Add' migrations in one array
+      const addMigrationNewValues = filteredMigrations
+        .filter(migration => migration.type === 'Add')
+        .map(migration => migration.newValue);
+
+      return (
+        fieldRequirement?.requirements
+          // Find migrations that match existing requirements - must be 'Delete' or 'Modify'
+          .filter(it => {
+            const matchingMigration = filteredMigrations.find(
+              migration => migration.fieldName === it.name
+            );
+
+            // If a reqiurement matches a 'Delete' migration, return false (filter it out of overall requirements)
+            if (matchingMigration) {
+              if (matchingMigration.type === 'Delete') {
+                return false;
+              }
+            }
+            return true;
+          })
+          .map(it => {
+            const matchingMigration = filteredMigrations.find(
+              migration => migration.fieldName === it.name
+            );
+
+            // If a requirement matches a 'Modify' migration, map it to it's new value
+            if (matchingMigration) {
+              if (matchingMigration.type === 'Modify') {
+                return matchingMigration.newValue as DecoratedCollegeOrMajorRequirement;
+              }
+            }
+            return it;
+          })
+          .concat(addMigrationNewValues.filter(Boolean) as DecoratedCollegeOrMajorRequirement[])
+          // Use helper to map requirements to requirements with source info
+          .map(it => reqWithSourceInfo(it, sourceType, field))
       );
     })
     .flat();
@@ -181,6 +240,7 @@ export function getUserRequirements({
   college,
   major: majors,
   minor: minors,
+  entranceYear,
   grad,
 }: AppOnboardingData): readonly RequirementWithIDSourceType[] {
   // check university & college & major & minor requirements
@@ -201,8 +261,8 @@ export function getUserRequirements({
       )
     : [];
   const collegeReqs = college ? specializedForCollege(college, majors) : [];
-  const majorReqs = fieldOfStudyReqs('Major', majors);
-  const minorReqs = fieldOfStudyReqs('Minor', minors);
+  const majorReqs = fieldOfStudyReqs('Major', majors, entranceYear);
+  const minorReqs = fieldOfStudyReqs('Minor', minors, entranceYear);
   const gradReqs = grad
     ? requirementJson.grad[grad].requirements.map(
         it =>
@@ -215,7 +275,9 @@ export function getUserRequirements({
       )
     : [];
   // flatten all requirements into single array
-  return [uniReqs, collegeReqs, majorReqs, minorReqs, gradReqs].flat();
+  return [uniReqs, collegeReqs, majorReqs, minorReqs, ...gradReqs]
+    .flat()
+    .filter(Boolean) as RequirementWithIDSourceType[];
 }
 
 /**

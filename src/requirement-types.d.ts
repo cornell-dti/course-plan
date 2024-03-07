@@ -96,6 +96,10 @@ type DecoratedCollegeOrMajorRequirement = RequirementCommon &
     readonly conditions?: Readonly<RequirementCourseConditions>;
   }>;
 
+type MigrationWithDecoratedRequirement = RequirementMigration & {
+  newValue?: DecoratedCollegeOrMajorRequirement;
+};
+
 /**
  * CourseTaken is the data type used in requirement computation.
  * It's a significantly simplified version of FirestoreSemesterCourse to make it easy to mock for

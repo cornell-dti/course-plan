@@ -5,6 +5,7 @@ import {
   RequirementChecker,
   Course,
   MutableMajorRequirements,
+  RequirementMigration,
 } from './types';
 import sourceRequirements, { colleges } from '../data';
 import { NO_FULFILLMENTS_COURSE_ID, SPECIAL_COURSES } from '../data/constants';
@@ -36,6 +37,9 @@ type InitialRequirementDecorator = (
 type RequirementDecorator = (
   requirement: DecoratedCollegeOrMajorRequirement
 ) => DecoratedCollegeOrMajorRequirement;
+type MigrationRequirementDecorator = (
+  migration: RequirementMigration
+) => MigrationWithDecoratedRequirement;
 
 const getEligibleCoursesFromRequirementCheckers = (
   checkers: readonly RequirementChecker[]
@@ -294,6 +298,22 @@ const sortRequirementCourses: RequirementDecorator = requirement => {
   }
 };
 
+const decorateMigrationValue: MigrationRequirementDecorator = migration => {
+  if (migration.newValue) {
+    const decoratedValue = decorateRequirementWithCourses(migration.newValue);
+    const fullyDecoratedMigration = {
+      ...migration,
+      newValue: decorateRequirementWithExams(decoratedValue),
+    };
+    return fullyDecoratedMigration;
+  }
+  return migration;
+};
+
+const decorateMigrations = (
+  migrations: readonly RequirementMigration[]
+): readonly MigrationWithDecoratedRequirement[] => migrations.map(decorateMigrationValue);
+
 const generateDecoratedRequirementsJson = (): DecoratedRequirementsJson => {
   const { university, college, major, minor, grad } = sourceRequirements;
   type MutableDecoratedJson = {
@@ -355,15 +375,25 @@ const generateDecoratedRequirementsJson = (): DecoratedRequirementsJson => {
     };
   });
   Object.entries(major).forEach(([majorName, majorRequirement]) => {
-    const { requirements, advisors, specializations, abbrev: abbr, ...rest } = majorRequirement;
+    const {
+      requirements,
+      migrations,
+      advisors,
+      specializations,
+      abbrev: abbr,
+      ...rest
+    } = majorRequirement;
     decoratedJson.major[majorName] = {
       ...rest,
       requirements: decorateRequirements(requirements),
+      migrations: migrations
+        ? (decorateMigrations(migrations) as RequirementMigration[])
+        : undefined,
       specializations: specializations && decorateRequirements(specializations),
     };
   });
   Object.entries(minor).forEach(([minorName, minorRequirement]) => {
-    const { requirements, advisors, abbrev: abbr, ...rest } = minorRequirement;
+    const { requirements, migrations, advisors, abbrev: abbr, ...rest } = minorRequirement;
     decoratedJson.minor[minorName] = {
       ...rest,
       requirements: decorateRequirements(requirements),
