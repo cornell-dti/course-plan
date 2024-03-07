@@ -2,11 +2,11 @@ import { CollegeOrMajorRequirement } from '../../requirements/types';
 import { includesWithSubRequirements } from '../../requirements/checkers';
 import { AdvisorGroup } from '../../tools/advisors/types';
 
-// from here
 const vienRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'Physical Science Core',
-    description: 'some description',
+    description:
+      'To fulfill the Physical Science Core, must complete one Intro to biology course, PLSCI 1420, and BIOMI 2900.',
     source: 'https://courses.cornell.edu/preview_program.php?catoid=55&poid=28379#Coursework',
     checker: includesWithSubRequirements(
       ['BIOMG 1350', 'BIOG 1140', 'BIOG 1440', 'BIOEE 1610', 'BIOEE 1780'],
@@ -19,7 +19,8 @@ const vienRequirements: readonly CollegeOrMajorRequirement[] = [
   },
   {
     name: 'Chemistry',
-    description: 'some description',
+    description:
+      'To fulfill the Chemistry requirement, must complete CHEM 1560, CHEM 1570, and one of the following: BIOMG 3300, BIOMG 3310, BIOMG 3350, NS 3200. BIOMG 3320 or BIOMG 3330 are not counted towards the Biochemistry requirement.',
     source: 'https://courses.cornell.edu/preview_program.php?catoid=55&poid=28379#Coursework',
     checker: includesWithSubRequirements(
       ['CHEM 1560'],
@@ -34,7 +35,8 @@ const vienRequirements: readonly CollegeOrMajorRequirement[] = [
     // TODO: NTRES/STSCI 2200, should I keep both or just replace one with the other?
     // look if these are the same course or not
     name: 'Statistics',
-    description: 'some description',
+    description:
+      'To fulfill the Statistics core, must complete one of the following: NTRES 3130/STSCI 2200, STSCI 2100, and STSCI 2150.',
     source: 'https://courses.cornell.edu/preview_program.php?catoid=55&poid=28379#Coursework',
     checker: includesWithSubRequirements(['NTRES 3130', 'STSCI 2200', 'STSCI 2100', 'STSCI 2150']),
     fulfilledBy: 'courses',
@@ -43,7 +45,7 @@ const vienRequirements: readonly CollegeOrMajorRequirement[] = [
   },
   {
     name: 'Plant Science',
-    description: 'some description',
+    description: 'To fulfill the Plant Science core, must complete PLBIO 2410 and PLSCS 2600.',
     source: 'https://courses.cornell.edu/preview_program.php?catoid=55&poid=28379#Coursework',
     checker: includesWithSubRequirements(['PLBIO 2410'], ['PLSCS 2600']),
     fulfilledBy: 'courses',
@@ -53,8 +55,10 @@ const vienRequirements: readonly CollegeOrMajorRequirement[] = [
 
   {
     // TODO: VIEN 4700/4710 (lecture and lab based must be taken together)
+    // Perhaps add a unique checker for the lecture lab requirement since they aren't many lecture/lab co-requisites.
     name: 'Viticulture & Enology Core',
-    description: 'some description',
+    description:
+      'All major requirements must be taken for a letter grade, except when not an option, or if taken during Spring 2020 or Fall 2020. All required V&E Core and Major Elective courses must be completed with a C- or better. Both lecture and laboratory section must be taken for major elective credit. Students taking only the lecture will not receive credit for the course towards completion of the major.',
     source: 'https://courses.cornell.edu/preview_program.php?catoid=55&poid=28379#Coursework',
     checker: includesWithSubRequirements(
       ['VIEN 1104', 'VIEN 1105'],
@@ -70,30 +74,9 @@ const vienRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'Major Electives',
     description:
-      'Need a mininum of 17 credits. At least 5 credits of major electives must be VIEN classes. There are Electives with Enology Focus, and Electives with Viticulture Focus.',
+      'Need a mininum of 17 credits. At least 5 credits of major electives must be VIEN classes. There are Electives with Enology Focus, and Electives with Viticulture Focus. All required V&E Core and Major Elective courses must be completed with a C- or better. Both lecture and laboratory section must be taken for major elective credit. Students taking only the lecture will not receive credit for the course towards completion of the major.',
     source: 'https://courses.cornell.edu/preview_program.php?catoid=55&poid=28379#Coursework',
-    checker: includesWithSubRequirements(
-      ['VIEN 2310', 'VIEN 4310'],
-      ['VIEN 2360', 'VIEN 4360'],
-      ['VIEN 2340', 'VIEN 4340'],
-      ['VIEN 4500', 'VIEN 4510'],
-      [
-        'BIOMI 2911',
-        'FDSC 2206',
-        'FDSC 3940',
-        'FDSC 3950',
-        'FDSC 4040',
-        'FDSC 4100',
-        'FDSC 4110',
-        'FDSC 4170',
-        'FDSC 4190',
-        'FDSC 4220',
-        'VIEN 4400',
-        'HADM 4430',
-        'VIEN 4650',
-        'VIEN 5660',
-      ]
-    ),
+    checker: includesWithSubRequirements([]),
     checkerWarning: `We will not list of major electives for this major. Please check with the Course of Studies for all major electives for this major.`,
     fulfilledBy: 'credits',
     perSlotMinCount: [17],
@@ -103,5 +86,5 @@ const vienRequirements: readonly CollegeOrMajorRequirement[] = [
 export default vienRequirements;
 
 export const vienAdvisors: AdvisorGroup = {
-  advisors: [{ name: 'John Doe', email: 'johndoe@cornell.edu' }],
+  advisors: [{ name: 'Kathleen Arnink', email: 'kja1@cornell.edu' }],
 };
