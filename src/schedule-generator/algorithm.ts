@@ -2,9 +2,16 @@ import Requirement from './requirement';
 import Course from './course';
 import GeneratorRequest from './generator-request';
 
+type GeneratedScheduleOutput = {
+  semester: string;
+  schedule: Map<string, Course[]>;
+  fulfilledRequirements: Map<Course, Requirement[]>;
+  totalCredits: number;
+};
+
 export default class ScheduleGenerator {
   // TODO: output meaningful type.
-  static generateSchedule(request: GeneratorRequest): void {
+  static generateSchedule(request: GeneratorRequest): GeneratedScheduleOutput {
     const semester = request.getSemester();
     let creditLimit = request.getCreditLimit();
     const classes = request.getClasses();
@@ -33,21 +40,25 @@ export default class ScheduleGenerator {
       }
     });
 
+    return { semester, schedule, fulfilledRequirements, totalCredits };
+  }
+
+  static prettyPrintSchedule(output: GeneratedScheduleOutput): void {
     // Print generated schedule
     console.log('************************');
-    console.log(`Generated Schedule for ${semester}:`);
-    schedule.forEach((courses, timeSlot) => {
+    console.log(`Generated Schedule for ${output.semester}:`);
+    output.schedule.forEach((courses, timeSlot) => {
       console.log(`Time Slot: ${timeSlot}`);
       courses.forEach(course => {
         const fulfilledReqs = ScheduleGenerator.getFulfilledRequirements(
           course,
-          fulfilledRequirements
+          output.fulfilledRequirements
         );
         console.log(`- ${course.getName()} (${fulfilledReqs}, ${course.getCredits()} credits)`);
       });
     });
     console.log();
-    console.log(`Total Credits in the Schedule: ${totalCredits}`);
+    console.log(`Total Credits in the Schedule: ${output.totalCredits}`);
   }
 
   private static isTimeSlotOccupied(schedule: Map<string, Course[]>, timeSlot: string): boolean {

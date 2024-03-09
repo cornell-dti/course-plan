@@ -104,7 +104,8 @@ class Testing {
     const interestingRequest = new GeneratorRequest(courses, requirements, 9, 'Fall');
 
     // Generate schedule with request
-    ScheduleGenerator.generateSchedule(interestingRequest);
+    const output = ScheduleGenerator.generateSchedule(interestingRequest);
+    ScheduleGenerator.prettyPrintSchedule(output);
   }
 }
 
