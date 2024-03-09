@@ -1,0 +1,17 @@
+// This file is only here for the purpose of being able to run `testing.ts` with `ts-node`.
+// Eventually, once we have frontend tests or whatnot, we can remove this file (as well as `testing.ts`
+// for that matter).
+
+// If you get some complaint about `ts-node` not being defined you should just install it globally:
+// `npm install -g ts-node typescript "@types/node"`,
+
+{
+  "ts-node": {
+    "compilerOptions": {
+      "module": "commonjs"
+    }
+  },
+  "compilerOptions": {
+    "module": "esnext"
+  }
+}
