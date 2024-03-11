@@ -5,12 +5,12 @@
     left-button-text="Back"
     right-button-text="Add Plan"
     label="Name"
-    warning="A plan with that name already exists."
     @plan-name="copyPlanName"
     @modal-closed="closeCurrentModal"
     @left-button-clicked="backCopyPlan"
     @right-button-clicked="addPlan"
     @warn-state="isWarn"
+    :rightButtonIsDisabled="canSave"
   >
   </text-input-modal>
 </template>
@@ -33,7 +33,7 @@ export default defineComponent({
       typeof name === 'string' && typeof copysem === 'string',
   },
   data() {
-    return { isDisabled: false, shown: false, planName: '', warn: false };
+    return { isDisabled: false, shown: false, planName: '', warn: true };
   },
   methods: {
     closeCurrentModal() {
@@ -69,6 +69,9 @@ export default defineComponent({
     },
     currPlan() {
       return store.state.currentPlan.name;
+    },
+    canSave() {
+      return this.warn;
     },
   },
 });

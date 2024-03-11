@@ -9,9 +9,9 @@
     @right-button-clicked="saveChanges"
     @plan-name="setPlanName"
     @warn-state="isWarn"
+    :rightButtonIsDisabled="canSave"
     :isPlanModal="true"
     label="Name"
-    warning="A plan with that name already exists."
   >
     <button class="editPlan-delete" @click="deletePlan" :disabled="!canDelete">DELETE PLAN</button>
   </text-input-modal>
@@ -35,7 +35,7 @@ export default defineComponent({
       typeof name === 'string' && typeof oldname === 'string',
   },
   data() {
-    return { isDisabled: false, shown: false, planName: '', warn: false };
+    return { isDisabled: false, shown: false, planName: '', warn: true };
   },
   methods: {
     closeCurrentModal() {
@@ -52,10 +52,8 @@ export default defineComponent({
       }
     },
     deletePlan() {
-      if (this.canDelete) {
-        this.$emit('delete-plan', this.currPlan);
-        this.$emit('close-edit-modal');
-      }
+      this.$emit('delete-plan', this.currPlan);
+      this.$emit('close-edit-modal');
     },
     setPlanName(planName: string) {
       this.planName = planName;
@@ -78,6 +76,9 @@ export default defineComponent({
     canDelete() {
       return store.state.plans.length > 1;
     },
+    canSave() {
+      return this.warn;
+    },
   },
 });
 </script>
@@ -92,9 +93,12 @@ export default defineComponent({
     width: 100%;
     color: $primary;
     font-weight: 800;
-    :disabled {
+    text-decoration: underline;
+    &:disabled {
       color: $disabledGray;
-      cursor: not-allowed;
+      &:hover {
+        opacity: 1;
+      }
     }
   }
 }
