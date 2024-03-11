@@ -8,10 +8,8 @@
           maxlength="15"
           v-model="planName"
           @input="rightPlanClicked"
+          @keydown.delete="rightPlanClicked"
         />
-        <div class="warning" v-if="ifWarn">
-          {{ warning }}
-        </div>
       </div>
       <slot />
     </div>
@@ -26,7 +24,6 @@ import store from '@/store';
 export default defineComponent({
   props: {
     label: { type: String, default: '' },
-    warning: { type: String, default: '' },
   },
   components: { TeleportModal },
   emits: {
@@ -44,7 +41,7 @@ export default defineComponent({
   },
   computed: {
     ifWarn() {
-      return store.state.plans.some(plan => plan.name === this.planName);
+      return store.state.plans.some(plan => plan.name === this.planName) || !this.planName;
     },
   },
 });
