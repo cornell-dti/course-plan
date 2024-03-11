@@ -503,7 +503,7 @@ export default defineComponent({
 .add-plan-button {
   float: right;
   background: $sangBlue;
-  border-radius: 8px;
+  border-radius: 3px;
   min-height: 2.5rem;
   min-width: 6.5rem;
   color: $white;
