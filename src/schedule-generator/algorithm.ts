@@ -1,10 +1,10 @@
 import Requirement from './requirement';
-import Course from './course';
+import Course, { TimeSlot } from './course';
 import GeneratorRequest from './generator-request';
 
 type GeneratedScheduleOutput = {
   semester: string;
-  schedule: Map<string, Course[]>;
+  schedule: Map<TimeSlot, Course[]>;
   fulfilledRequirements: Map<Course, Requirement[]>;
   totalCredits: number;
 };
@@ -16,7 +16,7 @@ export default class ScheduleGenerator {
     let creditLimit = request.getCreditLimit();
     const classes = request.getClasses();
 
-    const schedule: Map<string, Course[]> = new Map();
+    const schedule: Map<TimeSlot, Course[]> = new Map();
     const fulfilledRequirements: Map<Course, Requirement[]> = new Map();
 
     // Randomly shuffle the list of available courses
@@ -29,6 +29,7 @@ export default class ScheduleGenerator {
         course.getTimeSlots().forEach(timeSlot => {
           if (
             !ScheduleGenerator.isTimeSlotOccupied(schedule, timeSlot) &&
+            !fulfilledRequirements.has(course) && // prevent duplication
             creditLimit - course.getCredits() >= 0
           ) {
             ScheduleGenerator.addToSchedule(schedule, course, timeSlot);
@@ -48,7 +49,7 @@ export default class ScheduleGenerator {
     console.log('************************');
     console.log(`Generated Schedule for ${output.semester}:`);
     output.schedule.forEach((courses, timeSlot) => {
-      console.log(`Time Slot: ${timeSlot}`);
+      console.log(`Time Slot: ${timeSlot.start} – ${timeSlot.end}`);
       courses.forEach(course => {
         const fulfilledReqs = ScheduleGenerator.getFulfilledRequirements(
           course,
@@ -61,14 +62,30 @@ export default class ScheduleGenerator {
     console.log(`Total Credits in the Schedule: ${output.totalCredits}`);
   }
 
-  private static isTimeSlotOccupied(schedule: Map<string, Course[]>, timeSlot: string): boolean {
-    return schedule.has(timeSlot);
+  private static isTimeSlotOccupied(
+    schedule: Map<TimeSlot, Course[]>,
+    timeSlot: TimeSlot
+  ): boolean {
+    // Check for overlap.
+    const gap = 15 * 60 * 1000; // 15 minutes in milliseconds
+    const timeSlotStartMS = new Date(`01/01/1970 ${timeSlot.start}`).getTime();
+    const timeSlotEndMS = new Date(`01/01/1970 ${timeSlot.end}`).getTime();
+
+    for (const slot of Array.from(schedule.keys())) {
+      const slotStartMS = new Date(`01/01/1970 ${slot.start}`).getTime();
+      const slotEndMS = new Date(`01/01/1970 ${slot.end}`).getTime();
+      if (timeSlotStartMS < slotEndMS + gap && slotStartMS < timeSlotEndMS + gap) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   private static addToSchedule(
-    schedule: Map<string, Course[]>,
+    schedule: Map<TimeSlot, Course[]>,
     course: Course,
-    timeSlot: string
+    timeSlot: TimeSlot
   ): void {
     const coursesInTimeSlot = schedule.get(timeSlot) || [];
     coursesInTimeSlot.push(course);

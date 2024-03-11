@@ -15,7 +15,12 @@ class Testing {
     const cs1110 = new Course(
       'CS1110',
       3,
-      ['Time Slot 1'],
+      [
+        {
+          start: '10:00 AM',
+          end: '11:30 AM',
+        },
+      ],
       ['Fall', 'Spring'],
       [coreClass, techElective]
     );
@@ -23,7 +28,12 @@ class Testing {
     const orie3300 = new Course(
       'ORIE3300',
       4,
-      ['Time Slot 1'],
+      [
+        {
+          start: '11:30 AM',
+          end: '1:00 PM',
+        },
+      ],
       ['Fall', 'Spring'],
       [coreClass, techElective]
     );
@@ -31,7 +41,16 @@ class Testing {
     const info4430 = new Course(
       'INFO4430',
       3,
-      ['Time Slot 1', 'Time Slot 2'],
+      [
+        {
+          start: '10:00 AM',
+          end: '11:30 AM',
+        },
+        {
+          start: '11:30 AM',
+          end: '1:00 PM',
+        },
+      ],
       ['Fall'],
       [techElective]
     );
@@ -39,7 +58,12 @@ class Testing {
     const engrd2700 = new Course(
       'ENGRD2700',
       3,
-      ['Time Slot 2'],
+      [
+        {
+          start: '1:00 PM',
+          end: '2:30 PM',
+        },
+      ],
       ['Fall', 'Spring'],
       [engrdReq, probabilityReq]
     );
@@ -47,17 +71,38 @@ class Testing {
     const additionalCourse1 = new Course(
       'XYZ123',
       3,
-      ['Time Slot 1'],
+      [
+        {
+          start: '10:00 AM',
+          end: '11:30 AM',
+        },
+      ],
       ['Fall', 'Spring'],
       [coreClass]
     );
 
-    const additionalCourse2 = new Course('ABC456', 4, ['Time Slot 2'], ['Spring'], [techElective]);
+    const additionalCourse2 = new Course(
+      'ABC456',
+      4,
+      [
+        {
+          start: '11:30 AM',
+          end: '1:00 PM',
+        },
+      ],
+      ['Spring'],
+      [techElective]
+    );
 
     const randomCourse1 = new Course(
       'XYZ789',
       3,
-      ['Time Slot 3'],
+      [
+        {
+          start: '1:00 PM',
+          end: '2:30 PM',
+        },
+      ],
       ['Fall', 'Spring'],
       [techElective]
     );
@@ -65,7 +110,12 @@ class Testing {
     const randomCourse2 = new Course(
       'DEF321',
       4,
-      ['Time Slot 2'],
+      [
+        {
+          start: '10:00 AM',
+          end: '11:30 AM',
+        },
+      ],
       ['Spring'],
       [coreClass, probabilityReq]
     );
@@ -73,12 +123,47 @@ class Testing {
     const randomCourse3 = new Course(
       'PQR987',
       3,
-      ['Time Slot 1', 'Time Slot 3'],
+      [
+        {
+          start: '11:30 AM',
+          end: '1:00 PM',
+        },
+        {
+          start: '1:00 PM',
+          end: '2:30 PM',
+        },
+      ],
       ['Fall'],
       [engrdReq, techElective]
     );
 
-    const randomCourse4 = new Course('LMN654', 4, ['Time Slot 3'], ['Spring'], [techElective]);
+    // Enough time to walk to this class.
+    const randomCourse4 = new Course(
+      'LMN654',
+      4,
+      [
+        {
+          start: '8:55 AM',
+          end: '9:45 AM',
+        },
+      ],
+      ['Spring'],
+      [techElective]
+    );
+
+    // Enough time to walk to this class.
+    const randomCourse5 = new Course(
+      'RAC555',
+      2,
+      [
+        {
+          start: '8:55 AM',
+          end: '9:45 AM',
+        },
+      ],
+      ['Fall'],
+      [techElective, probabilityReq, engrdReq, coreClass]
+    );
 
     const courses: Course[] = [
       cs1110,
@@ -91,6 +176,7 @@ class Testing {
       randomCourse2,
       randomCourse3,
       randomCourse4,
+      randomCourse5,
     ];
 
     const requirements: Requirement[] = [

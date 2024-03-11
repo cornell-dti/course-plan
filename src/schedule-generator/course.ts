@@ -1,11 +1,16 @@
 import Requirement from './requirement';
 
+export type TimeSlot = {
+  start: string; // e.g. '10:00 AM'
+  end: string; // e.g. '11:30 AM'
+};
+
 export default class Course {
   private name: string;
 
   private credits: number;
 
-  private timeSlots: string[];
+  private timeSlots: TimeSlot[];
 
   private offeredSemesters: string[];
 
@@ -14,7 +19,7 @@ export default class Course {
   constructor(
     name = '',
     credits = 0,
-    timeSlots: string[] = [],
+    timeSlots: TimeSlot[] = [],
     offeredSemesters: string[] = [],
     requirements: Requirement[] = []
   ) {
@@ -29,7 +34,7 @@ export default class Course {
     return this.name;
   }
 
-  getTimeSlots(): string[] {
+  getTimeSlots(): TimeSlot[] {
     return this.timeSlots;
   }
 
@@ -49,7 +54,7 @@ export default class Course {
     this.name = name;
   }
 
-  setTimeSlots(timeSlots: string[]): void {
+  setTimeSlots(timeSlots: TimeSlot[]): void {
     this.timeSlots = timeSlots;
   }
 
