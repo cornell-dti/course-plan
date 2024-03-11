@@ -9,6 +9,11 @@
       @onboard="endOnboarding"
       @cancelOnboarding="cancelOnboarding"
     />
+    <schedule-generate-modal
+      class="dashboard-onboarding"
+      v-if="isScheduleGenerateModalOpen"
+      @closeScheduleGenerateModal="closeScheduleGenerateModal"
+    />
     <div class="dashboard-mainView">
       <div class="dashboard-menus">
         <nav-bar
@@ -32,10 +37,11 @@
           :startTour="startTour"
           @showTourEndWindow="showTourEnd"
         />
-        <schedule-generator-side-bar
+        <schedule-generate-side-bar
           v-if="loaded && !showToolsPage && !isProfileOpen && isScheduleGenerateOpen"
           selected-semester="Spring 2025"
           :generate-schedule-button-disabled="isScheduleGenerateButtonDisabled"
+          @openScheduleGenerateModal="openScheduleGenerateModal"
         />
         <bottom-bar
           v-if="!(isTablet && requirementsIsDisplayedMobile) && !showToolsPage && !isProfileOpen"
@@ -94,7 +100,8 @@ import SemesterView from '@/components/Semester/SemesterView.vue';
 import RequirementSideBar from '@/components/Requirements/RequirementSideBar.vue';
 import BottomBar from '@/components/BottomBar/BottomBar.vue';
 import NavBar from '@/components/NavBar.vue';
-import ScheduleGeneratorSideBar from '@/components/ScheduleGenerator/ScheduleGeneratorSideBar.vue';
+import ScheduleGenerateSideBar from '@/components/ScheduleGenerate/ScheduleGenerateSideBar.vue';
+import ScheduleGenerateModal from '@/components/ScheduleGenerate/ScheduleGenerateModal.vue';
 import Onboarding from '@/components/Modals/Onboarding/Onboarding.vue';
 import TourWindow from '@/components/Modals/TourWindow.vue';
 import ToolsContainer from '@/containers/Tools.vue';
@@ -142,8 +149,9 @@ export default defineComponent({
   components: {
     BottomBar,
     NavBar,
-    ScheduleGeneratorSideBar,
+    ScheduleGenerateSideBar,
     Onboarding,
+    ScheduleGenerateModal,
     RequirementSideBar,
     SemesterView,
     TourWindow,
@@ -169,6 +177,7 @@ export default defineComponent({
       isProfileOpen: false,
       isScheduleGenerateButtonDisabled: false,
       isScheduleGenerateOpen: false,
+      isScheduleGenerateModalOpen: false,
     };
   },
   computed: {
@@ -280,6 +289,15 @@ export default defineComponent({
       } else {
         this.editProfile();
       }
+    },
+
+    openScheduleGenerateModal() {
+      // TODO: do feature flag check
+      this.isScheduleGenerateModalOpen = true;
+    },
+
+    closeScheduleGenerateModal() {
+      this.isScheduleGenerateModalOpen = false;
     },
 
     closeWelcome() {
