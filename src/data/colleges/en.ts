@@ -211,6 +211,7 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
       'COMM 3030',
       'COMM 3020',
       'ENGRC 3023',
+      'ENGRC 3025',
       'ENGRC 3027',
       'ENGRC 2640',
       'ENGRC 3152',
