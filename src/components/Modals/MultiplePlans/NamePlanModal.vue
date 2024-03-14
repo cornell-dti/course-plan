@@ -79,8 +79,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
-@import '@/components/Modals/PlanModalDropdown.scss';
-
+@import '@/components/Modals/MultiplePlans/PlanModalDropdown.scss';
 .content-plan {
   width: 20rem;
 }
