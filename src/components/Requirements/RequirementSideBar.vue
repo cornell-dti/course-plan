@@ -218,7 +218,7 @@ type Data = {
 };
 
 // This section will be revisited when we try to make first-time tooltips
-const tour = introJs().start();
+const tour = introJs();
 tour.setOptions({
   exitOnEsc: false,
   doneLabel: 'Next',
@@ -472,6 +472,21 @@ export default defineComponent({
     toggleMinimized() {
       this.$emit('toggleMinimized');
     },
+  },
+  mounted() {
+    const newFeatureTour = introJs();
+    newFeatureTour.setOptions({
+      steps: [
+        {
+          element: '.multiple-plans',
+          intro: `<div class="introjs-tooltipTop"><div class="introjs-customTitle">New Feature Alert</div></div>
+          <div class = "introjs-bodytext">Create multiple plans for your 4 year plan to find the one best suited for you. Your journey, your way!</div>`,
+        },
+      ],
+      doneLabel: 'Done',
+    });
+    // check firestore if the user has seen it already
+    newFeatureTour.start();
   },
 });
 </script>
