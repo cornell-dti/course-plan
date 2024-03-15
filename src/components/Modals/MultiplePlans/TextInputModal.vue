@@ -81,10 +81,4 @@ export default defineComponent({
     display: flex;
   }
 }
-
-.warning {
-  color: $primary;
-  position: relative;
-  top: 0.5rem;
-}
 </style>
