@@ -187,11 +187,12 @@ import {
   editPlan,
   deletePlan,
   addPlan,
+  updateSawNewFeature,
 } from '@/global-firestore-data';
-import AddPlanModal from '@/components/Modals/AddPlanModal.vue';
-import CopyPlanModal from '../Modals/CopyPlanModal.vue';
-import NamePlanModal from '../Modals/NamePlanModal.vue';
-import EditPlanModal from '../Modals/EditPlanModal.vue';
+import AddPlanModal from '@/components/Modals/MultiplePlans/AddPlanModal.vue';
+import CopyPlanModal from '../Modals/MultiplePlans/CopyPlanModal.vue';
+import NamePlanModal from '../Modals/MultiplePlans/NamePlanModal.vue';
+import EditPlanModal from '../Modals/MultiplePlans/EditPlanModal.vue';
 
 export type ShowAllCourses = {
   readonly name: string;
@@ -218,7 +219,7 @@ type Data = {
 };
 
 // This section will be revisited when we try to make first-time tooltips
-const tour = introJs().start();
+const tour = introJs();
 tour.setOptions({
   exitOnEsc: false,
   doneLabel: 'Next',
@@ -249,6 +250,7 @@ export default defineComponent({
     isDisplayingMobile: { type: Boolean, required: true },
     isMobile: { type: Boolean, required: true },
     isMinimized: { type: Boolean, required: true },
+    startNewFeatureTour: { type: Boolean, required: true },
   },
   emits: ['showTourEndWindow', 'toggleMinimized'],
   data(): Data {
@@ -285,6 +287,24 @@ export default defineComponent({
         // resets tourStep in case skipped at step = 1
         this.tourStep = 0;
       });
+    },
+    startNewFeatureTour() {
+      console.log('startnewFeatureTour');
+      console.log(this.startNewFeatureTour);
+      const newFeatureTour = introJs();
+      newFeatureTour.setOptions({
+        steps: [
+          {
+            element: '.multiple-plans',
+            intro: `<div class="introjs-tooltipTop"><div class="introjs-customTitle">New Feature Alert</div></div>
+          <div class = "introjs-bodytext">Create multiple plans for your 4 year plan to find the one best suited for you. Your journey, your way!</div>`,
+          },
+        ],
+        doneLabel: 'Done',
+      });
+      // check firestore if the user has seen it already
+      newFeatureTour.start();
+      updateSawNewFeature(true);
     },
   },
   computed: {
@@ -503,7 +523,7 @@ export default defineComponent({
 .add-plan-button {
   float: right;
   background: $sangBlue;
-  border-radius: 8px;
+  border-radius: 3px;
   min-height: 2.5rem;
   min-width: 6.5rem;
   color: $white;

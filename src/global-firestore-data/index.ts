@@ -11,7 +11,11 @@ export const cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData = (
 ): FirestoreSemesterCourse =>
   cornellCourseRosterCourseToFirebaseSemesterCourse(course, store, incrementUniqueID);
 
-export { setAppOnboardingData, deleteTransferCredit } from './user-onboarding-data';
+export {
+  setAppOnboardingData,
+  deleteTransferCredit,
+  updateSawNewFeature,
+} from './user-onboarding-data';
 export {
   editPlans,
   editPlan,

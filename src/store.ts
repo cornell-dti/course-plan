@@ -75,6 +75,7 @@ const store: TypedVuexStore = new TypedVuexStore({
       grad: '',
       exam: [],
       tookSwim: 'no',
+      sawNewFeature: false,
     },
     orderByNewest: true,
     derivedCoursesData: {
@@ -179,6 +180,9 @@ const store: TypedVuexStore = new TypedVuexStore({
       const editedPlans = state.plans.map(plan => (plan === state.currentPlan ? editedPlan : plan));
       state.plans = editedPlans;
       state.currentPlan = editedPlan;
+    },
+    setSawNewFeature(state: VuexStoreState, seen: boolean) {
+      state.onboardingData.sawNewFeature = seen;
     },
   },
 });
@@ -321,7 +325,7 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
       const { orderByNewest } = data;
       store.commit('setSemesters', plan.semesters);
       updateDoc(doc(fb.semestersCollection, simplifiedUser.email), {
-        plans: [plan],
+        plans: data.plans,
       });
       // if user hasn't yet chosen an ordering, choose true by default
       store.commit('setOrderByNewest', orderByNewest === undefined ? true : orderByNewest);

@@ -36,7 +36,7 @@ type FirestoreSemester = {
 };
 
 type FirestoreSemestersData = {
-  readonly plans?: readonly Plan[];
+  readonly plans: readonly Plan[];
   readonly semesters: readonly FirestoreSemester[];
   readonly orderByNewest: boolean;
 };
@@ -65,6 +65,7 @@ type FirestoreOnboardingUserData = {
   readonly gradPrograms: readonly FirestoreCollegeMajorMinorOrGrad[];
   readonly exam: readonly FirestoreTransferExam[];
   readonly tookSwim: 'yes' | 'no';
+  sawNewFeature: boolean;
 };
 
 type FirestoreCourseOptInOptOutChoices = {
@@ -177,11 +178,6 @@ interface FullClassRosterCourseWithUniqueID extends CornellCourseRosterCourseFul
   readonly uniqueID: number;
 }
 
-type Plan = {
-  readonly name: string;
-  readonly semesters: readonly FirestoreSemester[];
-};
-
 // college and grad are optional fields: grad can be undefined if the user hasn't selected a grad program, and college can be undefined if the user has only selected a grad program.
 type AppOnboardingData = {
   readonly gradYear: string;
@@ -194,6 +190,7 @@ type AppOnboardingData = {
   readonly grad?: string;
   readonly exam: readonly FirestoreTransferExam[];
   readonly tookSwim: 'yes' | 'no';
+  sawNewFeature: boolean;
 };
 
 type AppBottomBarCourse = {

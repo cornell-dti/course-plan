@@ -8,10 +8,13 @@
     @left-button-clicked="closeCurrentModal"
     @right-button-clicked="saveChanges"
     @plan-name="setPlanName"
+    @warn-state="isWarn"
+    :placeholderPlan="currPlan"
+    :rightButtonIsDisabled="canSave"
     :isPlanModal="true"
     label="Name"
   >
-    <button class="editPlan-delete" @click="deletePlan">DELETE PLAN</button>
+    <button class="editPlan-delete" @click="deletePlan" :disabled="!canDelete">DELETE PLAN</button>
   </text-input-modal>
 </template>
 
@@ -33,7 +36,7 @@ export default defineComponent({
       typeof name === 'string' && typeof oldname === 'string',
   },
   data() {
-    return { isDisabled: false, shown: false, planName: '' };
+    return { isDisabled: false, shown: false, planName: '', warn: true };
   },
   methods: {
     closeCurrentModal() {
@@ -44,8 +47,10 @@ export default defineComponent({
       this.$emit('close-edit-modal');
     },
     saveChanges() {
-      this.$emit('edit-plan', this.planName, this.currPlan);
-      this.$emit('close-edit-modal');
+      if (!this.warn) {
+        this.$emit('edit-plan', this.planName, this.currPlan);
+        this.$emit('close-edit-modal');
+      }
     },
     deletePlan() {
       this.$emit('delete-plan', this.currPlan);
@@ -53,6 +58,9 @@ export default defineComponent({
     },
     setPlanName(planName: string) {
       this.planName = planName;
+    },
+    isWarn(warn: boolean) {
+      this.warn = warn;
     },
   },
   computed: {
@@ -66,19 +74,33 @@ export default defineComponent({
     currPlan() {
       return store.state.currentPlan.name;
     },
+    canDelete() {
+      return store.state.plans.length > 1;
+    },
+    canSave() {
+      return this.warn;
+    },
   },
 });
 </script>
 
 <style lang="scss">
-@import '@/components/Modals/PlanModalDropdown.scss';
+@import '@/components/Modals/MultiplePlans/PlanModalDropdown.scss';
 
 .editPlan {
   &-delete {
     position: relative;
-    bottom: 0.5rem;
+    bottom: 0.25rem;
     width: 100%;
     color: $primary;
+    font-weight: 800;
+    text-decoration: underline;
+    &:disabled {
+      color: $disabledGray;
+      &:hover {
+        opacity: 1;
+      }
+    }
   }
 }
 

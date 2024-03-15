@@ -9,6 +9,9 @@
     @modal-closed="closeCurrentModal"
     @left-button-clicked="backCopyPlan"
     @right-button-clicked="addPlan"
+    @warn-state="isWarn"
+    :placeholderPlan="selectedPlan"
+    :rightButtonIsDisabled="canSave"
   >
   </text-input-modal>
 </template>
@@ -31,7 +34,7 @@ export default defineComponent({
       typeof name === 'string' && typeof copysem === 'string',
   },
   data() {
-    return { isDisabled: false, shown: false, planName: '' };
+    return { isDisabled: false, shown: false, planName: '', warn: true };
   },
   methods: {
     closeCurrentModal() {
@@ -40,19 +43,21 @@ export default defineComponent({
     closeDropdownIfOpen() {
       this.shown = !this.shown;
     },
-    planClicked(plan: string) {
-      if (this.plans.length !== 1) this.currPlan = plan;
-    },
     backCopyPlan() {
       this.$emit('open-copy-modal');
       this.$emit('close-name-modal');
     },
     addPlan() {
-      this.$emit('add-plan', this.planName, this.selectedPlanCopy);
-      this.$emit('close-name-modal');
+      if (!this.warn) {
+        this.$emit('add-plan', this.planName, this.selectedPlanCopy);
+        this.$emit('close-name-modal');
+      }
     },
     copyPlanName(planName: string) {
       this.planName = planName;
+    },
+    isWarn(warn: boolean) {
+      this.warn = warn;
     },
   },
   computed: {
@@ -66,12 +71,18 @@ export default defineComponent({
     currPlan() {
       return store.state.currentPlan.name;
     },
+    canSave() {
+      return this.warn;
+    },
+    selectedPlan() {
+      return this.selectedPlanCopy;
+    },
   },
 });
 </script>
 
 <style lang="scss">
-@import '@/components/Modals/PlanModalDropdown.scss';
+@import '@/components/Modals/MultiplePlans/PlanModalDropdown.scss';
 
 .content-plan {
   width: 20rem;
