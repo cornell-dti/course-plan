@@ -7,7 +7,6 @@
           class="textInput-userinput"
           maxlength="15"
           v-model="planName"
-          :placeholder="placeholderPlan"
           @input="rightPlanClicked"
           @keydown.delete="rightPlanClicked"
         />
@@ -25,7 +24,6 @@ import store from '@/store';
 export default defineComponent({
   props: {
     label: { type: String, default: '' },
-    placeholderPlan: { type: String, default: '' },
   },
   components: { TeleportModal },
   emits: {
@@ -68,9 +66,6 @@ export default defineComponent({
     width: 100%;
     height: 2rem;
     padding-left: 0.5rem;
-    &::placeholder {
-      color: $darkPlaceholderGray;
-    }
   }
 }
 

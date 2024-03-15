@@ -9,7 +9,6 @@
     @right-button-clicked="saveChanges"
     @plan-name="setPlanName"
     @warn-state="isWarn"
-    :placeholderPlan="currPlan"
     :rightButtonIsDisabled="canSave"
     :isPlanModal="true"
     label="Name"

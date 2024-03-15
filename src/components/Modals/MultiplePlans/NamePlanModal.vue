@@ -10,7 +10,6 @@
     @left-button-clicked="backCopyPlan"
     @right-button-clicked="addPlan"
     @warn-state="isWarn"
-    :placeholderPlan="currPlan"
     :rightButtonIsDisabled="canSave"
   >
   </text-input-modal>
