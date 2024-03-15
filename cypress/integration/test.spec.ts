@@ -17,6 +17,12 @@ before('Visit site logged in', () => {
   cy.wait(5000); // ensure the page has time to load
 });
 
+// Test to confirm that the new user walkthrough works as expected
+// Click through the initial explanation, then the 4 following steps, and finally the finishing page
+it('Click through new feature tour', () => {
+  cy.get('.introjs-nextbutton').click();
+});
+
 // Delete existing semesters to ensure existing data does not mess with tests
 it('Delete all existing semesters, if any exist', () => {
   const semesterMenus = '[data-cyId=semesterMenu]';
