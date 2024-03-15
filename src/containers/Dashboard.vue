@@ -29,7 +29,6 @@
           :isMinimized="requirementsIsMinimized"
           @toggleMinimized="toggleMinimizeRequirements"
           :startTour="startTour"
-          :startNewFeatureTour="startNewFeatureTour"
           @showTourEndWindow="showTourEnd"
         />
         <bottom-bar
@@ -102,7 +101,6 @@ import {
   mediumBreakpoint,
   veryLargeBreakpoint,
 } from '@/assets/constants/scss-variables';
-import { trackRouter } from 'vue-gtag-next';
 
 const smallBreakpointPixels = parseInt(
   smallBreakpoint.substring(0, smallBreakpoint.length - 2),
@@ -158,7 +156,6 @@ export default defineComponent({
       maxBottomBarTabs: getMaxButtonBarTabs(),
       welcomeHidden: false,
       startTour: false,
-      startNewFeatureTour: true,
       showTourEndWindow: false,
       showToolsPage: false,
       isProfileOpen: false,
@@ -241,12 +238,6 @@ export default defineComponent({
       if (!this.startTour) {
         this.startTour = true;
         this.welcomeHidden = false;
-      }
-    },
-
-    startFeatureTour() {
-      if (!this.startNewFeatureTour) {
-        this.startNewFeatureTour = true;
       }
     },
 

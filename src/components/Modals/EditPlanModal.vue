@@ -84,7 +84,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
-@import '@/components/Modals/MultiplePlans/PlanModalDropdown.scss';
+@import '@/components/Modals/PlanModalDropdown.scss';
 
 .editPlan {
   &-delete {
