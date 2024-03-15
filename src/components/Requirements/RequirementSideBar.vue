@@ -188,10 +188,10 @@ import {
   deletePlan,
   addPlan,
 } from '@/global-firestore-data';
-import AddPlanModal from '@/components/Modals/AddPlanModal.vue';
-import CopyPlanModal from '../Modals/CopyPlanModal.vue';
-import NamePlanModal from '../Modals/NamePlanModal.vue';
-import EditPlanModal from '../Modals/EditPlanModal.vue';
+import AddPlanModal from '@/components/Modals/MultiplePlans/AddPlanModal.vue';
+import CopyPlanModal from '../Modals/MultiplePlans/CopyPlanModal.vue';
+import NamePlanModal from '../Modals/MultiplePlans/NamePlanModal.vue';
+import EditPlanModal from '../Modals/MultiplePlans/EditPlanModal.vue';
 
 export type ShowAllCourses = {
   readonly name: string;
