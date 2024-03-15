@@ -75,7 +75,7 @@ export default defineComponent({
       return this.warn;
     },
     selectedPlan() {
-      return this.selectedPlanCopy;
+      return `${this.selectedPlanCopy} copy`;
     },
   },
 });
