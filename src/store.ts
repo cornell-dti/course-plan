@@ -175,7 +175,7 @@ const store: TypedVuexStore = new TypedVuexStore({
     setSemesters(state: VuexStoreState, semesters: readonly FirestoreSemester[]) {
       const editedPlan: Plan = {
         name: state.currentPlan.name,
-        semesters: sortedSemesters(semesters),
+        semesters: sortedSemesters(semesters, state.orderByNewest),
       };
       const editedPlans = state.plans.map(plan => (plan === state.currentPlan ? editedPlan : plan));
       state.plans = editedPlans;
@@ -201,14 +201,15 @@ const autoRecomputeDerivedData = (): (() => void) =>
         );
         break;
       }
-      case 'setSemesters': {
+      case 'setSemesters' || 'setPlans': {
         const allCourseSet = new Set<string>();
         const duplicatedCourseCodeSet = new Set<string>();
         const courseMap: Record<number, FirestoreSemesterCourse> = {};
         const courseToSemesterMap: Record<number, FirestoreSemester> = {};
         (state.plans.length === 0
           ? []
-          : state.plans.find(p => p === state.currentPlan)?.semesters ?? state.plans[0].semesters
+          : state.plans.find(p => p.name === state.currentPlan.name)?.semesters ??
+            state.plans[0].semesters
         ).forEach(semester => {
           semester.courses.forEach(course => {
             if (isPlaceholderCourse(course)) {
@@ -241,7 +242,8 @@ const autoRecomputeDerivedData = (): (() => void) =>
       mutation.type === 'setSemesters' ||
       mutation.type === 'setToggleableRequirementChoices' ||
       mutation.type === 'setOverriddenFulfillmentChoices' ||
-      mutation.type === 'setCurrentPlan'
+      mutation.type === 'setCurrentPlan' ||
+      mutation.type === 'setPlans'
     ) {
       if (state.onboardingData.college !== '') {
         store.commit(
@@ -249,7 +251,7 @@ const autoRecomputeDerivedData = (): (() => void) =>
           computeGroupedRequirementFulfillmentReports(
             state.plans.length === 0
               ? []
-              : state.plans.find(p => p === state.currentPlan)?.semesters ??
+              : state.plans.find(p => p.name === state.currentPlan.name)?.semesters ??
                   state.plans[0].semesters,
             state.onboardingData,
             state.toggleableRequirementChoices,
