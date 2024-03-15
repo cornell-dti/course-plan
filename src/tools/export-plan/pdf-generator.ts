@@ -135,7 +135,7 @@ const generatePDF = async (): Promise<void> => {
   doc.setTextColor('#000000');
 
   // Rendering tables now
-  const sems = trimEmptySems(sortedSemesters(store.state.semesters, false));
+  const sems = trimEmptySems(sortedSemesters(store.getters.getCurrentPlanSemesters, false));
   let startct = Math.max(firstTableY, programY + 20);
 
   const emojiMap = {
