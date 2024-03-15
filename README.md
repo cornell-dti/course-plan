@@ -22,6 +22,17 @@ Then access http://localhost:8080/
 
 ## Contributors
 
+## SP24 
+- **Hannah Zhou** - Developer
+- **Nidhi Mylavarapu** - Developer
+- **Simon Ilincev** - Developer
+- **Zak Kent** - Dev Advisor
+- **Joanna Chen** - Designer
+- **Elizabeth Tang** - TPM
+- **Andrew Xu** - TPM
+- **Kaylin Chan** - PM
+- **Ilyssa Yan** - APM
+
 ### FA23
 - **Nidhi Mylavarapu** - Developer
 - **Simon Ilincev** - Developer
@@ -29,6 +40,7 @@ Then access http://localhost:8080/
 - **Miranda Yu** - Developer
 - **Elizabeth Tang** - Developer
 - **Pablo Raigoza** - Developer
+- **Andrew Xu** - Developer
 - **Michelle Dai** - Designer
 - **Joanna Chen** - Designer
 - **Jonathan Mak** - PMM
