@@ -288,6 +288,24 @@ export default defineComponent({
         this.tourStep = 0;
       });
     },
+    startNewFeatureTour() {
+      console.log('startnewFeatureTour');
+      console.log(this.startNewFeatureTour);
+      const newFeatureTour = introJs();
+      newFeatureTour.setOptions({
+        steps: [
+          {
+            element: '.multiple-plans',
+            intro: `<div class="introjs-tooltipTop"><div class="introjs-customTitle">New Feature Alert</div></div>
+          <div class = "introjs-bodytext">Create multiple plans for your 4 year plan to find the one best suited for you. Your journey, your way!</div>`,
+          },
+        ],
+        doneLabel: 'Done',
+      });
+      // check firestore if the user has seen it already
+      newFeatureTour.start();
+      updateSawNewFeature(true);
+    },
   },
   computed: {
     multiplePlansAllowed(): boolean {
@@ -474,26 +492,6 @@ export default defineComponent({
     toggleMinimized() {
       this.$emit('toggleMinimized');
     },
-  },
-  mounted() {
-    console.log('startnewFeatureTour');
-    console.log(this.startNewFeatureTour);
-    if (this.startNewFeatureTour) {
-      const newFeatureTour = introJs();
-      newFeatureTour.setOptions({
-        steps: [
-          {
-            element: '.multiple-plans',
-            intro: `<div class="introjs-tooltipTop"><div class="introjs-customTitle">New Feature Alert</div></div>
-          <div class = "introjs-bodytext">Create multiple plans for your 4 year plan to find the one best suited for you. Your journey, your way!</div>`,
-          },
-        ],
-        doneLabel: 'Done',
-      });
-      // check firestore if the user has seen it already
-      newFeatureTour.start();
-      updateSawNewFeature(true);
-    }
   },
 });
 </script>

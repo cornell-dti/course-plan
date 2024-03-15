@@ -313,8 +313,6 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
         store.commit('setOnboardingData', createAppOnboardingData(data));
       }
       onboardingDataInitialLoadFinished = true;
-      console.log('firebase');
-      console.log(store.state.onboardingData.sawNewFeature);
       emitOnLoadWhenLoaded();
     }
   );
