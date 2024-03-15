@@ -10,7 +10,7 @@
     @left-button-clicked="backCopyPlan"
     @right-button-clicked="addPlan"
     @warn-state="isWarn"
-    :placeholderPlan="currPlan"
+    :placeholderPlan="selectedPlan"
     :rightButtonIsDisabled="canSave"
   >
   </text-input-modal>
@@ -73,6 +73,9 @@ export default defineComponent({
     },
     canSave() {
       return this.warn;
+    },
+    selectedPlan() {
+      return this.selectedPlanCopy;
     },
   },
 });
