@@ -289,8 +289,6 @@ export default defineComponent({
       });
     },
     startNewFeatureTour() {
-      console.log('startnewFeatureTour');
-      console.log(this.startNewFeatureTour);
       const newFeatureTour = introJs();
       newFeatureTour.setOptions({
         steps: [
