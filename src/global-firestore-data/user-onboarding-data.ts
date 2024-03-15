@@ -26,6 +26,7 @@ export const setAppOnboardingData = (
       examType: e.type || e.examType,
     })),
     tookSwim: onboarding.tookSwim,
+    sawNewFeature: onboarding.sawNewFeature,
   });
 };
 
