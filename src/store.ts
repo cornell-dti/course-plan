@@ -75,6 +75,7 @@ const store: TypedVuexStore = new TypedVuexStore({
       grad: '',
       exam: [],
       tookSwim: 'no',
+      sawNewFeature: false,
     },
     orderByNewest: true,
     derivedCoursesData: {
@@ -179,6 +180,9 @@ const store: TypedVuexStore = new TypedVuexStore({
       const editedPlans = state.plans.map(plan => (plan === state.currentPlan ? editedPlan : plan));
       state.plans = editedPlans;
       state.currentPlan = editedPlan;
+    },
+    setSawNewFeature(state: VuexStoreState, seen: boolean) {
+      state.onboardingData.sawNewFeature = seen;
     },
   },
 });
