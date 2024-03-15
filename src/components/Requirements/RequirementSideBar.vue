@@ -187,6 +187,7 @@ import {
   editPlan,
   deletePlan,
   addPlan,
+  updateSawNewFeature,
 } from '@/global-firestore-data';
 import AddPlanModal from '@/components/Modals/MultiplePlans/AddPlanModal.vue';
 import CopyPlanModal from '../Modals/MultiplePlans/CopyPlanModal.vue';
@@ -249,6 +250,7 @@ export default defineComponent({
     isDisplayingMobile: { type: Boolean, required: true },
     isMobile: { type: Boolean, required: true },
     isMinimized: { type: Boolean, required: true },
+    startNewFeatureTour: { type: Boolean, required: true },
   },
   emits: ['showTourEndWindow', 'toggleMinimized'],
   data(): Data {
@@ -474,19 +476,24 @@ export default defineComponent({
     },
   },
   mounted() {
-    const newFeatureTour = introJs();
-    newFeatureTour.setOptions({
-      steps: [
-        {
-          element: '.multiple-plans',
-          intro: `<div class="introjs-tooltipTop"><div class="introjs-customTitle">New Feature Alert</div></div>
+    console.log('startnewFeatureTour');
+    console.log(this.startNewFeatureTour);
+    if (this.startNewFeatureTour) {
+      const newFeatureTour = introJs();
+      newFeatureTour.setOptions({
+        steps: [
+          {
+            element: '.multiple-plans',
+            intro: `<div class="introjs-tooltipTop"><div class="introjs-customTitle">New Feature Alert</div></div>
           <div class = "introjs-bodytext">Create multiple plans for your 4 year plan to find the one best suited for you. Your journey, your way!</div>`,
-        },
-      ],
-      doneLabel: 'Done',
-    });
-    // check firestore if the user has seen it already
-    newFeatureTour.start();
+          },
+        ],
+        doneLabel: 'Done',
+      });
+      // check firestore if the user has seen it already
+      newFeatureTour.start();
+      updateSawNewFeature(true);
+    }
   },
 });
 </script>

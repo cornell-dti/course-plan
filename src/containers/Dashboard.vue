@@ -30,6 +30,7 @@
           @toggleMinimized="toggleMinimizeRequirements"
           :startTour="startTour"
           @showTourEndWindow="showTourEnd"
+          :startNewFeatureTour="showNewFeatureTour"
         />
         <bottom-bar
           v-if="!(isTablet && requirementsIsDisplayedMobile) && !showToolsPage && !isProfileOpen"
@@ -176,6 +177,9 @@ export default defineComponent({
     },
     bottomBarIsExpanded(): boolean {
       return immutableBottomBarState.isExpanded;
+    },
+    showNewFeatureTour(): boolean {
+      return this.loaded && !this.onboardingData.sawNewFeature;
     },
   },
   created() {
