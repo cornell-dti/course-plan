@@ -65,11 +65,9 @@
               @edit-plan="editPlan"
               @delete-plan="deletePlan"
             />
-            <button class="add-plan-button" @click="startFeatureTour()">+ Add Plan</button>
-            <div class="multiple-plans-wrapper" :data-intro="getMultiplePlansTooltipText()">
-              <div class="multiple-plans-dropdown">
-                <multiple-plans-dropdown @open-edit-modal="toggleEditPlan" />
-              </div>
+            <button class="add-plan-button" @click="toggleAddPlan()">+ Add Plan</button>
+            <div class="multiple-plans-dropdown">
+              <multiple-plans-dropdown @open-edit-modal="toggleEditPlan" />
             </div>
           </div>
 
@@ -190,10 +188,10 @@ import {
   deletePlan,
   addPlan,
 } from '@/global-firestore-data';
-import AddPlanModal from '@/components/Modals/MultiplePlans/AddPlanModal.vue';
-import CopyPlanModal from '../Modals/MultiplePlans/CopyPlanModal.vue';
-import NamePlanModal from '../Modals/MultiplePlans/NamePlanModal.vue';
-import EditPlanModal from '../Modals/MultiplePlans/EditPlanModal.vue';
+import AddPlanModal from '@/components/Modals/AddPlanModal.vue';
+import CopyPlanModal from '../Modals/CopyPlanModal.vue';
+import NamePlanModal from '../Modals/NamePlanModal.vue';
+import EditPlanModal from '../Modals/EditPlanModal.vue';
 
 export type ShowAllCourses = {
   readonly name: string;
@@ -220,18 +218,12 @@ type Data = {
 };
 
 // This section will be revisited when we try to make first-time tooltips
-const tour = introJs();
+const tour = introJs().start();
 tour.setOptions({
   exitOnEsc: false,
   doneLabel: 'Next',
   nextLabel: 'Next',
   exitOnOverlayClick: false,
-});
-
-const newFeatureTour = introJs();
-newFeatureTour.setOptions({
-  doneLabel: 'Done',
-  exitOnOverlayClick: true,
 });
 
 // show 24 courses per page of the see all menu
@@ -254,7 +246,6 @@ export default defineComponent({
   },
   props: {
     startTour: { type: Boolean, required: true },
-    startNewFeatureTour: { type: Boolean, required: true },
     isDisplayingMobile: { type: Boolean, required: true },
     isMobile: { type: Boolean, required: true },
     isMinimized: { type: Boolean, required: true },
@@ -332,10 +323,6 @@ export default defineComponent({
     },
   },
   methods: {
-    startFeatureTour() {
-      console.log('startNewFeatureTour');
-      newFeatureTour.start();
-    },
     toggleAddPlan() {
       this.isAddPlanOpen = !this.isAddPlanOpen;
     },
@@ -431,10 +418,6 @@ export default defineComponent({
     getCoursesTooltipText() {
       return `<div class="introjs-tooltipTop"><div class="introjs-customTitle">These are your Courses</div><div class="introjs-customProgress">2/4</div>
       </div><div class = "introjs-bodytext">Drag and drop courses into your schedule! Click on them to learn more information like their descriptions.</div>`;
-    },
-    getMultiplePlansTooltipText() {
-      return `<div class="introjs-tooltipTop"><div class="introjs-customTitle">New Feature Alert</div></div>
-      <div class = "introjs-bodytext">Create multiple plans for your 4 year plan to find the one best suited for you. Your journey, your way!</div>`;
     },
     onShowAllCourses(showAllCourses: {
       requirementName: string;
