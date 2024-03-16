@@ -201,9 +201,6 @@ const autoRecomputeDerivedData = (): (() => void) =>
           'setSemesters',
           sortedSemesters(store.getters.getCurrentPlanSemesters, state.orderByNewest)
         );
-        console.log(store.getters.getCurrentPlanSemesters);
-        console.log(store.state.orderByNewest);
-        console.log(sortedSemesters(store.getters.getCurrentPlanSemesters, state.orderByNewest));
         break;
       }
       case 'setSemesters' || 'setPlans': {
