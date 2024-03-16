@@ -177,7 +177,9 @@ const store: TypedVuexStore = new TypedVuexStore({
         name: state.currentPlan.name,
         semesters: sortedSemesters(semesters, state.orderByNewest),
       };
-      const editedPlans = state.plans.map(plan => (plan === state.currentPlan ? editedPlan : plan));
+      const editedPlans = state.plans.map(plan =>
+        plan.name === state.currentPlan.name ? editedPlan : plan
+      );
       state.plans = editedPlans;
       state.currentPlan = editedPlan;
     },

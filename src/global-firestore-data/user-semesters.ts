@@ -28,6 +28,7 @@ export const editPlans = async (
   await updateDoc(doc(semestersCollection, store.state.currentFirebaseUser.email), {
     plans,
   });
+  store.commit('setOrderByNewest', store.state.orderByNewest);
 };
 /**
  * Sets whether semesters are ordered by newest/oldest
