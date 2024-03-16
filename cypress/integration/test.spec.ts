@@ -17,6 +17,12 @@ before('Visit site logged in', () => {
   cy.wait(5000); // ensure the page has time to load
 });
 
+// Test to confirm that the new user walkthrough works as expected
+// Click through the initial explanation, then the 4 following steps, and finally the finishing page
+it('Click through new feature tour', () => {
+  cy.get('.introjs-nextbutton').click();
+});
+
 // Delete existing semesters to ensure existing data does not mess with tests
 it('Delete all existing semesters, if any exist', () => {
   const semesterMenus = '[data-cyId=semesterMenu]';
@@ -236,4 +242,15 @@ it('Minimize a semester', () => {
   cy.get('[data-cyId=semester-courses]').should('not.have.class', 'semester-hidden');
   cy.get('[data-cyId=semester-course]').should('be.visible');
   cy.get('[data-cyId=semester-addCourse]').should('be.visible');
+});
+
+it('Multiple plans dropdown open/close', () => {
+  // dropdown initially closed
+  cy.get('[data-cyId=multiplePlans-dropdown-content]').should('not.exist');
+  cy.get('[data-cyId=multiplePlans-dropdown-open]').click();
+  // dropdown opens
+  cy.get('[data-cyId=multiplePlans-dropdown-content]').should('be.visible');
+  cy.get('[data-cyId=multiplePlans-dropdown-close]').click();
+  // dropdown closed again
+  cy.get('[data-cyId=multiplePlans-dropdown-content]').should('not.exist');
 });

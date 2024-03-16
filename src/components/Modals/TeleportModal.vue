@@ -23,7 +23,12 @@
         </div>
         <slot class="modal-body"></slot>
         <div v-if="!isSimpleModal" class="modal-buttonWrapper">
-          <button v-if="leftButtonText" class="modal-button" @click="leftButtonClicked">
+          <button
+            :class="{ 'modal-button--big': isPlanModal }"
+            v-if="leftButtonText"
+            class="modal-button"
+            @click="leftButtonClicked"
+          >
             {{ leftButtonText }}
           </button>
           <button
@@ -31,6 +36,7 @@
             :class="{
               'modal-button--disabled': rightButtonIsDisabled,
               'modal-button--highlighted': rightButtonIsHighlighted,
+              'modal-button--big': isPlanModal,
             }"
             @click="rightButtonClicked"
             data-cyId="modal-button"
@@ -49,83 +55,67 @@
     </div>
   </Teleport>
 </template>
-
-<script setup lang="ts">
-import { computed, ref } from 'vue';
+<script lang="ts">
+import { defineComponent, ref, PropType } from 'vue';
 import store from '@/store';
 
-type Props = {
-  title?: string;
-  contentClass: string;
-  leftButtonText?: string;
-  rightButtonText?: string;
-  rightButtonImage?: string;
-  rightButtonAlt?: string;
-  rightButtonIsDisabled?: boolean;
-  rightButtonIsHighlighted?: boolean;
-  /** `true` if the modal will set its own styling for its position */
-  isSimpleModal?: boolean;
-  /** `true` for modals without the gray overlay behind them */
-  hasNoBackground?: boolean;
-  /** modals without a gray overlay behind them AND clicking on the background closes the modal */
-  hasClickableTransparentBackground?: boolean;
-  /** `true` if you want to set custom position for modal */
-  hasCustomPosition?: boolean;
-  /** custom position (hasCustomPosition must be true) */
-  position?: { x: number; y: number };
-};
+export default defineComponent({
+  props: {
+    title: { type: String, default: '' },
+    contentClass: { type: String, required: true },
+    leftButtonText: { type: String, default: '' },
+    rightButtonText: { type: String, default: '' },
+    rightButtonImage: { type: String, default: '' },
+    rightButtonAlt: { type: String, default: '' },
+    rightButtonIsDisabled: { type: Boolean, default: false },
+    rightButtonIsHighlighted: { type: Boolean, default: false },
+    isSimpleModal: { type: Boolean, default: false }, // true if the modal will set its own styling for its position
+    hasNoBackground: { type: Boolean, default: false }, // true for modals without the gray overlay behind them
+    hasClickableTransparentBackground: { type: Boolean, default: false }, // modals without a gray overlay behind them AND clicking on the background closes the modal
+    hasCustomPosition: { type: Boolean, default: false }, // true if you want to set custom position for modal
+    isPlanModal: { type: Boolean, default: false },
+    position: {
+      type: Object as PropType<{ x: number; y: number }>,
+      default: () => ({ x: 0, y: 0 }),
+    }, // custom position (hasCustomPosition must be true)
+  },
+  data() {
+    const customPosition = this.hasCustomPosition
+      ? {
+          left: `${this.position.x}px`,
+          top: `${this.position.y}px`,
+        }
+      : {};
+    return {
+      customPosition,
+    };
+  },
+  emits: ['left-button-clicked', 'right-button-clicked', 'modal-closed'],
+  setup(props, { emit }) {
+    const modalBackground = ref((null as unknown) as HTMLDivElement);
 
-const props = withDefaults(defineProps<Props>(), {
-  title: '',
-  leftButtonText: '',
-  rightButtonText: '',
-  rightButtonImage: '',
-  rightButtonAlt: '',
-  rightButtonIsDisabled: false,
-  rightButtonIsHighlighted: false,
-  isSimpleModal: false,
-  hasNoBackground: false,
-  hasClickableTransparentBackground: false,
-  hasCustomPosition: false,
-  position: () => ({ x: 0, y: 0 }),
+    const close = () => {
+      store.commit('setIsTeleportModalOpen', false);
+      emit('modal-closed', true);
+    };
+
+    const closeOnClickOutside = (e: MouseEvent) => {
+      if (e.target === modalBackground.value) close();
+    };
+
+    const leftButtonClicked = () => {
+      emit('left-button-clicked');
+    };
+
+    const rightButtonClicked = () => {
+      emit('right-button-clicked');
+    };
+
+    store.commit('setIsTeleportModalOpen', true);
+
+    return { close, closeOnClickOutside, leftButtonClicked, rightButtonClicked, modalBackground };
+  },
 });
-
-type Emits = {
-  (e: 'left-button-clicked'): void;
-  (e: 'right-button-clicked'): void;
-  (e: 'modal-closed', closed: boolean): void;
-};
-
-const emit = defineEmits<Emits>();
-
-const close = () => {
-  store.commit('setIsTeleportModalOpen', false);
-  emit('modal-closed', true);
-};
-
-const modalBackground = ref<HTMLDivElement | null>(null);
-
-const closeOnClickOutside = (e: MouseEvent) => {
-  if (e.target === modalBackground.value) close();
-};
-
-const leftButtonClicked = () => {
-  emit('left-button-clicked');
-};
-
-const rightButtonClicked = () => {
-  emit('right-button-clicked');
-};
-
-const customPosition = computed(() => {
-  const {
-    hasCustomPosition,
-    position: { x, y },
-  } = props;
-  return hasCustomPosition ? { left: `${x}px`, top: `${y}px` } : {};
-});
-
-store.commit('setIsTeleportModalOpen', true);
 </script>
 
 <style scoped lang="scss">
@@ -227,6 +217,10 @@ store.commit('setIsTeleportModalOpen', true);
 
     &--highlighted {
       border: 2px solid $error;
+    }
+
+    &--big {
+      width: 7rem;
     }
   }
 }
