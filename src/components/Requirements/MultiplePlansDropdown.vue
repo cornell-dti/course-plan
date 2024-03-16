@@ -87,6 +87,7 @@ export default defineComponent({
           'setCurrentPlan',
           store.state.plans.find(p => p.name === plan)
         );
+        store.commit('setOrderByNewest', store.state.orderByNewest);
         this.shown = !this.shown;
       }
     },

@@ -393,6 +393,7 @@ export default defineComponent({
         'setCurrentPlan',
         store.state.plans.find(plan => plan.name === name)
       );
+      store.commit('setOrderByNewest', store.state.orderByNewest);
       this.confirmationText = `${oldname} has been renamed to ${name}!`;
       this.isConfirmationOpen = true;
       setTimeout(() => {
