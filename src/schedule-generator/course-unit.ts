@@ -9,7 +9,7 @@ export type DayOfTheWeek =
   | 'Saturday'
   | 'Sunday';
 
-export type TimeSlot = {
+export type Timeslot = {
   daysOfTheWeek: DayOfTheWeek[]; // e.g. ['Monday', 'Wednesday', 'Friday']
   start: string; // e.g. '10:00 AM'
   end: string; // e.g. '11:30 AM'
@@ -28,12 +28,12 @@ export default class Course {
   say we have one lecture L and two discussions D1 and D2.
   then there would be generated:
 
-  Course(name=L, timeSlots=[LectureTimeSlot, D1TimeSlot])
-  Course(name=L, timeSlots=[LectureTimeSlot, D2TimeSlot])
+  Course(name=L, timeslots=[LectureTimeslot, D1Timeslot])
+  Course(name=L, timeslots=[LectureTimeslot, D2Timeslot])
 
   then the algorithm will just choose one of these to schedule
   */
-  timeSlots: TimeSlot[];
+  timeslots: Timeslot[];
 
   offeredSemesters: string[];
 
@@ -42,13 +42,13 @@ export default class Course {
   constructor(
     name = '',
     credits = 0,
-    timeSlots: TimeSlot[] = [],
+    timeslots: Timeslot[] = [],
     offeredSemesters: string[] = [],
     requirements: Requirement[] = []
   ) {
     this.name = name;
     this.credits = credits;
-    this.timeSlots = timeSlots;
+    this.timeslots = timeslots;
     this.offeredSemesters = offeredSemesters;
     this.requirements = requirements;
   }
