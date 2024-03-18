@@ -1,5 +1,5 @@
 import Requirement from './requirement';
-import Course, { TimeSlot } from './course';
+import Course, { TimeSlot } from './course-unit';
 import GeneratorRequest from './generator-request';
 
 type GeneratedScheduleOutput = {
@@ -10,11 +10,9 @@ type GeneratedScheduleOutput = {
 };
 
 export default class ScheduleGenerator {
-  // TODO: output meaningful type.
   static generateSchedule(request: GeneratorRequest): GeneratedScheduleOutput {
-    const semester = request.getSemester();
-    let creditLimit = request.getCreditLimit();
-    const classes = request.getClasses();
+    const { classes, semester } = request;
+    let { creditLimit } = request;
 
     const schedule: Map<TimeSlot, Course[]> = new Map();
     const fulfilledRequirements: Map<Course, Requirement[]> = new Map();
@@ -25,17 +23,17 @@ export default class ScheduleGenerator {
     let totalCredits = 0;
 
     classes.forEach(course => {
-      if (course.getOfferedSemesters().includes(semester)) {
-        course.getTimeSlots().forEach(timeSlot => {
+      if (course.offeredSemesters.includes(semester)) {
+        course.timeSlots.forEach(timeSlot => {
           if (
             !ScheduleGenerator.isTimeSlotOccupied(schedule, timeSlot) &&
             !fulfilledRequirements.has(course) && // prevent duplication
-            creditLimit - course.getCredits() >= 0
+            creditLimit - course.credits >= 0
           ) {
             ScheduleGenerator.addToSchedule(schedule, course, timeSlot);
-            creditLimit -= course.getCredits();
-            totalCredits += course.getCredits();
-            fulfilledRequirements.set(course, course.getRequirements());
+            creditLimit -= course.credits;
+            totalCredits += course.credits;
+            fulfilledRequirements.set(course, course.requirements);
           }
         });
       }
@@ -49,13 +47,13 @@ export default class ScheduleGenerator {
     console.log('************************');
     console.log(`Generated Schedule for ${output.semester}:`);
     output.schedule.forEach((courses, timeSlot) => {
-      console.log(`Time Slot: ${timeSlot.start} – ${timeSlot.end}`);
+      console.log(`Time Slot: ${timeSlot.start} – ${timeSlot.end}. Days: ${timeSlot.daysOfTheWeek.join(', ')}`);
       courses.forEach(course => {
         const fulfilledReqs = ScheduleGenerator.getFulfilledRequirements(
           course,
           output.fulfilledRequirements
         );
-        console.log(`- ${course.getName()} (${fulfilledReqs}, ${course.getCredits()} credits)`);
+        console.log(`- ${course.name} (${fulfilledReqs}, ${course.credits} credits)`);
       });
     });
     console.log();
@@ -66,6 +64,7 @@ export default class ScheduleGenerator {
     schedule: Map<TimeSlot, Course[]>,
     timeSlot: TimeSlot
   ): boolean {
+    // TODO: deal with days of the week, *all timeslots*.
     // Check for overlap.
     const gap = 15 * 60 * 1000; // 15 minutes in milliseconds
     const timeSlotStartMS = new Date(`01/01/1970 ${timeSlot.start}`).getTime();
@@ -97,6 +96,6 @@ export default class ScheduleGenerator {
     fulfilledRequirements: Map<Course, Requirement[]>
   ): string {
     const requirements = fulfilledRequirements.get(course) || [];
-    return requirements.map(req => req.getType()).join(', ');
+    return requirements.map(req => req.type).join(', ');
   }
 }

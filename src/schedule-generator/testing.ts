@@ -1,5 +1,5 @@
 import Requirement from './requirement';
-import Course from './course';
+import Course from './course-unit';
 import GeneratorRequest from './generator-request';
 import ScheduleGenerator from './algorithm';
 
@@ -17,6 +17,7 @@ class Testing {
       3,
       [
         {
+          daysOfTheWeek: ['Monday', 'Wednesday'],
           start: '10:00 AM',
           end: '11:30 AM',
         },
@@ -30,8 +31,14 @@ class Testing {
       4,
       [
         {
+          daysOfTheWeek: ['Tuesday', 'Thursday'],
           start: '11:30 AM',
           end: '1:00 PM',
+        },
+        {
+          daysOfTheWeek: ['Friday'],
+          start: '3:00 PM',
+          end: '5:30 PM',
         },
       ],
       ['Fall', 'Spring'],
@@ -43,10 +50,12 @@ class Testing {
       3,
       [
         {
+          daysOfTheWeek: ['Monday', 'Wednesday'],
           start: '10:00 AM',
           end: '11:30 AM',
         },
         {
+          daysOfTheWeek: ['Thursday'],
           start: '11:30 AM',
           end: '1:00 PM',
         },
@@ -60,8 +69,14 @@ class Testing {
       3,
       [
         {
-          start: '1:00 PM',
-          end: '2:30 PM',
+          daysOfTheWeek: ['Tuesday', 'Thursday'],
+          start: '12:20 PM',
+          end: '1:10 PM',
+        },
+        {
+          daysOfTheWeek: ['Monday', 'Friday'],
+          start: '2:30 PM',
+          end: '4:30 PM',
         },
       ],
       ['Fall', 'Spring'],
@@ -73,8 +88,9 @@ class Testing {
       3,
       [
         {
-          start: '10:00 AM',
-          end: '11:30 AM',
+          daysOfTheWeek: ['Sunday'],
+          start: '7:00 AM',
+          end: '11:00 AM',
         },
       ],
       ['Fall', 'Spring'],
@@ -86,8 +102,9 @@ class Testing {
       4,
       [
         {
-          start: '11:30 AM',
-          end: '1:00 PM',
+          daysOfTheWeek: ['Monday', 'Saturday'],
+          start: '4:30 PM',
+          end: '6:00 PM',
         },
       ],
       ['Spring'],
@@ -99,8 +116,14 @@ class Testing {
       3,
       [
         {
+          daysOfTheWeek: ['Tuesday'],
           start: '1:00 PM',
           end: '2:30 PM',
+        },
+        {
+          daysOfTheWeek: ['Monday', 'Friday'],
+          start: '12:00 PM',
+          end: '3:00 PM',
         },
       ],
       ['Fall', 'Spring'],
@@ -112,6 +135,7 @@ class Testing {
       4,
       [
         {
+          daysOfTheWeek: ['Monday', 'Wednesday', 'Friday'],
           start: '10:00 AM',
           end: '11:30 AM',
         },
@@ -125,10 +149,12 @@ class Testing {
       3,
       [
         {
+          daysOfTheWeek: ['Monday', 'Tuesday', 'Wednesday'],
           start: '11:30 AM',
           end: '1:00 PM',
         },
         {
+          daysOfTheWeek: ['Thursday', 'Friday'],
           start: '1:00 PM',
           end: '2:30 PM',
         },
@@ -143,8 +169,14 @@ class Testing {
       4,
       [
         {
+          daysOfTheWeek: ['Monday', 'Wednesday', 'Friday'],
           start: '8:55 AM',
           end: '9:45 AM',
+        },
+        {
+          daysOfTheWeek: ['Tuesday', 'Thursday'],
+          start: '11:40 AM',
+          end: '12:30 PM',
         },
       ],
       ['Spring'],
@@ -157,8 +189,14 @@ class Testing {
       2,
       [
         {
+          daysOfTheWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
           start: '8:55 AM',
           end: '9:45 AM',
+        },
+        {
+          daysOfTheWeek: ['Saturday'],
+          start: '11:40 AM',
+          end: '12:30 PM',
         },
       ],
       ['Fall'],

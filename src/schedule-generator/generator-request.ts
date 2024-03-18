@@ -1,14 +1,14 @@
-import Course from './course';
+import Course from './course-unit';
 import Requirement from './requirement';
 
 export default class GeneratorRequest {
-  private classes: Course[];
+  classes: Course[];
 
-  private requirements: Requirement[];
+  requirements: Requirement[];
 
-  private creditLimit: number;
+  creditLimit: number;
 
-  private semester: string;
+  semester: string;
 
   constructor(
     classes: Course[] = [],
@@ -19,38 +19,6 @@ export default class GeneratorRequest {
     this.classes = classes;
     this.requirements = requirements;
     this.creditLimit = creditLimit;
-    this.semester = semester;
-  }
-
-  getClasses(): Course[] {
-    return this.classes;
-  }
-
-  getRequirements(): Requirement[] {
-    return this.requirements;
-  }
-
-  getCreditLimit(): number {
-    return this.creditLimit;
-  }
-
-  getSemester(): string {
-    return this.semester;
-  }
-
-  setClasses(classes: Course[]): void {
-    this.classes = classes;
-  }
-
-  setRequirements(requirements: Requirement[]): void {
-    this.requirements = requirements;
-  }
-
-  setCreditLimit(creditLimit: number): void {
-    this.creditLimit = creditLimit;
-  }
-
-  setSemester(semester: string): void {
     this.semester = semester;
   }
 
