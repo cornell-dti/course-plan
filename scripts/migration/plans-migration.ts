@@ -19,7 +19,7 @@ async function main() {
     await runOnUser(userEmail);
     return;
   }
-  const collection = await usernameCollection.get();
+  const collection = await semestersCollection.get();
   for (const { id } of collection.docs) {
     console.group(`Running on ${id}...`);
     // Intentionally await in a loop to have no interleaved console logs.
