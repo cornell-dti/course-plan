@@ -3,8 +3,45 @@
     <div class="courseMenu-content">
       <div
         class="courseMenu-section"
-        @mouseover="setDisplayColors(true)"
-        @mouseleave="setDisplayColors(false)"
+        @click="toggleDisplayEditCourseCredits"
+        :class="{ 'is-active': displayEditCourseCredits }"
+        v-if="getCreditRange && getCreditRange[0] != getCreditRange[1]"
+      >
+        <div class="courseMenu-left">
+          <img
+            class="courseMenu-icon"
+            :class="{ 'courseMenu-icon--left': isLeft }"
+            src="@/assets/images/edit-credits.svg"
+            alt="edit course credits icon"
+          />
+          <span class="courseMenu-text">Edit Credits</span>
+        </div>
+        <img
+          class="courseMenu-arrow"
+          src="@/assets/images/downarrow.svg"
+          alt="arrow to expand edit course credits"
+        />
+        <div
+          v-if="displayEditCourseCredits"
+          class="courseMenu-content courseMenu-editCredits courseMenu-centerCredits"
+          :style="{ zIndex: zIndexEditCredits }"
+        >
+          <div
+            v-for="credit in makeCreditArary()"
+            :key="credit"
+            class="courseMenu-section courseMenu-section--credits"
+            @click="editCourseCredit(credit)"
+          >
+            <div class="courseMenu-left">
+              <span class="courseMenu-text">{{ credit }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="courseMenu-section"
+        @click="toggleDisplayColors"
+        :class="{ 'is-active': displayColors }"
       >
         <div class="courseMenu-left">
           <img
@@ -52,44 +89,8 @@
           </button>
         </div>
       </div>
-      <div
-        class="courseMenu-section"
-        @mouseover="setDisplayEditCourseCredits(true)"
-        @mouseleave="setDisplayEditCourseCredits(false)"
-        v-if="getCreditRange && getCreditRange[0] != getCreditRange[1]"
-      >
-        <div class="courseMenu-left">
-          <img
-            class="courseMenu-icon"
-            :class="{ 'courseMenu-icon--left': isLeft }"
-            src="@/assets/images/edit-credits.svg"
-            alt="edit course credits icon"
-          />
-          <span class="courseMenu-text">Edit Credits</span>
-        </div>
-        <img
-          class="courseMenu-arrow"
-          src="@/assets/images/downarrow.svg"
-          alt="arrow to expand edit course credits"
-        />
-        <div
-          v-if="displayEditCourseCredits"
-          class="courseMenu-content courseMenu-editCredits courseMenu-centerCredits"
-          :style="{ zIndex: zIndexEditCredits }"
-        >
-          <div
-            v-for="credit in makeCreditArary()"
-            :key="credit"
-            class="courseMenu-section courseMenu-section--credits"
-            @click="editCourseCredit(credit)"
-          >
-            <div class="courseMenu-left">
-              <span class="courseMenu-text">{{ credit }}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-      <button class="courseMenu-section full-opacity-on-hover" @click="deleteCourse">
+
+      <button class="delete-button courseMenu-section full-opacity-on-hover" @click="deleteCourse">
         <div class="courseMenu-left">
           <img
             class="courseMenu-icon"
@@ -159,6 +160,24 @@ export default defineComponent({
     'edit-course-credit': (credit: number) => typeof credit === 'number',
   },
   methods: {
+    toggleDisplayColors() {
+      this.displayColors = !this.displayColors;
+      if (this.displayColors) {
+        this.zIndexColors = 3;
+      } else {
+        this.zIndexColors = 1;
+      }
+      this.displayEditCourseCredits = false;
+    },
+    toggleDisplayEditCourseCredits() {
+      this.displayEditCourseCredits = !this.displayEditCourseCredits;
+      if (this.displayEditCourseCredits) {
+        this.zIndexEditCredits = 3;
+      } else {
+        this.zIndexEditCredits = 1;
+      }
+      this.displayColors = false;
+    },
     deleteCourse() {
       this.$emit('delete-course');
     },
@@ -216,7 +235,9 @@ export default defineComponent({
 
 <style scoped lang="scss">
 @import '@/assets/scss/_variables.scss';
-
+.delete-button .courseMenu-text {
+  color: #eb6d6d;
+}
 .courseMenu {
   position: absolute;
   right: -3rem;
@@ -242,6 +263,7 @@ export default defineComponent({
     width: 100%;
     &:hover,
     &:active,
+    &.is-active,
     &:focus {
       background-color: rgba(50, 160, 242, 0.15);
     }
