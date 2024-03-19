@@ -12,7 +12,7 @@
           <div
             class="schedule-course"
             v-for="cls in classesSchedule[day]"
-            :style="getStyle(cls.color, cls.timeStart)"
+            :style="getStyle(cls.color, cls.timeStart, cls.timeEnd)"
           >
             <div class="schedule-course-info">
               <span class="schedule-course-name">
@@ -37,6 +37,12 @@ type Course = {
   timeStart: string;
   timeEnd: string;
 };
+
+type Time = {
+  hours: number;
+  minutes: number;
+};
+
 const minHour = 8;
 const totalMinutes = 600;
 const totalPixels = 610;
@@ -56,13 +62,7 @@ export default defineComponent({
     },
   },
   methods: {
-    getStyle(color: string, timeStart: string): Record<string, string> {
-      return {
-        borderColor: color,
-        top: this.getPixels(timeStart).toString() + 'px',
-      };
-    },
-    getPixels(time: string): number {
+    parseTimeString(time: string): Time {
       const parts = time.match(/(\d+):(\d+)(AM|PM)/i);
       if (!parts) {
         throw new Error('Invalid time format');
@@ -76,6 +76,37 @@ export default defineComponent({
       } else if (ampm.toUpperCase() === 'AM' && hours === 12) {
         hours = 0;
       }
+      return { hours, minutes };
+    },
+
+    getTotalMinutes(classes: Course[]): number {
+      // Initial min and max values set to the opposite extremes
+      let minHour = 23;
+      let maxHour = 0;
+
+      classes.forEach(cls => {
+        // Extract hours from timeStart and timeEnd and convert them to numbers
+        const startHour = this.parseTimeString(cls.timeStart).hours;
+        const endHour = this.parseTimeString(cls.timeEnd).minutes;
+
+        // Update min and max hours
+        minHour = Math.min(minHour, startHour);
+        maxHour = Math.max(maxHour, endHour);
+      });
+
+      return (maxHour - minHour) * 60;
+    },
+    getStyle(color: string, timeStart: string, timeEnd: string): Record<string, string> {
+      return {
+        borderColor: color,
+        top: this.getPixels(timeStart).toString() + 'px',
+        height: (this.getPixels(timeEnd) - this.getPixels(timeStart)).toString() + 'px',
+      };
+    },
+    getPixels(time: string): number {
+      const t = this.parseTimeString(time);
+      const hours = t.hours;
+      const minutes = t.minutes;
       return Math.round((((hours - minHour) * 60 + minutes) / totalMinutes) * totalPixels) + 50;
     },
   },
@@ -90,24 +121,24 @@ export default defineComponent({
     border: 1px solid $inactiveGray;
     box-sizing: border-box;
     border-radius: 4px;
+    height: 780px;
 
-    padding: 2rem 1.5rem 1rem 1.5rem;
+    padding: 2rem 0.5rem 1rem 1.5rem;
   }
   &-week {
     display: flex;
     flex-direction: row;
     color: $secondaryGray;
-    justify-content: space-between;
-    flex-grow: 1;
   }
   &-day {
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
+    width: 6rem;
     position: relative;
+    display: grid;
     &-label {
       margin-bottom: 1.8rem;
+      justify-self: center;
     }
+    border-left: 1px solid $inactiveGray;
   }
   &-hours {
     display: flex;
@@ -125,9 +156,9 @@ export default defineComponent({
     flex-direction: row;
   }
   &-course {
+    font-size: 12px;
     border-left-width: 4px;
     border-left-style: solid;
-    padding-top: 4px;
     padding-left: 8px;
     height: 70px;
     width: 85px;
