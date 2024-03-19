@@ -1,7 +1,7 @@
 <template>
   <div class="dashboard">
     <onboarding
-      class="dashboard-onboarding"
+      class="dashboard-modal"
       v-if="isOnboarding"
       :isEditingProfile="isEditingProfile"
       :userName="userName"
@@ -10,7 +10,7 @@
       @cancelOnboarding="cancelOnboarding"
     />
     <schedule-generate-modal
-      class="dashboard-onboarding"
+      class="dashboard-modal"
       v-if="isScheduleGenerateModalOpen"
       @closeScheduleGenerateModal="closeScheduleGenerateModal"
     />
@@ -334,7 +334,7 @@ export default defineComponent({
   }
 
   /* The Modal (background) */
-  &-onboarding {
+  &-modal {
     position: fixed; /* Stay in place */
     z-index: 4; /* Sit on top */
     left: 0;
