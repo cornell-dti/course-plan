@@ -26,6 +26,64 @@
             Please download before closing or it won't be saved!
           </div>
         </div>
+        <div class="schedule-generate-body">
+          <div class="schedule-generate-section-courses">
+            <div class="schedule-generate-subHeader schedule-generate-subHeader--smallerIndent">
+              <span class="schedule-generate-subHeader--font">Your Courses</span>
+            </div>
+            <div class="schedule-generate-inputs">
+              <div class="schedule-generate-inputWrapper">
+                <schedule-courses
+                  :num-credits="12"
+                  :classes="[
+                    {
+                      title: 'Introductory Programming',
+                      name: 'CS 1110',
+                      color: '#FF3B30', // eventually want to use coursescolorset
+                      // and match with the right component of this modal
+                    },
+                    {
+                      title: 'Information Science Major Concentration Group A',
+                      name: 'INFO 2450',
+                      color: '#34C759',
+                    },
+                    {
+                      title: 'Information Science Major Core Courses',
+                      name: 'INFO 1260',
+                      color: '#32A0F2',
+                    },
+                    {
+                      title: 'Information Science Major Electives',
+                      name: 'INFO 2300',
+                      color: '#AF52DE',
+                    },
+                    {
+                      title: 'College Requirements Human Diversity (D)',
+                      name: 'DSOC 1101',
+                      color: '#FF9500',
+                    },
+                    {
+                      title: 'No Requirement',
+                      name: 'ART 2301',
+                      color: '#B155E0',
+                    },
+                    // question: what if # of courses overflows the box? not in designs iirc
+                  ]"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="schedule-generate-section-schedule">
+            <div class="schedule-generate-subHeader schedule-generate-subHeader--indent">
+              <span class="schedule-generate-subHeader--font">Fall 2024</span>
+            </div>
+            <div class="schedule-generate-inputs">
+              <div class="schedule-generate-inputWrapper">
+                <schedule />
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="schedule-generate-bottom"></div>
     </div>
@@ -34,8 +92,14 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import Schedule from '@/components/ScheduleGenerate/Schedule.vue';
+import ScheduleCourses from '@/components/ScheduleGenerate/ScheduleCourses.vue';
 
 export default defineComponent({
+  components: {
+    Schedule,
+    ScheduleCourses,
+  },
   emits: ['closeScheduleGenerateModal'],
   methods: {
     cancel() {
@@ -66,7 +130,7 @@ input {
     border-radius: 9px;
     margin-left: auto;
     margin-right: auto;
-    width: 46rem;
+    width: 69rem;
   }
 
   &-cancel {
@@ -106,6 +170,64 @@ input {
   &-content {
     position: relative;
     padding: 1.5rem 2rem 1.5rem 2rem;
+  }
+
+  &-body {
+    padding: 0rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  &-section {
+    margin-bottom: 1rem;
+    &-courses {
+      width: 250px;
+      margin-right: 2rem;
+    }
+    &-schedule {
+      flex: 1;
+    }
+  }
+
+  &-subHeader {
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 22px;
+    position: relative;
+    top: 23px;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    /* identical to box height */
+    display: flex;
+    align-items: center;
+    text-align: center;
+    justify-content: space-between;
+    color: $darkGray2;
+    margin-bottom: 0.75rem;
+
+    &--font {
+      color: $black;
+      flex-direction: row;
+      background-color: $white;
+      padding: 0rem 0.5rem 0rem 0.5rem;
+    }
+    &--review {
+      font-weight: normal;
+      padding: 5px;
+      margin-left: 10px;
+      background-color: $white;
+      color: $lightPlaceholderGray;
+      font-size: 16px;
+    }
+    &--smallerIndent {
+      padding-left: 1.25rem;
+      font-size: 18px;
+    }
+    &--indent {
+      padding-left: 2rem;
+      font-size: 18px;
+    }
   }
 }
 </style>
