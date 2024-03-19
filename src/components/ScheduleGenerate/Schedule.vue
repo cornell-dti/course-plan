@@ -159,6 +159,7 @@ export default defineComponent({
     border: 1px solid $inactiveGray;
     box-sizing: border-box;
     border-radius: 4px;
+    height: 780px;
 
     padding: 2rem 0.5rem 1rem 1.5rem;
   }
