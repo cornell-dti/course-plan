@@ -2,15 +2,16 @@
   <div class="schedule-main">
     <div class="schedule-body">
       <div class="schedule-hours">
-        <div class="schedule-hour" v-for="hour in hoursRange">{{ hour }}</div>
+        <div class="schedule-hour" :key="hour" v-for="hour in hoursRange">{{ hour }}</div>
       </div>
       <div class="schedule-week">
-        <div class="schedule-day" v-for="day in days">
+        <div class="schedule-day" :key="day" v-for="day in days">
           <span class="schedule-day-label">
             {{ day }}
           </span>
           <div
             class="schedule-course"
+            :key="cls.name"
             v-for="cls in classesSchedule[day]"
             :style="getStyle(cls.color, cls.timeStart, cls.timeEnd)"
           >
@@ -48,7 +49,6 @@ type MinMaxHour = {
   maxHour: number;
 };
 
-const minHour = 8;
 const totalPixels = 610;
 export default defineComponent({
   props: {
@@ -66,7 +66,7 @@ export default defineComponent({
     hoursRange(): string[] {
       const { minHour, maxHour } = this.getMinMaxHours();
       const hoursArray: string[] = [];
-      for (let hour = minHour; hour <= maxHour; hour++) {
+      for (let hour = minHour; hour <= maxHour; hour += 1) {
         // Determine AM or PM
         const suffix = hour < 12 ? 'am' : 'pm';
         // Convert hour to 12-hour format and create the string
@@ -87,7 +87,7 @@ export default defineComponent({
         throw new Error('Invalid time format');
       }
       let hours = parseInt(parts[1], 10);
-      const minutes = parseInt(parts[2]);
+      const minutes = parseInt(parts[2], 10);
 
       const ampm = parts[3];
       if (ampm.toUpperCase() === 'PM' && hours < 12) {
@@ -121,15 +121,12 @@ export default defineComponent({
 
     getTotalMinutes(): number {
       // Initial min and max values set to the opposite extremes
-      const hoursRange = this.getMinMaxHours();
-      const maxHour = hoursRange.maxHour;
-      const minHour = hoursRange.minHour;
+      const { maxHour, minHour } = this.getMinMaxHours();
       return (maxHour - minHour) * 60;
     },
     getPixels(time: string): number {
-      const t = this.parseTimeString(time);
-      const hours = t.hours;
-      const minutes = t.minutes;
+      const { hours, minutes } = this.parseTimeString(time);
+      const { minHour } = this.getMinMaxHours();
       return (
         Math.round((((hours - minHour) * 60 + minutes) / this.totalMinutes) * totalPixels) + 50
       );
@@ -137,8 +134,8 @@ export default defineComponent({
     getStyle(color: string, timeStart: string, timeEnd: string): Record<string, string> {
       return {
         borderColor: color,
-        top: this.getPixels(timeStart).toString() + 'px',
-        height: (this.getPixels(timeEnd) - this.getPixels(timeStart)).toString() + 'px',
+        top: `${this.getPixels(timeStart).toString()}px`,
+        height: `${(this.getPixels(timeEnd) - this.getPixels(timeStart)).toString()}px`,
       };
     },
   },
