@@ -119,7 +119,7 @@ export default defineComponent({
           name: 'ART 2301',
           color: '#B155E0',
           timeStart: '5:10pm',
-          timeEnd: '6:00am',
+          timeEnd: '6:00pm',
         },
         // question: what if # of courses overflows the box? not in designs iirc
       ];
@@ -153,7 +153,7 @@ export default defineComponent({
             name: 'ART 2301',
             color: '#B155E0',
             timeStart: '5:10pm',
-            timeEnd: '6:00am',
+            timeEnd: '6:00pm',
           },
         ],
         Tuesday: [

@@ -43,8 +43,12 @@ type Time = {
   minutes: number;
 };
 
+type MinMaxHour = {
+  minHour: number;
+  maxHour: number;
+};
+
 const minHour = 8;
-const totalMinutes = 600;
 const totalPixels = 610;
 export default defineComponent({
   props: {
@@ -53,12 +57,27 @@ export default defineComponent({
       required: true,
     },
   },
+  data() {
+    return {
+      days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+    };
+  },
   computed: {
-    days(): string[] {
-      return ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-    },
     hoursRange(): string[] {
-      return ['8am', '9am', '10am', '11am', '12pm', '1pm', '2pm', '3pm', '4pm', '5pm', '6pm'];
+      const { minHour, maxHour } = this.getMinMaxHours();
+      const hoursArray: string[] = [];
+      for (let hour = minHour; hour <= maxHour; hour++) {
+        // Determine AM or PM
+        const suffix = hour < 12 ? 'am' : 'pm';
+        // Convert hour to 12-hour format and create the string
+        const formattedHour = `${hour <= 12 ? hour : hour - 12}${suffix}`;
+        hoursArray.push(formattedHour);
+      }
+      return hoursArray;
+    },
+    totalMinutes(): number {
+      const total = this.getTotalMinutes();
+      return total;
     },
   },
   methods: {
@@ -79,22 +98,41 @@ export default defineComponent({
       return { hours, minutes };
     },
 
-    getTotalMinutes(classes: Course[]): number {
-      // Initial min and max values set to the opposite extremes
+    getMinMaxHours(): MinMaxHour {
       let minHour = 23;
       let maxHour = 0;
 
-      classes.forEach(cls => {
-        // Extract hours from timeStart and timeEnd and convert them to numbers
-        const startHour = this.parseTimeString(cls.timeStart).hours;
-        const endHour = this.parseTimeString(cls.timeEnd).minutes;
+      this.days.forEach(day => {
+        const classes = this.classesSchedule[day];
+        classes.forEach(cls => {
+          // Extract hours from timeStart and timeEnd and convert them to numbers
+          const startHour = this.parseTimeString(cls.timeStart).hours;
+          const { hours: endHour, minutes: endMinutes } = this.parseTimeString(cls.timeEnd);
 
-        // Update min and max hours
-        minHour = Math.min(minHour, startHour);
-        maxHour = Math.max(maxHour, endHour);
+          // Update min and max hours
+          minHour = Math.min(minHour, startHour);
+          if (maxHour < endHour) {
+            maxHour = endHour + (endMinutes > 0 ? 1 : 0);
+          }
+        });
       });
+      return { minHour, maxHour };
+    },
 
+    getTotalMinutes(): number {
+      // Initial min and max values set to the opposite extremes
+      const hoursRange = this.getMinMaxHours();
+      const maxHour = hoursRange.maxHour;
+      const minHour = hoursRange.minHour;
       return (maxHour - minHour) * 60;
+    },
+    getPixels(time: string): number {
+      const t = this.parseTimeString(time);
+      const hours = t.hours;
+      const minutes = t.minutes;
+      return (
+        Math.round((((hours - minHour) * 60 + minutes) / this.totalMinutes) * totalPixels) + 50
+      );
     },
     getStyle(color: string, timeStart: string, timeEnd: string): Record<string, string> {
       return {
@@ -102,12 +140,6 @@ export default defineComponent({
         top: this.getPixels(timeStart).toString() + 'px',
         height: (this.getPixels(timeEnd) - this.getPixels(timeStart)).toString() + 'px',
       };
-    },
-    getPixels(time: string): number {
-      const t = this.parseTimeString(time);
-      const hours = t.hours;
-      const minutes = t.minutes;
-      return Math.round((((hours - minHour) * 60 + minutes) / totalMinutes) * totalPixels) + 50;
     },
   },
 });
@@ -146,10 +178,9 @@ export default defineComponent({
     color: $secondaryGray;
     justify-content: space-between;
     margin-right: 2rem;
-    margin-top: 3rem;
   }
   &-hour {
-    margin-bottom: 40px;
+    margin-top: 40px;
   }
   &-body {
     display: flex;
