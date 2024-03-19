@@ -27,7 +27,15 @@
       <div class="course-main">
         <div class="course-top">
           <div class="course-left">
-            <div class="course-code" data-cyId="courseCode">{{ courseObj.code }}</div>
+            <div
+              class="course-code"
+              data-cyId="courseCode"
+              :style="{
+                color: compact ? '#3d3d3d' : '#858585',
+              }"
+            >
+              {{ courseObj.code }}
+            </div>
             <course-caution
               v-if="!isReqCourse && compact"
               :course="courseObj"
@@ -266,6 +274,7 @@ export default defineComponent({
 
   &-name {
     font-size: 16px;
+    font-weight: bold;
     line-height: 19px;
     color: $primaryGray;
     margin-top: 0.25rem;
