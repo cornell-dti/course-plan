@@ -162,10 +162,6 @@ export default defineComponent({
         this.matchSelected();
       }
     },
-    onRemove() {
-      this.placeholderColor = '';
-      this.$emit('on-remove');
-    },
   },
 });
 </script>
