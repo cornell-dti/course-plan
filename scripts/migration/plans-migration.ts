@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 
-import { usernameCollection, semestersCollection } from '../firebase-config';
+import { semestersCollection } from '../firebase-config';
 
 /**
  * Perform migration of semester to plans with a list of semesters
@@ -8,8 +8,13 @@ import { usernameCollection, semestersCollection } from '../firebase-config';
 async function runOnUser(userEmail: string) {
   const semestersDoc = await semestersCollection.doc(userEmail).get();
   const semesters = semestersDoc.data()?.semesters ?? [];
+  const currplans = semestersDoc.data()?.plans ?? [];
+  const newplans =
+    currplans.length >= 1
+      ? currplans.map(p => (!('name' in p) ? { name: 'Plan 1', semesters } : p))
+      : [{ name: 'Plan 1', semesters }];
   await semestersCollection.doc(userEmail).update({
-    plans: [{ name: 'Plan 1', semesters }],
+    plans: newplans,
   });
 }
 
@@ -19,7 +24,7 @@ async function main() {
     await runOnUser(userEmail);
     return;
   }
-  const collection = await usernameCollection.get();
+  const collection = await semestersCollection.get();
   for (const { id } of collection.docs) {
     console.group(`Running on ${id}...`);
     // Intentionally await in a loop to have no interleaved console logs.
