@@ -51,8 +51,9 @@ const getMatchingCourses = (
   title.sort((first, second) => first.titleLong.localeCompare(second.titleLong));
 
   /* prioritize code matches over title matches */
+  return code.concat(title);
   // limit the number of results to 10
-  return code.concat(title).slice(0, 10);
+  // return code.concat(title).slice(0, 10);
 };
 
 export default defineComponent({
@@ -140,6 +141,8 @@ export default defineComponent({
   right: 0;
   box-shadow: -4px 4px 10px rgba(0, 0, 0, 0.25);
   border-radius: 7px;
+  max-height: 50vh;
+  overflow-y: auto;
 
   .search-result {
     padding: 10px;
