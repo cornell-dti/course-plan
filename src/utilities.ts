@@ -1,5 +1,4 @@
 import { fullCoursesArray } from './assets/courses/typed-full-courses';
-import requirementJSON from './requirements/typed-requirement-json';
 import { coursesColorSet } from './assets/constants/colors';
 
 /** Enumerated type to define seasons as integers in season order
@@ -82,35 +81,6 @@ export function computeEntranceYears(): Readonly<Record<string, string>> {
     semsDict[yr] = yr;
   }
   return semsDict;
-}
-
-export function getCollegeFullName(acronym: string | undefined): string {
-  // return Arts and Sciences for AS, AS1, or AS2
-  if (acronym && acronym.startsWith('AS')) {
-    return 'Arts and Sciences';
-  }
-  const college = acronym ? requirementJSON.college[acronym] : null;
-
-  // Return empty string if college is not in requirementJSON
-  return college ? college.name : '';
-}
-
-export function getMajorFullName(acronym: string): string {
-  // Return empty string if major is not in requirementJSON
-  const major = requirementJSON.major[acronym];
-  return major ? major.name : '';
-}
-
-export function getMinorFullName(acronym: string): string {
-  // Return empty string if minor is not in requirementJSON
-  const minor = requirementJSON.minor[acronym];
-  return minor ? minor.name : '';
-}
-
-export function getGradFullName(acronym: string | undefined): string {
-  // Return empty string if grad is not in requirementJSON
-  const grad = acronym ? requirementJSON.grad[acronym] : null;
-  return grad ? grad.name : '';
 }
 
 function getAllSubjects(): ReadonlySet<string> {

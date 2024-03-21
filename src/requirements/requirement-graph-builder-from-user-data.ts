@@ -9,10 +9,12 @@ import {
   buildRequirementFulfillmentGraph,
   removeIllegalEdgesFromRequirementFulfillmentGraph,
 } from './requirement-graph-builder';
+import { DecoratedRequirementsJson } from './types';
 
 export default function buildRequirementFulfillmentGraphFromUserData(
   coursesTaken: readonly CourseTaken[],
   onboardingData: AppOnboardingData,
+  requirementJson: DecoratedRequirementsJson,
   toggleableRequirementChoices: AppToggleableRequirementChoices,
   overriddenFulfillmentChoices: FirestoreOverriddenFulfillmentChoices
 ): {
@@ -23,7 +25,7 @@ export default function buildRequirementFulfillmentGraphFromUserData(
   readonly doubleCountedCourseUniqueIDSet: ReadonlySet<string | number>;
   readonly courseToRequirementsInConstraintViolations: Map<string | number, Set<string[]>>;
 } {
-  const userRequirements = getUserRequirements(onboardingData);
+  const userRequirements = getUserRequirements(onboardingData, requirementJson);
   const userRequirementsMap = Object.fromEntries(userRequirements.map(it => [it.id, it]));
 
   const requirementGraphBuilderParameters: BuildRequirementFulfillmentGraphParameters<

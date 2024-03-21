@@ -69,13 +69,7 @@ import OnboardingBasic from '@/components/Modals/Onboarding/OnboardingBasic.vue'
 import OnboardingTransfer from '@/components/Modals/Onboarding/OnboardingTransfer.vue';
 import { setAppOnboardingData } from '@/global-firestore-data';
 import ProfileConfirmation from '@/components/Modals/ProfileConfirmation.vue';
-import {
-  getMajorFullName,
-  getMinorFullName,
-  getGradFullName,
-  computeGradYears,
-  SeasonOrdinal,
-} from '@/utilities';
+import { computeGradYears, SeasonOrdinal } from '@/utilities';
 import store from '@/store';
 
 const placeholderText = 'Select one';
@@ -119,16 +113,19 @@ export default defineComponent({
       }
       return false;
     },
+    // FIXME: the requirement graph is not generated for the chosen major / minor / grad
+    // etc. and so cannot tell if the user has chosen a valid major / minor / grad.
     isInvalidMajorMinorGradError(): boolean {
-      return (
-        this.onboarding.major
-          .map(getMajorFullName)
-          .some((majorFullName: string) => majorFullName === '') ||
-        this.onboarding.minor
-          .map(getMinorFullName)
-          .some((minorFullName: string) => minorFullName === '') ||
-        (this.onboarding.grad ? getGradFullName(this.onboarding.grad) === '' : false)
-      );
+      return false;
+      // return (
+      //   this.onboarding.major
+      //     .map(getMajorFullName)
+      //     .some((majorFullName: string) => majorFullName === '') ||
+      //   this.onboarding.minor
+      //     .map(getMinorFullName)
+      //     .some((minorFullName: string) => minorFullName === '') ||
+      //   (this.onboarding.grad ? getGradFullName(this.onboarding.grad) === '' : false)
+      // );
     },
     isError(): boolean {
       if (!this.changed || this.isInvalidGraduationSemester || this.isInvalidMajorMinorGradError) {

@@ -9,6 +9,7 @@ import {
 import RequirementFulfillmentGraph from './requirement-graph';
 import buildRequirementFulfillmentGraphFromUserData from './requirement-graph-builder-from-user-data';
 import featureFlagCheckers from '../feature-flags';
+import { DecoratedRequirementsJson } from './types';
 
 /**
  * Used for total academic credit requirements for all colleges except EN and AR
@@ -200,6 +201,7 @@ function mergeRequirementFulfillmentStatisticsWithAdditionalRequirements(
 export default function computeGroupedRequirementFulfillmentReports(
   semesters: readonly FirestoreSemester[],
   onboardingData: AppOnboardingData,
+  requirementJson: DecoratedRequirementsJson,
   toggleableRequirementChoices: AppToggleableRequirementChoices,
   overriddenFulfillmentChoices: FirestoreOverriddenFulfillmentChoices
 ): {
@@ -223,6 +225,7 @@ export default function computeGroupedRequirementFulfillmentReports(
   } = buildRequirementFulfillmentGraphFromUserData(
     coursesTaken,
     onboardingData,
+    requirementJson,
     toggleableRequirementChoices,
     overriddenFulfillmentChoices
   );

@@ -192,7 +192,7 @@ import {
   getMajorFullName,
   getMinorFullName,
   getGradFullName,
-} from '@/utilities';
+} from '@/store-utilities';
 import { GTagEvent } from '@/gtag';
 
 const placeholderText = 'Select one';

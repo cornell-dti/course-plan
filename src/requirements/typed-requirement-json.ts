@@ -12,6 +12,7 @@ import decoratedRequirementJson from './decorated-requirements.json';
 //    - Requirement generation runs on node, requirement checking runs in browser.
 //      They have different import mechanisms. It's better to separate them.
 //    - To help webpack to avoid bundling the giant `filtered-all-courses.json`.
+// 3. This file is only used for a frontend test. Not used in the actual app.
 
 /** The generated requirement json that contains all pre-computed courses that satisfy each requirement. */
 export default (decoratedRequirementJson as unknown) as DecoratedRequirementsJson;

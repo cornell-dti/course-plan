@@ -196,13 +196,13 @@
 import { PropType, defineComponent } from 'vue';
 import DropDownArrow from '@/components/DropDownArrow.vue';
 import ProgressBarCaution from '@/components/Requirements/ProgressBarCaution.vue';
+import { getReqColor } from '@/utilities';
 import {
   getCollegeFullName,
   getMajorFullName,
   getMinorFullName,
   getGradFullName,
-  getReqColor,
-} from '@/utilities';
+} from '@/store-utilities';
 import featureFlagCheckers from '@/feature-flags';
 import {
   groupedRequirementDangerouslyFulfilled,

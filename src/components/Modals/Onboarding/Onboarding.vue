@@ -114,13 +114,7 @@ import OnboardingBasic from '@/components/Modals/Onboarding/OnboardingBasic.vue'
 import OnboardingTransfer from '@/components/Modals/Onboarding/OnboardingTransfer.vue';
 import OnboardingReview from '@/components/Modals/Onboarding/OnboardingReview.vue';
 import { setAppOnboardingData, populateSemesters } from '@/global-firestore-data';
-import {
-  getMajorFullName,
-  getMinorFullName,
-  getGradFullName,
-  computeGradYears,
-  SeasonOrdinal,
-} from '@/utilities';
+import { computeGradYears, SeasonOrdinal } from '@/utilities';
 import timeline1Text from '@/assets/images/timeline1text.svg';
 import timeline2Text from '@/assets/images/timeline2text.svg';
 import timeline3Text from '@/assets/images/timeline3text.svg';
@@ -177,17 +171,21 @@ export default defineComponent({
      *
      * @returns true if onboarding contains a major, minor, or program that is not in
      * requirementsJSON on this branch, false otherwise.
+     *
+     * FIXME: the requirement graph is not generated for the chosen major / minor / grad
+     * etc. and so cannot tell if the user has chosen a valid major / minor / grad.
      */
     isInvalidMajorMinorGradError(): boolean {
-      return (
-        this.onboarding.major
-          .map(getMajorFullName)
-          .some((majorFullName: string) => majorFullName === '') ||
-        this.onboarding.minor
-          .map(getMinorFullName)
-          .some((minorFullName: string) => minorFullName === '') ||
-        (this.onboarding.grad ? getGradFullName(this.onboarding.grad) === '' : false)
-      );
+      return false;
+      // return (
+      //   this.onboarding.major
+      //     .map(getMajorFullName)
+      //     .some((majorFullName: string) => majorFullName === '') ||
+      //   this.onboarding.minor
+      //     .map(getMinorFullName)
+      //     .some((minorFullName: string) => minorFullName === '') ||
+      //   (this.onboarding.grad ? getGradFullName(this.onboarding.grad) === '' : false)
+      // );
     },
     /**
      * Display error if the entrance and graduation year are not blank and the graduation semester comes before entrance semester, comparing the season if not blank
@@ -250,7 +248,7 @@ export default defineComponent({
     submitOnboarding() {
       const revised = this.setASCollegeReqs();
       this.clearTransferCreditIfGraduate();
-      setAppOnboardingData(this.name, revised);
+      // setAppOnboardingData(this.name, revised); // now done when you navigate to the page
       // indicates first time user onboarding
       if (!this.isEditingProfile) populateSemesters(store.state.currentPlan, revised);
       this.$emit('onboard');
@@ -280,9 +278,16 @@ export default defineComponent({
       ) {
         // special case: if the user has a graduate program (and not an undergrad program), skip the transfer page
         if (this.onboarding.grad !== '' && !this.onboarding.college && this.currentPage === 1) {
+          const revised = this.setASCollegeReqs();
+          this.clearTransferCreditIfGraduate();
+          setAppOnboardingData(this.name, revised);
           this.currentPage += 2;
-        } else {
-          this.currentPage = this.currentPage === FINAL_PAGE ? FINAL_PAGE : this.currentPage + 1;
+        } else if (this.currentPage !== FINAL_PAGE) {
+          // Needs to be done ahead of time.
+          const revised = this.setASCollegeReqs();
+          this.clearTransferCreditIfGraduate();
+          setAppOnboardingData(this.name, revised);
+          this.currentPage += 1;
         }
       }
     },

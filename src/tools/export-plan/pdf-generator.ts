@@ -12,13 +12,13 @@ import userDataToExamCourses from '../../requirements/requirement-exam-utils';
 import { trimEmptySems, bubbleColorMap, getCourseRows, loadImage } from './utilities';
 import { SemesterRows } from './types';
 
+import { sortedSemesters } from '../../utilities';
 import {
   getCollegeFullName,
   getMajorFullName,
   getMinorFullName,
   getGradFullName,
-  sortedSemesters,
-} from '../../utilities';
+} from '../../store-utilities';
 import store from '../../store';
 import { addFonts } from './add-fonts';
 
