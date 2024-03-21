@@ -100,6 +100,17 @@
           <span class="courseMenu-text">Delete</span>
         </div>
       </button>
+
+      <button class="courseMenu-section full-opacity-on-hover" @click="openSaveCourseModal">
+        <div class="courseMenu-left">
+          <img
+            class="courseMenu-icon"
+            src="@/assets/images/saveIconSmall.svg"
+            alt="save course icon"
+          />
+          <span class="courseMenu-text">Save</span>
+        </div>
+      </button>
     </div>
   </div>
 </template>
@@ -158,6 +169,7 @@ export default defineComponent({
     'delete-course': () => true,
     'open-edit-color-modal': (color: string) => typeof color === 'string',
     'edit-course-credit': (credit: number) => typeof credit === 'number',
+    'open-save-course-modal': () => console.log('open save course modal'),
   },
   methods: {
     toggleDisplayColors() {
@@ -228,6 +240,9 @@ export default defineComponent({
         }
       }
       return creditArray;
+    },
+    openSaveCourseModal() {
+      this.$emit('open-save-course-modal');
     },
   },
 });
