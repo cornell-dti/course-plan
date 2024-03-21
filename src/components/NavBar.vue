@@ -8,7 +8,7 @@
       ></div>
       <div class="navbar-top">
         <div class="navbar-iconWrapper course-plan-logo no-hover">
-          <img class="navbar-icon" src="@/assets/images/branding/logo.svg" alt="Courseplan logo" />
+          <img class="navbar-icon" :src="displayedLogo" alt="Courseplan logo" />
         </div>
         <div class="navbar-iconWrapper hairlineWrapper no-hover">
           <img class="navbar-icon hairline" src="@/assets/images/navbar/hairline.svg" />
@@ -92,8 +92,21 @@ export default defineComponent({
   emits: ['openPlan', 'openTools', 'toggleRequirementsMobile', 'openProfile'],
   data() {
     return {
+      logo: 'src/assets/images/branding/logo.svg',
+      christmasLogo: 'src/assets/images/branding/logo-christmas.svg',
       menuOpen: false,
     };
+  },
+  computed: {
+    displayedLogo() {
+      const currentDate = new Date();
+      const currentMonth = currentDate.getMonth() + 1;
+
+      if (currentMonth === 12) {
+        return this.christmasLogo;
+      }
+      return this.logo;
+    },
   },
   methods: {
     logout() {
