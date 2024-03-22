@@ -1,5 +1,6 @@
 <template>
   <div class="sidebar">
+    <confirmation :text="confirmationText" v-if="isConfirmationOpen" />
     <div class="sidebar-header">
       <h1 class="top header-title">Semester Schedule Builder</h1>
       <div class="semester">
@@ -71,12 +72,15 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import RequirementCourses from '@/components/ScheduleGenerate/RequirementCourses.vue';
+import Confirmation from '@/components/Modals/Confirmation.vue';
 
 export default defineComponent({
   data(): {
     requirements: string[];
     availableRequirements: Record<string, string>;
     numberOfRequirements: number;
+    isConfirmationOpen: boolean;
+    confirmationText: string;
   } {
     return {
       requirements: [],
@@ -86,10 +90,13 @@ export default defineComponent({
         'Liberal Studies': 'Liberal Studies',
       },
       numberOfRequirements: 3,
+      isConfirmationOpen: false,
+      confirmationText: '',
     };
   },
   components: {
     RequirementCourses,
+    Confirmation,
   },
   props: {
     // current semester being generated for
@@ -99,6 +106,18 @@ export default defineComponent({
   },
   emits: ['openScheduleGenerateModal'],
   methods: {
+    openConfirmationModal(msg: string) {
+      // Set text and display confirmation modal, then have it disappear after 3 seconds
+      this.confirmationText = msg;
+      this.isConfirmationOpen = true;
+
+      setTimeout(() => {
+        this.closeConfirmationModal();
+      }, 2000);
+    },
+    closeConfirmationModal() {
+      this.isConfirmationOpen = false;
+    },
     addRequirement() {
       this.requirements = [...this.requirements, ''];
     },
@@ -112,11 +131,15 @@ export default defineComponent({
       if (requirement !== '') this.availableRequirements[requirement] = requirement;
     },
     deleteRequirement(index: number) {
+      const requirement = this.requirements[index];
       // add back to the availableRequirements record
-      this.addAvailableRequirement(this.requirements[index]);
+      this.addAvailableRequirement(requirement);
 
       // delete this requirement from list
       this.requirements.splice(index, 1);
+      this.openConfirmationModal(
+        `Removed ${requirement === '' ? 'requirement' : requirement} from schedule builder`
+      );
     },
     openScheduleGenerateModal() {
       this.$emit('openScheduleGenerateModal');
