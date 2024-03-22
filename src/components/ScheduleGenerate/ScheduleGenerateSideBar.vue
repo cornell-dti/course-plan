@@ -46,7 +46,7 @@
         <button
           class="add-requirement-button"
           @click="addRequirement"
-          :disabled="Object.keys(availableRequirements).length === 0"
+          :disabled="requirements.length === numberOfRequirements"
         >
           + Requirement
         </button>
@@ -76,6 +76,7 @@ export default defineComponent({
   data(): {
     requirements: string[];
     availableRequirements: Record<string, string>;
+    numberOfRequirements: number;
   } {
     return {
       requirements: [],
@@ -84,6 +85,7 @@ export default defineComponent({
         'Probability Requirement': 'Probability Requirement',
         'Liberal Studies': 'Liberal Studies',
       },
+      numberOfRequirements: 3,
     };
   },
   components: {
@@ -304,5 +306,11 @@ export default defineComponent({
   border-radius: 4px;
   font-size: 16px;
   align-items: center;
+}
+
+.add-requirement-button:disabled {
+  border: 1px solid $inactiveGray;
+  background: $inactiveGray;
+  cursor: not-allowed;
 }
 </style>
