@@ -31,14 +31,7 @@
           class="onboarding-dropdown-content-item"
           :ref="`scroll-ref-${key}`"
           @click="onSelect([key, fullName])"
-          data-cyId="onboarding-dropdownItem"
         >
-          <img
-            v-if="correspondingImages"
-            class="season-emoji"
-            :src="correspondingImages[fullName]"
-            alt=""
-          />
           {{ fullName }}
         </div>
       </div>
@@ -60,13 +53,9 @@ export default defineComponent({
     },
     choice: { type: String, required: true },
     scrollBottomToElement: { type: Number, default: 0 },
-    correspondingImages: {
-      type: Object as PropType<Readonly<Record<string, string>>>,
-      default: null,
-    },
   },
   mounted() {
-    this.curQuery = this.availableChoices[this.choice];
+    this.curQuery = this.choice;
     this.prevQuery = this.curQuery;
   },
   emits: {
@@ -96,7 +85,7 @@ export default defineComponent({
   },
   watch: {
     choice(newVal) {
-      this.curQuery = this.availableChoices[newVal] || '';
+      this.curQuery = newVal || '';
       this.prevQuery = this.curQuery;
     },
   },

@@ -1,30 +1,43 @@
 <template>
   <div class="requirement">
-    <button
-      class="requirement-dropdown"
-      type="button"
-      @click="showDropdown = !showDropdown"
-      data-toggle="dropdown"
-      aria-haspopup="true"
-      :aria-expanded="showDropdown"
-    >
-      <div class="requirement-header">
-        <drop-down-arrow :isFlipped="showDropdown" :fillColor="emGreen" />
-        <p v-if="selectedRequirement === ''" class="requirement-header-text">New Requirement</p>
-        <p v-else class="requirement-header-text">
-          {{ selectedRequirement }}
-        </p>
-      </div>
-    </button>
+    <div class="requirement-header">
+      <button
+        class="requirement-dropdown"
+        type="button"
+        @click="showDropdown = !showDropdown"
+        data-toggle="dropdown"
+        aria-haspopup="true"
+        :aria-expanded="showDropdown"
+      >
+        <div class="requirement-header">
+          <drop-down-arrow :isFlipped="showDropdown" :fillColor="emGreen" />
+          <p v-if="selectedRequirement === ''" class="requirement-header-text">New Requirement</p>
+          <p v-else class="requirement-header-text">
+            {{ selectedRequirement }}
+          </p>
+        </div>
+      </button>
+      <button class="courseMenu-section full-opacity-on-hover" @click="deleteRequirement">
+        <div class="courseMenu-left">
+          <img src="@/assets/images/trash.svg" alt="delete req trashcan icon" />
+        </div>
+      </button>
+    </div>
     <div v-if="showDropdown">
       <p class="requirement-header-subtext">Please select a major requirement.</p>
       <all-requirements-dropdown
         :available-choices="availableRequirements"
         :choice="selectedRequirement"
+        @on-select="selectRequirement"
       />
       <new-course-modal @close-course-modal="closeCourseModal" v-if="isCourseModalOpen" />
       <div class="requirement-courses">
-        <add-course-button :compact="false" :should-clear-padding="true" @click="openCourseModal" />
+        <add-course-button
+          v-if="selectedRequirement !== ''"
+          :compact="false"
+          :should-clear-padding="true"
+          @click="openCourseModal"
+        />
       </div>
     </div>
   </div>
@@ -46,12 +59,26 @@ export default defineComponent({
       type: Object as PropType<Readonly<Record<string, string>>>,
       required: true,
     },
+    selectedRequirement: {
+      type: String,
+      required: true,
+    },
+    index: {
+      type: Number,
+      required: true,
+    },
+  },
+  emits: {
+    'delete-available-requirement': (requirement: string) => typeof requirement === 'string',
+    'select-requirement': (requirement: string, index: number) =>
+      typeof requirement === 'string' && typeof index === 'number',
+    'add-available-requirement': (requirement: string) => typeof requirement === 'string',
+    'delete-requirement': () => true,
   },
   data() {
     return {
-      showDropdown: false,
+      showDropdown: true,
       isCourseModalOpen: false,
-      selectedRequirement: '',
       emGreen,
     };
   },
@@ -63,6 +90,11 @@ export default defineComponent({
     DropDownArrow,
     AllRequirementsDropdown,
   },
+  computed: {
+    requirementChoice(): string {
+      return this.selectedRequirement;
+    },
+  },
   methods: {
     openCourseModal() {
       this.isCourseModalOpen = !this.isCourseModalOpen;
@@ -72,6 +104,16 @@ export default defineComponent({
     },
     closeDropdownIfOpen() {
       this.showDropdown = false;
+    },
+    selectRequirement(requirement: string) {
+      if (this.selectedRequirement !== '') {
+        this.$emit('add-available-requirement', this.selectedRequirement);
+      }
+      this.$emit('select-requirement', requirement, this.index);
+      this.$emit('delete-available-requirement', requirement);
+    },
+    deleteRequirement() {
+      this.$emit('delete-requirement');
     },
   },
 });
@@ -83,9 +125,18 @@ export default defineComponent({
   border-top: 1px solid;
   border-color: $inactiveGray;
   margin-bottom: 0.5rem;
-  &-dropdown {
-    margin-top: 12px;
+
+  &-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 6px;
   }
+
+  &-dropdown {
+    padding-bottom: 3px;
+  }
+
   &-header {
     display: flex;
     flex-direction: row;

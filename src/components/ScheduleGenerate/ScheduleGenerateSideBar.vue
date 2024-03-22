@@ -54,8 +54,16 @@
     </div>
     <!-- The Figma wrote the below as 'No Requirements added' but I believe that was a capitalization mistake. -->
     <p v-if="requirements.length === 0" class="no-requirements-added">No requirements added.</p>
-    <div v-for="req in requirements" :key="req">
-      <requirement-courses :availableRequirements="availableRequirements" />
+    <div v-for="(req, index) in requirements" :key="req">
+      <requirement-courses
+        :availableRequirements="availableRequirements"
+        :selected-requirement="requirements[index]"
+        :index="index"
+        @select-requirement="selectRequirement"
+        @delete-available-requirement="deleteAvailableRequirement"
+        @add-available-requirement="addAvailableRequirement"
+        @delete-requirement="deleteRequirement(index)"
+      />
     </div>
   </div>
 </template>
@@ -67,14 +75,14 @@ import RequirementCourses from '@/components/ScheduleGenerate/RequirementCourses
 export default defineComponent({
   data(): {
     requirements: string[];
-    availableRequirements: Readonly<Record<string, string>>;
+    availableRequirements: Record<string, string>;
   } {
     return {
       requirements: [],
       availableRequirements: {
-        CS: 'CS Requirement',
-        Prob: 'Probability Requirement',
-        'Lib Studies': 'Liberal Studies',
+        'CS Requirement': 'CS Requirement',
+        'Probability Requirement': 'Probability Requirement',
+        'Liberal Studies': 'Liberal Studies',
       },
     };
   },
@@ -91,7 +99,22 @@ export default defineComponent({
   methods: {
     addRequirement() {
       this.requirements = [...this.requirements, ''];
-      console.log(this.requirements);
+    },
+    deleteAvailableRequirement(requirement: string) {
+      delete this.availableRequirements[requirement];
+    },
+    selectRequirement(requirement: string, index: number) {
+      this.requirements[index] = requirement;
+    },
+    addAvailableRequirement(requirement: string) {
+      if (requirement !== '') this.availableRequirements[requirement] = requirement;
+    },
+    deleteRequirement(index: number) {
+      // add back to the availableRequirements record
+      this.addAvailableRequirement(this.requirements[index]);
+
+      // delete this requirement from list
+      this.requirements.splice(index, 1);
     },
     openScheduleGenerateModal() {
       this.$emit('openScheduleGenerateModal');
