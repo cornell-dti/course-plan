@@ -85,6 +85,7 @@ import { defineComponent } from 'vue';
 import Schedule from '@/components/ScheduleGenerate/Schedule.vue';
 import ScheduleCourses from '@/components/ScheduleGenerate/ScheduleCourses.vue';
 import { generateSchedulePDF } from '@/tools/export-plan';
+import type { ReqInfo } from '@/tools/export-plan/types';
 
 export default defineComponent({
   props: {
@@ -106,51 +107,105 @@ export default defineComponent({
       }
     },
     downloadSchedule() {
-      generateSchedulePDF();
+      generateSchedulePDF(this.reqs, this.classesSchedule, this.year, this.season);
     },
   },
   computed: {
-    classes() {
-      return [
+    season() {
+      return 'Fall';
+    },
+    year() {
+      return 2024;
+    },
+    reqs(): Map<ReqInfo, FirestoreSemesterCourse> {
+      // eventually we want to use course color set
+      // and match with the right component of this modal
+      const reqs = new Map<ReqInfo, FirestoreSemesterCourse>();
+      reqs.set(
+        { name: 'Introductory Programming', type: 'College', typeValue: 'A&S' },
         {
-          title: 'Introductory Programming',
-          name: 'CS 1110',
-          color: '#FF3B30', // eventually want to use coursescolorset
-          // and match with the right component of this modal
-          timeStart: '8:00am',
-          timeEnd: '8:50am',
+          crseId: 1,
+          lastRoster: 'Fall 2024',
+          uniqueID: 1,
+          code: 'CS 1110',
+          name: 'Basic CS',
+          credits: 4,
+          creditRange: [4, 4],
+          semesters: ['Fall'],
+          color: '#FF3B30',
+        }
+      );
+      reqs.set(
+        {
+          name: 'Information Science Major Concentration Group A',
+          type: 'Major',
+          typeValue: 'Info Sci',
         },
         {
-          title: 'Information Science Major Concentration Group A',
-          name: 'INFO 2450',
+          crseId: 2,
+          lastRoster: 'Fall 2024',
+          uniqueID: 2,
+          code: 'INFO 2450',
+          name: 'Info Sci',
+          credits: 4,
+          creditRange: [4, 4],
+          semesters: ['Fall'],
           color: '#34C759',
-          timeStart: '8:40am',
-          timeEnd: '9:55am',
-        },
+        }
+      );
+      reqs.set(
+        { name: 'Food Science Minor Core Courses', type: 'Minor', typeValue: 'Food Sci' },
         {
-          title: 'Information Science Major Core Courses',
-          name: 'INFO 1260',
+          crseId: 3,
+          lastRoster: 'Fall 2024',
+          uniqueID: 3,
+          code: 'FOOD 1260',
+          name: 'Food Sci Core',
+          credits: 4,
+          creditRange: [4, 4],
+          semesters: ['Fall'],
           color: '#32A0F2',
-          timeStart: '10:10am',
-          timeEnd: '11:00am',
-        },
+        }
+      );
+      reqs.set(
+        { name: 'Information Science Major Electives', type: 'Major', typeValue: 'Info Sci' },
         {
-          title: 'Information Science Major Electives',
-          name: 'INFO 2300',
+          crseId: 4,
+          lastRoster: 'Fall 2024',
+          uniqueID: 4,
+          code: 'INFO 2300',
+          name: 'Info Sci Elective',
+          credits: 4,
+          creditRange: [4, 4],
+          semesters: ['Fall'],
           color: '#AF52DE',
-          timeStart: '12:20pm',
-          timeEnd: '1:10pm',
-        },
+        }
+      );
+      reqs.set(
+        { name: 'College Requirements Human Diversity (D)', type: 'College', typeValue: 'A&S' },
         {
-          title: 'College Requirements Human Diversity (D)',
-          name: 'DSOC 1101',
+          crseId: 5,
+          lastRoster: 'Fall 2024',
+          uniqueID: 5,
+          code: 'DSOC 1101',
+          name: 'Diversity',
+          credits: 4,
+          creditRange: [4, 4],
+          semesters: ['Fall'],
           color: '#FF9500',
-          timeStart: '2:30pm',
-          timeEnd: '3:20pm',
-        },
+        }
+      );
+      reqs.set(
+        { name: 'Grad Requirement', type: 'Grad', typeValue: 'Johnson' },
         {
-          title: 'No Requirement',
-          name: 'ART 2301',
+          crseId: 6,
+          lastRoster: 'Fall 2024',
+          uniqueID: 6,
+          code: 'ART 2301',
+          name: 'Art',
+          credits: 4,
+          creditRange: [4, 4],
+          semesters: ['Fall'],
           color: '#B155E0',
           timeStart: '11:00pm',
           timeEnd: '11:50pm',

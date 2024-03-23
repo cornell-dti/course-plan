@@ -6,15 +6,15 @@
         >&nbsp;Credits
       </h3>
       <h3 class="info-subheader">
-        <span class="info-subheader-heavy">{{ classes.length }}</span
-        >&nbsp;{{ classes.length === 1 ? 'Course' : 'Courses' }}
+        <span class="info-subheader-heavy">{{ classes.size }}</span
+        >&nbsp;{{ classes.size === 1 ? 'Course' : 'Courses' }}
       </h3>
     </div>
     <div class="requirement-between-justifier">
-      <div v-for="cls in classes" :key="cls.name">
-        <h4 class="requirement-title-text">{{ cls.title }}</h4>
+      <div v-for="[req, cls] of classes" :key="req.name">
+        <h4 class="requirement-title-text">{{ req.name }}</h4>
         <div class="class-circle" :style="'border-color: ' + cls.color">
-          <span class="class-text">{{ cls.name }}</span>
+          <span class="class-text">{{ cls.code }}</span>
         </div>
       </div>
     </div>
@@ -23,6 +23,7 @@
 
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
+import type { ReqInfo } from '@/tools/export-plan/types';
 
 export default defineComponent({
   props: {
@@ -31,7 +32,7 @@ export default defineComponent({
       required: true,
     },
     classes: {
-      type: Array as PropType<Array<{ color: string; title: string; name: string }>>,
+      type: Map as PropType<Map<ReqInfo, FirestoreSemesterCourse>>,
       required: true,
     },
   },
