@@ -284,6 +284,12 @@ const estimateTableHeight = (body: string[][]): number => {
  * semesterRows: the object containing the table body and bubble information
  * tableX: top left x co-ordinate of the table
  * tableY: top left y co-ordinate of the table
+ *
+ * FIXME: right now there is an overflow issue (in `pdf-generator.ts` as well) if
+ * the requirement name *and* requirement code are too long. i.e. the little bubble that shows
+ * the requirement group may overflow past the right edge of the table.
+ *
+ * Generally doesn't happen; only occurs with long requirement names like for InfoSci.
  */
 const renderTable = (
   doc: JsPDF,

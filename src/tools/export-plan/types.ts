@@ -66,5 +66,5 @@ export type ClassesSchedule = {
 export type ReqInfo = {
   name: string;
   type: 'College' | 'Minor' | 'Major' | 'Grad' | 'Uni';
-  typeValue: string; // e.g. CoE, Computer Science, etc.
+  typeValue: string; // e.g. CoE, CS, etc. (should be the shortened code)
 };

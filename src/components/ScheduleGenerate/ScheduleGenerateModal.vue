@@ -141,9 +141,9 @@ export default defineComponent({
       );
       reqs.set(
         {
-          name: 'Information Science Major Concentration Group A',
+          name: 'Conc. Group A',
           type: 'Major',
-          typeValue: 'Info Sci',
+          typeValue: 'InfoSci',
         },
         {
           crseId: 2,
@@ -158,7 +158,7 @@ export default defineComponent({
         }
       );
       reqs.set(
-        { name: 'Food Science Minor Core Courses', type: 'Minor', typeValue: 'Food Sci' },
+        { name: 'Minor Core Courses', type: 'Minor', typeValue: 'FoodSci' },
         {
           crseId: 3,
           lastRoster: 'Fall 2024',
@@ -172,7 +172,7 @@ export default defineComponent({
         }
       );
       reqs.set(
-        { name: 'Information Science Major Electives', type: 'Major', typeValue: 'Info Sci' },
+        { name: 'IS Major Electives', type: 'Major', typeValue: 'InfoSci' },
         {
           crseId: 4,
           lastRoster: 'Fall 2024',
@@ -186,7 +186,7 @@ export default defineComponent({
         }
       );
       reqs.set(
-        { name: 'College Requirements Human Diversity (D)', type: 'College', typeValue: 'A&S' },
+        { name: 'Human Diversity (D)', type: 'College', typeValue: 'A&S' },
         {
           crseId: 5,
           lastRoster: 'Fall 2024',
