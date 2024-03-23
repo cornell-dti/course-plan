@@ -41,7 +41,41 @@
           </div>
         </div>
       </div>
-      <div class="schedule-generate-bottom"></div>
+      <div class="schedule-generate-bottom">
+        <div class="download-button" @click="downloadSchedule">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="19"
+            height="19"
+            class="download-button-icon"
+            viewBox="0 0 19 19"
+            fill="none"
+          >
+            <path
+              d="M16.625 11.875V15.0417C16.625 15.4616 16.4582 15.8643 16.1613 16.1613C15.8643 16.4582 15.4616 16.625 15.0417 16.625H3.95833C3.53841 16.625 3.13568 16.4582 2.83875 16.1613C2.54181 15.8643 2.375 15.4616 2.375 15.0417V11.875"
+              stroke="white"
+              stroke-width="1.05556"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M5.54199 7.91699L9.50033 11.8753L13.4587 7.91699"
+              stroke="white"
+              stroke-width="1.05556"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M9.5 11.875V2.375"
+              stroke="white"
+              stroke-width="1.05556"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          <span>Download</span>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -50,6 +84,7 @@
 import { defineComponent } from 'vue';
 import Schedule from '@/components/ScheduleGenerate/Schedule.vue';
 import ScheduleCourses from '@/components/ScheduleGenerate/ScheduleCourses.vue';
+import { generateSchedulePDF } from '@/tools/export-plan';
 
 export default defineComponent({
   props: {
@@ -69,6 +104,9 @@ export default defineComponent({
       if (e.target === this.$refs.modalBackground) {
         this.cancel();
       }
+    },
+    downloadSchedule() {
+      generateSchedulePDF();
     },
   },
   computed: {
@@ -216,6 +254,7 @@ export default defineComponent({
   },
 });
 </script>
+
 <style scoped lang="scss">
 @import '@/assets/scss/_variables.scss';
 button:hover {
@@ -331,6 +370,33 @@ input {
       padding-left: 2rem;
       font-size: 18px;
     }
+  }
+
+  &-bottom {
+    display: flex;
+    justify-content: flex-end;
+    padding: 0rem 2rem 1rem 2rem;
+  }
+}
+
+.download-button {
+  display: flex;
+  width: 246px;
+  height: 35px;
+  padding: 0px 66.603px 0px 62px;
+  align-items: center;
+  flex-shrink: 0;
+  border-radius: 3px;
+  background: var(--Button-Color---Sang, #4d7d92);
+  color: $white;
+  cursor: pointer;
+
+  &-icon {
+    margin-right: 21.05px;
+    width: 19px;
+    height: 19px;
+    flex-shrink: 0;
+    margin-bottom: 3px;
   }
 }
 </style>
