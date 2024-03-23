@@ -3,5 +3,6 @@
  */
 
 import generatePDF from './pdf-generator';
+import generateSchedulePDF from './pdf-schedule-generator';
 
-export default generatePDF;
+export { generatePDF, generateSchedulePDF };
