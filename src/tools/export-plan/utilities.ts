@@ -2,7 +2,7 @@ import { isPlaceholderCourse, isCourseTaken } from '../../utilities';
 import { getCollegeAbbrev, getMajorAbbrev, getMinorAbbrev, getGradAbbrev } from '../../data';
 import store from '../../store';
 import { pdfColors } from '@/assets/constants/colors';
-import { SemesterRows, BubbleData } from './types';
+import { SemesterRows, BubbleData, ReqInfo } from './types';
 
 export const trimEmptySems = (sems: readonly FirestoreSemester[]): readonly FirestoreSemester[] => {
   let maxNonemptyIndex = -1;
@@ -40,41 +40,22 @@ export const getCourseRows = (
   return { body: rows.map(row => row[0]), bubbles: rows.map(row => row[1]) };
 };
 
-export const getFulfilledReqs = (
-  course: FirestoreSemesterCourse | CourseTaken
-): readonly [string[], BubbleData[]] => {
-  const reqsFulfilled = store.state.safeRequirementFulfillmentGraph
-    .getConnectedRequirementsFromCourse({
-      uniqueId: isCourseTaken(course) ? course.uniqueId : course.uniqueID,
-    })
-    .filter(req => req in store.state.userRequirementsMap)
-    .filter(req => !reqsToFilterOut.includes(store.state.userRequirementsMap[req].name));
-
-  const getBubbleText = (req: string): string => {
-    switch (store.state.userRequirementsMap[req].sourceType) {
-      case 'College': {
-        return getCollegeAbbrev(store.state.userRequirementsMap[req].sourceSpecificName);
-      }
-      case 'Grad':
-        return getGradAbbrev(store.state.userRequirementsMap[req].sourceSpecificName);
-      case 'Major': {
-        return getMajorAbbrev(store.state.userRequirementsMap[req].sourceSpecificName);
-      }
-      case 'Minor': {
-        return getMinorAbbrev(store.state.userRequirementsMap[req].sourceSpecificName);
-      }
-      default:
-        throw new Error('group type not valid for bubble');
+const getBubbleText = (req: string): string => {
+  switch (store.state.userRequirementsMap[req].sourceType) {
+    case 'College': {
+      return getCollegeAbbrev(store.state.userRequirementsMap[req].sourceSpecificName);
     }
-  };
-
-  return [
-    reqsFulfilled.map(req => store.state.userRequirementsMap[req].name),
-    reqsFulfilled.map(req => ({
-      requirementGroup: getBubbleText(req),
-      color: bubbleColorMap[store.state.userRequirementsMap[req].sourceType](req),
-    })),
-  ];
+    case 'Grad':
+      return getGradAbbrev(store.state.userRequirementsMap[req].sourceSpecificName);
+    case 'Major': {
+      return getMajorAbbrev(store.state.userRequirementsMap[req].sourceSpecificName);
+    }
+    case 'Minor': {
+      return getMinorAbbrev(store.state.userRequirementsMap[req].sourceSpecificName);
+    }
+    default:
+      throw new Error('group type not valid for bubble');
+  }
 };
 
 /**
@@ -88,6 +69,58 @@ export const bubbleColorMap: Record<RequirementGroupType, (req?: string) => stri
   Grad: () => pdfColors.majorTeal,
   Major: () => pdfColors.majorTeal,
   Minor: () => pdfColors.minorDarkTeal,
+};
+
+const forcedBubbleColorMap = (req: 'College' | 'Major' | 'Minor' | 'Grad' | 'Uni'): string => {
+  switch (req) {
+    case 'College':
+      return pdfColors.collegeBlue;
+    case 'Grad':
+      return pdfColors.majorTeal;
+    case 'Major':
+      return pdfColors.majorTeal;
+    case 'Minor':
+      return pdfColors.minorDarkTeal;
+    default:
+      return pdfColors.turquoise;
+  }
+};
+
+export const getCourseRowsWithForcedReqs = (
+  courses: Map<ReqInfo, FirestoreSemesterCourse>
+): SemesterRows => {
+  const rows: [string[], BubbleData[]][] = Array.from(courses.entries()).map(([req, course]) => {
+    const reqs = [req.name];
+    const bubbles = [{ requirementGroup: req.typeValue, color: forcedBubbleColorMap(req.type) }];
+    return [
+      [
+        `${course.code}${isCourseTaken(course) ? '' : `: ${course.name}`}`,
+        course.credits.toString(),
+        reqs.join('\n'),
+      ],
+      bubbles,
+    ];
+  });
+  return { body: rows.map(row => row[0]), bubbles: rows.map(row => row[1]) };
+};
+
+export const getFulfilledReqs = (
+  course: FirestoreSemesterCourse | CourseTaken
+): readonly [string[], BubbleData[]] => {
+  const reqsFulfilled = store.state.safeRequirementFulfillmentGraph
+    .getConnectedRequirementsFromCourse({
+      uniqueId: isCourseTaken(course) ? course.uniqueId : course.uniqueID,
+    })
+    .filter(req => req in store.state.userRequirementsMap)
+    .filter(req => !reqsToFilterOut.includes(store.state.userRequirementsMap[req].name));
+
+  return [
+    reqsFulfilled.map(req => store.state.userRequirementsMap[req].name),
+    reqsFulfilled.map(req => ({
+      requirementGroup: getBubbleText(req),
+      color: bubbleColorMap[store.state.userRequirementsMap[req].sourceType](req),
+    })),
+  ];
 };
 
 /**

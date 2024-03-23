@@ -8,15 +8,14 @@ import winterEmojiURL from '@/assets/images/pdf-gen/winter.png';
 import APIBEmojiURL from '@/assets/images/pdf-gen/apib.png';
 import { lightPlaceholderGray, borderGray } from '@/assets/constants/scss-variables';
 import { pdfColors } from '@/assets/constants/colors';
-import { trimEmptySems, bubbleColorMap, getCourseRows, loadImage } from './utilities';
-import { SemesterRows } from './types';
+import { bubbleColorMap, loadImage, getCourseRowsWithForcedReqs } from './utilities';
+import { SemesterRows, ClassesSchedule, ReqInfo } from './types';
 
 import {
   getCollegeFullName,
   getMajorFullName,
   getMinorFullName,
   getGradFullName,
-  sortedSemesters,
 } from '../../utilities';
 import store from '../../store';
 import { addFonts } from './add-fonts';
@@ -39,7 +38,12 @@ const tableHeader = [['Course', 'Credits', 'Requirements Fulfilled']];
 // max number of characters that can fit into a line for the major, minor or grad program field
 const programLineCharLimit = 45;
 
-const generateSchedulePDF = async (): Promise<void> => {
+const generateSchedulePDF = async (
+  classes: Map<ReqInfo, FirestoreSemesterCourse>,
+  classesSchedule: ClassesSchedule, // for use in the calendar
+  year: number,
+  season: FirestoreSemesterSeason
+): Promise<void> => {
   const doc = new JsPDF({ unit: 'pt', format: 'letter' });
 
   addFonts(doc);
@@ -52,8 +56,7 @@ const generateSchedulePDF = async (): Promise<void> => {
   await renderFirstHeader(doc);
 
   // Rendering tables now
-  // FIXME — read from data
-  await renderBaseTable(doc, programY, tableX);
+  await renderBaseTable(doc, classes, year, season, programY, tableX);
   renderFooter(doc);
 
   // create new page
@@ -65,8 +68,7 @@ const generateSchedulePDF = async (): Promise<void> => {
   programY = await renderSecondHeader(doc);
 
   // Rendering tables now
-  // FIXME — read from data
-  await renderBaseTable(doc, programY, tableX, 'right');
+  await renderBaseTable(doc, classes, year, season, programY, tableX, 'right');
 
   // rendering PDF footer
   renderFooter(doc);
@@ -192,12 +194,13 @@ const renderSecondHeader = async (doc: JsPDF): Promise<number> => {
 
 const renderBaseTable = async (
   doc: JsPDF,
+  classes: Map<ReqInfo, FirestoreSemesterCourse>,
+  year: number,
+  season: FirestoreSemesterSeason,
   programY: number,
   tableX: number,
   totalCreditsAlignment: 'left' | 'right' = 'left'
 ): Promise<void> => {
-  const sem = trimEmptySems(sortedSemesters(store.state.semesters, false))[0];
-
   let startct = 0;
 
   if (totalCreditsAlignment === 'left') {
@@ -215,10 +218,10 @@ const renderBaseTable = async (
     APIB: await loadImage(APIBEmojiURL),
   };
 
-  let headerHeight = rowHeight * (2 + sem.courses.length);
-  if (sem.courses.length === 0) headerHeight = rowHeight;
+  let headerHeight = rowHeight * (2 + classes.size);
+  if (classes.size === 0) headerHeight = rowHeight;
 
-  const { body, bubbles } = getCourseRows(sem.courses);
+  const { body, bubbles } = getCourseRowsWithForcedReqs(classes);
 
   const estimatedHeight = estimateTableHeight(body);
   if (estimatedHeight + startct + 35 > doc.internal.pageSize.height) {
@@ -230,9 +233,9 @@ const renderBaseTable = async (
   doc.roundedRect(tableX, startct - rowHeight, tableWidth, headerHeight, 4, 4, 'F');
 
   doc.setFont('ProximaNova-Bold', 'bold');
-  doc.text(`${sem.season} ${sem.year} Generated Schedule`, tableX + 20, startct - 6);
+  doc.text(`${season} ${year} Generated Schedule`, tableX + 20, startct - 6);
 
-  const emoji = emojiMap[sem.season];
+  const emoji = emojiMap[season];
   doc.addImage(emoji, tableX + 5, startct - 15.5, 12, 12);
 
   const tableHeight = renderTable(doc, { body, bubbles }, tableX, startct, totalCreditsAlignment);
