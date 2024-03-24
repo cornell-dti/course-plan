@@ -144,6 +144,7 @@ export default defineComponent({
 
 <style scoped lang="scss">
 @import '@/assets/scss/_variables.scss';
+
 .newCourse {
   &-name {
     position: relative;
@@ -152,23 +153,27 @@ export default defineComponent({
     line-height: 14px;
     color: $darkGray;
   }
+
   &-title {
     font-size: 14px;
     line-height: 17px;
     color: $lightPlaceholderGray;
     margin-bottom: 6px;
   }
+
   &-requirements {
     font-style: normal;
     font-weight: 600;
     font-size: 14px;
     line-height: 14px;
     color: $emGreen;
+
     &-container {
       display: flex;
       flex-direction: row;
       margin-bottom: 10px;
     }
+
     &-edit {
       display: flex;
       flex-direction: row;
@@ -176,6 +181,7 @@ export default defineComponent({
       flex-wrap: wrap;
     }
   }
+
   &-link {
     padding: 0;
     background-color: $white;
@@ -186,17 +192,20 @@ export default defineComponent({
     line-height: 14px;
     color: $yuxuanBlue;
     cursor: pointer;
+
     &:hover {
       text-decoration-line: underline;
       color: $yuxuanBlue;
     }
   }
 }
+
 .warning {
   color: $warning;
   font-size: 14px;
   line-height: 17px;
   margin-bottom: 8px;
+
   &-icon {
     float: left;
     margin: 0.125rem 0.25rem 0 0;
