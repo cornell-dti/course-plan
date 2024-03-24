@@ -33,43 +33,7 @@
             </div>
             <div class="schedule-generate-inputs">
               <div class="schedule-generate-inputWrapper">
-                <schedule-courses
-                  :num-credits="12"
-                  :classes="[
-                    {
-                      title: 'Introductory Programming',
-                      name: 'CS 1110',
-                      color: '#FF3B30', // eventually want to use coursescolorset
-                      // and match with the right component of this modal
-                    },
-                    {
-                      title: 'Information Science Major Concentration Group A',
-                      name: 'INFO 2450',
-                      color: '#34C759',
-                    },
-                    {
-                      title: 'Information Science Major Core Courses',
-                      name: 'INFO 1260',
-                      color: '#32A0F2',
-                    },
-                    {
-                      title: 'Information Science Major Electives',
-                      name: 'INFO 2300',
-                      color: '#AF52DE',
-                    },
-                    {
-                      title: 'College Requirements Human Diversity (D)',
-                      name: 'DSOC 1101',
-                      color: '#FF9500',
-                    },
-                    {
-                      title: 'No Requirement',
-                      name: 'ART 2301',
-                      color: '#B155E0',
-                    },
-                    // question: what if # of courses overflows the box? not in designs iirc
-                  ]"
-                />
+                <schedule-courses :num-credits="12" :classes="classes" />
               </div>
             </div>
           </div>
@@ -79,7 +43,7 @@
             </div>
             <div class="schedule-generate-inputs">
               <div class="schedule-generate-inputWrapper">
-                <schedule />
+                <schedule :classesSchedule="classesSchedule" />
               </div>
             </div>
           </div>
@@ -109,6 +73,156 @@ export default defineComponent({
       if (e.target === this.$refs.modalBackground) {
         this.cancel();
       }
+    },
+  },
+  computed: {
+    classes() {
+      return [
+        {
+          title: 'Introductory Programming',
+          name: 'CS 1110',
+          color: '#FF3B30', // eventually want to use coursescolorset
+          // and match with the right component of this modal
+          timeStart: '8:00am',
+          timeEnd: '8:50am',
+        },
+        {
+          title: 'Information Science Major Concentration Group A',
+          name: 'INFO 2450',
+          color: '#34C759',
+          timeStart: '8:40am',
+          timeEnd: '9:55am',
+        },
+        {
+          title: 'Information Science Major Core Courses',
+          name: 'INFO 1260',
+          color: '#32A0F2',
+          timeStart: '10:10am',
+          timeEnd: '11:00am',
+        },
+        {
+          title: 'Information Science Major Electives',
+          name: 'INFO 2300',
+          color: '#AF52DE',
+          timeStart: '12:20pm',
+          timeEnd: '1:10pm',
+        },
+        {
+          title: 'College Requirements Human Diversity (D)',
+          name: 'DSOC 1101',
+          color: '#FF9500',
+          timeStart: '2:30pm',
+          timeEnd: '3:20pm',
+        },
+        {
+          title: 'No Requirement',
+          name: 'ART 2301',
+          color: '#B155E0',
+          timeStart: '5:10pm',
+          timeEnd: '6:00pm',
+        },
+        // question: what if # of courses overflows the box? not in designs iirc
+      ];
+    },
+    classesSchedule() {
+      return {
+        Monday: [
+          {
+            title: 'Introductory Programming',
+            name: 'CS 1110',
+            color: '#FF3B30',
+            timeStart: '8:00am',
+            timeEnd: '8:50am',
+          },
+          {
+            title: 'Information Science Major Core Courses',
+            name: 'INFO 1260',
+            color: '#32A0F2',
+            timeStart: '10:10am',
+            timeEnd: '11:00am',
+          },
+          {
+            title: 'Information Science Major Electives',
+            name: 'INFO 2300',
+            color: '#AF52DE',
+            timeStart: '12:20pm',
+            timeEnd: '1:10pm',
+          },
+          {
+            title: 'No Requirement',
+            name: 'ART 2301',
+            color: '#B155E0',
+            timeStart: '5:10pm',
+            timeEnd: '6:00pm',
+          },
+        ],
+        Tuesday: [
+          {
+            title: 'Information Science Major Concentration Group A',
+            name: 'INFO 2450',
+            color: '#34C759',
+            timeStart: '8:40am',
+            timeEnd: '9:55am',
+          },
+          {
+            title: 'College Requirements Human Diversity (D)',
+            name: 'DSOC 1101',
+            color: '#FF9500',
+            timeStart: '2:30pm',
+            timeEnd: '3:20pm',
+          },
+        ],
+        Wednesday: [
+          {
+            title: 'Introductory Programming',
+            name: 'CS 1110',
+            color: '#FF3B30',
+            timeStart: '8:00am',
+            timeEnd: '8:50am',
+          },
+          {
+            title: 'Information Science Major Core Courses',
+            name: 'INFO 1260',
+            color: '#32A0F2',
+            timeStart: '10:10am',
+            timeEnd: '11:00am',
+          },
+          {
+            title: 'Information Science Major Electives',
+            name: 'INFO 2300',
+            color: '#AF52DE',
+            timeStart: '12:20pm',
+            timeEnd: '1:10pm',
+          },
+        ],
+        Thursday: [
+          {
+            title: 'Information Science Major Concentration Group A',
+            name: 'INFO 2450',
+            color: '#34C759',
+            timeStart: '8:40am',
+            timeEnd: '9:55am',
+          },
+          {
+            title: 'College Requirements Human Diversity (D)',
+            name: 'DSOC 1101',
+            color: '#FF9500',
+            timeStart: '2:30pm',
+            timeEnd: '3:20pm',
+          },
+        ],
+        Friday: [
+          {
+            title: 'Introductory Programming',
+            name: 'CS 1110',
+            color: '#FF3B30',
+            timeStart: '12:20pm',
+            timeEnd: '1:10pm',
+          },
+        ],
+        Saturday: [],
+        Sunday: [],
+      };
     },
   },
 });
