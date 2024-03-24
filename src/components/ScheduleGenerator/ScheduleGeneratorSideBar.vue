@@ -1,3 +1,4 @@
+<!-- is this file being used?? -->
 <template>
   <div class="generatorheader">
     <h1 class="top header-title">Semester Schedule Builder</h1>
@@ -170,7 +171,8 @@ export default defineComponent({
   margin-bottom: 12px;
   border: 1px solid $emGreen;
   background: $emGreen;
-  cursor: pointer; /* otherwise uses default cursor */
+  cursor: pointer;
+  /* otherwise uses default cursor */
 }
 
 .generate-schedule-button:disabled {
@@ -214,6 +216,7 @@ export default defineComponent({
   -webkit-appearance: none;
   margin: 0;
 }
+
 .credit-limit-input[type='number'] {
   -moz-appearance: textfield;
   appearance: textfield;

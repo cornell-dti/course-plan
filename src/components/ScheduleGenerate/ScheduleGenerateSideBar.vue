@@ -40,9 +40,27 @@
 
           As such, if we want to enforce the credit limit here, would have to implement some sort of reactive JavaScript listener.
         -->
-        <input type="number" placeholder='"18"' min="0" max="30" class="credit-limit-input" />
+        <input
+          type="number"
+          placeholder='"18"'
+          min="0"
+          max="30"
+          class="credit-limit-input"
+          v-model="creditLimit"
+        />
       </div>
-      <button class="add-requirement-button">+ Requirement</button>
+      <div>
+        <button class="add-requirement-button" @click="toggleDropdown">+ Requirement</button>
+        <ul v-if="showDropdown" class="dropdown-content">
+          <li
+            v-for="req in requirements"
+            :key="req.requirementName"
+            @click="selectRequirement(req)"
+          >
+            {{ req.requirementName }}
+          </li>
+        </ul>
+      </div>
     </div>
     <hr />
     <!-- The Figma wrote the below as 'No Requirements added' but I believe that was a capitalization mistake. -->
@@ -52,18 +70,49 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import RequirementsDropdown from '@/components/Modals/NewCourse/RequirementsDropdown.vue';
+
+export type RequirementWithID = { readonly id: string; readonly name: string };
 
 export default defineComponent({
+  components: { RequirementsDropdown },
   props: {
     // current semester being generated for
     selectedSemester: { type: String, required: true },
     // (linked with requirements) whether any requirements have been added
     generateScheduleButtonDisabled: { type: Boolean, required: true },
   },
+  data() {
+    return {
+      creditLimit: 18,
+      showDropdown: false,
+      requirements: [
+        { requirementName: 'Major' },
+        { requirementName: 'Minor' },
+        { requirementName: 'College' },
+        { requirementName: 'Misc' },
+      ],
+    };
+  },
   emits: ['openScheduleGenerateModal'],
   methods: {
     openScheduleGenerateModal() {
       this.$emit('openScheduleGenerateModal');
+    },
+    toggleDropdown() {
+      this.showDropdown = !this.showDropdown;
+    },
+    selectRequirement(req) {
+      console.log(req.requirementName);
+      this.showDropdown = false;
+    },
+  },
+  watch: {
+    creditLimit(newValue, oldValue) {
+      const newValueStr = newValue.toString();
+      if (newValueStr.length > 2) {
+        this.creditLimit = oldValue || parseInt(newValueStr.substring(0, 2), 10);
+      }
     },
   },
 });
@@ -180,7 +229,8 @@ export default defineComponent({
   margin-bottom: 12px;
   border: 1px solid $emGreen;
   background: $emGreen;
-  cursor: pointer; /* otherwise uses default cursor */
+  cursor: pointer;
+  /* otherwise uses default cursor */
 }
 
 .generate-schedule-button:disabled {
@@ -224,6 +274,7 @@ export default defineComponent({
   -webkit-appearance: none;
   margin: 0;
 }
+
 .credit-limit-input[type='number'] {
   -moz-appearance: textfield;
   appearance: textfield;
