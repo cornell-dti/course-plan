@@ -18,6 +18,9 @@
       <!--TODO: add default view and another view when they are collections to be populated-->
       <div>
         <p>{{ collection }}</p>
+        <!--Must find all possible collections
+            Checkbox Style
+        -->
       </div>
     </div>
   </teleport-modal>
