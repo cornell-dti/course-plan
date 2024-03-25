@@ -1,5 +1,5 @@
 <template>
-  <div class="generated-schedule-schedule">
+  <div class="courses-main">
     <div class="parent-info-div">
       <h3 class="info-subheader">
         <span class="info-subheader-heavy">{{ numCredits }}</span
@@ -40,8 +40,8 @@ export default defineComponent({
 
 <style scoped lang="scss">
 @import '@/assets/scss/_variables.scss';
-.generated-schedule {
-  &-schedule {
+.courses {
+  &-main {
     border-color: $inactiveGray;
     border: 1px solid $inactiveGray;
     box-sizing: border-box;
