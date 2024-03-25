@@ -1,7 +1,7 @@
 <template>
   <div class="courseMenu">
     <div class="courseMenu-content">
-      <button class="courseMenu-section full-opacity-on-hover" @click="openSaveCourseModal">
+      <div class="courseMenu-section" @click="toggleDisplaySaveCourseModal">
         <div class="courseMenu-left">
           <img
             class="courseMenu-icon"
@@ -10,7 +10,13 @@
           />
           <span class="courseMenu-text">Save</span>
         </div>
-      </button>
+        <!-- TODO: access the name of the course-->
+        <save-course-modal
+          v-if="saveCourseModalVisible"
+          :course-name="courseName"
+          @close-save-course-modal="toggleDisplaySaveCourseModal"
+        />
+      </div>
       <div
         class="courseMenu-section"
         @click="toggleDisplayEditCourseCredits"
@@ -66,7 +72,6 @@
           src="@/assets/images/downarrow.svg"
           alt="arrow to expand edit course color"
         />
-
         <div
           v-if="displayColors"
           class="courseMenu-content courseMenu-colors"
@@ -117,6 +122,7 @@
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
 import { coursesColorSet } from '@/assets/constants/colors';
+import SaveCourseModal from '@/components/Modals/SaveCourseModal.vue';
 
 export default defineComponent({
   props: {
@@ -142,6 +148,8 @@ export default defineComponent({
       tooltipColor: '',
       zIndexColors: 1,
       zIndexEditCredits: 1,
+      saveCourseModalVisible: false,
+      courseName: 'todo',
     };
   },
   computed: {
@@ -168,9 +176,13 @@ export default defineComponent({
     'delete-course': () => true,
     'open-edit-color-modal': (color: string) => typeof color === 'string',
     'edit-course-credit': (credit: number) => typeof credit === 'number',
-    'open-save-course-modal': () => true,
+    'open-save-course-modal': (courseName: string) => typeof courseName === 'string',
   },
   methods: {
+    toggleDisplaySaveCourseModal() {
+      // when save course button is clicked, will display/close new modal
+      this.saveCourseModalVisible = !this.saveCourseModalVisible;
+    },
     toggleDisplayColors() {
       this.displayColors = !this.displayColors;
       if (this.displayColors) {
@@ -241,8 +253,11 @@ export default defineComponent({
       return creditArray;
     },
     openSaveCourseModal() {
-      this.$emit('open-save-course-modal');
+      this.$emit('open-save-course-modal', 'todo');
     },
+  },
+  components: {
+    SaveCourseModal,
   },
 });
 </script>
