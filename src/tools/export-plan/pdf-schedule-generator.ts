@@ -9,7 +9,7 @@ import APIBEmojiURL from '@/assets/images/pdf-gen/apib.png';
 import { lightPlaceholderGray, borderGray } from '@/assets/constants/scss-variables';
 import { pdfColors } from '@/assets/constants/colors';
 import { bubbleColorMap, loadImage, getCourseRowsWithForcedReqs } from './utilities';
-import { SemesterRows, ClassesSchedule, ReqInfo } from './types';
+import { SemesterRows, ReqInfo } from './types';
 
 import {
   getCollegeFullName,
@@ -40,7 +40,7 @@ const programLineCharLimit = 45;
 
 const generateSchedulePDF = async (
   classes: Map<ReqInfo, FirestoreSemesterCourse>,
-  classesSchedule: ClassesSchedule, // for use in the calendar
+  calendarDataString: string,
   year: number,
   season: FirestoreSemesterSeason
 ): Promise<void> => {
@@ -55,8 +55,23 @@ const generateSchedulePDF = async (
   // render PDF header for page 1
   await renderFirstHeader(doc);
 
-  // Rendering tables now
-  await renderBaseTable(doc, classes, year, season, programY, tableX);
+  // Rendering table now
+  const tableHeight = await renderBaseTable(doc, classes, year, season, programY, tableX);
+
+  // Calendar time
+  const imgProps = doc.getImageProperties(calendarDataString);
+
+  // Sh
+
+  doc.addImage(
+    calendarDataString,
+    'PNG',
+    48,
+    tableHeight,
+    tableWidth,
+    imgProps.height * (tableWidth / imgProps.width)
+  );
+
   renderFooter(doc);
 
   // create new page
@@ -200,7 +215,7 @@ const renderBaseTable = async (
   programY: number,
   tableX: number,
   totalCreditsAlignment: 'left' | 'right' = 'left'
-): Promise<void> => {
+): Promise<number> => {
   let startct = 0;
 
   if (totalCreditsAlignment === 'left') {
@@ -240,6 +255,8 @@ const renderBaseTable = async (
 
   const tableHeight = renderTable(doc, { body, bubbles }, tableX, startct, totalCreditsAlignment);
   startct += tableHeight + tableGap;
+
+  return startct;
 };
 
 const renderFooter = (doc: JsPDF): void => {

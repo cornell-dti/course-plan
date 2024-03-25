@@ -1,7 +1,7 @@
 <template>
   <div class="schedule-main">
-    <div class="schedule-body">
-      <div class="schedule-hours">
+    <div class="schedule-body" :style="getTotalHeight()">
+      <div class="schedule-hours" :style="getTotalHeight()">
         <div class="schedule-hour" :key="hour" v-for="hour in hoursRange">{{ hour }}</div>
       </div>
       <div class="schedule-week">
@@ -30,6 +30,7 @@
 
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
+import html2canvas from 'html2canvas';
 
 type Course = {
   color: string;
@@ -49,7 +50,6 @@ type MinMaxHour = {
   maxHour: number;
 };
 
-const totalPixels = 610;
 export default defineComponent({
   props: {
     classesSchedule: {
@@ -79,6 +79,9 @@ export default defineComponent({
       const total = this.getTotalMinutes();
       return total;
     },
+    availablePixels(): number {
+      return this.hoursRange.length * 61 - 50;
+    },
   },
   methods: {
     parseTimeString(time: string): Time {
@@ -96,6 +99,18 @@ export default defineComponent({
         hours = 0;
       }
       return { hours, minutes };
+    },
+
+    async generatePdfData(): Promise<string> {
+      // Get the HTML of the Vue component
+      const element = this.$el;
+
+      // Use html2canvas to convert the HTML to a canvas
+      const canvas = await html2canvas(element);
+
+      const imgData = canvas.toDataURL('image/png');
+
+      return imgData;
     },
 
     getMinMaxHours(): MinMaxHour {
@@ -128,7 +143,9 @@ export default defineComponent({
       const { hours, minutes } = this.parseTimeString(time);
       const { minHour } = this.getMinMaxHours();
       return (
-        Math.round((((hours - minHour) * 60 + minutes) / this.totalMinutes) * totalPixels) + 50
+        Math.round(
+          (((hours - minHour) * 60 + minutes) / this.totalMinutes) * this.availablePixels
+        ) + 50
       );
     },
     getStyle(color: string, timeStart: string, timeEnd: string): Record<string, string> {
@@ -136,6 +153,11 @@ export default defineComponent({
         borderColor: color,
         top: `${this.getPixels(timeStart).toString()}px`,
         height: `${(this.getPixels(timeEnd) - this.getPixels(timeStart)).toString()}px`,
+      };
+    },
+    getTotalHeight(): Record<string, string> {
+      return {
+        height: `${this.hoursRange.length * 61}px`,
       };
     },
   },
@@ -150,7 +172,6 @@ export default defineComponent({
     border: 1px solid $inactiveGray;
     box-sizing: border-box;
     border-radius: 4px;
-    height: 780px;
 
     padding: 2rem 0.5rem 1rem 1.5rem;
   }
@@ -167,17 +188,16 @@ export default defineComponent({
       margin-bottom: 1.8rem;
       justify-self: center;
     }
-    border-left: 1px solid $inactiveGray;
+    border-left: 1px solid #e5e5e5;
   }
   &-hours {
     display: flex;
     flex-direction: column;
     color: $secondaryGray;
-    justify-content: space-between;
     margin-right: 2rem;
   }
   &-hour {
-    margin-top: 40px;
+    padding-top: 40px;
   }
   &-body {
     display: flex;
@@ -188,7 +208,6 @@ export default defineComponent({
     border-left-width: 4px;
     border-left-style: solid;
     padding-left: 8px;
-    height: 70px;
     width: 85px;
     position: absolute;
     &-info {
