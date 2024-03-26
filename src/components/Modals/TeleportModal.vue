@@ -63,7 +63,7 @@ import store from '@/store';
 
 export default defineComponent({
   props: {
-    title: { type: String, required: true },
+    title: { type: String, default: '' },
     contentClass: { type: String, required: true },
     leftButtonText: { type: String, default: '' },
     rightButtonText: { type: String, default: '' },
