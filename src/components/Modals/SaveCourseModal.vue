@@ -1,22 +1,31 @@
 <template>
   <teleport-modal
-    :title="`${courseName} Saved`"
     content-class="content-plan"
     right-button-text="Save"
     @model-closed="closeCurrentModal"
     @right-button-clicked="saveCourse"
+    :has-custom-position="true"
   >
-    <div>
-      <hr />
-      <span> Collection </span>
-      <div @click="addNewCollection">
-        <img src="src\assets\images\plus.svg" alt="add new collection" />
+    <template #title>
+      <div class="saveCourseModal-title">
+        <img src="src\assets\images\savedIconBig.svg" alt="big saved icon" />
+        <h1>{{ courseName }} Saved</h1>
       </div>
-      <hr />
+    </template>
+    <div class="saveCourseModal-header">
+      <div class="saveCourseModal-header-line"><hr /></div>
+      <div class="saveCourseModal-header-content">
+        <span>Collections</span>
+        <button class="saveCourseModal-header-addButton" @click="addNewCollection">
+          <img src="src\assets\images\plus.svg" alt="add new collection" />
+        </button>
+      </div>
+      <div class="saveCoursesModal-header-line" v-if="isdefaultCollection"><hr /></div>
     </div>
+
     <div class="saveCourseModal-body">
       <!--TODO: add default view and another view when they are collections to be populated-->
-      <div>
+      <div class="saveCourseModal-body-content">
         <p>{{ collection }}</p>
         <!--Must find all possible collections
             Checkbox Style
@@ -32,11 +41,12 @@ import TeleportModal from '@/components/Modals/TeleportModal.vue';
 // import store from '@/store';
 
 export default defineComponent({
+  components: { TeleportModal },
   props: {
     courseName: { type: String, required: true },
     collection: { type: String, default: 'No collections added yet' },
+    isdefaultCollection: { type: Boolean, default: true },
   },
-  components: { TeleportModal },
   emits: {
     'close-save-course-modal': () => true,
     'save-course': (name: string) => typeof name === 'string',
@@ -55,16 +65,13 @@ export default defineComponent({
       this.$emit('open-add-collection-modal');
     },
   },
-  data() {
-    return { isDisabled: false };
-  },
 });
 </script>
 
 <style lang="scss">
 @import '@/assets/scss/_variables.scss';
 .content-plan {
-  width: 20rem;
+  width: 40rem;
 }
 
 .modal {
@@ -73,6 +80,50 @@ export default defineComponent({
   }
   &--flex {
     display: flex;
+  }
+}
+
+.saveCourseModal {
+  &-title {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 1rem;
+    gap: 0.5rem;
+    img {
+      align-self: flex-start;
+    }
+  }
+  &-header {
+    display: flex;
+    flex-direction: column;
+    hr {
+      margin-left: -6%;
+      width: 112%;
+    }
+    &-content {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      color: $primaryGray;
+      span {
+        font-size: 13px;
+        font-style: normal;
+        font-weight: 900;
+      }
+      &-addButton {
+        cursor: pointer;
+        &:hover {
+          opacity: 0.5;
+        }
+      }
+    }
+  }
+  &-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: $darkPlaceholderGray;
   }
 }
 </style>

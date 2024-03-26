@@ -10,12 +10,7 @@
           />
           <span class="courseMenu-text">Save</span>
         </div>
-        <!-- TODO: access the name of the course-->
-        <save-course-modal
-          v-if="saveCourseModalVisible"
-          :course-name="courseName"
-          @close-save-course-modal="toggleDisplaySaveCourseModal"
-        />
+        <save-course-modal v-if="saveCourseModalVisible" :course-name="courseName" />
       </div>
       <div
         class="courseMenu-section"
@@ -125,7 +120,12 @@ import { coursesColorSet } from '@/assets/constants/colors';
 import SaveCourseModal from '@/components/Modals/SaveCourseModal.vue';
 
 export default defineComponent({
+  components: {
+    SaveCourseModal,
+  },
+
   props: {
+    courseObj: { type: Object as PropType<FirestoreSemesterCourse>, required: true },
     getCreditRange: {
       type: (Array as PropType<readonly number[]>) as PropType<readonly [number, number]>,
       required: true,
@@ -149,7 +149,7 @@ export default defineComponent({
       zIndexColors: 1,
       zIndexEditCredits: 1,
       saveCourseModalVisible: false,
-      courseName: 'todo',
+      courseName: this.courseObj.code,
     };
   },
   computed: {
@@ -176,7 +176,6 @@ export default defineComponent({
     'delete-course': () => true,
     'open-edit-color-modal': (color: string) => typeof color === 'string',
     'edit-course-credit': (credit: number) => typeof credit === 'number',
-    'open-save-course-modal': (courseName: string) => typeof courseName === 'string',
   },
   methods: {
     toggleDisplaySaveCourseModal() {
@@ -252,12 +251,6 @@ export default defineComponent({
       }
       return creditArray;
     },
-    openSaveCourseModal() {
-      this.$emit('open-save-course-modal', 'todo');
-    },
-  },
-  components: {
-    SaveCourseModal,
   },
 });
 </script>

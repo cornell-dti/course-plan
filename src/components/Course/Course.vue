@@ -56,6 +56,7 @@
     </div>
     <course-menu
       v-if="menuOpen"
+      :courseObj="courseObj"
       :semesterIndex="semesterIndex"
       :isCompact="compact"
       :courseColor="courseObj.color"
@@ -292,8 +293,7 @@ export default defineComponent({
     display: flex;
     align-items: center;
   }
-
-  &-credits {
+  port &-credits {
     white-space: nowrap;
   }
 
