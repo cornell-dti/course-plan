@@ -7,7 +7,7 @@
   >
     <template #title>
       <div class="saveCourseModal-title">
-        <img src="src\assets\images\savedIconBig.svg" alt="big saved icon" />
+        <img src="src\assets\images\saveIconBig.svg" alt="big saved icon" />
         <h1>{{ courseName }} Saved</h1>
       </div>
     </template>
