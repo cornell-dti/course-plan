@@ -1,10 +1,9 @@
 <template>
   <teleport-modal
     content-class="content-plan"
-    right-button-text="Save"
+    right-button-text="Done"
     @model-closed="closeCurrentModal"
     @right-button-clicked="saveCourse"
-    :has-custom-position="true"
   >
     <template #title>
       <div class="saveCourseModal-title">
@@ -12,23 +11,23 @@
         <h1>{{ courseName }} Saved</h1>
       </div>
     </template>
+
     <div class="saveCourseModal-header">
-      <div class="saveCourseModal-header-line"><hr /></div>
-      <div class="saveCourseModal-header-content">
-        <span>Collections</span>
-        <button class="saveCourseModal-header-addButton" @click="addNewCollection">
+      <!-- create a rectangular border-->
+      <div class="saveCourseModal-header-text">
+        <span> Collections </span>
+        <button class="saveCourseModal-header-text-addButton" @click="addNewCollection">
           <img src="src\assets\images\plus.svg" alt="add new collection" />
         </button>
       </div>
-      <div class="saveCoursesModal-header-line" v-if="isdefaultCollection"><hr /></div>
     </div>
 
     <div class="saveCourseModal-body">
-      <!--TODO: add default view and another view when they are collections to be populated-->
       <div class="saveCourseModal-body-content">
         <p>{{ collection }}</p>
         <!--Must find all possible collections
             Checkbox Style
+            Need a collections variable in firestore
         -->
       </div>
     </div>
@@ -38,7 +37,6 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import TeleportModal from '@/components/Modals/TeleportModal.vue';
-// import store from '@/store';
 
 export default defineComponent({
   components: { TeleportModal },
@@ -71,7 +69,7 @@ export default defineComponent({
 <style lang="scss">
 @import '@/assets/scss/_variables.scss';
 .content-plan {
-  width: 40rem;
+  width: 20rem;
 }
 
 .modal {
@@ -95,21 +93,24 @@ export default defineComponent({
   }
   &-header {
     display: flex;
-    flex-direction: column;
-    hr {
-      margin-left: -6%;
-      width: 112%;
-    }
-    &-content {
+    align-self: center;
+    margin-left: 0%;
+    margin-bottom: 2rem;
+    width: 112%;
+    height: 2rem;
+    border: 0.5px solid rgb(176, 156, 156);
+    color: $primaryGray;
+    padding: 0.5rem;
+    &-text {
       display: flex;
-      flex-direction: row;
+      align-items: center;
       justify-content: space-between;
-      color: $primaryGray;
-      span {
-        font-size: 13px;
-        font-style: normal;
-        font-weight: 900;
-      }
+      margin-left: 0.5rem;
+      margin-right: 0.5rem;
+      font-size: 13px;
+      font-style: normal;
+      font-weight: 900;
+      width: 100%;
       &-addButton {
         cursor: pointer;
         &:hover {
@@ -118,6 +119,7 @@ export default defineComponent({
       }
     }
   }
+
   &-body {
     display: flex;
     flex-direction: column;
