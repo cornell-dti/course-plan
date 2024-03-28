@@ -1,17 +1,17 @@
 <template>
   <div
-    class="onboarding-selectWrapperRow"
+    class="requirementDropdown-selectWrapperRow"
     :style="{ borderColor: boxBorder }"
     v-click-outside="closeDropdownIfOpen"
   >
-    <div class="onboarding-select onboarding-input" data-cyId="onboarding-dropdown">
+    <div class="requirementDropdown-select requirementDropdown-input">
       <div
-        class="onboarding-dropdown-placeholder college-major-minor-wrapper"
+        class="requirementDropdown-dropdown-placeholder requirement-wrapper"
         @click="showHideDropdown()"
       >
         <input
           type="text"
-          class="onboarding-dropdown-placeholder college-major-minor-placeholder"
+          class="requirementDropdown-dropdown-placeholder requirement-placeholder"
           :style="{ color: placeholderColor, border: 'none', outline: 'none' }"
           :placeholder="prevQuery || 'Select Requirement'"
           v-model="curQuery"
@@ -20,15 +20,15 @@
           @keyup="onKeyUp"
         />
         <div
-          class="onboarding-dropdown-placeholder college-major-minor-arrow"
+          class="requirementDropdown-dropdown-placeholder requirement-arrow"
           :style="{ borderTopColor: arrowColor }"
         ></div>
       </div>
-      <div class="onboarding-dropdown-content" v-if="shown">
+      <div class="requirementDropdown-dropdown-content" v-if="shown">
         <div
           v-for="[key, fullName] in foundChoices"
           :key="key"
-          class="onboarding-dropdown-content-item"
+          class="requirementDropdown-dropdown-content-item"
           :ref="`scroll-ref-${key}`"
           @click="onSelect([key, fullName])"
         >
@@ -155,6 +155,168 @@ export default defineComponent({
 });
 </script>
 
+// a lot of this styling is copied from Onboarding.scss
+
 <style scoped lang="scss">
-@import '@/components/Modals/Onboarding/Onboarding.scss';
+@import '@/assets/scss/_variables.scss';
+
+.requirementDropdown {
+  padding: 1rem;
+  width: 100%;
+
+  &-selectWrapperRow {
+    margin-top: 4px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  &-select {
+    background: $white;
+    border: 1px solid $inactiveGray;
+
+    box-sizing: border-box;
+    border-radius: 1px;
+    width: 100%;
+    font-size: 14px;
+    line-height: 17px;
+    padding-left: 0;
+
+    color: $darkPlaceholderGray;
+    position: relative;
+
+    &--disabled {
+      opacity: 0.3;
+      pointer-events: none;
+    }
+
+    &--column {
+      display: flex;
+      flex-direction: column;
+      margin-right: 4px;
+      margin-left: 32px;
+    }
+    &--columnCenter {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    &--column-remove {
+      display: flex;
+      flex-direction: column-reverse;
+      justify-content: center;
+    }
+    &--column-removeExam {
+      display: flex;
+      flex-direction: column-reverse;
+    }
+    &--columnWide {
+      display: flex;
+      flex-direction: column;
+      width: 380px;
+    }
+    &--columnFill {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+    }
+  }
+
+  &-input {
+    font-size: 14px;
+    line-height: 17px;
+    color: $lightPlaceholderGray;
+    width: 100%;
+    height: auto;
+    min-height: 1.75rem;
+    padding: 5px 8px;
+    background-color: $white;
+    border: 0.5px solid $inactiveGray;
+    box-sizing: border-box;
+    border-radius: 2px;
+  }
+
+  &-dropdown {
+    &-placeholder {
+      height: 100%;
+      font-size: 14px;
+      line-height: 17px;
+      margin-left: 0.25rem;
+      display: flex;
+      align-items: center;
+
+      color: $darkPlaceholderGray;
+
+      background: transparent;
+
+      &.requirement-wrapper {
+        width: 100%;
+        height: 100%;
+      }
+
+      &.requirement-placeholder {
+        width: 100%;
+      }
+
+      &.requirement-arrow {
+        border-left: 6.24px solid transparent;
+        border-right: 6.24px solid transparent;
+
+        border-top: 6.24px solid $inactiveGray;
+        background: transparent;
+
+        //when clicked border-top-color: #32A0F2;
+
+        height: auto;
+        margin-right: 8.7px;
+        margin-left: 5px;
+      }
+
+      &.college-test-credits-arrow {
+        border-left: 6.24px solid transparent;
+        border-right: 6.24px solid transparent;
+
+        border-top: 6.24px solid $inactiveGray;
+        background: transparent;
+
+        //when clicked border-top-color: #32A0F2;
+        height: auto;
+        margin-right: 6px;
+        margin-left: 15px;
+      }
+    }
+  }
+
+  &-dropdown-content {
+    z-index: 2;
+    position: absolute;
+    width: inherit;
+    background: $white;
+    box-shadow: -4px 4px 10px rgba(0, 0, 0, 0.25);
+    border-radius: 7px;
+    max-height: 150px;
+    overflow: auto;
+    left: 0px;
+
+    margin-top: 6px;
+
+    &-item {
+      height: 2.25rem;
+      font-size: 14px;
+      line-height: 17px;
+      display: flex;
+      align-items: center;
+
+      color: $lightPlaceholderGray;
+
+      padding-left: 8px;
+    }
+  }
+
+  &-dropdown-content div:hover {
+    background: rgba(50, 160, 242, 0.15);
+    width: 100%;
+  }
+}
 </style>
