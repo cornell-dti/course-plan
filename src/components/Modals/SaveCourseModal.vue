@@ -70,6 +70,7 @@ export default defineComponent({
 @import '@/assets/scss/_variables.scss';
 .content-plan {
   width: 20rem;
+  margin-top: 8rem;
 }
 
 .modal {
@@ -85,9 +86,10 @@ export default defineComponent({
   &-title {
     display: flex;
     justify-content: space-between;
-    padding-top: 1rem;
+    padding-top: 0.6rem;
     gap: 0.5rem;
     img {
+      margin-top: 2%;
       align-self: flex-start;
     }
   }
