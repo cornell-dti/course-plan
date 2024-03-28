@@ -7,7 +7,7 @@
   >
     <template #title>
       <div class="saveCourseModal-title">
-        <img src="src\assets\images\saveIconBig.svg" alt="big saved icon" />
+        <img src="@/assets/images/saveIconBig.svg" alt="big saved icon" />
         <h1>{{ courseName }} Saved</h1>
       </div>
     </template>
@@ -17,7 +17,7 @@
       <div class="saveCourseModal-header-text">
         <span> Collections </span>
         <button class="saveCourseModal-header-text-addButton" @click="addNewCollection">
-          <img src="src\assets\images\plus.svg" alt="add new collection" />
+          <img src="@/assets/images/plus.svg" alt="add new collection" />
         </button>
       </div>
     </div>
@@ -70,6 +70,7 @@ export default defineComponent({
 @import '@/assets/scss/_variables.scss';
 .content-plan {
   width: 20rem;
+  margin-top: 8rem;
 }
 
 .modal {
@@ -85,9 +86,10 @@ export default defineComponent({
   &-title {
     display: flex;
     justify-content: space-between;
-    padding-top: 1rem;
+    padding-top: 0.6rem;
     gap: 0.5rem;
     img {
+      margin-top: 2%;
       align-self: flex-start;
     }
   }
