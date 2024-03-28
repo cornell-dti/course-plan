@@ -45,9 +45,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import Course from '@/components/Course/Course.vue';
 import AddCourseButton from '@/components/AddCourseButton.vue';
-import Placeholder from '@/components/Course/Placeholder.vue';
 import NewCourseModal from '@/components/Modals/NewCourse/NewCourseModal.vue';
 import { emGreen } from '@/assets/constants/scss-variables';
 import DropDownArrow from '@/components/DropDownArrow.vue';
@@ -84,8 +82,6 @@ export default defineComponent({
   },
   components: {
     AddCourseButton,
-    Course,
-    Placeholder,
     NewCourseModal,
     DropDownArrow,
     AllRequirementsDropdown,
