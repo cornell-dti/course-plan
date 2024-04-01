@@ -36,7 +36,7 @@
         @add-course="addCourse"
       />
       <div class="requirement-courses">
-        <div v-for="c in courses" :key="c">
+        <div v-for="c in courses" :key="c.crseId">
           <div class="requirement-courseWrapper">
             <course
               :courseObj="c"
