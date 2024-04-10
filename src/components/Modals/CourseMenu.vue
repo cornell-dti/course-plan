@@ -1,7 +1,11 @@
 <template>
   <div class="courseMenu">
     <div class="courseMenu-content">
-      <div class="courseMenu-section" @click="toggleDisplaySaveCourseModal">
+      <div
+        class="courseMenu-section"
+        v-if="saveCourseIconVisible"
+        @click="toggleDisplaySaveCourseModal"
+      >
         <div class="courseMenu-left">
           <img
             class="courseMenu-icon"
@@ -118,6 +122,7 @@
 import { PropType, defineComponent } from 'vue';
 import { coursesColorSet } from '@/assets/constants/colors';
 import SaveCourseModal from '@/components/Modals/SaveCourseModal.vue';
+import featureFlagCheckers from '@/feature-flags';
 
 export default defineComponent({
   components: {
@@ -149,6 +154,7 @@ export default defineComponent({
       zIndexColors: 1,
       zIndexEditCredits: 1,
       saveCourseModalVisible: false,
+      saveCourseIconVisible: featureFlagCheckers.isSavedCoursesEnabled(),
       courseName: this.courseObj.code,
     };
   },
@@ -179,8 +185,12 @@ export default defineComponent({
   },
   methods: {
     toggleDisplaySaveCourseModal() {
-      // when save course button is clicked, will display/close new modal
-      this.saveCourseModalVisible = !this.saveCourseModalVisible;
+      if (featureFlagCheckers.isSavedCoursesEnabled()) {
+        // when save course button is clicked, will display/close new modal
+        this.saveCourseModalVisible = !this.saveCourseModalVisible;
+      } else {
+        this.saveCourseModalVisible = false;
+      }
     },
     toggleDisplayColors() {
       this.displayColors = !this.displayColors;
