@@ -30,8 +30,24 @@
         :choice="selectedRequirement"
         @on-select="selectRequirement"
       />
-      <new-course-modal @close-course-modal="closeCourseModal" v-if="isCourseModalOpen" />
+      <new-course-modal
+        @close-course-modal="closeCourseModal"
+        v-if="isCourseModalOpen"
+        @add-course="addCourse"
+      />
       <div class="requirement-courses">
+        <div v-for="c in courses" :key="c.crseId">
+          <div class="requirement-courseWrapper">
+            <course
+              :courseObj="c"
+              :active="false"
+              :isReqCourse="false"
+              :compact="false"
+              :isSchedGenCourse="true"
+              @delete-course="deleteCourse"
+            />
+          </div>
+        </div>
         <add-course-button
           v-if="selectedRequirement !== ''"
           :compact="false"
@@ -50,6 +66,9 @@ import NewCourseModal from '@/components/Modals/NewCourse/NewCourseModal.vue';
 import { emGreen } from '@/assets/constants/scss-variables';
 import DropDownArrow from '@/components/DropDownArrow.vue';
 import AllRequirementsDropdown from '@/components/ScheduleGenerate/AllRequirementsDropdown.vue';
+import Course from '@/components/Course/Course.vue';
+import { cornellCourseRosterCourseToFirebaseSemesterCourseWithCustomIDAndColor } from '@/user-data-converter';
+import store from '@/store';
 
 export default defineComponent({
   props: {
@@ -74,9 +93,11 @@ export default defineComponent({
     'delete-requirement': () => true,
   },
   data() {
+    const courses: FirestoreSemesterCourse[] = [];
     return {
       showDropdown: true,
       isCourseModalOpen: false,
+      courses,
       emGreen,
     };
   },
@@ -85,6 +106,7 @@ export default defineComponent({
     NewCourseModal,
     DropDownArrow,
     AllRequirementsDropdown,
+    Course,
   },
   computed: {
     requirementChoice(): string {
@@ -110,6 +132,18 @@ export default defineComponent({
     },
     deleteRequirement() {
       this.$emit('delete-requirement');
+    },
+    addCourse(course: CornellCourseRosterCourse) {
+      this.courses.push(
+        cornellCourseRosterCourseToFirebaseSemesterCourseWithCustomIDAndColor(
+          course,
+          -1,
+          store.state.subjectColors[course.subject]
+        )
+      );
+    },
+    deleteCourse(code: string) {
+      this.courses = this.courses.filter(course => course.code !== code);
     },
   },
 });
@@ -152,6 +186,9 @@ export default defineComponent({
   &-courses {
     margin-top: 1rem;
     margin-bottom: 1.2rem;
+  }
+  &-courseWrapper {
+    padding: 0.2rem;
   }
 }
 </style>
