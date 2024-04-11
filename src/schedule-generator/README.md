@@ -8,7 +8,7 @@ Below is a detailed file-by-file breakdown:
 
 This is essentially what is imported and used by the frontend. It takes in a request (type `GeneratorRequest`, see `generator-request.ts`) and outputs a meaningful value of type `GeneratedScheduleOutput` which can be used to see what courses fulfill what requirements and are at what times.
 
-Currenlty the algorithm functions by randomly shuffling potential courses the user inputted, and then generating the first valid schedule that can be constructed through iteration through this randomly shuffled list.
+Currently the algorithm functions by randomly shuffling potential courses the user inputted, and then generating the first valid schedule that can be constructed through iteration through this randomly shuffled list.
 
 ## `course-unit.ts`
 
