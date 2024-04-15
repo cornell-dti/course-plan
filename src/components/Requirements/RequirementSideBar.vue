@@ -474,6 +474,7 @@ export default defineComponent({
       };
     },
     applyFilter() {
+      this.showAllPage = 0;
       this.showAllCourses.potentiallyFilteredAllCourses = this.searchFilter();
       this.showAllCourses.shownCourses = this.findPotentialSeeAllCourses(
         this.showAllCourses.potentiallyFilteredAllCourses
