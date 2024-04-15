@@ -469,7 +469,7 @@ export default defineComponent({
         name: showAllCourses.requirementName,
         shownCourses: this.findPotentialSeeAllCourses(showAllCourses.subReqCoursesArray),
         allCourses: showAllCourses.subReqCoursesArray,
-        potentiallyFilteredAllCourses: this.searchFilter(),
+        potentiallyFilteredAllCourses: [...showAllCourses.subReqCoursesArray],
       };
     },
     applyFilter() {
