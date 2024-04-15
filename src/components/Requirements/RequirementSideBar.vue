@@ -138,8 +138,7 @@
               </button>
             </div>
           </div>
-          <!-- TODO: impl -->
-          <div class="autocomplete" style="padding-top: 0.5rem">
+          <div :class="'autocomplete' + (numPages > 1 ? ' mt-0.75' : ' ')">
             <input
               :class="['search-box', 'filter-input']"
               ref="dropdownInput"
@@ -788,5 +787,9 @@ h1.title {
   &::placeholder {
     color: $darkPlaceholderGray;
   }
+}
+
+.mt-0\.75 {
+  margin-top: 0.5rem;
 }
 </style>
