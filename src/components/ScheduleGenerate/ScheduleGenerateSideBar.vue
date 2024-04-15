@@ -84,6 +84,7 @@ export default defineComponent({
   } {
     return {
       requirements: [],
+      // TODO: change hard coded requirements to requirement ids.
       availableRequirements: {
         'CS Requirement': 'CS Requirement',
         'Probability Requirement': 'Probability Requirement',
