@@ -138,6 +138,15 @@
               </button>
             </div>
           </div>
+          <!-- TODO: impl -->
+          <div class="autocomplete" style="padding-top: 0.5rem">
+            <input
+              :class="['search-box', 'filter-input']"
+              ref="dropdownInput"
+              v-model="searchText"
+              placeholder="Search for a matching course..."
+            />
+          </div>
           <draggable
             :modelValue="showAllCourses.shownCourses"
             :clone="cloneCourse"
@@ -198,6 +207,7 @@ export type ShowAllCourses = {
   readonly name: string;
   shownCourses: readonly FirestoreSemesterCourse[];
   readonly allCourses: readonly FirestoreSemesterCourse[];
+  potentiallyFilteredAllCourses: FirestoreSemesterCourse[];
 };
 
 type Data = {
@@ -216,6 +226,7 @@ type Data = {
   isConfirmationOpen: boolean;
   selectedPlanCopy: string;
   confirmationText: string;
+  searchText: string;
 };
 
 // This section will be revisited when we try to make first-time tooltips
@@ -259,7 +270,12 @@ export default defineComponent({
       displayedMajorIndex: 0,
       displayedMinorIndex: 0,
       numOfColleges: 1,
-      showAllCourses: { name: '', shownCourses: [], allCourses: [] },
+      showAllCourses: {
+        name: '',
+        shownCourses: [],
+        allCourses: [],
+        potentiallyFilteredAllCourses: [],
+      },
       shouldShowAllCourses: false,
       showAllPage: 0,
       tourStep: 0,
@@ -270,6 +286,7 @@ export default defineComponent({
       isConfirmationOpen: false,
       selectedPlanCopy: '',
       confirmationText: '',
+      searchText: '',
     };
   },
   watch: {
@@ -304,6 +321,9 @@ export default defineComponent({
       newFeatureTour.start();
       updateSawNewFeature(true);
     },
+    searchText() {
+      this.applyFilter();
+    },
   },
   computed: {
     multiplePlansAllowed(): boolean {
@@ -325,7 +345,9 @@ export default defineComponent({
       return store.state.groupedRequirementFulfillmentReport;
     },
     numPages(): number {
-      return Math.ceil(this.showAllCourses.allCourses.length / maxSeeAllCoursesPerPage);
+      return Math.ceil(
+        this.showAllCourses.potentiallyFilteredAllCourses.length / maxSeeAllCoursesPerPage
+      );
     },
     hasNextPage(): boolean {
       return this.showAllPage + 1 < this.numPages;
@@ -448,7 +470,14 @@ export default defineComponent({
         name: showAllCourses.requirementName,
         shownCourses: this.findPotentialSeeAllCourses(showAllCourses.subReqCoursesArray),
         allCourses: showAllCourses.subReqCoursesArray,
+        potentiallyFilteredAllCourses: this.searchFilter(),
       };
+    },
+    applyFilter() {
+      this.showAllCourses.potentiallyFilteredAllCourses = this.searchFilter();
+      this.showAllCourses.shownCourses = this.findPotentialSeeAllCourses(
+        this.showAllCourses.potentiallyFilteredAllCourses
+      );
     },
     nextPage() {
       if (!this.hasNextPage) {
@@ -482,7 +511,12 @@ export default defineComponent({
     },
     backFromSeeAll() {
       this.shouldShowAllCourses = false;
-      this.showAllCourses = { name: '', shownCourses: [], allCourses: [] };
+      this.showAllCourses = {
+        name: '',
+        shownCourses: [],
+        allCourses: [],
+        potentiallyFilteredAllCourses: [],
+      };
       this.showAllPage = 0;
     },
     cloneCourse(courseWithDummyUniqueID: FirestoreSemesterCourse): FirestoreSemesterCourse {
@@ -490,6 +524,19 @@ export default defineComponent({
     },
     toggleMinimized() {
       this.$emit('toggleMinimized');
+    },
+    searchFilter() {
+      const code: FirestoreSemesterCourse[] = [];
+      for (const course of this.showAllCourses.allCourses) {
+        if (
+          course.code.toUpperCase().includes(this.searchText.toUpperCase()) ||
+          course.name.toUpperCase().includes(this.searchText.toUpperCase())
+        ) {
+          code.push(course);
+        }
+      }
+
+      return code;
     },
   },
 });
@@ -702,8 +749,7 @@ h1.title {
     height: calc(100vh - 4.5rem);
   }
 }
-</style>
-<style lang="scss">
+
 .modal-content.requirement-debugger-modal-content {
   display: flex;
   align-items: center;
@@ -712,5 +758,34 @@ h1.title {
   width: calc(100% - 10em);
   height: 100vh;
   overflow: scroll;
+}
+
+.search-box {
+  border: 1px solid transparent;
+  background-color: $searchBoxWhite;
+  padding: 10px;
+  font-size: 16px;
+}
+
+.autocomplete {
+  /*the container must be positioned relative:*/
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  margin-top: 0.5rem;
+  padding-bottom: 12px;
+}
+
+.filter-input {
+  font-size: 14px;
+  line-height: 17px;
+  color: $lightPlaceholderGray;
+  width: 100%;
+  border-radius: 3px;
+  padding: 0.5rem;
+  border: 0.5px solid $inactiveGray;
+  &::placeholder {
+    color: $darkPlaceholderGray;
+  }
 }
 </style>
