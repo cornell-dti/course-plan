@@ -114,15 +114,11 @@ export default defineComponent({
     },
     availableRequirements(): Record<string, string> {
       const courseRecord: Record<string, string> = this.groupedRequirementFulfillmentReports.reduce(
-        (accumulator: Record<string, string>, groupedReq: GroupedRequirementFulfillmentReport) => {
-          return groupedReq.reqs.reduce(
-            (acc: Record<string, string>, req: RequirementFulfillment) => {
-              acc[req.requirement.id] = req.requirement.name;
-              return acc;
-            },
-            accumulator
-          );
-        },
+        (accumulator: Record<string, string>, groupedReq: GroupedRequirementFulfillmentReport) =>
+          groupedReq.reqs.reduce((acc: Record<string, string>, req: RequirementFulfillment) => {
+            acc[req.requirement.id] = req.requirement.name;
+            return acc;
+          }, accumulator),
         {} as Record<string, string>
       );
       return courseRecord;
