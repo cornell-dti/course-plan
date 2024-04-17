@@ -4,7 +4,7 @@
       <div
         class="courseMenu-section"
         v-if="saveCourseIconVisible"
-        @click="toggleDisplaySaveCourseModal"
+        @click="openSaveCourseModal(courseObj.code)"
       >
         <div class="courseMenu-left">
           <img
@@ -14,7 +14,6 @@
           />
           <span class="courseMenu-text">Save</span>
         </div>
-        <save-course-modal v-if="saveCourseModalVisible" :course-name="courseName" />
       </div>
       <div
         class="courseMenu-section"
@@ -121,14 +120,9 @@
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
 import { coursesColorSet } from '@/assets/constants/colors';
-import SaveCourseModal from '@/components/Modals/SaveCourseModal.vue';
 import featureFlagCheckers from '@/feature-flags';
 
 export default defineComponent({
-  components: {
-    SaveCourseModal,
-  },
-
   props: {
     courseObj: { type: Object as PropType<FirestoreSemesterCourse>, required: true },
     getCreditRange: {
@@ -153,9 +147,8 @@ export default defineComponent({
       tooltipColor: '',
       zIndexColors: 1,
       zIndexEditCredits: 1,
-      saveCourseModalVisible: false,
+      courseCode: '',
       saveCourseIconVisible: featureFlagCheckers.isSavedCoursesEnabled(),
-      courseName: this.courseObj.code,
     };
   },
   computed: {
@@ -179,19 +172,12 @@ export default defineComponent({
     },
   },
   emits: {
+    'open-save-course-modal': (code: string) => typeof code === 'string',
     'delete-course': () => true,
     'open-edit-color-modal': (color: string) => typeof color === 'string',
     'edit-course-credit': (credit: number) => typeof credit === 'number',
   },
   methods: {
-    toggleDisplaySaveCourseModal() {
-      if (featureFlagCheckers.isSavedCoursesEnabled()) {
-        // when save course button is clicked, will display/close new modal
-        this.saveCourseModalVisible = !this.saveCourseModalVisible;
-      } else {
-        this.saveCourseModalVisible = false;
-      }
-    },
     toggleDisplayColors() {
       this.displayColors = !this.displayColors;
       if (this.displayColors) {
@@ -209,6 +195,10 @@ export default defineComponent({
         this.zIndexEditCredits = 1;
       }
       this.displayColors = false;
+    },
+    openSaveCourseModal(courseCode: string) {
+      this.courseCode = courseCode;
+      this.$emit('open-save-course-modal', courseCode);
     },
     deleteCourse() {
       this.$emit('delete-course');

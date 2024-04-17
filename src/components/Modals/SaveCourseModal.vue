@@ -2,13 +2,14 @@
   <teleport-modal
     content-class="content-plan"
     right-button-text="Done"
-    @model-closed="closeCurrentModal"
+    @modal-closed="closeCurrentModal"
+    @left-button-clicked="closeCurrentModal"
     @right-button-clicked="saveCourse"
   >
     <template #title>
       <div class="saveCourseModal-title">
         <img src="@/assets/images/saveIconBig.svg" alt="big saved icon" />
-        <h1>{{ courseName }} Saved</h1>
+        <h1>{{ courseCode }} Saved</h1>
       </div>
     </template>
 
@@ -41,7 +42,7 @@ import TeleportModal from '@/components/Modals/TeleportModal.vue';
 export default defineComponent({
   components: { TeleportModal },
   props: {
-    courseName: { type: String, required: true },
+    courseCode: { type: String, required: true },
     collection: { type: String, default: 'No collections added yet' },
     isdefaultCollection: { type: Boolean, default: true },
   },
@@ -55,7 +56,7 @@ export default defineComponent({
       this.$emit('close-save-course-modal');
     },
     saveCourse() {
-      this.$emit('save-course', this.courseName);
+      this.$emit('save-course', this.courseCode);
       this.$emit('close-save-course-modal');
     },
     addNewCollection() {
