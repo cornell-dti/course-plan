@@ -11,9 +11,11 @@
       >
         <div class="requirement-header">
           <drop-down-arrow :isFlipped="showDropdown" :fillColor="emGreen" />
-          <p v-if="selectedRequirement === ''" class="requirement-header-text">New Requirement</p>
+          <p v-if="selectedRequirement.reqId === ''" class="requirement-header-text">
+            New Requirement
+          </p>
           <p v-else class="requirement-header-text">
-            {{ selectedRequirement }}
+            {{ selectedRequirement.reqName }}
           </p>
         </div>
       </button>
@@ -27,7 +29,7 @@
       <p class="requirement-header-subtext">Please select a major requirement.</p>
       <all-requirements-dropdown
         :available-choices="availableRequirements"
-        :choice="selectedRequirement"
+        :choice="selectedRequirement.reqName"
         @on-select="selectRequirement"
       />
       <!-- TODO: filter course showing to ones that fulfill req -->
@@ -37,7 +39,7 @@
         @add-course="addCourse"
       />
       <div class="requirement-courses">
-        <div v-for="c in courses" :key="c.crseId">
+        <div v-for="c in selectedRequirement.courses" :key="c.crseId">
           <div class="requirement-courseWrapper">
             <course
               :courseObj="c"
@@ -50,7 +52,7 @@
           </div>
         </div>
         <add-course-button
-          v-if="selectedRequirement !== ''"
+          v-if="selectedRequirement.reqId !== ''"
           :compact="false"
           :should-clear-padding="true"
           @click="openCourseModal"
@@ -70,6 +72,7 @@ import AllRequirementsDropdown from '@/components/ScheduleGenerate/AllRequiremen
 import Course from '@/components/Course/Course.vue';
 import { cornellCourseRosterCourseToFirebaseSemesterCourseWithCustomIDAndColor } from '@/user-data-converter';
 import store from '@/store';
+import { ReqCourses } from '@/components/ScheduleGenerate/ScheduleGenerateSideBar.vue';
 
 export default defineComponent({
   props: {
@@ -78,7 +81,7 @@ export default defineComponent({
       required: true,
     },
     selectedRequirement: {
-      type: String,
+      type: Object as PropType<ReqCourses>,
       required: true,
     },
     index: {
@@ -87,18 +90,17 @@ export default defineComponent({
     },
   },
   emits: {
-    'delete-available-requirement': (requirement: string) => typeof requirement === 'string',
-    'select-requirement': (requirement: string, index: number) =>
-      typeof requirement === 'string' && typeof index === 'number',
-    'add-available-requirement': (requirement: string) => typeof requirement === 'string',
+    'delete-available-requirement': (reqId: string) => typeof reqId === typeof 'string',
+    'select-requirement': (reqId: string, index: number) =>
+      typeof reqId === typeof 'string' && typeof index === 'number',
+    'add-available-requirement': (requirement: ReqCourses) =>
+      typeof requirement === typeof 'ReqCourses',
     'delete-requirement': () => true,
   },
   data() {
-    const courses: FirestoreSemesterCourse[] = [];
     return {
       showDropdown: true,
       isCourseModalOpen: false,
-      courses,
       emGreen,
     };
   },
@@ -111,7 +113,7 @@ export default defineComponent({
   },
   computed: {
     requirementChoice(): string {
-      return this.selectedRequirement;
+      return this.selectedRequirement.reqName;
     },
   },
   methods: {
@@ -125,7 +127,7 @@ export default defineComponent({
       this.showDropdown = false;
     },
     selectRequirement(requirement: string) {
-      if (this.selectedRequirement !== '') {
+      if (this.selectedRequirement.reqId !== '') {
         this.$emit('add-available-requirement', this.selectedRequirement);
       }
       this.$emit('select-requirement', requirement, this.index);
@@ -135,7 +137,7 @@ export default defineComponent({
       this.$emit('delete-requirement');
     },
     addCourse(course: CornellCourseRosterCourse) {
-      this.courses.push(
+      this.selectedRequirement.courses.push(
         cornellCourseRosterCourseToFirebaseSemesterCourseWithCustomIDAndColor(
           course,
           -1,
@@ -144,7 +146,9 @@ export default defineComponent({
       );
     },
     deleteCourse(code: string) {
-      this.courses = this.courses.filter(course => course.code !== code);
+      this.selectedRequirement.courses = this.selectedRequirement.courses.filter(
+        course => course.code !== code
+      );
     },
   },
 });
