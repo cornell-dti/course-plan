@@ -127,9 +127,8 @@ export default defineComponent({
         this.cancel();
       }
     },
-    async downloadSchedule() {
-      const calendarRef = this.$refs.calendar as typeof Schedule;
-      generateSchedulePDF(this.reqs, await calendarRef.generatePdfData(), this.year, this.season);
+    downloadSchedule() {
+      generateSchedulePDF(this.reqs, this.classesSchedule, this.year, this.season);
     },
     regenerateSchedule() {
       // TODO: implement (connect to backend).

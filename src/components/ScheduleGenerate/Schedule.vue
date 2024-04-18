@@ -30,7 +30,6 @@
 
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
-import html2canvas from 'html2canvas';
 
 type Course = {
   color: string;
@@ -99,15 +98,6 @@ export default defineComponent({
         hours = 0;
       }
       return { hours, minutes };
-    },
-
-    async generatePdfData(): Promise<string> {
-      // Get the HTML of the Vue component
-      const element = this.$el;
-      // Use html2canvas to convert the HTML to a canvas
-      const canvas = await html2canvas(element);
-      const imgData = canvas.toDataURL('image/png');
-      return imgData;
     },
 
     getMinMaxHours(): MinMaxHour {
