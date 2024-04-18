@@ -27,25 +27,17 @@
           </div>
         </div>
         <div class="schedule-generate-body">
+          <div class="schedule-generate-subHeader schedule-generate-subHeader--smallerIndent">
+            Your Courses
+          </div>
           <div class="schedule-generate-section-courses">
-            <div class="schedule-generate-subHeader schedule-generate-subHeader--smallerIndent">
-              <span class="schedule-generate-subHeader--font">Your Courses</span>
-            </div>
-            <div class="schedule-generate-inputs">
-              <div class="schedule-generate-inputWrapper">
-                <schedule-courses :num-credits="12" :classes="classes" />
-              </div>
-            </div>
+            <schedule-courses :num-credits="12" :classes="classes" />
           </div>
           <div class="schedule-generate-section-schedule">
             <div class="schedule-generate-subHeader schedule-generate-subHeader--indent">
-              <span class="schedule-generate-subHeader--font">Fall 2024</span>
+              {{ selectedSemester }}
             </div>
-            <div class="schedule-generate-inputs">
-              <div class="schedule-generate-inputWrapper">
-                <schedule :classesSchedule="classesSchedule" />
-              </div>
-            </div>
+            <schedule :classesSchedule="classesSchedule" />
           </div>
         </div>
       </div>
@@ -60,6 +52,10 @@ import Schedule from '@/components/ScheduleGenerate/Schedule.vue';
 import ScheduleCourses from '@/components/ScheduleGenerate/ScheduleCourses.vue';
 
 export default defineComponent({
+  props: {
+    // current semester being generated for
+    selectedSemester: { type: String, required: true },
+  },
   components: {
     Schedule,
     ScheduleCourses,
@@ -118,8 +114,8 @@ export default defineComponent({
           title: 'No Requirement',
           name: 'ART 2301',
           color: '#B155E0',
-          timeStart: '5:10pm',
-          timeEnd: '6:00pm',
+          timeStart: '11:00pm',
+          timeEnd: '11:50pm',
         },
         // question: what if # of courses overflows the box? not in designs iirc
       ];
@@ -145,15 +141,8 @@ export default defineComponent({
             title: 'Information Science Major Electives',
             name: 'INFO 2300',
             color: '#AF52DE',
-            timeStart: '12:20pm',
-            timeEnd: '1:10pm',
-          },
-          {
-            title: 'No Requirement',
-            name: 'ART 2301',
-            color: '#B155E0',
-            timeStart: '5:10pm',
-            timeEnd: '6:00pm',
+            timeStart: '11:15am',
+            timeEnd: '12:05pm',
           },
         ],
         Tuesday: [
@@ -191,8 +180,8 @@ export default defineComponent({
             title: 'Information Science Major Electives',
             name: 'INFO 2300',
             color: '#AF52DE',
-            timeStart: '12:20pm',
-            timeEnd: '1:10pm',
+            timeStart: '11:15am',
+            timeEnd: '12:05pm',
           },
         ],
         Thursday: [
@@ -291,6 +280,7 @@ input {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    margin-top: 2rem;
   }
 
   &-section {
@@ -298,48 +288,33 @@ input {
     &-courses {
       width: 250px;
       margin-right: 2rem;
+      display: flex;
+      position: relative;
+      z-index: 1;
     }
     &-schedule {
-      flex: 1;
+      display: flex;
+      position: relative;
+      z-index: 1;
     }
   }
 
   &-subHeader {
-    font-weight: bold;
-    font-size: 16px;
-    line-height: 22px;
-    position: relative;
-    top: 23px;
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
-    /* identical to box height */
-    display: flex;
-    align-items: center;
+    font-weight: 900;
     text-align: center;
-    justify-content: space-between;
-    color: $darkGray2;
-    margin-bottom: 0.75rem;
+    color: $black;
+    position: absolute;
+    z-index: 2;
+    line-height: 22px;
+    margin-top: -0.5rem;
+    background-color: $white;
 
-    &--font {
-      color: $black;
-      flex-direction: row;
-      background-color: $white;
-      padding: 0rem 0.5rem 0rem 0.5rem;
-    }
-    &--review {
-      font-weight: normal;
-      padding: 5px;
-      margin-left: 10px;
-      background-color: $white;
-      color: $lightPlaceholderGray;
-      font-size: 16px;
-    }
     &--smallerIndent {
-      padding-left: 1.25rem;
+      margin-left: 1.25rem;
       font-size: 18px;
     }
     &--indent {
-      padding-left: 2rem;
+      margin-left: 2rem;
       font-size: 18px;
     }
   }
