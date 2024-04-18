@@ -47,16 +47,13 @@
         <button
           class="add-requirement-button"
           @click="addRequirement"
-          :disabled="Object.keys(requirements).length === numberOfRequirements"
+          :disabled="requirements.length === numberOfRequirements"
         >
           + Requirement
         </button>
       </div>
     </div>
-    <!-- The Figma wrote the below as 'No Requirements added' but I believe that was a capitalization mistake. -->
-    <p v-if="Object.keys(requirements).length === 0" class="no-requirements-added">
-      No requirements added.
-    </p>
+    <p v-if="requirements.length === 0" class="no-requirements-added">No requirements added.</p>
     <div v-for="(req, index) in requirements" :key="req.reqId">
       <requirement-courses
         :available-requirements="availableRequirements"
@@ -88,6 +85,8 @@ export type ReqCourses = {
 
 export default defineComponent({
   data(): {
+    // requirements is the list of requirement groups on the sidebar
+    // it includes the requirement id, name, and the courses associated with it
     requirements: ReqCourses[];
     isConfirmationOpen: boolean;
     confirmationText: string;
@@ -113,6 +112,9 @@ export default defineComponent({
     groupedRequirementFulfillmentReports(): readonly GroupedRequirementFulfillmentReport[] {
       return store.state.groupedRequirementFulfillmentReport;
     },
+    // this function is turning the groupedRequirementFulfillmentReports and taking the reqs out of each group
+    // and concatenating them into one giant record with reqId's as keys and reqName's as values
+    // it represents the available requirements that haven't been assigned yet
     availableRequirements(): Record<string, string> {
       const courseRecord: Record<string, string> = this.groupedRequirementFulfillmentReports.reduce(
         (accumulator: Record<string, string>, groupedReq: GroupedRequirementFulfillmentReport) =>
@@ -124,6 +126,7 @@ export default defineComponent({
       );
       return courseRecord;
     },
+    // total number of requirements, used to calculate when to gray out the +Requirement button
     numberOfRequirements(): number {
       let length = 0;
       this.groupedRequirementFulfillmentReports.forEach(
@@ -147,6 +150,7 @@ export default defineComponent({
     closeConfirmationModal() {
       this.isConfirmationOpen = false;
     },
+    // add course to a requirement
     addCourse(course: CornellCourseRosterCourse, index: number) {
       this.requirements[index].courses.push(
         cornellCourseRosterCourseToFirebaseSemesterCourseWithCustomIDAndColor(
@@ -156,25 +160,31 @@ export default defineComponent({
         )
       );
     },
+    // delete a course from a requirement
     deleteCourse(code: string, index: number) {
       this.requirements[index].courses = this.requirements[index].courses.filter(
         course => course.code !== code
       );
     },
+    // add a new requirement group
     addRequirement() {
       this.requirements = [...this.requirements, { reqId: '', reqName: '', courses: [] }];
     },
+    // get rid of an available requirement
     deleteAvailableRequirement(reqId: string) {
       delete this.availableRequirements[reqId];
     },
+    // select a requirement on the dropdown
     selectRequirement(reqId: string, index: number) {
       const reqName = this.availableRequirements[reqId];
       this.requirements[index] = { reqId, reqName, courses: [] };
     },
+    // add back an available requirement
     addAvailableRequirement(requirement: ReqCourses) {
       if (requirement.reqId !== '')
         this.availableRequirements[requirement.reqId] = requirement.reqName;
     },
+    // delete a requirement group and add back to the available requirements
     deleteRequirement(index: number) {
       const requirement = this.requirements[index];
       // add back to the availableRequirements record

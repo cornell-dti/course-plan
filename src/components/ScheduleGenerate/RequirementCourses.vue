@@ -70,7 +70,6 @@ import { emGreen } from '@/assets/constants/scss-variables';
 import DropDownArrow from '@/components/DropDownArrow.vue';
 import AllRequirementsDropdown from '@/components/ScheduleGenerate/AllRequirementsDropdown.vue';
 import Course from '@/components/Course/Course.vue';
-
 import { ReqCourses } from '@/components/ScheduleGenerate/ScheduleGenerateSideBar.vue';
 
 export default defineComponent({
