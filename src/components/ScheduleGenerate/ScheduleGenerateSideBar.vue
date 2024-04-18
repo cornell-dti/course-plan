@@ -44,13 +44,7 @@
           -->
           <input type="number" placeholder='"18"' min="0" max="30" class="credit-limit-input" />
         </div>
-        <button
-          class="add-requirement-button"
-          @click="addRequirement"
-          :disabled="requirements.length === numberOfRequirements"
-        >
-          + Requirement
-        </button>
+        <button class="add-requirement-button" @click="addRequirement">+ Requirement</button>
       </div>
     </div>
     <p v-if="requirements.length === 0" class="no-requirements-added">No requirements added.</p>
@@ -62,8 +56,6 @@
         @add-course="addCourse"
         @delete-course="deleteCourse"
         @select-requirement="selectRequirement"
-        @delete-available-requirement="deleteAvailableRequirement"
-        @add-available-requirement="addAvailableRequirement"
         @delete-requirement="deleteRequirement(index)"
       />
     </div>
@@ -126,16 +118,17 @@ export default defineComponent({
       );
       return courseRecord;
     },
+    // TODO: use this once we check the total number of requirement groups they can add
     // total number of requirements, used to calculate when to gray out the +Requirement button
-    numberOfRequirements(): number {
-      let length = 0;
-      this.groupedRequirementFulfillmentReports.forEach(
-        (groupedReq: GroupedRequirementFulfillmentReport) => {
-          length += groupedReq.reqs.length;
-        }
-      );
-      return length;
-    },
+    // numberOfRequirements(): number {
+    //   let length = 0;
+    //   this.groupedRequirementFulfillmentReports.forEach(
+    //     (groupedReq: GroupedRequirementFulfillmentReport) => {
+    //       length += groupedReq.reqs.length;
+    //     }
+    //   );
+    //   return length;
+    // },
   },
   methods: {
     openConfirmationModal(msg: string) {
@@ -170,25 +163,29 @@ export default defineComponent({
     addRequirement() {
       this.requirements = [...this.requirements, { reqId: '', reqName: '', courses: [] }];
     },
+
+    // TODO: use availableRequirement once we start enforcing how many requirement groups we can add
+
+    // add back an available requirement
+    // addAvailableRequirement(requirement: ReqCourses) {
+    //   if (requirement.reqId !== '')
+    //     this.availableRequirements[requirement.reqId] = requirement.reqName;
+    // },
     // get rid of an available requirement
-    deleteAvailableRequirement(reqId: string) {
-      delete this.availableRequirements[reqId];
-    },
+    // deleteAvailableRequirement(reqId: string) {
+    //   delete this.availableRequirements[reqId];
+    // },
     // select a requirement on the dropdown
     selectRequirement(reqId: string, index: number) {
       const reqName = this.availableRequirements[reqId];
       this.requirements[index] = { reqId, reqName, courses: [] };
     },
-    // add back an available requirement
-    addAvailableRequirement(requirement: ReqCourses) {
-      if (requirement.reqId !== '')
-        this.availableRequirements[requirement.reqId] = requirement.reqName;
-    },
+
     // delete a requirement group and add back to the available requirements
     deleteRequirement(index: number) {
       const requirement = this.requirements[index];
       // add back to the availableRequirements record
-      this.addAvailableRequirement(requirement);
+      // this.addAvailableRequirement(requirement);
 
       // delete this requirement from list
       this.requirements.splice(index, 1);

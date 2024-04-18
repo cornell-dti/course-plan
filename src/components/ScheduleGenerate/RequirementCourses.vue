@@ -92,11 +92,11 @@ export default defineComponent({
       typeof course === typeof 'CornellCourseRosterCourse' && typeof index === typeof 'number',
     'delete-course': (code: string, index: number) =>
       typeof code === typeof 'string' && typeof index === typeof 'number',
-    'delete-available-requirement': (reqId: string) => typeof reqId === typeof 'string',
     'select-requirement': (reqId: string, index: number) =>
       typeof reqId === typeof 'string' && typeof index === 'number',
-    'add-available-requirement': (requirement: ReqCourses) =>
-      typeof requirement === typeof 'ReqCourses',
+    // 'add-available-requirement': (requirement: ReqCourses) =>
+    //   typeof requirement === typeof 'ReqCourses',
+    // 'delete-available-requirement': (reqId: string) => typeof reqId === typeof 'string',
     'delete-requirement': () => true,
   },
   data() {
@@ -129,11 +129,11 @@ export default defineComponent({
       this.showDropdown = false;
     },
     selectRequirement(requirement: string) {
-      if (this.selectedRequirement.reqId !== '') {
-        this.$emit('add-available-requirement', this.selectedRequirement);
-      }
+      // if (this.selectedRequirement.reqId !== '') {
+      //   this.$emit('add-available-requirement', this.selectedRequirement);
+      // }
       this.$emit('select-requirement', requirement, this.index);
-      this.$emit('delete-available-requirement', requirement);
+      // this.$emit('delete-available-requirement', requirement);
     },
     deleteRequirement() {
       this.$emit('delete-requirement');
