@@ -42,6 +42,24 @@
         </div>
       </div>
       <div class="schedule-generate-bottom">
+        <button @click="regenerateSchedule" class="generate-schedules-button">
+          <span class="footer-text">Generate New Schedules</span>
+        </button>
+        <button
+          @click="() => paginate(-1)"
+          :disabled="currentPage === 1"
+          :class="'footer-button' + (currentPage === 1 ? ' footer-button-disabled' : ' ')"
+        >
+          <span :class="currentPage === 1 ? 'footer-text-disabled' : 'footer-text'">Prev</span>
+        </button>
+        <button
+          @click="() => paginate(1)"
+          :disabled="currentPage === 5"
+          :class="'footer-button' + (currentPage === 5 ? ' footer-button-disabled' : ' ')"
+        >
+          <span :class="currentPage === 5 ? 'footer-text-disabled' : 'footer-text'">Next</span>
+        </button>
+        <span class="pagination-text">Page {{ currentPage }}/5</span>
         <div class="download-button" @click="downloadSchedule">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -109,6 +127,20 @@ export default defineComponent({
     downloadSchedule() {
       generateSchedulePDF(this.reqs, this.classesSchedule, this.year, this.season);
     },
+    regenerateSchedule() {
+      // TODO: implement (connect to backend).
+    },
+    paginate(direction: number) {
+      if ((this.currentPage < 5 && direction === 1) || (this.currentPage > 1 && direction === -1)) {
+        this.currentPage += direction;
+      }
+    },
+  },
+  data() {
+    return {
+      // TODO: implement (connect to backend).
+      currentPage: 1,
+    };
   },
   computed: {
     season() {
@@ -442,7 +474,7 @@ input {
   align-items: center;
   flex-shrink: 0;
   border-radius: 3px;
-  background: var(--Button-Color---Sang, #4d7d92);
+  background: var(--Button-Color---Sang, $sangBlue);
   color: $white;
   cursor: pointer;
 
@@ -453,5 +485,81 @@ input {
     flex-shrink: 0;
     margin-bottom: 3px;
   }
+}
+
+.generate-schedules {
+  &-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 3px;
+    height: 35px;
+    padding: 10px 33px;
+    border: 1px solid $sangBlue;
+    &-disabled {
+      border-radius: 3px;
+      background: rgba(231, 231, 231, 0.75);
+      cursor: not-allowed;
+    }
+  }
+}
+
+.footer {
+  &-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 3px;
+    height: 35px;
+    padding: 10px 20px;
+    border: 1px solid $sangBlue;
+    &-disabled {
+      border-radius: 3px;
+      background: rgba(231, 231, 231, 0.75);
+      border-color: $lightPlaceholderGray;
+      opacity: 50%;
+      cursor: not-allowed;
+    }
+  }
+
+  &-text {
+    color: $sangBlue;
+    text-align: center;
+    font-family: 'Proxima Nova';
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+
+    &-disabled {
+      color: $lightPlaceholderGray;
+      text-align: center;
+      font-family: 'Proxima Nova';
+      font-size: 16px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: normal;
+    }
+  }
+}
+
+.pagination-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 3px;
+  height: 35px;
+  padding: 10px 20px;
+  border: 1px solid $sangBlue;
+}
+
+.pagination-text {
+  color: $primaryGray;
+  text-align: center;
+  font-family: 'Proxima Nova';
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
 }
 </style>
