@@ -76,6 +76,7 @@ import { defineComponent } from 'vue';
 import RequirementCourses from '@/components/ScheduleGenerate/RequirementCourses.vue';
 import Confirmation from '@/components/Modals/Confirmation.vue';
 import store from '@/store';
+import { cornellCourseRosterCourseToFirebaseSemesterCourseWithCustomIDAndColor } from '@/user-data-converter';
 
 export type ReqCourses = {
   reqId: string;
@@ -86,13 +87,11 @@ export type ReqCourses = {
 export default defineComponent({
   data(): {
     requirements: ReqCourses[];
-    numberOfRequirements: number;
     isConfirmationOpen: boolean;
     confirmationText: string;
   } {
     return {
       requirements: [],
-      numberOfRequirements: this.availableRequirements?.length,
       isConfirmationOpen: false,
       confirmationText: '',
     };
@@ -123,6 +122,15 @@ export default defineComponent({
       );
       return courseRecord;
     },
+    numberOfRequirements(): number {
+      let length = 0;
+      this.groupedRequirementFulfillmentReports.forEach(
+        (groupedReq: GroupedRequirementFulfillmentReport) => {
+          length += groupedReq.reqs.length;
+        }
+      );
+      return length;
+    },
   },
   methods: {
     openConfirmationModal(msg: string) {
@@ -137,7 +145,20 @@ export default defineComponent({
     closeConfirmationModal() {
       this.isConfirmationOpen = false;
     },
-
+    addCourse(course: CornellCourseRosterCourse, index: number) {
+      this.requirements[index].courses.push(
+        cornellCourseRosterCourseToFirebaseSemesterCourseWithCustomIDAndColor(
+          course,
+          -1,
+          store.state.subjectColors[course.subject]
+        )
+      );
+    },
+    deleteCourse(index: number, code: string) {
+      this.requirements[index].courses = this.requirements[index].courses.filter(
+        course => course.code !== code
+      );
+    },
     addRequirement() {
       this.requirements = [...this.requirements, { reqId: '', reqName: '', courses: [] }];
     },

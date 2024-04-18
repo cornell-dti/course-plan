@@ -70,8 +70,7 @@ import { emGreen } from '@/assets/constants/scss-variables';
 import DropDownArrow from '@/components/DropDownArrow.vue';
 import AllRequirementsDropdown from '@/components/ScheduleGenerate/AllRequirementsDropdown.vue';
 import Course from '@/components/Course/Course.vue';
-import { cornellCourseRosterCourseToFirebaseSemesterCourseWithCustomIDAndColor } from '@/user-data-converter';
-import store from '@/store';
+
 import { ReqCourses } from '@/components/ScheduleGenerate/ScheduleGenerateSideBar.vue';
 
 export default defineComponent({
@@ -90,6 +89,9 @@ export default defineComponent({
     },
   },
   emits: {
+    'add-course': (course: CornellCourseRosterCourse, index: number) =>
+      typeof course === typeof 'CornellCourseRosterCourse' && typeof index === typeof 'number',
+    'delete-course': (code: string) => typeof code === typeof 'string',
     'delete-available-requirement': (reqId: string) => typeof reqId === typeof 'string',
     'select-requirement': (reqId: string, index: number) =>
       typeof reqId === typeof 'string' && typeof index === 'number',
@@ -137,18 +139,10 @@ export default defineComponent({
       this.$emit('delete-requirement');
     },
     addCourse(course: CornellCourseRosterCourse) {
-      this.selectedRequirement.courses.push(
-        cornellCourseRosterCourseToFirebaseSemesterCourseWithCustomIDAndColor(
-          course,
-          -1,
-          store.state.subjectColors[course.subject]
-        )
-      );
+      this.$emit('add-course', course, this.index);
     },
     deleteCourse(code: string) {
-      this.selectedRequirement.courses = this.selectedRequirement.courses.filter(
-        course => course.code !== code
-      );
+      this.$emit('delete-course', code);
     },
   },
 });
