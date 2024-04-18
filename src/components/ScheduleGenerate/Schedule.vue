@@ -175,7 +175,7 @@ export default defineComponent({
       margin-bottom: 1.8rem;
       justify-self: center;
     }
-    border-left: 1px solid #e5e5e5;
+    border-left: 1px solid $veryLightGray;
   }
   &-hours {
     display: flex;

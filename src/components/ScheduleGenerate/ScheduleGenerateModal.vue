@@ -35,7 +35,7 @@
           </div>
           <div class="schedule-generate-section-schedule">
             <div class="schedule-generate-subHeader schedule-generate-subHeader--indent">
-              Fall 2024
+              {{ selectedSemester }}
             </div>
             <schedule :classesSchedule="classesSchedule" />
           </div>
@@ -52,6 +52,10 @@ import Schedule from '@/components/ScheduleGenerate/Schedule.vue';
 import ScheduleCourses from '@/components/ScheduleGenerate/ScheduleCourses.vue';
 
 export default defineComponent({
+  props: {
+    // current semester being generated for
+    selectedSemester: { type: String, required: true },
+  },
   components: {
     Schedule,
     ScheduleCourses,

@@ -11,6 +11,7 @@
     />
     <schedule-generate-modal
       class="dashboard-modal"
+      :selected-semester="semesterToGenerate"
       v-if="isScheduleGenerateModalOpen"
       @closeScheduleGenerateModal="closeScheduleGenerateModal"
     />
@@ -39,7 +40,7 @@
         />
         <schedule-generate-side-bar
           v-if="loaded && !showToolsPage && !isProfileOpen && isScheduleGenerateOpen"
-          selected-semester="Spring 2025"
+          :selected-semester="semesterToGenerate"
           :generate-schedule-button-disabled="isScheduleGenerateButtonDisabled"
           @openScheduleGenerateModal="openScheduleGenerateModal"
         />
@@ -181,6 +182,10 @@ export default defineComponent({
     };
   },
   computed: {
+    semesterToGenerate(): string {
+      // TODO: read the newest roster from firestore
+      return 'Fall 2024';
+    },
     userName(): FirestoreUserName {
       return store.state.userName;
     },
