@@ -62,6 +62,8 @@
         :available-requirements="availableRequirements"
         :selected-requirement="requirements[index]"
         :index="index"
+        @add-course="addCourse"
+        @delete-course="deleteCourse"
         @select-requirement="selectRequirement"
         @delete-available-requirement="deleteAvailableRequirement"
         @add-available-requirement="addAvailableRequirement"
@@ -154,7 +156,7 @@ export default defineComponent({
         )
       );
     },
-    deleteCourse(index: number, code: string) {
+    deleteCourse(code: string, index: number) {
       this.requirements[index].courses = this.requirements[index].courses.filter(
         course => course.code !== code
       );

@@ -91,7 +91,8 @@ export default defineComponent({
   emits: {
     'add-course': (course: CornellCourseRosterCourse, index: number) =>
       typeof course === typeof 'CornellCourseRosterCourse' && typeof index === typeof 'number',
-    'delete-course': (code: string) => typeof code === typeof 'string',
+    'delete-course': (code: string, index: number) =>
+      typeof code === typeof 'string' && typeof index === typeof 'number',
     'delete-available-requirement': (reqId: string) => typeof reqId === typeof 'string',
     'select-requirement': (reqId: string, index: number) =>
       typeof reqId === typeof 'string' && typeof index === 'number',
@@ -142,7 +143,7 @@ export default defineComponent({
       this.$emit('add-course', course, this.index);
     },
     deleteCourse(code: string) {
-      this.$emit('delete-course', code);
+      this.$emit('delete-course', code, this.index);
     },
   },
 });
