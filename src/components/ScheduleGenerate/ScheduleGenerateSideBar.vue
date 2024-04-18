@@ -5,10 +5,7 @@
       <h1 class="top header-title">Semester Schedule Builder</h1>
       <div class="semester">
         <button class="semester-title-button semester-title full-opacity-on-hover" :disabled="true">
-          <p class="semester-title-top">
-            <!-- Example: "Spring 2025", as on Figma. -->
-            {{ selectedSemester }}
-          </p>
+          <p class="semester-title-top">{{ season }} {{ year }}</p>
         </button>
       </div>
       <!-- NOTE: you cannot generate a schedule if you have not inputted any requirements. -->
@@ -70,7 +67,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { PropType, defineComponent } from 'vue';
 import RequirementCourses from '@/components/ScheduleGenerate/RequirementCourses.vue';
 import Confirmation from '@/components/Modals/Confirmation.vue';
 
@@ -100,8 +97,9 @@ export default defineComponent({
     Confirmation,
   },
   props: {
-    // current semester being generated for
-    selectedSemester: { type: String, required: true },
+    // current year and season being generated for
+    year: { type: Number, required: true },
+    season: { type: Object as PropType<FirestoreSemesterSeason>, required: true },
     // (linked with requirements) whether any requirements have been added
     generateScheduleButtonDisabled: { type: Boolean, required: true },
   },

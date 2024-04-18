@@ -31,69 +31,69 @@
             Your Courses
           </div>
           <div class="schedule-generate-section-courses">
-            <schedule-courses :num-credits="12" :classes="classes" />
+            <schedule-courses :num-credits="12" :classes="reqs" />
           </div>
           <div class="schedule-generate-section-schedule">
             <div class="schedule-generate-subHeader schedule-generate-subHeader--indent">
-              {{ selectedSemester }}
+              {{ season }} {{ year }}
             </div>
             <schedule ref="calendar" :classesSchedule="classesSchedule" />
           </div>
         </div>
-      </div>
-      <div class="schedule-generate-bottom">
-        <button @click="regenerateSchedule" class="generate-schedules-button">
-          <span class="footer-text">Generate New Schedules</span>
-        </button>
-        <div class="right-footer-container">
-          <button
-            @click="() => paginate(-1)"
-            :disabled="currentPage === 1"
-            :class="'footer-button' + (currentPage === 1 ? ' footer-button-disabled' : ' ')"
-          >
-            <span :class="currentPage === 1 ? 'footer-text-disabled' : 'footer-text'">Prev</span>
+        <div class="schedule-generate-bottom">
+          <button @click="regenerateSchedule" class="generate-schedules-button">
+            <span class="footer-text">Generate New Schedules</span>
           </button>
-          <button
-            @click="() => paginate(1)"
-            :disabled="currentPage === 5"
-            :class="'footer-button' + (currentPage === 5 ? ' footer-button-disabled' : ' ')"
-          >
-            <span :class="currentPage === 5 ? 'footer-text-disabled' : 'footer-text'">Next</span>
-          </button>
-          <span class="pagination-text ml-25">Page {{ currentPage }}/5</span>
-        </div>
-        <div class="download-button" @click="downloadSchedule">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="19"
-            height="19"
-            class="download-button-icon"
-            viewBox="0 0 19 19"
-            fill="none"
-          >
-            <path
-              d="M16.625 11.875V15.0417C16.625 15.4616 16.4582 15.8643 16.1613 16.1613C15.8643 16.4582 15.4616 16.625 15.0417 16.625H3.95833C3.53841 16.625 3.13568 16.4582 2.83875 16.1613C2.54181 15.8643 2.375 15.4616 2.375 15.0417V11.875"
-              stroke="white"
-              stroke-width="1.05556"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-            <path
-              d="M5.54199 7.91699L9.50033 11.8753L13.4587 7.91699"
-              stroke="white"
-              stroke-width="1.05556"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-            <path
-              d="M9.5 11.875V2.375"
-              stroke="white"
-              stroke-width="1.05556"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-          </svg>
-          <span>Download</span>
+          <div class="right-footer-container">
+            <button
+              @click="() => paginate(-1)"
+              :disabled="currentPage === 1"
+              :class="'footer-button' + (currentPage === 1 ? ' footer-button-disabled' : ' ')"
+            >
+              <span :class="currentPage === 1 ? 'footer-text-disabled' : 'footer-text'">Prev</span>
+            </button>
+            <button
+              @click="() => paginate(1)"
+              :disabled="currentPage === 5"
+              :class="'footer-button' + (currentPage === 5 ? ' footer-button-disabled' : ' ')"
+            >
+              <span :class="currentPage === 5 ? 'footer-text-disabled' : 'footer-text'">Next</span>
+            </button>
+            <span class="pagination-text ml-25">Page {{ currentPage }}/5</span>
+          </div>
+          <div class="download-button" @click="downloadSchedule">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="19"
+              height="19"
+              class="download-button-icon"
+              viewBox="0 0 19 19"
+              fill="none"
+            >
+              <path
+                d="M16.625 11.875V15.0417C16.625 15.4616 16.4582 15.8643 16.1613 16.1613C15.8643 16.4582 15.4616 16.625 15.0417 16.625H3.95833C3.53841 16.625 3.13568 16.4582 2.83875 16.1613C2.54181 15.8643 2.375 15.4616 2.375 15.0417V11.875"
+                stroke="white"
+                stroke-width="1.05556"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M5.54199 7.91699L9.50033 11.8753L13.4587 7.91699"
+                stroke="white"
+                stroke-width="1.05556"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M9.5 11.875V2.375"
+                stroke="white"
+                stroke-width="1.05556"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+            <span>Download</span>
+          </div>
         </div>
       </div>
     </div>
@@ -101,7 +101,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { PropType, defineComponent } from 'vue';
 import Schedule from '@/components/ScheduleGenerate/Schedule.vue';
 import ScheduleCourses from '@/components/ScheduleGenerate/ScheduleCourses.vue';
 import { generateSchedulePDF } from '@/tools/export-plan';
@@ -109,8 +109,9 @@ import type { ReqInfo } from '@/tools/export-plan/types';
 
 export default defineComponent({
   props: {
-    // current semester being generated for
-    selectedSemester: { type: String, required: true },
+    // current year and season being generated for
+    year: { type: Number, required: true },
+    season: { type: Object as PropType<FirestoreSemesterSeason>, required: true },
   },
   components: {
     Schedule,
@@ -126,8 +127,9 @@ export default defineComponent({
         this.cancel();
       }
     },
-    downloadSchedule() {
-      generateSchedulePDF(this.reqs, this.classesSchedule, this.year, this.season);
+    async downloadSchedule() {
+      const calendarRef = this.$refs.calendar as typeof Schedule;
+      generateSchedulePDF(this.reqs, await calendarRef.generatePdfData(), this.year, this.season);
     },
     regenerateSchedule() {
       // TODO: implement (connect to backend).
@@ -145,12 +147,6 @@ export default defineComponent({
     };
   },
   computed: {
-    season() {
-      return 'Fall';
-    },
-    year() {
-      return 2024;
-    },
     reqs(): Map<ReqInfo, FirestoreSemesterCourse> {
       // eventually we want to use course color set
       // and match with the right component of this modal
@@ -241,11 +237,10 @@ export default defineComponent({
           creditRange: [4, 4],
           semesters: ['Fall'],
           color: '#B155E0',
-          timeStart: '11:00pm',
-          timeEnd: '11:50pm',
-        },
-        // question: what if # of courses overflows the box? not in designs iirc
-      ];
+        }
+      );
+      return reqs;
+      // question: what if # of courses overflows the box? not in designs iirc
     },
     classesSchedule() {
       return {
@@ -400,7 +395,7 @@ input {
 
   &-content {
     position: relative;
-    padding: 1.5rem 2rem 1.5rem 2rem;
+    padding: 2rem;
   }
 
   &-body {
@@ -452,11 +447,11 @@ input {
       font-size: 16px;
     }
     &--smallerIndent {
-      padding-left: 1.25rem;
+      margin-left: 1.25rem;
       font-size: 18px;
     }
     &--indent {
-      padding-left: 2rem;
+      margin-left: 2rem;
       font-size: 18px;
     }
   }
@@ -464,7 +459,7 @@ input {
   &-bottom {
     display: flex;
     justify-content: flex-start;
-    padding: 0rem 2rem 1rem 2rem;
+    margin-top: 1rem;
   }
 }
 
