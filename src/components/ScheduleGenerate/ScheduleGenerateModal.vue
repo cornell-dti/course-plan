@@ -45,53 +45,55 @@
         <button @click="regenerateSchedule" class="generate-schedules-button">
           <span class="footer-text">Generate New Schedules</span>
         </button>
-        <button
-          @click="() => paginate(-1)"
-          :disabled="currentPage === 1"
-          :class="'footer-button' + (currentPage === 1 ? ' footer-button-disabled' : ' ')"
-        >
-          <span :class="currentPage === 1 ? 'footer-text-disabled' : 'footer-text'">Prev</span>
-        </button>
-        <button
-          @click="() => paginate(1)"
-          :disabled="currentPage === 5"
-          :class="'footer-button' + (currentPage === 5 ? ' footer-button-disabled' : ' ')"
-        >
-          <span :class="currentPage === 5 ? 'footer-text-disabled' : 'footer-text'">Next</span>
-        </button>
-        <span class="pagination-text">Page {{ currentPage }}/5</span>
-        <div class="download-button" @click="downloadSchedule">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="19"
-            height="19"
-            class="download-button-icon"
-            viewBox="0 0 19 19"
-            fill="none"
+        <div class="right-footer-container">
+          <button
+            @click="() => paginate(-1)"
+            :disabled="currentPage === 1"
+            :class="'footer-button' + (currentPage === 1 ? ' footer-button-disabled' : ' ')"
           >
-            <path
-              d="M16.625 11.875V15.0417C16.625 15.4616 16.4582 15.8643 16.1613 16.1613C15.8643 16.4582 15.4616 16.625 15.0417 16.625H3.95833C3.53841 16.625 3.13568 16.4582 2.83875 16.1613C2.54181 15.8643 2.375 15.4616 2.375 15.0417V11.875"
-              stroke="white"
-              stroke-width="1.05556"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-            <path
-              d="M5.54199 7.91699L9.50033 11.8753L13.4587 7.91699"
-              stroke="white"
-              stroke-width="1.05556"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-            <path
-              d="M9.5 11.875V2.375"
-              stroke="white"
-              stroke-width="1.05556"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-          </svg>
-          <span>Download</span>
+            <span :class="currentPage === 1 ? 'footer-text-disabled' : 'footer-text'">Prev</span>
+          </button>
+          <button
+            @click="() => paginate(1)"
+            :disabled="currentPage === 5"
+            :class="'footer-button' + (currentPage === 5 ? ' footer-button-disabled' : ' ')"
+          >
+            <span :class="currentPage === 5 ? 'footer-text-disabled' : 'footer-text'">Next</span>
+          </button>
+          <span class="pagination-text ml-25">Page {{ currentPage }}/5</span>
+          <div class="download-button" @click="downloadSchedule">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="19"
+              height="19"
+              class="download-button-icon"
+              viewBox="0 0 19 19"
+              fill="none"
+            >
+              <path
+                d="M16.625 11.875V15.0417C16.625 15.4616 16.4582 15.8643 16.1613 16.1613C15.8643 16.4582 15.4616 16.625 15.0417 16.625H3.95833C3.53841 16.625 3.13568 16.4582 2.83875 16.1613C2.54181 15.8643 2.375 15.4616 2.375 15.0417V11.875"
+                stroke="white"
+                stroke-width="1.05556"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M5.54199 7.91699L9.50033 11.8753L13.4587 7.91699"
+                stroke="white"
+                stroke-width="1.05556"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M9.5 11.875V2.375"
+                stroke="white"
+                stroke-width="1.05556"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+            <span>Download</span>
+          </div>
         </div>
       </div>
     </div>
@@ -461,12 +463,13 @@ input {
 
   &-bottom {
     display: flex;
-    justify-content: flex-end;
+    justify-content: flex-start;
     padding: 0rem 2rem 1rem 2rem;
   }
 }
 
 .download-button {
+  margin-left: auto;
   display: flex;
   width: 246px;
   height: 35px;
@@ -494,7 +497,7 @@ input {
     align-items: center;
     border-radius: 3px;
     height: 35px;
-    padding: 10px 33px;
+    padding: 10px 28px;
     border: 1px solid $sangBlue;
     &-disabled {
       border-radius: 3px;
@@ -511,7 +514,7 @@ input {
     align-items: center;
     border-radius: 3px;
     height: 35px;
-    padding: 10px 20px;
+    padding: 10px 22px;
     border: 1px solid $sangBlue;
     &-disabled {
       border-radius: 3px;
@@ -543,6 +546,14 @@ input {
   }
 }
 
+.right-footer-container {
+  display: flex;
+  align-items: center;
+  margin-left: 2rem;
+  justify-content: space-between;
+  gap: 10px;
+}
+
 .pagination-button {
   display: flex;
   justify-content: center;
@@ -561,5 +572,9 @@ input {
   font-style: normal;
   font-weight: 600;
   line-height: normal;
+}
+
+.ml-25 {
+  margin-left: 25px;
 }
 </style>
