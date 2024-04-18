@@ -61,39 +61,39 @@
             <span :class="currentPage === 5 ? 'footer-text-disabled' : 'footer-text'">Next</span>
           </button>
           <span class="pagination-text ml-25">Page {{ currentPage }}/5</span>
-          <div class="download-button" @click="downloadSchedule">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="19"
-              height="19"
-              class="download-button-icon"
-              viewBox="0 0 19 19"
-              fill="none"
-            >
-              <path
-                d="M16.625 11.875V15.0417C16.625 15.4616 16.4582 15.8643 16.1613 16.1613C15.8643 16.4582 15.4616 16.625 15.0417 16.625H3.95833C3.53841 16.625 3.13568 16.4582 2.83875 16.1613C2.54181 15.8643 2.375 15.4616 2.375 15.0417V11.875"
-                stroke="white"
-                stroke-width="1.05556"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-              <path
-                d="M5.54199 7.91699L9.50033 11.8753L13.4587 7.91699"
-                stroke="white"
-                stroke-width="1.05556"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-              <path
-                d="M9.5 11.875V2.375"
-                stroke="white"
-                stroke-width="1.05556"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
-            <span>Download</span>
-          </div>
+        </div>
+        <div class="download-button" @click="downloadSchedule">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="19"
+            height="19"
+            class="download-button-icon"
+            viewBox="0 0 19 19"
+            fill="none"
+          >
+            <path
+              d="M16.625 11.875V15.0417C16.625 15.4616 16.4582 15.8643 16.1613 16.1613C15.8643 16.4582 15.4616 16.625 15.0417 16.625H3.95833C3.53841 16.625 3.13568 16.4582 2.83875 16.1613C2.54181 15.8643 2.375 15.4616 2.375 15.0417V11.875"
+              stroke="white"
+              stroke-width="1.05556"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M5.54199 7.91699L9.50033 11.8753L13.4587 7.91699"
+              stroke="white"
+              stroke-width="1.05556"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M9.5 11.875V2.375"
+              stroke="white"
+              stroke-width="1.05556"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          <span>Download</span>
         </div>
       </div>
     </div>
