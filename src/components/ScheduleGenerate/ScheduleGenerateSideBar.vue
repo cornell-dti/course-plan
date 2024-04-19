@@ -44,25 +44,18 @@
           -->
           <input type="number" placeholder='"18"' min="0" max="30" class="credit-limit-input" />
         </div>
-        <button
-          class="add-requirement-button"
-          @click="addRequirement"
-          :disabled="requirements.length === numberOfRequirements"
-        >
-          + Requirement
-        </button>
+        <button class="add-requirement-button" @click="addRequirement">+ Requirement</button>
       </div>
     </div>
-    <!-- The Figma wrote the below as 'No Requirements added' but I believe that was a capitalization mistake. -->
     <p v-if="requirements.length === 0" class="no-requirements-added">No requirements added.</p>
-    <div v-for="(req, index) in requirements" :key="req">
+    <div v-for="(req, index) in requirements" :key="req.reqId">
       <requirement-courses
-        :availableRequirements="availableRequirements"
+        :available-requirements="availableRequirements"
         :selected-requirement="requirements[index]"
         :index="index"
+        @add-course="addCourse"
+        @delete-course="deleteCourse"
         @select-requirement="selectRequirement"
-        @delete-available-requirement="deleteAvailableRequirement"
-        @add-available-requirement="addAvailableRequirement"
         @delete-requirement="deleteRequirement(index)"
       />
     </div>
@@ -73,24 +66,25 @@
 import { defineComponent } from 'vue';
 import RequirementCourses from '@/components/ScheduleGenerate/RequirementCourses.vue';
 import Confirmation from '@/components/Modals/Confirmation.vue';
+import store from '@/store';
+import { cornellCourseRosterCourseToFirebaseSemesterCourseWithCustomIDAndColor } from '@/user-data-converter';
+
+export type ReqCourses = {
+  reqId: string;
+  reqName: string;
+  courses: FirestoreSemesterCourse[];
+};
 
 export default defineComponent({
   data(): {
-    requirements: string[];
-    availableRequirements: Record<string, string>;
-    numberOfRequirements: number;
+    // requirements is the list of requirement groups on the sidebar
+    // it includes the requirement id, name, and the courses associated with it
+    requirements: ReqCourses[];
     isConfirmationOpen: boolean;
     confirmationText: string;
   } {
     return {
       requirements: [],
-      // TODO: change hard coded requirements to requirement ids.
-      availableRequirements: {
-        'CS Requirement': 'CS Requirement',
-        'Probability Requirement': 'Probability Requirement',
-        'Liberal Studies': 'Liberal Studies',
-      },
-      numberOfRequirements: 3,
       isConfirmationOpen: false,
       confirmationText: '',
     };
@@ -106,6 +100,36 @@ export default defineComponent({
     generateScheduleButtonDisabled: { type: Boolean, required: true },
   },
   emits: ['openScheduleGenerateModal'],
+  computed: {
+    groupedRequirementFulfillmentReports(): readonly GroupedRequirementFulfillmentReport[] {
+      return store.state.groupedRequirementFulfillmentReport;
+    },
+    // this function is turning the groupedRequirementFulfillmentReports and taking the reqs out of each group
+    // and concatenating them into one giant record with reqId's as keys and reqName's as values
+    // it represents the available requirements that haven't been assigned yet
+    availableRequirements(): Record<string, string> {
+      const courseRecord: Record<string, string> = this.groupedRequirementFulfillmentReports.reduce(
+        (accumulator: Record<string, string>, groupedReq: GroupedRequirementFulfillmentReport) =>
+          groupedReq.reqs.reduce((acc: Record<string, string>, req: RequirementFulfillment) => {
+            acc[req.requirement.id] = req.requirement.name;
+            return acc;
+          }, accumulator),
+        {} as Record<string, string>
+      );
+      return courseRecord;
+    },
+    // TODO: use this once we check the total number of requirement groups they can add
+    // total number of requirements, used to calculate when to gray out the +Requirement button
+    // numberOfRequirements(): number {
+    //   let length = 0;
+    //   this.groupedRequirementFulfillmentReports.forEach(
+    //     (groupedReq: GroupedRequirementFulfillmentReport) => {
+    //       length += groupedReq.reqs.length;
+    //     }
+    //   );
+    //   return length;
+    // },
+  },
   methods: {
     openConfirmationModal(msg: string) {
       // Set text and display confirmation modal, then have it disappear after 3 seconds
@@ -119,27 +143,56 @@ export default defineComponent({
     closeConfirmationModal() {
       this.isConfirmationOpen = false;
     },
+    // add course to a requirement
+    addCourse(course: CornellCourseRosterCourse, index: number) {
+      this.requirements[index].courses.push(
+        cornellCourseRosterCourseToFirebaseSemesterCourseWithCustomIDAndColor(
+          course,
+          -1,
+          store.state.subjectColors[course.subject]
+        )
+      );
+    },
+    // delete a course from a requirement
+    deleteCourse(code: string, index: number) {
+      this.requirements[index].courses = this.requirements[index].courses.filter(
+        course => course.code !== code
+      );
+    },
+    // add a new requirement group
     addRequirement() {
-      this.requirements = [...this.requirements, ''];
+      this.requirements = [...this.requirements, { reqId: '', reqName: '', courses: [] }];
     },
-    deleteAvailableRequirement(requirement: string) {
-      delete this.availableRequirements[requirement];
+
+    // TODO: use availableRequirement once we start enforcing how many requirement groups we can add
+
+    // add back an available requirement
+    // addAvailableRequirement(requirement: ReqCourses) {
+    //   if (requirement.reqId !== '')
+    //     this.availableRequirements[requirement.reqId] = requirement.reqName;
+    // },
+    // get rid of an available requirement
+    // deleteAvailableRequirement(reqId: string) {
+    //   delete this.availableRequirements[reqId];
+    // },
+    // select a requirement on the dropdown
+    selectRequirement(reqId: string, index: number) {
+      const reqName = this.availableRequirements[reqId];
+      this.requirements[index] = { reqId, reqName, courses: [] };
     },
-    selectRequirement(requirement: string, index: number) {
-      this.requirements[index] = requirement;
-    },
-    addAvailableRequirement(requirement: string) {
-      if (requirement !== '') this.availableRequirements[requirement] = requirement;
-    },
+
+    // delete a requirement group and add back to the available requirements
     deleteRequirement(index: number) {
       const requirement = this.requirements[index];
       // add back to the availableRequirements record
-      this.addAvailableRequirement(requirement);
+      // this.addAvailableRequirement(requirement);
 
       // delete this requirement from list
       this.requirements.splice(index, 1);
       this.openConfirmationModal(
-        `Removed ${requirement === '' ? 'requirement' : requirement} from schedule builder`
+        `Removed ${
+          requirement.reqName === '' ? 'requirement' : requirement.reqName
+        } from schedule builder`
       );
     },
     openScheduleGenerateModal() {
