@@ -245,15 +245,7 @@ export default defineComponent({
           };
         }),
       }));
-
-      console.log('From schedule gen side bar parent comp COURSES');
-      console.log(coursesWithReqIds);
-      console.log('From schedule gen side bar parent comp REQs');
-      console.log(this.requirements);
-      // this.$emit('openScheduleGenerateModal', courses, this.requirements);
       this.$emit('openScheduleGenerateModal', coursesWithReqIds, this.creditLimit);
-
-      // before it was just this.$emit('openScheduleGenerateModal')
     },
   },
 });

@@ -101,12 +101,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent } from 'vue';
 import Schedule from '@/components/ScheduleGenerate/Schedule.vue';
 import ScheduleCourses from '@/components/ScheduleGenerate/ScheduleCourses.vue';
 import GeneratorRequest from '@/schedule-generator/generator-request';
 import ScheduleGenerator from '@/schedule-generator/algorithm';
-import Course, { Timeslot, DayOfTheWeek } from '@/schedule-generator/course-unit';
+import Course from '@/schedule-generator/course-unit';
 import Requirement from '@/schedule-generator/requirement';
 
 export default defineComponent({
@@ -140,38 +140,6 @@ export default defineComponent({
         this.cancel();
       }
     },
-    // generateAndLogSchedule() {
-    //   const courses = this.courses.map(
-    //     course =>
-    //       new Course(
-    //         course.name,
-    //         // course.credits,
-    //         3,
-    //         [
-    //           {
-    //             start: course.timeStart,
-    //             end: course.timeEnd,
-    //             daysOfTheWeek: course.daysOfTheWeek || ['Monday', 'Friday'],
-    //           },
-    //         ],
-    //         [this.selectedSemester],
-    //         this.reqIds.map(reqId => new Requirement(reqId))
-    //       )
-    //   );
-
-    //   console.log('Courses with timeslots:', courses);
-    //   const generatorRequest = new GeneratorRequest(
-    //     courses,
-    //     this.reqIds.map(reqId => new Requirement(reqId)),
-    //     this.creditLimit,
-    //     this.selectedSemester
-    //   );
-
-    //   const generatedSchedule = ScheduleGenerator.generateSchedule(generatorRequest);
-    //   console.log('FROM generate and log scheedule method Generated Schedule:', generatedSchedule);
-    //   ScheduleGenerator.prettyPrintSchedule(generatedSchedule);
-    //   return generatedSchedule;
-    // },
   },
   // mounted() {
   //   this.generateAndLogSchedule();
@@ -185,12 +153,6 @@ export default defineComponent({
         timeStart: course.timeStart,
         timeEnd: course.timeEnd,
       }));
-      console.log('MODAL COLOR');
-      console.log(returnCourses[0].color);
-      console.log('From Schedule Generate MODAL COURSES SELECTED');
-      console.log(returnCourses);
-      console.log('From Schedule Generate MODAL REQS SELECTED');
-      console.log(this.reqIds);
       return returnCourses;
     },
     classesSchedule() {
@@ -208,6 +170,7 @@ export default defineComponent({
           new Course(
             course.name,
             // course.credits,
+            '#'.concat(course.color),
             3,
             [
               {
@@ -221,7 +184,6 @@ export default defineComponent({
           )
       );
 
-      // console.log('Courses with timeslots:', courses);
       const generatorRequest = new GeneratorRequest(
         courses,
         this.reqIds.map(reqId => new Requirement(reqId)),
@@ -230,7 +192,6 @@ export default defineComponent({
       );
 
       const generatedSchedule = ScheduleGenerator.generateSchedule(generatorRequest);
-      // console.log('From computed class schedule!!:', generatedSchedule);
       // ScheduleGenerator.prettyPrintSchedule(generatedSchedule);
 
       let mondayClasses = [];
@@ -243,87 +204,65 @@ export default defineComponent({
       generatedSchedule.schedule.forEach((timeslots, course) =>
         timeslots.forEach(timeslot =>
           timeslot.daysOfTheWeek.forEach(day => {
-            // console.log(day, timeslot.start, timeslot.end);
             if (day === 'Monday') {
-              console.log(day);
-              console.log(timeslot.start);
-              console.log(timeslot.end);
               mondayClasses.push({
                 title: course.name,
                 name: course.name,
-                color: '#FF3B30',
+                color: course.color,
                 timeStart: timeslot.start,
                 timeEnd: timeslot.end,
               });
             }
             if (day === 'Tuesday') {
-              console.log(day);
-              console.log(timeslot.start);
-              console.log(timeslot.end);
               tuesdayClasses.push({
                 title: course.name,
                 name: course.name,
-                color: '#FF3B30',
+                color: course.color,
                 timeStart: timeslot.start,
                 timeEnd: timeslot.end,
               });
             }
             if (day === 'Wednesday') {
-              console.log(day);
-              console.log(timeslot.start);
-              console.log(timeslot.end);
               wednesdayClasses.push({
                 title: course.name,
                 name: course.name,
-                color: '#FF3B30',
+                color: course.color,
                 timeStart: timeslot.start,
                 timeEnd: timeslot.end,
               });
             }
             if (day === 'Thursday') {
-              console.log(day);
-              console.log(timeslot.start);
-              console.log(timeslot.end);
               thursdayClasses.push({
                 title: course.name,
                 name: course.name,
-                color: '#FF3B30',
+                color: course.color,
                 timeStart: timeslot.start,
                 timeEnd: timeslot.end,
               });
             }
             if (day === 'Friday') {
-              console.log(day); // This will log 'Monday' if the day is Monday
-              console.log('STARTIME', timeslot.start);
-              console.log('ENDTIME', timeslot.end);
               fridayClasses.push({
                 title: course.name,
                 name: course.name,
-                color: '#FF3B30',
+                color: course.color,
                 timeStart: timeslot.start,
                 timeEnd: timeslot.end,
               });
             }
             if (day === 'Saturday') {
-              console.log(day);
-              console.log('STARTIME', timeslot.start);
-              console.log('ENDTIME', timeslot.end);
               saturdayClasses.push({
                 title: course.name,
                 name: course.name,
-                color: '#FF3B30',
+                color: course.color,
                 timeStart: timeslot.start,
                 timeEnd: timeslot.end,
               });
             }
             if (day === 'Sunday') {
-              console.log(day);
-              console.log('STARTIME', timeslot.start);
-              console.log('ENDTIME', timeslot.end);
               sundayClasses.push({
                 title: course.name,
                 name: course.name,
-                color: '#FF3B30',
+                color: course.color,
                 timeStart: timeslot.start,
                 timeEnd: timeslot.end,
               });
