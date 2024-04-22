@@ -208,27 +208,27 @@ export default defineComponent({
       function getRandomStartTime() {
         const hour = 8 + Math.floor(Math.random() * 8);
         const minutes = ['00', '15', '30', '45'][Math.floor(Math.random() * 4)];
-        const period = hour < 12 ? 'AM' : 'PM';
+        const period = hour < 12 ? 'am' : 'pm';
         const formattedHour = hour > 12 ? hour - 12 : hour;
-        return `${formattedHour}:${minutes} ${period}`;
+        return `${formattedHour}:${minutes}${period}`;
       }
 
       function getEndTimeFromStartTime(startTime) {
         let [time, period] = startTime.split(' ');
         let [hour, minutes] = time.split(':');
-        hour = parseInt(hour);
+        hour = parseInt(hour, 10);
 
         hour += 1;
 
-        if (hour === 12 && period === 'AM') {
-          period = 'PM';
-        } else if (hour === 12 && period === 'PM') {
-          period = 'AM';
+        if (hour === 12 && period === 'am') {
+          period = 'pm';
+        } else if (hour === 12 && period === 'pm') {
+          period = 'am';
         } else if (hour > 12) {
           hour -= 12;
         }
 
-        return `${hour}:${minutes} ${period}`;
+        return `${hour}:${minutes}`;
       }
 
       const coursesWithReqIds = this.requirements.map(req => ({

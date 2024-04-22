@@ -101,7 +101,7 @@
 </template>
 
 <script lang="ts">
-import { PropType, defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 import Schedule from '@/components/ScheduleGenerate/Schedule.vue';
 import ScheduleCourses from '@/components/ScheduleGenerate/ScheduleCourses.vue';
 import GeneratorRequest from '@/schedule-generator/generator-request';
@@ -140,41 +140,42 @@ export default defineComponent({
         this.cancel();
       }
     },
-    generateAndLogSchedule() {
-      const courses = this.courses.map(
-        course =>
-          new Course(
-            course.name,
-            // course.credits,
-            3,
-            [
-              {
-                start: course.timeStart,
-                end: course.timeEnd,
-                daysOfTheWeek: course.daysOfTheWeek || ['Monday', 'Friday'],
-              },
-            ],
-            [this.selectedSemester],
-            this.reqIds.map(reqId => new Requirement(reqId))
-          )
-      );
+    // generateAndLogSchedule() {
+    //   const courses = this.courses.map(
+    //     course =>
+    //       new Course(
+    //         course.name,
+    //         // course.credits,
+    //         3,
+    //         [
+    //           {
+    //             start: course.timeStart,
+    //             end: course.timeEnd,
+    //             daysOfTheWeek: course.daysOfTheWeek || ['Monday', 'Friday'],
+    //           },
+    //         ],
+    //         [this.selectedSemester],
+    //         this.reqIds.map(reqId => new Requirement(reqId))
+    //       )
+    //   );
 
-      console.log('Courses with timeslots:', courses);
-      const generatorRequest = new GeneratorRequest(
-        courses,
-        this.reqIds.map(reqId => new Requirement(reqId)),
-        this.creditLimit,
-        this.selectedSemester
-      );
+    //   console.log('Courses with timeslots:', courses);
+    //   const generatorRequest = new GeneratorRequest(
+    //     courses,
+    //     this.reqIds.map(reqId => new Requirement(reqId)),
+    //     this.creditLimit,
+    //     this.selectedSemester
+    //   );
 
-      const generatedSchedule = ScheduleGenerator.generateSchedule(generatorRequest);
-      console.log('Generated Schedule:', generatedSchedule);
-      ScheduleGenerator.prettyPrintSchedule(generatedSchedule);
-    },
+    //   const generatedSchedule = ScheduleGenerator.generateSchedule(generatorRequest);
+    //   console.log('FROM generate and log scheedule method Generated Schedule:', generatedSchedule);
+    //   ScheduleGenerator.prettyPrintSchedule(generatedSchedule);
+    //   return generatedSchedule;
+    // },
   },
-  mounted() {
-    this.generateAndLogSchedule();
-  },
+  // mounted() {
+  //   this.generateAndLogSchedule();
+  // },
   computed: {
     classes() {
       const returnCourses = this.courses.map(course => ({
@@ -193,96 +194,152 @@ export default defineComponent({
       return returnCourses;
     },
     classesSchedule() {
+      function getRandomDaySet(): string[] {
+        const daySets = [
+          ['Monday', 'Wednesday', 'Friday'], // Set 1
+          ['Tuesday', 'Thursday'], // Set 2
+          ['Saturday', 'Sunday'], // Set 3
+        ];
+        const randomIndex = Math.floor(Math.random() * daySets.length); // Get a random index
+        return daySets[randomIndex]; // Return a random set of days
+      }
+      const courses = this.courses.map(
+        course =>
+          new Course(
+            course.name,
+            // course.credits,
+            3,
+            [
+              {
+                start: course.timeStart,
+                end: course.timeEnd,
+                daysOfTheWeek: course.daysOfTheWeek || getRandomDaySet(),
+              },
+            ],
+            [this.selectedSemester],
+            this.reqIds.map(reqId => new Requirement(reqId))
+          )
+      );
+
+      // console.log('Courses with timeslots:', courses);
+      const generatorRequest = new GeneratorRequest(
+        courses,
+        this.reqIds.map(reqId => new Requirement(reqId)),
+        this.creditLimit,
+        this.selectedSemester
+      );
+
+      const generatedSchedule = ScheduleGenerator.generateSchedule(generatorRequest);
+      // console.log('From computed class schedule!!:', generatedSchedule);
+      // ScheduleGenerator.prettyPrintSchedule(generatedSchedule);
+
+      let mondayClasses = [];
+      let tuesdayClasses = [];
+      let wednesdayClasses = [];
+      let thursdayClasses = [];
+      let fridayClasses = [];
+      let saturdayClasses = [];
+      let sundayClasses = [];
+      generatedSchedule.schedule.forEach((timeslots, course) =>
+        timeslots.forEach(timeslot =>
+          timeslot.daysOfTheWeek.forEach(day => {
+            // console.log(day, timeslot.start, timeslot.end);
+            if (day === 'Monday') {
+              console.log(day);
+              console.log(timeslot.start);
+              console.log(timeslot.end);
+              mondayClasses.push({
+                title: course.name,
+                name: course.name,
+                color: '#FF3B30',
+                timeStart: timeslot.start,
+                timeEnd: timeslot.end,
+              });
+            }
+            if (day === 'Tuesday') {
+              console.log(day);
+              console.log(timeslot.start);
+              console.log(timeslot.end);
+              tuesdayClasses.push({
+                title: course.name,
+                name: course.name,
+                color: '#FF3B30',
+                timeStart: timeslot.start,
+                timeEnd: timeslot.end,
+              });
+            }
+            if (day === 'Wednesday') {
+              console.log(day);
+              console.log(timeslot.start);
+              console.log(timeslot.end);
+              wednesdayClasses.push({
+                title: course.name,
+                name: course.name,
+                color: '#FF3B30',
+                timeStart: timeslot.start,
+                timeEnd: timeslot.end,
+              });
+            }
+            if (day === 'Thursday') {
+              console.log(day);
+              console.log(timeslot.start);
+              console.log(timeslot.end);
+              thursdayClasses.push({
+                title: course.name,
+                name: course.name,
+                color: '#FF3B30',
+                timeStart: timeslot.start,
+                timeEnd: timeslot.end,
+              });
+            }
+            if (day === 'Friday') {
+              console.log(day); // This will log 'Monday' if the day is Monday
+              console.log('STARTIME', timeslot.start);
+              console.log('ENDTIME', timeslot.end);
+              fridayClasses.push({
+                title: course.name,
+                name: course.name,
+                color: '#FF3B30',
+                timeStart: timeslot.start,
+                timeEnd: timeslot.end,
+              });
+            }
+            if (day === 'Saturday') {
+              console.log(day);
+              console.log('STARTIME', timeslot.start);
+              console.log('ENDTIME', timeslot.end);
+              saturdayClasses.push({
+                title: course.name,
+                name: course.name,
+                color: '#FF3B30',
+                timeStart: timeslot.start,
+                timeEnd: timeslot.end,
+              });
+            }
+            if (day === 'Sunday') {
+              console.log(day);
+              console.log('STARTIME', timeslot.start);
+              console.log('ENDTIME', timeslot.end);
+              sundayClasses.push({
+                title: course.name,
+                name: course.name,
+                color: '#FF3B30',
+                timeStart: timeslot.start,
+                timeEnd: timeslot.end,
+              });
+            }
+          })
+        )
+      );
+
       return {
-        Monday: [
-          {
-            title: 'Introductory Programming',
-            name: 'CS 1110',
-            color: '#FF3B30',
-            timeStart: '8:00am',
-            timeEnd: '8:50am',
-          },
-          {
-            title: 'Information Science Major Core Courses',
-            name: 'INFO 1260',
-            color: '#32A0F2',
-            timeStart: '10:10am',
-            timeEnd: '11:00am',
-          },
-          {
-            title: 'Information Science Major Electives',
-            name: 'INFO 2300',
-            color: '#AF52DE',
-            timeStart: '11:15am',
-            timeEnd: '12:05pm',
-          },
-        ],
-        Tuesday: [
-          {
-            title: 'Information Science Major Concentration Group A',
-            name: 'INFO 2450',
-            color: '#34C759',
-            timeStart: '8:40am',
-            timeEnd: '9:55am',
-          },
-          {
-            title: 'College Requirements Human Diversity (D)',
-            name: 'DSOC 1101',
-            color: '#FF9500',
-            timeStart: '2:30pm',
-            timeEnd: '3:20pm',
-          },
-        ],
-        Wednesday: [
-          {
-            title: 'Introductory Programming',
-            name: 'CS 1110',
-            color: '#FF3B30',
-            timeStart: '8:00am',
-            timeEnd: '8:50am',
-          },
-          {
-            title: 'Information Science Major Core Courses',
-            name: 'INFO 1260',
-            color: '#32A0F2',
-            timeStart: '10:10am',
-            timeEnd: '11:00am',
-          },
-          {
-            title: 'Information Science Major Electives',
-            name: 'INFO 2300',
-            color: '#AF52DE',
-            timeStart: '11:15am',
-            timeEnd: '12:05pm',
-          },
-        ],
-        Thursday: [
-          {
-            title: 'Information Science Major Concentration Group A',
-            name: 'INFO 2450',
-            color: '#34C759',
-            timeStart: '8:40am',
-            timeEnd: '9:55am',
-          },
-          {
-            title: 'College Requirements Human Diversity (D)',
-            name: 'DSOC 1101',
-            color: '#FF9500',
-            timeStart: '2:30pm',
-            timeEnd: '3:20pm',
-          },
-        ],
-        Friday: [
-          {
-            title: 'Introductory Programming',
-            name: 'CS 1110',
-            color: '#FF3B30',
-            timeStart: '12:20pm',
-            timeEnd: '1:10pm',
-          },
-        ],
-        Saturday: [],
-        Sunday: [],
+        Monday: mondayClasses,
+        Tuesday: tuesdayClasses,
+        Wednesday: wednesdayClasses,
+        Thursday: thursdayClasses,
+        Friday: fridayClasses,
+        Saturday: saturdayClasses,
+        Sunday: sundayClasses,
       };
     },
   },
