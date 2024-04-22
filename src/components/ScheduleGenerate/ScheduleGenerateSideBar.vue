@@ -205,16 +205,47 @@ export default defineComponent({
       );
     },
     openScheduleGenerateModal() {
+      function getRandomStartTime() {
+        const hour = 8 + Math.floor(Math.random() * 8);
+        const minutes = ['00', '15', '30', '45'][Math.floor(Math.random() * 4)];
+        const period = hour < 12 ? 'AM' : 'PM';
+        const formattedHour = hour > 12 ? hour - 12 : hour;
+        return `${formattedHour}:${minutes} ${period}`;
+      }
+
+      function getEndTimeFromStartTime(startTime) {
+        let [time, period] = startTime.split(' ');
+        let [hour, minutes] = time.split(':');
+        hour = parseInt(hour);
+
+        hour += 1;
+
+        if (hour === 12 && period === 'AM') {
+          period = 'PM';
+        } else if (hour === 12 && period === 'PM') {
+          period = 'AM';
+        } else if (hour > 12) {
+          hour -= 12;
+        }
+
+        return `${hour}:${minutes} ${period}`;
+      }
+
       const coursesWithReqIds = this.requirements.map(req => ({
         reqId: req.reqId,
-        courses: req.courses.map(course => ({
-          title: course.name,
-          name: course.code,
-          color: course.color,
-          timeStart: '10:00 AM', // Example placeholder
-          timeEnd: '11:00 AM', // Example placeholder
-        })),
+        courses: req.courses.map(course => {
+          const startTime = getRandomStartTime();
+          const endTime = getEndTimeFromStartTime(startTime);
+          return {
+            title: course.name,
+            name: course.code,
+            color: course.color,
+            timeStart: startTime,
+            timeEnd: endTime,
+          };
+        }),
       }));
+
       console.log('From schedule gen side bar parent comp COURSES');
       console.log(coursesWithReqIds);
       console.log('From schedule gen side bar parent comp REQs');
