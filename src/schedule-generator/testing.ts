@@ -14,6 +14,7 @@ class Testing {
     // Courses
     const cs1110 = new Course(
       'CS1110',
+      '#FFFFF',
       3,
       [
         {
@@ -28,6 +29,7 @@ class Testing {
 
     const orie3300 = new Course(
       'ORIE3300',
+      '#FFFFF',
       4,
       [
         {
@@ -47,6 +49,7 @@ class Testing {
 
     const info4430 = new Course(
       'INFO4430',
+      '#FFFFF',
       3,
       [
         {
@@ -66,6 +69,7 @@ class Testing {
 
     const engrd2700 = new Course(
       'ENGRD2700',
+      '#FFFFF',
       3,
       [
         {
@@ -85,6 +89,7 @@ class Testing {
 
     const additionalCourse1 = new Course(
       'XYZ123',
+      '#FFFFF',
       3,
       [
         {
@@ -99,6 +104,7 @@ class Testing {
 
     const additionalCourse2 = new Course(
       'ABC456',
+      '#FFFFF',
       4,
       [
         {
@@ -113,6 +119,7 @@ class Testing {
 
     const randomCourse1 = new Course(
       'XYZ789',
+      '#FFFFF',
       3,
       [
         {
@@ -132,6 +139,7 @@ class Testing {
 
     const randomCourse2 = new Course(
       'DEF321',
+      '#FFFFF',
       4,
       [
         {
@@ -146,6 +154,7 @@ class Testing {
 
     const randomCourse3 = new Course(
       'PQR987',
+      '#FFFFF',
       3,
       [
         {
@@ -166,6 +175,7 @@ class Testing {
     // Enough time to walk to this class.
     const randomCourse4 = new Course(
       'LMN654',
+      '#FFFFF',
       4,
       [
         {
@@ -186,6 +196,7 @@ class Testing {
     // Enough time to walk to this class.
     const randomCourse5 = new Course(
       'RAC555',
+      '#FFFFF',
       2,
       [
         {

@@ -146,6 +146,8 @@ export default defineComponent({
   // },
   computed: {
     classes() {
+      console.log('courses straight from the input - should be in firebase format');
+      console.log(this.courses);
       const returnCourses = this.courses.map(course => ({
         title: course.title,
         name: course.name,
@@ -158,12 +160,12 @@ export default defineComponent({
     classesSchedule() {
       function getRandomDaySet(): string[] {
         const daySets = [
-          ['Monday', 'Wednesday', 'Friday'], // Set 1
-          ['Tuesday', 'Thursday'], // Set 2
-          ['Saturday', 'Sunday'], // Set 3
+          ['Monday', 'Wednesday', 'Friday'],
+          ['Tuesday', 'Thursday'],
+          ['Saturday', 'Sunday'],
         ];
-        const randomIndex = Math.floor(Math.random() * daySets.length); // Get a random index
-        return daySets[randomIndex]; // Return a random set of days
+        const randomIndex = Math.floor(Math.random() * daySets.length);
+        return daySets[randomIndex];
       }
       const courses = this.courses.map(
         course =>
@@ -193,7 +195,6 @@ export default defineComponent({
 
       const generatedSchedule = ScheduleGenerator.generateSchedule(generatorRequest);
       // ScheduleGenerator.prettyPrintSchedule(generatedSchedule);
-
       let mondayClasses = [];
       let tuesdayClasses = [];
       let wednesdayClasses = [];
