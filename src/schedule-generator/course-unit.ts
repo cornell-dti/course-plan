@@ -18,6 +18,8 @@ export type Timeslot = {
 export default class Course {
   name: string;
 
+  color: string;
+
   credits: number;
 
   /*
@@ -41,12 +43,14 @@ export default class Course {
 
   constructor(
     name = '',
+    color = '',
     credits = 0,
     timeslots: Timeslot[] = [],
     offeredSemesters: string[] = [],
     requirements: Requirement[] = []
   ) {
     this.name = name;
+    this.color = color;
     this.credits = credits;
     this.timeslots = timeslots;
     this.offeredSemesters = offeredSemesters;
