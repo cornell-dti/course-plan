@@ -42,7 +42,16 @@
 
             As such, if we want to enforce the credit limit here, would have to implement some sort of reactive JavaScript listener.
           -->
-          <input type="number" placeholder='"18"' min="0" max="30" class="credit-limit-input" />
+          <input
+            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+            type="number"
+            maxlength="2"
+            placeholder='"18"'
+            min="0"
+            max="30"
+            class="credit-limit-input"
+            v-model="creditLimit"
+          />
         </div>
         <button class="add-requirement-button" @click="addRequirement">+ Requirement</button>
       </div>
@@ -82,11 +91,13 @@ export default defineComponent({
     requirements: ReqCourses[];
     isConfirmationOpen: boolean;
     confirmationText: string;
+    creditLimit: number;
   } {
     return {
       requirements: [],
       isConfirmationOpen: false,
       confirmationText: '',
+      creditLimit: 12, // To Do: dont put a default number here (but then it allows 3 digits??)
     };
   },
   components: {
@@ -196,7 +207,24 @@ export default defineComponent({
       );
     },
     openScheduleGenerateModal() {
-      this.$emit('openScheduleGenerateModal');
+      const coursesWithReqIds = this.requirements.map(req => ({
+        reqId: req.reqId,
+        courses: req.courses.map(course => ({
+          title: course.name,
+          name: course.code,
+          color: course.color,
+          timeStart: '10:00 AM', // Example placeholder
+          timeEnd: '11:00 AM', // Example placeholder
+        })),
+      }));
+      console.log('From schedule gen side bar parent comp COURSES');
+      console.log(coursesWithReqIds);
+      console.log('From schedule gen side bar parent comp REQs');
+      console.log(this.requirements);
+      // this.$emit('openScheduleGenerateModal', courses, this.requirements);
+      this.$emit('openScheduleGenerateModal', coursesWithReqIds, this.creditLimit);
+
+      // before it was just this.$emit('openScheduleGenerateModal')
     },
   },
 });
@@ -209,6 +237,8 @@ export default defineComponent({
   width: 25rem;
   background-color: $white;
   padding: 1.625rem 1.5rem;
+  overflow-y: scroll;
+
   &-header {
     margin-bottom: 1rem;
   }
@@ -316,7 +346,8 @@ export default defineComponent({
   margin-bottom: 12px;
   border: 1px solid $emGreen;
   background: $emGreen;
-  cursor: pointer; /* otherwise uses default cursor */
+  cursor: pointer;
+  /* otherwise uses default cursor */
 }
 
 .generate-schedule-button:disabled {
@@ -360,6 +391,7 @@ export default defineComponent({
   -webkit-appearance: none;
   margin: 0;
 }
+
 .credit-limit-input[type='number'] {
   -moz-appearance: textfield;
   appearance: textfield;

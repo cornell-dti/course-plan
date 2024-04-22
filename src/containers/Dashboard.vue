@@ -10,9 +10,12 @@
       @cancelOnboarding="cancelOnboarding"
     />
     <schedule-generate-modal
+      v-if="isScheduleGenerateModalOpen"
       class="dashboard-modal"
       :selected-semester="semesterToGenerate"
-      v-if="isScheduleGenerateModalOpen"
+      :courses="coursesForGeneration"
+      :req-ids="reqIdsForGeneration"
+      :credit-limit="creditLimitForGeneration"
       @closeScheduleGenerateModal="closeScheduleGenerateModal"
     />
     <div class="dashboard-mainView">
@@ -41,7 +44,7 @@
         <schedule-generate-side-bar
           v-if="loaded && !showToolsPage && !isProfileOpen && isScheduleGenerateOpen"
           :selected-semester="semesterToGenerate"
-          :generate-schedule-button-disabled="isScheduleGenerateButtonDisabled"
+          :generate-schedule-button-disabled="erateButtonDisabled"
           @openScheduleGenerateModal="openScheduleGenerateModal"
         />
         <bottom-bar
@@ -179,6 +182,9 @@ export default defineComponent({
       isScheduleGenerateButtonDisabled: false,
       isScheduleGenerateOpen: false,
       isScheduleGenerateModalOpen: false,
+      coursesForGeneration: [],
+      reqIdsForGeneration: [],
+      creditLimitForGeneration: 12,
     };
   },
   computed: {
@@ -296,8 +302,10 @@ export default defineComponent({
       }
     },
 
-    openScheduleGenerateModal() {
-      // TODO: do feature flag check
+    openScheduleGenerateModal(coursesWithReqIds, creditLimit) {
+      this.coursesForGeneration = coursesWithReqIds.flatMap(req => req.courses);
+      this.reqIdsForGeneration = coursesWithReqIds.map(req => req.reqId); // Store requirement IDs
+      this.creditLimitForGeneration = creditLimit;
       this.isScheduleGenerateModalOpen = true;
     },
 
