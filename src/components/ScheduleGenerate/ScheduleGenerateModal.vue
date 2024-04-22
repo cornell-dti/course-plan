@@ -104,8 +104,10 @@
 import { PropType, defineComponent } from 'vue';
 import Schedule from '@/components/ScheduleGenerate/Schedule.vue';
 import ScheduleCourses from '@/components/ScheduleGenerate/ScheduleCourses.vue';
-import { generateSchedulePDF } from '@/tools/export-plan';
-import type { ReqInfo } from '@/tools/export-plan/types';
+import GeneratorRequest from '@/schedule-generator/generator-request';
+import ScheduleGenerator from '@/schedule-generator/algorithm';
+import Course, { Timeslot, DayOfTheWeek } from '@/schedule-generator/course-unit';
+import Requirement from '@/schedule-generator/requirement';
 
 export default defineComponent({
   props: {
@@ -138,74 +140,43 @@ export default defineComponent({
         this.cancel();
       }
     },
-    async downloadSchedule() {
-      const calendarRef = this.$refs.calendar as typeof Schedule;
-      generateSchedulePDF(this.reqs, await calendarRef.generatePdfData(), this.year, this.season);
-    },
-    regenerateSchedule() {
-      // TODO: implement (connect to backend).
-    },
-    paginate(direction: number) {
-      if ((this.currentPage < 5 && direction === 1) || (this.currentPage > 1 && direction === -1)) {
-        this.currentPage += direction;
-      }
-    },
-  },
-  data() {
-    return {
-      // TODO: implement (connect to backend).
-      currentPage: 1,
-    };
-  },
+    generateAndLogSchedule() {
+      const courses = this.courses.map(
+        course =>
+          new Course(
+            course.name,
+            // course.credits,
+            3,
+            [
+              {
+                start: course.timeStart,
+                end: course.timeEnd,
+                daysOfTheWeek: course.daysOfTheWeek || ['Monday', 'Friday'],
+              },
+            ],
+            [this.selectedSemester],
+            this.reqIds.map(reqId => new Requirement(reqId))
+          )
+      );
 
+      console.log('Courses with timeslots:', courses);
+      const generatorRequest = new GeneratorRequest(
+        courses,
+        this.reqIds.map(reqId => new Requirement(reqId)),
+        this.creditLimit,
+        this.selectedSemester
+      );
+
+      const generatedSchedule = ScheduleGenerator.generateSchedule(generatorRequest);
+      console.log('Generated Schedule:', generatedSchedule);
+      ScheduleGenerator.prettyPrintSchedule(generatedSchedule);
+    },
+  },
+  mounted() {
+    this.generateAndLogSchedule();
+  },
   computed: {
     classes() {
-      // return [
-      //   {
-      //     title: 'Introductory Programming',
-      //     name: 'CS 1110',
-      //     color: '#FF3B30', // eventually want to use coursescolorset
-      //     // and match with the right component of this modal
-      //     timeStart: '8:00am',
-      //     timeEnd: '8:50am',
-      //   },
-      //   {
-      //     title: 'Information Science Major Concentration Group A',
-      //     name: 'INFO 2450',
-      //     color: '#34C759',
-      //     timeStart: '8:40am',
-      //     timeEnd: '9:55am',
-      //   },
-      //   {
-      //     title: 'Information Science Major Core Courses',
-      //     name: 'INFO 1260',
-      //     color: '#32A0F2',
-      //     timeStart: '10:10am',
-      //     timeEnd: '11:00am',
-      //   },
-      //   {
-      //     title: 'Information Science Major Electives',
-      //     name: 'INFO 2300',
-      //     color: '#AF52DE',
-      //     timeStart: '12:20pm',
-      //     timeEnd: '1:10pm',
-      //   },
-      //   {
-      //     title: 'College Requirements Human Diversity (D)',
-      //     name: 'DSOC 1101',
-      //     color: '#FF9500',
-      //     timeStart: '2:30pm',
-      //     timeEnd: '3:20pm',
-      //   },
-      //   {
-      //     title: 'No Requirement',
-      //     name: 'ART 2301',
-      //     color: '#B155E0',
-      //     timeStart: '11:00pm',
-      //     timeEnd: '11:50pm',
-      //   },
-      //   // question: what if # of courses overflows the box? not in designs iirc
-      // ];
       const returnCourses = this.courses.map(course => ({
         title: course.title,
         name: course.name,
