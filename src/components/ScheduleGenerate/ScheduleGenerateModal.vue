@@ -146,7 +146,6 @@ export default defineComponent({
       console.log('From Schedule Generate MODAL REQS SELECTED');
       console.log(this.reqIds);
       return returnCourses;
-      // added change
     },
     classesSchedule() {
       return {
