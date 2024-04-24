@@ -19,9 +19,10 @@ export const editCollections = async (
   console.log('edit Collections');
   const collections = updater(store.state.collections);
   store.commit('setCollections', collections);
-  await updateDoc(doc(semestersCollection, store.state.currentFirebaseUser.email), {
-    collections,
-  });
+  // TODO: figure out how to update collections in firestore
+  // await updateDoc(doc(semestersCollection, store.state.currentFirebaseUser.email), {
+  // collections,
+  // });
   store.commit('setOrderByNewest', store.state.orderByNewest);
 };
 
@@ -52,6 +53,15 @@ export const setOrderByNewest = (orderByNewest: boolean): void => {
   updateDoc(doc(semestersCollection, store.state.currentFirebaseUser.email), {
     orderByNewest,
   });
+};
+
+export const editCollection = (
+  name: string,
+  updater: (oldCollection: Collection) => Collection
+): void => {
+  editCollections(oldCollection =>
+    oldCollection.map(collection => (collection.name === name ? updater(collection) : collection))
+  );
 };
 
 export const editSemester = (
@@ -127,6 +137,7 @@ export const addCollection = async (
     'setCurrentCollection',
     store.state.collections.find(collection => collection.name === name)
   );
+  // TODO: need to update semester (should we call deleteCourseFromSemester)
 };
 
 export const addSemester = (

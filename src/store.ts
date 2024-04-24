@@ -51,6 +51,7 @@ export type VuexStoreState = {
   isTeleportModalOpen: boolean;
   plans: readonly Plan[];
   currentPlan: Plan;
+  collections: readonly Collection[];
 };
 
 export class TypedVuexStore extends Store<VuexStoreState> {}
@@ -99,6 +100,7 @@ const store: TypedVuexStore = new TypedVuexStore({
     isTeleportModalOpen: false,
     plans: [],
     currentPlan: { name: '', semesters: [] },
+    collections: [],
   },
   actions: {},
   getters: {
