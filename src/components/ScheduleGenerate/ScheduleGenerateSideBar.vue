@@ -217,23 +217,23 @@ export default defineComponent({
         readonly semesters: readonly string[];
         readonly color: string;
       }) {
+        getCourseWithCrseIdAndRoster(course.lastRoster, course.crseId)
+          .then(firestoreCourse => {
+            console.log('Course details:', firestoreCourse);
+          })
+          .catch(error => {
+            if (error.code === 'permission-denied') {
+              console.error('You need to be logged in to view course details.');
+            } else {
+              console.error('Error fetching course details:', error);
+            }
+          });
+
         const hour = 8 + Math.floor(Math.random() * 8);
         const minutes = ['00', '15', '30', '45'][Math.floor(Math.random() * 4)];
         const period = hour < 12 ? 'am' : 'pm';
         const formattedHour = hour > 12 ? hour - 12 : hour;
         return `${formattedHour}:${minutes}${period}`;
-        // getCourseWithCrseIdAndRoster(course.lastRoster, course.crseId)
-        //   .then(firestoreCourse => {
-        //     console.log('Course details:', firestoreCourse);
-        //   })
-        //   .catch(error => {
-        //     if (error.code === 'permission-denied') {
-        //       console.error('You need to be logged in to view course details.');
-        //     } else {
-        //       console.error('Error fetching course details:', error);
-        //     }
-        //   });
-        // return "11:00am"
       }
 
       function getEndTime(startTime: { split: (arg0: string) => [any, any] }) {
@@ -265,6 +265,7 @@ export default defineComponent({
             color: course.color,
             courseCredits: course.credits,
             fulfilledReq: req.reqName,
+            fulfilledReqId: req.reqId,
             timeStart: startTime,
             timeEnd: endTime,
           };
