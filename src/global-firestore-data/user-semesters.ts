@@ -12,17 +12,17 @@ import {
   deleteCoursesFromRequirementChoices,
 } from './user-overridden-fulfillment-choices';
 
-export const editCollection = async (
+export const editCollections = async (
   updater: (oldCollections: readonly Collection[]) => readonly Collection[]
 ): Promise<void> => {
   // // TODO: add collections in store
-  // const collections = updater(store.state.collections);
-  // store.commit('setCollections', collections);
-  // await updateDoc(doc(semestersCollection, store.state.currentFirebaseUser.email), {
-  //   collections,
-  // });
+  const collections = updater(store.state.collections);
+  store.commit('setCollections', collections);
+  await updateDoc(doc(semestersCollection, store.state.currentFirebaseUser.email), {
+    collections,
+  });
   // // TODO: figure out what setOrderByNewest is doing here
-  // store.commit('setOrderByNewest', store.state.orderByNewest);
+  store.commit('setOrderByNewest', store.state.orderByNewest);
 };
 
 export const editSemesters = (
@@ -119,7 +119,11 @@ export const addCollection = async (
   gtag?: VueGtag
 ): Promise<void> => {
   GTagEvent(gtag, 'add-collection');
-  // await editCollection(oldCollections => [...oldCollections, createCollection(name, semesters)]);
+  await editCollections(oldCollections => [...oldCollections, createCollection(name, semesters)]);
+  store.commit(
+    'setCurrentCollection',
+    store.state.collections.find(collection => collection.name === name)
+  );
 };
 
 export const addSemester = (
@@ -146,8 +150,13 @@ export const addPlan = async (
   );
 };
 
-export const deleteCollection = async();
-// TODO: finish out this function
+export const deleteCollection = async (name: string, gtag?: VueGtag): Promise<void> => {
+  GTagEvent(gtag, 'delete-collection');
+  if (store.state.collections.some(p => p.name === name)) {
+    await editCollections(oldCollections => oldCollections.filter(p => p.name !== name));
+  }
+  store.commit('setCurrentCollection', store.state.collections[0]);
+};
 
 export const deleteSemester = (
   plan: Plan,
