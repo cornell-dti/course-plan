@@ -10,8 +10,8 @@
     <save-course-modal
       :courseCode="courseCode"
       @close-save-course-modal="closeSaveCourseModal"
-      @save-course="saveCourse"
-      @open-add-collection-modal="openAddCollectionModal"
+      @add-course-collection="addCourseCollection"
+      @add-collection="addCollection"
       v-if="isSaveCourseOpen"
     />
     <edit-color
@@ -182,11 +182,11 @@ export default defineComponent({
     closeEditColorModal() {
       this.isEditColorOpen = false;
     },
-    openAddCollectionModal() {
+    addCollection() {
       this.isSaveCourseOpen = false;
       // TODO: implement add collection
     },
-    saveCourse() {
+    addCourseCollection() {
       this.isSaveCourseOpen = false;
       // TODO: implement save course
     },
