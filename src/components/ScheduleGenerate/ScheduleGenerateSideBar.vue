@@ -170,7 +170,7 @@ export default defineComponent({
     },
     // add a new requirement group
     addRequirement() {
-      this.requirements = [...this.requirements, { reqId: '', reqName: '', courses: [] }];
+      this.requirements = [{ reqId: '', reqName: '', courses: [] }, ...this.requirements];
     },
 
     // TODO: use availableRequirement once we start enforcing how many requirement groups we can add
