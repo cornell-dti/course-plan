@@ -15,13 +15,13 @@ import {
 export const editCollections = async (
   updater: (oldCollections: readonly Collection[]) => readonly Collection[]
 ): Promise<void> => {
-  // // TODO: add collections in store
+  // TODO: finish implementing function
+  console.log('edit Collections');
   const collections = updater(store.state.collections);
   store.commit('setCollections', collections);
   await updateDoc(doc(semestersCollection, store.state.currentFirebaseUser.email), {
     collections,
   });
-  // // TODO: figure out what setOrderByNewest is doing here
   store.commit('setOrderByNewest', store.state.orderByNewest);
 };
 
@@ -64,6 +64,8 @@ export const editSemester = (
     oldSemesters.map(sem => (semesterEquals(sem, year, season) ? updater(sem) : sem))
   );
 };
+
+// TODO: check if need editCollection
 
 export const editPlan = (name: string, updater: (oldPlan: Plan) => Plan): void => {
   editPlans(oldPlan => oldPlan.map(plan => (plan.name === name ? updater(plan) : plan)));
@@ -113,12 +115,13 @@ export const semesterEquals = (
 ): boolean => semester.year === year && semester.season === season;
 
 export const addCollection = async (
-  // TODO: finish addCollection function
   name: string,
   semesters: readonly FirestoreSemester[],
   gtag?: VueGtag
 ): Promise<void> => {
   GTagEvent(gtag, 'add-collection');
+  // TODO: finish implementing function
+  console.log('add Collection');
   await editCollections(oldCollections => [...oldCollections, createCollection(name, semesters)]);
   store.commit(
     'setCurrentCollection',
@@ -152,6 +155,8 @@ export const addPlan = async (
 
 export const deleteCollection = async (name: string, gtag?: VueGtag): Promise<void> => {
   GTagEvent(gtag, 'delete-collection');
+  // implement function
+  console.log('delete Collection');
   if (store.state.collections.some(p => p.name === name)) {
     await editCollections(oldCollections => oldCollections.filter(p => p.name !== name));
   }
@@ -184,7 +189,36 @@ export const deletePlan = async (name: string, gtag?: VueGtag): Promise<void> =>
   store.commit('setCurrentPlan', store.state.plans[0]);
 };
 
+// collection specific functions
+
+// TODO: can add one course to multiple collections
+export const addCourseToCollections = (
+  plan: Plan,
+  year: number,
+  season: FirestoreSemesterSeason,
+  newCourse: FirestoreSemesterCourse,
+  gtag?: VueGtag
+): void => {
+  GTagEvent(gtag, 'add-course-collections');
+  // TODO: implement function
+  console.log('add Course to Collections');
+};
+
+export const deleteCourseFromCollection = (
+  plan: Plan,
+  year: number,
+  season: FirestoreSemesterSeason,
+  name: string,
+  courseUniqueID: number,
+  gtag?: VueGtag
+): void => {
+  GTagEvent(gtag, 'delete-course-collection');
+  // TODO: implement function
+  console.log('delete Course from Collection');
+};
+
 export const addCourseToSemester = (
+  // TODO: need to add collection aswell?
   plan: Plan,
   year: number,
   season: FirestoreSemesterSeason,
