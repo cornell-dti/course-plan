@@ -144,7 +144,8 @@ export default defineComponent({
               },
             ],
             [this.selectedSemester],
-            this.reqIds.map(reqId => new Requirement(reqId))
+            // this.reqIds.map(reqId => new Requirement(reqId))
+            course.fulfilledReqId
           )
       );
 
