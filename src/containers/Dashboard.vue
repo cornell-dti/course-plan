@@ -11,7 +11,8 @@
     />
     <schedule-generate-modal
       class="dashboard-modal"
-      :selected-semester="semesterToGenerate"
+      :year="year"
+      :season="season"
       v-if="isScheduleGenerateModalOpen"
       @closeScheduleGenerateModal="closeScheduleGenerateModal"
     />
@@ -40,7 +41,8 @@
         />
         <schedule-generate-side-bar
           v-if="loaded && !showToolsPage && !isProfileOpen && isScheduleGenerateOpen"
-          :selected-semester="semesterToGenerate"
+          :year="year"
+          :season="season"
           :generate-schedule-button-disabled="isScheduleGenerateButtonDisabled"
           @openScheduleGenerateModal="openScheduleGenerateModal"
         />
@@ -182,9 +184,13 @@ export default defineComponent({
     };
   },
   computed: {
-    semesterToGenerate(): string {
+    season(): FirestoreSemesterSeason {
       // TODO: read the newest roster from firestore
-      return 'Fall 2024';
+      return 'Fall';
+    },
+    year(): number {
+      // TODO: read the newest roster from firestore
+      return 2024;
     },
     userName(): FirestoreUserName {
       return store.state.userName;
