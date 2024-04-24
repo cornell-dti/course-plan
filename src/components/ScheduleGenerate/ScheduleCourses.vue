@@ -6,8 +6,8 @@
         >&nbsp;Credits
       </h3>
       <h3 class="info-subheader">
-        <span class="info-subheader-heavy">{{ classes.size }}</span
-        >&nbsp;{{ classes.size === 1 ? 'Course' : 'Courses' }}
+        <span class="info-subheader-heavy">{{ numClasses }}</span
+        >&nbsp;{{ numClasses === 1 ? 'Course' : 'Courses' }}
       </h3>
     </div>
     <div class="requirement-between-justifier">
@@ -31,6 +31,10 @@ export default defineComponent({
       type: Number,
       required: true,
     },
+    numClasses: {
+      type: Number,
+      required: true,
+    },
     classes: {
       type: Map as PropType<Map<ReqInfo, FirestoreSemesterCourse>>,
       required: true,
@@ -41,6 +45,7 @@ export default defineComponent({
 
 <style scoped lang="scss">
 @import '@/assets/scss/_variables.scss';
+
 .courses {
   &-main {
     border-color: $inactiveGray;
