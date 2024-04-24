@@ -47,13 +47,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, onMounted, ref } from 'vue';
 import Schedule from '@/components/ScheduleGenerate/Schedule.vue';
 import ScheduleCourses from '@/components/ScheduleGenerate/ScheduleCourses.vue';
 import GeneratorRequest from '@/schedule-generator/generator-request';
 import ScheduleGenerator from '@/schedule-generator/algorithm';
 import Course from '@/schedule-generator/course-unit';
 import Requirement from '@/schedule-generator/requirement';
+import { getDocs, orderBy, query } from 'firebase/firestore';
+import { coursesCollection } from '@/firebase-config';
 
 export default defineComponent({
   props: {
@@ -87,13 +89,10 @@ export default defineComponent({
       }
     },
   },
-  // mounted() {
-  //   this.generateAndLogSchedule();
-  // },
   computed: {
     classes() {
-      console.log('courses straight from the input - should be in firebase format');
-      console.log(this.courses);
+      // console.log('courses straight from the input - should be in firebase format');
+      // console.log(this.courses);
       const returnCourses = this.courses.map(course => ({
         title: course.title,
         name: course.name,
@@ -104,6 +103,14 @@ export default defineComponent({
       return returnCourses;
     },
     classesSchedule() {
+      console.log('courses from user input, in firebasesemestercourse format');
+      console.log(this.courses);
+
+      console.log('reqs from userinput');
+      console.log(this.reqIds);
+
+      console.log('req mapping');
+      console.log(this.reqIds.map(reqId => new Requirement(reqId)));
       function getRandomDaySet(): string[] {
         const daySets = [
           ['Monday', 'Wednesday', 'Friday'],
