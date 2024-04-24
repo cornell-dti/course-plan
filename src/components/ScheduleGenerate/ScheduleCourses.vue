@@ -6,8 +6,8 @@
         >&nbsp;Credits
       </h3>
       <h3 class="info-subheader">
-        <span class="info-subheader-heavy">{{ classes.length }}</span
-        >&nbsp;{{ classes.length === 1 ? 'Course' : 'Courses' }}
+        <span class="info-subheader-heavy">{{ numClasses }}</span
+        >&nbsp;{{ numClasses === 1 ? 'Course' : 'Courses' }}
       </h3>
     </div>
     <div class="requirement-between-justifier">
@@ -30,6 +30,10 @@ export default defineComponent({
       type: Number,
       required: true,
     },
+    numClasses: {
+      type: Number,
+      required: true,
+    },
     classes: {
       type: Array as PropType<Array<{ color: string; title: string; name: string }>>,
       required: true,
@@ -40,6 +44,7 @@ export default defineComponent({
 
 <style scoped lang="scss">
 @import '@/assets/scss/_variables.scss';
+
 .courses {
   &-main {
     border-color: $inactiveGray;

@@ -31,7 +31,11 @@
             Your Courses
           </div>
           <div class="schedule-generate-section-courses">
-            <schedule-courses :num-credits="creditLimit" :classes="classes" />
+            <schedule-courses
+              :num-credits="totalCreditsGenerated"
+              :num-classes="numberOfCoursesGenerated"
+              :classes="classes"
+            />
           </div>
           <div class="schedule-generate-section-schedule">
             <div class="schedule-generate-subHeader schedule-generate-subHeader--indent">
@@ -47,15 +51,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref } from 'vue';
+import { defineComponent } from 'vue';
 import Schedule from '@/components/ScheduleGenerate/Schedule.vue';
 import ScheduleCourses from '@/components/ScheduleGenerate/ScheduleCourses.vue';
 import GeneratorRequest from '@/schedule-generator/generator-request';
 import ScheduleGenerator from '@/schedule-generator/algorithm';
 import Course from '@/schedule-generator/course-unit';
 import Requirement from '@/schedule-generator/requirement';
-import { getDocs, orderBy, query } from 'firebase/firestore';
-import { coursesCollection } from '@/firebase-config';
 
 export default defineComponent({
   props: {
@@ -79,6 +81,12 @@ export default defineComponent({
     ScheduleCourses,
   },
   emits: ['closeScheduleGenerateModal'],
+  data() {
+    return {
+      numberOfCoursesGenerated: null,
+      totalCreditsGenerated: 0,
+    };
+  },
   methods: {
     cancel() {
       this.$emit('closeScheduleGenerateModal');
@@ -94,7 +102,7 @@ export default defineComponent({
       // console.log('courses straight from the input - should be in firebase format');
       // console.log(this.courses);
       const returnCourses = this.courses.map(course => ({
-        title: course.title,
+        title: course.fulfilledReq,
         name: course.name,
         color: '#'.concat(course.color),
         timeStart: course.timeStart,
@@ -106,11 +114,12 @@ export default defineComponent({
       console.log('courses from user input, in firebasesemestercourse format');
       console.log(this.courses);
 
-      console.log('reqs from userinput');
-      console.log(this.reqIds);
+      // console.log('reqs from userinput');
+      // console.log(this.reqIds);
 
-      console.log('req mapping');
-      console.log(this.reqIds.map(reqId => new Requirement(reqId)));
+      // console.log('req mapping');
+      // console.log(this.reqIds.map(reqId => new Requirement(reqId)));
+
       function getRandomDaySet(): string[] {
         const daySets = [
           ['Monday', 'Wednesday', 'Friday'],
@@ -126,7 +135,7 @@ export default defineComponent({
             course.name,
             // course.credits,
             '#'.concat(course.color),
-            3,
+            course.courseCredits,
             [
               {
                 start: course.timeStart,
@@ -147,6 +156,10 @@ export default defineComponent({
       );
 
       const generatedSchedule = ScheduleGenerator.generateSchedule(generatorRequest);
+
+      this.numberOfCoursesGenerated = generatedSchedule.schedule.size;
+      this.totalCreditsGenerated = generatedSchedule.totalCredits;
+
       // ScheduleGenerator.prettyPrintSchedule(generatedSchedule);
       let mondayClasses = [];
       let tuesdayClasses = [];

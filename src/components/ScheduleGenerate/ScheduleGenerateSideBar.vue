@@ -77,6 +77,7 @@ import RequirementCourses from '@/components/ScheduleGenerate/RequirementCourses
 import Confirmation from '@/components/Modals/Confirmation.vue';
 import store from '@/store';
 import { cornellCourseRosterCourseToFirebaseSemesterCourseWithCustomIDAndColor } from '@/user-data-converter';
+import { getCourseWithCrseIdAndRoster } from '@/global-firestore-data/courses';
 
 export type ReqCourses = {
   reqId: string;
@@ -207,15 +208,37 @@ export default defineComponent({
       );
     },
     openScheduleGenerateModal() {
-      function getRandomStartTime() {
+      function getStartTime(course: {
+        readonly crseId: number;
+        readonly lastRoster: string;
+        readonly uniqueID: number;
+        readonly code: string;
+        readonly name: string;
+        readonly credits: number;
+        readonly creditRange: readonly [number, number];
+        readonly semesters: readonly string[];
+        readonly color: string;
+      }) {
         const hour = 8 + Math.floor(Math.random() * 8);
         const minutes = ['00', '15', '30', '45'][Math.floor(Math.random() * 4)];
         const period = hour < 12 ? 'am' : 'pm';
         const formattedHour = hour > 12 ? hour - 12 : hour;
         return `${formattedHour}:${minutes}${period}`;
+        // getCourseWithCrseIdAndRoster(course.lastRoster, course.crseId)
+        //   .then(firestoreCourse => {
+        //     console.log('Course details:', firestoreCourse);
+        //   })
+        //   .catch(error => {
+        //     if (error.code === 'permission-denied') {
+        //       console.error('You need to be logged in to view course details.');
+        //     } else {
+        //       console.error('Error fetching course details:', error);
+        //     }
+        //   });
+        // return "11:00am"
       }
 
-      function getEndTimeFromStartTime(startTime) {
+      function getEndTime(startTime: { split: (arg0: string) => [any, any] }) {
         let [time, period] = startTime.split(' ');
         let [hour, minutes] = time.split(':');
         hour = parseInt(hour, 10);
@@ -225,7 +248,7 @@ export default defineComponent({
         if (hour === 12 && period === 'am') {
           period = 'pm';
         } else if (hour === 12 && period === 'pm') {
-          period = 'am';
+          period = 'pm';
         } else if (hour > 12) {
           hour -= 12;
         }
@@ -236,12 +259,14 @@ export default defineComponent({
       const coursesWithReqIds = this.requirements.map(req => ({
         reqId: req.reqId,
         courses: req.courses.map(course => {
-          const startTime = getRandomStartTime();
-          const endTime = getEndTimeFromStartTime(startTime);
+          const startTime = getStartTime(course);
+          const endTime = getEndTime(startTime);
           return {
             title: course.name,
             name: course.code,
             color: course.color,
+            courseCredits: course.credits,
+            fulfilledReq: req.reqName,
             timeStart: startTime,
             timeEnd: endTime,
           };
