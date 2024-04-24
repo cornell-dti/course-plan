@@ -225,3 +225,8 @@ type Plan = {
   readonly name: string;
   readonly semesters: readonly FirestoreSemester[];
 };
+
+type Collection = {
+  readonly name: string;
+  // TODO: add potential more fields
+};
