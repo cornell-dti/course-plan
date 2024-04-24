@@ -31,30 +31,87 @@
             Your Courses
           </div>
           <div class="schedule-generate-section-courses">
-            <schedule-courses :num-credits="12" :classes="classes" />
+            <schedule-courses :num-credits="12" :classes="reqs" />
           </div>
           <div class="schedule-generate-section-schedule">
             <div class="schedule-generate-subHeader schedule-generate-subHeader--indent">
-              {{ selectedSemester }}
+              {{ season }} {{ year }}
             </div>
-            <schedule :classesSchedule="classesSchedule" />
+            <schedule ref="calendar" :classesSchedule="classesSchedule" />
+          </div>
+        </div>
+        <div class="schedule-generate-bottom">
+          <button @click="regenerateSchedule" class="generate-schedules-button">
+            <span class="footer-text">Generate New Schedules</span>
+          </button>
+          <div class="right-footer-container">
+            <button
+              @click="() => paginate(-1)"
+              :disabled="currentPage === 1"
+              :class="'footer-button' + (currentPage === 1 ? ' footer-button-disabled' : ' ')"
+            >
+              <span :class="currentPage === 1 ? 'footer-text-disabled' : 'footer-text'">Prev</span>
+            </button>
+            <button
+              @click="() => paginate(1)"
+              :disabled="currentPage === 5"
+              :class="'footer-button' + (currentPage === 5 ? ' footer-button-disabled' : ' ')"
+            >
+              <span :class="currentPage === 5 ? 'footer-text-disabled' : 'footer-text'">Next</span>
+            </button>
+            <span class="pagination-text ml-25">Page {{ currentPage }}/5</span>
+          </div>
+          <div class="download-button" @click="downloadSchedule">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="19"
+              height="19"
+              class="download-button-icon"
+              viewBox="0 0 19 19"
+              fill="none"
+            >
+              <path
+                d="M16.625 11.875V15.0417C16.625 15.4616 16.4582 15.8643 16.1613 16.1613C15.8643 16.4582 15.4616 16.625 15.0417 16.625H3.95833C3.53841 16.625 3.13568 16.4582 2.83875 16.1613C2.54181 15.8643 2.375 15.4616 2.375 15.0417V11.875"
+                stroke="white"
+                stroke-width="1.05556"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M5.54199 7.91699L9.50033 11.8753L13.4587 7.91699"
+                stroke="white"
+                stroke-width="1.05556"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M9.5 11.875V2.375"
+                stroke="white"
+                stroke-width="1.05556"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+            <span>Download</span>
           </div>
         </div>
       </div>
-      <div class="schedule-generate-bottom"></div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { PropType, defineComponent } from 'vue';
 import Schedule from '@/components/ScheduleGenerate/Schedule.vue';
 import ScheduleCourses from '@/components/ScheduleGenerate/ScheduleCourses.vue';
+import { generateSchedulePDF } from '@/tools/export-plan';
+import type { ReqInfo } from '@/tools/export-plan/types';
 
 export default defineComponent({
   props: {
-    // current semester being generated for
-    selectedSemester: { type: String, required: true },
+    // current year and season being generated for
+    year: { type: Number, required: true },
+    season: { type: Object as PropType<FirestoreSemesterSeason>, required: true },
   },
   components: {
     Schedule,
@@ -70,55 +127,120 @@ export default defineComponent({
         this.cancel();
       }
     },
+    async downloadSchedule() {
+      const calendarRef = this.$refs.calendar as typeof Schedule;
+      generateSchedulePDF(this.reqs, await calendarRef.generatePdfData(), this.year, this.season);
+    },
+    regenerateSchedule() {
+      // TODO: implement (connect to backend).
+    },
+    paginate(direction: number) {
+      if ((this.currentPage < 5 && direction === 1) || (this.currentPage > 1 && direction === -1)) {
+        this.currentPage += direction;
+      }
+    },
+  },
+  data() {
+    return {
+      // TODO: implement (connect to backend).
+      currentPage: 1,
+    };
   },
   computed: {
-    classes() {
-      return [
+    reqs(): Map<ReqInfo, FirestoreSemesterCourse> {
+      // eventually we want to use course color set
+      // and match with the right component of this modal
+      const reqs = new Map<ReqInfo, FirestoreSemesterCourse>();
+      reqs.set(
+        { name: 'Introductory Programming', type: 'College', typeValue: 'A&S' },
         {
-          title: 'Introductory Programming',
-          name: 'CS 1110',
-          color: '#FF3B30', // eventually want to use coursescolorset
-          // and match with the right component of this modal
-          timeStart: '8:00am',
-          timeEnd: '8:50am',
+          crseId: 1,
+          lastRoster: 'Fall 2024',
+          uniqueID: 1,
+          code: 'CS 1110',
+          name: 'Basic CS',
+          credits: 4,
+          creditRange: [4, 4],
+          semesters: ['Fall'],
+          color: '#FF3B30',
+        }
+      );
+      reqs.set(
+        {
+          name: 'Conc. Group A',
+          type: 'Major',
+          typeValue: 'InfoSci',
         },
         {
-          title: 'Information Science Major Concentration Group A',
-          name: 'INFO 2450',
+          crseId: 2,
+          lastRoster: 'Fall 2024',
+          uniqueID: 2,
+          code: 'INFO 2450',
+          name: 'Info Sci',
+          credits: 4,
+          creditRange: [4, 4],
+          semesters: ['Fall'],
           color: '#34C759',
-          timeStart: '8:40am',
-          timeEnd: '9:55am',
-        },
+        }
+      );
+      reqs.set(
+        { name: 'Minor Core Courses', type: 'Minor', typeValue: 'FoodSci' },
         {
-          title: 'Information Science Major Core Courses',
-          name: 'INFO 1260',
+          crseId: 3,
+          lastRoster: 'Fall 2024',
+          uniqueID: 3,
+          code: 'FOOD 1260',
+          name: 'Food Sci Core',
+          credits: 4,
+          creditRange: [4, 4],
+          semesters: ['Fall'],
           color: '#32A0F2',
-          timeStart: '10:10am',
-          timeEnd: '11:00am',
-        },
+        }
+      );
+      reqs.set(
+        { name: 'IS Major Electives', type: 'Major', typeValue: 'InfoSci' },
         {
-          title: 'Information Science Major Electives',
-          name: 'INFO 2300',
+          crseId: 4,
+          lastRoster: 'Fall 2024',
+          uniqueID: 4,
+          code: 'INFO 2300',
+          name: 'Info Sci Elective',
+          credits: 4,
+          creditRange: [4, 4],
+          semesters: ['Fall'],
           color: '#AF52DE',
-          timeStart: '12:20pm',
-          timeEnd: '1:10pm',
-        },
+        }
+      );
+      reqs.set(
+        { name: 'Human Diversity (D)', type: 'College', typeValue: 'A&S' },
         {
-          title: 'College Requirements Human Diversity (D)',
-          name: 'DSOC 1101',
+          crseId: 5,
+          lastRoster: 'Fall 2024',
+          uniqueID: 5,
+          code: 'DSOC 1101',
+          name: 'Diversity',
+          credits: 4,
+          creditRange: [4, 4],
+          semesters: ['Fall'],
           color: '#FF9500',
-          timeStart: '2:30pm',
-          timeEnd: '3:20pm',
-        },
+        }
+      );
+      reqs.set(
+        { name: 'Grad Requirement', type: 'Grad', typeValue: 'Johnson' },
         {
-          title: 'No Requirement',
-          name: 'ART 2301',
+          crseId: 6,
+          lastRoster: 'Fall 2024',
+          uniqueID: 6,
+          code: 'ART 2301',
+          name: 'Art',
+          credits: 4,
+          creditRange: [4, 4],
+          semesters: ['Fall'],
           color: '#B155E0',
-          timeStart: '11:00pm',
-          timeEnd: '11:50pm',
-        },
-        // question: what if # of courses overflows the box? not in designs iirc
-      ];
+        }
+      );
+      return reqs;
+      // question: what if # of courses overflows the box? not in designs iirc
     },
     classesSchedule() {
       return {
@@ -216,6 +338,7 @@ export default defineComponent({
   },
 });
 </script>
+
 <style scoped lang="scss">
 @import '@/assets/scss/_variables.scss';
 button:hover {
@@ -272,7 +395,7 @@ input {
 
   &-content {
     position: relative;
-    padding: 1.5rem 2rem 1.5rem 2rem;
+    padding: 2rem;
   }
 
   &-body {
@@ -309,6 +432,20 @@ input {
     margin-top: -0.5rem;
     background-color: $white;
 
+    &--font {
+      color: $black;
+      flex-direction: row;
+      background-color: $white;
+      padding: 0rem 0.5rem 0rem 0.5rem;
+    }
+    &--review {
+      font-weight: normal;
+      padding: 5px;
+      margin-left: 10px;
+      background-color: $white;
+      color: $lightPlaceholderGray;
+      font-size: 16px;
+    }
     &--smallerIndent {
       margin-left: 1.25rem;
       font-size: 18px;
@@ -318,5 +455,121 @@ input {
       font-size: 18px;
     }
   }
+
+  &-bottom {
+    display: flex;
+    justify-content: flex-start;
+    margin-top: 1rem;
+  }
+}
+
+.download-button {
+  margin-left: auto;
+  display: flex;
+  width: 246px;
+  height: 35px;
+  padding: 0px 66.603px 0px 62px;
+  align-items: center;
+  flex-shrink: 0;
+  border-radius: 3px;
+  background: var(--Button-Color---Sang, $sangBlue);
+  color: $white;
+  cursor: pointer;
+
+  &-icon {
+    margin-right: 21.05px;
+    width: 19px;
+    height: 19px;
+    flex-shrink: 0;
+    margin-bottom: 3px;
+  }
+}
+
+.generate-schedules {
+  &-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 3px;
+    height: 35px;
+    padding: 10px 28px;
+    border: 1px solid $sangBlue;
+    &-disabled {
+      border-radius: 3px;
+      background: rgba(231, 231, 231, 0.75);
+      cursor: not-allowed;
+    }
+  }
+}
+
+.footer {
+  &-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 3px;
+    height: 35px;
+    padding: 10px 22px;
+    border: 1px solid $sangBlue;
+    &-disabled {
+      border-radius: 3px;
+      background: rgba(231, 231, 231, 0.75);
+      border-color: $lightPlaceholderGray;
+      opacity: 50%;
+      cursor: not-allowed;
+    }
+  }
+
+  &-text {
+    color: $sangBlue;
+    text-align: center;
+    font-family: 'Proxima Nova';
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+
+    &-disabled {
+      color: $lightPlaceholderGray;
+      text-align: center;
+      font-family: 'Proxima Nova';
+      font-size: 16px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: normal;
+    }
+  }
+}
+
+.right-footer-container {
+  display: flex;
+  align-items: center;
+  margin-left: 2rem;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.pagination-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 3px;
+  height: 35px;
+  padding: 10px 20px;
+  border: 1px solid $sangBlue;
+}
+
+.pagination-text {
+  color: $primaryGray;
+  text-align: center;
+  font-family: 'Proxima Nova';
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+}
+
+.ml-25 {
+  margin-left: 25px;
 }
 </style>
