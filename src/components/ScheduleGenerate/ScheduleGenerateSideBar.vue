@@ -74,7 +74,10 @@ import RequirementCourses from '@/components/ScheduleGenerate/RequirementCourses
 import Confirmation from '@/components/Modals/Confirmation.vue';
 import store from '@/store';
 import { cornellCourseRosterCourseToFirebaseSemesterCourseWithCustomIDAndColor } from '@/user-data-converter';
-import { getCourseWithCrseIdAndRoster } from '@/global-firestore-data/courses';
+import {
+  extractSubjectAndNumber,
+  getCourseWithCrseIdAndRoster,
+} from '@/global-firestore-data/courses';
 
 export type ReqCourses = {
   reqId: string;
@@ -205,72 +208,112 @@ export default defineComponent({
         } from schedule builder`
       );
     },
-    openScheduleGenerateModal() {
-      function getStartTime(course: {
-        readonly crseId: number;
-        readonly lastRoster: string;
-        readonly uniqueID: number;
-        readonly code: string;
-        readonly name: string;
-        readonly credits: number;
-        readonly creditRange: readonly [number, number];
-        readonly semesters: readonly string[];
-        readonly color: string;
-      }) {
-        getCourseWithCrseIdAndRoster(course.lastRoster, course.crseId)
+    async openScheduleGenerateModal() {
+      function formatTime(timeStr: string): string {
+        const timeParts = timeStr.match(/(\d+):(\d+)(\w{2})/);
+        if (!timeParts) return '';
+
+        const hours = parseInt(timeParts[1], 10);
+        const minutes = timeParts[2];
+        const period = timeParts[3].toLowerCase();
+
+        return `${hours}:${minutes}${period}`;
+      }
+
+      function getStartTime(course: FirestoreSemesterCourse): Promise<string> {
+        return getCourseWithCrseIdAndRoster(course.lastRoster, course.crseId)
           .then(firestoreCourse => {
-            console.log('Course details:', firestoreCourse);
+            const timeUnformatted = firestoreCourse.enrollGroups[0].classSections[0].meetings[0]
+              .timeStart as string;
+            const timeFormatted = formatTime(timeUnformatted);
+            return timeFormatted;
           })
           .catch(error => {
-            if (error.code === 'permission-denied') {
-              console.error('You need to be logged in to view course details.');
-            } else {
-              console.error('Error fetching course details:', error);
-            }
+            console.error('Error fetching course details:', error);
+            throw new Error('Failed to fetch the course details.');
           });
-
-        const hour = 8 + Math.floor(Math.random() * 8);
-        const minutes = ['00', '15', '30', '45'][Math.floor(Math.random() * 4)];
-        const period = hour < 12 ? 'am' : 'pm';
-        const formattedHour = hour > 12 ? hour - 12 : hour;
-        return `${formattedHour}:${minutes}${period}`;
       }
 
-      function getEndTime(startTime: { split: (arg0: string) => [any, any] }) {
-        let [time, period] = startTime.split(' ');
-        let [hour, minutes] = time.split(':');
-        hour = parseInt(hour, 10);
+      function getEndTime(course: FirestoreSemesterCourse): Promise<string> {
+        return getCourseWithCrseIdAndRoster(course.lastRoster, course.crseId)
+          .then(firestoreCourse => {
+            const timeUnformatted = firestoreCourse.enrollGroups[0].classSections[0].meetings[0]
+              .timeEnd as string;
+            const timeFormatted = formatTime(timeUnformatted);
+            return timeFormatted;
+          })
+          .catch(error => {
+            console.error('Error fetching course details:', error);
+            throw new Error('Failed to fetch the course details.');
+          });
+      }
 
-        hour += 1;
+      function getPattern(course: FirestoreSemesterCourse): Promise<string> {
+        return getCourseWithCrseIdAndRoster(course.lastRoster, course.crseId)
+          .then(firestoreCourse => {
+            const pattern = firestoreCourse.enrollGroups[0].classSections[0].meetings[0]
+              .pattern as string;
+            console.log('Class pattern:', pattern);
+            return pattern;
+          })
+          .catch(error => {
+            console.error('Error fetching course pattern:', error);
+            throw new Error('Failed to fetch the course pattern.');
+          });
+      }
 
-        if (hour === 12 && period === 'am') {
-          period = 'pm';
-        } else if (hour === 12 && period === 'pm') {
-          period = 'pm';
-        } else if (hour > 12) {
-          hour -= 12;
+      function getDaysOfTheWeek(patternStr: string): string[] {
+        const dayMap: { [key: string]: string } = {
+          M: 'Monday',
+          T: 'Tuesday',
+          W: 'Wednesday',
+          R: 'Thursday',
+          F: 'Friday',
+          S: 'Saturday',
+          Su: 'Sunday',
+        };
+
+        const days: string[] = [];
+
+        for (let i = 0; i < patternStr.length; i++) {
+          if (patternStr[i] === 'S' && i + 1 < patternStr.length && patternStr[i + 1] === 'u') {
+            days.push(dayMap['Su']);
+            i++;
+          } else if (dayMap[patternStr[i]]) {
+            days.push(dayMap[patternStr[i]]);
+          }
         }
 
-        return `${hour}:${minutes}`;
+        return days;
       }
 
-      const coursesWithReqIds = this.requirements.map(req => ({
-        reqId: req.reqId,
-        courses: req.courses.map(course => {
-          const startTime = getStartTime(course);
-          const endTime = getEndTime(startTime);
-          return {
-            title: course.name,
-            name: course.code,
-            color: course.color,
-            courseCredits: course.credits,
-            fulfilledReq: req.reqName,
-            fulfilledReqId: req.reqId,
-            timeStart: startTime,
-            timeEnd: endTime,
-          };
-        }),
-      }));
+      const coursesWithReqIds = await Promise.all(
+        this.requirements.map(async req => ({
+          reqId: req.reqId,
+          courses: await Promise.all(
+            req.courses.map(async course => {
+              const startTime = await getStartTime(course);
+              const endTime = await getEndTime(course);
+              const pattern = await getPattern(course);
+              const daysOfTheWeek = getDaysOfTheWeek(pattern);
+              // console.log(pattern);
+              // console.log('Days of the week:', daysOfTheWeek);
+              return {
+                title: course.name,
+                name: course.code,
+                color: course.color,
+                courseCredits: course.credits,
+                fulfilledReq: req.reqName,
+                fulfilledReqId: req.reqId,
+                daysOfTheWeek,
+                timeStart: startTime,
+                timeEnd: endTime,
+              };
+            })
+          ),
+        }))
+      );
+
       this.$emit('openScheduleGenerateModal', coursesWithReqIds, this.creditLimit);
     },
   },
