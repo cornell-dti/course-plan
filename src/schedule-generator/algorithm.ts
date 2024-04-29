@@ -28,7 +28,7 @@ export default class ScheduleGenerator {
         let performAdditionFlag = true;
 
         // New logic: must be free for *all* time slots.
-        if (fulfilledRequirements.has(course.name) || creditLimit - course.credits < 0) {
+        if (fulfilledRequirements.has(course.code) || creditLimit - course.credits < 0) {
           performAdditionFlag = false;
         } else {
           for (const timeslot of course.timeslots) {
@@ -48,7 +48,7 @@ export default class ScheduleGenerator {
           ScheduleGenerator.addToSchedule(schedule, course, course.timeslots);
           creditLimit -= course.credits;
           totalCredits += course.credits;
-          fulfilledRequirements.set(course.name, course.requirements);
+          fulfilledRequirements.set(course.code, course.requirements);
         }
       }
     });
@@ -61,11 +61,11 @@ export default class ScheduleGenerator {
     console.log(`Generated Schedule for ${output.semester}:`);
     output.schedule.forEach((timeslots, course) => {
       const fulfilledReqs = output.fulfilledRequirements
-        .get(course.name)
-        ?.map(req => req.type)
+        .get(course.code)
+        ?.map(req => req.name)
         .join(', ');
 
-      console.log(`- ${course.name} (${fulfilledReqs}, ${course.credits} credits)`);
+      console.log(`- ${course.code} (${fulfilledReqs}, ${course.credits} credits)`);
 
       timeslots.forEach(timeslot => {
         if (timeslot.daysOfTheWeek && timeslot.daysOfTheWeek.length > 0) {
