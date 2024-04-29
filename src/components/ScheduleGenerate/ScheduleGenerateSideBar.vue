@@ -120,7 +120,7 @@ export default defineComponent({
       // 1. Credit limit has been specified
       // 2. At least one requirement has been added
       // 3. Each requirement has at least one course added
-      const isCreditLimitSpecified = this.creditLimit != undefined;
+      const isCreditLimitSpecified = this.creditLimit !== undefined;
       const hasOneRequirement = this.requirements.length > 0;
       const hasEveryRequirementOneCourse = this.requirements.every(req => req.courses.length > 0);
       return !(
