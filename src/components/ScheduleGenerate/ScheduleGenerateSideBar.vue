@@ -90,13 +90,13 @@ export default defineComponent({
     requirements: ReqCourses[];
     isConfirmationOpen: boolean;
     confirmationText: string;
-    creditLimit: number;
+    creditLimit?: number;
   } {
     return {
       requirements: [],
       isConfirmationOpen: false,
       confirmationText: '',
-      creditLimit: 12, // To Do: dont put a default number here (but then it allows 3 digits??)
+      creditLimit: undefined, // To Do: dont put a default number here (but then it allows 3 digits??)
     };
   },
   components: {
@@ -107,11 +107,19 @@ export default defineComponent({
     // current year and season being generated for
     year: { type: Number, required: true },
     season: { type: Object as PropType<FirestoreSemesterSeason>, required: true },
-    // (linked with requirements) whether any requirements have been added
-    generateScheduleButtonDisabled: { type: Boolean, required: true },
   },
   emits: ['openScheduleGenerateModal'],
   computed: {
+    generateScheduleButtonDisabled(): boolean {
+      // disables the "Generate Schedule" button until
+      // 1. Credit limit has been specified
+      // 2. At least one requirement has been added
+      // 3. Each requirement has at least one course added
+      const isCreditLimitSpecified = this.creditLimit != undefined;
+      const hasOneRequirement = this.requirements.length > 0;
+      const hasEveryRequirementOneCourse = this.requirements.every(req => req.courses.length > 0);
+      return !(isCreditLimitSpecified && hasOneRequirement && hasEveryRequirementOneCourse);
+    },
     groupedRequirementFulfillmentReports(): readonly GroupedRequirementFulfillmentReport[] {
       return store.state.groupedRequirementFulfillmentReport;
     },
