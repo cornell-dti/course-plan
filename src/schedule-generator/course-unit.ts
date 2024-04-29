@@ -15,8 +15,23 @@ export type Timeslot = {
   end: string; // e.g. '11:30 AM'
 };
 
+export type CourseForFrontend = {
+  title: string;
+  name: string;
+  color: string;
+  courseCredits: number;
+  fulfilledReq: string;
+  fulfilledReqId: string;
+  daysOfTheWeek: DayOfTheWeek[];
+  timeStart: string;
+  timeEnd: string;
+  code: string;
+};
+
 export default class Course {
   name: string;
+
+  color: string;
 
   credits: number;
 
@@ -41,12 +56,14 @@ export default class Course {
 
   constructor(
     name = '',
+    color = '',
     credits = 0,
     timeslots: Timeslot[] = [],
     offeredSemesters: string[] = [],
     requirements: Requirement[] = []
   ) {
     this.name = name;
+    this.color = color;
     this.credits = credits;
     this.timeslots = timeslots;
     this.offeredSemesters = offeredSemesters;

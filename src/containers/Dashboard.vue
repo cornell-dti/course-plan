@@ -10,10 +10,13 @@
       @cancelOnboarding="cancelOnboarding"
     />
     <schedule-generate-modal
+      v-if="isScheduleGenerateModalOpen"
       class="dashboard-modal"
       :year="year"
       :season="season"
-      v-if="isScheduleGenerateModalOpen"
+      :courses="coursesForGeneration"
+      :req-ids="reqIdsForGeneration"
+      :credit-limit="creditLimitForGeneration"
       @closeScheduleGenerateModal="closeScheduleGenerateModal"
     />
     <div class="dashboard-mainView">
@@ -118,6 +121,7 @@ import {
   mediumBreakpoint,
   veryLargeBreakpoint,
 } from '@/assets/constants/scss-variables';
+import { CourseForFrontend } from '@/schedule-generator/course-unit';
 
 const smallBreakpointPixels = parseInt(
   smallBreakpoint.substring(0, smallBreakpoint.length - 2),
@@ -181,6 +185,9 @@ export default defineComponent({
       isScheduleGenerateButtonDisabled: false,
       isScheduleGenerateOpen: false,
       isScheduleGenerateModalOpen: false,
+      coursesForGeneration: [] as CourseForFrontend[],
+      reqIdsForGeneration: [] as string[],
+      creditLimitForGeneration: 12,
     };
   },
   computed: {
@@ -283,6 +290,7 @@ export default defineComponent({
     },
 
     openScheduleGenerate() {
+      // TODO: type better
       this.showToolsPage = false;
       this.isProfileOpen = false;
       this.isScheduleGenerateOpen = true;
@@ -302,8 +310,16 @@ export default defineComponent({
       }
     },
 
-    openScheduleGenerateModal() {
-      // TODO: do feature flag check
+    openScheduleGenerateModal(
+      coursesWithReqIds: {
+        reqId: string;
+        courses: CourseForFrontend[];
+      }[],
+      creditLimit: number
+    ) {
+      this.coursesForGeneration = coursesWithReqIds.flatMap(req => req.courses);
+      this.reqIdsForGeneration = coursesWithReqIds.map(req => req.reqId); // Store requirement IDs
+      this.creditLimitForGeneration = creditLimit;
       this.isScheduleGenerateModalOpen = true;
     },
 

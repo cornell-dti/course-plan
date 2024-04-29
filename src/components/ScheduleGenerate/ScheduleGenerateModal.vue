@@ -31,7 +31,11 @@
             Your Courses
           </div>
           <div class="schedule-generate-section-courses">
-            <schedule-courses :num-credits="12" :classes="reqs" />
+            <!-- TODO: investigate type error -->
+            <schedule-courses
+              :generated-schedule-output="generatedScheduleOutput"
+              :classes="classes"
+            />
           </div>
           <div class="schedule-generate-section-schedule">
             <div class="schedule-generate-subHeader schedule-generate-subHeader--indent">
@@ -40,6 +44,7 @@
             <schedule ref="calendar" :classesSchedule="classesSchedule" />
           </div>
         </div>
+        <!-- TODO: connect everything in the footer here... -->
         <div class="schedule-generate-bottom">
           <button @click="regenerateSchedule" class="generate-schedules-button">
             <span class="footer-text">Generate New Schedules</span>
@@ -105,19 +110,42 @@ import { PropType, defineComponent } from 'vue';
 import Schedule from '@/components/ScheduleGenerate/Schedule.vue';
 import ScheduleCourses from '@/components/ScheduleGenerate/ScheduleCourses.vue';
 import { generateSchedulePDF } from '@/tools/export-plan';
-import type { ReqInfo } from '@/tools/export-plan/types';
+import GeneratorRequest from '@/schedule-generator/generator-request';
+import ScheduleGenerator from '@/schedule-generator/algorithm';
+import type { GeneratedScheduleOutput } from '@/schedule-generator/algorithm';
+import Course, { CourseForFrontend, DayOfTheWeek } from '@/schedule-generator/course-unit';
+import Requirement from '@/schedule-generator/requirement';
 
 export default defineComponent({
   props: {
+    // current semester being generated for
     // current year and season being generated for
     year: { type: Number, required: true },
     season: { type: Object as PropType<FirestoreSemesterSeason>, required: true },
+    courses: {
+      type: Array as PropType<CourseForFrontend[]>,
+      default: () => [],
+    },
+    creditLimit: {
+      type: Number,
+      default: 12,
+    },
+    reqIds: {
+      type: Array as PropType<(string | undefined)[]>,
+      default: () => [],
+    },
   },
   components: {
     Schedule,
     ScheduleCourses,
   },
   emits: ['closeScheduleGenerateModal'],
+  data() {
+    return {
+      currentPage: 1,
+      generatedScheduleOutput: null as null | GeneratedScheduleOutput,
+    };
+  },
   methods: {
     cancel() {
       this.$emit('closeScheduleGenerateModal');
@@ -128,11 +156,55 @@ export default defineComponent({
       }
     },
     async downloadSchedule() {
+      console.log(this.courses, this.reqIds, this.classes, this.classesSchedule);
       const calendarRef = this.$refs.calendar as typeof Schedule;
       generateSchedulePDF(this.reqs, await calendarRef.generatePdfData(), this.year, this.season);
     },
+    generateSchedule() {
+      function getRandomDaySet(): DayOfTheWeek[] {
+        const daySets = [
+          ['Monday', 'Wednesday', 'Friday'],
+          ['Tuesday', 'Thursday'],
+          ['Saturday', 'Sunday'],
+        ] as DayOfTheWeek[][];
+        const randomIndex = Math.floor(Math.random() * daySets.length);
+        return daySets[randomIndex];
+      }
+      const courses = this.courses.map(
+        course =>
+          new Course(
+            course.name,
+            // course.credits,
+            '#'.concat(course.color),
+            course.courseCredits,
+            [
+              {
+                start: course.timeStart,
+                end: course.timeEnd,
+                daysOfTheWeek: (course.daysOfTheWeek as DayOfTheWeek[]) || getRandomDaySet(),
+              },
+            ],
+            [`${this.year} ${this.season}`],
+            // this.reqIds.map(reqId => new Requirement(reqId))
+            [
+              {
+                type: course.fulfilledReqId,
+              },
+            ]
+          )
+      );
+
+      const generatorRequest = new GeneratorRequest(
+        courses,
+        this.reqIds.map(reqId => new Requirement(reqId)),
+        this.creditLimit,
+        `${this.year} ${this.season}`
+      );
+
+      this.generatedScheduleOutput = ScheduleGenerator.generateSchedule(generatorRequest);
+    },
     regenerateSchedule() {
-      // TODO: implement (connect to backend).
+      // TODO: recompute stuff..
     },
     paginate(direction: number) {
       if ((this.currentPage < 5 && direction === 1) || (this.currentPage > 1 && direction === -1)) {
@@ -140,199 +212,120 @@ export default defineComponent({
       }
     },
   },
-  data() {
-    return {
-      // TODO: implement (connect to backend).
-      currentPage: 1,
-    };
-  },
   computed: {
-    reqs(): Map<ReqInfo, FirestoreSemesterCourse> {
-      // eventually we want to use course color set
-      // and match with the right component of this modal
-      const reqs = new Map<ReqInfo, FirestoreSemesterCourse>();
-      reqs.set(
-        { name: 'Introductory Programming', type: 'College', typeValue: 'A&S' },
-        {
-          crseId: 1,
-          lastRoster: 'Fall 2024',
-          uniqueID: 1,
-          code: 'CS 1110',
-          name: 'Basic CS',
-          credits: 4,
-          creditRange: [4, 4],
-          semesters: ['Fall'],
-          color: '#FF3B30',
-        }
+    classes() {
+      const returnCourses = Array.from(this.generatedScheduleOutput?.schedule.keys() ?? []).map(
+        course => ({
+          title: this.courses.find(c => c.name === course.name)?.fulfilledReq ?? '',
+          name: course.name,
+          color: '#'.concat(this.courses.find(c => c.name === course.name)?.color ?? ''),
+          code: this.courses.find(c => c.name === course.name)?.code ?? '',
+          timeStart: this.courses.find(c => c.name === course.name)?.timeStart,
+          timeEnd: this.courses.find(c => c.name === course.name)?.timeEnd,
+        })
       );
-      reqs.set(
-        {
-          name: 'Conc. Group A',
-          type: 'Major',
-          typeValue: 'InfoSci',
-        },
-        {
-          crseId: 2,
-          lastRoster: 'Fall 2024',
-          uniqueID: 2,
-          code: 'INFO 2450',
-          name: 'Info Sci',
-          credits: 4,
-          creditRange: [4, 4],
-          semesters: ['Fall'],
-          color: '#34C759',
-        }
-      );
-      reqs.set(
-        { name: 'Minor Core Courses', type: 'Minor', typeValue: 'FoodSci' },
-        {
-          crseId: 3,
-          lastRoster: 'Fall 2024',
-          uniqueID: 3,
-          code: 'FOOD 1260',
-          name: 'Food Sci Core',
-          credits: 4,
-          creditRange: [4, 4],
-          semesters: ['Fall'],
-          color: '#32A0F2',
-        }
-      );
-      reqs.set(
-        { name: 'IS Major Electives', type: 'Major', typeValue: 'InfoSci' },
-        {
-          crseId: 4,
-          lastRoster: 'Fall 2024',
-          uniqueID: 4,
-          code: 'INFO 2300',
-          name: 'Info Sci Elective',
-          credits: 4,
-          creditRange: [4, 4],
-          semesters: ['Fall'],
-          color: '#AF52DE',
-        }
-      );
-      reqs.set(
-        { name: 'Human Diversity (D)', type: 'College', typeValue: 'A&S' },
-        {
-          crseId: 5,
-          lastRoster: 'Fall 2024',
-          uniqueID: 5,
-          code: 'DSOC 1101',
-          name: 'Diversity',
-          credits: 4,
-          creditRange: [4, 4],
-          semesters: ['Fall'],
-          color: '#FF9500',
-        }
-      );
-      reqs.set(
-        { name: 'Grad Requirement', type: 'Grad', typeValue: 'Johnson' },
-        {
-          crseId: 6,
-          lastRoster: 'Fall 2024',
-          uniqueID: 6,
-          code: 'ART 2301',
-          name: 'Art',
-          credits: 4,
-          creditRange: [4, 4],
-          semesters: ['Fall'],
-          color: '#B155E0',
-        }
-      );
-      return reqs;
-      // question: what if # of courses overflows the box? not in designs iirc
+      return returnCourses;
     },
     classesSchedule() {
+      if (!this.generatedScheduleOutput) {
+        // Opening for the first time...
+        this.generateSchedule();
+      }
+
+      type classList = {
+        title: string;
+        name: string;
+        color: string;
+        timeStart: string;
+        timeEnd: string;
+      }[];
+
+      // ScheduleGenerator.prettyPrintSchedule(generatedSchedule);
+      const mondayClasses: classList = [];
+      const tuesdayClasses: classList = [];
+      const wednesdayClasses: classList = [];
+      const thursdayClasses: classList = [];
+      const fridayClasses: classList = [];
+      const saturdayClasses: classList = [];
+      const sundayClasses: classList = [];
+      this.generatedScheduleOutput?.schedule.forEach((timeslots, course) =>
+        timeslots.forEach(timeslot =>
+          timeslot.daysOfTheWeek.forEach(day => {
+            if (day === 'Monday') {
+              mondayClasses.push({
+                title: course.name,
+                name: course.name,
+                color: course.color,
+                timeStart: timeslot.start,
+                timeEnd: timeslot.end,
+              });
+            }
+            if (day === 'Tuesday') {
+              tuesdayClasses.push({
+                title: course.name,
+                name: course.name,
+                color: course.color,
+                timeStart: timeslot.start,
+                timeEnd: timeslot.end,
+              });
+            }
+            if (day === 'Wednesday') {
+              wednesdayClasses.push({
+                title: course.name,
+                name: course.name,
+                color: course.color,
+                timeStart: timeslot.start,
+                timeEnd: timeslot.end,
+              });
+            }
+            if (day === 'Thursday') {
+              thursdayClasses.push({
+                title: course.name,
+                name: course.name,
+                color: course.color,
+                timeStart: timeslot.start,
+                timeEnd: timeslot.end,
+              });
+            }
+            if (day === 'Friday') {
+              fridayClasses.push({
+                title: course.name,
+                name: course.name,
+                color: course.color,
+                timeStart: timeslot.start,
+                timeEnd: timeslot.end,
+              });
+            }
+            if (day === 'Saturday') {
+              saturdayClasses.push({
+                title: course.name,
+                name: course.name,
+                color: course.color,
+                timeStart: timeslot.start,
+                timeEnd: timeslot.end,
+              });
+            }
+            if (day === 'Sunday') {
+              sundayClasses.push({
+                title: course.name,
+                name: course.name,
+                color: course.color,
+                timeStart: timeslot.start,
+                timeEnd: timeslot.end,
+              });
+            }
+          })
+        )
+      );
+
       return {
-        Monday: [
-          {
-            title: 'Introductory Programming',
-            name: 'CS 1110',
-            color: '#FF3B30',
-            timeStart: '8:00am',
-            timeEnd: '8:50am',
-          },
-          {
-            title: 'Information Science Major Core Courses',
-            name: 'INFO 1260',
-            color: '#32A0F2',
-            timeStart: '10:10am',
-            timeEnd: '11:00am',
-          },
-          {
-            title: 'Information Science Major Electives',
-            name: 'INFO 2300',
-            color: '#AF52DE',
-            timeStart: '11:15am',
-            timeEnd: '12:05pm',
-          },
-        ],
-        Tuesday: [
-          {
-            title: 'Information Science Major Concentration Group A',
-            name: 'INFO 2450',
-            color: '#34C759',
-            timeStart: '8:40am',
-            timeEnd: '9:55am',
-          },
-          {
-            title: 'College Requirements Human Diversity (D)',
-            name: 'DSOC 1101',
-            color: '#FF9500',
-            timeStart: '2:30pm',
-            timeEnd: '3:20pm',
-          },
-        ],
-        Wednesday: [
-          {
-            title: 'Introductory Programming',
-            name: 'CS 1110',
-            color: '#FF3B30',
-            timeStart: '8:00am',
-            timeEnd: '8:50am',
-          },
-          {
-            title: 'Information Science Major Core Courses',
-            name: 'INFO 1260',
-            color: '#32A0F2',
-            timeStart: '10:10am',
-            timeEnd: '11:00am',
-          },
-          {
-            title: 'Information Science Major Electives',
-            name: 'INFO 2300',
-            color: '#AF52DE',
-            timeStart: '11:15am',
-            timeEnd: '12:05pm',
-          },
-        ],
-        Thursday: [
-          {
-            title: 'Information Science Major Concentration Group A',
-            name: 'INFO 2450',
-            color: '#34C759',
-            timeStart: '8:40am',
-            timeEnd: '9:55am',
-          },
-          {
-            title: 'College Requirements Human Diversity (D)',
-            name: 'DSOC 1101',
-            color: '#FF9500',
-            timeStart: '2:30pm',
-            timeEnd: '3:20pm',
-          },
-        ],
-        Friday: [
-          {
-            title: 'Introductory Programming',
-            name: 'CS 1110',
-            color: '#FF3B30',
-            timeStart: '12:20pm',
-            timeEnd: '1:10pm',
-          },
-        ],
-        Saturday: [],
-        Sunday: [],
+        Monday: mondayClasses,
+        Tuesday: tuesdayClasses,
+        Wednesday: wednesdayClasses,
+        Thursday: thursdayClasses,
+        Friday: fridayClasses,
+        Saturday: saturdayClasses,
+        Sunday: sundayClasses,
       };
     },
   },
@@ -341,6 +334,7 @@ export default defineComponent({
 
 <style scoped lang="scss">
 @import '@/assets/scss/_variables.scss';
+
 button:hover {
   opacity: 0.5;
 }
@@ -348,9 +342,11 @@ button:hover {
 input {
   background-color: none;
 }
+
 .schedule-generate {
   padding: 1rem;
   width: 100%;
+
   &-main {
     background: $white;
     border-radius: 9px;
@@ -408,6 +404,7 @@ input {
 
   &-section {
     margin-bottom: 1rem;
+
     &-courses {
       width: 250px;
       margin-right: 2rem;
@@ -415,6 +412,7 @@ input {
       position: relative;
       z-index: 1;
     }
+
     &-schedule {
       display: flex;
       position: relative;
@@ -450,6 +448,7 @@ input {
       margin-left: 1.25rem;
       font-size: 18px;
     }
+
     &--indent {
       margin-left: 2rem;
       font-size: 18px;

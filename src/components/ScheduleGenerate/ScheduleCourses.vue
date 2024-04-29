@@ -2,17 +2,21 @@
   <div class="courses-main">
     <div class="parent-info-div">
       <h3 class="info-subheader">
-        <span class="info-subheader-heavy">{{ numCredits }}</span
+        <span class="info-subheader-heavy">{{ generatedScheduleOutput?.totalCredits ?? 0 }}</span
         >&nbsp;Credits
       </h3>
       <h3 class="info-subheader">
-        <span class="info-subheader-heavy">{{ classes.size }}</span
-        >&nbsp;{{ classes.size === 1 ? 'Course' : 'Courses' }}
+        <span class="info-subheader-heavy">{{
+          new Set(generatedScheduleOutput?.schedule.keys()).size ?? 0
+        }}</span
+        >&nbsp;{{
+          (new Set(generatedScheduleOutput?.schedule.keys()).size ?? 0) === 1 ? 'Course' : 'Courses'
+        }}
       </h3>
     </div>
     <div class="requirement-between-justifier">
-      <div v-for="[req, cls] of classes" :key="req.name">
-        <h4 class="requirement-title-text">{{ req.name }}</h4>
+      <div v-for="cls of classes" :key="cls.name">
+        <h4 class="requirement-title-text">{{ cls.title }}</h4>
         <div class="class-circle" :style="'border-color: ' + cls.color">
           <span class="class-text">{{ cls.code }}</span>
         </div>
@@ -23,16 +27,23 @@
 
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
-import type { ReqInfo } from '@/tools/export-plan/types';
+import { Course } from '@/requirements/types';
+import { Timeslot } from '@/schedule-generator/course-unit';
+import Requirement from '@/schedule-generator/requirement';
 
 export default defineComponent({
   props: {
-    numCredits: {
-      type: Number,
+    generatedScheduleOutput: {
+      type: Object as PropType<{
+        semester: string;
+        schedule: Map<Course, Timeslot[]>;
+        fulfilledRequirements: Map<string, Requirement[]>;
+        totalCredits: number;
+      } | null>,
       required: true,
     },
     classes: {
-      type: Map as PropType<Map<ReqInfo, FirestoreSemesterCourse>>,
+      type: Array as PropType<{ name: string; title: string; code: string; color: string }[]>,
       required: true,
     },
   },
@@ -41,6 +52,7 @@ export default defineComponent({
 
 <style scoped lang="scss">
 @import '@/assets/scss/_variables.scss';
+
 .courses {
   &-main {
     border-color: $inactiveGray;
@@ -56,6 +68,7 @@ export default defineComponent({
   display: flex;
   justify-content: space-between;
   margin-bottom: 24px;
+  gap: 10px;
 }
 
 .info-subheader {

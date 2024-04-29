@@ -1,8 +1,8 @@
-import Requirement from './requirement';
 import Course, { Timeslot } from './course-unit';
 import GeneratorRequest from './generator-request';
+import Requirement from './requirement';
 
-type GeneratedScheduleOutput = {
+export type GeneratedScheduleOutput = {
   semester: string;
   schedule: Map<Course, Timeslot[]>;
   fulfilledRequirements: Map<string, Requirement[]>; // maps course name to fulfilled requirements
@@ -57,7 +57,6 @@ export default class ScheduleGenerator {
   }
 
   static prettyPrintSchedule(output: GeneratedScheduleOutput): void {
-    // Print generated schedule
     console.log('************************');
     console.log(`Generated Schedule for ${output.semester}:`);
     output.schedule.forEach((timeslots, course) => {
@@ -65,14 +64,19 @@ export default class ScheduleGenerator {
         .get(course.name)
         ?.map(req => req.type)
         .join(', ');
+
       console.log(`- ${course.name} (${fulfilledReqs}, ${course.credits} credits)`);
 
       timeslots.forEach(timeslot => {
-        console.log(
-          `\tTime Slot: ${timeslot.start} – ${timeslot.end}. Days: ${timeslot.daysOfTheWeek.join(
-            ', '
-          )}`
-        );
+        if (timeslot.daysOfTheWeek && timeslot.daysOfTheWeek.length > 0) {
+          console.log(
+            `\tTime Slot: ${timeslot.start} – ${timeslot.end}. Days: ${timeslot.daysOfTheWeek.join(
+              ', '
+            )}`
+          );
+        } else {
+          console.log(`\tTime Slot: ${timeslot.start} – ${timeslot.end}. Days: not specified`);
+        }
       });
     });
     console.log();

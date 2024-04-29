@@ -39,7 +39,16 @@
 
             As such, if we want to enforce the credit limit here, would have to implement some sort of reactive JavaScript listener.
           -->
-          <input type="number" placeholder='"18"' min="0" max="30" class="credit-limit-input" />
+          <input
+            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+            type="number"
+            maxlength="2"
+            placeholder='"18"'
+            min="0"
+            max="30"
+            class="credit-limit-input"
+            v-model="creditLimit"
+          />
         </div>
         <button class="add-requirement-button" @click="addRequirement">+ Requirement</button>
       </div>
@@ -65,6 +74,7 @@ import RequirementCourses from '@/components/ScheduleGenerate/RequirementCourses
 import Confirmation from '@/components/Modals/Confirmation.vue';
 import store from '@/store';
 import { cornellCourseRosterCourseToFirebaseSemesterCourseWithCustomIDAndColor } from '@/user-data-converter';
+import { getCourseWithCrseIdAndRoster } from '@/global-firestore-data/courses';
 
 export type ReqCourses = {
   reqId: string;
@@ -79,11 +89,13 @@ export default defineComponent({
     requirements: ReqCourses[];
     isConfirmationOpen: boolean;
     confirmationText: string;
+    creditLimit: number;
   } {
     return {
       requirements: [],
       isConfirmationOpen: false,
       confirmationText: '',
+      creditLimit: 12, // To Do: dont put a default number here (but then it allows 3 digits??)
     };
   },
   components: {
@@ -159,7 +171,7 @@ export default defineComponent({
     },
     // add a new requirement group
     addRequirement() {
-      this.requirements = [...this.requirements, { reqId: '', reqName: '', courses: [] }];
+      this.requirements = [{ reqId: '', reqName: '', courses: [] }, ...this.requirements];
     },
 
     // TODO: use availableRequirement once we start enforcing how many requirement groups we can add
@@ -193,8 +205,113 @@ export default defineComponent({
         } from schedule builder`
       );
     },
-    openScheduleGenerateModal() {
-      this.$emit('openScheduleGenerateModal');
+    async openScheduleGenerateModal() {
+      function formatTime(timeStr: string): string {
+        const timeParts = timeStr.match(/(\d+):(\d+)(\w{2})/);
+        if (!timeParts) return '';
+
+        const hours = parseInt(timeParts[1], 10);
+        const minutes = timeParts[2];
+        const period = timeParts[3].toLowerCase();
+
+        return `${hours}:${minutes}${period}`;
+      }
+
+      function getStartTime(course: FirestoreSemesterCourse): Promise<string> {
+        return getCourseWithCrseIdAndRoster(course.lastRoster, course.crseId)
+          .then(firestoreCourse => {
+            const timeUnformatted = firestoreCourse.enrollGroups[0].classSections[0].meetings[0]
+              .timeStart as string;
+            const timeFormatted = formatTime(timeUnformatted);
+            return timeFormatted;
+          })
+          .catch(error => {
+            console.error('Error fetching course details:', error);
+            throw new Error('Failed to fetch the course details.');
+          });
+      }
+
+      function getEndTime(course: FirestoreSemesterCourse): Promise<string> {
+        return getCourseWithCrseIdAndRoster(course.lastRoster, course.crseId)
+          .then(firestoreCourse => {
+            const timeUnformatted = firestoreCourse.enrollGroups[0].classSections[0].meetings[0]
+              .timeEnd as string;
+            const timeFormatted = formatTime(timeUnformatted);
+            return timeFormatted;
+          })
+          .catch(error => {
+            console.error('Error fetching course details:', error);
+            throw new Error('Failed to fetch the course details.');
+          });
+      }
+
+      function getPattern(course: FirestoreSemesterCourse): Promise<string> {
+        return getCourseWithCrseIdAndRoster(course.lastRoster, course.crseId)
+          .then(firestoreCourse => {
+            const pattern = firestoreCourse.enrollGroups[0].classSections[0].meetings[0]
+              .pattern as string;
+            return pattern;
+          })
+          .catch(error => {
+            console.error('Error fetching course pattern:', error);
+            throw new Error('Failed to fetch the course pattern.');
+          });
+      }
+
+      function getDaysOfTheWeek(patternStr: string): string[] {
+        const dayMap: { [key: string]: string } = {
+          M: 'Monday',
+          T: 'Tuesday',
+          W: 'Wednesday',
+          R: 'Thursday',
+          F: 'Friday',
+          S: 'Saturday',
+          Su: 'Sunday',
+        };
+
+        const days: string[] = [];
+
+        for (let i = 0; i < patternStr.length; i += 1) {
+          if (patternStr[i] === 'S' && i + 1 < patternStr.length && patternStr[i + 1] === 'u') {
+            days.push(dayMap.Su);
+            i += 1;
+          } else if (dayMap[patternStr[i]]) {
+            days.push(dayMap[patternStr[i]]);
+          }
+        }
+
+        return days;
+      }
+
+      const coursesWithReqIds = await Promise.all(
+        this.requirements.map(async req => ({
+          reqId: req.reqId,
+          courses: await Promise.all(
+            req.courses.map(async course => {
+              const startTime = await getStartTime(course);
+              const endTime = await getEndTime(course);
+              const pattern = await getPattern(course);
+              const daysOfTheWeek = getDaysOfTheWeek(pattern);
+              // console.log(pattern);
+              // console.log('Days of the week:', daysOfTheWeek);
+              return {
+                title: course.name,
+                name: course.code,
+                color: course.color,
+                code: course.code,
+                courseCredits: course.credits,
+                fulfilledReq: req.reqName,
+                fulfilledReqId: req.reqId,
+                daysOfTheWeek,
+                timeStart: startTime,
+                timeEnd: endTime,
+              };
+            })
+          ),
+        }))
+      );
+
+      this.$emit('openScheduleGenerateModal', coursesWithReqIds, this.creditLimit);
     },
   },
 });
@@ -207,6 +324,8 @@ export default defineComponent({
   width: 25rem;
   background-color: $white;
   padding: 1.625rem 1.5rem;
+  overflow-y: scroll;
+
   &-header {
     margin-bottom: 1rem;
   }
@@ -314,7 +433,8 @@ export default defineComponent({
   margin-bottom: 12px;
   border: 1px solid $emGreen;
   background: $emGreen;
-  cursor: pointer; /* otherwise uses default cursor */
+  cursor: pointer;
+  /* otherwise uses default cursor */
 }
 
 .generate-schedule-button:disabled {
@@ -358,6 +478,7 @@ export default defineComponent({
   -webkit-appearance: none;
   margin: 0;
 }
+
 .credit-limit-input[type='number'] {
   -moz-appearance: textfield;
   appearance: textfield;
