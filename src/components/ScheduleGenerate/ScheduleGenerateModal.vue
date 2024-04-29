@@ -230,80 +230,80 @@ export default defineComponent({
 
         const momentary = ScheduleGenerator.generateSchedule(generatorRequest);
 
-        // // Basic algorithm: now we want to clean up output.
-        // // Make it so that for every element of output, we keep track of
-        // // a Collections.counter-style object of fulfilled requirements.
-        // const fulfilledRequirementsCount = new Map<string, number>();
-        // for (const course of momentary.schedule.keys()) {
-        //   const req = course.requirements;
-        //   for (const requirement of req) {
-        //     if (fulfilledRequirementsCount.has(requirement.name)) {
-        //       fulfilledRequirementsCount.set(
-        //         requirement.name,
-        //         fulfilledRequirementsCount.get(requirement.name) !== undefined
-        //           ? (fulfilledRequirementsCount.get(requirement.name) as number) + 1
-        //           : 1
-        //       );
-        //     } else {
-        //       fulfilledRequirementsCount.set(requirement.name, 1);
-        //     }
-        //   }
-        // }
-        // // Now we can get rid of duplicates in course.requirements by using the counter object.
-        // // We want to make it so that there is only one requirement count per requirement, globally.
-        // // We can do this by iterate over schedule.schedule in order of smallest number of course.requirements,
-        // // and when we encounter a duplicate, remove it.
-        // const fulfilledReqsSet = new Set<string>();
-        // const sortedSchedule = Array.from(momentary.schedule.keys()).sort(
-        //   (a, b) => a.requirements.length - b.requirements.length
-        // );
+        // Basic algorithm: now we want to clean up output.
+        // Make it so that for every element of output, we keep track of
+        // a Collections.counter-style object of fulfilled requirements.
+        const fulfilledRequirementsCount = new Map<string, number>();
+        for (const course of momentary.schedule.keys()) {
+          const req = course.requirements;
+          for (const requirement of req) {
+            if (fulfilledRequirementsCount.has(requirement.name)) {
+              fulfilledRequirementsCount.set(
+                requirement.name,
+                fulfilledRequirementsCount.get(requirement.name) !== undefined
+                  ? (fulfilledRequirementsCount.get(requirement.name) as number) + 1
+                  : 1
+              );
+            } else {
+              fulfilledRequirementsCount.set(requirement.name, 1);
+            }
+          }
+        }
+        // Now we can get rid of duplicates in course.requirements by using the counter object.
+        // We want to make it so that there is only one requirement count per requirement, globally.
+        // We can do this by iterate over schedule.schedule in order of smallest number of course.requirements,
+        // and when we encounter a duplicate, remove it.
+        const fulfilledReqsSet = new Set<string>();
+        const sortedSchedule = Array.from(momentary.schedule.keys()).sort(
+          (a, b) => a.requirements.length - b.requirements.length
+        );
 
-        // for (const course of sortedSchedule) {
-        //   const newRequirements = [];
-        //   for (const requirement of course.requirements) {
-        // TODO: we actually just want to do this if it is the smallest unused
-        // one from the counter.
-        //     if (!fulfilledReqsSet.has(requirement.name)) {
-        //       fulfilledReqsSet.add(requirement.name);
-        //       newRequirements.push(requirement);
-        //     }
-        //   }
-        //   course.requirements = newRequirements;
-        // }
+        for (const course of sortedSchedule) {
+          const newRequirements = [];
+          for (const requirement of course.requirements) {
+            // TODO: we actually just want to do this if it is the smallest unused
+            // one from the counter. (Right now it is not being prioritized.)
+            if (!fulfilledReqsSet.has(requirement.name)) {
+              fulfilledReqsSet.add(requirement.name);
+              newRequirements.push(requirement);
+            }
+          }
+          course.requirements = newRequirements;
+        }
 
-        // // Remove those courses that have no requirements left.
-        // momentary.schedule = new Map(
-        //   Array.from(momentary.schedule).filter(obj => obj[0].requirements.length > 0)
-        // );
+        // Remove those courses that have no requirements left.
+        momentary.schedule = new Map(
+          Array.from(momentary.schedule).filter(obj => obj[0].requirements.length > 0)
+        );
 
-        // let deltaCredits = 0;
-        // const usedReqsSet = new Set<string>(); // can use it once
+        let deltaCredits = 0;
+        const usedReqsSet = new Set<string>(); // can use it once
 
-        // // Update fulfilledReqs, which is a map of course names -> fulfilled reqs.
-        // // We want to make it so that for every course name, we delete those requirements
-        // // that are already in fulfilledReqsSet, and if this causes it to be empty,
-        // // delete from fulfilledReqs.
-        // const newFullfilledReqs = new Map<string, Requirement[]>();
-        // for (const course of momentary.fulfilledRequirements.keys()) {
-        //   const newRequirements = [];
-        //   for (const requirement of momentary.fulfilledRequirements.get(course) ?? []) {
-        //     if (
-        //       !fulfilledReqsSet.has(requirement.name) ||
-        //       (!usedReqsSet.has(requirement.name) && fulfilledReqsSet.has(requirement.name))
-        //     ) {
-        //       newRequirements.push(requirement);
-        //       usedReqsSet.add(requirement.name);
-        //     }
-        //   }
-        //   if (newRequirements.length > 0) {
-        //     newFullfilledReqs.set(course, newRequirements);
-        //   } else {
-        //     deltaCredits -= this.courses.find(c => c.code === course)?.courseCredits ?? 0;
-        //   }
-        // }
+        // Update fulfilledReqs, which is a map of course names -> fulfilled reqs.
+        // We want to make it so that for every course name, we delete those requirements
+        // that are already in fulfilledReqsSet, and if this causes it to be empty,
+        // delete from fulfilledReqs.
+        const newFullfilledReqs = new Map<string, Requirement[]>();
+        for (const course of momentary.fulfilledRequirements.keys()) {
+          const newRequirements = [];
+          for (const requirement of momentary.fulfilledRequirements.get(course) ?? []) {
+            if (
+              !fulfilledReqsSet.has(requirement.name) ||
+              (!usedReqsSet.has(requirement.name) && fulfilledReqsSet.has(requirement.name))
+            ) {
+              newRequirements.push(requirement);
+              usedReqsSet.add(requirement.name);
+            }
+          }
+          if (newRequirements.length > 0) {
+            newFullfilledReqs.set(course, newRequirements);
+          } else {
+            deltaCredits -= this.courses.find(c => c.code === course)?.courseCredits ?? 0;
+          }
+        }
 
-        // momentary.fulfilledRequirements = newFullfilledReqs;
-        // momentary.totalCredits += deltaCredits;
+        momentary.fulfilledRequirements = newFullfilledReqs;
+        momentary.totalCredits += deltaCredits;
 
         output.push(momentary);
       }
