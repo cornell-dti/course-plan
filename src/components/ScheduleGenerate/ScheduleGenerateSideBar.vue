@@ -40,17 +40,18 @@
             As such, if we want to enforce the credit limit here, would have to implement some sort of reactive JavaScript listener.
           -->
           <input
-            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
             type="number"
-            maxlength="2"
             placeholder='"18"'
-            min="0"
-            max="30"
+            min="12"
+            max="22"
             class="credit-limit-input"
             v-model="creditLimit"
           />
         </div>
         <button class="add-requirement-button" @click="addRequirement">+ Requirement</button>
+      </div>
+      <div v-if="isInvalidCreditLimit" class="credit-limit-warning">
+        Note: Credit limit must be between 12 and 22 inclusive.
       </div>
     </div>
     <p v-if="requirements.length === 0" class="no-requirements-added">No requirements added.</p>
@@ -112,12 +113,18 @@ export default defineComponent({
   },
   emits: ['openScheduleGenerateModal'],
   computed: {
+    isInvalidCreditLimit(): boolean {
+      if (this.creditLimit !== undefined) {
+        return this.creditLimit < 12 || this.creditLimit > 22;
+      }
+      return false;
+    },
     generateButtonText(): string {
       return this.isGenerating ? 'Generating...' : 'Generate Schedule';
     },
     generateScheduleButtonDisabled(): boolean {
       // disables the "Generate Schedule" button until
-      // 1. Credit limit has been specified
+      // 1. Credit limit has been specified and is between 12 and 22
       // 2. At least one requirement has been added
       // 3. Each requirement has at least one course added
       const isCreditLimitSpecified = this.creditLimit !== undefined;
@@ -127,7 +134,8 @@ export default defineComponent({
         isCreditLimitSpecified &&
         hasOneRequirement &&
         hasEveryRequirementOneCourse &&
-        !this.isGenerating
+        !this.isGenerating &&
+        !this.isInvalidCreditLimit
       );
     },
     groupedRequirementFulfillmentReports(): readonly GroupedRequirementFulfillmentReport[] {
@@ -477,6 +485,14 @@ export default defineComponent({
   font-style: normal;
   font-weight: 400;
   line-height: normal;
+}
+
+.credit-limit-warning {
+  color: $warning;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  margin-top: 4px;
 }
 
 .credit-limit-input::placeholder {

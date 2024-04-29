@@ -176,6 +176,7 @@ export default defineComponent({
     height: 780px;
 
     padding: 2rem 0.5rem 1rem 1.5rem;
+    overflow: scroll;
   }
   &-week {
     display: flex;
