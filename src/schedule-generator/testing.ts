@@ -6,10 +6,10 @@ import ScheduleGenerator from './algorithm';
 class Testing {
   public static main(): void {
     // Create some requirements
-    const techElective = new Requirement('Technical Elective');
-    const engrdReq = new Requirement('ENGRD Requirement');
-    const probabilityReq = new Requirement('Probability Requirement');
-    const coreClass = new Requirement('Core Class');
+    const techElective = new Requirement('Technical Elective', 'College', 'CoE');
+    const engrdReq = new Requirement('ENGRD Requirement', 'Major', 'CS');
+    const probabilityReq = new Requirement('Probability Requirement', 'College', 'A&S');
+    const coreClass = new Requirement('Core Class', 'Minor', 'Linguistics');
 
     // Courses
     const cs1110 = new Course(

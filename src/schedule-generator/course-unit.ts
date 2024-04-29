@@ -16,20 +16,18 @@ export type Timeslot = {
 };
 
 export type CourseForFrontend = {
-  title: string;
-  name: string;
+  title: string; // title
+  code: string; // math 2940
   color: string;
   courseCredits: number;
-  fulfilledReq: string;
-  fulfilledReqId: string;
+  fulfilledReq: Requirement;
   daysOfTheWeek: DayOfTheWeek[];
   timeStart: string;
   timeEnd: string;
-  code: string;
 };
 
 export default class Course {
-  name: string;
+  code: string;
 
   color: string;
 
@@ -43,8 +41,8 @@ export default class Course {
   say we have one lecture L and two discussions D1 and D2.
   then there would be generated:
 
-  Course(name=L, timeslots=[LectureTimeslot, D1Timeslot])
-  Course(name=L, timeslots=[LectureTimeslot, D2Timeslot])
+  Course(code=L, timeslots=[LectureTimeslot, D1Timeslot])
+  Course(code=L, timeslots=[LectureTimeslot, D2Timeslot])
 
   then the algorithm will just choose one of these to schedule
   */
@@ -55,14 +53,14 @@ export default class Course {
   requirements: Requirement[];
 
   constructor(
-    name = '',
+    code = '',
     color = '',
     credits = 0,
     timeslots: Timeslot[] = [],
     offeredSemesters: string[] = [],
     requirements: Requirement[] = []
   ) {
-    this.name = name;
+    this.code = code;
     this.color = color;
     this.credits = credits;
     this.timeslots = timeslots;
@@ -71,7 +69,7 @@ export default class Course {
   }
 
   toString(): string {
-    return `${this.name}: 
+    return `${this.code}: 
           -------------------
           ${this.credits} credits
           `;

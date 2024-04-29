@@ -75,6 +75,7 @@ import Confirmation from '@/components/Modals/Confirmation.vue';
 import store from '@/store';
 import { cornellCourseRosterCourseToFirebaseSemesterCourseWithCustomIDAndColor } from '@/user-data-converter';
 import { getCourseWithCrseIdAndRoster } from '@/global-firestore-data/courses';
+import Requirement from '@/schedule-generator/requirement';
 
 export type ReqCourses = {
   reqId: string;
@@ -283,7 +284,9 @@ export default defineComponent({
         return days;
       }
 
-      const coursesWithReqIds = await Promise.all(
+      // TODO: if a course does not exist in the firestore (outdated) an error
+      // will be thrown. (Requires that user selected a bad course.)
+      const coursesWithReqs = await Promise.all(
         this.requirements.map(async req => ({
           reqId: req.reqId,
           courses: await Promise.all(
@@ -296,12 +299,14 @@ export default defineComponent({
               // console.log('Days of the week:', daysOfTheWeek);
               return {
                 title: course.name,
-                name: course.code,
                 color: course.color,
                 code: course.code,
                 courseCredits: course.credits,
-                fulfilledReq: req.reqName,
-                fulfilledReqId: req.reqId,
+                fulfilledReq: {
+                  name: req.reqName,
+                  for: req.reqId.split('-')[0],
+                  typeValue: req.reqId.split('-')[1],
+                } as Requirement,
                 daysOfTheWeek,
                 timeStart: startTime,
                 timeEnd: endTime,
@@ -311,7 +316,7 @@ export default defineComponent({
         }))
       );
 
-      this.$emit('openScheduleGenerateModal', coursesWithReqIds, this.creditLimit);
+      this.$emit('openScheduleGenerateModal', coursesWithReqs, this.creditLimit);
     },
   },
 });

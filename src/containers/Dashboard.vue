@@ -15,7 +15,7 @@
       :year="year"
       :season="season"
       :courses="coursesForGeneration"
-      :req-ids="reqIdsForGeneration"
+      :reqs="reqsForGeneration"
       :credit-limit="creditLimitForGeneration"
       @closeScheduleGenerateModal="closeScheduleGenerateModal"
     />
@@ -122,6 +122,7 @@ import {
   veryLargeBreakpoint,
 } from '@/assets/constants/scss-variables';
 import { CourseForFrontend } from '@/schedule-generator/course-unit';
+import Requirement from '@/schedule-generator/requirement';
 
 const smallBreakpointPixels = parseInt(
   smallBreakpoint.substring(0, smallBreakpoint.length - 2),
@@ -186,7 +187,7 @@ export default defineComponent({
       isScheduleGenerateOpen: false,
       isScheduleGenerateModalOpen: false,
       coursesForGeneration: [] as CourseForFrontend[],
-      reqIdsForGeneration: [] as string[],
+      reqsForGeneration: [] as Requirement[],
       creditLimitForGeneration: 12,
     };
   },
@@ -290,7 +291,6 @@ export default defineComponent({
     },
 
     openScheduleGenerate() {
-      // TODO: type better
       this.showToolsPage = false;
       this.isProfileOpen = false;
       this.isScheduleGenerateOpen = true;
@@ -312,13 +312,13 @@ export default defineComponent({
 
     openScheduleGenerateModal(
       coursesWithReqIds: {
-        reqId: string;
+        req: Requirement;
         courses: CourseForFrontend[];
       }[],
       creditLimit: number
     ) {
       this.coursesForGeneration = coursesWithReqIds.flatMap(req => req.courses);
-      this.reqIdsForGeneration = coursesWithReqIds.map(req => req.reqId); // Store requirement IDs
+      this.reqsForGeneration = coursesWithReqIds.map(obj => obj.req); // Store requirement IDs
       this.creditLimitForGeneration = creditLimit;
       this.isScheduleGenerateModalOpen = true;
     },

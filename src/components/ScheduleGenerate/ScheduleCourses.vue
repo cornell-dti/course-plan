@@ -11,8 +11,8 @@
       </h3>
     </div>
     <div class="requirement-between-justifier">
-      <div v-for="cls of classes" :key="cls.name">
-        <h4 class="requirement-title-text">{{ cls.title }}</h4>
+      <div v-for="cls of classes" :key="cls.code">
+        <h4 class="requirement-title-text">{{ cls.fulfilledReq?.name ?? '' }}</h4>
         <div class="class-circle" :style="'border-color: ' + cls.color">
           <span class="class-text">{{ cls.code }}</span>
         </div>
@@ -24,6 +24,7 @@
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
 import Course, { Timeslot } from '@/schedule-generator/course-unit';
+import Requirement from '@/schedule-generator/requirement';
 
 export default defineComponent({
   props: {
@@ -36,7 +37,14 @@ export default defineComponent({
       required: true,
     },
     classes: {
-      type: Array as PropType<{ name: string; title: string; code: string; color: string }[]>,
+      type: Array as PropType<
+        {
+          title: string | undefined;
+          fulfilledReq: Requirement | undefined;
+          code: string;
+          color: string;
+        }[]
+      >,
       required: true,
     },
   },
