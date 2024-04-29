@@ -2,12 +2,12 @@
   <div class="courses-main">
     <div class="parent-info-div">
       <h3 class="info-subheader">
-        <span class="info-subheader-heavy">{{ numCredits }}</span
+        <span class="info-subheader-heavy">{{ totalCredits }}</span
         >&nbsp;Credits
       </h3>
       <h3 class="info-subheader">
-        <span class="info-subheader-heavy">{{ numClasses }}</span
-        >&nbsp;{{ numClasses === 1 ? 'Course' : 'Courses' }}
+        <span class="info-subheader-heavy">{{ new Set(generatedSchedule?.keys()).size ?? 0 }}</span
+        >&nbsp;{{ (new Set(generatedSchedule?.keys()).size ?? 0) === 1 ? 'Course' : 'Courses' }}
       </h3>
     </div>
     <div class="requirement-between-justifier">
@@ -23,15 +23,15 @@
 
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
-import type { ReqInfo } from '@/tools/export-plan/types';
+import Course, { Timeslot } from '@/schedule-generator/course-unit';
 
 export default defineComponent({
   props: {
-    numCredits: {
-      type: Number,
+    generatedSchedule: {
+      type: Object as PropType<Map<Course, Timeslot[]> | null>,
       required: true,
     },
-    numClasses: {
+    totalCredits: {
       type: Number,
       required: true,
     },

@@ -32,8 +32,8 @@
           </div>
           <div class="schedule-generate-section-courses">
             <schedule-courses
-              :num-credits="totalCreditsGenerated"
-              :num-classes="numberOfCoursesGenerated"
+              :total-credits="generatedScheduleOutputs[currentPage - 1]?.totalCredits ?? 0"
+              :generated-schedule="generatedScheduleOutputs[currentPage - 1]?.schedule"
               :classes="classes"
             />
           </div>
@@ -110,7 +110,12 @@ import Schedule from '@/components/ScheduleGenerate/Schedule.vue';
 import ScheduleCourses from '@/components/ScheduleGenerate/ScheduleCourses.vue';
 import GeneratorRequest from '@/schedule-generator/generator-request';
 import ScheduleGenerator from '@/schedule-generator/algorithm';
-import Course from '@/schedule-generator/course-unit';
+import type { GeneratedScheduleOutput } from '@/schedule-generator/algorithm';
+import Course, {
+  CourseForFrontend,
+  DayOfTheWeek,
+  Timeslot,
+} from '@/schedule-generator/course-unit';
 import Requirement from '@/schedule-generator/requirement';
 
 export default defineComponent({
@@ -137,8 +142,8 @@ export default defineComponent({
   emits: ['closeScheduleGenerateModal'],
   data() {
     return {
-      numberOfCoursesGenerated: null,
-      totalCreditsGenerated: 0,
+      currentPage: 1,
+      generatedScheduleOutputs: [] as GeneratedScheduleOutput[],
     };
   },
   methods: {
@@ -150,31 +155,21 @@ export default defineComponent({
         this.cancel();
       }
     },
-  },
-  computed: {
-    classes() {
-      // console.log('courses straight from the input - should be in firebase format');
-      // console.log(this.courses);
-      const returnCourses = this.courses.map(course => ({
-        title: course.fulfilledReq,
-        name: course.name,
-        color: '#'.concat(course.color),
-        timeStart: course.timeStart,
-        timeEnd: course.timeEnd,
-      }));
-      return returnCourses;
+    async downloadSchedule() {
+      console.log(this.courses, this.reqIds, this.classes, this.classesSchedule);
+      const calendarRef = this.$refs.calendar as typeof Schedule;
+      // FIXME: pass in the other data, reqs no longer exists
+      generateSchedulePDF(this.reqs, await calendarRef.generatePdfData(), this.year, this.season);
     },
-    classesSchedule() {
-      console.log('courses from user input, in firebasesemestercourse format');
-      console.log(this.courses);
+    generateSchedules() {
+      const output: {
+        semester: string;
+        schedule: Map<Course, Timeslot[]>;
+        fulfilledRequirements: Map<string, Requirement[]>;
+        totalCredits: number;
+      }[] = [];
 
-      // console.log('reqs from userinput');
-      // console.log(this.reqIds);
-
-      // console.log('req mapping');
-      // console.log(this.reqIds.map(reqId => new Requirement(reqId)));
-
-      function getRandomDaySet(): string[] {
+      function getRandomDaySet(): DayOfTheWeek[] {
         const daySets = [
           ['Monday', 'Wednesday', 'Friday'],
           ['Tuesday', 'Thursday'],
@@ -183,47 +178,87 @@ export default defineComponent({
         const randomIndex = Math.floor(Math.random() * daySets.length);
         return daySets[randomIndex];
       }
-      const courses = this.courses.map(
-        course =>
-          new Course(
-            course.name,
-            // course.credits,
-            '#'.concat(course.color),
-            course.courseCredits,
-            [
-              {
-                start: course.timeStart,
-                end: course.timeEnd,
-                daysOfTheWeek: course.daysOfTheWeek || getRandomDaySet(),
-              },
-            ],
-            [this.selectedSemester],
-            // this.reqIds.map(reqId => new Requirement(reqId))
-            course.fulfilledReqId
-          )
-      );
 
-      const generatorRequest = new GeneratorRequest(
-        courses,
-        this.reqIds.map(reqId => new Requirement(reqId)),
-        this.creditLimit,
-        this.selectedSemester
-      );
+      for (let i = 0; i < 5; i += 1) {
+        const courses = this.courses.map(
+          course =>
+            new Course(
+              course.name,
+              // course.credits,
+              '#'.concat(course.color),
+              course.courseCredits,
+              [
+                {
+                  start: course.timeStart,
+                  end: course.timeEnd,
+                  daysOfTheWeek: (course.daysOfTheWeek as DayOfTheWeek[]) || getRandomDaySet(),
+                },
+              ],
+              [`${this.year} ${this.season}`],
+              // this.reqIds.map(reqId => new Requirement(reqId))
+              [
+                {
+                  type: course.fulfilledReqId,
+                },
+              ]
+            )
+        );
 
-      const generatedSchedule = ScheduleGenerator.generateSchedule(generatorRequest);
+        const generatorRequest = new GeneratorRequest(
+          courses,
+          this.reqIds.map(reqId => new Requirement(reqId)),
+          this.creditLimit,
+          `${this.year} ${this.season}`
+        );
+
+        output.push(ScheduleGenerator.generateSchedule(generatorRequest));
+      }
+
+      this.generatedScheduleOutputs = output;
+    },
+    regenerateSchedule() {
+      this.generateSchedules();
+      this.currentPage = 1;
+    },
+    paginate(direction: number) {
+      if ((this.currentPage < 5 && direction === 1) || (this.currentPage > 1 && direction === -1)) {
+        this.currentPage += direction;
+      }
+    },
+  },
+  computed: {
+    classes() {
+      const returnCourses = Array.from(
+        this.generatedScheduleOutputs[this.currentPage - 1]?.schedule.keys() ?? []
+      ).map(course => ({
+        title: this.courses.find(c => c.name === course.name)?.fulfilledReq ?? '',
+        name: course.name,
+        color: '#'.concat(this.courses.find(c => c.name === course.name)?.color ?? ''),
+        code: this.courses.find(c => c.name === course.name)?.code ?? '',
+        timeStart: this.courses.find(c => c.name === course.name)?.timeStart,
+        timeEnd: this.courses.find(c => c.name === course.name)?.timeEnd,
+      }));
+      return returnCourses;
+    },
+    classesSchedule() {
+      if (this.generatedScheduleOutputs.length === 0) {
+        // Opening for the first time...
+        this.generateSchedules();
+      }
 
       this.numberOfCoursesGenerated = generatedSchedule.schedule.size;
       this.totalCreditsGenerated = generatedSchedule.totalCredits;
 
       // ScheduleGenerator.prettyPrintSchedule(generatedSchedule);
-      let mondayClasses = [];
-      let tuesdayClasses = [];
-      let wednesdayClasses = [];
-      let thursdayClasses = [];
-      let fridayClasses = [];
-      let saturdayClasses = [];
-      let sundayClasses = [];
-      generatedSchedule.schedule.forEach((timeslots, course) =>
+      const mondayClasses: classList = [];
+      const tuesdayClasses: classList = [];
+      const wednesdayClasses: classList = [];
+      const thursdayClasses: classList = [];
+      const fridayClasses: classList = [];
+      const saturdayClasses: classList = [];
+      const sundayClasses: classList = [];
+
+      this.generatedScheduleOutputs[this.currentPage - 1]?.schedule.forEach((timeslots, course) =>
         timeslots.forEach(timeslot =>
           timeslot.daysOfTheWeek.forEach(day => {
             if (day === 'Monday') {
