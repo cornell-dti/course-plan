@@ -62,9 +62,3 @@ export type ClassesSchedule = {
     timeEnd: string;
   }[];
 };
-
-export type ReqInfo = {
-  name: string;
-  type: 'College' | 'Minor' | 'Major' | 'Grad' | 'Uni';
-  typeValue: string; // e.g. CoE, CS, etc. (should be the shortened code)
-};

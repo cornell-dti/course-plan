@@ -14,7 +14,7 @@
       class="dashboard-modal"
       :selected-semester="semesterToGenerate"
       :courses="coursesForGeneration"
-      :req-ids="reqIdsForGeneration"
+      :reqs="reqsForGeneration"
       :credit-limit="creditLimitForGeneration"
       @closeScheduleGenerateModal="closeScheduleGenerateModal"
     />
@@ -120,6 +120,11 @@ import {
   mediumBreakpoint,
   veryLargeBreakpoint,
 } from '@/assets/constants/scss-variables';
+<<<<<<< HEAD
+=======
+import { CourseForFrontend } from '@/schedule-generator/course-unit';
+import Requirement from '@/schedule-generator/requirement';
+>>>>>>> a92662bb (finally integrate download pdf, but algo only ever returns one course)
 
 const smallBreakpointPixels = parseInt(
   smallBreakpoint.substring(0, smallBreakpoint.length - 2),
@@ -184,8 +189,13 @@ export default defineComponent({
       isScheduleGenerateButtonDisabled: false,
       isScheduleGenerateOpen: false,
       isScheduleGenerateModalOpen: false,
+<<<<<<< HEAD
       coursesForGeneration: [],
       reqIdsForGeneration: [],
+=======
+      coursesForGeneration: [] as CourseForFrontend[],
+      reqsForGeneration: [] as Requirement[],
+>>>>>>> a92662bb (finally integrate download pdf, but algo only ever returns one course)
       creditLimitForGeneration: 12,
     };
   },
@@ -311,9 +321,19 @@ export default defineComponent({
       }
     },
 
+<<<<<<< HEAD
     openScheduleGenerateModal(coursesWithReqIds, creditLimit) {
+=======
+    openScheduleGenerateModal(
+      coursesWithReqIds: {
+        req: Requirement;
+        courses: CourseForFrontend[];
+      }[],
+      creditLimit: number
+    ) {
+>>>>>>> a92662bb (finally integrate download pdf, but algo only ever returns one course)
       this.coursesForGeneration = coursesWithReqIds.flatMap(req => req.courses);
-      this.reqIdsForGeneration = coursesWithReqIds.map(req => req.reqId); // Store requirement IDs
+      this.reqsForGeneration = coursesWithReqIds.map(obj => obj.req); // Store requirement IDs
       this.creditLimitForGeneration = creditLimit;
       this.isScheduleGenerateModalOpen = true;
     },

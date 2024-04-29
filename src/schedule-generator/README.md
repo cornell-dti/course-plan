@@ -31,7 +31,7 @@ Just a narrow wrapper around the information you send to `algorithm.ts` for sche
 
 ## `requirement.ts`
 
-To be honest this probably shouldn't even exist, it's a super-simple class that just stores the "`type`" (name) of a requirement. One example such requirement type could be: "First-year Writing Seminar".
+A super-simple class that just stores the "`name`" of a class, as well as the type of the requirement (e.g. "College") and its typeValue (e.g. "CS").
 
 ## `testing.ts`
 

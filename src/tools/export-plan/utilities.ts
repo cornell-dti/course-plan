@@ -2,7 +2,8 @@ import { isPlaceholderCourse, isCourseTaken } from '../../utilities';
 import { getCollegeAbbrev, getMajorAbbrev, getMinorAbbrev, getGradAbbrev } from '../../data';
 import store from '../../store';
 import { pdfColors } from '@/assets/constants/colors';
-import { SemesterRows, BubbleData, ReqInfo } from './types';
+import { SemesterRows, BubbleData } from './types';
+import Requirement from '@/schedule-generator/requirement';
 
 export const trimEmptySems = (sems: readonly FirestoreSemester[]): readonly FirestoreSemester[] => {
   let maxNonemptyIndex = -1;
@@ -87,17 +88,26 @@ const forcedBubbleColorMap = (req: 'College' | 'Major' | 'Minor' | 'Grad' | 'Uni
 };
 
 export const getCourseRowsWithForcedReqs = (
-  courses: Map<ReqInfo, FirestoreSemesterCourse>
+  courses: {
+    fulfilledReq: Requirement | undefined;
+    title: string | undefined;
+    color: string;
+    credits: number;
+    code: string;
+    timeStart: string | undefined;
+    timeEnd: string | undefined;
+  }[]
 ): SemesterRows => {
-  const rows: [string[], BubbleData[]][] = Array.from(courses.entries()).map(([req, course]) => {
-    const reqs = [req.name];
-    const bubbles = [{ requirementGroup: req.typeValue, color: forcedBubbleColorMap(req.type) }];
+  const rows: [string[], BubbleData[]][] = courses.map(course => {
+    const reqs = [course.fulfilledReq?.name ?? '?']; // the name of the req
+    const bubbles = [
+      {
+        requirementGroup: course.fulfilledReq?.typeValue ?? '?',
+        color: forcedBubbleColorMap(course.fulfilledReq?.for ?? 'College'),
+      },
+    ];
     return [
-      [
-        `${course.code}${isCourseTaken(course) ? '' : `: ${course.name}`}`,
-        course.credits.toString(),
-        reqs.join('\n'),
-      ],
+      [`${course.code}: ${course.title ?? ''}`, course.credits.toString(), reqs.join('\n')],
       bubbles,
     ];
   });

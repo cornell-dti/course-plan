@@ -1,7 +1,17 @@
 export default class Requirement {
-  type: string;
+  name: string; // effectively name
 
-  constructor(type?: string) {
-    this.type = type || '';
+  for: 'College' | 'Major' | 'Minor' | 'Grad' | 'Uni';
+
+  typeValue: string;
+
+  constructor(
+    name: string,
+    forType: 'College' | 'Major' | 'Minor' | 'Grad' | 'Uni',
+    typeValue: string
+  ) {
+    this.name = name;
+    this.for = forType;
+    this.typeValue = typeValue;
   }
 }

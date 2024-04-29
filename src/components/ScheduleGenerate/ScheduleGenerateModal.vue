@@ -130,8 +130,8 @@ export default defineComponent({
       type: Number,
       default: 12,
     },
-    reqIds: {
-      type: Array,
+    reqs: {
+      type: Array as PropType<(Requirement | undefined)[]>,
       default: () => [],
     },
   },
@@ -156,10 +156,13 @@ export default defineComponent({
       }
     },
     async downloadSchedule() {
-      console.log(this.courses, this.reqIds, this.classes, this.classesSchedule);
       const calendarRef = this.$refs.calendar as typeof Schedule;
-      // FIXME: pass in the other data, reqs no longer exists
-      generateSchedulePDF(this.reqs, await calendarRef.generatePdfData(), this.year, this.season);
+      generateSchedulePDF(
+        this.classes,
+        await calendarRef.generatePdfData(),
+        this.year,
+        this.season
+      );
     },
     generateSchedules() {
       const output: {
@@ -179,11 +182,17 @@ export default defineComponent({
         return daySets[randomIndex];
       }
 
+      function genRandomUUID() {
+        return (
+          Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
+        );
+      }
+
       for (let i = 0; i < 5; i += 1) {
         const courses = this.courses.map(
           course =>
             new Course(
-              course.name,
+              course.code,
               // course.credits,
               '#'.concat(course.color),
               course.courseCredits,
@@ -195,18 +204,20 @@ export default defineComponent({
                 },
               ],
               [`${this.year} ${this.season}`],
-              // this.reqIds.map(reqId => new Requirement(reqId))
-              [
-                {
-                  type: course.fulfilledReqId,
-                },
-              ]
+              [course.fulfilledReq]
             )
         );
 
         const generatorRequest = new GeneratorRequest(
           courses,
-          this.reqIds.map(reqId => new Requirement(reqId)),
+          this.reqs.map(
+            req =>
+              new Requirement(
+                req?.name ?? genRandomUUID(),
+                req?.for ?? 'College',
+                req?.typeValue ?? '?'
+              )
+          ),
           this.creditLimit,
           `${this.year} ${this.season}`
         );
@@ -231,12 +242,13 @@ export default defineComponent({
       const returnCourses = Array.from(
         this.generatedScheduleOutputs[this.currentPage - 1]?.schedule.keys() ?? []
       ).map(course => ({
-        title: this.courses.find(c => c.name === course.name)?.fulfilledReq ?? '',
-        name: course.name,
-        color: '#'.concat(this.courses.find(c => c.name === course.name)?.color ?? ''),
-        code: this.courses.find(c => c.name === course.name)?.code ?? '',
-        timeStart: this.courses.find(c => c.name === course.name)?.timeStart,
-        timeEnd: this.courses.find(c => c.name === course.name)?.timeEnd,
+        fulfilledReq: this.courses.find(c => c.code === course.code)?.fulfilledReq,
+        title: this.courses.find(c => c.code === course.code)?.title,
+        color: '#'.concat(this.courses.find(c => c.code === course.code)?.color ?? ''),
+        code: course.code,
+        credits: course.credits,
+        timeStart: this.courses.find(c => c.code === course.code)?.timeStart,
+        timeEnd: this.courses.find(c => c.code === course.code)?.timeEnd,
       }));
       return returnCourses;
     },
@@ -263,8 +275,8 @@ export default defineComponent({
           timeslot.daysOfTheWeek.forEach(day => {
             if (day === 'Monday') {
               mondayClasses.push({
-                title: course.name,
-                name: course.name,
+                title: course.code,
+                name: course.code,
                 color: course.color,
                 timeStart: timeslot.start,
                 timeEnd: timeslot.end,
@@ -272,8 +284,8 @@ export default defineComponent({
             }
             if (day === 'Tuesday') {
               tuesdayClasses.push({
-                title: course.name,
-                name: course.name,
+                title: course.code,
+                name: course.code,
                 color: course.color,
                 timeStart: timeslot.start,
                 timeEnd: timeslot.end,
@@ -281,8 +293,8 @@ export default defineComponent({
             }
             if (day === 'Wednesday') {
               wednesdayClasses.push({
-                title: course.name,
-                name: course.name,
+                title: course.code,
+                name: course.code,
                 color: course.color,
                 timeStart: timeslot.start,
                 timeEnd: timeslot.end,
@@ -290,8 +302,8 @@ export default defineComponent({
             }
             if (day === 'Thursday') {
               thursdayClasses.push({
-                title: course.name,
-                name: course.name,
+                title: course.code,
+                name: course.code,
                 color: course.color,
                 timeStart: timeslot.start,
                 timeEnd: timeslot.end,
@@ -299,8 +311,8 @@ export default defineComponent({
             }
             if (day === 'Friday') {
               fridayClasses.push({
-                title: course.name,
-                name: course.name,
+                title: course.code,
+                name: course.code,
                 color: course.color,
                 timeStart: timeslot.start,
                 timeEnd: timeslot.end,
@@ -308,8 +320,8 @@ export default defineComponent({
             }
             if (day === 'Saturday') {
               saturdayClasses.push({
-                title: course.name,
-                name: course.name,
+                title: course.code,
+                name: course.code,
                 color: course.color,
                 timeStart: timeslot.start,
                 timeEnd: timeslot.end,
@@ -317,8 +329,8 @@ export default defineComponent({
             }
             if (day === 'Sunday') {
               sundayClasses.push({
-                title: course.name,
-                name: course.name,
+                title: course.code,
+                name: course.code,
                 color: course.color,
                 timeStart: timeslot.start,
                 timeEnd: timeslot.end,
