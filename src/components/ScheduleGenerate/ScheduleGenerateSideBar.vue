@@ -27,7 +27,7 @@
             fill="white"
           />
         </svg>
-        Generate Schedule
+        {{ generateButtonText }}
       </button>
       <div class="credit-limit-container">
         <div>
@@ -91,12 +91,14 @@ export default defineComponent({
     isConfirmationOpen: boolean;
     confirmationText: string;
     creditLimit?: number;
+    isGenerating: boolean;
   } {
     return {
       requirements: [],
       isConfirmationOpen: false,
       confirmationText: '',
       creditLimit: undefined, // To Do: dont put a default number here (but then it allows 3 digits??)
+      isGenerating: false,
     };
   },
   components: {
@@ -110,6 +112,9 @@ export default defineComponent({
   },
   emits: ['openScheduleGenerateModal'],
   computed: {
+    generateButtonText(): string {
+      return this.isGenerating ? 'Generating...' : 'Generate Schedule';
+    },
     generateScheduleButtonDisabled(): boolean {
       // disables the "Generate Schedule" button until
       // 1. Credit limit has been specified
@@ -118,7 +123,12 @@ export default defineComponent({
       const isCreditLimitSpecified = this.creditLimit != undefined;
       const hasOneRequirement = this.requirements.length > 0;
       const hasEveryRequirementOneCourse = this.requirements.every(req => req.courses.length > 0);
-      return !(isCreditLimitSpecified && hasOneRequirement && hasEveryRequirementOneCourse);
+      return !(
+        isCreditLimitSpecified &&
+        hasOneRequirement &&
+        hasEveryRequirementOneCourse &&
+        !this.isGenerating
+      );
     },
     groupedRequirementFulfillmentReports(): readonly GroupedRequirementFulfillmentReport[] {
       return store.state.groupedRequirementFulfillmentReport;
@@ -137,17 +147,6 @@ export default defineComponent({
       );
       return courseRecord;
     },
-    // TODO: use this once we check the total number of requirement groups they can add
-    // total number of requirements, used to calculate when to gray out the +Requirement button
-    // numberOfRequirements(): number {
-    //   let length = 0;
-    //   this.groupedRequirementFulfillmentReports.forEach(
-    //     (groupedReq: GroupedRequirementFulfillmentReport) => {
-    //       length += groupedReq.reqs.length;
-    //     }
-    //   );
-    //   return length;
-    // },
   },
   methods: {
     openConfirmationModal(msg: string) {
@@ -215,6 +214,7 @@ export default defineComponent({
       );
     },
     async openScheduleGenerateModal() {
+      this.isGenerating = true;
       function formatTime(timeStr: string): string {
         const timeParts = timeStr.match(/(\d+):(\d+)(\w{2})/);
         if (!timeParts) return '';
@@ -323,7 +323,7 @@ export default defineComponent({
           ),
         }))
       );
-
+      this.isGenerating = false;
       this.$emit('openScheduleGenerateModal', coursesWithReqs, this.creditLimit);
     },
   },
