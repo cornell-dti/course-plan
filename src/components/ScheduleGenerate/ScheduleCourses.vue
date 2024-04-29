@@ -2,16 +2,12 @@
   <div class="courses-main">
     <div class="parent-info-div">
       <h3 class="info-subheader">
-        <span class="info-subheader-heavy">{{ generatedScheduleOutput?.totalCredits ?? 0 }}</span
+        <span class="info-subheader-heavy">{{ totalCredits }}</span
         >&nbsp;Credits
       </h3>
       <h3 class="info-subheader">
-        <span class="info-subheader-heavy">{{
-          new Set(generatedScheduleOutput?.schedule.keys()).size ?? 0
-        }}</span
-        >&nbsp;{{
-          (new Set(generatedScheduleOutput?.schedule.keys()).size ?? 0) === 1 ? 'Course' : 'Courses'
-        }}
+        <span class="info-subheader-heavy">{{ new Set(generatedSchedule?.keys()).size ?? 0 }}</span
+        >&nbsp;{{ (new Set(generatedSchedule?.keys()).size ?? 0) === 1 ? 'Course' : 'Courses' }}
       </h3>
     </div>
     <div class="requirement-between-justifier">
@@ -27,19 +23,16 @@
 
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
-import { Course } from '@/requirements/types';
-import { Timeslot } from '@/schedule-generator/course-unit';
-import Requirement from '@/schedule-generator/requirement';
+import Course, { Timeslot } from '@/schedule-generator/course-unit';
 
 export default defineComponent({
   props: {
-    generatedScheduleOutput: {
-      type: Object as PropType<{
-        semester: string;
-        schedule: Map<Course, Timeslot[]>;
-        fulfilledRequirements: Map<string, Requirement[]>;
-        totalCredits: number;
-      } | null>,
+    generatedSchedule: {
+      type: Object as PropType<Map<Course, Timeslot[]> | null>,
+      required: true,
+    },
+    totalCredits: {
+      type: Number,
       required: true,
     },
     classes: {

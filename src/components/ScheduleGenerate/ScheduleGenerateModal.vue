@@ -31,9 +31,9 @@
             Your Courses
           </div>
           <div class="schedule-generate-section-courses">
-            <!-- TODO: investigate type error -->
             <schedule-courses
-              :generated-schedule-output="generatedScheduleOutput"
+              :total-credits="generatedScheduleOutputs[currentPage - 1]?.totalCredits ?? 0"
+              :generated-schedule="generatedScheduleOutputs[currentPage - 1]?.schedule"
               :classes="classes"
             />
           </div>
@@ -113,7 +113,11 @@ import { generateSchedulePDF } from '@/tools/export-plan';
 import GeneratorRequest from '@/schedule-generator/generator-request';
 import ScheduleGenerator from '@/schedule-generator/algorithm';
 import type { GeneratedScheduleOutput } from '@/schedule-generator/algorithm';
-import Course, { CourseForFrontend, DayOfTheWeek } from '@/schedule-generator/course-unit';
+import Course, {
+  CourseForFrontend,
+  DayOfTheWeek,
+  Timeslot,
+} from '@/schedule-generator/course-unit';
 import Requirement from '@/schedule-generator/requirement';
 
 export default defineComponent({
@@ -143,7 +147,7 @@ export default defineComponent({
   data() {
     return {
       currentPage: 1,
-      generatedScheduleOutput: null as null | GeneratedScheduleOutput,
+      generatedScheduleOutputs: [] as GeneratedScheduleOutput[],
     };
   },
   methods: {
@@ -158,9 +162,17 @@ export default defineComponent({
     async downloadSchedule() {
       console.log(this.courses, this.reqIds, this.classes, this.classesSchedule);
       const calendarRef = this.$refs.calendar as typeof Schedule;
+      // FIXME: pass in the other data, reqs no longer exists
       generateSchedulePDF(this.reqs, await calendarRef.generatePdfData(), this.year, this.season);
     },
-    generateSchedule() {
+    generateSchedules() {
+      const output: {
+        semester: string;
+        schedule: Map<Course, Timeslot[]>;
+        fulfilledRequirements: Map<string, Requirement[]>;
+        totalCredits: number;
+      }[] = [];
+
       function getRandomDaySet(): DayOfTheWeek[] {
         const daySets = [
           ['Monday', 'Wednesday', 'Friday'],
@@ -170,41 +182,47 @@ export default defineComponent({
         const randomIndex = Math.floor(Math.random() * daySets.length);
         return daySets[randomIndex];
       }
-      const courses = this.courses.map(
-        course =>
-          new Course(
-            course.name,
-            // course.credits,
-            '#'.concat(course.color),
-            course.courseCredits,
-            [
-              {
-                start: course.timeStart,
-                end: course.timeEnd,
-                daysOfTheWeek: (course.daysOfTheWeek as DayOfTheWeek[]) || getRandomDaySet(),
-              },
-            ],
-            [`${this.year} ${this.season}`],
-            // this.reqIds.map(reqId => new Requirement(reqId))
-            [
-              {
-                type: course.fulfilledReqId,
-              },
-            ]
-          )
-      );
 
-      const generatorRequest = new GeneratorRequest(
-        courses,
-        this.reqIds.map(reqId => new Requirement(reqId)),
-        this.creditLimit,
-        `${this.year} ${this.season}`
-      );
+      for (let i = 0; i < 5; i += 1) {
+        const courses = this.courses.map(
+          course =>
+            new Course(
+              course.name,
+              // course.credits,
+              '#'.concat(course.color),
+              course.courseCredits,
+              [
+                {
+                  start: course.timeStart,
+                  end: course.timeEnd,
+                  daysOfTheWeek: (course.daysOfTheWeek as DayOfTheWeek[]) || getRandomDaySet(),
+                },
+              ],
+              [`${this.year} ${this.season}`],
+              // this.reqIds.map(reqId => new Requirement(reqId))
+              [
+                {
+                  type: course.fulfilledReqId,
+                },
+              ]
+            )
+        );
 
-      this.generatedScheduleOutput = ScheduleGenerator.generateSchedule(generatorRequest);
+        const generatorRequest = new GeneratorRequest(
+          courses,
+          this.reqIds.map(reqId => new Requirement(reqId)),
+          this.creditLimit,
+          `${this.year} ${this.season}`
+        );
+
+        output.push(ScheduleGenerator.generateSchedule(generatorRequest));
+      }
+
+      this.generatedScheduleOutputs = output;
     },
     regenerateSchedule() {
-      // TODO: recompute stuff..
+      this.generateSchedules();
+      this.currentPage = 1;
     },
     paginate(direction: number) {
       if ((this.currentPage < 5 && direction === 1) || (this.currentPage > 1 && direction === -1)) {
@@ -214,22 +232,22 @@ export default defineComponent({
   },
   computed: {
     classes() {
-      const returnCourses = Array.from(this.generatedScheduleOutput?.schedule.keys() ?? []).map(
-        course => ({
-          title: this.courses.find(c => c.name === course.name)?.fulfilledReq ?? '',
-          name: course.name,
-          color: '#'.concat(this.courses.find(c => c.name === course.name)?.color ?? ''),
-          code: this.courses.find(c => c.name === course.name)?.code ?? '',
-          timeStart: this.courses.find(c => c.name === course.name)?.timeStart,
-          timeEnd: this.courses.find(c => c.name === course.name)?.timeEnd,
-        })
-      );
+      const returnCourses = Array.from(
+        this.generatedScheduleOutputs[this.currentPage - 1]?.schedule.keys() ?? []
+      ).map(course => ({
+        title: this.courses.find(c => c.name === course.name)?.fulfilledReq ?? '',
+        name: course.name,
+        color: '#'.concat(this.courses.find(c => c.name === course.name)?.color ?? ''),
+        code: this.courses.find(c => c.name === course.name)?.code ?? '',
+        timeStart: this.courses.find(c => c.name === course.name)?.timeStart,
+        timeEnd: this.courses.find(c => c.name === course.name)?.timeEnd,
+      }));
       return returnCourses;
     },
     classesSchedule() {
-      if (!this.generatedScheduleOutput) {
+      if (this.generatedScheduleOutputs.length === 0) {
         // Opening for the first time...
-        this.generateSchedule();
+        this.generateSchedules();
       }
 
       type classList = {
@@ -248,7 +266,8 @@ export default defineComponent({
       const fridayClasses: classList = [];
       const saturdayClasses: classList = [];
       const sundayClasses: classList = [];
-      this.generatedScheduleOutput?.schedule.forEach((timeslots, course) =>
+
+      this.generatedScheduleOutputs[this.currentPage - 1]?.schedule.forEach((timeslots, course) =>
         timeslots.forEach(timeslot =>
           timeslot.daysOfTheWeek.forEach(day => {
             if (day === 'Monday') {
