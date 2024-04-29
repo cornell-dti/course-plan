@@ -96,7 +96,7 @@ const generateSchedulePDF = async (
   // rendering PDF footer
   renderFooter(doc);
 
-  const pdfName = `${store.state.userName.firstName}_CoursePlan`;
+  const pdfName = `${store.state.userName.firstName}_Generated_Schedule`;
   doc.save(pdfName);
 };
 
