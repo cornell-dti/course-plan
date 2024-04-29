@@ -303,8 +303,6 @@ export default defineComponent({
               const endTime = await getEndTime(course);
               const pattern = await getPattern(course);
               const daysOfTheWeek = getDaysOfTheWeek(pattern);
-              // console.log(pattern);
-              // console.log('Days of the week:', daysOfTheWeek);
               return {
                 title: course.name,
                 color: course.color,
