@@ -257,9 +257,15 @@ export default defineComponent({
 
         for (const course of sortedSchedule) {
           const newRequirements = [];
-          for (const requirement of course.requirements) {
-            // TODO: we actually just want to do this if it is the smallest unused
-            // one from the counter. (Right now it is not being prioritized.)
+          // Sort course.requirements according to fulfilledRequirementsCount.
+          // Prioritize smaller ones.
+          const sortedCourseFullfilledRequirements = course.requirements.sort(
+            (a, b) =>
+              (fulfilledRequirementsCount.get(a.name) ?? 0) -
+              (fulfilledRequirementsCount.get(b.name) ?? 0)
+          );
+
+          for (const requirement of sortedCourseFullfilledRequirements) {
             if (!fulfilledReqsSet.has(requirement.name)) {
               fulfilledReqsSet.add(requirement.name);
               newRequirements.push(requirement);

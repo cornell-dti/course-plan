@@ -16,7 +16,8 @@ export default class ScheduleGenerator {
     let { creditLimit } = request;
 
     const schedule: Map<Course, Timeslot[]> = new Map();
-    const fulfilledRequirements: Map<string, Requirement[]> = new Map();
+    const fulfilledRequirements: Map<string, Requirement[]> = new Map(); // used for checking no course duplicates
+    const actualFulfilledRequirements: Set<string> = new Set(); // used for checking no requirement duplicates
 
     // Randomly shuffle the list of available courses
     classes.sort(() => Math.random() - 0.5);
@@ -26,9 +27,14 @@ export default class ScheduleGenerator {
     classes.forEach(course => {
       if (course.offeredSemesters.includes(semester)) {
         let performAdditionFlag = true;
+        const onlyCourseRequirement = course.requirements[0].name ?? 'nonsense-requirement';
 
         // New logic: must be free for *all* time slots.
-        if (fulfilledRequirements.has(course.code) || creditLimit - course.credits < 0) {
+        if (
+          actualFulfilledRequirements.has(onlyCourseRequirement) ||
+          fulfilledRequirements.has(course.code) ||
+          creditLimit - course.credits < 0
+        ) {
           performAdditionFlag = false;
         } else {
           for (const timeslot of course.timeslots) {
@@ -49,6 +55,9 @@ export default class ScheduleGenerator {
           creditLimit -= course.credits;
           totalCredits += course.credits;
           fulfilledRequirements.set(course.code, course.requirements);
+          for (const requirement of course.requirements) {
+            actualFulfilledRequirements.add(requirement.name);
+          }
         }
       }
     });
