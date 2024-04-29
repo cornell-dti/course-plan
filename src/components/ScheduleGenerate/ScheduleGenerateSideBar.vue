@@ -237,6 +237,8 @@ export default defineComponent({
       function getStartTime(course: FirestoreSemesterCourse): Promise<string> {
         return getCourseWithCrseIdAndRoster(course.lastRoster, course.crseId)
           .then(firestoreCourse => {
+            console.log(course.crseId);
+            console.log(course.lastRoster);
             const timeUnformatted = firestoreCourse.enrollGroups[0].classSections[0].meetings[0]
               .timeStart as string;
             const timeFormatted = formatTime(timeUnformatted);
