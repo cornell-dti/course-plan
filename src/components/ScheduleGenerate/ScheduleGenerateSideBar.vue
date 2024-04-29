@@ -51,7 +51,7 @@
         <button class="add-requirement-button" @click="addRequirement">+ Requirement</button>
       </div>
       <div v-if="isInvalidCreditLimit" class="credit-limit-warning">
-        Note: Credit limit must be between 12 and 22 inclusive.
+        Note: You must specify a credit limit. The credit limit must be between 12 and 22 inclusive.
       </div>
     </div>
     <p v-if="requirements.length === 0" class="no-requirements-added">No requirements added.</p>
@@ -117,7 +117,7 @@ export default defineComponent({
       if (this.creditLimit !== undefined) {
         return this.creditLimit < 12 || this.creditLimit > 22;
       }
-      return false;
+      return true;
     },
     generateButtonText(): string {
       return this.isGenerating ? 'Generating...' : 'Generate Schedule';
