@@ -258,6 +258,8 @@ export default defineComponent({
         // for (const course of sortedSchedule) {
         //   const newRequirements = [];
         //   for (const requirement of course.requirements) {
+        // TODO: we actually just want to do this if it is the smallest unused
+        // one from the counter.
         //     if (!fulfilledReqsSet.has(requirement.name)) {
         //       fulfilledReqsSet.add(requirement.name);
         //       newRequirements.push(requirement);
