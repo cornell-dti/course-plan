@@ -537,7 +537,7 @@ input {
     line-height: 22px;
     margin-top: -0.5rem;
     background-color: $white;
-
+    padding: 0rem 0.5rem 0rem 0.5rem;
     &--font {
       color: $black;
       flex-direction: row;
