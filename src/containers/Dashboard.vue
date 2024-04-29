@@ -96,6 +96,15 @@
       @closeTourWindow="closeTour"
       v-if="showTourEndWindow"
     />
+    <giveaway-modal
+      title="Courseplan Giveaway!"
+      right-button-text="Submit"
+      rightButtonAlt="giveaway submit icon"
+      @modal-closed="closeGiveawayModal"
+      @right-button-clicked="clearSemester"
+      v-if="showGiveawayModal"
+    >
+    </giveaway-modal>
   </div>
 </template>
 
@@ -114,6 +123,7 @@ import TourWindow from '@/components/Modals/TourWindow.vue';
 import ToolsContainer from '@/containers/Tools.vue';
 import ProfileEditor from '@/containers/Profile.vue';
 import featureFlagCheckers from '@/feature-flags';
+import GiveawayModal from '@/components/Modals/GiveawayModal.vue';
 
 import store, { initializeFirestoreListeners } from '@/store';
 import { immutableBottomBarState } from '@/components/BottomBar/BottomBarState';
@@ -166,6 +176,7 @@ export default defineComponent({
     TourWindow,
     ToolsContainer,
     ProfileEditor,
+    GiveawayModal,
   },
   data() {
     return {
@@ -186,6 +197,7 @@ export default defineComponent({
       showTourEndWindow: false,
       showToolsPage: false,
       isProfileOpen: false,
+      showGiveawayModal: true,
       isScheduleGenerateOpen: false,
       isScheduleGenerateModalOpen: false,
       coursesForGeneration: [] as CourseForFrontend[],
@@ -340,6 +352,10 @@ export default defineComponent({
 
     closeTour() {
       this.showTourEndWindow = false;
+    },
+
+    closeGiveawayModal() {
+      this.showGiveawayModal = false;
     },
   },
 });

@@ -223,6 +223,9 @@ type AppFirestoreSemesterCourseWithRequirementID = FirestoreSemesterCourse & {
 /** Map from requirement ID to option chosen */
 type AppToggleableRequirementChoices = Readonly<Record<string, string>>;
 
+type GiveawayEntry = {
+  igUsername: string;
+};
 type Plan = {
   readonly name: string;
   readonly semesters: readonly FirestoreSemester[];
