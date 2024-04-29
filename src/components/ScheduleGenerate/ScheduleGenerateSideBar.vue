@@ -505,7 +505,7 @@ export default defineComponent({
   background-color: $emGreen;
   color: $white;
   border-radius: 4px;
-  font-size: 16px;
+  // font-size: 16px;
   align-items: center;
 }
 

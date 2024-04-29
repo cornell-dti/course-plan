@@ -89,14 +89,31 @@ export default class ScheduleGenerator {
   ): boolean {
     // Check for overlap.
     const gap = 15 * 60 * 1000; // 15 minutes in milliseconds
-    const timeslotStartMS = new Date(`01/01/1970 ${timeslot.start}`).getTime();
-    const timeslotEndMS = new Date(`01/01/1970 ${timeslot.end}`).getTime();
-    const timeslotDaysOfTheWeek = new Set(timeslot.daysOfTheWeek);
+    const timeslotCopy = { ...timeslot };
+
+    if (!timeslotCopy.start.includes(' ')) {
+      timeslotCopy.start = `${timeslotCopy.start.slice(0, -2)} ${timeslotCopy.start.slice(-2)}`;
+    }
+    if (!timeslotCopy.end.includes(' ')) {
+      timeslotCopy.end = `${timeslotCopy.end.slice(0, -2)} ${timeslotCopy.end.slice(-2)}`;
+    }
+
+    const timeslotStartMS = new Date(`01/01/1970 ${timeslotCopy.start}`).getTime();
+    const timeslotEndMS = new Date(`01/01/1970 ${timeslotCopy.end}`).getTime();
+    const timeslotDaysOfTheWeek = new Set(timeslotCopy.daysOfTheWeek);
 
     for (const slotArray of Array.from(schedule.values())) {
       for (const slot of slotArray) {
-        const slotStartMS = new Date(`01/01/1970 ${slot.start}`).getTime();
-        const slotEndMS = new Date(`01/01/1970 ${slot.end}`).getTime();
+        const slotCopy = { ...slot };
+        if (!slotCopy.start.includes(' ')) {
+          slotCopy.start = `${slotCopy.start.slice(0, -2)} ${slotCopy.start.slice(-2)}`;
+        }
+        if (!slotCopy.end.includes(' ')) {
+          slotCopy.end = `${slotCopy.end.slice(0, -2)} ${slotCopy.end.slice(-2)}`;
+        }
+
+        const slotStartMS = new Date(`01/01/1970 ${slotCopy.start}`).getTime();
+        const slotEndMS = new Date(`01/01/1970 ${slotCopy.end}`).getTime();
 
         if (
           timeslotStartMS < slotEndMS + gap &&
