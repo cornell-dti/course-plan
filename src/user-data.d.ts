@@ -36,6 +36,7 @@ type FirestoreSemester = {
 };
 
 type FirestoreSemestersData = {
+  readonly collections: readonly Collection[];
   readonly plans: readonly Plan[];
   readonly semesters: readonly FirestoreSemester[];
   readonly orderByNewest: boolean;
@@ -229,4 +230,5 @@ type Plan = {
 type Collection = {
   readonly name: string;
   // TODO: add potential more fields
+  readonly courses: readonly FirestoreSemesterCourse[];
 };

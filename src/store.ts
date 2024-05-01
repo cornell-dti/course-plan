@@ -188,6 +188,9 @@ const store: TypedVuexStore = new TypedVuexStore({
     setSawNewFeature(state: VuexStoreState, seen: boolean) {
       state.onboardingData.sawNewFeature = seen;
     },
+    setCollections(state: VuexStoreState, collections: readonly Collection[]) {
+      state.collections = collections;
+    },
   },
 });
 
@@ -247,7 +250,8 @@ const autoRecomputeDerivedData = (): (() => void) =>
       mutation.type === 'setToggleableRequirementChoices' ||
       mutation.type === 'setOverriddenFulfillmentChoices' ||
       mutation.type === 'setCurrentPlan' ||
-      mutation.type === 'setPlans'
+      mutation.type === 'setPlans' ||
+      mutation.type === 'setCollections'
     ) {
       if (state.onboardingData.college !== '') {
         store.commit(
@@ -336,6 +340,8 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
       // if user hasn't yet chosen an ordering, choose true by default
       store.commit('setOrderByNewest', orderByNewest === undefined ? true : orderByNewest);
     } else {
+      const collections = [{ name: 'All', courses: [] }];
+      store.commit('setCollections', collections); // TODO: add setCollection
       const plans = [{ name: 'Plan 1', semesters: [] }];
       store.commit('setPlans', plans);
       store.commit('setCurrentPlan', plans[0]);
@@ -349,6 +355,7 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
         orderByNewest: true,
         plans: [{ name: 'Plan 1', semesters: [newSemester] }],
         semesters: [newSemester],
+        collections: [{ name: 'All', courses: [] }],
       });
     }
     semestersInitialLoadFinished = true;
