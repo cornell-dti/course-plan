@@ -46,7 +46,6 @@
           v-if="loaded && !showToolsPage && !isProfileOpen && isScheduleGenerateOpen"
           :year="year"
           :season="season"
-          :generate-schedule-button-disabled="isScheduleGenerateButtonDisabled"
           @openScheduleGenerateModal="openScheduleGenerateModal"
         />
         <bottom-bar
@@ -183,7 +182,6 @@ export default defineComponent({
       showTourEndWindow: false,
       showToolsPage: false,
       isProfileOpen: false,
-      isScheduleGenerateButtonDisabled: false,
       isScheduleGenerateOpen: false,
       isScheduleGenerateModalOpen: false,
       coursesForGeneration: [] as CourseForFrontend[],

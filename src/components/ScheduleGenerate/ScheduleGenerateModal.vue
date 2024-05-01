@@ -545,13 +545,14 @@ input {
     line-height: 22px;
     margin-top: -0.5rem;
     background-color: $white;
-
+    padding: 0rem 0.5rem 0rem 0.5rem;
     &--font {
       color: $black;
       flex-direction: row;
       background-color: $white;
       padding: 0rem 0.5rem 0rem 0.5rem;
     }
+
     &--review {
       font-weight: normal;
       padding: 5px;
@@ -560,6 +561,7 @@ input {
       color: $lightPlaceholderGray;
       font-size: 16px;
     }
+
     &--smallerIndent {
       margin-left: 1.25rem;
       font-size: 18px;
@@ -583,6 +585,7 @@ input {
   display: flex;
   width: 246px;
   height: 35px;
+  font-family: 'ProximaNova';
   padding: 0px 66.603px 0px 62px;
   align-items: center;
   flex-shrink: 0;
@@ -605,10 +608,12 @@ input {
     display: flex;
     justify-content: center;
     align-items: center;
+    font-family: 'Proxima Nova';
     border-radius: 3px;
     height: 35px;
     padding: 10px 28px;
     border: 1px solid $sangBlue;
+
     &-disabled {
       border-radius: 3px;
       background: rgba(231, 231, 231, 0.75);
@@ -621,11 +626,13 @@ input {
   &-button {
     display: flex;
     justify-content: center;
+    font-family: 'ProximaNova';
     align-items: center;
     border-radius: 3px;
     height: 35px;
     padding: 10px 22px;
     border: 1px solid $sangBlue;
+
     &-disabled {
       border-radius: 3px;
       background: rgba(231, 231, 231, 0.75);
@@ -638,7 +645,7 @@ input {
   &-text {
     color: $sangBlue;
     text-align: center;
-    font-family: 'Proxima Nova';
+    font-family: 'ProximaNova';
     font-size: 16px;
     font-style: normal;
     font-weight: 400;
@@ -647,7 +654,7 @@ input {
     &-disabled {
       color: $lightPlaceholderGray;
       text-align: center;
-      font-family: 'Proxima Nova';
+      font-family: 'ProximaNova';
       font-size: 16px;
       font-style: normal;
       font-weight: 400;
@@ -677,7 +684,6 @@ input {
 .pagination-text {
   color: $primaryGray;
   text-align: center;
-  font-family: 'Proxima Nova';
   font-size: 16px;
   font-style: normal;
   font-weight: 600;

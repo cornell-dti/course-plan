@@ -62,6 +62,7 @@ export default defineComponent({
     border-radius: 4px;
 
     padding: 2rem calc(28px + 10px) 2rem;
+    overflow: scroll;
   }
 }
 

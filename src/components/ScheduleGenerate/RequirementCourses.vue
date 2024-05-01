@@ -37,6 +37,7 @@
         @close-course-modal="closeCourseModal"
         v-if="isCourseModalOpen"
         @add-course="addCourse"
+        :selected-requirement="selectedRequirement"
       />
       <div class="requirement-courses">
         <div v-for="c in selectedRequirement.courses" :key="c.crseId">
