@@ -42,7 +42,5 @@ export const specificRosterCoursesArrayWithSeasonAndYear = (
   const currRoster = seasonAndYearToRosterIdentifier(season, year);
   return Object.values(fullCoursesJsonWithStringKey)
     .flat()
-    .filter(course => {
-      course.roster == currRoster;
-    });
+    .filter(course => course.roster === currRoster);
 };

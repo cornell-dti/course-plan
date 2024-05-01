@@ -30,8 +30,8 @@ import { fullCoursesArray } from '@/assets/courses/typed-full-courses';
 
 const getMatchingCourses = (
   searchText: string,
-  filter?: (course: CornellCourseRosterCourse) => boolean,
-  coursesArray?: readonly CornellCourseRosterCourse[]
+  coursesArray?: readonly CornellCourseRosterCourse[],
+  filter?: (course: CornellCourseRosterCourse) => boolean
 ): readonly CornellCourseRosterCourse[] => {
   // search after value length of 2 to reduce search times of courses
   if (!searchText || searchText.length < 2) return [];
@@ -39,6 +39,7 @@ const getMatchingCourses = (
   const code: CornellCourseRosterCourse[] = [];
   const title: CornellCourseRosterCourse[] = [];
   let filteredCourses: readonly CornellCourseRosterCourse[] = [];
+  console.log(coursesArray);
   if (coursesArray !== undefined) {
     filteredCourses = coursesArray;
   } else {
@@ -67,9 +68,8 @@ export default defineComponent({
     placeholder: { type: String, required: true },
     autoFocus: { type: Boolean, required: true },
     coursesArray: {
-      type: Object as PropType<CornellCourseRosterCourse[]>,
+      type: Object as PropType<readonly CornellCourseRosterCourse[]>,
       required: false,
-      default: undefined,
     },
   },
   emits: {
@@ -84,7 +84,7 @@ export default defineComponent({
   },
   computed: {
     matches(): readonly CornellCourseRosterCourse[] {
-      return getMatchingCourses(this.searchText.toUpperCase());
+      return getMatchingCourses(this.searchText.toUpperCase(), this.coursesArray);
     },
   },
   mounted() {

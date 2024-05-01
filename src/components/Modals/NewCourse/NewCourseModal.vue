@@ -21,7 +21,7 @@
       @on-escape="closeCurrentModal"
       @on-select="selectCourse"
       data-cyId="newCourse-dropdown"
-      :course-array="courseArrayBySem"
+      :courses-array="courseArrayBySem"
     />
     <div v-else class="selected-course" data-cyId="newCourse-selectedCourse">
       {{ selectedCourse.subject }} {{ selectedCourse.catalogNbr }}:
@@ -91,9 +91,8 @@ export default defineComponent({
     rightButtonText(): string {
       return this.editMode ? 'Next' : 'Add';
     },
-    courseArrayBySem() {
+    courseArrayBySem(): readonly CornellCourseRosterCourse[] {
       const courses = specificRosterCoursesArrayWithSeasonAndYear(this.season, this.year);
-      console.log(courses);
       return courses;
     },
   },
