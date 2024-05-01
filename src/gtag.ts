@@ -23,7 +23,9 @@ export const GTagLoginEvent = (gtag: VueGtag | undefined, method: string): void 
 };
 
 type EventType =
+  | 'add-collection' // User adds a collection
   | 'add-course' // User adds a course
+  | 'add-course-collections' // User adds a course to a collection(s)
   | 'add-modal-edit-requirements' // User clicks Edit Requirements on Add Modal
   | 'add-semester' // User adds a semester
   | 'add-plan'
@@ -35,7 +37,9 @@ type EventType =
   | 'bottom-bar-view-course-information-on-roster' // User clicks View Course Information on Roster link on Bottom Bar
   | 'course-edit-color' // User edits the course color
   | 'subject-edit-color' // User edits the subject color
+  | 'delete-collection' // User deletes a collection
   | 'delete-course' // User deletes a course
+  | 'delete-course-collection' // User deletes a course from a collection
   | 'delete-semester' // User deletes a semester
   | 'delete-semester-courses' // User deletes all courses in a semester
   | 'delete-plan'
@@ -58,10 +62,24 @@ export const GTagEvent = (gtag: VueGtag | undefined, eventType: EventType): void
   if (!gtag) return;
   let eventPayload: EventPayload | undefined;
   switch (eventType) {
+    case 'add-collection':
+      eventPayload = {
+        event_category: 'collection',
+        event_label: 'add-collection',
+        value: 1,
+      };
+      break;
     case 'add-course':
       eventPayload = {
         event_category: 'course',
         event_label: 'add',
+        value: 1,
+      };
+      break;
+    case 'add-course-collections':
+      eventPayload = {
+        event_category: 'collection',
+        event_label: 'add-course-collections',
         value: 1,
       };
       break;
@@ -142,10 +160,24 @@ export const GTagEvent = (gtag: VueGtag | undefined, eventType: EventType): void
         value: 1,
       };
       break;
+    case 'delete-collection':
+      eventPayload = {
+        event_category: 'collection',
+        event_label: 'delete-collection',
+        value: 1,
+      };
+      break;
     case 'delete-course':
       eventPayload = {
         event_category: 'course',
         event_label: 'delete',
+        value: 1,
+      };
+      break;
+    case 'delete-course-collection':
+      eventPayload = {
+        event_category: 'collection',
+        event_label: 'delete-course-collection',
         value: 1,
       };
       break;
