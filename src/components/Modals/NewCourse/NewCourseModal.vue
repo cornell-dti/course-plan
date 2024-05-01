@@ -18,10 +18,10 @@
       :key="courseSelectorKey"
       placeholder='"CS 1110", "Multivariable Calculus", etc'
       :autoFocus="true"
-      :course-filter="courseFilter"
       @on-escape="closeCurrentModal"
       @on-select="selectCourse"
       data-cyId="newCourse-dropdown"
+      :course-filter="courseFilterByReqAndSem"
     />
     <div v-else class="selected-course" data-cyId="newCourse-selectedCourse">
       {{ selectedCourse.subject }} {{ selectedCourse.catalogNbr }}:
@@ -44,7 +44,7 @@
 </template>
 
 <script lang="ts">
-import { PropType, defineComponent } from 'vue';
+import { defineComponent } from 'vue';
 import SelectedRequirementEditor from '@/components/Modals/NewCourse/SelectedRequirementEditor.vue';
 import TeleportModal from '@/components/Modals/TeleportModal.vue';
 import CourseSelector from '@/components/Modals/NewCourse/CourseSelector.vue';
@@ -54,19 +54,11 @@ import {
   getRelatedRequirementIdsForCourseOptOut,
   getRelatedUnfulfilledRequirements,
 } from '@/requirements/requirement-frontend-utils';
-import { ReqCourses } from '@/components/ScheduleGenerate/ScheduleGenerateSideBar.vue';
 
 export default defineComponent({
   props: {
-    selectedRequirement: {
-      type: Object as PropType<ReqCourses>,
-      required: false,
-      default: () => ({
-        reqId: '',
-        reqName: '',
-        courses: [],
-      }),
-    },
+    fulfillingReqForFilter: { type: String, required: false, default: '' },
+    semesterForFilter: { type: String, required: false, default: '' },
   },
   components: { CourseSelector, TeleportModal, SelectedRequirementEditor },
   emits: {
@@ -98,12 +90,6 @@ export default defineComponent({
     },
   },
   methods: {
-    courseFilter() {
-      return (course: CornellCourseRosterCourse) =>
-        this.selectedRequirement.courses.some(
-          firestoreCourse => firestoreCourse.crseId === course.crseId
-        );
-    },
     selectCourse(result: CornellCourseRosterCourse) {
       this.selectedCourse = result;
       this.$emit('select-course', this.selectedCourse);
@@ -187,18 +173,27 @@ export default defineComponent({
     toggleEditMode() {
       this.editMode = !this.editMode;
     },
+    courseFilterByReqAndSem(course: CornellCourseRosterCourse) {
+      // console.log("course filter by req func ", course);
+      // console.log("want to return true if we fulfill req:", this.fulfillingReqForFilter);
+      // console.log("want to filter by this semestet: ", this.semesterForFilter);
+      // TO DO: Use course, fulfilling req, and semestet to return true/false
+      return true;
+    },
   },
 });
 </script>
 
 <style lang="scss">
 @import '@/assets/scss/_variables.scss';
+
 .newCourse {
   &-text {
     font-size: 14px;
     line-height: 17px;
     color: $lightPlaceholderGray;
   }
+
   &-dropdown {
     font-size: 14px;
     line-height: 17px;
@@ -207,10 +202,12 @@ export default defineComponent({
     border-radius: 3px;
     padding: 0.5rem;
     border: 0.5px solid $inactiveGray;
+
     &::placeholder {
       color: $darkPlaceholderGray;
     }
   }
+
   &-name {
     position: relative;
     border-radius: 11px;
@@ -219,6 +216,7 @@ export default defineComponent({
     line-height: 14px;
     color: $darkGray;
   }
+
   &-title {
     font-size: 14px;
     line-height: 17px;

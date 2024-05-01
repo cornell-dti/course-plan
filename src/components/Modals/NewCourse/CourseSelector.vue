@@ -37,15 +37,7 @@ const getMatchingCourses = (
   /* code array for results that contain course code and title array for results that contain title */
   const code: CornellCourseRosterCourse[] = [];
   const title: CornellCourseRosterCourse[] = [];
-  const filteredCourses = fullCoursesArray.filter(
-    course =>
-      (filter ? filter(course) : true) &&
-      (course.subject
-        .concat(' ', course.catalogNbr)
-        .toUpperCase()
-        .includes(searchText.toUpperCase()) ||
-        course.titleLong.toUpperCase().includes(searchText.toUpperCase()))
-  );
+  const filteredCourses = filter != null ? fullCoursesArray.filter(filter) : fullCoursesArray;
   for (const course of filteredCourses) {
     const courseCode = `${course.subject} ${course.catalogNbr}`;
     if (courseCode.toUpperCase().includes(searchText)) {
@@ -128,6 +120,7 @@ export default defineComponent({
   padding: 10px;
   font-size: 16px;
 }
+
 .autocomplete {
   /*the container must be positioned relative:*/
   position: relative;
@@ -136,6 +129,7 @@ export default defineComponent({
   margin-top: 0.5rem;
   padding-bottom: 12px;
 }
+
 .autocomplete-items {
   position: absolute;
   border: 1px solid $searchBoxBorderGray;
@@ -159,6 +153,7 @@ export default defineComponent({
     }
   }
 }
+
 .autocomplete-active {
   /*when navigating through the items using the arrow keys:*/
   background-color: DodgerBlue !important;

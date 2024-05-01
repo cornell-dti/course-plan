@@ -37,7 +37,7 @@
         @close-course-modal="closeCourseModal"
         v-if="isCourseModalOpen"
         @add-course="addCourse"
-        :selected-requirement="selectedRequirement"
+        :fulfilling-req="selectedRequirement.reqId"
       />
       <div class="requirement-courses">
         <div v-for="c in selectedRequirement.courses" :key="c.crseId">
@@ -57,6 +57,7 @@
           :compact="false"
           :should-clear-padding="true"
           @click="openCourseModal"
+          :fulfilling-requirement="selectedRequirement.reqId"
         />
       </div>
     </div>
@@ -134,6 +135,7 @@ export default defineComponent({
       //   this.$emit('add-available-requirement', this.selectedRequirement);
       // }
       this.$emit('select-requirement', requirement, this.index);
+      console.log(requirement);
       // this.$emit('delete-available-requirement', requirement);
     },
     deleteRequirement() {
