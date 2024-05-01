@@ -98,7 +98,7 @@ export default defineComponent({
       requirements: [],
       isConfirmationOpen: false,
       confirmationText: '',
-      creditLimit: undefined, // To Do: dont put a default number here (but then it allows 3 digits??)
+      creditLimit: undefined,
       isGenerating: false,
     };
   },

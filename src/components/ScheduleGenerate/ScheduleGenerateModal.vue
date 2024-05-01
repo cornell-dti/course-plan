@@ -676,7 +676,6 @@ input {
 .pagination-text {
   color: $primaryGray;
   text-align: center;
-  font-family: 'ProximaNova';
   font-size: 16px;
   font-style: normal;
   font-weight: 600;
