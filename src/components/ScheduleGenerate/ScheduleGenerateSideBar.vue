@@ -27,7 +27,7 @@
             fill="white"
           />
         </svg>
-        Generate Schedule
+        {{ generateButtonText }}
       </button>
       <div class="credit-limit-container">
         <div>
@@ -40,17 +40,18 @@
             As such, if we want to enforce the credit limit here, would have to implement some sort of reactive JavaScript listener.
           -->
           <input
-            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
             type="number"
-            maxlength="2"
             placeholder='"18"'
-            min="0"
-            max="30"
+            min="12"
+            max="22"
             class="credit-limit-input"
             v-model="creditLimit"
           />
         </div>
         <button class="add-requirement-button" @click="addRequirement">+ Requirement</button>
+      </div>
+      <div v-if="isInvalidCreditLimit" class="credit-limit-warning">
+        Note: You must specify a credit limit. The credit limit must be between 12 and 22 inclusive.
       </div>
     </div>
     <p v-if="requirements.length === 0" class="no-requirements-added">No requirements added.</p>
@@ -90,13 +91,15 @@ export default defineComponent({
     requirements: ReqCourses[];
     isConfirmationOpen: boolean;
     confirmationText: string;
-    creditLimit: number;
+    creditLimit?: number;
+    isGenerating: boolean;
   } {
     return {
       requirements: [],
       isConfirmationOpen: false,
       confirmationText: '',
-      creditLimit: 12, // To Do: dont put a default number here (but then it allows 3 digits??)
+      creditLimit: undefined,
+      isGenerating: false,
     };
   },
   components: {
@@ -107,11 +110,34 @@ export default defineComponent({
     // current year and season being generated for
     year: { type: Number, required: true },
     season: { type: Object as PropType<FirestoreSemesterSeason>, required: true },
-    // (linked with requirements) whether any requirements have been added
-    generateScheduleButtonDisabled: { type: Boolean, required: true },
   },
   emits: ['openScheduleGenerateModal'],
   computed: {
+    isInvalidCreditLimit(): boolean {
+      if (this.creditLimit !== undefined) {
+        return this.creditLimit < 12 || this.creditLimit > 22;
+      }
+      return true;
+    },
+    generateButtonText(): string {
+      return this.isGenerating ? 'Generating...' : 'Generate Schedule';
+    },
+    generateScheduleButtonDisabled(): boolean {
+      // disables the "Generate Schedule" button until
+      // 1. Credit limit has been specified and is between 12 and 22
+      // 2. At least one requirement has been added
+      // 3. Each requirement has at least one course added
+      const isCreditLimitSpecified = this.creditLimit !== undefined;
+      const hasOneRequirement = this.requirements.length > 0;
+      const hasEveryRequirementOneCourse = this.requirements.every(req => req.courses.length > 0);
+      return !(
+        isCreditLimitSpecified &&
+        hasOneRequirement &&
+        hasEveryRequirementOneCourse &&
+        !this.isGenerating &&
+        !this.isInvalidCreditLimit
+      );
+    },
     groupedRequirementFulfillmentReports(): readonly GroupedRequirementFulfillmentReport[] {
       return store.state.groupedRequirementFulfillmentReport;
     },
@@ -129,17 +155,6 @@ export default defineComponent({
       );
       return courseRecord;
     },
-    // TODO: use this once we check the total number of requirement groups they can add
-    // total number of requirements, used to calculate when to gray out the +Requirement button
-    // numberOfRequirements(): number {
-    //   let length = 0;
-    //   this.groupedRequirementFulfillmentReports.forEach(
-    //     (groupedReq: GroupedRequirementFulfillmentReport) => {
-    //       length += groupedReq.reqs.length;
-    //     }
-    //   );
-    //   return length;
-    // },
   },
   methods: {
     openConfirmationModal(msg: string) {
@@ -207,6 +222,7 @@ export default defineComponent({
       );
     },
     async openScheduleGenerateModal() {
+      this.isGenerating = true;
       function formatTime(timeStr: string): string {
         const timeParts = timeStr.match(/(\d+):(\d+)(\w{2})/);
         if (!timeParts) return '';
@@ -221,6 +237,8 @@ export default defineComponent({
       function getStartTime(course: FirestoreSemesterCourse): Promise<string> {
         return getCourseWithCrseIdAndRoster(course.lastRoster, course.crseId)
           .then(firestoreCourse => {
+            console.log(course.crseId);
+            console.log(course.lastRoster);
             const timeUnformatted = firestoreCourse.enrollGroups[0].classSections[0].meetings[0]
               .timeStart as string;
             const timeFormatted = formatTime(timeUnformatted);
@@ -296,8 +314,6 @@ export default defineComponent({
               const endTime = await getEndTime(course);
               const pattern = await getPattern(course);
               const daysOfTheWeek = getDaysOfTheWeek(pattern);
-              // console.log(pattern);
-              // console.log('Days of the week:', daysOfTheWeek);
               return {
                 title: course.name,
                 color: course.color,
@@ -315,7 +331,7 @@ export default defineComponent({
           ),
         }))
       );
-
+      this.isGenerating = false;
       this.$emit('openScheduleGenerateModal', coursesWithReqs, this.creditLimit);
     },
   },
@@ -471,6 +487,14 @@ export default defineComponent({
   font-style: normal;
   font-weight: 400;
   line-height: normal;
+}
+
+.credit-limit-warning {
+  color: $warning;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  margin-top: 4px;
 }
 
 .credit-limit-input::placeholder {

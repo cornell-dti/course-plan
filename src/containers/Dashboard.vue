@@ -44,8 +44,8 @@
         />
         <schedule-generate-side-bar
           v-if="loaded && !showToolsPage && !isProfileOpen && isScheduleGenerateOpen"
-          :selected-semester="semesterToGenerate"
-          :generate-schedule-button-disabled="erateButtonDisabled"
+          :year="year"
+          :season="season"
           @openScheduleGenerateModal="openScheduleGenerateModal"
         />
         <bottom-bar
@@ -120,11 +120,8 @@ import {
   mediumBreakpoint,
   veryLargeBreakpoint,
 } from '@/assets/constants/scss-variables';
-<<<<<<< HEAD
-=======
 import { CourseForFrontend } from '@/schedule-generator/course-unit';
 import Requirement from '@/schedule-generator/requirement';
->>>>>>> a92662bb (finally integrate download pdf, but algo only ever returns one course)
 
 const smallBreakpointPixels = parseInt(
   smallBreakpoint.substring(0, smallBreakpoint.length - 2),
@@ -186,16 +183,10 @@ export default defineComponent({
       showTourEndWindow: false,
       showToolsPage: false,
       isProfileOpen: false,
-      isScheduleGenerateButtonDisabled: false,
       isScheduleGenerateOpen: false,
       isScheduleGenerateModalOpen: false,
-<<<<<<< HEAD
-      coursesForGeneration: [],
-      reqIdsForGeneration: [],
-=======
       coursesForGeneration: [] as CourseForFrontend[],
       reqsForGeneration: [] as Requirement[],
->>>>>>> a92662bb (finally integrate download pdf, but algo only ever returns one course)
       creditLimitForGeneration: 12,
     };
   },
@@ -321,9 +312,6 @@ export default defineComponent({
       }
     },
 
-<<<<<<< HEAD
-    openScheduleGenerateModal(coursesWithReqIds, creditLimit) {
-=======
     openScheduleGenerateModal(
       coursesWithReqIds: {
         req: Requirement;
@@ -331,7 +319,6 @@ export default defineComponent({
       }[],
       creditLimit: number
     ) {
->>>>>>> a92662bb (finally integrate download pdf, but algo only ever returns one course)
       this.coursesForGeneration = coursesWithReqIds.flatMap(req => req.courses);
       this.reqsForGeneration = coursesWithReqIds.map(obj => obj.req); // Store requirement IDs
       this.creditLimitForGeneration = creditLimit;

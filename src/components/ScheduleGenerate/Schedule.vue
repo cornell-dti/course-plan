@@ -123,14 +123,15 @@ export default defineComponent({
           // Extract hours from timeStart and timeEnd and convert them to numbers
           const startHour = this.parseTimeString(cls.timeStart).hours;
           const { hours: endHour, minutes: endMinutes } = this.parseTimeString(cls.timeEnd);
-
           // Update min and max hours
           minHour = Math.min(minHour, startHour);
-          if (maxHour < endHour) {
+          if (maxHour < endHour + (endMinutes > 0 ? 1 : 0)) {
             maxHour = endHour + (endMinutes > 0 ? 1 : 0);
           }
         });
       });
+      minHour = Math.min(minHour, 8);
+      maxHour = Math.max(maxHour, 16);
       return { minHour, maxHour };
     },
 
@@ -175,6 +176,7 @@ export default defineComponent({
     height: 780px;
 
     padding: 2rem 0.5rem 1rem 1.5rem;
+    overflow: scroll;
   }
   &-week {
     display: flex;
