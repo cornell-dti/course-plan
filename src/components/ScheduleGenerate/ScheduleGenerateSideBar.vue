@@ -245,7 +245,7 @@ export default defineComponent({
             return timeFormatted;
           })
           .catch(error => {
-            throw new Error('Failed to fetch the course details.', error);
+            throw new Error(`Failed to fetch the course details. ${error}`);
           });
       }
 
@@ -258,7 +258,7 @@ export default defineComponent({
             return timeFormatted;
           })
           .catch(error => {
-            throw new Error('Failed to fetch the course details.', error);
+            throw new Error(`Failed to fetch the course details. ${error}`);
           });
       }
 
@@ -270,7 +270,7 @@ export default defineComponent({
             return pattern;
           })
           .catch(error => {
-            throw new Error('Failed to fetch the course pattern.', error);
+            throw new Error(`Failed to fetch the course pattern. ${error}`);
           });
       }
 

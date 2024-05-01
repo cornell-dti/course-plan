@@ -60,8 +60,12 @@ export default defineComponent({
   props: {
     // TODO: filter by selectedRequirement for schedule generator
     // selectedRequirement: { type: String, required: false, default: '' },
-    year: { type: Number, required: true },
-    season: { type: String as PropType<FirestoreSemesterSeason>, required: true },
+    year: { type: Number, required: false, default: undefined },
+    season: {
+      type: String as PropType<FirestoreSemesterSeason>,
+      required: false,
+      default: undefined,
+    },
   },
   components: { CourseSelector, TeleportModal, SelectedRequirementEditor },
   emits: {
@@ -91,9 +95,12 @@ export default defineComponent({
     rightButtonText(): string {
       return this.editMode ? 'Next' : 'Add';
     },
-    courseArrayBySem(): readonly CornellCourseRosterCourse[] {
-      const courses = specificRosterCoursesArrayWithSeasonAndYear(this.season, this.year);
-      return courses;
+    courseArrayBySem(): readonly CornellCourseRosterCourse[] | undefined {
+      if (this.season !== undefined && this.year !== undefined) {
+        const courses = specificRosterCoursesArrayWithSeasonAndYear(this.season, this.year);
+        return courses;
+      }
+      return undefined;
     },
   },
   methods: {
