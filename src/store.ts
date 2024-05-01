@@ -76,6 +76,7 @@ const store: TypedVuexStore = new TypedVuexStore({
       exam: [],
       tookSwim: 'no',
       sawNewFeature: false,
+      sawGiveaway: false,
       sawScheduleGenerator: false,
     },
     orderByNewest: true,
@@ -186,6 +187,9 @@ const store: TypedVuexStore = new TypedVuexStore({
     },
     setSawNewFeature(state: VuexStoreState, seen: boolean) {
       state.onboardingData.sawNewFeature = seen;
+    },
+    setSawGiveaway(state: VuexStoreState, seen: boolean) {
+      state.onboardingData.sawGiveaway = seen;
     },
     setSawScheduleGenerator(state: VuexStoreState, seen: boolean) {
       state.onboardingData.sawScheduleGenerator = seen;

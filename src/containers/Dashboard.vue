@@ -197,7 +197,7 @@ export default defineComponent({
       showTourEndWindow: false,
       showToolsPage: false,
       isProfileOpen: false,
-      showGiveawayModal: true,
+      showGiveawayModal: false,
       isScheduleGenerateOpen: false,
       isScheduleGenerateModalOpen: false,
       coursesForGeneration: [] as CourseForFrontend[],
@@ -241,6 +241,9 @@ export default defineComponent({
           this.startMultiplePlansTour = true;
         } else if (!this.onboardingData.sawScheduleGenerator) {
           this.startScheduleGeneratorTour = true;
+        }
+        if (!this.onboardingData.sawGiveaway) {
+          this.showGiveawayModal = true;
         }
       } else {
         this.startOnboarding();

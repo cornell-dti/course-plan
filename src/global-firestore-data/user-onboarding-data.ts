@@ -27,6 +27,7 @@ export const setAppOnboardingData = (
     })),
     tookSwim: onboarding.tookSwim,
     sawNewFeature: onboarding.sawNewFeature,
+    sawGiveaway: onboarding.sawGiveaway,
     sawScheduleGenerator: onboarding.sawScheduleGenerator,
   });
 };
@@ -58,6 +59,13 @@ export const updateSawNewFeature = (sawNewFeature: boolean): void => {
   store.commit('setSawNewFeature', sawNewFeature);
   updateDoc(doc(onboardingDataCollection, store.state.currentFirebaseUser.email), {
     sawNewFeature,
+  });
+};
+
+export const updateSawGiveaway = (sawGiveaway: boolean): void => {
+  store.commit('setSawGiveaway', sawGiveaway);
+  updateDoc(doc(onboardingDataCollection, store.state.currentFirebaseUser.email), {
+    sawGiveaway,
   });
 };
 

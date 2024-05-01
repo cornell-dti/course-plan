@@ -9,8 +9,6 @@
     ref="modalBackground"
   >
     <div :class="['modal-content', contentClass]">
-      <component :is="'script'" src="@/assets/confetti.js"></component>
-      <button @click="startConfetti()">hello</button>
       <div class="modal-top">
         <button @click="close" class="modal-exitbutton" data-cyId="modal-exit">
           <img class="modal-exit" src="@/assets/images/x.png" alt="x to close modal" />
@@ -54,6 +52,7 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import enterGiveaway from '@/global-firestore-data/giveaway-entries';
+import { updateSawGiveaway } from '@/global-firestore-data';
 
 export default defineComponent({
   props: {
@@ -76,14 +75,14 @@ export default defineComponent({
         enterGiveaway(this.netId, this.igUsername);
         this.$emit('modal-closed', true);
       }
-      console.log(this.netId);
-      console.log(this.igUsername);
+      updateSawGiveaway(true);
     },
   },
   setup(props, { emit }) {
     const modalBackground = ref((null as unknown) as HTMLDivElement);
 
     const close = () => {
+      updateSawGiveaway(true);
       emit('modal-closed', true);
     };
 
@@ -91,15 +90,7 @@ export default defineComponent({
       if (e.target === modalBackground.value) close();
     };
 
-    const leftButtonClicked = () => {
-      emit('left-button-clicked');
-    };
-
-    const rightButtonClicked = () => {
-      emit('right-button-clicked');
-    };
-
-    return { close, closeOnClickOutside, leftButtonClicked, rightButtonClicked, modalBackground };
+    return { close, closeOnClickOutside, modalBackground };
   },
 });
 </script>
@@ -139,6 +130,7 @@ export default defineComponent({
     margin-left: auto;
     margin-right: auto;
     padding: 1rem;
+    background-image: url('@/assets/images/confetti.gif');
   }
   &-logo {
     margin-bottom: 1rem;
