@@ -36,8 +36,8 @@
         @close-course-modal="closeCourseModal"
         v-if="isCourseModalOpen"
         @add-course="addCourse"
-        :selected-requirement="selectedRequirement.reqId"
-        current-semester="FA24"
+        :year="year"
+        :season="season"
       />
       <div class="requirement-courses">
         <div v-for="c in selectedRequirement.courses" :key="c.crseId">
@@ -87,6 +87,8 @@ export default defineComponent({
       type: Number,
       required: true,
     },
+    year: { type: Number, required: true },
+    season: { type: String as PropType<FirestoreSemesterSeason>, required: true },
   },
   emits: {
     'add-course': (course: CornellCourseRosterCourse, index: number) =>
@@ -130,7 +132,12 @@ export default defineComponent({
       this.showDropdown = false;
     },
     selectRequirement(requirement: string) {
+      // TODO: uncomment once we limit the number of requirement groups of each type
+      // if (this.selectedRequirement.reqId !== '') {
+      //   this.$emit('add-available-requirement', this.selectedRequirement);
+      // }
       this.$emit('select-requirement', requirement, this.index);
+      // this.$emit('delete-available-requirement', requirement);
     },
     deleteRequirement() {
       this.$emit('delete-requirement');

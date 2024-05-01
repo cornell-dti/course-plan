@@ -21,6 +21,7 @@
       @on-escape="closeCurrentModal"
       @on-select="selectCourse"
       data-cyId="newCourse-dropdown"
+      :course-array="courseArrayBySem"
     />
     <div v-else class="selected-course" data-cyId="newCourse-selectedCourse">
       {{ selectedCourse.subject }} {{ selectedCourse.catalogNbr }}:
@@ -43,7 +44,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { PropType, defineComponent } from 'vue';
 import SelectedRequirementEditor from '@/components/Modals/NewCourse/SelectedRequirementEditor.vue';
 import TeleportModal from '@/components/Modals/TeleportModal.vue';
 import CourseSelector from '@/components/Modals/NewCourse/CourseSelector.vue';
@@ -53,11 +54,14 @@ import {
   getRelatedRequirementIdsForCourseOptOut,
   getRelatedUnfulfilledRequirements,
 } from '@/requirements/requirement-frontend-utils';
+import { specificRosterCoursesArrayWithSeasonAndYear } from '@/assets/courses/typed-full-courses';
 
 export default defineComponent({
   props: {
-    selectedRequirement: { type: String, required: false, default: '' },
-    currentSemester: { type: String, required: false, default: '' },
+    // TODO: filter by selectedRequirement for schedule generator
+    // selectedRequirement: { type: String, required: false, default: '' },
+    year: { type: Number, required: true },
+    season: { type: String as PropType<FirestoreSemesterSeason>, required: true },
   },
   components: { CourseSelector, TeleportModal, SelectedRequirementEditor },
   emits: {
@@ -87,11 +91,13 @@ export default defineComponent({
     rightButtonText(): string {
       return this.editMode ? 'Next' : 'Add';
     },
+    courseArrayBySem() {
+      const courses = specificRosterCoursesArrayWithSeasonAndYear(this.season, this.year);
+      console.log(courses);
+      return courses;
+    },
   },
   methods: {
-    courseFilterByReqAndSem(course: CornellCourseRosterCourse) {
-      return true;
-    },
     selectCourse(result: CornellCourseRosterCourse) {
       this.selectedCourse = result;
       this.$emit('select-course', this.selectedCourse);

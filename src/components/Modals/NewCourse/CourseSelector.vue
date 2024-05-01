@@ -30,14 +30,20 @@ import { fullCoursesArray } from '@/assets/courses/typed-full-courses';
 
 const getMatchingCourses = (
   searchText: string,
-  filter?: (course: CornellCourseRosterCourse) => boolean
+  filter?: (course: CornellCourseRosterCourse) => boolean,
+  coursesArray?: readonly CornellCourseRosterCourse[]
 ): readonly CornellCourseRosterCourse[] => {
   // search after value length of 2 to reduce search times of courses
   if (!searchText || searchText.length < 2) return [];
   /* code array for results that contain course code and title array for results that contain title */
   const code: CornellCourseRosterCourse[] = [];
   const title: CornellCourseRosterCourse[] = [];
-  const filteredCourses = filter != null ? fullCoursesArray.filter(filter) : fullCoursesArray;
+  let filteredCourses: readonly CornellCourseRosterCourse[] = [];
+  if (coursesArray !== undefined) {
+    filteredCourses = coursesArray;
+  } else {
+    filteredCourses = filter != null ? fullCoursesArray.filter(filter) : fullCoursesArray;
+  }
   for (const course of filteredCourses) {
     const courseCode = `${course.subject} ${course.catalogNbr}`;
     if (courseCode.toUpperCase().includes(searchText)) {
@@ -59,13 +65,12 @@ export default defineComponent({
   props: {
     searchBoxClassName: { type: String, required: true },
     placeholder: { type: String, required: true },
-    courseFilter: {
-      type: (Function as unknown) as PropType<
-        ((course: CornellCourseRosterCourse) => boolean) | undefined
-      >,
+    autoFocus: { type: Boolean, required: true },
+    coursesArray: {
+      type: Object as PropType<CornellCourseRosterCourse[]>,
+      required: false,
       default: undefined,
     },
-    autoFocus: { type: Boolean, required: true },
   },
   emits: {
     'on-escape': () => true,
@@ -79,7 +84,7 @@ export default defineComponent({
   },
   computed: {
     matches(): readonly CornellCourseRosterCourse[] {
-      return getMatchingCourses(this.searchText.toUpperCase(), this.courseFilter);
+      return getMatchingCourses(this.searchText.toUpperCase());
     },
   },
   mounted() {

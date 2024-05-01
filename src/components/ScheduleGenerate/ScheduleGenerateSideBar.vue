@@ -60,6 +60,8 @@
         :available-requirements="availableRequirements"
         :selected-requirement="requirements[index]"
         :index="index"
+        :year="year"
+        :season="season"
         @add-course="addCourse"
         @delete-course="deleteCourse"
         @select-requirement="selectRequirement"
@@ -109,7 +111,7 @@ export default defineComponent({
   props: {
     // current year and season being generated for
     year: { type: Number, required: true },
-    season: { type: Object as PropType<FirestoreSemesterSeason>, required: true },
+    season: { type: String as PropType<FirestoreSemesterSeason>, required: true },
   },
   emits: ['openScheduleGenerateModal'],
   computed: {
