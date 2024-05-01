@@ -53,7 +53,6 @@ export const setOrderByNewest = (orderByNewest: boolean): void => {
   });
 };
 
-// TODO: check if need editCollection
 export const editCollection = (
   name: string,
   updater: (oldCollection: Collection) => Collection
@@ -127,8 +126,6 @@ export const addCollection = async (
   gtag?: VueGtag
 ): Promise<void> => {
   GTagEvent(gtag, 'add-collection');
-  // TODO: finish implementing function
-  console.log('add Collection');
   await editCollections(oldCollections => [...oldCollections, createCollection(name, courses)]);
 };
 
@@ -158,12 +155,11 @@ export const addPlan = async (
 
 export const deleteCollection = async (name: string, gtag?: VueGtag): Promise<void> => {
   GTagEvent(gtag, 'delete-collection');
-  // implement function
   console.log('delete Collection');
+  // TODO: 1) delete collection 2) delete course from collection 3) now can add course to semester
   if (store.state.collections.some(p => p.name === name)) {
     await editCollections(oldCollections => oldCollections.filter(p => p.name !== name));
   }
-  // TODO: what happens to the courses within the collection?
 };
 
 export const deleteSemester = (
@@ -199,13 +195,27 @@ export const addCourseToCollections = (
   plan: Plan,
   year: number,
   season: FirestoreSemesterSeason,
-  newCourse: FirestoreSemesterCourse,
+  courseUniqueID: number,
+  choiceUpdater: (choice: FirestoreCourseOptInOptOutChoices) => FirestoreCourseOptInOptOutChoices,
   gtag?: VueGtag
 ): void => {
-  GTagEvent(gtag, 'add-course-collections');
-  // TODO: implement function
+  // TODO: 1) add course to collection 2) delete course from semester
+  // 3) cannot add course to collection if it is already in the collection
   console.log('add Course to Collections');
-  // TODO: 1) add course to collection 2) delete course from semester 3) cannot add course to collection if it is already in the collection
+  GTagEvent(gtag, 'add-course-collections');
+  editCollections(oldCollections =>
+    oldCollections.map(collection => {
+      if (collection.courses.some(course => course.uniqueID === courseUniqueID)) {
+        return collection;
+      }
+      return {
+        ...collection,
+        courses: [...collection.courses, store.getters.getCourse(courseUniqueID)],
+      };
+    })
+  );
+  deleteCourseFromSemester(plan, year, season, courseUniqueID); // delete course from semester
+  deleteCourseFromRequirementChoices(courseUniqueID); // remove course from requirement choices
 };
 
 export const deleteCourseFromCollection = (
@@ -216,14 +226,16 @@ export const deleteCourseFromCollection = (
   courseUniqueID: number,
   gtag?: VueGtag
 ): void => {
-  GTagEvent(gtag, 'delete-course-collection');
-  // TODO: implement function
   console.log('delete Course from Collection');
   // TODO: 1) delete course from collection 2) now can add course to semester
+  GTagEvent(gtag, 'delete-course-collection');
+  editCollection(name, oldCollection => ({
+    ...oldCollection,
+    courses: oldCollection.courses.filter(course => course.uniqueID !== courseUniqueID),
+  }));
 };
 
 export const addCourseToSemester = (
-  // TODO: need to add collection aswell?
   plan: Plan,
   year: number,
   season: FirestoreSemesterSeason,
