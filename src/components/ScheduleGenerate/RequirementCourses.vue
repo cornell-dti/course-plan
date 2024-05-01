@@ -32,8 +32,7 @@
         :choice="selectedRequirement.reqName"
         @on-select="selectRequirement"
       />
-      <!-- TODO: filter course showing to ones that fulfill req -->
-      <new-course-modal
+      <new-requirement-course-modal
         @close-course-modal="closeCourseModal"
         v-if="isCourseModalOpen"
         @add-course="addCourse"
@@ -57,7 +56,6 @@
           :compact="false"
           :should-clear-padding="true"
           @click="openCourseModal"
-          :fulfilling-requirement="selectedRequirement.reqId"
         />
       </div>
     </div>
@@ -67,7 +65,7 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
 import AddCourseButton from '@/components/AddCourseButton.vue';
-import NewCourseModal from '@/components/Modals/NewCourse/NewCourseModal.vue';
+import NewRequirementCourseModal from '@/components/Modals/NewCourse/NewCourseModal.vue';
 import { emGreen } from '@/assets/constants/scss-variables';
 import DropDownArrow from '@/components/DropDownArrow.vue';
 import AllRequirementsDropdown from '@/components/ScheduleGenerate/AllRequirementsDropdown.vue';
@@ -110,7 +108,7 @@ export default defineComponent({
   },
   components: {
     AddCourseButton,
-    NewCourseModal,
+    NewRequirementCourseModal,
     DropDownArrow,
     AllRequirementsDropdown,
     Course,
@@ -131,12 +129,7 @@ export default defineComponent({
       this.showDropdown = false;
     },
     selectRequirement(requirement: string) {
-      // if (this.selectedRequirement.reqId !== '') {
-      //   this.$emit('add-available-requirement', this.selectedRequirement);
-      // }
       this.$emit('select-requirement', requirement, this.index);
-      console.log(requirement);
-      // this.$emit('delete-available-requirement', requirement);
     },
     deleteRequirement() {
       this.$emit('delete-requirement');
