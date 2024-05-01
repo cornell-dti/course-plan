@@ -15,14 +15,12 @@ import {
 export const editCollections = async (
   updater: (oldCollections: readonly Collection[]) => readonly Collection[]
 ): Promise<void> => {
-  // TODO: finish implementing function
   console.log('edit Collections');
   const collections = updater(store.state.collections);
   store.commit('setCollections', collections);
-  // TODO: figure out how to update collections in firestore
-  // await updateDoc(doc(semestersCollection, store.state.currentFirebaseUser.email), {
-  // collections,
-  // });
+  await updateDoc(doc(semestersCollection, store.state.currentFirebaseUser.email), {
+    collections,
+  });
   store.commit('setOrderByNewest', store.state.orderByNewest);
 };
 
@@ -55,6 +53,7 @@ export const setOrderByNewest = (orderByNewest: boolean): void => {
   });
 };
 
+// TODO: check if need editCollection
 export const editCollection = (
   name: string,
   updater: (oldCollection: Collection) => Collection
@@ -75,21 +74,19 @@ export const editSemester = (
   );
 };
 
-// TODO: check if need editCollection
-
 export const editPlan = (name: string, updater: (oldPlan: Plan) => Plan): void => {
   editPlans(oldPlan => oldPlan.map(plan => (plan.name === name ? updater(plan) : plan)));
 };
 
 const createCollection = (
   name: string,
-  semesters: readonly FirestoreSemester[]
+  courses: readonly FirestoreSemesterCourse[]
 ): {
   name: string;
-  semesters: readonly FirestoreSemester[];
+  courses: readonly FirestoreSemesterCourse[];
 } => ({
   name,
-  semesters,
+  courses,
 });
 
 const createSemester = (
@@ -126,18 +123,13 @@ export const semesterEquals = (
 
 export const addCollection = async (
   name: string,
-  semesters: readonly FirestoreSemester[],
+  courses: readonly FirestoreSemesterCourse[],
   gtag?: VueGtag
 ): Promise<void> => {
   GTagEvent(gtag, 'add-collection');
   // TODO: finish implementing function
   console.log('add Collection');
-  await editCollections(oldCollections => [...oldCollections, createCollection(name, semesters)]);
-  store.commit(
-    'setCurrentCollection',
-    store.state.collections.find(collection => collection.name === name)
-  );
-  // TODO: need to update semester (should we call deleteCourseFromSemester)
+  await editCollections(oldCollections => [...oldCollections, createCollection(name, courses)]);
 };
 
 export const addSemester = (
@@ -171,7 +163,7 @@ export const deleteCollection = async (name: string, gtag?: VueGtag): Promise<vo
   if (store.state.collections.some(p => p.name === name)) {
     await editCollections(oldCollections => oldCollections.filter(p => p.name !== name));
   }
-  store.commit('setCurrentCollection', store.state.collections[0]);
+  // TODO: what happens to the courses within the collection?
 };
 
 export const deleteSemester = (
@@ -213,6 +205,7 @@ export const addCourseToCollections = (
   GTagEvent(gtag, 'add-course-collections');
   // TODO: implement function
   console.log('add Course to Collections');
+  // TODO: 1) add course to collection 2) delete course from semester 3) cannot add course to collection if it is already in the collection
 };
 
 export const deleteCourseFromCollection = (
@@ -226,6 +219,7 @@ export const deleteCourseFromCollection = (
   GTagEvent(gtag, 'delete-course-collection');
   // TODO: implement function
   console.log('delete Course from Collection');
+  // TODO: 1) delete course from collection 2) now can add course to semester
 };
 
 export const addCourseToSemester = (
