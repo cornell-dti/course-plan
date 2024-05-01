@@ -239,16 +239,13 @@ export default defineComponent({
       function getStartTime(course: FirestoreSemesterCourse): Promise<string> {
         return getCourseWithCrseIdAndRoster(course.lastRoster, course.crseId)
           .then(firestoreCourse => {
-            console.log(course.crseId);
-            console.log(course.lastRoster);
             const timeUnformatted = firestoreCourse.enrollGroups[0].classSections[0].meetings[0]
               .timeStart as string;
             const timeFormatted = formatTime(timeUnformatted);
             return timeFormatted;
           })
           .catch(error => {
-            console.error('Error fetching course details:', error);
-            throw new Error('Failed to fetch the course details.');
+            throw new Error('Failed to fetch the course details.', error);
           });
       }
 
@@ -261,8 +258,7 @@ export default defineComponent({
             return timeFormatted;
           })
           .catch(error => {
-            console.error('Error fetching course details:', error);
-            throw new Error('Failed to fetch the course details.');
+            throw new Error('Failed to fetch the course details.', error);
           });
       }
 
@@ -274,8 +270,7 @@ export default defineComponent({
             return pattern;
           })
           .catch(error => {
-            console.error('Error fetching course pattern:', error);
-            throw new Error('Failed to fetch the course pattern.');
+            throw new Error('Failed to fetch the course pattern.', error);
           });
       }
 

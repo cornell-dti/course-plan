@@ -39,7 +39,6 @@ const getMatchingCourses = (
   const code: CornellCourseRosterCourse[] = [];
   const title: CornellCourseRosterCourse[] = [];
   let filteredCourses: readonly CornellCourseRosterCourse[] = [];
-  console.log(coursesArray);
   if (coursesArray !== undefined) {
     filteredCourses = coursesArray;
   } else {
@@ -70,6 +69,7 @@ export default defineComponent({
     coursesArray: {
       type: Object as PropType<readonly CornellCourseRosterCourse[]>,
       required: false,
+      default: undefined,
     },
   },
   emits: {
