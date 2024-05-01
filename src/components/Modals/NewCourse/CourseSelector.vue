@@ -37,15 +37,7 @@ const getMatchingCourses = (
   /* code array for results that contain course code and title array for results that contain title */
   const code: CornellCourseRosterCourse[] = [];
   const title: CornellCourseRosterCourse[] = [];
-  const filteredCourses = fullCoursesArray.filter(
-    course =>
-      (filter ? filter(course) : true) &&
-      (course.subject
-        .concat(' ', course.catalogNbr)
-        .toUpperCase()
-        .includes(searchText.toUpperCase()) ||
-        course.titleLong.toUpperCase().includes(searchText.toUpperCase()))
-  );
+  const filteredCourses = filter != null ? fullCoursesArray.filter(filter) : fullCoursesArray;
   for (const course of filteredCourses) {
     const courseCode = `${course.subject} ${course.catalogNbr}`;
     if (courseCode.toUpperCase().includes(searchText)) {

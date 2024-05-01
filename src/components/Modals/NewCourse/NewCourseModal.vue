@@ -18,7 +18,6 @@
       :key="courseSelectorKey"
       placeholder='"CS 1110", "Multivariable Calculus", etc'
       :autoFocus="true"
-      :course-filter="courseFilter"
       @on-escape="closeCurrentModal"
       @on-select="selectCourse"
       data-cyId="newCourse-dropdown"
@@ -44,7 +43,7 @@
 </template>
 
 <script lang="ts">
-import { PropType, defineComponent } from 'vue';
+import { defineComponent } from 'vue';
 import SelectedRequirementEditor from '@/components/Modals/NewCourse/SelectedRequirementEditor.vue';
 import TeleportModal from '@/components/Modals/TeleportModal.vue';
 import CourseSelector from '@/components/Modals/NewCourse/CourseSelector.vue';
@@ -54,19 +53,11 @@ import {
   getRelatedRequirementIdsForCourseOptOut,
   getRelatedUnfulfilledRequirements,
 } from '@/requirements/requirement-frontend-utils';
-import { ReqCourses } from '@/components/ScheduleGenerate/ScheduleGenerateSideBar.vue';
 
 export default defineComponent({
   props: {
-    selectedRequirement: {
-      type: Object as PropType<ReqCourses>,
-      required: false,
-      default: () => ({
-        reqId: '',
-        reqName: '',
-        courses: [],
-      }),
-    },
+    selectedRequirement: { type: String, required: false, default: '' },
+    currentSemester: { type: String, required: false, default: '' },
   },
   components: { CourseSelector, TeleportModal, SelectedRequirementEditor },
   emits: {
@@ -98,11 +89,8 @@ export default defineComponent({
     },
   },
   methods: {
-    courseFilter() {
-      return (course: CornellCourseRosterCourse) =>
-        this.selectedRequirement.courses.some(
-          firestoreCourse => firestoreCourse.crseId === course.crseId
-        );
+    courseFilterByReqAndSem(course: CornellCourseRosterCourse) {
+      return true;
     },
     selectCourse(result: CornellCourseRosterCourse) {
       this.selectedCourse = result;

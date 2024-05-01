@@ -32,11 +32,12 @@
         :choice="selectedRequirement.reqName"
         @on-select="selectRequirement"
       />
-      <new-requirement-course-modal
+      <new-course-modal
         @close-course-modal="closeCourseModal"
         v-if="isCourseModalOpen"
         @add-course="addCourse"
-        :fulfilling-req="selectedRequirement.reqId"
+        :selected-requirement="selectedRequirement.reqId"
+        current-semester="FA24"
       />
       <div class="requirement-courses">
         <div v-for="c in selectedRequirement.courses" :key="c.crseId">
@@ -65,7 +66,7 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
 import AddCourseButton from '@/components/AddCourseButton.vue';
-import NewRequirementCourseModal from '@/components/Modals/NewCourse/NewCourseModal.vue';
+import NewCourseModal from '@/components/Modals/NewCourse/NewCourseModal.vue';
 import { emGreen } from '@/assets/constants/scss-variables';
 import DropDownArrow from '@/components/DropDownArrow.vue';
 import AllRequirementsDropdown from '@/components/ScheduleGenerate/AllRequirementsDropdown.vue';
@@ -108,7 +109,7 @@ export default defineComponent({
   },
   components: {
     AddCourseButton,
-    NewRequirementCourseModal,
+    NewCourseModal,
     DropDownArrow,
     AllRequirementsDropdown,
     Course,
