@@ -40,7 +40,7 @@
         :season="season"
       />
       <div class="requirement-courses">
-        <div v-for="c in selectedRequirement.courses" :key="c.crseId">
+        <div v-for="c in uniqueify(selectedRequirement.courses)" :key="c.crseId">
           <div class="requirement-courseWrapper">
             <course
               :courseObj="c"
@@ -147,6 +147,17 @@ export default defineComponent({
     },
     deleteCourse(code: string) {
       this.$emit('delete-course', code, this.index);
+    },
+    uniqueify(courses: FirestoreSemesterCourse[]): FirestoreSemesterCourse[] {
+      const uniqueCourses: FirestoreSemesterCourse[] = [];
+      const courseIds: number[] = [];
+      courses.forEach((course) => {
+        if (!courseIds.includes(course.crseId)) {
+          uniqueCourses.push(course);
+          courseIds.push(course.crseId);
+        }
+      });
+      return uniqueCourses;
     },
   },
 });
