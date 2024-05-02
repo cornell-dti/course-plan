@@ -250,7 +250,7 @@ export default defineComponent({
     isDisplayingMobile: { type: Boolean, required: true },
     isMobile: { type: Boolean, required: true },
     isMinimized: { type: Boolean, required: true },
-    startNewFeatureTour: { type: Boolean, required: true },
+    startMultiplePlansTour: { type: Boolean, required: true },
   },
   emits: ['showTourEndWindow', 'toggleMinimized'],
   data(): Data {
@@ -288,7 +288,7 @@ export default defineComponent({
         this.tourStep = 0;
       });
     },
-    startNewFeatureTour() {
+    startMultiplePlansTour() {
       const newFeatureTour = introJs();
       newFeatureTour.setOptions({
         steps: [

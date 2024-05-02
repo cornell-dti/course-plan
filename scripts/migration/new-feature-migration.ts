@@ -3,16 +3,24 @@
 import { usernameCollection, onboardingDataCollection } from '../firebase-config';
 
 /**
- * Perform migration of semester to plans with a list of semesters
+ * Perform migration of user data to add sawNewFeature boolean
+ * TODO: update sawNewFeature to sawMultiplePlans
  */
-async function runOnUser(userEmail: string) {
-  await onboardingDataCollection.doc(userEmail).update({ sawNewFeature: false });
+// async function addSawMultiplePlans(userEmail: string) {
+//   await onboardingDataCollection.doc(userEmail).update({ sawNewFeature: false });
+// }
+
+/**
+ * Perform migration of user data to add sawScheduleGenerator boolean
+ */
+async function addSawScheduleGenerator(userEmail: string) {
+  await onboardingDataCollection.doc(userEmail).update({ sawScheduleGenerator: false });
 }
 
 async function main() {
   const userEmail = process.argv[2];
   if (userEmail != null) {
-    await runOnUser(userEmail);
+    await addSawScheduleGenerator(userEmail);
     return;
   }
   const collection = await usernameCollection.get();
@@ -20,7 +28,7 @@ async function main() {
     console.group(`Running on ${id}...`);
     // Intentionally await in a loop to have no interleaved console logs.
     // eslint-disable-next-line no-await-in-loop
-    await runOnUser(id);
+    await addSawScheduleGenerator(id);
     console.groupEnd();
   }
 }
