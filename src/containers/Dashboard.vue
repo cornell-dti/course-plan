@@ -225,6 +225,8 @@ export default defineComponent({
         this.loaded = true;
         if (!this.onboardingData.sawNewFeature) {
           this.startMultiplePlansTour = true;
+        } else if (!this.onboardingData.sawScheduleGenerator) {
+          console.log('start schedule generator tour');
         }
       } else {
         this.startOnboarding();

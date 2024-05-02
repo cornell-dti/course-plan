@@ -66,6 +66,7 @@ type FirestoreOnboardingUserData = {
   readonly exam: readonly FirestoreTransferExam[];
   readonly tookSwim: 'yes' | 'no';
   sawNewFeature: boolean;
+  sawScheduleGenerator: boolean;
 };
 
 type FirestoreCourseOptInOptOutChoices = {
@@ -191,6 +192,7 @@ type AppOnboardingData = {
   readonly exam: readonly FirestoreTransferExam[];
   readonly tookSwim: 'yes' | 'no';
   sawNewFeature: boolean;
+  sawScheduleGenerator: boolean;
 };
 
 type AppBottomBarCourse = {
