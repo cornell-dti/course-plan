@@ -8,7 +8,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import generatePDF from '@/tools/export-plan';
+import { generatePDF } from '@/tools/export-plan';
 
 export default defineComponent({
   methods: {
