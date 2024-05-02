@@ -25,6 +25,7 @@
           class="dashboard-nav"
           data-cyId="navbar"
           :isDisplayingRequirementsMobile="requirementsIsDisplayedMobile"
+          :startScheduleGeneratorTour="startScheduleGeneratorTour"
           @openPlan="openPlan"
           @openTools="openTools"
           @openProfile="openProfile"
@@ -181,6 +182,7 @@ export default defineComponent({
       welcomeHidden: false,
       startTour: false,
       startMultiplePlansTour: false,
+      startScheduleGeneratorTour: false,
       showTourEndWindow: false,
       showToolsPage: false,
       isProfileOpen: false,
@@ -226,7 +228,7 @@ export default defineComponent({
         if (!this.onboardingData.sawNewFeature) {
           this.startMultiplePlansTour = true;
         } else if (!this.onboardingData.sawScheduleGenerator) {
-          console.log('start schedule generator tour');
+          this.startScheduleGeneratorTour = true;
         }
       } else {
         this.startOnboarding();
