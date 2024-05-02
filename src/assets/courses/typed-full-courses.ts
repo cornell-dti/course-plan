@@ -1,5 +1,4 @@
 import json from './full-courses.json';
-import { seasonAndYearToRosterIdentifier } from '../../user-data-converter';
 
 const fullCoursesJsonWithStringKey = (json as unknown) as Readonly<
   Record<string, readonly CornellCourseRosterCourse[]>
@@ -35,10 +34,8 @@ export const fullCoursesArray: readonly CornellCourseRosterCourse[] = Object.val
   fullCoursesJsonWithStringKey
 ).flat();
 
-export const specificRosterCoursesArrayWithSeasonAndYear = (
-  season: FirestoreSemesterSeason,
-  year: number
+export const specificRosterCoursesArray = (
+  roster: string
 ): readonly CornellCourseRosterCourse[] => {
-  const currRoster = seasonAndYearToRosterIdentifier(season, year);
-  return fullCoursesArray.filter(course => course.roster === currRoster);
+  return fullCoursesArray.filter(course => course.roster === roster);
 };

@@ -54,7 +54,8 @@ import {
   getRelatedRequirementIdsForCourseOptOut,
   getRelatedUnfulfilledRequirements,
 } from '@/requirements/requirement-frontend-utils';
-import { specificRosterCoursesArrayWithSeasonAndYear } from '@/assets/courses/typed-full-courses';
+import { specificRosterCoursesArray } from '@/assets/courses/typed-full-courses';
+import { seasonAndYearToRosterIdentifier } from '../../../user-data-converter';
 
 export default defineComponent({
   props: {
@@ -97,7 +98,8 @@ export default defineComponent({
     },
     courseArrayBySem(): readonly CornellCourseRosterCourse[] | undefined {
       if (this.season !== undefined && this.year !== undefined) {
-        const courses = specificRosterCoursesArrayWithSeasonAndYear(this.season, this.year);
+        const currRoster = seasonAndYearToRosterIdentifier(this.season, this.year);
+        const courses = specificRosterCoursesArray(currRoster);
         return courses;
       }
       return undefined;
