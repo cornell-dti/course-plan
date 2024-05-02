@@ -25,6 +25,7 @@
           class="dashboard-nav"
           data-cyId="navbar"
           :isDisplayingRequirementsMobile="requirementsIsDisplayedMobile"
+          :startScheduleGeneratorTour="startScheduleGeneratorTour"
           @openPlan="openPlan"
           @openTools="openTools"
           @openProfile="openProfile"
@@ -41,7 +42,7 @@
           @toggleMinimized="toggleMinimizeRequirements"
           :startTour="startTour"
           @showTourEndWindow="showTourEnd"
-          :startNewFeatureTour="startNewFeatureTour"
+          :startMultiplePlansTour="startMultiplePlansTour"
         />
         <schedule-generate-side-bar
           v-if="loaded && !showToolsPage && !isProfileOpen && isScheduleGenerateOpen"
@@ -180,7 +181,8 @@ export default defineComponent({
       maxBottomBarTabs: getMaxButtonBarTabs(),
       welcomeHidden: false,
       startTour: false,
-      startNewFeatureTour: false,
+      startMultiplePlansTour: false,
+      startScheduleGeneratorTour: false,
       showTourEndWindow: false,
       showToolsPage: false,
       isProfileOpen: false,
@@ -224,7 +226,9 @@ export default defineComponent({
       if (this.onboardingData.college !== '' || this.onboardingData.grad !== '') {
         this.loaded = true;
         if (!this.onboardingData.sawNewFeature) {
-          this.startNewFeatureTour = true;
+          this.startMultiplePlansTour = true;
+        } else if (!this.onboardingData.sawScheduleGenerator) {
+          this.startScheduleGeneratorTour = true;
         }
       } else {
         this.startOnboarding();
