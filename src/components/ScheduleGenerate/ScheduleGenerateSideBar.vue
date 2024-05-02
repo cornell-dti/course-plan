@@ -274,7 +274,6 @@ export default defineComponent({
           .then(firestoreCourse => {
             const pattern = firestoreCourse.enrollGroups[0].classSections[0].meetings[0]
               .pattern as string;
-            console.log('Class pattern:', pattern);
             return pattern;
           })
           .catch(error => {
@@ -299,10 +298,10 @@ export default defineComponent({
 
         const days: string[] = [];
 
-        for (let i = 0; i < patternStr.length; i++) {
+        for (let i = 0; i < patternStr.length; i += 1) {
           if (patternStr[i] === 'S' && i + 1 < patternStr.length && patternStr[i + 1] === 'u') {
-            days.push(dayMap['Su']);
-            i++;
+            days.push(dayMap.Su);
+            i += 1;
           } else if (dayMap[patternStr[i]]) {
             days.push(dayMap[patternStr[i]]);
           }
@@ -325,6 +324,7 @@ export default defineComponent({
               return {
                 title: course.name,
                 color: course.color,
+                code: course.code,
                 courseCredits: course.credits,
                 fulfilledReq: {
                   name: req.reqName,
