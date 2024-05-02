@@ -105,9 +105,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { PropType, defineComponent } from 'vue';
 import Schedule from '@/components/ScheduleGenerate/Schedule.vue';
 import ScheduleCourses from '@/components/ScheduleGenerate/ScheduleCourses.vue';
+import { generateSchedulePDF } from '@/tools/export-plan';
 import GeneratorRequest from '@/schedule-generator/generator-request';
 import ScheduleGenerator from '@/schedule-generator/algorithm';
 import type { GeneratedScheduleOutput } from '@/schedule-generator/algorithm';
@@ -121,9 +122,11 @@ import Requirement from '@/schedule-generator/requirement';
 export default defineComponent({
   props: {
     // current semester being generated for
-    selectedSemester: { type: String, required: true },
+    // current year and season being generated for
+    year: { type: Number, required: true },
+    season: { type: Object as PropType<FirestoreSemesterSeason>, required: true },
     courses: {
-      type: Array,
+      type: Array as PropType<CourseForFrontend[]>,
       default: () => [],
     },
     creditLimit: {
@@ -177,7 +180,7 @@ export default defineComponent({
           ['Monday', 'Wednesday', 'Friday'],
           ['Tuesday', 'Thursday'],
           ['Saturday', 'Sunday'],
-        ];
+        ] as DayOfTheWeek[][];
         const randomIndex = Math.floor(Math.random() * daySets.length);
         return daySets[randomIndex];
       }
@@ -344,8 +347,13 @@ export default defineComponent({
         this.generateSchedules();
       }
 
-      this.numberOfCoursesGenerated = generatedSchedule.schedule.size;
-      this.totalCreditsGenerated = generatedSchedule.totalCredits;
+      type classList = {
+        title: string;
+        name: string;
+        color: string;
+        timeStart: string;
+        timeEnd: string;
+      }[];
 
       // ScheduleGenerator.prettyPrintSchedule(generatedSchedule);
       const mondayClasses: classList = [];

@@ -12,7 +12,8 @@
     <schedule-generate-modal
       v-if="isScheduleGenerateModalOpen"
       class="dashboard-modal"
-      :selected-semester="semesterToGenerate"
+      :year="year"
+      :season="season"
       :courses="coursesForGeneration"
       :reqs="reqsForGeneration"
       :credit-limit="creditLimitForGeneration"
