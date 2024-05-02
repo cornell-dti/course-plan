@@ -33,6 +33,7 @@
         </div>
         <div class="navbar-buttonWrapper desktop">
           <button
+            id="schedule-generator"
             class="navbar-iconWrapper schedule-builder-icon full-opacity-on-hover"
             @click="openScheduleGenerate"
           />
@@ -70,9 +71,9 @@
           <div class="navbar-iconWrapper profile-mobile-icon" />
           <span class="nav-mobile-button-text">Profile</span>
         </button>
-        <button class="nav-mobile-button" @click="openProfile">
+        <button class="nav-mobile-button" @click="openScheduleGenerate">
           <div class="navbar-iconWrapper schedule-builder-mobile-icon" />
-          <span class="nav-mobile-button-text">Builder</span>
+          <span class="nav-mobile-button-text">Build</span>
         </button>
         <button class="nav-mobile-button" @click="logout">
           <div class="navbar-iconWrapper logout-mobile-icon" />
@@ -95,12 +96,15 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { getAuth, signOut } from 'firebase/auth';
+import introJs from 'intro.js';
 import { GTagEvent } from '@/gtag';
 import { clickOutside } from '@/utilities';
+import { updateSawScheduleGenerator } from '@/global-firestore-data/user-onboarding-data';
 
 export default defineComponent({
   props: {
     isDisplayingRequirementsMobile: { type: Boolean, required: true },
+    startScheduleGeneratorTour: { type: Boolean, required: true },
   },
   emits: [
     'openPlan',
@@ -113,6 +117,25 @@ export default defineComponent({
     return {
       menuOpen: false,
     };
+  },
+  watch: {
+    startScheduleGeneratorTour() {
+      const scheduleGeneratorTour = introJs();
+      scheduleGeneratorTour.setOptions({
+        steps: [
+          {
+            element: '#schedule-generator',
+            intro: `<div class="introjs-tooltipTop"><div class="introjs-customTitle">Introducing a New Page</div></div>
+          <div class = "introjs-bodytext">Use Build 💪 to automatically generate new schedules based on the courses you want to take! 📆</div>`,
+            position: 'right',
+          },
+        ],
+        doneLabel: 'Got it',
+      });
+      // check firestore if the user has seen it already
+      scheduleGeneratorTour.start();
+      updateSawScheduleGenerator(true);
+    },
   },
   methods: {
     logout() {
