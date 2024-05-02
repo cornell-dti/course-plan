@@ -151,7 +151,7 @@ export default defineComponent({
     uniqueify(courses: FirestoreSemesterCourse[]): FirestoreSemesterCourse[] {
       const uniqueCourses: FirestoreSemesterCourse[] = [];
       const courseIds: number[] = [];
-      courses.forEach((course) => {
+      courses.forEach(course => {
         if (!courseIds.includes(course.crseId)) {
           uniqueCourses.push(course);
           courseIds.push(course.crseId);

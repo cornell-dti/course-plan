@@ -239,26 +239,32 @@ export default defineComponent({
       function getStartTime(course: FirestoreSemesterCourse): Promise<string> {
         return getCourseWithCrseIdAndRoster(course.lastRoster, course.crseId)
           .then(firestoreCourse => {
-            const timeUnformatted = firestoreCourse.enrollGroups[0].classSections[0].meetings[0]
-              .timeStart as string;
-            const timeFormatted = formatTime(timeUnformatted);
-            return timeFormatted;
+            const { meetings } = firestoreCourse.enrollGroups[0].classSections[0];
+            if (meetings.length > 0 && meetings[0].timeStart) {
+              const timeUnformatted = meetings[0].timeStart as string;
+              return formatTime(timeUnformatted);
+            }
+            return '12:00AM';
           })
           .catch(error => {
-            throw new Error(`Failed to fetch the course details. ${error}`);
+            console.error(`Failed to fetch the course details. ${error}`);
+            return '12:00AM';
           });
       }
 
       function getEndTime(course: FirestoreSemesterCourse): Promise<string> {
         return getCourseWithCrseIdAndRoster(course.lastRoster, course.crseId)
           .then(firestoreCourse => {
-            const timeUnformatted = firestoreCourse.enrollGroups[0].classSections[0].meetings[0]
-              .timeEnd as string;
-            const timeFormatted = formatTime(timeUnformatted);
-            return timeFormatted;
+            const { meetings } = firestoreCourse.enrollGroups[0].classSections[0];
+            if (meetings.length > 0 && meetings[0].timeEnd) {
+              const timeUnformatted = meetings[0].timeEnd as string;
+              return formatTime(timeUnformatted);
+            }
+            return '1:00AM';
           })
           .catch(error => {
-            throw new Error(`Failed to fetch the course details. ${error}`);
+            console.error(`Failed to fetch the course details. ${error}`);
+            return '1:00AM';
           });
       }
 
@@ -274,7 +280,11 @@ export default defineComponent({
           });
       }
 
-      function getDaysOfTheWeek(patternStr: string): string[] {
+      function getDaysOfTheWeek(patternStr?: string): string[] {
+        if (patternStr === undefined) {
+          return [];
+        }
+
         const dayMap: { [key: string]: string } = {
           M: 'Monday',
           T: 'Tuesday',
