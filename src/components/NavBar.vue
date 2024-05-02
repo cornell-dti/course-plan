@@ -96,9 +96,9 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { getAuth, signOut } from 'firebase/auth';
+import introJs from 'intro.js';
 import { GTagEvent } from '@/gtag';
 import { clickOutside } from '@/utilities';
-import introJs from 'intro.js';
 import { updateSawScheduleGenerator } from '@/global-firestore-data/user-onboarding-data';
 
 export default defineComponent({
@@ -127,6 +127,7 @@ export default defineComponent({
             element: '#schedule-generator',
             intro: `<div class="introjs-tooltipTop"><div class="introjs-customTitle">Introducing a New Page</div></div>
           <div class = "introjs-bodytext">Use Build 💪 to automatically generate new schedules based on the courses your want to take! 📆</div>`,
+            position: 'right',
           },
         ],
         doneLabel: 'Got it',

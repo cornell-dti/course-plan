@@ -6,9 +6,9 @@ import { usernameCollection, onboardingDataCollection } from '../firebase-config
  * Perform migration of user data to add sawNewFeature boolean
  * TODO: update sawNewFeature to sawMultiplePlans
  */
-async function addSawMultiplePlans(userEmail: string) {
-  await onboardingDataCollection.doc(userEmail).update({ sawNewFeature: false });
-}
+// async function addSawMultiplePlans(userEmail: string) {
+//   await onboardingDataCollection.doc(userEmail).update({ sawNewFeature: false });
+// }
 
 /**
  * Perform migration of user data to add sawScheduleGenerator boolean
