@@ -126,7 +126,7 @@ export default defineComponent({
           {
             element: '#schedule-generator',
             intro: `<div class="introjs-tooltipTop"><div class="introjs-customTitle">Introducing a New Page</div></div>
-          <div class = "introjs-bodytext">Use Build 💪 to automatically generate new schedules based on the courses your want to take! 📆</div>`,
+          <div class = "introjs-bodytext">Use Build 💪 to automatically generate new schedules based on the courses you want to take! 📆</div>`,
             position: 'right',
           },
         ],
