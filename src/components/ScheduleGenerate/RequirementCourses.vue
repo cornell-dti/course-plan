@@ -32,6 +32,7 @@
         :choice="selectedRequirement.reqName"
         @on-select="selectRequirement"
       />
+      <!-- TODO: filter course showing to ones that fulfill req -->
       <new-course-modal
         @close-course-modal="closeCourseModal"
         v-if="isCourseModalOpen"

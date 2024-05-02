@@ -40,7 +40,5 @@ export const specificRosterCoursesArrayWithSeasonAndYear = (
   year: number
 ): readonly CornellCourseRosterCourse[] => {
   const currRoster = seasonAndYearToRosterIdentifier(season, year);
-  return Object.values(fullCoursesJsonWithStringKey)
-    .flat()
-    .filter(course => course.roster === currRoster);
+  return fullCoursesArray.filter(course => course.roster === currRoster);
 };
