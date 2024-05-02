@@ -223,7 +223,7 @@ export default defineComponent({
     listenerUnsubscriber = initializeFirestoreListeners(() => {
       if (this.onboardingData.college !== '' || this.onboardingData.grad !== '') {
         this.loaded = true;
-        if (!this.onboardingData.sawMultiplePlans) {
+        if (!this.onboardingData.sawNewFeature) {
           this.startMultiplePlansTour = true;
         }
       } else {

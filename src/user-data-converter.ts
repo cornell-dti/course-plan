@@ -201,5 +201,5 @@ export const createAppOnboardingData = (data: FirestoreOnboardingUserData): AppO
         ]
       : [],
   tookSwim: 'tookSwim' in data ? data.tookSwim : 'no',
-  sawMultiplePlans: data.sawMultiplePlans,
+  sawNewFeature: data.sawNewFeature,
 });
