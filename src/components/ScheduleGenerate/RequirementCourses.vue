@@ -37,10 +37,11 @@
         @close-course-modal="closeCourseModal"
         v-if="isCourseModalOpen"
         @add-course="addCourse"
-        :selected-requirement="selectedRequirement"
+        :year="year"
+        :season="season"
       />
       <div class="requirement-courses">
-        <div v-for="c in selectedRequirement.courses" :key="c.crseId">
+        <div v-for="c in uniqueify(selectedRequirement.courses)" :key="c.crseId">
           <div class="requirement-courseWrapper">
             <course
               :courseObj="c"
@@ -87,6 +88,8 @@ export default defineComponent({
       type: Number,
       required: true,
     },
+    year: { type: Number, required: true },
+    season: { type: String as PropType<FirestoreSemesterSeason>, required: true },
   },
   emits: {
     'add-course': (course: CornellCourseRosterCourse, index: number) =>
@@ -130,6 +133,7 @@ export default defineComponent({
       this.showDropdown = false;
     },
     selectRequirement(requirement: string) {
+      // TODO: uncomment once we limit the number of requirement groups of each type
       // if (this.selectedRequirement.reqId !== '') {
       //   this.$emit('add-available-requirement', this.selectedRequirement);
       // }
@@ -144,6 +148,17 @@ export default defineComponent({
     },
     deleteCourse(code: string) {
       this.$emit('delete-course', code, this.index);
+    },
+    uniqueify(courses: FirestoreSemesterCourse[]): FirestoreSemesterCourse[] {
+      const uniqueCourses: FirestoreSemesterCourse[] = [];
+      const courseIds: number[] = [];
+      courses.forEach(course => {
+        if (!courseIds.includes(course.crseId)) {
+          uniqueCourses.push(course);
+          courseIds.push(course.crseId);
+        }
+      });
+      return uniqueCourses;
     },
   },
 });

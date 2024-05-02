@@ -37,7 +37,7 @@
             @click="openScheduleGenerate"
           />
           <div class="navbar-iconText">
-            <span>Builder</span>
+            <span>Build</span>
           </div>
         </div>
       </div>
