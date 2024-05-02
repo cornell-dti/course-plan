@@ -26,7 +26,7 @@ export const setAppOnboardingData = (
       examType: e.type || e.examType,
     })),
     tookSwim: onboarding.tookSwim,
-    sawNewFeature: onboarding.sawNewFeature,
+    sawMultiplePlans: onboarding.sawMultiplePlans,
   });
 };
 
@@ -53,9 +53,9 @@ export const deleteTransferCredit = (code: string): void => {
   );
 };
 
-export const updateSawNewFeature = (sawNewFeature: boolean): void => {
-  store.commit('setSawNewFeature', sawNewFeature);
+export const updateSawNewFeature = (sawMultiplePlans: boolean): void => {
+  store.commit('setSawNewFeature', sawMultiplePlans);
   updateDoc(doc(onboardingDataCollection, store.state.currentFirebaseUser.email), {
-    sawNewFeature,
+    sawMultiplePlans,
   });
 };

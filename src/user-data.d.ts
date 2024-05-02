@@ -65,7 +65,7 @@ type FirestoreOnboardingUserData = {
   readonly gradPrograms: readonly FirestoreCollegeMajorMinorOrGrad[];
   readonly exam: readonly FirestoreTransferExam[];
   readonly tookSwim: 'yes' | 'no';
-  sawNewFeature: boolean;
+  sawMultiplePlans: boolean;
 };
 
 type FirestoreCourseOptInOptOutChoices = {
@@ -190,7 +190,7 @@ type AppOnboardingData = {
   readonly grad?: string;
   readonly exam: readonly FirestoreTransferExam[];
   readonly tookSwim: 'yes' | 'no';
-  sawNewFeature: boolean;
+  sawMultiplePlans: boolean;
 };
 
 type AppBottomBarCourse = {
