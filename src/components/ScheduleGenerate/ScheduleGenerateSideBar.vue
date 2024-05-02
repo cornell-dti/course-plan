@@ -147,7 +147,7 @@ export default defineComponent({
     // and concatenating them into one giant record with reqId's as keys and reqName's as values
     // it represents the available requirements that haven't been assigned yet
     availableRequirements(): Record<string, string> {
-      const courseRecord: Record<string, string> = this.groupedRequirementFulfillmentReports.reduce(
+      let courseRecord: Record<string, string> = this.groupedRequirementFulfillmentReports.reduce(
         (accumulator: Record<string, string>, groupedReq: GroupedRequirementFulfillmentReport) =>
           groupedReq.reqs.reduce((acc: Record<string, string>, req: RequirementFulfillment) => {
             acc[req.requirement.id] = req.requirement.name;
@@ -155,6 +155,7 @@ export default defineComponent({
           }, accumulator),
         {} as Record<string, string>
       );
+      courseRecord['-1'] = 'No requirement'; // TODO: Double check that "-1" can never be an id
       return courseRecord;
     },
   },
