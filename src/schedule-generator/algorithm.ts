@@ -2,7 +2,7 @@ import Course, { Timeslot } from './course-unit';
 import GeneratorRequest from './generator-request';
 import Requirement from './requirement';
 
-type GeneratedScheduleOutput = {
+export type GeneratedScheduleOutput = {
   semester: string;
   schedule: Map<Course, Timeslot[]>;
   fulfilledRequirements: Map<string, Requirement[]>; // maps course name to fulfilled requirements
