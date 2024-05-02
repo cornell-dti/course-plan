@@ -21,6 +21,7 @@
       @on-escape="closeCurrentModal"
       @on-select="selectCourse"
       data-cyId="newCourse-dropdown"
+      :courses-array="courseArrayBySem"
     />
     <div v-else class="selected-course" data-cyId="newCourse-selectedCourse">
       {{ selectedCourse.subject }} {{ selectedCourse.catalogNbr }}:
@@ -43,7 +44,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { PropType, defineComponent } from 'vue';
 import SelectedRequirementEditor from '@/components/Modals/NewCourse/SelectedRequirementEditor.vue';
 import TeleportModal from '@/components/Modals/TeleportModal.vue';
 import CourseSelector from '@/components/Modals/NewCourse/CourseSelector.vue';
@@ -53,8 +54,20 @@ import {
   getRelatedRequirementIdsForCourseOptOut,
   getRelatedUnfulfilledRequirements,
 } from '@/requirements/requirement-frontend-utils';
+import { specificRosterCoursesArray } from '@/assets/courses/typed-full-courses';
+import { seasonAndYearToRosterIdentifier } from '../../../user-data-converter';
 
 export default defineComponent({
+  props: {
+    // TODO: filter by selectedRequirement for schedule generator
+    // selectedRequirement: { type: String, required: false, default: '' },
+    year: { type: Number, required: false, default: undefined },
+    season: {
+      type: String as PropType<FirestoreSemesterSeason>,
+      required: false,
+      default: undefined,
+    },
+  },
   components: { CourseSelector, TeleportModal, SelectedRequirementEditor },
   emits: {
     'close-course-modal': () => true,
@@ -82,6 +95,14 @@ export default defineComponent({
     },
     rightButtonText(): string {
       return this.editMode ? 'Next' : 'Add';
+    },
+    courseArrayBySem(): readonly CornellCourseRosterCourse[] | undefined {
+      if (this.season !== undefined && this.year !== undefined) {
+        const currRoster = seasonAndYearToRosterIdentifier(this.season, this.year);
+        const courses = specificRosterCoursesArray(currRoster);
+        return courses;
+      }
+      return undefined;
     },
   },
   methods: {
@@ -174,12 +195,14 @@ export default defineComponent({
 
 <style lang="scss">
 @import '@/assets/scss/_variables.scss';
+
 .newCourse {
   &-text {
     font-size: 14px;
     line-height: 17px;
     color: $lightPlaceholderGray;
   }
+
   &-dropdown {
     font-size: 14px;
     line-height: 17px;
@@ -188,10 +211,12 @@ export default defineComponent({
     border-radius: 3px;
     padding: 0.5rem;
     border: 0.5px solid $inactiveGray;
+
     &::placeholder {
       color: $darkPlaceholderGray;
     }
   }
+
   &-name {
     position: relative;
     border-radius: 11px;
@@ -200,6 +225,7 @@ export default defineComponent({
     line-height: 14px;
     color: $darkGray;
   }
+
   &-title {
     font-size: 14px;
     line-height: 17px;
