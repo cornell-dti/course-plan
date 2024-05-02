@@ -70,6 +70,7 @@ export default defineComponent({
   display: flex;
   justify-content: space-between;
   margin-bottom: 24px;
+  gap: 10px;
 }
 
 .info-subheader {
