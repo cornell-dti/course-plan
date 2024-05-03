@@ -16,6 +16,7 @@ export default class ScheduleGenerator {
     let { creditLimit } = request;
 
     const schedule: Map<Course, Timeslot[]> = new Map();
+    // Bad naming — should update to fulfilledRequirementsByCourse, for example (due to legacy variable convention).
     const fulfilledRequirements: Map<string, Requirement[]> = new Map(); // used for checking no course duplicates
     const actualFulfilledRequirements: Set<string> = new Set(); // used for checking no requirement duplicates
 
