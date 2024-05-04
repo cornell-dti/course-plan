@@ -10,3 +10,55 @@ export type SemesterRows = {
   // the list of bubbles for each course in the semester
   bubbles: BubbleData[][];
 };
+
+export type ClassesSchedule = {
+  Monday: {
+    title: string;
+    name: string;
+    color: string;
+    timeStart: string;
+    timeEnd: string;
+  }[];
+  Tuesday: {
+    title: string;
+    name: string;
+    color: string;
+    timeStart: string;
+    timeEnd: string;
+  }[];
+  Wednesday: {
+    title: string;
+    name: string;
+    color: string;
+    timeStart: string;
+    timeEnd: string;
+  }[];
+  Thursday: {
+    title: string;
+    name: string;
+    color: string;
+    timeStart: string;
+    timeEnd: string;
+  }[];
+  Friday: {
+    title: string;
+    name: string;
+    color: string;
+    timeStart: string;
+    timeEnd: string;
+  }[];
+  Saturday: {
+    title: string;
+    name: string;
+    color: string;
+    timeStart: string;
+    timeEnd: string;
+  }[];
+  Sunday: {
+    title: string;
+    name: string;
+    color: string;
+    timeStart: string;
+    timeEnd: string;
+  }[];
+};

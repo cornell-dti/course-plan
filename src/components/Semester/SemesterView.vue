@@ -107,7 +107,10 @@ export default defineComponent({
   },
   computed: {
     semesters(): readonly FirestoreSemester[] {
-      return store.state.semesters;
+      if (store.state.plans.length === 0) {
+        return [];
+      }
+      return store.getters.getCurrentPlanSemesters;
     },
     noSemesters(): boolean {
       return this.semesters.length === 0;
@@ -145,11 +148,11 @@ export default defineComponent({
       this.isSemesterModalOpen = false;
     },
     addSemester(season: string, year: number) {
-      addSemester(year, season as FirestoreSemesterSeason, this.$gtag);
+      addSemester(store.state.currentPlan, year, season as FirestoreSemesterSeason, this.$gtag);
       this.openSemesterConfirmationModal(season as FirestoreSemesterSeason, year, true);
     },
     deleteSemester(season: string, year: number) {
-      deleteSemester(year, season as FirestoreSemesterSeason, this.$gtag);
+      deleteSemester(store.state.currentPlan, year, season as FirestoreSemesterSeason, this.$gtag);
       this.openSemesterConfirmationModal(season as FirestoreSemesterSeason, year, false);
     },
     courseOnClick(course: FirestoreSemesterCourse) {
@@ -197,7 +200,7 @@ export default defineComponent({
 
   &-addSemesterButton {
     background: $sangBlue;
-    border-radius: 8px;
+    border-radius: 3px;
     min-height: 2.5rem;
     min-width: 9rem;
     color: $white;

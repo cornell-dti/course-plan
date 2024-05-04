@@ -30,6 +30,7 @@ import { fullCoursesArray } from '@/assets/courses/typed-full-courses';
 
 const getMatchingCourses = (
   searchText: string,
+  coursesArray?: readonly CornellCourseRosterCourse[],
   filter?: (course: CornellCourseRosterCourse) => boolean
 ): readonly CornellCourseRosterCourse[] => {
   // search after value length of 2 to reduce search times of courses
@@ -37,7 +38,12 @@ const getMatchingCourses = (
   /* code array for results that contain course code and title array for results that contain title */
   const code: CornellCourseRosterCourse[] = [];
   const title: CornellCourseRosterCourse[] = [];
-  const filteredCourses = filter != null ? fullCoursesArray.filter(filter) : fullCoursesArray;
+  let filteredCourses: readonly CornellCourseRosterCourse[] = [];
+  if (coursesArray !== undefined) {
+    filteredCourses = coursesArray;
+  } else {
+    filteredCourses = filter != null ? fullCoursesArray.filter(filter) : fullCoursesArray;
+  }
   for (const course of filteredCourses) {
     const courseCode = `${course.subject} ${course.catalogNbr}`;
     if (courseCode.toUpperCase().includes(searchText)) {
@@ -51,21 +57,21 @@ const getMatchingCourses = (
   title.sort((first, second) => first.titleLong.localeCompare(second.titleLong));
 
   /* prioritize code matches over title matches */
+  return code.concat(title);
   // limit the number of results to 10
-  return code.concat(title).slice(0, 10);
+  // return code.concat(title).slice(0, 10);
 };
 
 export default defineComponent({
   props: {
     searchBoxClassName: { type: String, required: true },
     placeholder: { type: String, required: true },
-    courseFilter: {
-      type: (Function as unknown) as PropType<
-        ((course: CornellCourseRosterCourse) => boolean) | undefined
-      >,
+    autoFocus: { type: Boolean, required: true },
+    coursesArray: {
+      type: Object as PropType<readonly CornellCourseRosterCourse[]>,
+      required: false,
       default: undefined,
     },
-    autoFocus: { type: Boolean, required: true },
   },
   emits: {
     'on-escape': () => true,
@@ -79,7 +85,7 @@ export default defineComponent({
   },
   computed: {
     matches(): readonly CornellCourseRosterCourse[] {
-      return getMatchingCourses(this.searchText.toUpperCase(), this.courseFilter);
+      return getMatchingCourses(this.searchText.toUpperCase(), this.coursesArray);
     },
   },
   mounted() {
@@ -120,6 +126,7 @@ export default defineComponent({
   padding: 10px;
   font-size: 16px;
 }
+
 .autocomplete {
   /*the container must be positioned relative:*/
   position: relative;
@@ -128,6 +135,7 @@ export default defineComponent({
   margin-top: 0.5rem;
   padding-bottom: 12px;
 }
+
 .autocomplete-items {
   position: absolute;
   border: 1px solid $searchBoxBorderGray;
@@ -140,6 +148,8 @@ export default defineComponent({
   right: 0;
   box-shadow: -4px 4px 10px rgba(0, 0, 0, 0.25);
   border-radius: 7px;
+  max-height: 50vh;
+  overflow-y: auto;
 
   .search-result {
     padding: 10px;
@@ -151,6 +161,7 @@ export default defineComponent({
     }
   }
 }
+
 .autocomplete-active {
   /*when navigating through the items using the arrow keys:*/
   background-color: DodgerBlue !important;

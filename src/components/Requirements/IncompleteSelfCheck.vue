@@ -77,7 +77,10 @@ export default defineComponent({
     // and courses that do not fulfill the requirement checker
     selfCheckCourses(): Record<string, FirestoreSemesterCourse> {
       const courses: Record<string, FirestoreSemesterCourse> = {};
-      store.state.semesters
+      (
+        store.state.plans.find(p => p === store.state.currentPlan)?.semesters ??
+        store.state.plans[0].semesters
+      )
         .flatMap(it => it.courses)
         .forEach(course => {
           if (
@@ -165,6 +168,7 @@ export default defineComponent({
       this.showDropdown = false;
       const newCourse = cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData(course);
       addCourseToSemester(
+        store.state.currentPlan,
         year,
         season,
         newCourse,

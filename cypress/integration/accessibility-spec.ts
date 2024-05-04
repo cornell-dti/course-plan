@@ -35,6 +35,12 @@ it('Check navbar accessibility', () => {
   cy.checkA11y('[data-cyId=navbar]', null, null, true); // only check accessibility within the navbar
 });
 
+// Test to confirm that the new user walkthrough works as expected
+// Click through the initial explanation, then the 4 following steps, and finally the finishing page
+it('Click through schedule generator tour', () => {
+  cy.get('.introjs-nextbutton').click();
+});
+
 // Check the accessibility of the requirements sidebar with all toggles fully open
 // Note that the selector in checkA11y ensures only the sidebar is inspected
 it('Check accessibility of the requirements sidebar', () => {

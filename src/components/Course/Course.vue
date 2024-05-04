@@ -27,7 +27,15 @@
       <div class="course-main">
         <div class="course-top">
           <div class="course-left">
-            <div class="course-code" data-cyId="courseCode">{{ courseObj.code }}</div>
+            <div
+              class="course-code"
+              data-cyId="courseCode"
+              :style="{
+                color: compact ? '#3d3d3d' : '#858585',
+              }"
+            >
+              {{ courseObj.code }}
+            </div>
             <course-caution
               v-if="!isReqCourse && compact"
               :course="courseObj"
@@ -42,7 +50,11 @@
         <div v-if="!compact" class="course-info">
           <span class="course-credits">{{ creditString }}</span>
           <span v-if="semesterString" class="course-semesters">{{ semesterString }}</span>
-          <course-caution v-if="!isReqCourse" :course="courseObj" :isCompactView="false" />
+          <course-caution
+            v-if="!isReqCourse && !isSchedGenCourse"
+            :course="courseObj"
+            :isCompactView="false"
+          />
         </div>
       </div>
     </div>
@@ -83,6 +95,7 @@ export default defineComponent({
     semesterIndex: { type: Number, required: false, default: 0 },
     season: { type: String, required: false, default: '' },
     year: { type: Number, required: false, default: 0 },
+    isSchedGenCourse: { type: Boolean, required: false, default: false },
   },
   emits: {
     'delete-course': (code: string, uniqueID: number) =>
@@ -266,6 +279,7 @@ export default defineComponent({
 
   &-name {
     font-size: 16px;
+    font-weight: bold;
     line-height: 19px;
     color: $primaryGray;
     margin-top: 0.25rem;

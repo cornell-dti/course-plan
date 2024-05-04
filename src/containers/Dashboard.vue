@@ -1,7 +1,7 @@
 <template>
   <div class="dashboard">
     <onboarding
-      class="dashboard-onboarding"
+      class="dashboard-modal"
       v-if="isOnboarding"
       :isEditingProfile="isEditingProfile"
       :userName="userName"
@@ -9,27 +9,46 @@
       @onboard="endOnboarding"
       @cancelOnboarding="cancelOnboarding"
     />
+    <schedule-generate-modal
+      v-if="isScheduleGenerateModalOpen"
+      class="dashboard-modal"
+      :year="year"
+      :season="season"
+      :courses="coursesForGeneration"
+      :reqs="reqsForGeneration"
+      :credit-limit="creditLimitForGeneration"
+      @closeScheduleGenerateModal="closeScheduleGenerateModal"
+    />
     <div class="dashboard-mainView">
       <div class="dashboard-menus">
         <nav-bar
           class="dashboard-nav"
           data-cyId="navbar"
           :isDisplayingRequirementsMobile="requirementsIsDisplayedMobile"
+          :startScheduleGeneratorTour="startScheduleGeneratorTour"
           @openPlan="openPlan"
           @openTools="openTools"
           @openProfile="openProfile"
+          @openScheduleGenerate="openScheduleGenerate"
           @toggleRequirementsMobile="toggleRequirementsMobile"
         />
         <requirement-side-bar
           class="dashboard-reqs"
           data-cyId="reqsSidebar"
-          v-if="loaded && !showToolsPage && !isProfileOpen"
+          v-if="loaded && !showToolsPage && !isProfileOpen && !isScheduleGenerateOpen"
           :isMobile="isTablet"
           :isDisplayingMobile="requirementsIsDisplayedMobile"
           :isMinimized="requirementsIsMinimized"
           @toggleMinimized="toggleMinimizeRequirements"
           :startTour="startTour"
           @showTourEndWindow="showTourEnd"
+          :startMultiplePlansTour="startMultiplePlansTour"
+        />
+        <schedule-generate-side-bar
+          v-if="loaded && !showToolsPage && !isProfileOpen && isScheduleGenerateOpen"
+          :year="year"
+          :season="season"
+          @openScheduleGenerateModal="openScheduleGenerateModal"
         />
         <bottom-bar
           v-if="!(isTablet && requirementsIsDisplayedMobile) && !showToolsPage && !isProfileOpen"
@@ -88,6 +107,8 @@ import SemesterView from '@/components/Semester/SemesterView.vue';
 import RequirementSideBar from '@/components/Requirements/RequirementSideBar.vue';
 import BottomBar from '@/components/BottomBar/BottomBar.vue';
 import NavBar from '@/components/NavBar.vue';
+import ScheduleGenerateSideBar from '@/components/ScheduleGenerate/ScheduleGenerateSideBar.vue';
+import ScheduleGenerateModal from '@/components/ScheduleGenerate/ScheduleGenerateModal.vue';
 import Onboarding from '@/components/Modals/Onboarding/Onboarding.vue';
 import TourWindow from '@/components/Modals/TourWindow.vue';
 import ToolsContainer from '@/containers/Tools.vue';
@@ -101,6 +122,8 @@ import {
   mediumBreakpoint,
   veryLargeBreakpoint,
 } from '@/assets/constants/scss-variables';
+import { CourseForFrontend } from '@/schedule-generator/course-unit';
+import Requirement from '@/schedule-generator/requirement';
 
 const smallBreakpointPixels = parseInt(
   smallBreakpoint.substring(0, smallBreakpoint.length - 2),
@@ -135,7 +158,9 @@ export default defineComponent({
   components: {
     BottomBar,
     NavBar,
+    ScheduleGenerateSideBar,
     Onboarding,
+    ScheduleGenerateModal,
     RequirementSideBar,
     SemesterView,
     TourWindow,
@@ -156,12 +181,27 @@ export default defineComponent({
       maxBottomBarTabs: getMaxButtonBarTabs(),
       welcomeHidden: false,
       startTour: false,
+      startMultiplePlansTour: false,
+      startScheduleGeneratorTour: false,
       showTourEndWindow: false,
       showToolsPage: false,
       isProfileOpen: false,
+      isScheduleGenerateOpen: false,
+      isScheduleGenerateModalOpen: false,
+      coursesForGeneration: [] as CourseForFrontend[],
+      reqsForGeneration: [] as Requirement[],
+      creditLimitForGeneration: 12,
     };
   },
   computed: {
+    season(): FirestoreSemesterSeason {
+      // TODO: read the newest roster from firestore
+      return 'Fall';
+    },
+    year(): number {
+      // TODO: read the newest roster from firestore
+      return 2024;
+    },
     userName(): FirestoreUserName {
       return store.state.userName;
     },
@@ -169,7 +209,7 @@ export default defineComponent({
       return store.state.onboardingData;
     },
     semesters(): readonly FirestoreSemester[] {
-      return store.state.semesters;
+      return store.getters.getCurrentPlanSemesters;
     },
     hasBottomCourses(): boolean {
       return immutableBottomBarState.bottomCourses.length > 0;
@@ -185,6 +225,11 @@ export default defineComponent({
     listenerUnsubscriber = initializeFirestoreListeners(() => {
       if (this.onboardingData.college !== '' || this.onboardingData.grad !== '') {
         this.loaded = true;
+        if (!this.onboardingData.sawNewFeature) {
+          this.startMultiplePlansTour = true;
+        } else if (!this.onboardingData.sawScheduleGenerator) {
+          this.startScheduleGeneratorTour = true;
+        }
       } else {
         this.startOnboarding();
       }
@@ -244,11 +289,18 @@ export default defineComponent({
     openPlan() {
       this.showToolsPage = false;
       this.isProfileOpen = false;
+      this.isScheduleGenerateOpen = false;
     },
 
     openTools() {
       this.showToolsPage = true;
       this.isProfileOpen = false;
+    },
+
+    openScheduleGenerate() {
+      this.showToolsPage = false;
+      this.isProfileOpen = false;
+      this.isScheduleGenerateOpen = true;
     },
 
     editProfile() {
@@ -263,6 +315,23 @@ export default defineComponent({
       } else {
         this.editProfile();
       }
+    },
+
+    openScheduleGenerateModal(
+      coursesWithReqIds: {
+        req: Requirement;
+        courses: CourseForFrontend[];
+      }[],
+      creditLimit: number
+    ) {
+      this.coursesForGeneration = coursesWithReqIds.flatMap(req => req.courses);
+      this.reqsForGeneration = coursesWithReqIds.map(obj => obj.req); // Store requirement IDs
+      this.creditLimitForGeneration = creditLimit;
+      this.isScheduleGenerateModalOpen = true;
+    },
+
+    closeScheduleGenerateModal() {
+      this.isScheduleGenerateModalOpen = false;
     },
 
     closeWelcome() {
@@ -294,7 +363,7 @@ export default defineComponent({
   }
 
   /* The Modal (background) */
-  &-onboarding {
+  &-modal {
     position: fixed; /* Stay in place */
     z-index: 4; /* Sit on top */
     left: 0;

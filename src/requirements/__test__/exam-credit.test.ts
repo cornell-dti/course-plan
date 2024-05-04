@@ -73,6 +73,8 @@ it('Exam is converted to correct course', () => {
     exam: [{ examType: 'AP', score: 5, subject: 'Computer Science A' }],
     minor: [],
     tookSwim: 'no',
+    sawNewFeature: false,
+    sawScheduleGenerator: false,
   };
   const examCourses = userDataToExamCourses(userData);
   const expected = {
