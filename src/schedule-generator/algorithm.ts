@@ -2,6 +2,14 @@ import Course, { Timeslot } from './course-unit';
 import GeneratorRequest from './generator-request';
 import Requirement from './requirement';
 
+/**
+ * The output of the schedule generator.
+ *
+ * @param semester The semester for which the schedule is generated.
+ * @param schedule A map of courses to their respective timeslots.
+ * @param fulfilledRequirements A map of course codes to the requirements they fulfill.
+ * @param totalCredits The total number of credits in the schedule.
+ */
 export type GeneratedScheduleOutput = {
   semester: string;
   schedule: Map<Course, Timeslot[]>;
@@ -10,14 +18,24 @@ export type GeneratedScheduleOutput = {
   totalCredits: number;
 };
 
+/**
+ * A class (based off of Java OOP architecture) that generates a valid semester schedule based on a
+ * list of courses and their respective timeslots, requirements, and other information.
+ */
 export default class ScheduleGenerator {
+  /**
+   * A directly-accessible method that generates a schedule for some desired semester given
+   * a list of courses, requirement info, and a credit limit.
+   *
+   * @param request An instance of a class containing the necessary information to generate a schedule.
+   * @returns The generated schedule.
+   */
   static generateSchedule(request: GeneratorRequest): GeneratedScheduleOutput {
     const { classes, semester } = request;
     let { creditLimit } = request;
 
     const schedule: Map<Course, Timeslot[]> = new Map();
-    // Bad naming — should update to fulfilledRequirementsByCourse, for example (due to legacy variable convention).
-    const fulfilledRequirements: Map<string, Requirement[]> = new Map(); // used for checking no course duplicates
+    const fulfilledRequirementsByCourse: Map<string, Requirement[]> = new Map(); // used for checking no course duplicates
     const actualFulfilledRequirements: Set<string> = new Set(); // used for checking no requirement duplicates
 
     // Randomly shuffle the list of available courses
@@ -27,13 +45,15 @@ export default class ScheduleGenerator {
 
     classes.forEach(course => {
       if (course.offeredSemesters.includes(semester)) {
-        let performAdditionFlag = true;
+        let performAdditionFlag = true; // whether we can use this course or not
+        // onlyCourseRequirement serves to doubly-ensure that only one requirement is being mapped
+        // to each course (because the courses are being dragged under single requirement groups)
         const onlyCourseRequirement = course.requirements[0].name ?? 'nonsense-requirement';
 
         // New logic: must be free for *all* time slots.
         if (
           actualFulfilledRequirements.has(onlyCourseRequirement) ||
-          fulfilledRequirements.has(course.code) ||
+          fulfilledRequirementsByCourse.has(course.code) ||
           creditLimit - course.credits < 0
         ) {
           performAdditionFlag = false;
@@ -55,7 +75,7 @@ export default class ScheduleGenerator {
           ScheduleGenerator.addToSchedule(schedule, course, course.timeslots);
           creditLimit -= course.credits;
           totalCredits += course.credits;
-          fulfilledRequirements.set(course.code, course.requirements);
+          fulfilledRequirementsByCourse.set(course.code, course.requirements);
           for (const requirement of course.requirements) {
             actualFulfilledRequirements.add(requirement.name);
           }
@@ -63,9 +83,20 @@ export default class ScheduleGenerator {
       }
     });
 
-    return { semester, schedule, fulfilledRequirements, totalCredits };
+    return {
+      semester,
+      schedule,
+      fulfilledRequirements: fulfilledRequirementsByCourse,
+      totalCredits
+    };
   }
 
+  /**
+   * A helper static function that console.logs a pretty-printed text version of the schedule.
+   * Useful for debugging and testing.
+   *
+   * @param output The output of the schedule generator.
+   */
   static prettyPrintSchedule(output: GeneratedScheduleOutput): void {
     console.log('************************');
     console.log(`Generated Schedule for ${output.semester}:`);
@@ -93,6 +124,13 @@ export default class ScheduleGenerator {
     console.log(`Total Credits in the Schedule: ${output.totalCredits}`);
   }
 
+  /**
+   * A helper function to check if a timeslot is occupied in the schedule.
+   *
+   * @param schedule Information about the currently built-up schedule
+   * @param timeslot The timeslot to check for overlap
+   * @returns Whether the timeslot is occupied or not
+   */
   private static isTimeslotOccupied(
     schedule: Map<Course, Timeslot[]>,
     timeslot: Timeslot
@@ -138,6 +176,14 @@ export default class ScheduleGenerator {
     return false;
   }
 
+  /**
+   * A helper function that adds to our map of courses to timeslots some new
+   * course and its respective timeslots.
+   *
+   * @param schedule The schedule to add the course to
+   * @param course The course to add
+   * @param timeslots The timeslots to add
+   */
   private static addToSchedule(
     schedule: Map<Course, Timeslot[]>,
     course: Course,
