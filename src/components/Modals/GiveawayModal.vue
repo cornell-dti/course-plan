@@ -10,7 +10,7 @@
   >
     <div class="modal-content">
       <div class="modal-top">
-        <button @click="close" class="modal-exitbutton" data-cyId="modal-exit">
+        <button @click="close" class="modal-exitbutton" data-cyId="giveaway-exit">
           <img class="modal-exit" src="@/assets/images/x.png" alt="x to close modal" />
         </button>
       </div>
