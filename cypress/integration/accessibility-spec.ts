@@ -37,12 +37,13 @@ it('Check navbar accessibility', () => {
 
 // Test to confirm that the new user walkthrough works as expected
 // Click through the initial explanation, then the 4 following steps, and finally the finishing page
-it('Click through submit', () => {
-  cy.get('[data-cyId=giveaway-exit]').click();
-});
 
 it('Click through schedule generator tour', () => {
   cy.get('.introjs-nextbutton').click();
+});
+
+it('Click through giveaway exit', () => {
+  cy.get('[data-cyId=giveaway-exit]').click();
 });
 
 // Check the accessibility of the requirements sidebar with all toggles fully open

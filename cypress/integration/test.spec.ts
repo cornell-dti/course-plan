@@ -19,12 +19,13 @@ before('Visit site logged in', () => {
 
 // Test to confirm that the new user walkthrough works as expected
 // Click through the initial explanation, then the 4 following steps, and finally the finishing page
-it('Click through submit', () => {
-  cy.get('[data-cyId=giveaway-exit]').click();
-});
 
 it('Click through new feature tour', () => {
   cy.get('.introjs-nextbutton').click();
+});
+
+it('Click through giveaway exit', () => {
+  cy.get('[data-cyId=giveaway-exit]').click();
 });
 
 // Delete existing semesters to ensure existing data does not mess with tests
