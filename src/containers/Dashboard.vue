@@ -101,7 +101,6 @@
       right-button-text="Submit"
       rightButtonAlt="giveaway submit icon"
       @modal-closed="closeGiveawayModal"
-      @right-button-clicked="clearSemester"
       v-if="showGiveawayModal"
     >
     </giveaway-modal>

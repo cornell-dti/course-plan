@@ -8,7 +8,7 @@
     @click="closeOnClickOutside"
     ref="modalBackground"
   >
-    <div :class="['modal-content', contentClass]">
+    <div class="modal-content">
       <div class="modal-top">
         <button @click="close" class="modal-exitbutton" data-cyId="modal-exit">
           <img class="modal-exit" src="@/assets/images/x.png" alt="x to close modal" />
@@ -57,7 +57,6 @@ import { updateSawGiveaway } from '@/global-firestore-data';
 export default defineComponent({
   props: {
     title: { type: String, default: '' },
-    contentClass: { type: String, required: true },
     rightButtonText: { type: String, default: '' },
     rightButtonImage: { type: String, default: '' },
     rightButtonAlt: { type: String, default: '' },
@@ -220,27 +219,6 @@ export default defineComponent({
     &::placeholder {
       color: $darkPlaceholderGray;
     }
-  }
-}
-
-// custom styling for different modals depending on contentClass
-.content {
-  &-confirmation {
-    border: none;
-    margin-top: 1rem;
-    min-height: 0;
-    margin-left: auto;
-    margin-right: auto;
-    display: flex;
-    align-items: center;
-    pointer-events: none;
-  }
-
-  &-slotmenu {
-    background-color: $white;
-    min-height: 0;
-    width: 7rem;
-    position: fixed;
   }
 }
 </style>
