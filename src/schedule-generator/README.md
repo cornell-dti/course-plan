@@ -8,7 +8,15 @@ Below is a detailed file-by-file breakdown:
 
 This is essentially what is imported and used by the frontend. It takes in a request (type `GeneratorRequest`, see `generator-request.ts`) and outputs a meaningful value of type `GeneratedScheduleOutput` which can be used to see what courses fulfill what requirements and are at what times.
 
-Currently the algorithm functions by randomly shuffling potential courses the user inputted, and then generating the first valid schedule that can be constructed by iterating through this randomly shuffled list.
+Currently the algorithm functions by randomly shuffling potential courses the user inputted, and then generating the first valid schedule that can be constructed by iterating through this randomly shuffled list. A "valid schedule" is one that is under the credit limit and does not duplicate courses. Valid schedules are constructed by iterating through the shuffled list of courses and adding them to the schedule if:
+
+- they do not fulfill a requirement that has already been fulfilled
+- they are not some duplicate of a course already in the generated schedule
+- they do not push the schedule over the credit limit
+- the course is offered in the upcoming semester
+- there is enough time to get to (one of) the course's offered timeslots given the current schedule and including a 15-minute gap between classes
+
+If a course is added to the schedule, the requirement it fulfills is marked as fulfilled and the course is marked as taken, and the current number of credits is alos updated. The algorithm continues until the credit limit is reached or all courses have been iterated through.
 
 Please note that the frontend generates five schedules at once, for paging through. This is done by calling the algorithm five times, but with a different random seed, as JavaScript's `Random` library uses system time. However, especially for smaller problems, this means that some generated schedules might be the same — a potential avenue for improvement down the line would be to have a somewhat more sophisticated algorithm that allows for the generation of `n` unique solutions, though `<n` might occur if `n` are not found (after some `>n` number of iterations).
 

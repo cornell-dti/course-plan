@@ -41,6 +41,11 @@ export default class ScheduleGenerator {
     // Randomly shuffle the list of available courses
     classes.sort(() => Math.random() - 0.5);
 
+    // Randomly shuffle the course timeslots for more variability
+    classes.forEach(course => {
+      course.timeslots.sort(() => Math.random() - 0.5);
+    });
+
     let totalCredits = 0;
 
     classes.forEach(course => {
