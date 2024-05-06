@@ -136,7 +136,7 @@ export default class ScheduleGenerator {
     timeslot: Timeslot
   ): boolean {
     // Check for overlap.
-    const gap = 15 * 60 * 1000; // 15 minutes in milliseconds
+    const gap = 15 * 60 * 1000; // 15 minutes in milliseconds; need a 15 min gap for walking
     const timeslotCopy = { ...timeslot };
 
     if (!timeslotCopy.start.includes(' ')) {
