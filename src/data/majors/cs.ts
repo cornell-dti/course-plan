@@ -153,23 +153,6 @@ const csRequirements: readonly CollegeOrMajorRequirement[] = [
     fulfilledBy: 'credits',
     perSlotMinCount: [3],
   },
-  {
-    name: 'Probability',
-    description: 'Must take BTRY 3080, CS 4850, ECE 3100, ECON 3130, ENGRD 2700, or MATH 4710.',
-    source: 'https://www.cs.cornell.edu/undergrad/csmajor',
-    allowCourseDoubleCounting: true,
-    checker: includesWithSubRequirements([
-      'BTRY 3080',
-      'CS 4850',
-      'ECE 3100',
-      'ECON 3130',
-      'ENGRD 2700',
-      'MATH 4710',
-    ]),
-    fulfilledBy: 'courses',
-    perSlotMinCount: [1],
-    slotNames: ['Course'],
-  },
 ];
 
 export default csRequirements;
@@ -246,6 +229,28 @@ export const csMigrations: RequirementMigration[] = [
       ],
       fulfilledBy: 'courses',
       perSlotMinCount: [3],
+      slotNames: ['Course'],
+    },
+  },
+  {
+    entryYear: 2023, // CS students entering Fall 2024 or later no longer have a Probability requirement
+    type: 'Add',
+    fieldName: 'Probability',
+    newValue: {
+      name: 'Probability',
+      description: 'Must take BTRY 3080, CS 4850, ECE 3100, ECON 3130, ENGRD 2700, or MATH 4710.',
+      source: 'https://www.cs.cornell.edu/undergrad/csmajor',
+      allowCourseDoubleCounting: true,
+      checker: includesWithSubRequirements([
+        'BTRY 3080',
+        'CS 4850',
+        'ECE 3100',
+        'ECON 3130',
+        'ENGRD 2700',
+        'MATH 4710',
+      ]),
+      fulfilledBy: 'courses',
+      perSlotMinCount: [1],
       slotNames: ['Course'],
     },
   },
