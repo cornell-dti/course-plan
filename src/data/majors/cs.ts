@@ -1,4 +1,4 @@
-import { Course, CollegeOrMajorRequirement } from '../../requirements/types';
+import { Course, CollegeOrMajorRequirement, RequirementMigration } from '../../requirements/types';
 import {
   includesWithSingleRequirement,
   includesWithSubRequirements,
@@ -25,21 +25,24 @@ const csRequirements: readonly CollegeOrMajorRequirement[] = [
   },
   {
     name: 'Computer Science Core',
-    description: 'CS 2800 or CS 2802, CS 3110, CS 3410 or CS 3420, CS 4410, and CS 4820',
+    description:
+      'CS 2800 or CS 2802, CS 3110, CS 3410 or CS 3420, CS 3700 or CS 3780, CS 4410, and CS 4820',
     source: 'https://www.cs.cornell.edu/undergrad/csmajor',
     checker: includesWithSubRequirements(
       ['CS 2800', 'CS 2802'],
       ['CS 3110'],
       ['CS 3410', 'CS 3420'],
+      ['CS 3700', 'CS 3780'],
       ['CS 4820'],
       ['CS 4410', 'CS 4414']
     ),
     fulfilledBy: 'courses',
-    perSlotMinCount: [1, 1, 1, 1, 1],
+    perSlotMinCount: [1, 1, 1, 1, 1, 1],
     slotNames: [
       'CS 2800 or CS 2802',
       'CS 3110',
       'CS 3410 or CS 3420',
+      'CS 3700 or CS 3780',
       'CS 4820',
       'CS 4410 or CS 4414',
     ],
@@ -186,3 +189,32 @@ export const csAdvisors: AdvisorGroup = {
   ],
   source: 'https://www.cs.cornell.edu/undergrad/ustaff/contact-academic-advisor',
 };
+
+export const csMigrations: RequirementMigration[] = [
+  {
+    entryYear: 2023, // CS students entering Fall 2024 or later have new core requirements (listed above)
+    type: 'Modify',
+    fieldName: 'Computer Science Core',
+    newValue: {
+      name: 'Computer Science Core',
+      description: 'CS 2800 or CS 2802, CS 3110, CS 3410 or CS 3420, CS 4410, and CS 4820',
+      source: 'https://www.cs.cornell.edu/undergrad/csmajor',
+      checker: includesWithSubRequirements(
+        ['CS 2800', 'CS 2802'],
+        ['CS 3110'],
+        ['CS 3410', 'CS 3420'],
+        ['CS 4820'],
+        ['CS 4410', 'CS 4414']
+      ),
+      fulfilledBy: 'courses',
+      perSlotMinCount: [1, 1, 1, 1, 1],
+      slotNames: [
+        'CS 2800 or CS 2802',
+        'CS 3110',
+        'CS 3410 or CS 3420',
+        'CS 4820',
+        'CS 4410 or CS 4414',
+      ],
+    },
+  },
+];
