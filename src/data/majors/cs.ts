@@ -50,13 +50,13 @@ const csRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'CS Electives',
     description:
-      'Three 4000+ CS electives each at 3 credits. CS 4090, CS 4998, and CS 4999 are NOT allowed.',
+      'Two 4000+ CS electives each at 3 credits. CS 4090, CS 4998, and CS 4999 are NOT allowed. CS 3700 or CS 3780 allowed if not used in CS core.',
     source:
       'http://www.cs.cornell.edu/undergrad/rulesandproceduresengineering/choosingyourelectives',
     checker: [
       (course: Course): boolean => {
         if (
-          courseMatchesCodeOptions(course, ['CS 4090', 'CS 4998', 'CS 4999', 'CS 4410', 'CS 4820'])
+          courseMatchesCodeOptions(course, ['CS 4090', 'CS 4998', 'CS 4999', 'CS 4410', 'CS 4820', 'CS 3700', 'CS 3780'])
         ) {
           return false;
         }
@@ -71,7 +71,7 @@ const csRequirements: readonly CollegeOrMajorRequirement[] = [
       },
     ],
     fulfilledBy: 'courses',
-    perSlotMinCount: [3],
+    perSlotMinCount: [2],
     slotNames: ['Course'],
   },
   {
@@ -215,6 +215,38 @@ export const csMigrations: RequirementMigration[] = [
         'CS 4820',
         'CS 4410 or CS 4414',
       ],
+    },
+  },
+  {
+    entryYear: 2023, // CS students entering Fall 2024 or later have new CS elective requirements (listed above)
+    type: 'Modify',
+    fieldName: 'CS Electives',
+    newValue: {
+      name: 'CS Electives',
+      description:
+        'Three 4000+ CS electives each at 3 credits. CS 4090, CS 4998, and CS 4999 are NOT allowed.',
+      source:
+        'http://www.cs.cornell.edu/undergrad/rulesandproceduresengineering/choosingyourelectives',
+      checker: [
+        (course: Course): boolean => {
+          if (
+            courseMatchesCodeOptions(course, ['CS 4090', 'CS 4998', 'CS 4999', 'CS 4410', 'CS 4820'])
+          ) {
+            return false;
+          }
+          return (
+            ifCodeMatch(course.subject, 'CS') &&
+            !(
+              ifCodeMatch(course.catalogNbr, '1***') ||
+              ifCodeMatch(course.catalogNbr, '2***') ||
+              ifCodeMatch(course.catalogNbr, '3***')
+            )
+          );
+        },
+      ],
+      fulfilledBy: 'courses',
+      perSlotMinCount: [3],
+      slotNames: ['Course'],
     },
   },
 ];
