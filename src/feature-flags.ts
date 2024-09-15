@@ -9,7 +9,7 @@ type FeatureFlagName =
   | 'RequirementDebugger'
   | 'ToggleRequirementsBarBtn'
   | 'Profile'
-  | 'SavedCourses';
+  | 'SavedCourses'
   | 'MultiplePlans';
 /* | 'AddYourFeatureFlagNameHere' */
 const featureFlagCheckers: FeatureFlagCheckers = registerFeatureFlagChecker(
