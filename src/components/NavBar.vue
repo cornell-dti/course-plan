@@ -31,6 +31,17 @@
             <span>Profile</span>
           </div>
         </div>
+        <div
+          v-if="displaySavedCourses"
+          class="navbar-buttonWrapper desktop"
+          @click="openPlan"
+          data-cyId="openPlan"
+        >
+          <button class="navbar-iconWrapper saved-courses-icon full-opacity-on-hover" />
+          <div class="navbar-iconText">
+            <span>Saved</span>
+          </div>
+        </div>
       </div>
       <div class="navbar-bottom">
         <button
@@ -84,10 +95,16 @@ import { defineComponent } from 'vue';
 import { getAuth, signOut } from 'firebase/auth';
 import { GTagEvent } from '@/gtag';
 import { clickOutside } from '@/utilities';
+import featureFlagCheckers from '@/feature-flags';
 
 export default defineComponent({
   props: {
     isDisplayingRequirementsMobile: { type: Boolean, required: true },
+  },
+  computed: {
+    displaySavedCourses() {
+      return featureFlagCheckers.isSavedCoursesEnabled();
+    },
   },
   emits: ['openPlan', 'openTools', 'toggleRequirementsMobile', 'openProfile'],
   data() {
@@ -175,6 +192,9 @@ $mobile-navbar-height: 4.5rem;
       .profile-icon {
         background-image: url('@/assets/images/navbar/profileIconBlue.svg');
       }
+      .saved-courses-icon {
+        background-image: url('@/assets/images/navbar/savedCoursesIconBlue.svg');
+      }
     }
   }
 
@@ -203,6 +223,10 @@ $mobile-navbar-height: 4.5rem;
 
   .profile-icon {
     background-image: url('@/assets/images/navbar/profileIcon.svg');
+  }
+
+  .saved-courses-icon {
+    background-image: url('@/assets/images/navbar/savedCoursesIcon.svg');
   }
 
   .requirements-bar {
