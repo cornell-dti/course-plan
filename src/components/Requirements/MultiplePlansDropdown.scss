@@ -1,0 +1,84 @@
+@import '@/assets/scss/_variables.scss';
+
+.multiplePlans-dropdown {
+  display: flex;
+  flex-direction: column;
+
+  &-placeholder {
+    height: 100%;
+    font-size: 16px;
+    font-weight: bold;
+    margin-left: 0.25rem;
+    display: flex;
+    align-items: center;
+
+    color: $lightPlaceholderGray;
+
+    background: transparent;
+
+    &.wrapper {
+      position: relative;
+      right: 0.25rem;
+      width: 90%;
+      height: 2.5rem;
+      border-radius: 2px;
+      border: 1px solid $lightPlaceholderGray;
+      cursor: pointer;
+    }
+
+    &.plan {
+      padding-left: 0.5rem;
+      width: 100%;
+    }
+
+    &.down-arrow {
+      position: relative;
+      right: 7%;
+      width: 6.24px;
+      height: 6.24px;
+      border-left: 6.24px solid transparent;
+      border-right: 6.24px solid transparent;
+      border-top: 6.24px solid $lightPlaceholderGray;
+    }
+
+    &.up-arrow {
+      position: relative;
+      right: 7%;
+      width: 6.24px;
+      height: 6.24px;
+      border-left: 6.24px solid transparent;
+      border-right: 6.24px solid transparent;
+      border-top: 6.24px solid $lightPlaceholderGray;
+      transform: rotate(180deg);
+    }
+
+    &.editimg {
+      padding-left: 10px;
+      height: 15px;
+    }
+  }
+
+  &-content {
+    z-index: 100;
+    max-height: 8rem;
+    border-radius: 2px;
+    &.item {
+      width: 90%;
+      border: 1px solid $lightPlaceholderGray;
+      z-index: 150;
+      background-color: white;
+      height: 2.5rem;
+      font-size: 16px;
+      line-height: 16px;
+      display: flex;
+      align-items: center;
+      color: $lightPlaceholderGray;
+      padding-left: 10px;
+    }
+    &.item:hover {
+      background-color: $searchBoxHoverGray;
+      opacity: 1;
+      cursor: pointer;
+    }
+  }
+}

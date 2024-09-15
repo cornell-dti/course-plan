@@ -30,6 +30,7 @@
           @toggleMinimized="toggleMinimizeRequirements"
           :startTour="startTour"
           @showTourEndWindow="showTourEnd"
+          :startNewFeatureTour="startNewFeatureTour"
         />
         <bottom-bar
           v-if="!(isTablet && requirementsIsDisplayedMobile) && !showToolsPage && !isProfileOpen"
@@ -156,6 +157,7 @@ export default defineComponent({
       maxBottomBarTabs: getMaxButtonBarTabs(),
       welcomeHidden: false,
       startTour: false,
+      startNewFeatureTour: false,
       showTourEndWindow: false,
       showToolsPage: false,
       isProfileOpen: false,
@@ -169,7 +171,7 @@ export default defineComponent({
       return store.state.onboardingData;
     },
     semesters(): readonly FirestoreSemester[] {
-      return store.state.semesters;
+      return store.getters.getCurrentPlanSemesters;
     },
     hasBottomCourses(): boolean {
       return immutableBottomBarState.bottomCourses.length > 0;
@@ -185,6 +187,9 @@ export default defineComponent({
     listenerUnsubscriber = initializeFirestoreListeners(() => {
       if (this.onboardingData.college !== '' || this.onboardingData.grad !== '') {
         this.loaded = true;
+        if (!this.onboardingData.sawNewFeature) {
+          this.startNewFeatureTour = true;
+        }
       } else {
         this.startOnboarding();
       }

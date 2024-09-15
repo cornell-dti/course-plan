@@ -26,6 +26,7 @@ type EventType =
   | 'add-course' // User adds a course
   | 'add-modal-edit-requirements' // User clicks Edit Requirements on Add Modal
   | 'add-semester' // User adds a semester
+  | 'add-plan'
   | 'bottom-bar-close' // User collapses or closes the Bottom Bar
   | 'bottom-bar-CU-reviews-link' // User clicks CU Reviews link on Bottom Bar
   | 'bottom-bar-delete-tab' // User deletes a tab on the Bottom Bar
@@ -37,6 +38,7 @@ type EventType =
   | 'delete-course' // User deletes a course
   | 'delete-semester' // User deletes a semester
   | 'delete-semester-courses' // User deletes all courses in a semester
+  | 'delete-plan'
   | 'logout' // User logs out
   | 'onboarding-edit-basic-information' // User clicks to edit basic info on the review page of Onboarding
   | 'onboarding-edit-transfer-credits' // User clicks to edit transfer credits on the review page of Onboarding
@@ -73,6 +75,13 @@ export const GTagEvent = (gtag: VueGtag | undefined, eventType: EventType): void
     case 'add-semester':
       eventPayload = {
         event_category: 'semester',
+        event_label: 'add',
+        value: 1,
+      };
+      break;
+    case 'add-plan':
+      eventPayload = {
+        event_category: 'plan',
         event_label: 'add',
         value: 1,
       };
@@ -150,6 +159,13 @@ export const GTagEvent = (gtag: VueGtag | undefined, eventType: EventType): void
     case 'delete-semester-courses':
       eventPayload = {
         event_category: 'semester-courses',
+        event_label: 'delete',
+        value: 1,
+      };
+      break;
+    case 'delete-plan':
+      eventPayload = {
+        event_category: 'semester',
         event_label: 'delete',
         value: 1,
       };
