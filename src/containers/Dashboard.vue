@@ -19,6 +19,12 @@
           @openTools="openTools"
           @openProfile="openProfile"
           @toggleRequirementsMobile="toggleRequirementsMobile"
+          @openCollection="openCollection"
+        />
+        <collections-side-bar
+          class="dashboard-collections"
+          data-cyId="collectionsSidebar"
+          v-if="loaded && !showToolsPage && !isProfileOpen && isShowCollectionOpen"
         />
         <requirement-side-bar
           class="dashboard-reqs"
@@ -93,6 +99,7 @@ import Onboarding from '@/components/Modals/Onboarding/Onboarding.vue';
 import TourWindow from '@/components/Modals/TourWindow.vue';
 import ToolsContainer from '@/containers/Tools.vue';
 import ProfileEditor from '@/containers/Profile.vue';
+import CollectionsSideBar from '@/components/Modals/CollectionsSideBar.vue';
 import featureFlagCheckers from '@/feature-flags';
 
 import store, { initializeFirestoreListeners } from '@/store';
@@ -142,6 +149,7 @@ export default defineComponent({
     TourWindow,
     ToolsContainer,
     ProfileEditor,
+    CollectionsSideBar,
   },
   data() {
     return {
@@ -161,6 +169,7 @@ export default defineComponent({
       showTourEndWindow: false,
       showToolsPage: false,
       isProfileOpen: false,
+      isShowCollectionOpen: false,
     };
   },
   computed: {
@@ -244,6 +253,13 @@ export default defineComponent({
         this.startTour = true;
         this.welcomeHidden = false;
       }
+    },
+
+    // for the sidebar, not the modal
+    openCollection() {
+      this.showToolsPage = false;
+      this.isProfileOpen = false;
+      this.isShowCollectionOpen = !this.isShowCollectionOpen;
     },
 
     openPlan() {

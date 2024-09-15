@@ -11,16 +11,12 @@ import { defineComponent } from 'vue';
 // import store from '@/store';
 
 export default defineComponent({
+  name: 'CollectionsSideBar',
   components: {},
   props: {},
-  emits: ['openCollectionModal'],
+  emits: [],
   computed: {},
-  methods: {
-    // open the collection modal
-    openCollectionModal() {
-      this.$emit('openCollectionModal');
-    },
-  },
+  methods: {},
 });
 </script>
 
