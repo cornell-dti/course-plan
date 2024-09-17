@@ -21,11 +21,6 @@
           @toggleRequirementsMobile="toggleRequirementsMobile"
           @openCollection="openCollection"
         />
-        <collections-side-bar
-          class="dashboard-collections"
-          data-cyId="collectionsSidebar"
-          v-if="loaded && !showToolsPage && !isProfileOpen && isShowCollectionOpen"
-        />
         <requirement-side-bar
           class="dashboard-reqs"
           data-cyId="reqsSidebar"
@@ -37,6 +32,7 @@
           :startTour="startTour"
           @showTourEndWindow="showTourEnd"
           :startNewFeatureTour="startNewFeatureTour"
+          :isDisplayingCollection="isShowCollectionOpen"
         />
         <bottom-bar
           v-if="!(isTablet && requirementsIsDisplayedMobile) && !showToolsPage && !isProfileOpen"
@@ -99,7 +95,6 @@ import Onboarding from '@/components/Modals/Onboarding/Onboarding.vue';
 import TourWindow from '@/components/Modals/TourWindow.vue';
 import ToolsContainer from '@/containers/Tools.vue';
 import ProfileEditor from '@/containers/Profile.vue';
-import CollectionsSideBar from '@/components/Modals/CollectionsSideBar.vue';
 import featureFlagCheckers from '@/feature-flags';
 
 import store, { initializeFirestoreListeners } from '@/store';
@@ -149,7 +144,6 @@ export default defineComponent({
     TourWindow,
     ToolsContainer,
     ProfileEditor,
-    CollectionsSideBar,
   },
   data() {
     return {
@@ -259,12 +253,13 @@ export default defineComponent({
     openCollection() {
       this.showToolsPage = false;
       this.isProfileOpen = false;
-      this.isShowCollectionOpen = !this.isShowCollectionOpen;
+      this.isShowCollectionOpen = true;
     },
 
     openPlan() {
       this.showToolsPage = false;
       this.isProfileOpen = false;
+      this.isShowCollectionOpen = false;
     },
 
     openTools() {

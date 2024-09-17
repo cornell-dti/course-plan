@@ -18,146 +18,153 @@
         data-tooltipClass="tooltipCenter tourStep1"
       >
         <!-- loop through reqs array of req objects -->
-        <div
-          class="fixed"
-          :class="{
-            'd-none': shouldShowAllCourses,
-          }"
-          data-intro-group="req-tooltip"
-          :data-intro="getCoursesTooltipText()"
-          data-disable-interaction="1"
-          data-step="2"
-          data-tooltipClass="tooltipCenter tourStep2"
-        >
-          <button
-            class="requirement-debugger-toggler"
-            v-if="debuggerAllowed"
-            @click="toggleDebugger()"
-          >
-            Open Requirement Debugger
-          </button>
-          <confirmation :text="confirmationText" v-if="isConfirmationOpen" />
-          <div class="multiple-plans">
-            <add-plan-modal
-              v-if="isAddPlanOpen"
-              @close-plan-modal="toggleAddPlan"
-              @open-copy-modal="toggleCopyPlan"
-              @add-plan="addPlan"
-            />
-            <copy-plan-modal
-              v-if="isCopyPlanOpen"
-              @open-plan-modal="toggleAddPlan"
-              @close-copy-modal="toggleCopyPlan"
-              @open-name-modal="toggleNamePlan"
-              @copy-plan="copyPlan"
-            />
-            <name-plan-modal
-              v-if="isNamePlanOpen"
-              @open-copy-modal="toggleCopyPlan"
-              @close-name-modal="toggleNamePlan"
-              @add-plan="addPlan"
-              :selectedPlanCopy="selectedPlanCopy"
-            />
-            <edit-plan-modal
-              v-if="isEditPlanOpen"
-              @close-edit-modal="toggleEditPlan"
-              @close-name-modal="toggleNamePlan"
-              @edit-plan="editPlan"
-              @delete-plan="deletePlan"
-            />
-            <button class="add-plan-button" @click="toggleAddPlan()">+ Add Plan</button>
-            <div class="multiple-plans-dropdown">
-              <multiple-plans-dropdown @open-edit-modal="toggleEditPlan" />
-            </div>
-          </div>
-
-          <teleport-modal
-            content-class="requirement-debugger-modal-content"
-            :isSimpleModal="true"
-            v-if="displayDebugger"
-          >
-            <button class="requirement-debugger-toggler" @click="toggleDebugger()">
-              Close Requirement Debugger
-            </button>
-            <requirement-debugger />
-          </teleport-modal>
-          <div v-if="showToggleRequirementsBtn" class="requirement-sidebar-header">
-            <button class="requirement-sidebar-btn-close" @click="toggleMinimized">←</button>
-          </div>
+        <div>
           <div
-            class="req"
-            v-for="(req, index) in groupedRequirementFulfillmentReports"
-            :key="index"
+            class="fixed"
+            :class="{
+              'd-none': shouldShowAllCourses,
+            }"
+            data-intro-group="req-tooltip"
+            :data-intro="getCoursesTooltipText()"
+            data-disable-interaction="1"
+            data-step="2"
+            data-tooltipClass="tooltipCenter tourStep2"
           >
-            <requirement-group
-              :req="req"
-              :reqIndex="index"
-              :toggleableRequirementChoices="toggleableRequirementChoices"
-              :displayedMajorIndex="displayedMajorIndex"
-              :displayedMinorIndex="displayedMinorIndex"
-              :showMajorOrMinorRequirements="showMajorOrMinorRequirements(index, req.groupName)"
-              :numOfColleges="numOfColleges"
-              :tourStep="tourStep"
-              @changeToggleableRequirementChoice="chooseToggleableRequirementOption"
-              @activateMajor="activateMajor"
-              @activateMinor="activateMinor"
-              @onShowAllCourses="onShowAllCourses"
-            />
-          </div>
-        </div>
-      </div>
-      <div class="fixed see-all-padding-y" v-if="shouldShowAllCourses">
-        <div class="see-all-padding-x see-all-header pb-3">
-          <span class="arrow-left">
-            <drop-down-arrow :isPointingLeft="true" :fillColor="'#32A0F2'" />
-          </span>
-          <button class="btn back-button p-0" @click="backFromSeeAll">
-            GO BACK TO REQUIREMENTS
-          </button>
-        </div>
-        <div class="see-all-padding-x py-3">
-          <h1 class="title">{{ showAllCourses.name }}</h1>
-          <div class="see-all-pages" v-if="numPages > 1">
-            <span class="see-all-pageCount">{{ pageText }}</span>
-            <div class="see-all-buttonWrapper">
+            <div class="multiple-plans">
+              <add-plan-modal
+                v-if="isAddPlanOpen"
+                @close-plan-modal="toggleAddPlan"
+                @open-copy-modal="toggleCopyPlan"
+                @add-plan="addPlan"
+              />
+              <copy-plan-modal
+                v-if="isCopyPlanOpen"
+                @open-plan-modal="toggleAddPlan"
+                @close-copy-modal="toggleCopyPlan"
+                @open-name-modal="toggleNamePlan"
+                @copy-plan="copyPlan"
+              />
+              <name-plan-modal
+                v-if="isNamePlanOpen"
+                @open-copy-modal="toggleCopyPlan"
+                @close-name-modal="toggleNamePlan"
+                @add-plan="addPlan"
+                :selectedPlanCopy="selectedPlanCopy"
+              />
+              <edit-plan-modal
+                v-if="isEditPlanOpen"
+                @close-edit-modal="toggleEditPlan"
+                @close-name-modal="toggleNamePlan"
+                @edit-plan="editPlan"
+                @delete-plan="deletePlan"
+              />
+              <button class="add-plan-button" @click="toggleAddPlan()">+ Add Plan</button>
+              <div class="multiple-plans-dropdown">
+                <multiple-plans-dropdown @open-edit-modal="toggleEditPlan" />
+              </div>
+            </div>
+            <div class="collection-header" v-if="isDisplayingCollection">
+              <collections-side-bar />
+            </div>
+            <div v-if="!isDisplayingCollection">
               <button
-                class="see-all-button"
-                :class="{ 'see-all-button--disabled': !hasPrevPage }"
-                :disabled="!hasPrevPage"
-                @click="prevPage()"
+                class="requirement-debugger-toggler"
+                v-if="debuggerAllowed"
+                @click="toggleDebugger()"
               >
-                <span class="see-all-button-text">Prev</span>
+                Open Requirement Debugger
               </button>
-              <button
-                class="see-all-button"
-                :class="{ 'see-all-button--disabled': !hasNextPage }"
-                :disabled="!hasNextPage"
-                @click="nextPage()"
+              <confirmation :text="confirmationText" v-if="isConfirmationOpen" />
+
+              <teleport-modal
+                content-class="requirement-debugger-modal-content"
+                :isSimpleModal="true"
+                v-if="displayDebugger"
               >
-                <span class="see-all-button-text">Next</span>
-              </button>
+                <button class="requirement-debugger-toggler" @click="toggleDebugger()">
+                  Close Requirement Debugger
+                </button>
+                <requirement-debugger />
+              </teleport-modal>
+              <div v-if="showToggleRequirementsBtn" class="requirement-sidebar-header">
+                <button class="requirement-sidebar-btn-close" @click="toggleMinimized">←</button>
+              </div>
+              <div
+                class="req"
+                v-for="(req, index) in groupedRequirementFulfillmentReports"
+                :key="index"
+              >
+                <requirement-group
+                  :req="req"
+                  :reqIndex="index"
+                  :toggleableRequirementChoices="toggleableRequirementChoices"
+                  :displayedMajorIndex="displayedMajorIndex"
+                  :displayedMinorIndex="displayedMinorIndex"
+                  :showMajorOrMinorRequirements="showMajorOrMinorRequirements(index, req.groupName)"
+                  :numOfColleges="numOfColleges"
+                  :tourStep="tourStep"
+                  @changeToggleableRequirementChoice="chooseToggleableRequirementOption"
+                  @activateMajor="activateMajor"
+                  @activateMinor="activateMinor"
+                  @onShowAllCourses="onShowAllCourses"
+                />
+              </div>
             </div>
           </div>
-          <draggable
-            :modelValue="showAllCourses.shownCourses"
-            :clone="cloneCourse"
-            item-key="code"
-            :group="{ name: 'draggable-semester-courses', put: false }"
-          >
-            <template #item="{ element }">
-              <div>
-                <div class="mt-3">
-                  <course
-                    :courseObj="element"
-                    :compact="false"
-                    :active="false"
-                    :isReqCourse="true"
-                    class="requirements-course"
-                  />
-                </div>
+        </div>
+        <div class="fixed see-all-padding-y" v-if="shouldShowAllCourses">
+          <div class="see-all-padding-x see-all-header pb-3">
+            <span class="arrow-left">
+              <drop-down-arrow :isPointingLeft="true" :fillColor="'#32A0F2'" />
+            </span>
+            <button class="btn back-button p-0" @click="backFromSeeAll">
+              GO BACK TO REQUIREMENTS
+            </button>
+          </div>
+          <div class="see-all-padding-x py-3">
+            <h1 class="title">{{ showAllCourses.name }}</h1>
+            <div class="see-all-pages" v-if="numPages > 1">
+              <span class="see-all-pageCount">{{ pageText }}</span>
+              <div class="see-all-buttonWrapper">
+                <button
+                  class="see-all-button"
+                  :class="{ 'see-all-button--disabled': !hasPrevPage }"
+                  :disabled="!hasPrevPage"
+                  @click="prevPage()"
+                >
+                  <span class="see-all-button-text">Prev</span>
+                </button>
+                <button
+                  class="see-all-button"
+                  :class="{ 'see-all-button--disabled': !hasNextPage }"
+                  :disabled="!hasNextPage"
+                  @click="nextPage()"
+                >
+                  <span class="see-all-button-text">Next</span>
+                </button>
               </div>
-            </template>
-          </draggable>
+            </div>
+            <draggable
+              :modelValue="showAllCourses.shownCourses"
+              :clone="cloneCourse"
+              item-key="code"
+              :group="{ name: 'draggable-semester-courses', put: false }"
+            >
+              <template #item="{ element }">
+                <div>
+                  <div class="mt-3">
+                    <course
+                      :courseObj="element"
+                      :compact="false"
+                      :active="false"
+                      :isReqCourse="true"
+                      class="requirements-course"
+                    />
+                  </div>
+                </div>
+              </template>
+            </draggable>
+          </div>
         </div>
       </div>
     </aside>
@@ -177,6 +184,7 @@ import RequirementDebugger from '@/components/Requirements/RequirementDebugger.v
 import RequirementGroup from '@/components/Requirements/RequirementGroup.vue';
 import DropDownArrow from '@/components/DropDownArrow.vue';
 import MultiplePlansDropdown from './MultiplePlansDropdown.vue';
+import CollectionsSideBar from '../Modals/CollectionsSideBar.vue';
 
 import clipboard from '@/assets/images/clipboard.svg';
 import warning from '@/assets/images/warning.svg';
@@ -244,6 +252,7 @@ export default defineComponent({
     CopyPlanModal,
     NamePlanModal,
     EditPlanModal,
+    CollectionsSideBar,
   },
   props: {
     startTour: { type: Boolean, required: true },
@@ -251,8 +260,9 @@ export default defineComponent({
     isMobile: { type: Boolean, required: true },
     isMinimized: { type: Boolean, required: true },
     startNewFeatureTour: { type: Boolean, required: true },
+    isDisplayingCollection: { type: Boolean, required: true },
   },
-  emits: ['showTourEndWindow', 'toggleMinimized'],
+  emits: ['showTourEndWindow', 'toggleMinimized'], // probably will remove emits with just using components
   data(): Data {
     return {
       displayDebugger: false,
@@ -528,6 +538,10 @@ export default defineComponent({
   color: $white;
   border: none;
   font-size: 16px;
+}
+
+.collections-side-bar {
+  margin: 1.5rem 0 1rem 0;
 }
 
 .requirement-sidebar-btn-open {
