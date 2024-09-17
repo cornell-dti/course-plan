@@ -16,7 +16,9 @@
         :style="customPosition"
       >
         <div v-if="!isSimpleModal" class="modal-top">
-          <h1>{{ title }}</h1>
+          <slot name="title">
+            <h1>{{ title }}</h1>
+          </slot>
           <button @click="close" data-cyId="modal-exit">
             <img class="modal-exit" src="@/assets/images/x.png" alt="x to close modal" />
           </button>
