@@ -34,10 +34,8 @@ export default defineComponent({
 @import '@/assets/scss/_variables.scss';
 
 .sidebar {
-  width: 22.5rem;
-  z-index: 100;
   height: 100%;
-  position: fixed;
+  position: relative;
 
   &-header {
     margin-top: 1.5rem;
@@ -45,8 +43,8 @@ export default defineComponent({
   }
 }
 
-.serparator-header {
-  width: 335px;
+.separator-header {
+  width: 100%;
   height: 2px;
   background: #587c91;
 }
@@ -92,7 +90,7 @@ export default defineComponent({
 }
 
 .separator {
-  width: 335px;
+  width: 100%;
   height: 2px;
   background: rgba(196, 196, 196, 0.4);
 }

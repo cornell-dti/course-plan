@@ -540,9 +540,9 @@ export default defineComponent({
   font-size: 16px;
 }
 
-.collections-side-bar {
-  margin: 1.5rem 0 1rem 0;
-}
+// .collections-side-bar {
+//   //  margin: 1.5rem 0 1rem 0;
+// }
 
 .requirement-sidebar-btn-open {
   @include requirement-sidebar-btn;
