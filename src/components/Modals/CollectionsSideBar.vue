@@ -1,18 +1,14 @@
 <template>
   <div class="sidebar">
     <div class="sidebar-header">
-      <div class="serparator-header"></div>
+      <div class="separator-header"></div>
       <h1 class="top header-title">Collections</h1>
     </div>
     <div>
-      <div class="dropdown-item">
-        <img
-          src="@/assets/images/dropdown.svg"
-          class="dropdown-item-placeholder"
-          alt="open dropdown"
-        />
-        <div class="dropdown-header-title">All</div>
-      </div>
+      <button class="dropdown-item-button">
+        <img src="@/assets/images/dropdown.svg" alt="open dropdown" class="hover-image" />
+        <span class="dropdown-header-title">All</span>
+      </button>
       <div class="separator"></div>
     </div>
   </div>
@@ -55,7 +51,7 @@ export default defineComponent({
   background: #587c91;
 }
 
-.top {
+.top.header-title {
   margin: 1.5rem 0 0rem 0;
 
   &-small {
@@ -63,16 +59,15 @@ export default defineComponent({
   }
 }
 
-.dropdown-item {
+.dropdown-item-button {
   display: flex;
-  &:hover {
-    border-radius: 9px;
-    background: rgba(20, 132, 129, 0.2);
-  }
-  width: 352px;
+  width: 335px;
   padding: 15px 2px;
   align-items: center;
   gap: 14px;
+  border: none;
+  background: none;
+  cursor: pointer;
 }
 
 .dropdown-item-placeholder {
@@ -83,6 +78,7 @@ export default defineComponent({
   height: 11.994px;
   flex-shrink: 0;
 }
+
 .dropdown-header-title {
   display: flex;
   align-items: center;
