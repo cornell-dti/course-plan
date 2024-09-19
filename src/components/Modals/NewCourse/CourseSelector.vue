@@ -44,11 +44,13 @@ const getMatchingCourses = (
   } else {
     filteredCourses = filter != null ? fullCoursesArray.filter(filter) : fullCoursesArray;
   }
+  const normalizedSearchText = searchText.toUpperCase().replace(/\s+/g, '');
   for (const course of filteredCourses) {
-    const courseCode = `${course.subject} ${course.catalogNbr}`;
-    if (courseCode.toUpperCase().includes(searchText)) {
+    const courseCode = `${course.subject}${course.catalogNbr}`.toUpperCase().replace(/\s+/g, '');
+    const courseTitle = course.titleLong.toUpperCase().replace(/\s+/g, '');
+    if (courseCode.includes(normalizedSearchText)) {
       code.push(course);
-    } else if (course.titleLong.toUpperCase().includes(searchText)) {
+    } else if (courseTitle.includes(normalizedSearchText)) {
       title.push(course);
     }
   }
