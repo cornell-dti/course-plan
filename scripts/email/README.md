@@ -42,7 +42,7 @@ Then in comparison to other email services like Sendgrid, Resend stood out for i
 ## How It Works
 
 1. The script loads environment variables and the specified email template.
-2. It chunks the BCC list into groups of 50 recipients to make best use of our 100-email-per-day free tier. 50 is the max number of recipients allowed in a single Resend API call. (For `to` recipients, still confirming this with Resend support for `bcc` recipients.)
+2. It chunks the BCC list into groups of 49 recipients to make best use of our 100-email-per-day free tier. (50 is the max number of recipients allowed in a single Resend API call, and this is shared across `to` and `bcc` recipients.)
 3. Emails are sent in batches, with progress updates printed to the console.
 
 ## Creating Templates
@@ -61,5 +61,5 @@ A couple notes:
 ## Further Notes
 
 - Currently using `courseplan.simonilincev.com` for DNS; should be updated to `courseplan.io` soon. This can be done on the Resend dashboard under "Domains" on the sidebar. 4 DNS records need to be set up (configure `_dmarc` as well even though it is optional).
-- If you want to have emails land in more than 5,000 inboxes per day, you will need to stagger the emails over several days. Note that these 5,000 inboxes are already "batched" into 100 emails each with 50 bcc recipients.
-- A dummy "to" recipient is required when using BCC for technical reasons.
+- If you want to have emails land in more than 4,900 inboxes per day, you will need to stagger the emails over several days. Note that these 4,900 inboxes are already "batched" into 100 emails each with 49 bcc recipients.
+- A dummy "to" recipient is required when using BCC for technical reasons. (This does not count towards the 49 bcc recipients.)

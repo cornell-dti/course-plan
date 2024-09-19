@@ -21,7 +21,7 @@ def chunk_list(lst: List[str], chunk_size: int) -> List[List[str]]:
 
 
 def send_emails(bcc_list: List[str]):
-    bcc_chunks = chunk_list(bcc_list, 50)
+    bcc_chunks = chunk_list(bcc_list, 49)
     total_chunks = len(bcc_chunks)
 
     print(
