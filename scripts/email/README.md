@@ -32,9 +32,9 @@ Then in comparison to other email services like Sendgrid, Resend stood out for i
 
 4. Update the import in `base_template.py` to import the template you created in the previous step. As an example, if you created a file called `new_course_reminder.py` in the templates folder, you would update the import in `base_template.py` to `from .templates.new_course_reminder import *`. For details on how to create a template, see two sections from now.
 
-5. Run the script:
+5. `cd` into the `scripts/email` directory and run the script:
    ```bash
-   python3 scripts/email/base_template.py
+   python3 base_template.py
    ```
 
 **Important**: Please revert your import change to `base_template.py` before pushing any changes. By always sticking with `dryrun.py` as the base template, we can avoid accidentally sending emails to thousands of users (surefire way to worsen your chances at getting an A/A+ for the semester 😅).

@@ -1,5 +1,5 @@
 BCC = ["hyz4@cornell.edu"]
-SUBJECT = "Sign up for CoursePlan 🔫"
+SUBJECT = "Are you signed up for CoursePlan yet 🤔 "
 HTML = (
-    "<strong>This is a requirement for your continued presence on CoursePlan.</strong>"
+    "Hi Hannah, <br><br>We're just checking in...<br><br>Our patience is running short ⏰.<br><br><strong>Soon it won't just be emails that we send.</strong><br><br>– the CP unit"
 )
