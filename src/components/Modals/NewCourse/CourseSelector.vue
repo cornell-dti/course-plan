@@ -38,13 +38,15 @@ const getMatchingCourses = (
   /* code array for results that contain course code and title array for results that contain title */
   const code: CornellCourseRosterCourse[] = [];
   const title: CornellCourseRosterCourse[] = [];
+  const codeAndTitle: CornellCourseRosterCourse[] = [];
+
   let filteredCourses: readonly CornellCourseRosterCourse[] = [];
   if (coursesArray !== undefined) {
     filteredCourses = coursesArray;
   } else {
     filteredCourses = filter != null ? fullCoursesArray.filter(filter) : fullCoursesArray;
   }
-  const normalizedSearchText = searchText.toUpperCase().replace(/\s+/g, '');
+  const normalizedSearchText = searchText.toUpperCase().replace(/\s+/g, '').replace(/:/g, '');
   for (const course of filteredCourses) {
     const courseCode = `${course.subject}${course.catalogNbr}`.toUpperCase().replace(/\s+/g, '');
     const courseTitle = course.titleLong.toUpperCase().replace(/\s+/g, '');
@@ -52,14 +54,16 @@ const getMatchingCourses = (
       code.push(course);
     } else if (courseTitle.includes(normalizedSearchText)) {
       title.push(course);
+    } else if ((courseCode + courseTitle).includes(normalizedSearchText)) {
+      codeAndTitle.push(course);
     }
   }
-  // Sort both results by title
+  // Sort all results by title, and prioritize code matches over other matches.
   code.sort((first, second) => first.titleLong.localeCompare(second.titleLong));
   title.sort((first, second) => first.titleLong.localeCompare(second.titleLong));
+  codeAndTitle.sort((first, second) => first.titleLong.localeCompare(second.titleLong));
 
-  /* prioritize code matches over title matches */
-  return code.concat(title);
+  return code.concat(title).concat(codeAndTitle);
   // limit the number of results to 10
   // return code.concat(title).slice(0, 10);
 };
