@@ -38,8 +38,8 @@ scripts/out
 # Secret API key
 python/secret_api_keys.py
 
-# Resend API key.
-scripts/email/.env
+# Email API key stuff.
+.env.private
 
 # Python compilation files.
 */**/*.pyc
