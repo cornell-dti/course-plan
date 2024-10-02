@@ -4,10 +4,10 @@ import resend
 from typing import List
 
 # Load relevant template to run this script on.
-from templates.versioned_preenroll.sp25.current_freshman import *
+from templates.dryrun import *
 
 # Load environment variables from .env
-load_dotenv(".env.private")
+load_dotenv(".env")
 
 resend.api_key = os.environ["RESEND_API_KEY"]
 
@@ -24,22 +24,9 @@ def send_emails(bcc_list: List[str]):
     bcc_chunks = chunk_list(bcc_list, 49)
     total_chunks = len(bcc_chunks)
 
-    # Add confirmation prompt
-    confirm = (
-        input(
-            f"Do you want to proceed with sending {len(bcc_chunks)} {'email' if len(bcc_chunks) == 1 else 'emails'} to {len(bcc_list)} {'recipient' if len(bcc_list) == 1 else 'recipients'}? (y/N): "
-        )
-        .lower()
-        .strip()
+    print(
+        f"Starting email job with {len(bcc_list)} recipients in {total_chunks} batch(es)."
     )
-
-    if confirm != "y":
-        print("Email sending cancelled. Goodbye!")
-        return
-    else:
-        print(
-            f"Starting email job with {len(bcc_list)} {'recipient' if len(bcc_list) == 1 else 'recipients'} in {total_chunks} batch(es).\n"
-        )
 
     for i, bcc_chunk in enumerate(bcc_chunks, 1):
         params: resend.Emails.SendParams = {
@@ -50,12 +37,12 @@ def send_emails(bcc_list: List[str]):
             "html": HTML,
         }
 
-        resend.Emails.send(params)
+        email = resend.Emails.send(params)
         print(f"Batch {i}/{total_chunks} sent successfully!")
 
-    print("\nAll email batches sent successfully!")
-    print("Email job completed!")
+    print("All email batches sent successfully!")
 
 
 if __name__ == "__main__":
     send_emails(BCC)
+    print("Email job completed!")
