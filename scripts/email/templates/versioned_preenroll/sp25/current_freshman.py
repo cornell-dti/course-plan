@@ -18,8 +18,8 @@ BCC = [
     for users in USERS.values()
     for user in users
     if (
-        (user["graduation_year"] == "2028" and user["graduation_semester"] == "Spring")
-        or (user["graduation_year"] == "2027" and user["graduation_semester"] == "Fall")
+        (user["graduation_year"] == "2029" and user["graduation_semester"] == "Spring")
+        or (user["graduation_year"] == "2026" and user["graduation_semester"] == "Fall")
         # handle VTMED students
         or (
             (
@@ -43,43 +43,94 @@ freshman_dates = PRE_ENROLL_DATES["2028", "2029-VTMED"]
 start_date = freshman_dates["start_date"]
 end_date = freshman_dates["end_date"]
 
-SUBJECT = "Pre-Enroll Reminder from CoursePlan for the Fall 2025 semester!"
+SUBJECT = "Pre-Enroll Reminder from CoursePlan for the Spring '25 Semester!"
 HTML = f"""
-    <div>
-        <h1>Cornell CoursePlan</h1>
-
-        <p>HEY [Y/N],</p>
-
-        <p>🥳 Happy pre-enroll 🥳 Your pre enroll time slot is coming up on {start_date} – {end_date}. If you haven't met CoursePlan yet, it's the go-to platform for requirement tracking & schedule building.</p>
-
-        <h2>INTRODUCING</h2>
-        <h3>Schedule Generator & Multiple Plans</h3>
-
-        <p>Say hello to your generated schedule!</p>
-
-        <p>Select the classes you're interested in & get auto-generated schedule suggestions.</p>
-
-        <button>Take a look</button>
-
-        <p>Create multiple versions of your 4 year plan to find the best one suited for you.</p>
-
-        <button>Try it out</button>
-
-        <p>Got a Question? Comment? Concern? Let us know how we can make CoursePlan the best at courseplan.io@gmail.com! And... we're cooking up some cool updates for y'all, so follow our instagram for the latest. Look forward to hearing from us every so often- right in your inbox!</p>
-
-        <p>See you soon,<br>
-        Your friends at CoursePlan DTI <3</p>
-
-        <p>PS: have you heard of our giveaway? **</p>
-
-        <p>Schedule smarter. Plan Ahead.</p>
-
-        <p>Not a user yet? Get started here.<br>
-        Don't want to graduate? Unsubscribe</p>
-
-        <footer>
-            <p>Schedule Smarter. Plan Ahead.</p>
-            <p>Instagram : Courseplan</p>
-        </footer>
+<div style="font-family: Proxima Nova, sans-serif; margin: 0 auto; background-color: #F7F7F7; font-size: 16px;">
+    <div style="text-align: center; padding: 40px 0px;">
+        <img src="https://i.ibb.co/f9zrdNS/logo.png"
+            alt="Cornell CoursePlan Logo" style="height: 50px;">
     </div>
-    """
+    <div
+        style="background-color: #FFFFFF; border-radius: 10px; padding: 40px 48px; margin-bottom: 20px; max-width: 600px; margin: 0 auto;">
+
+        <div style="padding: 20px; margin-bottom: 20px;">
+            <p style="margin: 0; font-size: 16px;"><strong>Heya,</strong></p>
+            <p style="line-height: 1.5; font-size: 16px;">🥳 Happy pre-enroll 🥳 Your pre enroll time slot is coming up
+                on
+                {start_date} – {end_date}. If you haven't met <strong>CoursePlan</strong> yet, it's the go-to platform for
+                requirement tracking & schedule building.</p>
+        </div>
+
+        <h2
+            style="color: #1AA9A5; font-size: medium; text-align: center; text-transform: uppercase; letter-spacing: 0.05em;">
+            INTRODUCING</h2>
+        <h3 style="font-size: 24px; text-align: center; margin-bottom: 5px;">Schedule Generator &
+            Multiple
+            Plans</h3>
+
+        <div style="padding: 20px;">
+            <img src="https://i.ibb.co/vQJ8nV8/screen1.png"
+                alt="Schedule Generator" style="width: 100%; height: auto; margin-bottom: -4px;">
+            <p style="color: #3D3D3D; text-align: center; font-size: 15px; width: 50%; margin: 0 auto 16px;">Select
+                the classes&nbsp;<span style="opacity: 50%;">you're
+                    interested in & get auto-generated</span>&nbsp;schedule suggestions.</p>
+            <div style="text-align: center;">
+                <a href="https://courseplan.io" target="_blank"
+                    style="background-color: #508197; color: white; text-decoration: none; padding: 10px 33px; border-radius: 5px; display: inline-block; font-family: Albert Sans, Proxima Nova, sans-serif; font-size: 15px; letter-spacing: 0.05em;">Take
+                    a look</a>
+            </div>
+        </div>
+
+        <div style="padding: 20px; margin-bottom: 44px;">
+            <img src="https://i.ibb.co/2ncKFC1/screen2.png"
+                alt="Multiple Plans" style="width: 100%; height: auto; margin-bottom: -4px;">
+            <p style="color: #3D3D3D; text-align: center; font-size: 15px; width: 50%; margin: 0 auto 16px;">Create
+                multiple versions&nbsp;<span style="opacity: 50%;">of
+                    your 4 year plan to find the best
+                    one suited for you.</span></p>
+            <div style="text-align: center;">
+                <a href="https://courseplan.io" target="_blank"
+                    style="background-color: #508197; color: white; text-decoration: none; padding: 10px 40px; border-radius: 5px; display: inline-block; font-family: Albert Sans, Proxima Nova, sans-serif; font-size: 15px; letter-spacing: 0.05em;">Try
+                    it out</a>
+            </div>
+        </div>
+
+        <p style="line-height: 1.5; font-size: 16px;">Got a Question? Comment? Concern? Let us know how we can make
+            CoursePlan the best at <a href="mailto:courseplan.io@gmail.com"
+                style="color: #1AA9A5; text-decoration: none;" target="_blank">courseplan.io@gmail.com</a>! And... we're
+            cooking up some cool updates for y'all, so follow
+            our <a href="https://www.instagram.com/courseplan.io/" style="color: #1AA9A5; text-decoration: none;"
+                target="_blank">instagram</a> for the latest. Look forward to hearing from us every so often — right in
+            your inbox!</p>
+
+        <p style="line-height: 1.5; font-size: 16px;">
+            See you soon,<br>
+            Your friends at CoursePlan DTI &lt;3 </p>
+
+        <p style="font-size: 16px;">PS: have you heard of our giveaway? 👀</p>
+
+        <img src="https://i.ibb.co/MNcbn9L/cp-square.png"
+            alt="Cornell CoursePlan Icon" style="height: 32px;">
+
+        <p style="line-height: 1.5; margin-top: 37.5px; font-size: 16px;">
+            Not a user yet? <a href="https://courseplan.io" target="_blank"
+                style="color: #1AA9A5; text-decoration: underline;">Get started here</a><br>
+            Don't want to graduate? <a href="https://courseplan.io" target="_blank"
+                style="color: #1AA9A5; text-decoration: underline;">Unsubscribe on
+                your profile tab</a>
+        </p>
+    </div>
+</div>
+
+<div
+    style="background-color: #105351; color: white; padding: 15px 35px; font-size: 16px; font-family: Proxima Nova, sans-serif;">
+    <div style="display: flex; margin: 0 auto;">
+        <p style="margin-left: 0; margin-right: auto;">Schedule Smarter. Plan Ahead.</p>
+        <p style="margin-left: auto; margin-right: 0;">
+            <a href="https://www.instagram.com/courseplan.io/" style="color: white; text-decoration: none;">Instagram</a>
+            <span style="margin: 0 5px;">•</span>
+            <a href="https://courseplan.io" style="color: white; text-decoration: none;">Courseplan</a>
+        </p>
+    </div>
+</div>
+"""
