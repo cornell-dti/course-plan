@@ -127,9 +127,9 @@ HTML = f"""
     <div style="display: flex; margin: 0 auto;">
         <p style="margin-left: 0; margin-right: auto;">Schedule Smarter. Plan Ahead.</p>
         <p style="margin-left: auto; margin-right: 0;">
-            <a href="https://www.instagram.com/courseplan.io/" style="color: white; text-decoration: none;">Instagram</a>
+            <a href="https://www.instagram.com/courseplan.io/" style="color: #1AA9A5; text-decoration: underline;">Instagram</a>
             <span style="margin: 0 5px;">•</span>
-            <a href="https://courseplan.io" style="color: white; text-decoration: none;">Courseplan</a>
+            <a href="https://courseplan.io" style="color: #1AA9A5; text-decoration: underline;"">Courseplan</a>
         </p>
     </div>
 </div>
