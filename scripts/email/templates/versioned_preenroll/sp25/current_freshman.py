@@ -54,7 +54,7 @@ HTML = f"""
         style="background-color: #FFFFFF; border-radius: 10px; padding: 40px 48px; margin-bottom: 20px; max-width: 600px; margin: 0 auto;">
 
         <div style="padding: 20px; margin-bottom: 20px;">
-            <p style="margin: 0; font-size: 16px;"><strong>Heya,</strong></p>
+            <p style="margin: 0; font-size: 16px;"><strong>Hey CoursePlanner,</strong></p>
             <p style="line-height: 1.5; font-size: 16px;">🥳 Happy pre-enroll 🥳 Your pre enroll time slot is coming up
                 on
                 {start_date} – {end_date}. If you haven't met <strong>CoursePlan</strong> yet, it's the go-to platform for
