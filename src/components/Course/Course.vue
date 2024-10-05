@@ -114,9 +114,9 @@ export default defineComponent({
     'course-on-click': (course: FirestoreSemesterCourse) => typeof course === 'object',
     'edit-course-credit': (credit: number, uniqueID: number) =>
       typeof credit === 'number' && typeof uniqueID === 'number',
-    'save-course': (courseCode: string, collections: string[]) =>
-      typeof courseCode === 'string' && typeof collections === 'object',
-    'add-course-collection': (name: string) => typeof name === 'string',
+    'save-course': (course: FirestoreSemesterCourse, collections: string[]) =>
+      typeof course === 'object' && typeof collections === 'object',
+    'add-collection': (name: string) => typeof name === 'string',
     'edit-collection': (name: string, oldname: string) =>
       typeof name === 'string' && typeof oldname === 'string',
   },
@@ -189,10 +189,11 @@ export default defineComponent({
       this.isEditColorOpen = false;
     },
     addCollection(name: string) {
-      this.$emit('add-course-collection', name);
+      this.$emit('add-collection', name);
     },
-    saveCourse(courseCode: string, collections: string[]) {
-      this.$emit('save-course', courseCode, collections);
+    saveCourse(collections: string[]) {
+      const course = { ...this.courseObj };
+      this.$emit('save-course', course, collections);
     },
     /* only to rename the collection */
     editCollection(name: string, oldname: string) {

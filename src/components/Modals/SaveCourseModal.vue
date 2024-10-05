@@ -25,11 +25,16 @@
 
     <div class="saveCourseModal-body">
       <div class="saveCourseModal-body-content">
-        <p v-for="(collection, index) in collections" :key="index">{{ collection }}</p>
-        <!--Must find all possible collections
-            Checkbox Style
-            Need a collections variable in firestore
-        -->
+        <div v-for="collection in collections" :key="collection">
+          <input
+            v-if:="!isDefaultCollection"
+            type="checkbox"
+            id="collection"
+            :value="collection"
+            v-model="checkedCollections"
+          />
+          <label for="collection">{{ collection }}</label>
+        </div>
       </div>
     </div>
   </teleport-modal>
@@ -44,19 +49,26 @@ export default defineComponent({
   components: { TeleportModal },
   props: {
     courseCode: { type: String, required: true },
-    isdefaultCollection: { type: Boolean, default: true },
   },
   data() {
     return {
-      collections: store.state.collections.map(collection => collection.name),
+      checkedCollections: [] as string[], // New data property to manage checked state
     };
   },
   computed: {
-    placeholderName() {
+    isDefaultCollection() {
+      const collections = store.state.collections.map(collection => collection.name);
+      return collections.length === 0;
+    },
+    collections() {
+      const collections = store.state.collections.map(collection => collection.name);
+      return collections.length === 0 ? ['No collections added yet'] : collections;
+    },
+    placeholder_name() {
       const oldcollections = store.state.collections.map(collection => collection.name);
       let newCollectionNum = 1;
       // eslint-disable-next-line no-loop-func
-      while (oldcollections.find(p => p === `Collection ${newCollectionNum}`)) {
+      while (oldcollections.find(p => p === `New Collection ${newCollectionNum}`)) {
         newCollectionNum += 1;
       }
       return `New Collection ${newCollectionNum}`;
@@ -64,8 +76,7 @@ export default defineComponent({
   },
   emits: {
     'close-save-course-modal': () => true,
-    'save-course': (courseCode: string, collections: string[]) =>
-      typeof courseCode === 'string' && typeof collections === 'object',
+    'save-course': (collections: string[]) => typeof collections === 'object',
     'add-collection': (name: string) => typeof name === 'string',
   },
   methods: {
@@ -73,11 +84,11 @@ export default defineComponent({
       this.$emit('close-save-course-modal');
     },
     saveCourse() {
-      this.$emit('save-course', this.courseCode, this.collections);
+      this.$emit('save-course', this.checkedCollections);
       this.closeCurrentModal();
     },
     addCollection() {
-      this.$emit('add-collection', this.placeholderName);
+      this.$emit('add-collection', this.placeholder_name);
     },
   },
 });

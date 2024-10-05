@@ -110,7 +110,6 @@
                 @edit-course-credit="editCourseCredit"
                 @save-course="saveCourse"
                 @add-collection="addCollection"
-                @add-course-collection="addCourseToCollections"
                 @edit-collection="editCollection"
               />
               <placeholder
@@ -170,7 +169,7 @@ import {
   deleteAllCoursesFromSemester,
   updateRequirementChoices,
   addCollection,
-  // addCourseToCollections,
+  addCourseToCollections,
   editCollection,
 } from '@/global-firestore-data';
 import store, { updateSubjectColorData } from '@/store';
@@ -415,9 +414,10 @@ export default defineComponent({
     closeConfirmationModal() {
       this.isConfirmationOpen = false;
     },
-    saveCourse(courseCode: string, collections: string[]) {
-      // addCourseToCollections(courseCode, collections);
-      this.openConfirmationModal(`Saved ${courseCode} to ${collections.join(', ')}`);
+
+    saveCourse(course: FirestoreSemesterCourse, collections: string[]) {
+      addCourseToCollections(store.state.currentPlan, this.year, this.season, course, collections);
+      this.openConfirmationModal(`Saved ${course.code} to ${collections.join(', ')}`);
     },
     addCollection(name: string) {
       addCollection(name, []);
@@ -426,10 +426,6 @@ export default defineComponent({
       setTimeout(() => {
         this.isConfirmationOpen = false;
       }, 2000);
-    },
-    addCourseToCollections(courseCode: string, collections: string[]) {
-      // addCourseToCollections(courseCode, collections);
-      this.openConfirmationModal(`Added ${courseCode} to ${collections.join(', ')}`);
     },
     editCollection(oldname: string, name: string) {
       const { collections } = store.state;
@@ -441,11 +437,6 @@ export default defineComponent({
       if (toEdit !== undefined) {
         editCollection(oldname, updater);
       }
-      store.commit(
-        'setCurrentCollection',
-        store.state.collections.find(collection => collection.name === name)
-      );
-      // store.commit('setOrderByNewest', store.state.orderByNewest);
       this.confirmationText = `${oldname} has been renamed to ${name}!`;
       this.isConfirmationOpen = true;
       setTimeout(() => {

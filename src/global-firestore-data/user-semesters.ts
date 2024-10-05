@@ -17,9 +17,6 @@ export const editCollections = async (
 ): Promise<void> => {
   const collections = updater(store.state.collections);
   store.commit('setCollections', collections);
-  await updateDoc(doc(semestersCollection, store.state.currentFirebaseUser.email), {
-    collections,
-  });
 };
 
 export const editSemesters = (
@@ -125,10 +122,6 @@ export const addCollection = async (
 ): Promise<void> => {
   GTagEvent(gtag, 'add-collection');
   await editCollections(oldCollections => [...oldCollections, createCollection(name, courses)]);
-  // store.commit(
-  //   'setCurrentPlan',
-  //   store.state.plans.find(plan => plan.name === name)
-  // );
 };
 
 export const addSemester = (
@@ -193,29 +186,27 @@ export const deletePlan = async (name: string, gtag?: VueGtag): Promise<void> =>
 
 /** Add one course to multiple collections.
  * This course is removed from the requirement choices.
- *  */
+ */
 export const addCourseToCollections = (
   plan: Plan,
   year: number,
   season: FirestoreSemesterSeason,
-  courseUniqueID: number,
-  choiceUpdater: (choice: FirestoreCourseOptInOptOutChoices) => FirestoreCourseOptInOptOutChoices,
+  newCourse: FirestoreSemesterCourse,
+  collectionIDs: string[], // Array of collection IDs
   gtag?: VueGtag
 ): void => {
   GTagEvent(gtag, 'add-course-collections');
   editCollections(oldCollections =>
     oldCollections.map(collection => {
-      if (collection.courses.some(course => course.uniqueID === courseUniqueID)) {
-        return collection;
+      if (collectionIDs.includes(collection.name)) {
+        return { ...collection, courses: [...collection.courses, newCourse] };
       }
-      return {
-        ...collection,
-        courses: [...collection.courses, store.getters.getCourse(courseUniqueID)],
-      };
+      return collection;
     })
   );
-  deleteCourseFromSemester(plan, year, season, courseUniqueID);
-  deleteCourseFromRequirementChoices(courseUniqueID);
+
+  deleteCourseFromSemester(plan, year, season, newCourse.uniqueID);
+  deleteCourseFromRequirementChoices(newCourse.uniqueID);
 };
 
 /** Delete a course from a certain collection. */
