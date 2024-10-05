@@ -108,6 +108,10 @@
                 @color-subject="colorSubject"
                 @course-on-click="courseOnClick"
                 @edit-course-credit="editCourseCredit"
+                @save-course="saveCourse"
+                @add-collection="addCollection"
+                @add-course-collection="addCourseToCollections"
+                @edit-collection="editCollection"
               />
               <placeholder
                 v-else
@@ -165,6 +169,9 @@ import {
   deleteCourseFromSemester,
   deleteAllCoursesFromSemester,
   updateRequirementChoices,
+  addCollection,
+  // addCourseToCollections,
+  editCollection,
 } from '@/global-firestore-data';
 import store, { updateSubjectColorData } from '@/store';
 import {
@@ -407,6 +414,43 @@ export default defineComponent({
     },
     closeConfirmationModal() {
       this.isConfirmationOpen = false;
+    },
+    saveCourse(courseCode: string, collections: string[]) {
+      // addCourseToCollections(courseCode, collections);
+      this.openConfirmationModal(`Saved ${courseCode} to ${collections.join(', ')}`);
+    },
+    addCollection(name: string) {
+      addCollection(name, []);
+      this.confirmationText = `${name} has been added!`;
+      this.isConfirmationOpen = true;
+      setTimeout(() => {
+        this.isConfirmationOpen = false;
+      }, 2000);
+    },
+    addCourseToCollections(courseCode: string, collections: string[]) {
+      // addCourseToCollections(courseCode, collections);
+      this.openConfirmationModal(`Added ${courseCode} to ${collections.join(', ')}`);
+    },
+    editCollection(oldname: string, name: string) {
+      const { collections } = store.state;
+      const toEdit = collections.find(collection => collection.name === oldname);
+      const updater = (collection: Collection): Collection => ({
+        name,
+        courses: collection.courses,
+      });
+      if (toEdit !== undefined) {
+        editCollection(oldname, updater);
+      }
+      store.commit(
+        'setCurrentCollection',
+        store.state.collections.find(collection => collection.name === name)
+      );
+      // store.commit('setOrderByNewest', store.state.orderByNewest);
+      this.confirmationText = `${oldname} has been renamed to ${name}!`;
+      this.isConfirmationOpen = true;
+      setTimeout(() => {
+        this.isConfirmationOpen = false;
+      }, 2000);
     },
     // TODO @willespencer refactor the below methods after gatekeep removed (to only 1 method)
     addCourse(data: CornellCourseRosterCourse, choice: FirestoreCourseOptInOptOutChoices) {

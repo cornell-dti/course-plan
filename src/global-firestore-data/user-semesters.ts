@@ -192,8 +192,7 @@ export const deletePlan = async (name: string, gtag?: VueGtag): Promise<void> =>
 };
 
 /** Add one course to multiple collections.
- * This course can no longer be added to semesters and is removed
- * from the requirement choices.
+ * This course is removed from the requirement choices.
  *  */
 export const addCourseToCollections = (
   plan: Plan,
@@ -217,11 +216,9 @@ export const addCourseToCollections = (
   );
   deleteCourseFromSemester(plan, year, season, courseUniqueID);
   deleteCourseFromRequirementChoices(courseUniqueID);
-  // course cannot be added to semester anymore unless removed or drag & dropped back.
 };
 
-/** Delete a course from a certain collection. This course can now be
-added into semeseters. */
+/** Delete a course from a certain collection. */
 export const deleteCourseFromCollection = (
   plan: Plan,
   year: number,

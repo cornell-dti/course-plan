@@ -17,7 +17,7 @@
       <!-- create a rectangular border-->
       <div class="saveCourseModal-header-text">
         <span> Collections </span>
-        <button class="saveCourseModal-header-text-addButton" @click="addNewCollection">
+        <button class="saveCourseModal-header-text-addButton" @click="addCollection">
           <img src="@/assets/images/plus.svg" alt="add new collection" />
         </button>
       </div>
@@ -25,7 +25,7 @@
 
     <div class="saveCourseModal-body">
       <div class="saveCourseModal-body-content">
-        <p>{{ collection }}</p>
+        <p v-for="(collection, index) in collections" :key="index">{{ collection }}</p>
         <!--Must find all possible collections
             Checkbox Style
             Need a collections variable in firestore
@@ -38,30 +38,46 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import TeleportModal from '@/components/Modals/TeleportModal.vue';
+import store from '@/store';
 
 export default defineComponent({
   components: { TeleportModal },
   props: {
     courseCode: { type: String, required: true },
-    collection: { type: String, default: 'No collections added yet' },
     isdefaultCollection: { type: Boolean, default: true },
+  },
+  data() {
+    return {
+      collections: store.state.collections.map(collection => collection.name),
+    };
+  },
+  computed: {
+    placeholderName() {
+      const oldcollections = store.state.collections.map(collection => collection.name);
+      let newCollectionNum = 1;
+      // eslint-disable-next-line no-loop-func
+      while (oldcollections.find(p => p === `Collection ${newCollectionNum}`)) {
+        newCollectionNum += 1;
+      }
+      return `New Collection ${newCollectionNum}`;
+    },
   },
   emits: {
     'close-save-course-modal': () => true,
-    'save-course': (name: string) => typeof name === 'string',
-    'open-add-collection-modal': () => true,
+    'save-course': (courseCode: string, collections: string[]) =>
+      typeof courseCode === 'string' && typeof collections === 'object',
+    'add-collection': (name: string) => typeof name === 'string',
   },
   methods: {
     closeCurrentModal() {
       this.$emit('close-save-course-modal');
     },
     saveCourse() {
-      this.$emit('save-course', this.courseCode);
-      this.$emit('close-save-course-modal');
+      this.$emit('save-course', this.courseCode, this.collections);
+      this.closeCurrentModal();
     },
-    addNewCollection() {
-      this.$emit('close-save-course-modal');
-      this.$emit('open-add-collection-modal');
+    addCollection() {
+      this.$emit('add-collection', this.placeholderName);
     },
   },
 });

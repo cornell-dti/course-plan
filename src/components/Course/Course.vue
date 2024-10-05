@@ -10,8 +10,9 @@
     <save-course-modal
       :courseCode="courseCode"
       @close-save-course-modal="closeSaveCourseModal"
-      @add-course-collection="addCourseCollection"
+      @save-course="saveCourse"
       @add-collection="addCollection"
+      @edit-collection="editCollection"
       v-if="isSaveCourseOpen"
     />
     <edit-color
@@ -88,9 +89,9 @@ import {
   reportCourseColorChange,
   reportSubjectColorChange,
 } from '@/components/BottomBar/BottomBarState';
+import { isCourseConflict } from '@/store';
 import { clickOutside } from '@/utilities';
 import EditColor from '../Modals/EditColor.vue';
-import { isCourseConflict } from '@/store';
 
 export default defineComponent({
   components: { CourseCaution, CourseMenu, EditColor, SaveCourseModal },
@@ -113,6 +114,11 @@ export default defineComponent({
     'course-on-click': (course: FirestoreSemesterCourse) => typeof course === 'object',
     'edit-course-credit': (credit: number, uniqueID: number) =>
       typeof credit === 'number' && typeof uniqueID === 'number',
+    'save-course': (courseCode: string, collections: string[]) =>
+      typeof courseCode === 'string' && typeof collections === 'object',
+    'add-course-collection': (name: string) => typeof name === 'string',
+    'edit-collection': (name: string, oldname: string) =>
+      typeof name === 'string' && typeof oldname === 'string',
   },
   data() {
     return {
@@ -182,13 +188,15 @@ export default defineComponent({
     closeEditColorModal() {
       this.isEditColorOpen = false;
     },
-    addCollection() {
-      this.isSaveCourseOpen = false;
-      // TODO: implement add collection
+    addCollection(name: string) {
+      this.$emit('add-course-collection', name);
     },
-    addCourseCollection() {
-      this.isSaveCourseOpen = false;
-      // TODO: implement save course
+    saveCourse(courseCode: string, collections: string[]) {
+      this.$emit('save-course', courseCode, collections);
+    },
+    /* only to rename the collection */
+    editCollection(name: string, oldname: string) {
+      this.$emit('edit-collection', name, oldname);
     },
     colorCourse(color: string) {
       this.$emit('color-course', color, this.courseObj.uniqueID, this.courseObj.code);
