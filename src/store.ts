@@ -51,6 +51,7 @@ export type VuexStoreState = {
   isTeleportModalOpen: boolean;
   plans: readonly Plan[];
   currentPlan: Plan;
+  collections: readonly Collection[];
 };
 
 export class TypedVuexStore extends Store<VuexStoreState> {}
@@ -99,6 +100,7 @@ const store: TypedVuexStore = new TypedVuexStore({
     isTeleportModalOpen: false,
     plans: [],
     currentPlan: { name: '', semesters: [] },
+    collections: [],
   },
   actions: {},
   getters: {
@@ -185,6 +187,9 @@ const store: TypedVuexStore = new TypedVuexStore({
     },
     setSawNewFeature(state: VuexStoreState, seen: boolean) {
       state.onboardingData.sawNewFeature = seen;
+    },
+    setCollections(state: VuexStoreState, newCollections: readonly Collection[]) {
+      state.collections = newCollections;
     },
   },
 });
@@ -326,6 +331,7 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
       const plan = getFirstPlan(data);
       store.commit('setPlans', data.plans);
       store.commit('setCurrentPlan', plan);
+      // store.commit('setCollections', data.collections); Note: toggle this on and off to save collections progress after refresh
       const { orderByNewest } = data;
       store.commit('setSemesters', plan.semesters);
       updateDoc(doc(fb.semestersCollection, simplifiedUser.email), {

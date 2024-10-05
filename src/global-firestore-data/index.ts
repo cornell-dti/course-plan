@@ -17,12 +17,18 @@ export {
   updateSawNewFeature,
 } from './user-onboarding-data';
 export {
+  editCollections,
+  editCollection,
   editPlans,
   editPlan,
   editSemesters,
   editSemester,
+  addCollection,
+  addCourseToCollections,
   addSemester,
   addPlan,
+  deleteCollection,
+  deleteCourseFromCollection,
   deletePlan,
   deleteSemester,
   addCourseToSemester,

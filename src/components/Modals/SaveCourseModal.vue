@@ -17,7 +17,7 @@
       <!-- create a rectangular border-->
       <div class="saveCourseModal-header-text">
         <span> Collections </span>
-        <button class="saveCourseModal-header-text-addButton" @click="addNewCollection">
+        <button class="saveCourseModal-header-text-addButton" @click="addCollection">
           <img src="@/assets/images/plus.svg" alt="add new collection" />
         </button>
       </div>
@@ -25,11 +25,16 @@
 
     <div class="saveCourseModal-body">
       <div class="saveCourseModal-body-content">
-        <p>{{ collection }}</p>
-        <!--Must find all possible collections
-            Checkbox Style
-            Need a collections variable in firestore
-        -->
+        <div v-for="collection in collections" :key="collection">
+          <input
+            v-if:="!isDefaultCollection"
+            type="checkbox"
+            id="collection"
+            :value="collection"
+            v-model="checkedCollections"
+          />
+          <label for="collection">{{ collection }}</label>
+        </div>
       </div>
     </div>
   </teleport-modal>
@@ -38,30 +43,52 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import TeleportModal from '@/components/Modals/TeleportModal.vue';
+import store from '@/store';
 
 export default defineComponent({
   components: { TeleportModal },
   props: {
     courseCode: { type: String, required: true },
-    collection: { type: String, default: 'No collections added yet' },
-    isdefaultCollection: { type: Boolean, default: true },
+  },
+  data() {
+    return {
+      checkedCollections: [] as string[], // New data property to manage checked state
+    };
+  },
+  computed: {
+    isDefaultCollection() {
+      const collections = store.state.collections.map(collection => collection.name);
+      return collections.length === 0;
+    },
+    collections() {
+      const collections = store.state.collections.map(collection => collection.name);
+      return collections.length === 0 ? ['No collections added yet'] : collections;
+    },
+    placeholder_name() {
+      const oldcollections = store.state.collections.map(collection => collection.name);
+      let newCollectionNum = 1;
+      // eslint-disable-next-line no-loop-func
+      while (oldcollections.find(p => p === `New Collection ${newCollectionNum}`)) {
+        newCollectionNum += 1;
+      }
+      return `New Collection ${newCollectionNum}`;
+    },
   },
   emits: {
     'close-save-course-modal': () => true,
-    'save-course': (name: string) => typeof name === 'string',
-    'open-add-collection-modal': () => true,
+    'save-course': (collections: string[]) => typeof collections === 'object',
+    'add-collection': (name: string) => typeof name === 'string',
   },
   methods: {
     closeCurrentModal() {
       this.$emit('close-save-course-modal');
     },
     saveCourse() {
-      this.$emit('save-course', this.courseCode);
-      this.$emit('close-save-course-modal');
+      this.$emit('save-course', this.checkedCollections);
+      this.closeCurrentModal();
     },
-    addNewCollection() {
-      this.$emit('close-save-course-modal');
-      this.$emit('open-add-collection-modal');
+    addCollection() {
+      this.$emit('add-collection', this.placeholder_name);
     },
   },
 });
