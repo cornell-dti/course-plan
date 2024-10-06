@@ -190,7 +190,7 @@ const store: TypedVuexStore = new TypedVuexStore({
     },
     setSawGiveaway(state: VuexStoreState, seen: boolean) {
       const currentDate = new Date();
-      const cutoffDate = new Date('2024-10-30'); // giveaway ending date
+      const cutoffDate = new Date('2024-10-5'); // giveaway ending date - *TEMPORARY* Made it october 5th for testing purposes
 
       if (currentDate >= cutoffDate) {
         state.onboardingData.sawGiveaway = true; // if the current date is past the giveaway date, then we set saw giveaway to true, meaning the modal won't be visible to them
