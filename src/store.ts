@@ -189,7 +189,14 @@ const store: TypedVuexStore = new TypedVuexStore({
       state.onboardingData.sawNewFeature = seen;
     },
     setSawGiveaway(state: VuexStoreState, seen: boolean) {
-      state.onboardingData.sawGiveaway = seen;
+      const currentDate = new Date();
+      const cutoffDate = new Date('2024-10-30'); // giveaway ending date
+
+      if (currentDate >= cutoffDate) {
+        state.onboardingData.sawGiveaway = true; // if the current date is past the giveaway date, then we set saw giveaway to true, meaning the modal won't be visible to them
+      } else {
+        state.onboardingData.sawGiveaway = seen; // otherwise, if the current date is within the giveaway time period, then whether the modal is visible or not is dependent on whether they've seen it before
+      }
     },
     setSawScheduleGenerator(state: VuexStoreState, seen: boolean) {
       state.onboardingData.sawScheduleGenerator = seen;
