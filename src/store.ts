@@ -189,14 +189,7 @@ const store: TypedVuexStore = new TypedVuexStore({
       state.onboardingData.sawNewFeature = seen;
     },
     setSawGiveaway(state: VuexStoreState, seen: boolean) {
-      const currentDate = new Date();
-      const cutoffDate = new Date('2024-10-3'); // October 30th, 2024 *TEMPORARILY OCTOBER 3RD*
-
-      if (currentDate >= cutoffDate) {
-        state.onboardingData.sawGiveaway = true; // Automatically set to true if the date is on or after October 30, 2024
-      } else {
-        state.onboardingData.sawGiveaway = seen; // Automatically set to false (or "seen") if it's before October 30, 2024
-      }
+      state.onboardingData.sawGiveaway = seen;
     },
     setSawScheduleGenerator(state: VuexStoreState, seen: boolean) {
       state.onboardingData.sawScheduleGenerator = seen;

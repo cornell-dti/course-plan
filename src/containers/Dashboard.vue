@@ -101,7 +101,7 @@
       right-button-text="Submit"
       rightButtonAlt="giveaway submit icon"
       @modal-closed="closeGiveawayModal"
-      v-if="showGiveawayModal"
+      v-if="showGiveawayModal && isBeforeCutoff"
     >
     </giveaway-modal>
   </div>
@@ -228,6 +228,12 @@ export default defineComponent({
     bottomBarIsExpanded(): boolean {
       return immutableBottomBarState.isExpanded;
     },
+    isBeforeCutoff(): boolean {
+      const currentDate = new Date();
+      const cutoffDate = new Date('2024-10-30T23:59:00'); // October 30th, 2024, at 11:59 PM
+      console.log(currentDate < cutoffDate);
+      return currentDate < cutoffDate;
+    },
   },
   created() {
     window.addEventListener('resize', this.resizeEventHandler);
@@ -242,7 +248,8 @@ export default defineComponent({
           this.startScheduleGeneratorTour = true;
         }
         if (!this.onboardingData.sawGiveaway) {
-          this.showGiveawayModal = true;
+          // if user did not see the giveaway
+          this.showGiveawayModal = true; // show the giveaway
         }
       } else {
         this.startOnboarding();
