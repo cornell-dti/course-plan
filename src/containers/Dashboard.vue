@@ -96,6 +96,14 @@
       @closeTourWindow="closeTour"
       v-if="showTourEndWindow"
     />
+    <giveaway-modal
+      title="Courseplan Giveaway!"
+      right-button-text="Submit"
+      rightButtonAlt="giveaway submit icon"
+      @modal-closed="closeGiveawayModal"
+      v-if="showGiveawayModal && isBeforeCutoff"
+    >
+    </giveaway-modal>
   </div>
 </template>
 
@@ -114,6 +122,7 @@ import TourWindow from '@/components/Modals/TourWindow.vue';
 import ToolsContainer from '@/containers/Tools.vue';
 import ProfileEditor from '@/containers/Profile.vue';
 import featureFlagCheckers from '@/feature-flags';
+import GiveawayModal from '@/components/Modals/GiveawayModal.vue';
 
 import store, { initializeFirestoreListeners } from '@/store';
 import { immutableBottomBarState } from '@/components/BottomBar/BottomBarState';
@@ -166,6 +175,7 @@ export default defineComponent({
     TourWindow,
     ToolsContainer,
     ProfileEditor,
+    GiveawayModal,
   },
   data() {
     return {
@@ -186,6 +196,7 @@ export default defineComponent({
       showTourEndWindow: false,
       showToolsPage: false,
       isProfileOpen: false,
+      showGiveawayModal: false,
       isScheduleGenerateOpen: false,
       isScheduleGenerateModalOpen: false,
       coursesForGeneration: [] as CourseForFrontend[],
@@ -217,6 +228,12 @@ export default defineComponent({
     bottomBarIsExpanded(): boolean {
       return immutableBottomBarState.isExpanded;
     },
+    isBeforeCutoff(): boolean {
+      const currentDate = new Date();
+      const cutoffDate = new Date('2024-10-30T23:59:00'); // October 30th, 2024, at 11:59 PM
+      console.log(currentDate < cutoffDate);
+      return currentDate < cutoffDate;
+    },
   },
   created() {
     window.addEventListener('resize', this.resizeEventHandler);
@@ -229,6 +246,10 @@ export default defineComponent({
           this.startMultiplePlansTour = true;
         } else if (!this.onboardingData.sawScheduleGenerator) {
           this.startScheduleGeneratorTour = true;
+        }
+        if (!this.onboardingData.sawGiveaway) {
+          // if user did not see the giveaway
+          this.showGiveawayModal = true; // show the giveaway
         }
       } else {
         this.startOnboarding();
@@ -340,6 +361,10 @@ export default defineComponent({
 
     closeTour() {
       this.showTourEndWindow = false;
+    },
+
+    closeGiveawayModal() {
+      this.showGiveawayModal = false;
     },
   },
 });
