@@ -48,7 +48,7 @@ HTML = f"""
 <div style="font-family: Proxima Nova, sans-serif; margin: 0 auto; background-color: #F7F7F7; font-size: 16px;">
     <div style="text-align: center; padding: 40px 0px;">
         <img src="https://i.postimg.cc/3RFF8VpK/logo.png"
-            alt="Cornell CoursePlan Logo" style="height: 50px;">
+            alt="Cornell CoursePlan Logo" style="height: 50px; width: 172px;">
     </div>
     <div
         style="background-color: #FFFFFF; border-radius: 10px; padding: 40px 48px; margin-bottom: 20px; max-width: 600px; margin: 0 auto;">
