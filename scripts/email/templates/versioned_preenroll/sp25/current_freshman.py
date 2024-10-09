@@ -47,7 +47,7 @@ SUBJECT = "Pre-Enroll Reminder from CoursePlan for the Spring '25 Semester!"
 HTML = f"""
 <div style="font-family: Proxima Nova, sans-serif; margin: 0 auto; background-color: #F7F7F7; font-size: 16px;">
     <div style="text-align: center; padding: 40px 0px;">
-        <img src="https://i.ibb.co/f9zrdNS/logo.png"
+        <img src="https://i.postimg.cc/3RFF8VpK/logo.png"
             alt="Cornell CoursePlan Logo" style="height: 50px;">
     </div>
     <div
@@ -109,7 +109,7 @@ HTML = f"""
 
         <p style="font-size: 16px;">PS: have you heard of our giveaway? 👀</p>
 
-        <img src="https://i.ibb.co/MNcbn9L/cp-square.png"
+        <img src="https://i.postimg.cc/yYYvd1v2/cp-square.png"
             alt="Cornell CoursePlan Icon" style="height: 32px;">
 
         <p style="line-height: 1.5; margin-top: 37.5px; font-size: 16px;">
