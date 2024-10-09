@@ -69,7 +69,7 @@ HTML = f"""
             Plans</h3>
 
         <div style="padding: 20px;">
-            <img src="https://i.ibb.co/vQJ8nV8/screen1.png"
+            <img src="https://i.postimg.cc/pVRGnYs9/auto-generatedsched.png"
                 alt="Schedule Generator" style="width: 100%; height: auto; margin-bottom: -4px;">
             <p style="color: #3D3D3D; text-align: center; font-size: 15px; width: 50%; margin: 0 auto 16px;">Select
                 the classes&nbsp;<span style="opacity: 50%;">you're
@@ -82,7 +82,7 @@ HTML = f"""
         </div>
 
         <div style="padding: 20px; margin-bottom: 44px;">
-            <img src="https://i.ibb.co/2ncKFC1/screen2.png"
+            <img src="https://i.postimg.cc/LHgbdsqs/multipleversion.png"
                 alt="Multiple Plans" style="width: 100%; height: auto; margin-bottom: -4px;">
             <p style="color: #3D3D3D; text-align: center; font-size: 15px; width: 50%; margin: 0 auto 16px;">Create
                 multiple versions&nbsp;<span style="opacity: 50%;">of
@@ -100,7 +100,7 @@ HTML = f"""
                 style="color: #1AA9A5; text-decoration: none;" target="_blank">courseplan.io@gmail.com</a>! And... we're
             cooking up some cool updates for y'all, so follow
             our <a href="https://www.instagram.com/courseplan.io/" style="color: #1AA9A5; text-decoration: none;"
-                target="_blank">instagram</a> for the latest. Look forward to hearing from us every so often — right in
+                target="_blank">Instagram</a> for the latest. Look forward to hearing from us every so often — right in
             your inbox!</p>
 
         <p style="line-height: 1.5; font-size: 16px;">
