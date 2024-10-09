@@ -47,12 +47,12 @@ def get_users() -> Dict[Tuple[str, str], List[Dict]]:
         grad_programs = [
             program.get("acronym", "") for program in user_data.get("gradPrograms", [])
         ]
-        grad_sem = user_data.get("gradSem", None)
-        grad_year = user_data.get("gradYear", None)
+        entrance_sem = user_data.get("entranceSem", None)
+        entrance_year = user_data.get("entranceYear", None)
         majors = [major.get("acronym", "") for major in user_data.get("majors", [])]
         minors = [minor.get("acronym", "") for minor in user_data.get("minors", [])]
 
-        key = (grad_sem, grad_year)
+        key = (entrance_sem, entrance_year)
         user_map[key].append(
             {
                 "email": email,
@@ -61,8 +61,8 @@ def get_users() -> Dict[Tuple[str, str], List[Dict]]:
                 "last_name": last_name,
                 "colleges": colleges,
                 "grad_programs": grad_programs,
-                "graduation_semester": grad_sem,
-                "graduation_year": grad_year,
+                "entrance_semester": entrance_sem,
+                "entrance_year": entrance_year,
                 "majors": majors,
                 "minors": minors,
             }

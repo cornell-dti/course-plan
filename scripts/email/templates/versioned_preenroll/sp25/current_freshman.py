@@ -18,21 +18,21 @@ BCC = [
     for users in USERS.values()
     for user in users
     if (
-        (user["graduation_year"] == "2029" and user["graduation_semester"] == "Spring")
-        or (user["graduation_year"] == "2026" and user["graduation_semester"] == "Fall")
+        (user["entrance_year"] == "2024" and user["entrance_semester"] == "Fall")
+        or (user["entrance_year"] == "2025" and user["entrance_semester"] == "Spring")
         # handle VTMED students
-        or (
-            (
-                user["graduation_year"] == "2029"
-                and user["graduation_semester"] == "Spring"
-                and "VTMED" in user["majors"]
-            )
-            or (
-                user["graduation_year"] == "2028"
-                and user["graduation_semester"] == "Fall"
-                and "VTMED" in user["majors"]
-            )
-        )
+        # or (
+        #     (
+        #         user["entrance_year"] == "2029"
+        #         and user["entrance_semester"] == "Spring"
+        #         and "VTMED" in user["majors"]
+        #     )
+        #     or (
+        #         user["entrance_year"] == "2028"
+        #         and user["entrance_semester"] == "Fall"
+        #         and "VTMED" in user["majors"]
+        #     )
+        # )
     )
 ]
 
