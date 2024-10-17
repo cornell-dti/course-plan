@@ -36,7 +36,7 @@ type FirestoreSemester = {
 };
 
 type FirestoreSemestersData = {
-  // readonly collections: readonly Collection[]; Note: Not sure where to store collections
+  readonly savedCourses: readonly Collection[]; // confirmed works:
   readonly plans: readonly Plan[];
   readonly semesters: readonly FirestoreSemester[];
   readonly orderByNewest: boolean;

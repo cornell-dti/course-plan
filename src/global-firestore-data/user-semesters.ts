@@ -15,7 +15,7 @@ import {
 export const editCollections = async (
   updater: (oldCollections: readonly Collection[]) => readonly Collection[]
 ): Promise<void> => {
-  const collections = updater(store.state.collections);
+  const collections = updater(store.state.savedCourses);
   store.commit('setCollections', collections);
 };
 
@@ -153,7 +153,7 @@ export const addPlan = async (
  */
 export const deleteCollection = async (name: string, gtag?: VueGtag): Promise<void> => {
   GTagEvent(gtag, 'delete-collection');
-  if (store.state.collections.some(p => p.name === name)) {
+  if (store.state.savedCourses.some(p => p.name === name)) {
     await editCollections(oldCollections => oldCollections.filter(p => p.name !== name));
   }
 };
@@ -192,7 +192,7 @@ export const addCourseToCollections = (
   year: number,
   season: FirestoreSemesterSeason,
   newCourse: FirestoreSemesterCourse,
-  collectionIDs: string[], // Array of collection IDs
+  collectionIDs: string[],
   gtag?: VueGtag
 ): void => {
   GTagEvent(gtag, 'add-course-collections');
