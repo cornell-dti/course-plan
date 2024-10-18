@@ -19,7 +19,6 @@ before('Visit site logged in', () => {
 
 // Test to confirm that the new user walkthrough works as expected
 // Click through the initial explanation, then the 4 following steps, and finally the finishing page
-
 it('Click through new feature tour', () => {
   cy.get('.introjs-nextbutton').click();
 });
