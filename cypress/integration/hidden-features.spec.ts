@@ -170,35 +170,35 @@ it('Test that only one semester button shows', () => {
 
 // Test to confirm that CUReviews data is being loaded in for a sample course
 // In the past, CUReviews data has stopped coming in and not been noticed since it is hidden in the bottom bar
-// it('Confirm CUReviews data exists', () => {
-//   // open add modal and try to add CS 1110
-//   cy.get('[data-cyId=semester-addCourse]').click();
-//   cy.get('[data-cyId=newCourse-dropdown]').type('CS 1110');
-//   cy.get('[data-cyId=newCourse-searchResult]').first().click();
-//   cy.get('[data-cyId=modal-button]').click();
+it('Confirm CUReviews data exists', () => {
+  // open add modal and try to add CS 1110
+  cy.get('[data-cyId=semester-addCourse]').click();
+  cy.get('[data-cyId=newCourse-dropdown]').type('CS 1110');
+  cy.get('[data-cyId=newCourse-searchResult]').first().click();
+  cy.get('[data-cyId=modal-button]').click();
 
-//   // open the bottom bar
-//   cy.get('[data-cyId=semester-course]').click();
+  // open the bottom bar
+  cy.get('[data-cyId=semester-course]').click();
 
-//   // confirm each CUReviews data value is not "N/A" - which occurs if data fetched incorrectly
-//   cy.get('[data-cyId="CUReviews-overall')
-//     .invoke('text')
-//     .should(text => {
-//       expect(text).not.to.eq('N/A');
-//     });
+  // confirm each CUReviews data value is not "N/A" - which occurs if data fetched incorrectly
+  cy.get('[data-cyId="CUReviews-overall')
+    .invoke('text')
+    .should(text => {
+      expect(text).not.to.eq('N/A');
+    });
 
-//   cy.get('[data-cyId="CUReviews-difficulty')
-//     .invoke('text')
-//     .should(text => {
-//       expect(text).not.to.eq('N/A');
-//     });
+  cy.get('[data-cyId="CUReviews-difficulty')
+    .invoke('text')
+    .should(text => {
+      expect(text).not.to.eq('N/A');
+    });
 
-//   cy.get('[data-cyId="CUReviews-workload')
-//     .invoke('text')
-//     .should(text => {
-//       expect(text).not.to.eq('N/A');
-//     });
-// });
+  cy.get('[data-cyId="CUReviews-workload')
+    .invoke('text')
+    .should(text => {
+      expect(text).not.to.eq('N/A');
+    });
+});
 
 // Test to confirm that teleport modals can be clicked outside of to close them
 it('Click outside teleport modals', () => {
