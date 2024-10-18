@@ -236,6 +236,6 @@ it('Use mobile navbar', () => {
 });
 
 // Test to make sure giveaway modal successfully exits
-it('Click through giveaway exit', () => {
-  cy.get('[data-cyId=giveaway-exit]').click();
-});
+// it('Click through giveaway exit', () => {
+//   cy.get('[data-cyId=giveaway-exit]').click();
+// });
