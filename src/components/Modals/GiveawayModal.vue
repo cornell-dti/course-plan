@@ -18,7 +18,17 @@
       <div class="modal-textWrapper">
         <img class="modal-logo" src="@/assets/images/branding/logo.svg" />
         <h1 class="modal-title">{{ title }}</h1>
-        <div>Sign up for your chance to win a $25 gift card!</div>
+        <div>
+          Sign up for a chance to win a
+          <a
+            href="https://sonnyangelusa.com/products/smiski-hippers"
+            target="_blank"
+            style="color: black; text-decoration: underline"
+            onmouseover="this.style.color='#4D7D92'"
+            onmouseout="this.style.color='black'"
+            >Smiski Hipper</a
+          >
+        </div>
         <div class="textInput">
           <label class="textInput-label">Cornell NetID</label>
           <div class="textInput-wrapper">
