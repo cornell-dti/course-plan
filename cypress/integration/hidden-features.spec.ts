@@ -234,3 +234,8 @@ it('Use mobile navbar', () => {
   cy.get('[data-cyId=navbar-viewRequirements]').click();
   cy.get('[data-cyId=requirements-viewMore]').click();
 });
+
+// Test to make sure giveaway modal successfully exits
+it('Exit Giveaway Modal', () => {
+  cy.get('[data-cyId=giveaway-exit]').click();
+});
