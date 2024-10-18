@@ -6,6 +6,7 @@
       'teleport-transparentBackground': hasClickableTransparentBackground,
     }"
     @click="closeOnClickOutside"
+    data-cyId="giveaway-exit"
     ref="modalBackground"
   >
     <div class="modal-content">
