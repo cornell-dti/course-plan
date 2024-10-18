@@ -24,10 +24,6 @@ it('Click through new feature tour', () => {
   cy.get('.introjs-nextbutton').click();
 });
 
-it('Click through giveaway exit', () => {
-  cy.get('[data-cyId=giveaway-exit]').click();
-});
-
 // Delete existing semesters to ensure existing data does not mess with tests
 it('Delete all existing semesters, if any exist', () => {
   const semesterMenus = '[data-cyId=semesterMenu]';
