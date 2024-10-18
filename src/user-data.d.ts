@@ -66,6 +66,7 @@ type FirestoreOnboardingUserData = {
   readonly exam: readonly FirestoreTransferExam[];
   readonly tookSwim: 'yes' | 'no';
   sawNewFeature: boolean;
+  sawGiveaway: boolean;
   sawScheduleGenerator: boolean;
 };
 
@@ -192,6 +193,7 @@ type AppOnboardingData = {
   readonly exam: readonly FirestoreTransferExam[];
   readonly tookSwim: 'yes' | 'no';
   sawNewFeature: boolean;
+  sawGiveaway: boolean;
   sawScheduleGenerator: boolean;
 };
 
@@ -223,6 +225,9 @@ type AppFirestoreSemesterCourseWithRequirementID = FirestoreSemesterCourse & {
 /** Map from requirement ID to option chosen */
 type AppToggleableRequirementChoices = Readonly<Record<string, string>>;
 
+type GiveawayEntry = {
+  igUsername: string;
+};
 type Plan = {
   readonly name: string;
   readonly semesters: readonly FirestoreSemester[];
