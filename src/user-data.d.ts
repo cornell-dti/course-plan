@@ -36,6 +36,7 @@ type FirestoreSemester = {
 };
 
 type FirestoreSemestersData = {
+  readonly savedCourses: readonly Collection[]; // confirmed works:
   readonly plans: readonly Plan[];
   readonly semesters: readonly FirestoreSemester[];
   readonly orderByNewest: boolean;
@@ -224,4 +225,9 @@ type AppToggleableRequirementChoices = Readonly<Record<string, string>>;
 type Plan = {
   readonly name: string;
   readonly semesters: readonly FirestoreSemester[];
+};
+
+type Collection = {
+  readonly name: string;
+  readonly courses: readonly FirestoreSemesterCourse[];
 };
