@@ -375,6 +375,10 @@ export default defineComponent({
     openEditCollectionModal(collection: string) {
       this.isEditCollectionModalOpen = true;
       this.confirmationText = `Editing ${collection}`;
+      this.isConfirmationOpen = true;
+      setTimeout(() => {
+        this.isConfirmationOpen = false;
+      }, 2000);
     },
     deleteCourseFromCollection(courseCode: string) {
       // implement delete course from collection backend

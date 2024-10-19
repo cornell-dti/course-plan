@@ -6,10 +6,9 @@
     </div>
 
     <div class="sidebar-content">
-      <span>
-        <!--Fixes gap issue-->
-        <button class="dropdown-item-button" @click="closeDropdownIfOpen(0)">
-          <div class="dropdown-item-button-title">
+      <div class="dropdown-item-button">
+        <div class="dropdown-item-button-title">
+          <button @click="closeDropdownIfOpen(0)" style="padding-left: 0rem">
             <div class="dropdown-item-button-title-collection">
               <drop-down-arrow
                 :fillColor="dropdownStates[0] && !isEditCollectionModalOpen ? emGreen : darkGray"
@@ -21,8 +20,8 @@
                 All
               </span>
             </div>
-          </div>
-        </button>
+          </button>
+        </div>
         <div v-if="dropdownStates[0]">
           <div v-if="!hasCourses" class="center-content">No classes added yet</div>
           <div v-else>
@@ -40,12 +39,11 @@
           </div>
         </div>
         <div class="separator"></div>
-      </span>
-
+      </div>
       <!-- Dynamic Collections -->
-      <div v-for="(collection, index) in collections" :key="index">
-        <button class="dropdown-item-button" @click="closeDropdownIfOpen(index + 1)">
-          <div class="dropdown-item-button-title">
+      <div v-for="(collection, index) in collections" :key="index" class="dropdown-item-button">
+        <div class="dropdown-item-button-title">
+          <button @click="closeDropdownIfOpen(index + 1)" style="padding-left: 0rem">
             <div class="dropdown-item-button-title-collection">
               <drop-down-arrow
                 :fillColor="dropdownStates[index + 1] ? emGreen : darkGray"
@@ -57,11 +55,11 @@
                 {{ collection }}
               </span>
             </div>
-            <button class="course-dotRow" @click="openEditCollectionModal">
-              <img src="@/assets/images/dots/threeDots.svg" alt="open edit collection modal" />
-            </button>
-          </div>
-        </button>
+          </button>
+          <button class="course-dotRow" @click="openEditCollectionModal">
+            <img src="@/assets/images/dots/threeDots.svg" alt="open edit collection modal" />
+          </button>
+        </div>
         <div v-if="dropdownStates[index + 1]">
           <div v-if="true" class="center-content">No classes added yet</div>
           <div v-else>
@@ -147,7 +145,7 @@ export default defineComponent({
     openEditCollectionModal() {
       // Open modal to edit collection
       this.isEditCollectionModalOpen = true;
-      this.$emit('open-edit-collection-modal', 'Collection 1');
+      this.$emit('open-edit-collection-modal', 'Collection X');
     },
     deleteCourseFromCollection(courseCode: string) {
       this.$emit('delete-course-from-collection', courseCode);
@@ -202,8 +200,8 @@ export default defineComponent({
   display: flex;
   justify-content: center;
   color: $lightGray;
-  margin-top: 0.3rem;
-  margin-bottom: 1.3rem;
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
 }
 
 .dropdown-item-button {
@@ -215,13 +213,12 @@ export default defineComponent({
   cursor: pointer;
   padding: 0.5rem 0;
 
-  &-title {
+  &-title,
+  button {
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    width: 100%;
-    gap: 0.5rem;
     color: $darkGray;
     font-size: 14px;
     font-weight: 700;
@@ -248,6 +245,7 @@ export default defineComponent({
 }
 
 .separator {
+  margin-top: 0.5rem;
   width: 100%;
   height: 2px;
   background: rgba(196, 196, 196, 0.4);
