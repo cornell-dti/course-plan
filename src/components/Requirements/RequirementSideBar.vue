@@ -30,6 +30,14 @@
             data-step="2"
             data-tooltipClass="tooltipCenter tourStep2"
           >
+            <button
+              class="requirement-debugger-toggler"
+              v-if="debuggerAllowed"
+              @click="toggleDebugger()"
+            >
+              Open Requirement Debugger
+            </button>
+            <confirmation :text="confirmationText" v-if="isConfirmationOpen" />
             <div class="multiple-plans">
               <add-plan-modal
                 v-if="isAddPlanOpen"
@@ -64,18 +72,12 @@
               </div>
             </div>
             <div class="collection-header" v-if="isDisplayingCollection">
-              <collections-side-bar />
+              <collections-side-bar
+                @delete-course-from-collection="deleteCourseFromCollection"
+                @open-edit-collection-modal="openEditCollectionModal"
+              />
             </div>
             <div v-if="!isDisplayingCollection">
-              <button
-                class="requirement-debugger-toggler"
-                v-if="debuggerAllowed"
-                @click="toggleDebugger()"
-              >
-                Open Requirement Debugger
-              </button>
-              <confirmation :text="confirmationText" v-if="isConfirmationOpen" />
-
               <teleport-modal
                 content-class="requirement-debugger-modal-content"
                 :isSimpleModal="true"
@@ -158,6 +160,7 @@
                       :compact="false"
                       :active="false"
                       :isReqCourse="true"
+                      :isSemesterCourseCard="true"
                       class="requirements-course"
                     />
                   </div>
@@ -224,6 +227,7 @@ type Data = {
   isConfirmationOpen: boolean;
   selectedPlanCopy: string;
   confirmationText: string;
+  isEditCollectionModalOpen: boolean;
 };
 
 // This section will be revisited when we try to make first-time tooltips
@@ -277,6 +281,7 @@ export default defineComponent({
       isCopyPlanOpen: false,
       isNamePlanOpen: false,
       isEditPlanOpen: false,
+      isEditCollectionModalOpen: false,
       isConfirmationOpen: false,
       selectedPlanCopy: '',
       confirmationText: '',
@@ -365,6 +370,21 @@ export default defineComponent({
     },
     toggleDebugger(): void {
       this.displayDebugger = !this.displayDebugger;
+    },
+
+    openEditCollectionModal(collection: string) {
+      this.isEditCollectionModalOpen = true;
+      this.confirmationText = `Editing ${collection}`;
+    },
+    deleteCourseFromCollection(courseCode: string) {
+      // implement delete course from collection backend
+      // Note: Design doesn't actual have a confirmation text, but I added it as confirmation
+      // since the backend doesn't actual delete the course
+      this.confirmationText = `${courseCode} has been deleted from your collection!`;
+      this.isConfirmationOpen = true;
+      setTimeout(() => {
+        this.isConfirmationOpen = false;
+      }, 2000);
     },
     addPlan(name: string, copysem?: string) {
       if (copysem) {
