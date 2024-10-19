@@ -34,8 +34,8 @@
         <div
           v-if="displaySavedCourses"
           class="navbar-buttonWrapper desktop"
-          @click="openPlan"
-          data-cyId="openPlan"
+          @click="openCollection"
+          data-cyId="openCollection"
         >
           <button class="navbar-iconWrapper saved-courses-icon full-opacity-on-hover" />
           <div class="navbar-iconText">
@@ -106,7 +106,7 @@ export default defineComponent({
       return featureFlagCheckers.isSavedCoursesEnabled();
     },
   },
-  emits: ['openPlan', 'openTools', 'toggleRequirementsMobile', 'openProfile'],
+  emits: ['openPlan', 'openTools', 'toggleRequirementsMobile', 'openProfile', 'openCollection'],
   data() {
     return {
       menuOpen: false,
@@ -117,6 +117,10 @@ export default defineComponent({
       GTagEvent(this.$gtag, 'logout');
       const auth = getAuth();
       signOut(auth).then(() => window.location.reload());
+    },
+    openCollection() {
+      this.menuOpen = false;
+      this.$emit('openCollection');
     },
     openPlan() {
       this.menuOpen = false;

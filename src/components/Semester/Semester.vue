@@ -100,6 +100,7 @@
                 :isReqCourse="false"
                 :compact="compact"
                 :active="activatedCourse.uniqueID === element.uniqueID"
+                :isSemesterCourseCard="true"
                 class="semester-course"
                 data-cyId="semester-course"
                 :semesterIndex="semesterIndex + 1"

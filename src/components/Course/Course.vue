@@ -34,8 +34,21 @@
               :isCompactView="true"
             />
           </div>
-          <button v-if="!isReqCourse" class="course-dotRow" @click="openMenu">
+          <button
+            v-if="!isReqCourse && isSemesterCourseCard"
+            class="course-dotRow"
+            @click="openMenu"
+          >
             <img src="@/assets/images/dots/threeDots.svg" alt="open menu for course card" />
+          </button>
+          <button
+            v-else-if="!isReqCourse && !isSemesterCourseCard"
+            class="course-trash"
+            @click="deleteCourseFromCollection"
+            @mouseover="hoverTrashIcon"
+            @mouseleave="unhoverTrashIcon"
+          >
+            <img :src="trashIcon" alt="delete course from collection" />
           </button>
         </div>
         <div v-if="!compact" class="course-name">{{ courseObj.name }}</div>
@@ -72,6 +85,8 @@ import {
 import { clickOutside } from '@/utilities';
 import EditColor from '../Modals/EditColor.vue';
 import { isCourseConflict } from '@/store';
+import trashGrayIcon from '@/assets/images/trash-gray.svg';
+import trashRedIcon from '@/assets/images/trash.svg';
 
 export default defineComponent({
   components: { CourseCaution, CourseMenu, EditColor },
@@ -83,6 +98,7 @@ export default defineComponent({
     semesterIndex: { type: Number, required: false, default: 0 },
     season: { type: String, required: false, default: '' },
     year: { type: Number, required: false, default: 0 },
+    isSemesterCourseCard: { type: Boolean, required: true },
   },
   emits: {
     'delete-course': (code: string, uniqueID: number) =>
@@ -94,6 +110,7 @@ export default defineComponent({
     'course-on-click': (course: FirestoreSemesterCourse) => typeof course === 'object',
     'edit-course-credit': (credit: number, uniqueID: number) =>
       typeof credit === 'number' && typeof uniqueID === 'number',
+    'delete-course-from-collection': (code: string) => typeof code === 'string',
   },
   data() {
     return {
@@ -102,6 +119,8 @@ export default defineComponent({
       getCreditRange: this.courseObj.creditRange,
       isEditColorOpen: false,
       editedColor: '',
+      deletingCourse: false,
+      trashIcon: trashGrayIcon, // Default icon
     };
   },
   computed: {
@@ -146,6 +165,14 @@ export default defineComponent({
       this.$emit('delete-course', this.courseObj.code, this.courseObj.uniqueID);
       this.closeMenuIfOpen();
     },
+    deleteCourseFromCollection() {
+      this.deletingCourse = true;
+      this.$emit('delete-course-from-collection', this.courseObj.code);
+      // wait to allow deletion
+      setTimeout(() => {
+        this.deletingCourse = false;
+      }, 10);
+    },
     openEditColorModal(color: string) {
       this.editedColor = color;
       this.isEditColorOpen = true;
@@ -164,7 +191,7 @@ export default defineComponent({
       this.closeMenuIfOpen();
     },
     courseOnClick() {
-      if (!this.menuOpen) {
+      if (!this.menuOpen && !this.deletingCourse) {
         this.$emit('course-on-click', this.courseObj);
         addCourseToBottomBar(this.courseObj, this.season, this.year);
       }
@@ -174,6 +201,12 @@ export default defineComponent({
       this.closeMenuIfOpen();
     },
     isCourseConflict,
+    hoverTrashIcon() {
+      this.trashIcon = trashRedIcon;
+    },
+    unhoverTrashIcon() {
+      this.trashIcon = trashGrayIcon;
+    },
   },
   directives: {
     'click-outside': clickOutside,
@@ -227,6 +260,18 @@ export default defineComponent({
   }
 
   &-dotRow {
+    padding: 8px 0;
+    display: flex;
+    position: relative;
+
+    &:hover,
+    &:active,
+    &:focus {
+      cursor: pointer;
+    }
+  }
+
+  &-trash {
     padding: 8px 0;
     display: flex;
     position: relative;

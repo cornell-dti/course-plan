@@ -24,7 +24,7 @@
         <slot class="modal-body"></slot>
         <div v-if="!isSimpleModal" class="modal-buttonWrapper">
           <button
-            :class="{ 'modal-button--big': isPlanModal }"
+            :class="{ 'modal-button--big': isPlanModal || isCollectionModal }"
             v-if="leftButtonText"
             class="modal-button"
             @click="leftButtonClicked"
@@ -36,7 +36,7 @@
             :class="{
               'modal-button--disabled': rightButtonIsDisabled,
               'modal-button--highlighted': rightButtonIsHighlighted,
-              'modal-button--big': isPlanModal,
+              'modal-button--big': isPlanModal || isCollectionModal,
             }"
             @click="rightButtonClicked"
             data-cyId="modal-button"
@@ -74,6 +74,7 @@ export default defineComponent({
     hasClickableTransparentBackground: { type: Boolean, default: false }, // modals without a gray overlay behind them AND clicking on the background closes the modal
     hasCustomPosition: { type: Boolean, default: false }, // true if you want to set custom position for modal
     isPlanModal: { type: Boolean, default: false },
+    isCollectionModal: { type: Boolean, default: false },
     position: {
       type: Object as PropType<{ x: number; y: number }>,
       default: () => ({ x: 0, y: 0 }),
