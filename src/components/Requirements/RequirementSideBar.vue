@@ -76,6 +76,13 @@
                 @delete-course-from-collection="deleteCourseFromCollection"
                 @open-edit-collection-modal="openEditCollectionModal"
               />
+              <edit-collection-modal
+                v-if="isEditCollectionOpen"
+                @close-edit-modal="toggleEditCollection"
+                @delete-collection="deleteCollection"
+                @edit-collection="editCollection"
+                :oldCollectionName="oldCollectionName"
+              />
             </div>
             <div v-if="!isDisplayingCollection">
               <teleport-modal
@@ -188,6 +195,7 @@ import RequirementGroup from '@/components/Requirements/RequirementGroup.vue';
 import DropDownArrow from '@/components/DropDownArrow.vue';
 import MultiplePlansDropdown from './MultiplePlansDropdown.vue';
 import CollectionsSideBar from '../Modals/CollectionsSideBar.vue';
+import EditCollectionModal from '../Modals/EditCollectionModal.vue';
 
 import clipboard from '@/assets/images/clipboard.svg';
 import warning from '@/assets/images/warning.svg';
@@ -198,6 +206,8 @@ import {
   editPlan,
   deletePlan,
   addPlan,
+  // editCollection,
+  // deleteCollection,
   updateSawNewFeature,
 } from '@/global-firestore-data';
 import AddPlanModal from '@/components/Modals/MultiplePlans/AddPlanModal.vue';
@@ -227,7 +237,8 @@ type Data = {
   isConfirmationOpen: boolean;
   selectedPlanCopy: string;
   confirmationText: string;
-  isEditCollectionModalOpen: boolean;
+  isEditCollectionOpen: boolean;
+  oldCollectionName: string;
 };
 
 // This section will be revisited when we try to make first-time tooltips
@@ -257,6 +268,7 @@ export default defineComponent({
     NamePlanModal,
     EditPlanModal,
     CollectionsSideBar,
+    EditCollectionModal,
   },
   props: {
     startTour: { type: Boolean, required: true },
@@ -281,10 +293,11 @@ export default defineComponent({
       isCopyPlanOpen: false,
       isNamePlanOpen: false,
       isEditPlanOpen: false,
-      isEditCollectionModalOpen: false,
+      isEditCollectionOpen: false,
       isConfirmationOpen: false,
       selectedPlanCopy: '',
       confirmationText: '',
+      oldCollectionName: '',
     };
   },
   watch: {
@@ -368,23 +381,43 @@ export default defineComponent({
     toggleEditPlan() {
       this.isEditPlanOpen = !this.isEditPlanOpen;
     },
+    toggleEditCollection() {
+      this.isEditCollectionOpen = !this.isEditCollectionOpen;
+      this.oldCollectionName = '';
+    },
     toggleDebugger(): void {
       this.displayDebugger = !this.displayDebugger;
     },
 
     openEditCollectionModal(collection: string) {
-      this.isEditCollectionModalOpen = true;
-      this.confirmationText = `Editing ${collection}`;
-      this.isConfirmationOpen = true;
-      setTimeout(() => {
-        this.isConfirmationOpen = false;
-      }, 2000);
+      this.isEditCollectionOpen = true;
+      this.oldCollectionName = collection;
     },
     deleteCourseFromCollection(courseCode: string) {
       // implement delete course from collection backend
       // Note: Design doesn't actual have a confirmation text, but I added it as confirmation
       // since the backend doesn't actual delete the course
       this.confirmationText = `${courseCode} has been deleted from your collection!`;
+      this.isConfirmationOpen = true;
+      setTimeout(() => {
+        this.isConfirmationOpen = false;
+      }, 2000);
+    },
+    deleteCollection(collection: string) {
+      // implement delete collection backend
+      // Note: Design doesn't actual have a confirmation text, but I added it as confirmation
+      // since the backend doesn't actual delete the collection
+      this.confirmationText = `${collection} has been deleted!`;
+      this.isConfirmationOpen = true;
+      setTimeout(() => {
+        this.isConfirmationOpen = false;
+      }, 2000);
+    },
+    editCollection(name: string, oldname: string) {
+      // implement edit collection backend
+      // Note: Design doesn't actual have a confirmation text, but I added it as confirmation
+      // since the backend doesn't actual edit the collection
+      this.confirmationText = `${oldname} has been renamed to ${name}!`;
       this.isConfirmationOpen = true;
       setTimeout(() => {
         this.isConfirmationOpen = false;

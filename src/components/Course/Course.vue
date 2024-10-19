@@ -45,8 +45,10 @@
             v-else-if="!isReqCourse && !isSemesterCourseCard"
             class="course-trash"
             @click="deleteCourseFromCollection"
+            @mouseover="hoverTrashIcon"
+            @mouseleave="unhoverTrashIcon"
           >
-            <img src="@/assets/images/trash.svg" alt="delete course from collection" />
+            <img :src="trashIcon" alt="delete course from collection" />
           </button>
         </div>
         <div v-if="!compact" class="course-name">{{ courseObj.name }}</div>
@@ -83,6 +85,8 @@ import {
 import { clickOutside } from '@/utilities';
 import EditColor from '../Modals/EditColor.vue';
 import { isCourseConflict } from '@/store';
+import trashGrayIcon from '@/assets/images/trash-gray.svg';
+import trashRedIcon from '@/assets/images/trash.svg';
 
 export default defineComponent({
   components: { CourseCaution, CourseMenu, EditColor },
@@ -116,6 +120,7 @@ export default defineComponent({
       isEditColorOpen: false,
       editedColor: '',
       deletingCourse: false,
+      trashIcon: trashGrayIcon, // Default icon
     };
   },
   computed: {
@@ -196,6 +201,12 @@ export default defineComponent({
       this.closeMenuIfOpen();
     },
     isCourseConflict,
+    hoverTrashIcon() {
+      this.trashIcon = trashRedIcon;
+    },
+    unhoverTrashIcon() {
+      this.trashIcon = trashGrayIcon;
+    },
   },
   directives: {
     'click-outside': clickOutside,

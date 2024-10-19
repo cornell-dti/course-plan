@@ -11,14 +11,11 @@
           <button @click="closeDropdownIfOpen(0)" style="padding-left: 0rem">
             <div class="dropdown-item-button-title-collection">
               <drop-down-arrow
-                :fillColor="dropdownStates[0] && !isEditCollectionModalOpen ? emGreen : darkGray"
-                :isFlipped="dropdownStates[0] && !isEditCollectionModalOpen"
+                :fillColor="dropdownStates[0] ? emGreen : darkGray"
+                :isFlipped="dropdownStates[0]"
                 class="arrow"
-              >
-              </drop-down-arrow>
-              <span :class="{ highlighted: dropdownStates[0] && !isEditCollectionModalOpen }">
-                All
-              </span>
+              />
+              <span :class="{ highlighted: dropdownStates[0] }"> All </span>
             </div>
           </button>
         </div>
@@ -33,7 +30,6 @@
                 :active="false"
                 :isSemesterCourseCard="false"
                 @delete-course-from-collection="deleteCourseFromCollection"
-                @course-on-click="courseOnClick"
               />
             </div>
           </div>
@@ -49,14 +45,13 @@
                 :fillColor="dropdownStates[index + 1] ? emGreen : darkGray"
                 :isFlipped="dropdownStates[index + 1]"
                 class="arrow"
-              >
-              </drop-down-arrow>
+              />
               <span :class="{ highlighted: dropdownStates[index + 1] }">
                 {{ collection }}
               </span>
             </div>
           </button>
-          <button class="course-dotRow" @click="openEditCollectionModal">
+          <button class="course-dotRow" @click="openEditCollectionModal(collection)">
             <img src="@/assets/images/dots/threeDots.svg" alt="open edit collection modal" />
           </button>
         </div>
@@ -86,16 +81,20 @@ import { isPlaceholderCourse } from '@/utilities';
 import store from '@/store';
 
 export default defineComponent({
+  // props: {
+  //   // collections: {
+  //   //   type: Array as PropType<readonly Collection[]>,
+  //   //   required: true,
+  //   // },
+  // },
   components: {
     // draggable, // implement later with backend
     Course,
     DropDownArrow,
   },
-  props: {
-    // collections: {
-    //   type: Array as PropType<readonly Collection[]>,
-    //   required: true,
-    // },
+  emits: {
+    'delete-course-from-collection': (courseCode: string) => typeof courseCode === 'string',
+    'open-edit-collection-modal': (collection: string) => typeof collection === 'string',
   },
   data() {
     return {
@@ -109,7 +108,7 @@ export default defineComponent({
   computed: {
     coursesAll() {
       // fixed courses for the All Collection
-      return store.state.currentPlan.semesters[6].courses
+      return store.state.currentPlan.semesters[6].courses // I fetched a random course from my SemesterView
         .map(course => {
           if (!isPlaceholderCourse(course)) {
             return course;
@@ -131,27 +130,19 @@ export default defineComponent({
       return this.coursesAll.length > 0; // dummy data
     },
   },
-  emits: {
-    'course-onclick': (course: FirestoreSemesterCourse) => typeof course === 'object',
-    'delete-course-from-collection': (courseCode: string) => typeof courseCode === 'string',
-    'open-edit-collection-modal': (collection: string) => typeof collection === 'string',
-  },
   methods: {
     isPlaceholderCourse,
     closeDropdownIfOpen(index: number) {
       // Toggle the clicked dropdown and close others
       this.dropdownStates = this.dropdownStates.map((state, i) => (i === index ? !state : false));
     },
-    openEditCollectionModal() {
+    openEditCollectionModal(collection: string) {
       // Open modal to edit collection
       this.isEditCollectionModalOpen = true;
-      this.$emit('open-edit-collection-modal', 'Collection X');
+      this.$emit('open-edit-collection-modal', collection);
     },
     deleteCourseFromCollection(courseCode: string) {
       this.$emit('delete-course-from-collection', courseCode);
-    },
-    courseOnClick(course: FirestoreSemesterCourse) {
-      this.$emit('course-onclick', course);
     },
   },
 });
@@ -251,11 +242,11 @@ export default defineComponent({
   background: rgba(196, 196, 196, 0.4);
 }
 
-::v-deep .arrow {
+:deep(.arrow) {
   margin-top: -8px;
+}
 
-  &-up {
-    margin-top: 3px;
-  }
+:deep(.arrow-up) {
+  margin-top: 3px;
 }
 </style>
