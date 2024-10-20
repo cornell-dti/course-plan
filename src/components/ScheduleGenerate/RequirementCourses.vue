@@ -26,19 +26,19 @@
       </button>
     </div>
     <div v-if="showDropdown">
-      <p class="requirement-header-subtext">Please select a major requirement.</p>
+      <p class="requirement-header-subtext">Please select a major/minor requirement.</p>
       <all-requirements-dropdown
         :available-choices="availableRequirements"
         :choice="selectedRequirement.reqName"
         @on-select="selectRequirement"
       />
-      <!-- TODO: filter course showing to ones that fulfill req -->
       <new-course-modal
         @close-course-modal="closeCourseModal"
         v-if="isCourseModalOpen"
         @add-course="addCourse"
         :year="year"
         :season="season"
+        :filterForRequirementID="selectedRequirement.reqId"
       />
       <div class="requirement-courses">
         <div v-for="c in uniqueify(selectedRequirement.courses)" :key="c.crseId">

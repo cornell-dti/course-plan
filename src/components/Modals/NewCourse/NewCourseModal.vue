@@ -53,19 +53,26 @@ import store from '@/store';
 import {
   getRelatedRequirementIdsForCourseOptOut,
   getRelatedUnfulfilledRequirements,
+  getFilterForRequirementFulfillment,
 } from '@/requirements/requirement-frontend-utils';
 import { specificRosterCoursesArray } from '@/assets/courses/typed-full-courses';
 import { seasonAndYearToRosterIdentifier } from '../../../user-data-converter';
 
 export default defineComponent({
   props: {
-    // TODO: filter by selectedRequirement for schedule generator
-    // selectedRequirement: { type: String, required: false, default: '' },
     year: { type: Number, required: false, default: undefined },
     season: {
       type: String as PropType<FirestoreSemesterSeason>,
       required: false,
       default: undefined,
+    },
+    // An optional filter for the course selector; if set, only
+    // allows for viewing (and so selecting) courses that fulfill
+    // the given requirement.
+    filterForRequirementID: {
+      type: String as PropType<string>,
+      required: false,
+      default: '',
     },
   },
   components: { CourseSelector, TeleportModal, SelectedRequirementEditor },
@@ -100,6 +107,15 @@ export default defineComponent({
       if (this.season !== undefined && this.year !== undefined) {
         const currRoster = seasonAndYearToRosterIdentifier(this.season, this.year);
         const courses = specificRosterCoursesArray(currRoster);
+        if (this.filterForRequirementID) {
+          return courses.filter(
+            getFilterForRequirementFulfillment(
+              store.state.userRequirementsMap,
+              store.state.toggleableRequirementChoices,
+              this.filterForRequirementID
+            )
+          );
+        }
         return courses;
       }
       return undefined;
