@@ -25,17 +25,23 @@ def send_emails(bcc_list: List[str]):
     total_chunks = len(bcc_chunks)
 
     # Add option to list all emails
-    list_emails = input("Do you want to list all email addresses? (y/N): ").lower().strip()
-    if list_emails == 'y':
+    list_emails = (
+        input("Do you want to list all email addresses? (y/N): ").lower().strip()
+    )
+    if list_emails == "y":
         print("\nList of email addresses:")
         for email in bcc_list:
             print(email)
         print()
 
     # Add confirmation prompt
-    confirm = input(
-        f"Do you want to proceed with sending {len(bcc_chunks)} {'email' if len(bcc_chunks) == 1 else 'emails'} to {len(bcc_list)} {'recipient' if len(bcc_list) == 1 else 'recipients'}? (y/N): "
-    ).lower().strip()
+    confirm = (
+        input(
+            f"Do you want to proceed with sending {len(bcc_chunks)} {'email' if len(bcc_chunks) == 1 else 'emails'} to {len(bcc_list)} {'recipient' if len(bcc_list) == 1 else 'recipients'}? (y/N): "
+        )
+        .lower()
+        .strip()
+    )
 
     if confirm != "y":
         print("Email sending cancelled. Goodbye!")
@@ -54,8 +60,11 @@ def send_emails(bcc_list: List[str]):
             "html": HTML,
         }
 
-        resend.Emails.send(params)
-        print(f"Batch {i}/{total_chunks} sent successfully!")
+        try:
+            resend.Emails.send(params)
+            print(f"Batch {i}/{total_chunks} sent successfully!")
+        except Exception as e:
+            print(f"Batch {i}/{total_chunks} failed with error: {e}")
 
     print("\nAll email batches sent successfully!")
     print("Email job completed!")
