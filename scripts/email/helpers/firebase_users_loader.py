@@ -71,8 +71,6 @@ def get_users() -> Dict[Tuple[str, str], List[Dict]]:
             }
         )
 
-    print(f"\nFetched {len(user_map)} users.")
-
     return dict(user_map)
 
 
