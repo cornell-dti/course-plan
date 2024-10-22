@@ -95,6 +95,5 @@ By using this approach, we can easily create targeted email lists for different 
 ## Further Notes
 
 - You **must** run the script from the root directory of the project.
-- Currently using `courseplan.simonilincev.com` for DNS; should be updated to `courseplan.io` soon. This can be done on the Resend dashboard under "Domains" on the sidebar. 4 DNS records need to be set up (configure `_dmarc` as well even though it is optional).
 - If you want to have emails land in more than 4,900 inboxes per day, you will need to stagger the emails over several days. Note that these 4,900 inboxes are already "batched" into 100 emails each with 49 bcc recipients.
 - A dummy "to" recipient is required when using BCC for technical reasons. (This does not count towards the 49 bcc recipients.)
