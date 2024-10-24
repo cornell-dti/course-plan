@@ -72,7 +72,7 @@ const csRequirements: readonly CollegeOrMajorRequirement[] = [
         );
       },
     ],
-    checkerWarning: "We do not check whether you are allowed to take CS 3700/3780 towards this requirement.",
+    checkerWarning: 'We do not check whether you are allowed to take CS 3700/3780 towards this requirement.',
     fulfilledBy: 'courses',
     perSlotMinCount: [2],
     slotNames: ['Course'],
