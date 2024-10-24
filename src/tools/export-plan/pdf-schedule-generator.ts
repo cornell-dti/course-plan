@@ -79,8 +79,6 @@ const generateSchedulePDF = async (
   // Calendar time
   const imgProps = doc.getImageProperties(calendarDataString);
 
-  // Sh
-
   doc.addImage(
     calendarDataString,
     'PNG',
