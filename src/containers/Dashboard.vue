@@ -207,12 +207,38 @@ export default defineComponent({
   },
   computed: {
     season(): FirestoreSemesterSeason {
-      // TODO: read the newest roster from firestore
-      return 'Fall';
+      // Get the last element in the rosters array
+      const lastElement = rosters[rosters.length - 1];
+
+      // Determine the season
+      let determinedSeason = 'Unknown';
+      if (lastElement.startsWith('FA')) {
+        determinedSeason = 'Fall';
+      } else if (lastElement.startsWith('SP')) {
+        determinedSeason = 'Spring';
+      } else if (lastElement.startsWith('SU')) {
+        determinedSeason = 'Summer';
+      } else if (lastElement.startsWith('WI')) {
+        determinedSeason = 'Winter';
+      }
+
+      // Log the determined season
+      // console.log(`Determined season: ${determinedSeason}`);
+
+      return determinedSeason as FirestoreSemesterSeason;
     },
     year(): number {
-      // TODO: read the newest roster from firestore
-      return 2024;
+      // Get the last element in the rosters array
+      const lastElement = rosters[rosters.length - 1];
+
+      // Extract the last two digits of the year (e.g., '24' for '2024')
+      const yearSuffix = lastElement.slice(2);
+
+      // Log the determined year for testing
+      // console.log(`Determined year: ${yearSuffix}`);
+
+      // Return the year suffix as a number
+      return parseInt(yearSuffix, 10);
     },
     userName(): FirestoreUserName {
       return store.state.userName;
