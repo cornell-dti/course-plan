@@ -229,16 +229,10 @@ export default defineComponent({
     },
     year(): number {
       // Get the last element in the rosters array
-      const lastElement = rosters[rosters.length - 1];
-
-      // Extract the last two digits of the year (e.g., '24' for '2024')
-      const yearSuffix = lastElement.slice(2);
-
-      // Log the determined year for testing
-      // console.log(`Determined year: ${yearSuffix}`);
+      const year = rosters[rosters.length - 1];
 
       // Return the year suffix as a number
-      return parseInt(yearSuffix, 10);
+      return parseInt(year, 10);
     },
     userName(): FirestoreUserName {
       return store.state.userName;
