@@ -111,6 +111,7 @@
 import { defineComponent } from 'vue';
 
 import introJs from 'intro.js';
+import rosters from '@/assets/courses/rosters.json';
 import SemesterView from '@/components/Semester/SemesterView.vue';
 import RequirementSideBar from '@/components/Requirements/RequirementSideBar.vue';
 import BottomBar from '@/components/BottomBar/BottomBar.vue';
