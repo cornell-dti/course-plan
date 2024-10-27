@@ -73,7 +73,7 @@ collections: data from the store, given from parent RequirementSideBar.vue
 when we open a collection, we will show the courses from that collection
 */
 
-import { /* PropType , */ defineComponent } from 'vue';
+import { defineComponent } from 'vue';
 // import draggable from 'vuedraggable'; // implement later with backend
 import Course from '@/components/Course/Course.vue';
 import DropDownArrow from '@/components/DropDownArrow.vue';
@@ -108,18 +108,12 @@ export default defineComponent({
   computed: {
     coursesAll() {
       // fixed courses for the All Collection
-      return store.state.currentPlan.semesters[6].courses // I fetched a random course from my SemesterView
-        .map(course => {
-          if (!isPlaceholderCourse(course)) {
-            return course;
-          }
-          // do not want to return placeholder courses
-          return null;
-        })
-        .filter(course => course !== null)
+      return store.state.currentPlan.semesters[0].courses
+        .filter(course => !isPlaceholderCourse(course)) // Filter out placeholder courses directly
         .filter(
           course =>
-            course.name === 'Beginning Swimming' || course.name === 'Introductory Statistics'
+            course.name === 'Introduction to Computing: A Design and Development Perspective' ||
+            course.name === 'Object-Oriented Programming and Data Structures'
         );
     },
     collections() {
@@ -168,7 +162,6 @@ export default defineComponent({
   &-content {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
   }
 }
 

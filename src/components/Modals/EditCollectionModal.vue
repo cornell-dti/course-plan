@@ -44,10 +44,6 @@ export default defineComponent({
     closeCurrentModal() {
       this.$emit('close-edit-modal');
     },
-    // backCopyPlan() {
-    //   this.$emit('open-copy-modal');
-    //   this.$emit('close-edit-modal');
-    // },
     saveChanges() {
       if (!this.warn) {
         this.$emit('edit-collection', this.collectionName, this.oldCollectionName);

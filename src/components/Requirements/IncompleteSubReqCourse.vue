@@ -29,6 +29,7 @@
               :compact="true"
               :active="false"
               class="requirements-course"
+              :isSemesterCourseCard="true"
             />
           </div>
         </template>
