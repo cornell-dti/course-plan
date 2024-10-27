@@ -10,8 +10,9 @@
     <save-course-modal
       :courseCode="courseCode"
       @close-save-course-modal="closeSaveCourseModal"
-      @add-course-collection="addCourseCollection"
+      @save-course="saveCourse"
       @add-collection="addCollection"
+      @edit-collection="editCollection"
       v-if="isSaveCourseOpen"
     />
     <edit-color
@@ -59,7 +60,7 @@
           <button
             v-else-if="!isReqCourse && !isSemesterCourseCard"
             class="course-trash"
-            @click="deleteCourseFromCollection"
+            @click="saveCourse"
             @mouseover="hoverTrashIcon"
             @mouseleave="unhoverTrashIcon"
           >
@@ -129,7 +130,11 @@ export default defineComponent({
     'course-on-click': (course: FirestoreSemesterCourse) => typeof course === 'object',
     'edit-course-credit': (credit: number, uniqueID: number) =>
       typeof credit === 'number' && typeof uniqueID === 'number',
-    'delete-course-from-collection': (code: string) => typeof code === 'string',
+    'save-course': (course: FirestoreSemesterCourse, collections: string[]) =>
+      typeof course === 'object' && typeof collections === 'object',
+    'add-collection': (name: string) => typeof name === 'string',
+    'edit-collection': (name: string, oldname: string) =>
+      typeof name === 'string' && typeof oldname === 'string',
   },
   data() {
     return {
@@ -194,14 +199,6 @@ export default defineComponent({
       this.$emit('delete-course', this.courseObj.code, this.courseObj.uniqueID);
       this.closeMenuIfOpen();
     },
-    deleteCourseFromCollection() {
-      this.deletingCourse = true;
-      this.$emit('delete-course-from-collection', this.courseObj.code);
-      // wait to allow deletion
-      setTimeout(() => {
-        this.deletingCourse = false;
-      }, 10);
-    },
     openEditColorModal(color: string) {
       this.editedColor = color;
       this.isEditColorOpen = true;
@@ -209,13 +206,15 @@ export default defineComponent({
     closeEditColorModal() {
       this.isEditColorOpen = false;
     },
-    addCollection() {
-      this.isSaveCourseOpen = false;
-      // TODO: implement add collection
+    addCollection(name: string) {
+      this.$emit('add-collection', name);
     },
-    addCourseCollection() {
-      this.isSaveCourseOpen = false;
-      // TODO: implement save course
+    saveCourse(/* collections: string[] */) {
+      // const course = { ...this.courseObj };
+      // this.$emit('save-course', course, collections)
+    },
+    editCollection(name: string, oldname: string) {
+      this.$emit('edit-collection', name, oldname);
     },
     colorCourse(color: string) {
       this.$emit('color-course', color, this.courseObj.uniqueID, this.courseObj.code);
