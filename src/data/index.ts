@@ -390,7 +390,7 @@ const json: RequirementsJson = {
     },
     NS: {
       name: 'Nutritional Sciences',
-      schools: ['AG'],
+      schools: ['AG', 'HE'],
       requirements: nsRequirements,
       advisors: nsAdvisors,
       abbrev: 'NS',
