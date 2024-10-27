@@ -19,6 +19,7 @@
           @openTools="openTools"
           @openProfile="openProfile"
           @toggleRequirementsMobile="toggleRequirementsMobile"
+          @openCollection="openCollection"
         />
         <requirement-side-bar
           class="dashboard-reqs"
@@ -31,6 +32,7 @@
           :startTour="startTour"
           @showTourEndWindow="showTourEnd"
           :startNewFeatureTour="startNewFeatureTour"
+          :isDisplayingCollection="isShowCollectionOpen"
         />
         <bottom-bar
           v-if="!(isTablet && requirementsIsDisplayedMobile) && !showToolsPage && !isProfileOpen"
@@ -161,6 +163,7 @@ export default defineComponent({
       showTourEndWindow: false,
       showToolsPage: false,
       isProfileOpen: false,
+      isShowCollectionOpen: false,
     };
   },
   computed: {
@@ -246,9 +249,17 @@ export default defineComponent({
       }
     },
 
+    // for the sidebar, not the modal
+    openCollection() {
+      this.showToolsPage = false;
+      this.isProfileOpen = false;
+      this.isShowCollectionOpen = true;
+    },
+
     openPlan() {
       this.showToolsPage = false;
       this.isProfileOpen = false;
+      this.isShowCollectionOpen = false;
     },
 
     openTools() {
