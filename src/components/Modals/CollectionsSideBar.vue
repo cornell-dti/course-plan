@@ -77,7 +77,7 @@ import { defineComponent } from 'vue';
 // import draggable from 'vuedraggable'; // implement later with backend
 import Course from '@/components/Course/Course.vue';
 import DropDownArrow from '@/components/DropDownArrow.vue';
-import { isPlaceholderCourse } from '@/utilities';
+import { isPlaceholderCourse, isFirestoreSemesterCourse } from '@/utilities';
 import store from '@/store';
 
 export default defineComponent({
@@ -106,15 +106,16 @@ export default defineComponent({
     };
   },
   computed: {
-    coursesAll() {
-      // fixed courses for the All Collection
-      return store.state.currentPlan.semesters[0].courses
-        .filter(course => !isPlaceholderCourse(course)) // Filter out placeholder courses directly
-        .filter(
-          course =>
-            course.name === 'Introduction to Computing: A Design and Development Perspective' ||
-            course.name === 'Object-Oriented Programming and Data Structures'
-        );
+    coursesAll(): FirestoreSemesterCourse[] {
+      const courses = [...store.state.currentPlan.semesters[0].courses].filter(course =>
+        isFirestoreSemesterCourse(course)
+      ) as FirestoreSemesterCourse[];
+
+      return courses.filter(
+        course =>
+          course.name === 'Introduction to Computing: A Design and Development Perspective' ||
+          course.name === 'Object-Oriented Programming and Data Structures'
+      );
     },
     collections() {
       // Dummy data; replace with store.state.savedCourses when integrated
@@ -126,6 +127,7 @@ export default defineComponent({
   },
   methods: {
     isPlaceholderCourse,
+    isFirestoreSemesterCourse,
     closeDropdownIfOpen(index: number) {
       // Toggle the clicked dropdown and close others
       this.dropdownStates = this.dropdownStates.map((state, i) => (i === index ? !state : false));
