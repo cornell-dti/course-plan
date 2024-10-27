@@ -7,6 +7,13 @@
     }"
     class="course"
   >
+    <save-course-modal
+      :courseCode="courseCode"
+      @close-save-course-modal="closeSaveCourseModal"
+      @add-course-collection="addCourseCollection"
+      @add-collection="addCollection"
+      v-if="isSaveCourseOpen"
+    />
     <edit-color
       :editedColor="editedColor"
       @color-course="colorCourse"
@@ -27,7 +34,15 @@
       <div class="course-main">
         <div class="course-top">
           <div class="course-left">
-            <div class="course-code" data-cyId="courseCode">{{ courseObj.code }}</div>
+            <div
+              class="course-code"
+              data-cyId="courseCode"
+              :style="{
+                color: compact ? '#3d3d3d' : '#858585',
+              }"
+            >
+              {{ courseObj.code }}
+            </div>
             <course-caution
               v-if="!isReqCourse && compact"
               :course="courseObj"
@@ -61,12 +76,15 @@
     </div>
     <course-menu
       v-if="menuOpen"
+      :courseObj="courseObj"
       :semesterIndex="semesterIndex"
       :isCompact="compact"
       :courseColor="courseObj.color"
+      :courseCode="courseObj.code"
       @open-edit-color-modal="openEditColorModal"
       @delete-course="deleteCourse"
       @edit-course-credit="editCourseCredit"
+      @open-save-course-modal="openSaveCourseModal"
       :getCreditRange="getCreditRange || []"
       v-click-outside="closeMenuIfOpen"
     />
@@ -77,6 +95,7 @@
 import { CSSProperties, PropType, defineComponent } from 'vue';
 import CourseMenu from '@/components/Modals/CourseMenu.vue';
 import CourseCaution from '@/components/Course/CourseCaution.vue';
+import SaveCourseModal from '@/components/Modals/SaveCourseModal.vue';
 import {
   addCourseToBottomBar,
   reportCourseColorChange,
@@ -89,7 +108,7 @@ import trashGrayIcon from '@/assets/images/trash-gray.svg';
 import trashRedIcon from '@/assets/images/trash.svg';
 
 export default defineComponent({
-  components: { CourseCaution, CourseMenu, EditColor },
+  components: { CourseCaution, CourseMenu, EditColor, SaveCourseModal },
   props: {
     courseObj: { type: Object as PropType<FirestoreSemesterCourse>, required: true },
     compact: { type: Boolean, required: true },
@@ -118,9 +137,11 @@ export default defineComponent({
       stopCloseFlag: false,
       getCreditRange: this.courseObj.creditRange,
       isEditColorOpen: false,
+      isSaveCourseOpen: false,
       editedColor: '',
       deletingCourse: false,
       trashIcon: trashGrayIcon, // Default icon
+      courseCode: '',
     };
   },
   computed: {
@@ -161,6 +182,14 @@ export default defineComponent({
         this.menuOpen = false;
       }
     },
+    openSaveCourseModal(courseCode: string) {
+      this.courseCode = courseCode;
+      this.isSaveCourseOpen = true;
+      this.closeMenuIfOpen();
+    },
+    closeSaveCourseModal() {
+      this.isSaveCourseOpen = false;
+    },
     deleteCourse() {
       this.$emit('delete-course', this.courseObj.code, this.courseObj.uniqueID);
       this.closeMenuIfOpen();
@@ -179,6 +208,14 @@ export default defineComponent({
     },
     closeEditColorModal() {
       this.isEditColorOpen = false;
+    },
+    addCollection() {
+      this.isSaveCourseOpen = false;
+      // TODO: implement add collection
+    },
+    addCourseCollection() {
+      this.isSaveCourseOpen = false;
+      // TODO: implement save course
     },
     colorCourse(color: string) {
       this.$emit('color-course', color, this.courseObj.uniqueID, this.courseObj.code);
@@ -311,6 +348,7 @@ export default defineComponent({
 
   &-name {
     font-size: 16px;
+    font-weight: bold;
     line-height: 19px;
     color: $primaryGray;
     margin-top: 0.25rem;
@@ -328,8 +366,7 @@ export default defineComponent({
     display: flex;
     align-items: center;
   }
-
-  &-credits {
+  port &-credits {
     white-space: nowrap;
   }
 

@@ -9,8 +9,8 @@ type FeatureFlagName =
   | 'RequirementDebugger'
   | 'ToggleRequirementsBarBtn'
   | 'Profile'
-  | 'SavedCourses'
-  | 'MultiplePlans';
+  | 'MultiplePlans'
+  | 'SavedCourses';
 /* | 'AddYourFeatureFlagNameHere' */
 const featureFlagCheckers: FeatureFlagCheckers = registerFeatureFlagChecker(
   'APIBFulfillment',
@@ -19,8 +19,8 @@ const featureFlagCheckers: FeatureFlagCheckers = registerFeatureFlagChecker(
   'RequirementDebugger',
   'ToggleRequirementsBarBtn',
   'Profile',
+  'MultiplePlans',
   'SavedCourses',
-  'MultiplePlans'
   /* 'AddYourFeatureFlagNameHere' */
 );
 export default featureFlagCheckers;

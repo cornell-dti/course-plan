@@ -3,59 +3,22 @@
     <div class="courseMenu-content">
       <div
         class="courseMenu-section"
-        @mouseover="setDisplayColors(true)"
-        @mouseleave="setDisplayColors(false)"
+        v-if="saveCourseIconVisible"
+        @click="openSaveCourseModal(courseObj.code)"
       >
         <div class="courseMenu-left">
           <img
             class="courseMenu-icon"
-            src="@/assets/images/paint.svg"
-            alt="edit course color paint icon"
+            src="@/assets/images/saveIconSmall.svg"
+            alt="save course icon"
           />
-          <span class="courseMenu-text">Edit Color</span>
-        </div>
-        <img
-          class="courseMenu-arrow"
-          src="@/assets/images/downarrow.svg"
-          alt="arrow to expand edit course color"
-        />
-
-        <div
-          v-if="displayColors"
-          class="courseMenu-content courseMenu-colors"
-          :style="{ zIndex: zIndexColors }"
-        >
-          <button
-            v-for="(color, index) in colors"
-            :key="index"
-            class="courseMenu-color full-opacity-on-hover"
-            @click="openEditColorModal(color.hex)"
-          >
-            <div class="courseMenu-left">
-              <div
-                class="courseMenu-color--icon"
-                :style="{ backgroundColor: color.hex }"
-                @mouseover="setDisplayColorTooltip(true, color.text)"
-                @mouseleave="setDisplayColorTooltip(false, color.text)"
-              >
-                <img
-                  v-if="`#${courseColor}` === color.hex"
-                  class="courseMenu-color--checkmark"
-                  src="@/assets/images/checkmark-color.svg"
-                  alt="color checkmark"
-                />
-              </div>
-            </div>
-            <div v-if="tooltipColor === color.text" class="courseMenu-color--tooltip">
-              {{ color.text }}
-            </div>
-          </button>
+          <span class="courseMenu-text">Save</span>
         </div>
       </div>
       <div
         class="courseMenu-section"
-        @mouseover="setDisplayEditCourseCredits(true)"
-        @mouseleave="setDisplayEditCourseCredits(false)"
+        @click="toggleDisplayEditCourseCredits"
+        :class="{ 'is-active': displayEditCourseCredits }"
         v-if="getCreditRange && getCreditRange[0] != getCreditRange[1]"
       >
         <div class="courseMenu-left">
@@ -89,7 +52,58 @@
           </div>
         </div>
       </div>
-      <button class="courseMenu-section full-opacity-on-hover" @click="deleteCourse">
+      <div
+        class="courseMenu-section"
+        @click="toggleDisplayColors"
+        :class="{ 'is-active': displayColors }"
+      >
+        <div class="courseMenu-left">
+          <img
+            class="courseMenu-icon"
+            src="@/assets/images/paint.svg"
+            alt="edit course color paint icon"
+          />
+          <span class="courseMenu-text">Edit Color</span>
+        </div>
+        <img
+          class="courseMenu-arrow"
+          src="@/assets/images/downarrow.svg"
+          alt="arrow to expand edit course color"
+        />
+        <div
+          v-if="displayColors"
+          class="courseMenu-content courseMenu-colors"
+          :style="{ zIndex: zIndexColors }"
+        >
+          <button
+            v-for="(color, index) in colors"
+            :key="index"
+            class="courseMenu-color full-opacity-on-hover"
+            @click="openEditColorModal(color.hex)"
+          >
+            <div class="courseMenu-left">
+              <div
+                class="courseMenu-color--icon"
+                :style="{ backgroundColor: color.hex }"
+                @mouseover="setDisplayColorTooltip(true, color.text)"
+                @mouseleave="setDisplayColorTooltip(false, color.text)"
+              >
+                <img
+                  v-if="`#${courseColor}` === color.hex"
+                  class="courseMenu-color--checkmark"
+                  src="@/assets/images/checkmark-color.svg"
+                  alt="color checkmark"
+                />
+              </div>
+            </div>
+            <div v-if="tooltipColor === color.text" class="courseMenu-color--tooltip">
+              {{ color.text }}
+            </div>
+          </button>
+        </div>
+      </div>
+
+      <button class="delete-button courseMenu-section full-opacity-on-hover" @click="deleteCourse">
         <div class="courseMenu-left">
           <img
             class="courseMenu-icon"
@@ -106,9 +120,11 @@
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
 import { coursesColorSet } from '@/assets/constants/colors';
+import featureFlagCheckers from '@/feature-flags';
 
 export default defineComponent({
   props: {
+    courseObj: { type: Object as PropType<FirestoreSemesterCourse>, required: true },
     getCreditRange: {
       type: (Array as PropType<readonly number[]>) as PropType<readonly [number, number]>,
       required: true,
@@ -131,6 +147,8 @@ export default defineComponent({
       tooltipColor: '',
       zIndexColors: 1,
       zIndexEditCredits: 1,
+      courseCode: '',
+      saveCourseIconVisible: featureFlagCheckers.isSavedCoursesEnabled(),
     };
   },
   computed: {
@@ -154,11 +172,34 @@ export default defineComponent({
     },
   },
   emits: {
+    'open-save-course-modal': (code: string) => typeof code === 'string',
     'delete-course': () => true,
     'open-edit-color-modal': (color: string) => typeof color === 'string',
     'edit-course-credit': (credit: number) => typeof credit === 'number',
   },
   methods: {
+    toggleDisplayColors() {
+      this.displayColors = !this.displayColors;
+      if (this.displayColors) {
+        this.zIndexColors = 3;
+      } else {
+        this.zIndexColors = 1;
+      }
+      this.displayEditCourseCredits = false;
+    },
+    toggleDisplayEditCourseCredits() {
+      this.displayEditCourseCredits = !this.displayEditCourseCredits;
+      if (this.displayEditCourseCredits) {
+        this.zIndexEditCredits = 3;
+      } else {
+        this.zIndexEditCredits = 1;
+      }
+      this.displayColors = false;
+    },
+    openSaveCourseModal(courseCode: string) {
+      this.courseCode = courseCode;
+      this.$emit('open-save-course-modal', courseCode);
+    },
     deleteCourse() {
       this.$emit('delete-course');
     },
@@ -216,7 +257,9 @@ export default defineComponent({
 
 <style scoped lang="scss">
 @import '@/assets/scss/_variables.scss';
-
+.delete-button .courseMenu-text {
+  color: #eb6d6d;
+}
 .courseMenu {
   position: absolute;
   right: -3rem;
@@ -242,6 +285,7 @@ export default defineComponent({
     width: 100%;
     &:hover,
     &:active,
+    &.is-active,
     &:focus {
       background-color: rgba(50, 160, 242, 0.15);
     }
