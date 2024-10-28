@@ -59,7 +59,7 @@
           <button
             v-else-if="!isReqCourse && !isSemesterCourseCard"
             class="course-trash"
-            @click="deleteCourseFromCollection"
+            @click.stop="deleteCourseFromCollection"
             @mouseover="hoverTrashIcon"
             @mouseleave="unhoverTrashIcon"
           >

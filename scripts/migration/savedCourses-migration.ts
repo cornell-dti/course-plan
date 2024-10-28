@@ -6,9 +6,9 @@ import { usernameCollection, semestersCollection } from '../firebase-config';
  * Perform migration of a default The 'All' Collection for All Courses saved
  */
 async function runOnUser(userEmail: string) {
-  const emptyCourses = [];
+  const courses = [];
   await semestersCollection.doc(userEmail).update({
-    savedCourses: [{ name: 'All', emptyCourses }],
+    savedCourses: [{ name: 'All', courses }],
   });
 }
 
