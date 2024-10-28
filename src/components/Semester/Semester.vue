@@ -423,7 +423,6 @@ export default defineComponent({
       addedToCollections: string[],
       deletedFromCollections: string[]
     ) {
-      // Loop through each collection and check if the course is already in it
       deletedFromCollections.forEach(collection => {
         // If course is already in collection, remove it
         deleteCourseFromCollection(collection, course.code);
@@ -448,7 +447,7 @@ export default defineComponent({
         );
       } else if (deletedFromCollections.length === 0) {
         this.openConfirmationModal(`Saved ${course.code} to ${addedToCollections.join(', ')}`);
-      } else {
+      } else if (addedToCollections.length === 0) {
         this.openConfirmationModal(
           ` Deleted ${course.code} from ${deletedFromCollections.join(', ')}`
         );

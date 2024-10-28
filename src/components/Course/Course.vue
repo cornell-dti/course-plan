@@ -12,7 +12,6 @@
       @close-save-course-modal="closeSaveCourseModal"
       @save-course="saveCourse"
       @add-collection="addCollection"
-      @edit-collection="editCollection"
       v-if="isSaveCourseOpen"
     />
     <edit-color
@@ -60,7 +59,7 @@
           <button
             v-else-if="!isReqCourse && !isSemesterCourseCard"
             class="course-trash"
-            @click="saveCourse"
+            @click="deleteCourseFromCollection"
             @mouseover="hoverTrashIcon"
             @mouseleave="unhoverTrashIcon"
           >
@@ -105,7 +104,6 @@ import {
 import { isCourseConflict } from '@/store';
 import { clickOutside } from '@/utilities';
 import EditColor from '../Modals/EditColor.vue';
-import { isCourseConflict } from '@/store';
 import trashGrayIcon from '@/assets/images/trash-gray.svg';
 import trashRedIcon from '@/assets/images/trash.svg';
 
@@ -140,6 +138,7 @@ export default defineComponent({
       typeof addedToCollections === 'object' &&
       typeof deletedFromCollection === 'object',
     'add-collection': (name: string) => typeof name === 'string',
+    'delete-course-from-collection': (courseCode: string) => typeof courseCode === 'string',
   },
   data() {
     return {
@@ -203,6 +202,9 @@ export default defineComponent({
     deleteCourse() {
       this.$emit('delete-course', this.courseObj.code, this.courseObj.uniqueID);
       this.closeMenuIfOpen();
+    },
+    deleteCourseFromCollection() {
+      this.$emit('delete-course-from-collection', this.courseObj.code);
     },
     openEditColorModal(color: string) {
       this.editedColor = color;

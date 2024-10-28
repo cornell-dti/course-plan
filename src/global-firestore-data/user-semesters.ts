@@ -52,8 +52,8 @@ export const setOrderByNewest = (orderByNewest: boolean): void => {
 };
 
 /**
- * Updates the 'All'/Default Collection with all unique courses from all collections
- * @param updater
+ * Updates the 'All'/Default Collection with all unique courses from all collections.
+ *
  */
 export const editDefaultCollection = (): void => {
   const allCollections = store.state.savedCourses;
@@ -68,7 +68,7 @@ export const editDefaultCollection = (): void => {
     }
   });
 
-  editCollection('All', oldCollection => ({
+  editCollection(defaultCollectionName, oldCollection => ({
     ...oldCollection,
     courses: Array.from(uniqueCourses),
   }));
@@ -174,8 +174,7 @@ export const addPlan = async (
   );
 };
 
-/** [deleteCollection] delete an entire collection. Now all courses from
- * the collection can be added to semesters.
+/** Deletes an entire collection including the courses.
  */
 export const deleteCollection = async (name: string, gtag?: VueGtag): Promise<void> => {
   GTagEvent(gtag, 'delete-collection');
@@ -233,6 +232,19 @@ export const addCourseToCollections = (
 
   deleteCourseFromSemester(plan, year, season, newCourse.uniqueID);
   deleteCourseFromRequirementChoices(newCourse.uniqueID);
+};
+
+/**
+ * Delete a course from all collections including the 'All' Collection.
+ *
+ * @param code
+ */
+export const deleteCourseFromAllCollections = (code: string): void => {
+  // delete course from all collections
+  const allCollections = store.state.savedCourses;
+  allCollections.forEach(collection => {
+    deleteCourseFromCollection(collection.name, code);
+  });
 };
 
 /** Delete a course from a certain collection. */

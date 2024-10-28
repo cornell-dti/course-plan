@@ -206,8 +206,11 @@ import {
   editPlan,
   deletePlan,
   addPlan,
-  // editCollection,
-  // deleteCollection,
+  editCollection,
+  editDefaultCollection,
+  deleteCollection,
+  deleteCourseFromCollection,
+  deleteCourseFromAllCollections,
   updateSawNewFeature,
 } from '@/global-firestore-data';
 import AddPlanModal from '@/components/Modals/MultiplePlans/AddPlanModal.vue';
@@ -239,6 +242,7 @@ type Data = {
   confirmationText: string;
   isEditCollectionOpen: boolean;
   oldCollectionName: string;
+  defaultCollectionName: string;
 };
 
 // This section will be revisited when we try to make first-time tooltips
@@ -298,6 +302,7 @@ export default defineComponent({
       selectedPlanCopy: '',
       confirmationText: '',
       oldCollectionName: '',
+      defaultCollectionName: 'All',
     };
   },
   watch: {
@@ -393,30 +398,39 @@ export default defineComponent({
       this.isEditCollectionOpen = true;
       this.oldCollectionName = collection;
     },
-    deleteCourseFromCollection(courseCode: string) {
-      // implement delete course from collection backend
-      // Note: Design doesn't actual have a confirmation text, but I added it as confirmation
-      // since the backend doesn't actual delete the course
+    deleteCourseFromCollection(collectionName: string, courseCode: string) {
+      if (collectionName === this.defaultCollectionName) {
+        deleteCourseFromAllCollections(courseCode);
+      } else {
+        deleteCourseFromCollection(collectionName, courseCode);
+        editDefaultCollection();
+      }
       this.confirmationText = `${courseCode} has been deleted from your collection!`;
       this.isConfirmationOpen = true;
       setTimeout(() => {
         this.isConfirmationOpen = false;
       }, 2000);
     },
-    deleteCollection(collection: string) {
-      // implement delete collection backend
-      // Note: Design doesn't actual have a confirmation text, but I added it as confirmation
-      // since the backend doesn't actual delete the collection
-      this.confirmationText = `${collection} has been deleted!`;
+    deleteCollection(collectionName: string) {
+      deleteCollection(collectionName);
+      editDefaultCollection();
+      this.confirmationText = `${collectionName} has been deleted!`;
       this.isConfirmationOpen = true;
       setTimeout(() => {
         this.isConfirmationOpen = false;
       }, 2000);
     },
     editCollection(name: string, oldname: string) {
-      // implement edit collection backend
-      // Note: Design doesn't actual have a confirmation text, but I added it as confirmation
-      // since the backend doesn't actual edit the collection
+      const { savedCourses } = store.state;
+      const toEdit = savedCourses.find(collection => collection.name === oldname);
+      const updater = (collection: Collection): Collection => ({
+        name,
+        courses: collection.courses,
+      });
+      if (toEdit !== undefined) {
+        editCollection(oldname, updater);
+      }
+
       this.confirmationText = `${oldname} has been renamed to ${name}!`;
       this.isConfirmationOpen = true;
       setTimeout(() => {

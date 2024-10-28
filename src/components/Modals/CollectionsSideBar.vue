@@ -6,73 +6,55 @@
     </div>
 
     <div class="sidebar-content">
-      <div class="dropdown-item-button">
+      <div v-for="(collection, index) in collections" :key="index" class="dropdown-item-button">
         <div class="dropdown-item-button-title">
-          <button @click="closeDropdownIfOpen(0)" style="padding-left: 0rem">
+          <button @click="closeDropdownIfOpen(index)" style="padding-left: 0rem">
             <div class="dropdown-item-button-title-collection">
               <drop-down-arrow
-                :fillColor="dropdownStates[0] ? emGreen : darkGray"
-                :isFlipped="dropdownStates[0]"
+                :fillColor="dropdownStates[index] ? emGreen : darkGray"
+                :isFlipped="dropdownStates[index]"
                 class="arrow"
               />
-              <span :class="{ highlighted: dropdownStates[0] }"> All </span>
+              <span :class="{ highlighted: dropdownStates[index] }">
+                {{ collection }}
+              </span>
+            </div>
+          </button>
+          <button class="course-dotRow" @click="openEditCollectionModal(collection)">
+            <div v-if="!isDefaultCollection(collection)">
+              <img src="@/assets/images/dots/threeDots.svg" alt="open edit collection modal" />
             </div>
           </button>
         </div>
-        <div v-if="dropdownStates[0]">
-          <div v-if="!hasCourses" class="center-content">No classes added yet</div>
+        <div v-if="!dropdownStates[index]" class="separator"></div>
+        <div v-if="dropdownStates[index]">
+          <div v-if="coursesAll(collection).length == 0" class="center-content">
+            No classes added yet
+          </div>
           <div v-else>
-            <div v-for="(course, index) in coursesAll" :key="index" class="dropdown-item-content">
+            <div
+              v-for="(course, index2) in coursesAll(collection)"
+              :key="index2"
+              class="dropdown-item-content"
+            >
               <course
                 :courseObj="course"
                 :isReqCourse="false"
                 :compact="false"
                 :active="false"
                 :isSemesterCourseCard="false"
-                @delete-course-from-collection="deleteCourseFromCollection"
+                @delete-course-from-collection="deleteCourseFromCollection(collection, course)"
               />
             </div>
           </div>
+          <div class="separator"></div>
         </div>
-        <div class="separator"></div>
-      </div>
-      <!-- Dynamic Collections -->
-      <div v-for="(collection, index) in collections" :key="index" class="dropdown-item-button">
-        <div class="dropdown-item-button-title">
-          <button @click="closeDropdownIfOpen(index + 1)" style="padding-left: 0rem">
-            <div class="dropdown-item-button-title-collection">
-              <drop-down-arrow
-                :fillColor="dropdownStates[index + 1] ? emGreen : darkGray"
-                :isFlipped="dropdownStates[index + 1]"
-                class="arrow"
-              />
-              <span :class="{ highlighted: dropdownStates[index + 1] }">
-                {{ collection }}
-              </span>
-            </div>
-          </button>
-          <button class="course-dotRow" @click="openEditCollectionModal(collection)">
-            <img src="@/assets/images/dots/threeDots.svg" alt="open edit collection modal" />
-          </button>
-        </div>
-        <div v-if="dropdownStates[index + 1]">
-          <div v-if="true" class="center-content">No classes added yet</div>
-          <div v-else>
-            <!-- Add your course components here. For Backend Implementation -->
-          </div>
-        </div>
-        <div class="separator"></div>
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-/* Hannah's note for backend: This component is a sidebar that shows collections of saved courses
-collections: data from the store, given from parent RequirementSideBar.vue
-when we open a collection, we will show the courses from that collection
-*/
-
 import { defineComponent } from 'vue';
 // import draggable from 'vuedraggable'; // implement later with backend
 import Course from '@/components/Course/Course.vue';
@@ -81,53 +63,60 @@ import { isPlaceholderCourse, isFirestoreSemesterCourse } from '@/utilities';
 import store from '@/store';
 
 export default defineComponent({
-  // props: {
-  //   // collections: {
-  //   //   type: Array as PropType<readonly Collection[]>,
-  //   //   required: true,
-  //   // },
-  // },
   components: {
     // draggable, // implement later with backend
     Course,
     DropDownArrow,
   },
   emits: {
-    'delete-course-from-collection': (courseCode: string) => typeof courseCode === 'string',
+    'delete-course-from-collection': (collection: string, courseCode: string) =>
+      typeof collection === 'string' && typeof courseCode === 'string',
     'open-edit-collection-modal': (collection: string) => typeof collection === 'string',
   },
   data() {
     return {
       shown: false,
-      dropdownStates: [false, false, false], // This will change when integrated with backend
       emGreen: '#148481',
       darkGray: '#4F4F4F',
+      dropdownStates: [] as boolean[],
       isEditCollectionModalOpen: false,
     };
   },
   computed: {
-    coursesAll(): FirestoreSemesterCourse[] {
-      const courses = [...store.state.currentPlan.semesters[0].courses].filter(course =>
-        isFirestoreSemesterCourse(course)
-      ) as FirestoreSemesterCourse[];
-
-      return courses.filter(
-        course =>
-          course.name === 'Introduction to Computing: A Design and Development Perspective' ||
-          course.name === 'Object-Oriented Programming and Data Structures'
-      );
-    },
     collections() {
       // Dummy data; replace with store.state.savedCourses when integrated
-      return ['Collection 1', 'Collection 2'];
+      return store.state.savedCourses.map(collection => collection.name);
     },
-    hasCourses() {
-      return this.coursesAll.length > 0; // dummy data
+    hasCourses(collection: Collection) {
+      return collection.courses.length > 0;
+    },
+  },
+  mounted() {
+    // Initialize dropdown states when the component mounts
+    this.intializeDropdownStates();
+  },
+  watch: {
+    // Watch for changes in collections and reinitialize dropdown states
+    collections: {
+      immediate: true,
+      handler() {
+        this.intializeDropdownStates();
+      },
     },
   },
   methods: {
     isPlaceholderCourse,
     isFirestoreSemesterCourse,
+    isDefaultCollection(collection: string) {
+      return collection === 'All';
+    },
+    coursesAll(name: string): readonly FirestoreSemesterCourse[] {
+      const collection = store.state.savedCourses.find(c => c.name === name);
+      return collection?.courses || [];
+    },
+    intializeDropdownStates() {
+      this.dropdownStates = Array(this.collections.length).fill(false);
+    },
     closeDropdownIfOpen(index: number) {
       // Toggle the clicked dropdown and close others
       this.dropdownStates = this.dropdownStates.map((state, i) => (i === index ? !state : false));
@@ -137,8 +126,8 @@ export default defineComponent({
       this.isEditCollectionModalOpen = true;
       this.$emit('open-edit-collection-modal', collection);
     },
-    deleteCourseFromCollection(courseCode: string) {
-      this.$emit('delete-course-from-collection', courseCode);
+    deleteCourseFromCollection(collection: string, course: FirestoreSemesterCourse) {
+      this.$emit('delete-course-from-collection', collection, course.code);
     },
   },
 });

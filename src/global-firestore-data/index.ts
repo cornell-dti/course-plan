@@ -30,6 +30,7 @@ export {
   addPlan,
   deleteCollection,
   deleteCourseFromCollection,
+  deleteCourseFromAllCollections,
   deletePlan,
   deleteSemester,
   addCourseToSemester,

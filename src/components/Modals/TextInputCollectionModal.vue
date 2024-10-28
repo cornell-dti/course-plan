@@ -1,4 +1,3 @@
-<!--This is a copy of TextInputModal from MultiplePlans. I didn't want to directly edit code from that file. But later on, we can probably make an overall TextInputModal for any plan, collection, etc.-->
 <template>
   <teleport-modal content-class="content-plan">
     <div class="textInput">
@@ -21,7 +20,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import TeleportModal from '@/components/Modals/TeleportModal.vue';
-// import store from '@/store';
+import store from '@/store';
 
 export default defineComponent({
   props: {
@@ -31,7 +30,7 @@ export default defineComponent({
   },
   components: { TeleportModal },
   emits: {
-    'collection-name': (planName: string) => typeof planName === 'string',
+    'collection-name': (collectionName: string) => typeof collectionName === 'string',
     'warn-state': (warn: boolean) => typeof warn === 'boolean',
   },
   methods: {
@@ -45,9 +44,10 @@ export default defineComponent({
   },
   computed: {
     ifWarn() {
-      return false; // dummy data
-      // store.state.savedCourses.some(collection => collection.name === this.collectionName) ||
-      // !this.collectionName
+      return (
+        store.state.savedCourses.some(collection => collection.name === this.collectionName) ||
+        !this.collectionName
+      );
     },
   },
 });
