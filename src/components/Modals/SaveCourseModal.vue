@@ -2,7 +2,7 @@
   <teleport-modal
     content-class="content-plan"
     right-button-text="Done"
-    :right-button-is-disabled="!isUniqueName"
+    :right-button-is-disabled="!isUniqueCollectionName"
     @modal-closed="closeCurrentModal"
     @left-button-clicked="closeCurrentModal"
     @right-button-clicked="saveCourse"
@@ -52,9 +52,9 @@
               v-model="checkedCollections"
             />
             <label :for="'collection-' + index" class="collection-label">
-              <span v-if="!isEditing || (isEditing && currentEditingIndex !== index)">{{
-                collection
-              }}</span>
+              <span v-if="!isEditing || (isEditing && currentEditingIndex !== index)">
+                {{ collection }}
+              </span>
             </label>
           </div>
         </div>
@@ -64,6 +64,7 @@
         <input type="checkbox" v-model="checkedCollections" id="new-collection" />
         <label for="new-collection" class="new-collection-label">
           <input
+            ref="newCollectionInput"
             maxlength="30"
             v-model="newCollectionName"
             @blur="finishEditing"
@@ -91,22 +92,32 @@ export default defineComponent({
   data() {
     return {
       checkedCollections: [] as string[],
+      preSelectedCollections: [] as string[], // To keep track of initial selections
       newCollectionName: '', // Holds the name of the new collection before it is added
       isEditing: false,
       currentEditingIndex: -1,
     };
   },
   computed: {
-    isUniqueName() {
+    isUniqueCollectionName() {
       return !this.collections.includes(this.newCollectionName);
     },
     isDefaultCollection() {
       const collections = store.state.savedCourses.map(collection => collection.name);
-      return collections.length === 0;
+      return collections.length === 1; // Note: the 'All' collection
     },
     collections() {
-      const collections = store.state.savedCourses.map(collection => collection.name);
+      const collections = store.state.savedCourses
+        .map(collection => collection.name)
+        .filter(collection => collection !== 'All');
       return collections.length === 0 ? [] : collections;
+    },
+    updateSelectedCollections() {
+      // Get collections that already contain this.courseCode
+      return store.state.savedCourses
+        .filter(collection => collection.courses.some(course => course.code === this.courseCode))
+        .map(collection => collection.name)
+        .filter(collection => collection !== 'All');
     },
     placeholder_name() {
       const oldCollections = store.state.savedCourses.map(collection => collection.name);
@@ -121,9 +132,14 @@ export default defineComponent({
       return store.state.savedCourses.length >= 4;
     },
   },
+  mounted() {
+    this.checkedCollections = this.updateSelectedCollections;
+    this.preSelectedCollections = [...this.checkedCollections]; // Store initial state
+  },
   emits: {
     'close-save-course-modal': () => true,
-    'save-course': (collections: string[]) => typeof collections === 'object',
+    'save-course': (addedToCollections: string[], deletedFromCollections: string[]) =>
+      typeof addedToCollections === 'object' && typeof deletedFromCollections === 'object',
     'add-collection': (name: string) => typeof name === 'string',
   },
   methods: {
@@ -131,18 +147,32 @@ export default defineComponent({
       this.$emit('close-save-course-modal');
     },
     saveCourse() {
-      if (this.checkedCollections.length !== 0) {
-        this.$emit('save-course', this.checkedCollections);
-      }
+      // Determine which collections to add/remove based on initial selections
+      const addedToCollections = this.checkedCollections.filter(
+        collection => !this.preSelectedCollections.includes(collection)
+      );
+      const deletedFromCollections = this.preSelectedCollections.filter(
+        collection => !this.checkedCollections.includes(collection)
+      );
+
+      this.$emit('save-course', addedToCollections, deletedFromCollections);
+
       this.closeCurrentModal();
     },
     addCollection() {
       this.newCollectionName = this.placeholder_name;
       this.isEditing = true;
       this.currentEditingIndex = this.collections.length;
+
+      // Delay to allow the DOM to update, then focus and select the text
+      this.$nextTick(() => {
+        const input = this.$refs.newCollectionInput as HTMLInputElement;
+        input.focus();
+        input.select();
+      });
     },
     finishEditing() {
-      if (this.newCollectionName.trim() && this.isUniqueName) {
+      if (this.newCollectionName.trim() && this.isUniqueCollectionName) {
         this.$emit('add-collection', this.newCollectionName.trim());
         this.newCollectionName = '';
       }

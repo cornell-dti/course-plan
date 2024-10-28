@@ -95,13 +95,13 @@
               border: 1px solid $emGreen;
             }
   
-            &:checked {
+            &:checked{
               background-color: $emGreen;
               border: 1px solid $emGreen;
             }
   
             // Show checkbox vector when checked
-            &:checked::before {
+            &:checked::before{
               content: '';
               background-image: url('@/assets/images/checkmark-color.svg');
               background-size: contain;
@@ -180,6 +180,12 @@
             transition: border 0.2s ease;
             width: 80%;
             padding-left: 0.1rem;
+
+            &:focus {
+              outline: none;
+              border-color: $lightGray;
+              box-shadow: none;
+            }
           }
         }
       }

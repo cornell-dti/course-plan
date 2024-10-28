@@ -19,6 +19,7 @@ export {
 export {
   editCollections,
   editCollection,
+  editDefaultCollection,
   editPlans,
   editPlan,
   editSemesters,

@@ -12,7 +12,6 @@
       @close-save-course-modal="closeSaveCourseModal"
       @save-course="saveCourse"
       @add-collection="addCollection"
-      @edit-collection="editCollection"
       v-if="isSaveCourseOpen"
     />
     <edit-color
@@ -114,11 +113,15 @@ export default defineComponent({
     'course-on-click': (course: FirestoreSemesterCourse) => typeof course === 'object',
     'edit-course-credit': (credit: number, uniqueID: number) =>
       typeof credit === 'number' && typeof uniqueID === 'number',
-    'save-course': (course: FirestoreSemesterCourse, collections: string[]) =>
-      typeof course === 'object' && typeof collections === 'object',
+    'save-course': (
+      course: FirestoreSemesterCourse,
+      addedToCollections: string[],
+      deletedFromCollection: string[]
+    ) =>
+      typeof course === 'object' &&
+      typeof addedToCollections === 'object' &&
+      typeof deletedFromCollection === 'object',
     'add-collection': (name: string) => typeof name === 'string',
-    'edit-collection': (name: string, oldname: string) =>
-      typeof name === 'string' && typeof oldname === 'string',
   },
   data() {
     return {
@@ -191,13 +194,9 @@ export default defineComponent({
     addCollection(name: string) {
       this.$emit('add-collection', name);
     },
-    saveCourse(collections: string[]) {
+    saveCourse(addedToCollections: string[], deletedFromCollections: string[]) {
       const course = { ...this.courseObj };
-      this.$emit('save-course', course, collections);
-    },
-    /* only to rename the collection */
-    editCollection(name: string, oldname: string) {
-      this.$emit('edit-collection', name, oldname);
+      this.$emit('save-course', course, addedToCollections, deletedFromCollections);
     },
     colorCourse(color: string) {
       this.$emit('color-course', color, this.courseObj.uniqueID, this.courseObj.code);

@@ -171,6 +171,8 @@ import {
   addCollection,
   addCourseToCollections,
   editCollection,
+  editDefaultCollection,
+  deleteCourseFromCollection,
 } from '@/global-firestore-data';
 import store, { updateSubjectColorData } from '@/store';
 import {
@@ -415,9 +417,41 @@ export default defineComponent({
       this.isConfirmationOpen = false;
     },
 
-    saveCourse(course: FirestoreSemesterCourse, collections: string[]) {
-      addCourseToCollections(store.state.currentPlan, this.year, this.season, course, collections);
-      this.openConfirmationModal(`Saved ${course.code} to ${collections.join(', ')}`);
+    saveCourse(
+      course: FirestoreSemesterCourse,
+      addedToCollections: string[],
+      deletedFromCollections: string[]
+    ) {
+      // Loop through each collection and check if the course is already in it
+      deletedFromCollections.forEach(collection => {
+        // If course is already in collection, remove it
+        deleteCourseFromCollection(collection, course.code);
+      });
+
+      addCourseToCollections(
+        store.state.currentPlan,
+        this.year,
+        this.season,
+        course,
+        addedToCollections
+      );
+
+      editDefaultCollection(); // edit the 'All' collection
+
+      // Display confirmation message for all collections except the last one
+      if (addedToCollections.length !== 0 && deletedFromCollections.length !== 0) {
+        this.openConfirmationModal(
+          `Saved ${course.code} to ${addedToCollections.join(', ')}. Deleted ${
+            course.code
+          } from ${deletedFromCollections.join(', ')}`
+        );
+      } else if (deletedFromCollections.length === 0) {
+        this.openConfirmationModal(`Saved ${course.code} to ${addedToCollections.join(', ')}`);
+      } else {
+        this.openConfirmationModal(
+          ` Deleted ${course.code} from ${deletedFromCollections.join(', ')}`
+        );
+      }
     },
     addCollection(name: string) {
       addCollection(name, []);
@@ -428,8 +462,8 @@ export default defineComponent({
       }, 2000);
     },
     editCollection(oldname: string, name: string) {
-      const { collections } = store.state;
-      const toEdit = collections.find(collection => collection.name === oldname);
+      const { savedCourses } = store.state;
+      const toEdit = savedCourses.find(collection => collection.name === oldname);
       const updater = (collection: Collection): Collection => ({
         name,
         courses: collection.courses,
@@ -437,6 +471,7 @@ export default defineComponent({
       if (toEdit !== undefined) {
         editCollection(oldname, updater);
       }
+
       this.confirmationText = `${oldname} has been renamed to ${name}!`;
       this.isConfirmationOpen = true;
       setTimeout(() => {

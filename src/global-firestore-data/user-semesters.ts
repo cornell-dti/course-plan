@@ -15,8 +15,11 @@ import {
 export const editCollections = async (
   updater: (oldCollections: readonly Collection[]) => readonly Collection[]
 ): Promise<void> => {
-  const collections = updater(store.state.savedCourses);
-  store.commit('setCollections', collections);
+  const savedCourses = updater(store.state.savedCourses);
+  store.commit('setSavedCourses', savedCourses);
+  await updateDoc(doc(semestersCollection, store.state.currentFirebaseUser.email), {
+    savedCourses,
+  });
 };
 
 export const editSemesters = (
@@ -46,6 +49,29 @@ export const setOrderByNewest = (orderByNewest: boolean): void => {
   updateDoc(doc(semestersCollection, store.state.currentFirebaseUser.email), {
     orderByNewest,
   });
+};
+
+/**
+ * Updates the 'All'/Default Collection with all unique courses from all collections
+ * @param updater
+ */
+export const editDefaultCollection = (): void => {
+  const allCollections = store.state.savedCourses;
+  const defaultCollectionName = 'All';
+
+  const uniqueCourses = new Set<FirestoreSemesterCourse>();
+  allCollections.forEach(collection => {
+    if (collection.name !== defaultCollectionName) {
+      collection.courses.forEach(course => {
+        uniqueCourses.add(course);
+      });
+    }
+  });
+
+  editCollection('All', oldCollection => ({
+    ...oldCollection,
+    courses: Array.from(uniqueCourses),
+  }));
 };
 
 export const editCollection = (
@@ -210,19 +236,11 @@ export const addCourseToCollections = (
 };
 
 /** Delete a course from a certain collection. */
-export const deleteCourseFromCollection = (
-  plan: Plan,
-  year: number,
-  season: FirestoreSemesterSeason,
-  name: string,
-  courseUniqueID: number,
-  gtag?: VueGtag
-): void => {
+export const deleteCourseFromCollection = (name: string, code: string): void => {
   // delete course from collection
-  GTagEvent(gtag, 'delete-course-collection');
   editCollection(name, oldCollection => ({
     ...oldCollection,
-    courses: oldCollection.courses.filter(course => course.uniqueID !== courseUniqueID),
+    courses: oldCollection.courses.filter(course => course.code !== code),
   }));
 };
 
