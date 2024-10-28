@@ -14,10 +14,9 @@
     </template>
 
     <div class="saveCourseModal-header">
-      <!-- create a rectangular border-->
       <div class="saveCourseModal-header-text">
         <span> Collections </span>
-        <button class="saveCourseModal-header-text-addButton" @click="addNewCollection">
+        <button class="saveCourseModal-header-text-addButton" @click="addCollection">
           <img src="@/assets/images/plus.svg" alt="add new collection" />
         </button>
       </div>
@@ -49,7 +48,7 @@ export default defineComponent({
   emits: {
     'close-save-course-modal': () => true,
     'save-course': (name: string) => typeof name === 'string',
-    'open-add-collection-modal': () => true,
+    'add-collection': (name: string) => typeof name === 'string',
   },
   methods: {
     closeCurrentModal() {
@@ -59,9 +58,8 @@ export default defineComponent({
       this.$emit('save-course', this.courseCode);
       this.$emit('close-save-course-modal');
     },
-    addNewCollection() {
-      this.$emit('close-save-course-modal');
-      this.$emit('open-add-collection-modal');
+    addCollection() {
+      // this.$emit('add-collection');
     },
   },
 });
@@ -97,28 +95,48 @@ export default defineComponent({
   &-header {
     display: flex;
     align-self: center;
-    margin-left: 0%;
     margin-bottom: 2rem;
     width: 112%;
-    height: 2rem;
-    border: 0.5px solid rgb(176, 156, 156);
     color: $primaryGray;
-    padding: 0.5rem;
-    &-text {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+    padding: 1rem 0rem; /* Increased padding for vertical spacing */
+  }
+
+  &-header-text {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 13px;
+    font-weight: 900;
+    width: 100%;
+    position: relative;
+    padding: 0rem 0.5rem;
+
+    /* Create horizontal lines using ::before and ::after */
+    &::before,
+    &::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background-color: $darkPlaceholderGray;
+    }
+
+    /* Top line */
+    &::before {
+      top: -0.5rem; /* Position line above the text */
+    }
+
+    /* Bottom line */
+    &::after {
+      bottom: -0.5rem; /* Position line below the text */
+    }
+
+    &-addButton {
       margin-left: 0.5rem;
-      margin-right: 0.5rem;
-      font-size: 13px;
-      font-style: normal;
-      font-weight: 900;
-      width: 100%;
-      &-addButton {
-        cursor: pointer;
-        &:hover {
-          opacity: 0.5;
-        }
+      cursor: pointer;
+      &:hover {
+        opacity: 0.5;
       }
     }
   }

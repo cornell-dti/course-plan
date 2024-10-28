@@ -41,7 +41,7 @@ jobs:
           SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_CORNELLDTI_COURSEPLAN_DEV }}
       - name: Upload recordings if tests fail
         if: ${{ failure() }}
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: recorded-videos
           path: cypress/videos/
