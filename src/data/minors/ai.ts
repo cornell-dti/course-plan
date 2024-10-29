@@ -1,9 +1,10 @@
-import { CollegeOrMajorRequirement, Course } from '../../requirements/types';
+import { CollegeOrMajorRequirement, Course, RequirementMigration } from '../../requirements/types';
 import {
   includesWithSingleRequirement,
   courseMatchesCodeOptions,
   ifCodeMatch,
   courseMatchesCode,
+  includesWithSubRequirements,
 } from '../../requirements/checkers';
 import { AdvisorGroup } from '../../tools/advisors/types';
 import { lastNameRange } from '../../tools/advisors/checkers';
@@ -40,7 +41,6 @@ const aiMinorRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'Human-AI Interaction',
     description: 'Add Core Course 3',
-    //TODO: add INFO 3450 exception for students grad in dec 2024 or may 2025
     source:
       'https://prod.cis.cornell.edu/undergraduate-opportunities/minors/artificial-intelligence/ai-minor-requirements',
     checker: includesWithSingleRequirement('INFO 4940'),
@@ -105,6 +105,24 @@ const aiMinorRequirements: readonly CollegeOrMajorRequirement[] = [
     fulfilledBy: 'courses',
     perSlotMinCount: [2],
     slotNames: ['Course'],
+  },
+];
+
+export const aiMigrations: RequirementMigration[] = [
+  {
+    entryYear: 2021, // This requirement only for students graduating in Dec 2024 or May 2025
+    type: 'Modify',
+    fieldName: 'Human-AI Interaction',
+    newValue: {
+      name: 'Human-AI Interaction',
+      description: 'INFO 3450',
+      source:
+        'https://prod.cis.cornell.edu/undergraduate-opportunities/minors/artificial-intelligence/ai-minor-requirements',
+      checker: includesWithSubRequirements(['INFO 3450']),
+      fulfilledBy: 'courses',
+      perSlotMinCount: [1],
+      slotNames: ['INFO 3450'],
+    },
   },
 ];
 

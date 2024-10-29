@@ -51,7 +51,7 @@ import psychRequirements, { psychAdvisors } from './majors/psych';
 import stsRequirements, { stsAdvisors } from './majors/sts';
 import vienRequirements, { vienAdvisors } from './majors/vien';
 import aerospaceMinorRequirements, { aerospaceMinorAdvisors } from './minors/aerospace';
-import aiMinorRequirements from './minors/ai';
+import aiMinorRequirements, { aiMigrations } from './minors/ai';
 import animalSciRequirements, { animalSciAdvisors } from './minors/animal-sci';
 import appliedMathMinorRequirements, { appliedMathMinorAdvisors } from './minors/applied-math';
 import buMinorRequirements, { buMinorAdvisors } from './minors/bu';
@@ -456,9 +456,10 @@ const json: RequirementsJson = {
     },
     AI: {
       name: 'Artificial Intelligence',
-      schools: ['EN'], //TODO: add Bowers
+      schools: ['EN'],
       requirements: aiMinorRequirements,
-      advisors: csAdvisors, //TODO: no set advisor for AI minor
+      advisors: csAdvisors,
+      migrations: aiMigrations,
       abbrev: 'AI',
     },
 
