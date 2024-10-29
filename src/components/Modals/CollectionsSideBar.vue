@@ -37,14 +37,24 @@
               :key="index2"
               class="dropdown-item-content"
             >
-              <course
-                :courseObj="course"
-                :isReqCourse="false"
-                :compact="false"
-                :active="false"
-                :isSemesterCourseCard="false"
-                @delete-course-from-collection="deleteCourseFromCollection(collection, course)"
-              />
+              <draggable
+                :group="{ name: 'draggable-semester-courses', pull: 'clone', put: false }"
+                :modelValue="[course]"
+                :clone="cloneCourse"
+                item-key="code"
+              >
+                <template #item="{ element: templatedCourse }">
+                  <course
+                    :courseObj="templatedCourse"
+                    :isReqCourse="false"
+                    :compact="false"
+                    :active="false"
+                    :isSemesterCourseCard="false"
+                    class="collection-course"
+                    @delete-course-from-collection="deleteCourseFromCollection(collection, templatedCourse)"
+                  />
+                </template>
+              </draggable>
             </div>
           </div>
           <div class="separator"></div>
@@ -56,15 +66,16 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-// import draggable from 'vuedraggable'; // implement later with backend
+import draggable from 'vuedraggable';
 import Course from '@/components/Course/Course.vue';
 import DropDownArrow from '@/components/DropDownArrow.vue';
 import { isPlaceholderCourse, isFirestoreSemesterCourse } from '@/utilities';
 import store from '@/store';
+import { incrementUniqueID } from '@/global-firestore-data';
 
 export default defineComponent({
   components: {
-    // draggable, // implement later with backend
+    draggable,
     Course,
     DropDownArrow,
   },
@@ -128,6 +139,9 @@ export default defineComponent({
     },
     deleteCourseFromCollection(collection: string, course: FirestoreSemesterCourse) {
       this.$emit('delete-course-from-collection', collection, course.code);
+    },
+    cloneCourse(courseWithDummyUniqueID: FirestoreSemesterCourse): FirestoreSemesterCourse {
+      return { ...courseWithDummyUniqueID, uniqueID: incrementUniqueID() };
     },
   },
 });
@@ -232,5 +246,15 @@ export default defineComponent({
 
 :deep(.arrow-up) {
   margin-top: 3px;
+}
+
+.collection-course {
+  touch-action: none;
+  cursor: grab;
+  
+  &:active:hover {
+    touch-action: none;
+    cursor: grabbing;
+  }
 }
 </style>
