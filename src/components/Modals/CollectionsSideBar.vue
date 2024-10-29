@@ -51,7 +51,9 @@
                     :active="false"
                     :isSemesterCourseCard="false"
                     class="collection-course"
-                    @delete-course-from-collection="deleteCourseFromCollection(collection, templatedCourse)"
+                    @delete-course-from-collection="
+                      deleteCourseFromCollection(collection, templatedCourse)
+                    "
                   />
                 </template>
               </draggable>
@@ -251,7 +253,7 @@ export default defineComponent({
 .collection-course {
   touch-action: none;
   cursor: grab;
-  
+
   &:active:hover {
     touch-action: none;
     cursor: grabbing;
