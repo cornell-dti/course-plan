@@ -10,7 +10,8 @@ type FeatureFlagName =
   | 'ToggleRequirementsBarBtn'
   | 'Profile'
   | 'MultiplePlans'
-  | 'SavedCourses';
+  | 'SavedCourses'
+  | 'Schedule Generator';
 /* | 'AddYourFeatureFlagNameHere' */
 const featureFlagCheckers: FeatureFlagCheckers = registerFeatureFlagChecker(
   'APIBFulfillment',
@@ -20,7 +21,8 @@ const featureFlagCheckers: FeatureFlagCheckers = registerFeatureFlagChecker(
   'ToggleRequirementsBarBtn',
   'Profile',
   'MultiplePlans',
-  'SavedCourses'
+  'SavedCourses',
+  'Schedule Generator'
   /* 'AddYourFeatureFlagNameHere' */
 );
 export default featureFlagCheckers;

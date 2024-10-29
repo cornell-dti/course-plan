@@ -15,6 +15,7 @@ export {
   setAppOnboardingData,
   deleteTransferCredit,
   updateSawNewFeature,
+  updateSawGiveaway,
 } from './user-onboarding-data';
 export {
   editCollections,

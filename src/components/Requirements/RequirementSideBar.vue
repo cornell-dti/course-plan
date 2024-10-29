@@ -281,6 +281,7 @@ export default defineComponent({
     isMinimized: { type: Boolean, required: true },
     startNewFeatureTour: { type: Boolean, required: true },
     isDisplayingCollection: { type: Boolean, required: true },
+    startMultiplePlansTour: { type: Boolean, required: true },
   },
   emits: ['showTourEndWindow', 'toggleMinimized'], // probably will remove emits with just using components
   data(): Data {
@@ -321,7 +322,7 @@ export default defineComponent({
         this.tourStep = 0;
       });
     },
-    startNewFeatureTour() {
+    startMultiplePlansTour() {
       const newFeatureTour = introJs();
       newFeatureTour.setOptions({
         steps: [
@@ -610,10 +611,6 @@ export default defineComponent({
   border: none;
   font-size: 16px;
 }
-
-// .collections-side-bar {
-//   //  margin: 1.5rem 0 1rem 0;
-// }
 
 .requirement-sidebar-btn-open {
   @include requirement-sidebar-btn;

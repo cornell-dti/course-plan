@@ -25,7 +25,7 @@ import csRequirements, { csAdvisors } from './majors/cs';
 import deaRequirements, { deaAdvisors } from './majors/dea';
 import easRequirements, { easAdvisors } from './majors/eas';
 import economicsRequirements, { economicsAdvisors } from './majors/econ';
-import eceRequirements, { eceAdvisors } from './majors/ece';
+import eceRequirements, { eceAdvisors, eceMigrations } from './majors/ece';
 import essRequirements, { essAdvisors } from './majors/ess';
 import englishRequirements, { englishAdvisors } from './majors/engl';
 import envEngineeringRequirements, { envEngineeringAdvisors } from './majors/envE';
@@ -80,6 +80,7 @@ import earthAndAtmosphericSciencesMinorRequirements, {
 import mpaRequirements, { mpaAdvisors } from './grad/mpa';
 
 import { MATH2940, CHEM2080 } from './specializations/en';
+import nsRequirements, { nsAdvisors } from './majors/ns';
 
 const json: RequirementsJson = {
   university: {
@@ -265,6 +266,7 @@ const json: RequirementsJson = {
       schools: ['EN'],
       requirements: eceRequirements,
       advisors: eceAdvisors,
+      migrations: eceMigrations,
       abbrev: 'ECE',
     },
     ENGL: {
@@ -385,6 +387,13 @@ const json: RequirementsJson = {
       requirements: mseRequirements,
       advisors: mseAdvisors,
       abbrev: 'MSE',
+    },
+    NS: {
+      name: 'Nutritional Sciences',
+      schools: ['AG'],
+      requirements: nsRequirements,
+      advisors: nsAdvisors,
+      abbrev: 'NS',
     },
     ORIE: {
       name: 'Operations Research and Engineering',

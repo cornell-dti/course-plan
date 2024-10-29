@@ -74,6 +74,8 @@ it('Exam is converted to correct course', () => {
     minor: [],
     tookSwim: 'no',
     sawNewFeature: false,
+    sawGiveaway: false,
+    sawScheduleGenerator: false,
   };
   const examCourses = userDataToExamCourses(userData);
   const expected = {

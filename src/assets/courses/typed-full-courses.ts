@@ -33,3 +33,6 @@ export const fullCoursesJson: FullCourseJson = Object.fromEntries(
 export const fullCoursesArray: readonly CornellCourseRosterCourse[] = Object.values(
   fullCoursesJsonWithStringKey
 ).flat();
+
+export const specificRosterCoursesArray = (roster: string): readonly CornellCourseRosterCourse[] =>
+  fullCoursesArray.filter(course => course.roster === roster);

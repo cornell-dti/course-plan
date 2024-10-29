@@ -70,7 +70,11 @@
         <div v-if="!compact" class="course-info">
           <span class="course-credits">{{ creditString }}</span>
           <span v-if="semesterString" class="course-semesters">{{ semesterString }}</span>
-          <course-caution v-if="!isReqCourse" :course="courseObj" :isCompactView="false" />
+          <course-caution
+            v-if="!isReqCourse && !isSchedGenCourse"
+            :course="courseObj"
+            :isCompactView="false"
+          />
         </div>
       </div>
     </div>
@@ -118,6 +122,7 @@ export default defineComponent({
     season: { type: String, required: false, default: '' },
     year: { type: Number, required: false, default: 0 },
     isSemesterCourseCard: { type: Boolean, required: true },
+    isSchedGenCourse: { type: Boolean, required: false, default: false },
   },
   emits: {
     'delete-course': (code: string, uniqueID: number) =>

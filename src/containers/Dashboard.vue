@@ -1,7 +1,7 @@
 <template>
   <div class="dashboard">
     <onboarding
-      class="dashboard-onboarding"
+      class="dashboard-modal"
       v-if="isOnboarding"
       :isEditingProfile="isEditingProfile"
       :userName="userName"
@@ -9,22 +9,34 @@
       @onboard="endOnboarding"
       @cancelOnboarding="cancelOnboarding"
     />
+    <schedule-generate-modal
+      v-if="isScheduleGenerateModalOpen"
+      class="dashboard-modal"
+      :year="year"
+      :season="season"
+      :courses="coursesForGeneration"
+      :reqs="reqsForGeneration"
+      :credit-limit="creditLimitForGeneration"
+      @closeScheduleGenerateModal="closeScheduleGenerateModal"
+    />
     <div class="dashboard-mainView">
       <div class="dashboard-menus">
         <nav-bar
           class="dashboard-nav"
           data-cyId="navbar"
           :isDisplayingRequirementsMobile="requirementsIsDisplayedMobile"
+          :startScheduleGeneratorTour="startScheduleGeneratorTour"
           @openPlan="openPlan"
           @openTools="openTools"
           @openProfile="openProfile"
+          @openScheduleGenerate="openScheduleGenerate"
           @toggleRequirementsMobile="toggleRequirementsMobile"
           @openCollection="openCollection"
         />
         <requirement-side-bar
           class="dashboard-reqs"
           data-cyId="reqsSidebar"
-          v-if="loaded && !showToolsPage && !isProfileOpen"
+          v-if="loaded && !showToolsPage && !isProfileOpen && !isScheduleGenerateOpen"
           :isMobile="isTablet"
           :isDisplayingMobile="requirementsIsDisplayedMobile"
           :isMinimized="requirementsIsMinimized"
@@ -33,6 +45,13 @@
           @showTourEndWindow="showTourEnd"
           :startNewFeatureTour="startNewFeatureTour"
           :isDisplayingCollection="isShowCollectionOpen"
+          :startMultiplePlansTour="startMultiplePlansTour"
+        />
+        <schedule-generate-side-bar
+          v-if="loaded && !showToolsPage && !isProfileOpen && isScheduleGenerateOpen"
+          :year="year"
+          :season="season"
+          @openScheduleGenerateModal="openScheduleGenerateModal"
         />
         <bottom-bar
           v-if="!(isTablet && requirementsIsDisplayedMobile) && !showToolsPage && !isProfileOpen"
@@ -80,6 +99,14 @@
       @closeTourWindow="closeTour"
       v-if="showTourEndWindow"
     />
+    <giveaway-modal
+      title="Courseplan Giveaway!"
+      right-button-text="Submit"
+      rightButtonAlt="giveaway submit icon"
+      @modal-closed="closeGiveawayModal"
+      v-if="showGiveawayModal && isBeforeCutoff"
+    >
+    </giveaway-modal>
   </div>
 </template>
 
@@ -87,15 +114,19 @@
 import { defineComponent } from 'vue';
 
 import introJs from 'intro.js';
+import rosters from '@/assets/courses/rosters.json';
 import SemesterView from '@/components/Semester/SemesterView.vue';
 import RequirementSideBar from '@/components/Requirements/RequirementSideBar.vue';
 import BottomBar from '@/components/BottomBar/BottomBar.vue';
 import NavBar from '@/components/NavBar.vue';
+import ScheduleGenerateSideBar from '@/components/ScheduleGenerate/ScheduleGenerateSideBar.vue';
+import ScheduleGenerateModal from '@/components/ScheduleGenerate/ScheduleGenerateModal.vue';
 import Onboarding from '@/components/Modals/Onboarding/Onboarding.vue';
 import TourWindow from '@/components/Modals/TourWindow.vue';
 import ToolsContainer from '@/containers/Tools.vue';
 import ProfileEditor from '@/containers/Profile.vue';
 import featureFlagCheckers from '@/feature-flags';
+import GiveawayModal from '@/components/Modals/GiveawayModal.vue';
 
 import store, { initializeFirestoreListeners } from '@/store';
 import { immutableBottomBarState } from '@/components/BottomBar/BottomBarState';
@@ -104,6 +135,8 @@ import {
   mediumBreakpoint,
   veryLargeBreakpoint,
 } from '@/assets/constants/scss-variables';
+import { CourseForFrontend } from '@/schedule-generator/course-unit';
+import Requirement from '@/schedule-generator/requirement';
 
 const smallBreakpointPixels = parseInt(
   smallBreakpoint.substring(0, smallBreakpoint.length - 2),
@@ -138,12 +171,15 @@ export default defineComponent({
   components: {
     BottomBar,
     NavBar,
+    ScheduleGenerateSideBar,
     Onboarding,
+    ScheduleGenerateModal,
     RequirementSideBar,
     SemesterView,
     TourWindow,
     ToolsContainer,
     ProfileEditor,
+    GiveawayModal,
   },
   data() {
     return {
@@ -159,14 +195,55 @@ export default defineComponent({
       maxBottomBarTabs: getMaxButtonBarTabs(),
       welcomeHidden: false,
       startTour: false,
-      startNewFeatureTour: false,
+      startMultiplePlansTour: false,
+      startScheduleGeneratorTour: false,
       showTourEndWindow: false,
       showToolsPage: false,
       isProfileOpen: false,
       isShowCollectionOpen: false,
+      showGiveawayModal: false,
+      isScheduleGenerateOpen: false,
+      isScheduleGenerateModalOpen: false,
+      coursesForGeneration: [] as CourseForFrontend[],
+      reqsForGeneration: [] as Requirement[],
+      creditLimitForGeneration: 12,
     };
   },
   computed: {
+    season(): FirestoreSemesterSeason {
+      // Get the last element in the rosters array
+      const lastElement = rosters[rosters.length - 1];
+
+      // Determine the season
+      let determinedSeason = 'Unknown';
+      if (lastElement.startsWith('FA')) {
+        determinedSeason = 'Fall';
+      } else if (lastElement.startsWith('SP')) {
+        determinedSeason = 'Spring';
+      } else if (lastElement.startsWith('SU')) {
+        determinedSeason = 'Summer';
+      } else if (lastElement.startsWith('WI')) {
+        determinedSeason = 'Winter';
+      }
+
+      // Log the determined season
+      // console.log(`Determined season: ${determinedSeason}`);
+
+      return determinedSeason as FirestoreSemesterSeason;
+    },
+    year(): number {
+      // Get the last element in the rosters array
+      const lastElement = rosters[rosters.length - 1];
+
+      // Extract the last two digits of the year (e.g., '24' for '2024')
+      const yearSuffix = lastElement.slice(2);
+
+      // Log the determined year for testing
+      // console.log(`Determined year: ${yearSuffix}`);
+
+      // Return the year suffix as a number
+      return parseInt(yearSuffix, 10) + 2000;
+    },
     userName(): FirestoreUserName {
       return store.state.userName;
     },
@@ -182,6 +259,12 @@ export default defineComponent({
     bottomBarIsExpanded(): boolean {
       return immutableBottomBarState.isExpanded;
     },
+    isBeforeCutoff(): boolean {
+      const currentDate = new Date();
+      const cutoffDate = new Date('2024-10-30T23:59:00'); // October 30th, 2024, at 11:59 PM
+      console.log(currentDate < cutoffDate);
+      return currentDate < cutoffDate;
+    },
   },
   created() {
     window.addEventListener('resize', this.resizeEventHandler);
@@ -191,7 +274,13 @@ export default defineComponent({
       if (this.onboardingData.college !== '' || this.onboardingData.grad !== '') {
         this.loaded = true;
         if (!this.onboardingData.sawNewFeature) {
-          this.startNewFeatureTour = true;
+          this.startMultiplePlansTour = true;
+        } else if (!this.onboardingData.sawScheduleGenerator) {
+          this.startScheduleGeneratorTour = true;
+        }
+        if (!this.onboardingData.sawGiveaway) {
+          // if user did not see the giveaway
+          this.showGiveawayModal = true; // show the giveaway
         }
       } else {
         this.startOnboarding();
@@ -260,11 +349,18 @@ export default defineComponent({
       this.showToolsPage = false;
       this.isProfileOpen = false;
       this.isShowCollectionOpen = false;
+      this.isScheduleGenerateOpen = false;
     },
 
     openTools() {
       this.showToolsPage = true;
       this.isProfileOpen = false;
+    },
+
+    openScheduleGenerate() {
+      this.showToolsPage = false;
+      this.isProfileOpen = false;
+      this.isScheduleGenerateOpen = true;
     },
 
     editProfile() {
@@ -281,12 +377,33 @@ export default defineComponent({
       }
     },
 
+    openScheduleGenerateModal(
+      coursesWithReqIds: {
+        req: Requirement;
+        courses: CourseForFrontend[];
+      }[],
+      creditLimit: number
+    ) {
+      this.coursesForGeneration = coursesWithReqIds.flatMap(req => req.courses);
+      this.reqsForGeneration = coursesWithReqIds.map(obj => obj.req); // Store requirement IDs
+      this.creditLimitForGeneration = creditLimit;
+      this.isScheduleGenerateModalOpen = true;
+    },
+
+    closeScheduleGenerateModal() {
+      this.isScheduleGenerateModalOpen = false;
+    },
+
     closeWelcome() {
       this.welcomeHidden = false;
     },
 
     closeTour() {
       this.showTourEndWindow = false;
+    },
+
+    closeGiveawayModal() {
+      this.showGiveawayModal = false;
     },
   },
 });
@@ -310,7 +427,7 @@ export default defineComponent({
   }
 
   /* The Modal (background) */
-  &-onboarding {
+  &-modal {
     position: fixed; /* Stay in place */
     z-index: 4; /* Sit on top */
     left: 0;

@@ -40,6 +40,14 @@
           <button class="navbar-iconWrapper saved-courses-icon full-opacity-on-hover" />
           <div class="navbar-iconText">
             <span>Saved</span>
+        <div class="navbar-buttonWrapper desktop">
+          <button
+            id="schedule-generator"
+            class="navbar-iconWrapper schedule-builder-icon full-opacity-on-hover"
+            @click="openScheduleGenerate"
+          />
+          <div class="navbar-iconText">
+            <span>Build</span>
           </div>
         </div>
       </div>
@@ -70,7 +78,11 @@
         </button>
         <button class="nav-mobile-button" data-cyId="navbar-editProfile" @click="openProfile">
           <div class="navbar-iconWrapper profile-mobile-icon" />
-          <span class="nav-mobile-button-text">Edit Profile</span>
+          <span class="nav-mobile-button-text">Profile</span>
+        </button>
+        <button class="nav-mobile-button" @click="openScheduleGenerate">
+          <div class="navbar-iconWrapper schedule-builder-mobile-icon" />
+          <span class="nav-mobile-button-text">Build</span>
         </button>
         <button class="nav-mobile-button" @click="logout">
           <div class="navbar-iconWrapper logout-mobile-icon" />
@@ -93,24 +105,53 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { getAuth, signOut } from 'firebase/auth';
+import introJs from 'intro.js';
 import { GTagEvent } from '@/gtag';
 import { clickOutside } from '@/utilities';
 import featureFlagCheckers from '@/feature-flags';
+import { updateSawScheduleGenerator } from '@/global-firestore-data/user-onboarding-data';
 
 export default defineComponent({
   props: {
     isDisplayingRequirementsMobile: { type: Boolean, required: true },
+    startScheduleGeneratorTour: { type: Boolean, required: true },
   },
   computed: {
     displaySavedCourses() {
-      return featureFlagCheckers.isSavedCoursesEnabled();
+      return true;
     },
   },
-  emits: ['openPlan', 'openTools', 'toggleRequirementsMobile', 'openProfile', 'openCollection'],
+  emits: [
+    'openPlan',
+    'openTools',
+    'toggleRequirementsMobile',
+    'openProfile',
+    'openCollection',
+    'openScheduleGenerate',
+  ],
   data() {
     return {
       menuOpen: false,
     };
+  },
+  watch: {
+    startScheduleGeneratorTour() {
+      const scheduleGeneratorTour = introJs();
+      scheduleGeneratorTour.setOptions({
+        steps: [
+          {
+            element: '#schedule-generator',
+            intro: `<div class="introjs-tooltipTop"><div class="introjs-customTitle">Introducing a New Page</div></div>
+          <div class = "introjs-bodytext">Use Build 💪 to automatically generate new schedules based on the courses you want to take! 📆</div>`,
+            position: 'right',
+          },
+        ],
+        doneLabel: 'Got it',
+      });
+      // check firestore if the user has seen it already
+      scheduleGeneratorTour.start();
+      updateSawScheduleGenerator(true);
+    },
   },
   methods: {
     logout() {
@@ -136,6 +177,10 @@ export default defineComponent({
     openProfile() {
       this.menuOpen = false;
       this.$emit('openProfile');
+    },
+    openScheduleGenerate() {
+      this.menuOpen = false;
+      this.$emit('openScheduleGenerate');
     },
     toggleRequirementsMobile() {
       this.menuOpen = false;
@@ -198,6 +243,9 @@ $mobile-navbar-height: 4.5rem;
       }
       .saved-courses-icon {
         background-image: url('@/assets/images/navbar/savedCoursesIconBlue.svg');
+      },
+      .schedule-builder-icon {
+        background-image: url('@/assets/images/navbar/scheduleBuilderIconBlue.svg');
       }
     }
   }
@@ -231,6 +279,10 @@ $mobile-navbar-height: 4.5rem;
 
   .saved-courses-icon {
     background-image: url('@/assets/images/navbar/savedCoursesIcon.svg');
+  }
+  
+  .schedule-builder-icon {
+    background-image: url('@/assets/images/navbar/scheduleBuilderIcon.svg');
   }
 
   .requirements-bar {
@@ -291,6 +343,10 @@ $mobile-navbar-height: 4.5rem;
 
   .profile-mobile-icon {
     background-image: url('@/assets/images/navbar/profile-mobile-icon.svg');
+  }
+
+  .schedule-builder-mobile-icon {
+    background-image: url('@/assets/images/navbar/schedule-builder-mobile.svg');
   }
 
   .logout-mobile-icon {

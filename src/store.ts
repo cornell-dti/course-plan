@@ -78,6 +78,8 @@ const store: TypedVuexStore = new TypedVuexStore({
       exam: [],
       tookSwim: 'no',
       sawNewFeature: false,
+      sawGiveaway: false,
+      sawScheduleGenerator: false,
     },
     orderByNewest: true,
     derivedCoursesData: {
@@ -195,6 +197,12 @@ const store: TypedVuexStore = new TypedVuexStore({
     },
     setDefaultSavedCoursesCollection(state: VuexStoreState, allSavedCourses: Collection) {
       state.allSavedCourses = allSavedCourses;
+    },
+    setSawGiveaway(state: VuexStoreState, seen: boolean) {
+      state.onboardingData.sawGiveaway = seen;
+    },
+    setSawScheduleGenerator(state: VuexStoreState, seen: boolean) {
+      state.onboardingData.sawScheduleGenerator = seen;
     },
   },
 });
