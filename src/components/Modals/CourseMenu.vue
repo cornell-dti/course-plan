@@ -148,7 +148,7 @@ export default defineComponent({
       zIndexColors: 1,
       zIndexEditCredits: 1,
       courseCode: '',
-      saveCourseIconVisible: featureFlagCheckers.isSavedCoursesEnabled(),
+      saveCourseIconVisible: true,
     };
   },
   computed: {
