@@ -66,7 +66,7 @@ export default defineComponent({
       required: false,
       default: undefined,
     },
-    // An optional filter for the course selector; if set, only
+    // An optional filter for the course selector. If set, only
     // allows for viewing (and so selecting) courses that fulfill
     // the given requirement.
     filterForRequirementID: {
