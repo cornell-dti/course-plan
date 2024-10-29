@@ -116,13 +116,13 @@ const json: RequirementsJson = {
       advisors: casAdvisors,
     },
     EN: {
-      name: 'Engineering (CoE)',
+      name: 'Engineering (ENG)',
       requirements: engineeringRequirements,
       advisors: engineeringAdvisors,
       abbrev: 'CoE',
     },
     HE: {
-      name: 'Human Ecology (HE)',
+      name: 'Human Ecology (CHE)',
       requirements: humanEcologyRequirements,
       abbrev: 'HumEc',
       advisors: humanEcologyAdvisors,
@@ -134,7 +134,7 @@ const json: RequirementsJson = {
       advisors: ilrAdvisors,
     },
     BU: {
-      name: 'SC Johnson College of Business',
+      name: 'SC Johnson College of Business (SHA, DYSON)',
       requirements: businessRequirements,
       abbrev: 'Business',
       advisors: businessAdvisors,
