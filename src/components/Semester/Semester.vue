@@ -109,6 +109,9 @@
                 @color-subject="colorSubject"
                 @course-on-click="courseOnClick"
                 @edit-course-credit="editCourseCredit"
+                @save-course="saveCourse"
+                @add-collection="addCollection"
+                @edit-collection="editCollection"
               />
               <placeholder
                 v-else
@@ -166,6 +169,11 @@ import {
   deleteCourseFromSemester,
   deleteAllCoursesFromSemester,
   updateRequirementChoices,
+  addCollection,
+  addCourseToCollections,
+  editCollection,
+  editDefaultCollection,
+  deleteCourseFromCollection,
 } from '@/global-firestore-data';
 import store, { updateSubjectColorData } from '@/store';
 import {
@@ -408,6 +416,67 @@ export default defineComponent({
     },
     closeConfirmationModal() {
       this.isConfirmationOpen = false;
+    },
+
+    saveCourse(
+      course: FirestoreSemesterCourse,
+      addedToCollections: string[],
+      deletedFromCollections: string[]
+    ) {
+      deletedFromCollections.forEach(collection => {
+        // If course is already in collection, remove it
+        deleteCourseFromCollection(collection, course.code);
+      });
+
+      addCourseToCollections(
+        store.state.currentPlan,
+        this.year,
+        this.season,
+        course,
+        addedToCollections
+      );
+
+      editDefaultCollection(); // edit the 'All' collection
+
+      // Display confirmation message for all collections except the last one
+      if (addedToCollections.length !== 0 && deletedFromCollections.length !== 0) {
+        this.openConfirmationModal(
+          `Saved ${course.code} to ${addedToCollections.join(', ')}. Deleted ${
+            course.code
+          } from ${deletedFromCollections.join(', ')}`
+        );
+      } else if (deletedFromCollections.length === 0) {
+        this.openConfirmationModal(`Saved ${course.code} to ${addedToCollections.join(', ')}`);
+      } else if (addedToCollections.length === 0) {
+        this.openConfirmationModal(
+          ` Deleted ${course.code} from ${deletedFromCollections.join(', ')}`
+        );
+      }
+    },
+    addCollection(name: string) {
+      addCollection(name, []);
+      this.confirmationText = `${name} has been added!`;
+      this.isConfirmationOpen = true;
+      setTimeout(() => {
+        this.isConfirmationOpen = false;
+      }, 2000);
+    },
+    editCollection(oldname: string, name: string) {
+      const { savedCourses } = store.state;
+      const toEdit = savedCourses.find(collection => collection.name === oldname);
+      const updater = (collection: Collection): Collection => ({
+        name,
+        courses: collection.courses,
+      });
+      if (toEdit !== undefined) {
+        editCollection(oldname, updater);
+      }
+
+      this.confirmationText = `${oldname} has been renamed to ${name}!`;
+      this.isConfirmationOpen = true;
+      setTimeout(() => {
+        this.isConfirmationOpen = false;
+      }, 2000);
     },
     // TODO @willespencer refactor the below methods after gatekeep removed (to only 1 method)
     addCourse(data: CornellCourseRosterCourse, choice: FirestoreCourseOptInOptOutChoices) {

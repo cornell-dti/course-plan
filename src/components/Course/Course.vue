@@ -12,7 +12,6 @@
       @close-save-course-modal="closeSaveCourseModal"
       @save-course="saveCourse"
       @add-collection="addCollection"
-      @edit-collection="editCollection"
       v-if="isSaveCourseOpen"
     />
     <edit-color
@@ -60,7 +59,7 @@
           <button
             v-else-if="!isReqCourse && !isSemesterCourseCard"
             class="course-trash"
-            @click="saveCourse"
+            @click.stop="deleteCourseFromCollection"
             @mouseover="hoverTrashIcon"
             @mouseleave="unhoverTrashIcon"
           >
@@ -102,9 +101,9 @@ import {
   reportCourseColorChange,
   reportSubjectColorChange,
 } from '@/components/BottomBar/BottomBarState';
+import { isCourseConflict } from '@/store';
 import { clickOutside } from '@/utilities';
 import EditColor from '../Modals/EditColor.vue';
-import { isCourseConflict } from '@/store';
 import trashGrayIcon from '@/assets/images/trash-gray.svg';
 import trashRedIcon from '@/assets/images/trash.svg';
 
@@ -130,11 +129,16 @@ export default defineComponent({
     'course-on-click': (course: FirestoreSemesterCourse) => typeof course === 'object',
     'edit-course-credit': (credit: number, uniqueID: number) =>
       typeof credit === 'number' && typeof uniqueID === 'number',
-    'save-course': (course: FirestoreSemesterCourse, collections: string[]) =>
-      typeof course === 'object' && typeof collections === 'object',
+    'save-course': (
+      course: FirestoreSemesterCourse,
+      addedToCollections: string[],
+      deletedFromCollection: string[]
+    ) =>
+      typeof course === 'object' &&
+      typeof addedToCollections === 'object' &&
+      typeof deletedFromCollection === 'object',
     'add-collection': (name: string) => typeof name === 'string',
-    'edit-collection': (name: string, oldname: string) =>
-      typeof name === 'string' && typeof oldname === 'string',
+    'delete-course-from-collection': (courseCode: string) => typeof courseCode === 'string',
   },
   data() {
     return {
@@ -199,6 +203,9 @@ export default defineComponent({
       this.$emit('delete-course', this.courseObj.code, this.courseObj.uniqueID);
       this.closeMenuIfOpen();
     },
+    deleteCourseFromCollection() {
+      this.$emit('delete-course-from-collection', this.courseObj.code);
+    },
     openEditColorModal(color: string) {
       this.editedColor = color;
       this.isEditColorOpen = true;
@@ -209,12 +216,9 @@ export default defineComponent({
     addCollection(name: string) {
       this.$emit('add-collection', name);
     },
-    saveCourse(/* collections: string[] */) {
-      // const course = { ...this.courseObj };
-      // this.$emit('save-course', course, collections)
-    },
-    editCollection(name: string, oldname: string) {
-      this.$emit('edit-collection', name, oldname);
+    saveCourse(addedToCollections: string[], deletedFromCollections: string[]) {
+      const course = { ...this.courseObj };
+      this.$emit('save-course', course, addedToCollections, deletedFromCollections);
     },
     colorCourse(color: string) {
       this.$emit('color-course', color, this.courseObj.uniqueID, this.courseObj.code);

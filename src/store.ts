@@ -51,6 +51,8 @@ export type VuexStoreState = {
   isTeleportModalOpen: boolean;
   plans: readonly Plan[];
   currentPlan: Plan;
+  savedCourses: readonly Collection[];
+  allSavedCourses: Collection;
 };
 
 export class TypedVuexStore extends Store<VuexStoreState> {}
@@ -99,6 +101,8 @@ const store: TypedVuexStore = new TypedVuexStore({
     isTeleportModalOpen: false,
     plans: [],
     currentPlan: { name: '', semesters: [] },
+    savedCourses: [],
+    allSavedCourses: { name: '', courses: [] },
   },
   actions: {},
   getters: {
@@ -186,6 +190,12 @@ const store: TypedVuexStore = new TypedVuexStore({
     setSawNewFeature(state: VuexStoreState, seen: boolean) {
       state.onboardingData.sawNewFeature = seen;
     },
+    setSavedCourses(state: VuexStoreState, newSavedCourses: readonly Collection[]) {
+      state.savedCourses = newSavedCourses;
+    },
+    setDefaultSavedCoursesCollection(state: VuexStoreState, allSavedCourses: Collection) {
+      state.allSavedCourses = allSavedCourses;
+    },
   },
 });
 
@@ -203,7 +213,7 @@ const autoRecomputeDerivedData = (): (() => void) =>
         );
         break;
       }
-      case 'setSemesters' || 'setPlans': {
+      case 'setSemesters' || 'setPlans' || 'setSavedCourses': {
         const allCourseSet = new Set<string>();
         const duplicatedCourseCodeSet = new Set<string>();
         const courseMap: Record<number, FirestoreSemesterCourse> = {};
@@ -245,7 +255,9 @@ const autoRecomputeDerivedData = (): (() => void) =>
       mutation.type === 'setToggleableRequirementChoices' ||
       mutation.type === 'setOverriddenFulfillmentChoices' ||
       mutation.type === 'setCurrentPlan' ||
-      mutation.type === 'setPlans'
+      mutation.type === 'setPlans' ||
+      mutation.type === 'setDefaultSavedCoursesCollection' ||
+      mutation.type === 'setSavedCourses'
     ) {
       if (state.onboardingData.college !== '') {
         store.commit(
@@ -326,17 +338,22 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
       const plan = getFirstPlan(data);
       store.commit('setPlans', data.plans);
       store.commit('setCurrentPlan', plan);
+      store.commit('setSavedCourses', data.savedCourses); // Note: toggle this on and off to save collections progress after refresh
       const { orderByNewest } = data;
       store.commit('setSemesters', plan.semesters);
       updateDoc(doc(fb.semestersCollection, simplifiedUser.email), {
         plans: data.plans,
+        savedCourses: data.savedCourses,
       });
       // if user hasn't yet chosen an ordering, choose true by default
       store.commit('setOrderByNewest', orderByNewest === undefined ? true : orderByNewest);
     } else {
       const plans = [{ name: 'Plan 1', semesters: [] }];
+      const savedCourses = [{ name: 'All', courses: [] }]; // Warning: Every retruning user needs this Collection too
       store.commit('setPlans', plans);
       store.commit('setCurrentPlan', plans[0]);
+      store.commit('setSavedCourses', savedCourses);
+      store.commit('setDefaultSavedCoursesCollection', savedCourses[0]);
       const newSemester: FirestoreSemester = {
         year: getCurrentYear(),
         season: getCurrentSeason(),
@@ -347,6 +364,7 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
         orderByNewest: true,
         plans: [{ name: 'Plan 1', semesters: [newSemester] }],
         semesters: [newSemester],
+        savedCourses: [{ name: 'All', courses: [] }],
       });
     }
     semestersInitialLoadFinished = true;

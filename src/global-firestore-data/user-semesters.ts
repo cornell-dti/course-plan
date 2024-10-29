@@ -12,6 +12,16 @@ import {
   deleteCoursesFromRequirementChoices,
 } from './user-overridden-fulfillment-choices';
 
+export const editCollections = async (
+  updater: (oldCollections: readonly Collection[]) => readonly Collection[]
+): Promise<void> => {
+  const savedCourses = updater(store.state.savedCourses);
+  store.commit('setSavedCourses', savedCourses);
+  await updateDoc(doc(semestersCollection, store.state.currentFirebaseUser.email), {
+    savedCourses,
+  });
+};
+
 export const editSemesters = (
   plan: Plan,
   updater: (oldSemesters: readonly FirestoreSemester[]) => readonly FirestoreSemester[]
@@ -41,6 +51,38 @@ export const setOrderByNewest = (orderByNewest: boolean): void => {
   });
 };
 
+/**
+ * Updates the 'All'/Default Collection with all unique courses from all collections.
+ *
+ */
+export const editDefaultCollection = (): void => {
+  const allCollections = store.state.savedCourses;
+  const defaultCollectionName = 'All';
+
+  const uniqueCourses = new Set<FirestoreSemesterCourse>();
+  allCollections.forEach(collection => {
+    if (collection.name !== defaultCollectionName) {
+      collection.courses.forEach(course => {
+        uniqueCourses.add(course);
+      });
+    }
+  });
+
+  editCollection(defaultCollectionName, oldCollection => ({
+    ...oldCollection,
+    courses: Array.from(uniqueCourses),
+  }));
+};
+
+export const editCollection = (
+  name: string,
+  updater: (oldCollection: Collection) => Collection
+): void => {
+  editCollections(oldCollection =>
+    oldCollection.map(collection => (collection.name === name ? updater(collection) : collection))
+  );
+};
+
 export const editSemester = (
   plan: Plan,
   year: number,
@@ -55,6 +97,17 @@ export const editSemester = (
 export const editPlan = (name: string, updater: (oldPlan: Plan) => Plan): void => {
   editPlans(oldPlan => oldPlan.map(plan => (plan.name === name ? updater(plan) : plan)));
 };
+
+const createCollection = (
+  name: string,
+  courses: readonly FirestoreSemesterCourse[]
+): {
+  name: string;
+  courses: readonly FirestoreSemesterCourse[];
+} => ({
+  name,
+  courses,
+});
 
 const createSemester = (
   year: number,
@@ -88,6 +141,15 @@ export const semesterEquals = (
   season: FirestoreSemesterSeason
 ): boolean => semester.year === year && semester.season === season;
 
+export const addCollection = async (
+  name: string,
+  courses: readonly FirestoreSemesterCourse[],
+  gtag?: VueGtag
+): Promise<void> => {
+  GTagEvent(gtag, 'add-collection');
+  await editCollections(oldCollections => [...oldCollections, createCollection(name, courses)]);
+};
+
 export const addSemester = (
   plan: Plan,
   year: number,
@@ -110,6 +172,15 @@ export const addPlan = async (
     'setCurrentPlan',
     store.state.plans.find(plan => plan.name === name)
   );
+};
+
+/** Deletes an entire collection including the courses.
+ */
+export const deleteCollection = async (name: string, gtag?: VueGtag): Promise<void> => {
+  GTagEvent(gtag, 'delete-collection');
+  if (store.state.savedCourses.some(p => p.name === name)) {
+    await editCollections(oldCollections => oldCollections.filter(p => p.name !== name));
+  }
 };
 
 export const deleteSemester = (
@@ -136,6 +207,53 @@ export const deletePlan = async (name: string, gtag?: VueGtag): Promise<void> =>
     await editPlans(oldPlans => oldPlans.filter(p => p.name !== name));
   }
   store.commit('setCurrentPlan', store.state.plans[0]);
+};
+
+/** Add one course to multiple collections.
+ * This course is removed from the requirement choices.
+ */
+export const addCourseToCollections = (
+  plan: Plan,
+  year: number,
+  season: FirestoreSemesterSeason,
+  newCourse: FirestoreSemesterCourse,
+  collectionIDs: string[],
+  gtag?: VueGtag
+): void => {
+  GTagEvent(gtag, 'add-course-collections');
+  editCollections(oldCollections =>
+    oldCollections.map(collection => {
+      if (collectionIDs.includes(collection.name)) {
+        return { ...collection, courses: [...collection.courses, newCourse] };
+      }
+      return collection;
+    })
+  );
+
+  deleteCourseFromSemester(plan, year, season, newCourse.uniqueID);
+  deleteCourseFromRequirementChoices(newCourse.uniqueID);
+};
+
+/**
+ * Delete a course from all collections including the 'All' Collection.
+ *
+ * @param code
+ */
+export const deleteCourseFromAllCollections = (code: string): void => {
+  // delete course from all collections
+  const allCollections = store.state.savedCourses;
+  allCollections.forEach(collection => {
+    deleteCourseFromCollection(collection.name, code);
+  });
+};
+
+/** Delete a course from a certain collection. */
+export const deleteCourseFromCollection = (name: string, code: string): void => {
+  // delete course from collection
+  editCollection(name, oldCollection => ({
+    ...oldCollection,
+    courses: oldCollection.courses.filter(course => course.code !== code),
+  }));
 };
 
 export const addCourseToSemester = (

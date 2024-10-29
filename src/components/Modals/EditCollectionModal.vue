@@ -63,12 +63,10 @@ export default defineComponent({
   },
   computed: {
     collections() {
-      // return store.state.savedCourses.map(collection => collection.name);
-      return store.state.plans.map(plan => plan.name); // dummy data. replace with store.state.savedCourses when integrated
+      return store.state.savedCourses.map(collection => collection.name);
     },
     canDelete() {
-      return true; // dummy data
-      // return store.state.savedCourses.length > 1;
+      return store.state.savedCourses.length > 1;
     },
     canSave() {
       return this.warn;
