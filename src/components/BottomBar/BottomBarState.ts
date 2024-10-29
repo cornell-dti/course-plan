@@ -66,7 +66,7 @@ const getReviews = (
   classDifficulty: number;
   classWorkload: number;
 }> =>
-  fetch('https://www.cureviews.org/api/getCourseByInfo', {
+  fetch('https://www.cureviews.org/api/courses/get-by-info', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ subject: subject.toLowerCase(), number }),
