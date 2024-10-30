@@ -341,6 +341,7 @@ export default defineComponent({
     openCollection() {
       this.showToolsPage = false;
       this.isProfileOpen = false;
+      this.isScheduleGenerateOpen = false;
       this.isShowCollectionOpen = true;
     },
 
@@ -360,6 +361,7 @@ export default defineComponent({
       this.showToolsPage = false;
       this.isProfileOpen = false;
       this.isScheduleGenerateOpen = true;
+      this.isShowCollectionOpen = false;
     },
 
     editProfile() {
