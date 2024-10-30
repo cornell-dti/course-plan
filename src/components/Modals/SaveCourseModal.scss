@@ -1,0 +1,207 @@
+@import '@/assets/scss/_variables.scss';
+.saveCourseModal {
+  &-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 3.5rem;
+    column-gap: 0.7rem;
+    img {
+      margin-top: -5%;
+    }
+    h1 {
+      font-size: 20px;
+    }
+  }
+
+  &-header {
+    display: flex;
+    align-self: center;
+    width: 112%;
+    height: 2.5rem;
+    color: $primaryGray;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    padding-left: 1rem;
+    padding-right: 0.8rem;
+
+    &-text {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 13px;
+      font-weight: 900;
+      width: 100%;
+
+      &-addButton {
+        cursor: pointer;
+        &:hover {
+          opacity: 0.5;
+        }
+      }
+    }
+  }
+
+  &-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    color: $primaryGray;
+    width: 100%;
+    position: relative;
+    overflow-y: auto;
+    overflow-x: hidden;
+    box-sizing: border-box;
+    flex-grow: 1;
+
+    ::-webkit-scrollbar-button {
+      display: none; // Hide the up and down arrows
+    }
+
+    &-content {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 0.5rem;
+      width: 100%;
+
+      &.default-collection {
+        margin-top: 0.5rem;
+        justify-content: center;
+        align-items: center;
+      }
+
+      &-collection {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+        color: $primaryGray;
+        font-weight: 600;
+        column-gap: 0.5rem;
+        padding-top: 0.5rem;
+        padding-bottom: 8px; // adjust padding if needed
+
+        input[type='checkbox'] {
+          margin: 0;
+          padding: 0;
+          appearance: none;
+          width: 12px;
+          height: 12px;
+          border-radius: 10%;
+          border: 1px solid $lightGray;
+          background-color: white;
+          cursor: pointer;
+          position: relative; // For the ::before element positioning
+          user-select: none;
+          outline: none;
+
+          &:hover {
+            border: 1px solid $emGreen;
+          }
+
+          &:checked {
+            background-color: $emGreen;
+            border: 1px solid $emGreen;
+          }
+
+          // Show checkbox vector when checked
+          &:checked::before {
+            content: '';
+            background-image: url('@/assets/images/checkmark-color.svg');
+            background-size: contain;
+            background-repeat: no-repeat;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-48%, -38%);
+            width: 9px;
+            height: 9px;
+          }
+        }
+
+        label {
+          cursor: pointer;
+          user-select: none;
+          margin: 0;
+          padding: 0;
+          outline: none;
+        }
+      }
+    }
+    &-bottom {
+      display: flex;
+      align-items: center;
+      column-gap: 0.4rem;
+      width: 100%;
+
+      input[type='checkbox'] {
+        margin-right: 0;
+        padding: 0;
+        appearance: none;
+        width: 12px;
+        height: 12px;
+        border-radius: 10%;
+        border: 1px solid $lightGray;
+        background-color: white;
+        cursor: pointer;
+        position: relative; // For the ::before element positioning
+        user-select: none;
+        outline: none;
+
+        &:hover {
+          border: 1px solid $emGreen;
+        }
+
+        &:checked {
+          background-color: $emGreen;
+          border: 1px solid $emGreen;
+        }
+
+        // Show checkbox vector when checked
+        &:checked::before {
+          content: '';
+          background-image: url('@/assets/images/checkmark-color.svg');
+          background-size: contain;
+          background-repeat: no-repeat;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-48%, -38%);
+          width: 9px;
+          height: 9px;
+        }
+      }
+
+      .new-collection-label {
+        flex-grow: 1;
+        display: flex;
+        align-items: center;
+        margin-top: 0.3rem;
+
+        .editable-input {
+          border: 1px solid $lightGray;
+          border-radius: 4px;
+          box-sizing: border-box;
+          transition: border 0.2s ease;
+          width: 220px;
+
+          &:focus {
+            outline: none;
+            border-color: $lightGray;
+            box-shadow: none;
+          }
+        }
+      }
+    }
+  }
+  &-divider-line {
+    display: flex;
+    align-self: center;
+    width: 112%;
+    height: 0.3px;
+    background-color: $lightestGray;
+  }
+}

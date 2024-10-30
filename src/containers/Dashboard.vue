@@ -31,6 +31,7 @@
           @openProfile="openProfile"
           @openScheduleGenerate="openScheduleGenerate"
           @toggleRequirementsMobile="toggleRequirementsMobile"
+          @openCollection="openCollection"
         />
         <requirement-side-bar
           class="dashboard-reqs"
@@ -42,6 +43,7 @@
           @toggleMinimized="toggleMinimizeRequirements"
           :startTour="startTour"
           @showTourEndWindow="showTourEnd"
+          :isDisplayingCollection="isShowCollectionOpen"
           :startMultiplePlansTour="startMultiplePlansTour"
         />
         <schedule-generate-side-bar
@@ -197,6 +199,7 @@ export default defineComponent({
       showTourEndWindow: false,
       showToolsPage: false,
       isProfileOpen: false,
+      isShowCollectionOpen: false,
       showGiveawayModal: false,
       isScheduleGenerateOpen: false,
       isScheduleGenerateModalOpen: false,
@@ -334,9 +337,18 @@ export default defineComponent({
       }
     },
 
+    // for the sidebar, not the modal
+    openCollection() {
+      this.showToolsPage = false;
+      this.isProfileOpen = false;
+      this.isScheduleGenerateOpen = false;
+      this.isShowCollectionOpen = true;
+    },
+
     openPlan() {
       this.showToolsPage = false;
       this.isProfileOpen = false;
+      this.isShowCollectionOpen = false;
       this.isScheduleGenerateOpen = false;
     },
 
@@ -349,6 +361,7 @@ export default defineComponent({
       this.showToolsPage = false;
       this.isProfileOpen = false;
       this.isScheduleGenerateOpen = true;
+      this.isShowCollectionOpen = false;
     },
 
     editProfile() {

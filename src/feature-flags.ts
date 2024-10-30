@@ -10,6 +10,7 @@ type FeatureFlagName =
   | 'ToggleRequirementsBarBtn'
   | 'Profile'
   | 'MultiplePlans'
+  | 'SavedCourses'
   | 'Schedule Generator';
 /* | 'AddYourFeatureFlagNameHere' */
 const featureFlagCheckers: FeatureFlagCheckers = registerFeatureFlagChecker(
@@ -20,6 +21,7 @@ const featureFlagCheckers: FeatureFlagCheckers = registerFeatureFlagChecker(
   'ToggleRequirementsBarBtn',
   'Profile',
   'MultiplePlans',
+  'SavedCourses',
   'Schedule Generator'
   /* 'AddYourFeatureFlagNameHere' */
 );
