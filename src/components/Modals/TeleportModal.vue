@@ -24,7 +24,15 @@
           </button>
         </div>
         <slot class="modal-body"></slot>
-        <div v-if="!isSimpleModal" class="modal-buttonWrapper">
+        <div
+          v-if="!isSimpleModal"
+          :class="[
+            {
+              'modal-buttonWrapper': !isSaveCourseModal,
+              'modal-buttonWrapperCollection': isSaveCourseModal,
+            },
+          ]"
+        >
           <button
             :class="{ 'modal-button--big': isPlanModal || isCollectionModal }"
             v-if="leftButtonText"
@@ -191,6 +199,12 @@ export default defineComponent({
 
   &-buttonWrapper {
     margin-top: 1rem;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
+
+  &-buttonWrapperCollection {
     display: flex;
     justify-content: flex-end;
     align-items: center;

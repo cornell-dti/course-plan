@@ -65,7 +65,7 @@ export default defineComponent({
     border: 1px solid $darkPlaceholderGray;
     top: 0.5rem;
     position: relative;
-    width: 500px;
+    width: 100%;
     height: 2rem;
     padding-left: 0.5rem;
     &::placeholder {

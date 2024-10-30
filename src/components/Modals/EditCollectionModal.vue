@@ -1,7 +1,7 @@
 <template>
   <text-input-collection-modal
     title="Edit Collection"
-    content-class="content-plan"
+    content-class="content-editCollection"
     left-button-text="Cancel"
     right-button-text="Save Changes"
     @modal-closed="closeCurrentModal"
@@ -95,8 +95,9 @@ export default defineComponent({
   }
 }
 
-.content-plan {
+.content-editCollection {
   width: 20rem;
+  margin-top: 10rem;
 }
 
 .modal {

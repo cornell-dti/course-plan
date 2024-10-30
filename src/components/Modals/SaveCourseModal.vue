@@ -1,6 +1,6 @@
 <template>
   <teleport-modal
-    content-class="content-plan"
+    content-class="content-collection"
     right-button-text="Done"
     :right-button-is-disabled="!isUniqueCollectionName"
     :show-close-button="false"
@@ -189,7 +189,7 @@ export default defineComponent({
 <style lang="scss">
 @import '@/components/Modals/SaveCourseModal.scss';
 
-.content-plan {
+.content-collection {
   width: 302px;
   height: 293px;
   margin-top: 8rem;

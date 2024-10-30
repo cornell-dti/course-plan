@@ -21,6 +21,8 @@
     height: 2.5rem;
     border: 0.3px solid $lightestGray;
     color: $primaryGray;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
     padding-left: 1rem;
     padding-right: 0.8rem;
 
@@ -49,7 +51,6 @@
     color: $primaryGray;
     width: 100%;
     position: relative;
-    max-height: 4.5rem;
     overflow-y: auto;
     overflow-x: hidden;
     box-sizing: border-box;
@@ -137,8 +138,8 @@
       input[type='checkbox'] {
         margin-right: 0.35rem;
         appearance: none;
-        width: 14px;
-        height: 14px;
+        width: 12px;
+        height: 12px;
         border-radius: 10%;
         border: 1px solid $lightGray;
         background-color: white;
