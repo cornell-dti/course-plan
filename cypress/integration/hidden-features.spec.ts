@@ -82,7 +82,7 @@ it('Onboard a new user with all required fields', () => {
     cy.wrap($el)
       .invoke('text')
       .then(text => {
-        if (text.includes('Engineering')) {
+        if (text.includes('Engineering (ENG)')) {
           cy.wrap($el).click();
         }
       });

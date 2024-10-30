@@ -87,7 +87,7 @@ export function computeEntranceYears(): Readonly<Record<string, string>> {
 export function getCollegeFullName(acronym: string | undefined): string {
   // return Arts and Sciences for AS, AS1, or AS2
   if (acronym && acronym.startsWith('AS')) {
-    return 'Arts and Sciences';
+    return 'Arts and Sciences (CAS)';
   }
   const college = acronym ? requirementJSON.college[acronym] : null;
 
