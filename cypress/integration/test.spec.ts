@@ -174,7 +174,7 @@ it('Switch to engineering college and cs major in class of 2022', () => {
 
   // confirm engineering and computer science are selected on the requirements menu
   cy.get('[data-cyId=majorTitle]').contains('Computer Science');
-  cy.get('[data-cyId=collegeTitle]').contains('(Engineering)');
+  cy.get('[data-cyId=collegeTitle]').contains('(Engineering (ENG))');
 });
 
 // This test not only adds CS 1110, but confirms the new add modal has the correct requirements,
