@@ -7,6 +7,13 @@
     }"
     class="course"
   >
+    <save-course-modal
+      :courseCode="courseCode"
+      @close-save-course-modal="closeSaveCourseModal"
+      @save-course="saveCourse"
+      @add-collection="addCollection"
+      v-if="isSaveCourseOpen"
+    />
     <edit-color
       :editedColor="editedColor"
       @color-course="colorCourse"
@@ -42,8 +49,21 @@
               :isCompactView="true"
             />
           </div>
-          <button v-if="!isReqCourse" class="course-dotRow" @click="openMenu">
+          <button
+            v-if="!isReqCourse && isSemesterCourseCard"
+            class="course-dotRow"
+            @click="openMenu"
+          >
             <img src="@/assets/images/dots/threeDots.svg" alt="open menu for course card" />
+          </button>
+          <button
+            v-else-if="!isReqCourse && !isSemesterCourseCard"
+            class="course-trash"
+            @click.stop="deleteCourseFromCollection"
+            @mouseover="hoverTrashIcon"
+            @mouseleave="unhoverTrashIcon"
+          >
+            <img :src="trashIcon" alt="delete course from collection" />
           </button>
         </div>
         <div v-if="!compact" class="course-name">{{ courseObj.name }}</div>
@@ -60,12 +80,15 @@
     </div>
     <course-menu
       v-if="menuOpen"
+      :courseObj="courseObj"
       :semesterIndex="semesterIndex"
       :isCompact="compact"
       :courseColor="courseObj.color"
+      :courseCode="courseObj.code"
       @open-edit-color-modal="openEditColorModal"
       @delete-course="deleteCourse"
       @edit-course-credit="editCourseCredit"
+      @open-save-course-modal="openSaveCourseModal"
       :getCreditRange="getCreditRange || []"
       v-click-outside="closeMenuIfOpen"
     />
@@ -76,17 +99,20 @@
 import { CSSProperties, PropType, defineComponent } from 'vue';
 import CourseMenu from '@/components/Modals/CourseMenu.vue';
 import CourseCaution from '@/components/Course/CourseCaution.vue';
+import SaveCourseModal from '@/components/Modals/SaveCourseModal.vue';
 import {
   addCourseToBottomBar,
   reportCourseColorChange,
   reportSubjectColorChange,
 } from '@/components/BottomBar/BottomBarState';
+import { isCourseConflict } from '@/store';
 import { clickOutside } from '@/utilities';
 import EditColor from '../Modals/EditColor.vue';
-import { isCourseConflict } from '@/store';
+import trashGrayIcon from '@/assets/images/trash-gray.svg';
+import trashRedIcon from '@/assets/images/trash.svg';
 
 export default defineComponent({
-  components: { CourseCaution, CourseMenu, EditColor },
+  components: { CourseCaution, CourseMenu, EditColor, SaveCourseModal },
   props: {
     courseObj: { type: Object as PropType<FirestoreSemesterCourse>, required: true },
     compact: { type: Boolean, required: true },
@@ -95,6 +121,7 @@ export default defineComponent({
     semesterIndex: { type: Number, required: false, default: 0 },
     season: { type: String, required: false, default: '' },
     year: { type: Number, required: false, default: 0 },
+    isSemesterCourseCard: { type: Boolean, required: true },
     isSchedGenCourse: { type: Boolean, required: false, default: false },
   },
   emits: {
@@ -107,6 +134,16 @@ export default defineComponent({
     'course-on-click': (course: FirestoreSemesterCourse) => typeof course === 'object',
     'edit-course-credit': (credit: number, uniqueID: number) =>
       typeof credit === 'number' && typeof uniqueID === 'number',
+    'save-course': (
+      course: FirestoreSemesterCourse,
+      addedToCollections: string[],
+      deletedFromCollection: string[]
+    ) =>
+      typeof course === 'object' &&
+      typeof addedToCollections === 'object' &&
+      typeof deletedFromCollection === 'object',
+    'add-collection': (name: string) => typeof name === 'string',
+    'delete-course-from-collection': (courseCode: string) => typeof courseCode === 'string',
   },
   data() {
     return {
@@ -114,7 +151,11 @@ export default defineComponent({
       stopCloseFlag: false,
       getCreditRange: this.courseObj.creditRange,
       isEditColorOpen: false,
+      isSaveCourseOpen: false,
       editedColor: '',
+      deletingCourse: false,
+      trashIcon: trashGrayIcon, // Default icon
+      courseCode: '',
     };
   },
   computed: {
@@ -155,9 +196,20 @@ export default defineComponent({
         this.menuOpen = false;
       }
     },
+    openSaveCourseModal(courseCode: string) {
+      this.courseCode = courseCode;
+      this.isSaveCourseOpen = true;
+      this.closeMenuIfOpen();
+    },
+    closeSaveCourseModal() {
+      this.isSaveCourseOpen = false;
+    },
     deleteCourse() {
       this.$emit('delete-course', this.courseObj.code, this.courseObj.uniqueID);
       this.closeMenuIfOpen();
+    },
+    deleteCourseFromCollection() {
+      this.$emit('delete-course-from-collection', this.courseObj.code);
     },
     openEditColorModal(color: string) {
       this.editedColor = color;
@@ -165,6 +217,13 @@ export default defineComponent({
     },
     closeEditColorModal() {
       this.isEditColorOpen = false;
+    },
+    addCollection(name: string) {
+      this.$emit('add-collection', name);
+    },
+    saveCourse(addedToCollections: string[], deletedFromCollections: string[]) {
+      const course = { ...this.courseObj };
+      this.$emit('save-course', course, addedToCollections, deletedFromCollections);
     },
     colorCourse(color: string) {
       this.$emit('color-course', color, this.courseObj.uniqueID, this.courseObj.code);
@@ -177,7 +236,7 @@ export default defineComponent({
       this.closeMenuIfOpen();
     },
     courseOnClick() {
-      if (!this.menuOpen) {
+      if (!this.menuOpen && !this.deletingCourse) {
         this.$emit('course-on-click', this.courseObj);
         addCourseToBottomBar(this.courseObj, this.season, this.year);
       }
@@ -187,6 +246,12 @@ export default defineComponent({
       this.closeMenuIfOpen();
     },
     isCourseConflict,
+    hoverTrashIcon() {
+      this.trashIcon = trashRedIcon;
+    },
+    unhoverTrashIcon() {
+      this.trashIcon = trashGrayIcon;
+    },
   },
   directives: {
     'click-outside': clickOutside,
@@ -251,6 +316,18 @@ export default defineComponent({
     }
   }
 
+  &-trash {
+    padding: 8px 0;
+    display: flex;
+    position: relative;
+
+    &:hover,
+    &:active,
+    &:focus {
+      cursor: pointer;
+    }
+  }
+
   &-content {
     width: calc(100% - #{$colored-grabber-width});
     padding: 0 1rem;
@@ -297,8 +374,7 @@ export default defineComponent({
     display: flex;
     align-items: center;
   }
-
-  &-credits {
+  port &-credits {
     white-space: nowrap;
   }
 

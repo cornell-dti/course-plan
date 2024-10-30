@@ -3,6 +3,20 @@
     <div class="courseMenu-content">
       <div
         class="courseMenu-section"
+        v-if="saveCourseIconVisible"
+        @click="openSaveCourseModal(courseObj.code)"
+      >
+        <div class="courseMenu-left">
+          <img
+            class="courseMenu-icon"
+            src="@/assets/images/saveIconSmall.svg"
+            alt="save course icon"
+          />
+          <span class="courseMenu-text">Save</span>
+        </div>
+      </div>
+      <div
+        class="courseMenu-section"
         @click="toggleDisplayEditCourseCredits"
         :class="{ 'is-active': displayEditCourseCredits }"
         v-if="getCreditRange && getCreditRange[0] != getCreditRange[1]"
@@ -56,7 +70,6 @@
           src="@/assets/images/downarrow.svg"
           alt="arrow to expand edit course color"
         />
-
         <div
           v-if="displayColors"
           class="courseMenu-content courseMenu-colors"
@@ -110,6 +123,7 @@ import { coursesColorSet } from '@/assets/constants/colors';
 
 export default defineComponent({
   props: {
+    courseObj: { type: Object as PropType<FirestoreSemesterCourse>, required: true },
     getCreditRange: {
       type: (Array as PropType<readonly number[]>) as PropType<readonly [number, number]>,
       required: true,
@@ -132,6 +146,8 @@ export default defineComponent({
       tooltipColor: '',
       zIndexColors: 1,
       zIndexEditCredits: 1,
+      courseCode: '',
+      saveCourseIconVisible: true,
     };
   },
   computed: {
@@ -155,6 +171,7 @@ export default defineComponent({
     },
   },
   emits: {
+    'open-save-course-modal': (code: string) => typeof code === 'string',
     'delete-course': () => true,
     'open-edit-color-modal': (color: string) => typeof color === 'string',
     'edit-course-credit': (credit: number) => typeof credit === 'number',
@@ -177,6 +194,10 @@ export default defineComponent({
         this.zIndexEditCredits = 1;
       }
       this.displayColors = false;
+    },
+    openSaveCourseModal(courseCode: string) {
+      this.courseCode = courseCode;
+      this.$emit('open-save-course-modal', courseCode);
     },
     deleteCourse() {
       this.$emit('delete-course');

@@ -31,6 +31,16 @@
             <span>Profile</span>
           </div>
         </div>
+        <div
+          class="navbar-buttonWrapper desktop"
+          @click="openCollection"
+          data-cyId="openCollection"
+        >
+          <button class="navbar-iconWrapper saved-courses-icon full-opacity-on-hover" />
+          <div class="navbar-iconText">
+            <span>Saved</span>
+          </div>
+        </div>
         <div class="navbar-buttonWrapper desktop">
           <button
             id="schedule-generator"
@@ -99,6 +109,7 @@ import { getAuth, signOut } from 'firebase/auth';
 import introJs from 'intro.js';
 import { GTagEvent } from '@/gtag';
 import { clickOutside } from '@/utilities';
+// import featureFlagCheckers from '@/feature-flags';
 import { updateSawScheduleGenerator } from '@/global-firestore-data/user-onboarding-data';
 
 export default defineComponent({
@@ -106,11 +117,17 @@ export default defineComponent({
     isDisplayingRequirementsMobile: { type: Boolean, required: true },
     startScheduleGeneratorTour: { type: Boolean, required: true },
   },
+  computed: {
+    displaySavedCourses() {
+      return true;
+    },
+  },
   emits: [
     'openPlan',
     'openTools',
     'toggleRequirementsMobile',
     'openProfile',
+    'openCollection',
     'openScheduleGenerate',
   ],
   data() {
@@ -142,6 +159,10 @@ export default defineComponent({
       GTagEvent(this.$gtag, 'logout');
       const auth = getAuth();
       signOut(auth).then(() => window.location.reload());
+    },
+    openCollection() {
+      this.menuOpen = false;
+      this.$emit('openCollection');
     },
     openPlan() {
       this.menuOpen = false;
@@ -221,6 +242,9 @@ $mobile-navbar-height: 4.5rem;
       .profile-icon {
         background-image: url('@/assets/images/navbar/profileIconBlue.svg');
       }
+      .saved-courses-icon {
+        background-image: url('@/assets/images/navbar/savedCoursesIconBlue.svg');
+      }
       .schedule-builder-icon {
         background-image: url('@/assets/images/navbar/scheduleBuilderIconBlue.svg');
       }
@@ -252,6 +276,10 @@ $mobile-navbar-height: 4.5rem;
 
   .profile-icon {
     background-image: url('@/assets/images/navbar/profileIcon.svg');
+  }
+
+  .saved-courses-icon {
+    background-image: url('@/assets/images/navbar/savedCoursesIcon.svg');
   }
 
   .schedule-builder-icon {

@@ -31,6 +31,7 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
+@import '@/assets/scss/_variables.scss';
 .arrow {
   height: 14px;
   width: 14px;
