@@ -69,7 +69,6 @@
             ref="newCollectionInput"
             maxlength="30"
             v-model="newCollectionName"
-            @blur="finishEditing"
             @keydown.enter="finishEditing"
             class="editable-input"
             placeholder="Add new collection"
@@ -80,6 +79,8 @@
     <div v-if="isNumCollectionGreaterThanFour" class="saveCourseModal-divider-line"></div>
   </teleport-modal>
 </template>
+
+<!--@blur="finishEditing"-->
 
 <script lang="ts">
 import { defineComponent } from 'vue';

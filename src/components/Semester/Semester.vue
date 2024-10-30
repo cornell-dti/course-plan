@@ -445,9 +445,9 @@ export default defineComponent({
             course.code
           } from ${deletedFromCollections.join(', ')}`
         );
-      } else if (deletedFromCollections.length === 0) {
+      } else if (deletedFromCollections.length === 0 && addedToCollections.length !== 0) {
         this.openConfirmationModal(`Saved ${course.code} to ${addedToCollections.join(', ')}`);
-      } else if (addedToCollections.length === 0) {
+      } else if (addedToCollections.length === 0 && deletedFromCollections.length !== 0) {
         this.openConfirmationModal(
           ` Deleted ${course.code} from ${deletedFromCollections.join(', ')}`
         );
