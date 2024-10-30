@@ -16,6 +16,7 @@
       </div>
     </template>
 
+    <div class="saveCourseModal-divider-line"></div>
     <div class="saveCourseModal-header">
       <div class="saveCourseModal-header-text">
         <span> Collections </span>
@@ -24,6 +25,10 @@
         </button>
       </div>
     </div>
+    <div
+      v-if="isNumCollectionGreaterThanFour || (isDefaultCollection && !isEditing)"
+      class="saveCourseModal-divider-line"
+    ></div>
 
     <div :class="['saveCourseModal-body']">
       <div
@@ -70,6 +75,7 @@
             maxlength="30"
             v-model="newCollectionName"
             @keydown.enter="finishEditing"
+            @blur="finishEditing"
             class="editable-input"
             placeholder="Add new collection"
           />
@@ -79,8 +85,6 @@
     <div v-if="isNumCollectionGreaterThanFour" class="saveCourseModal-divider-line"></div>
   </teleport-modal>
 </template>
-
-<!--@blur="finishEditing"-->
 
 <script lang="ts">
 import { defineComponent } from 'vue';

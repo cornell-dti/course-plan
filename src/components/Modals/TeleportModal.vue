@@ -244,7 +244,7 @@ export default defineComponent({
     }
 
     &--addCollection {
-      margin-top: 3rem;
+      margin-top: 1rem;
       margin-right: 0.2rem;
     }
   }

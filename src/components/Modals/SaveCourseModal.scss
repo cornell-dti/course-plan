@@ -19,7 +19,6 @@
     align-self: center;
     width: 112%;
     height: 2.5rem;
-    border: 0.3px solid $lightestGray;
     color: $primaryGray;
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
@@ -54,6 +53,7 @@
     overflow-y: auto;
     overflow-x: hidden;
     box-sizing: border-box;
+    flex-grow: 1;
 
     ::-webkit-scrollbar-button {
       display: none; // Hide the up and down arrows
@@ -66,8 +66,9 @@
       align-items: flex-start;
       gap: 0.5rem;
       width: 100%;
-
+    
       &.default-collection {
+        margin-top: 0.5rem;
         justify-content: center;
         align-items: center;
       }
@@ -80,7 +81,8 @@
         color: $primaryGray;
         font-weight: 600;
         column-gap: 0.5rem;
-        padding-bottom: 11px; // adjust padding if needed
+        padding-top: 0.5rem;
+        padding-bottom: 8px; // adjust padding if needed
 
         input[type='checkbox'] {
           margin: 0;
