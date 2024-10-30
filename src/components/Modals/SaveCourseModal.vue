@@ -3,6 +3,8 @@
     content-class="content-plan"
     right-button-text="Done"
     :right-button-is-disabled="!isUniqueCollectionName"
+    :show-close-button="false"
+    :is-save-course-modal="true"
     @modal-closed="closeCurrentModal"
     @left-button-clicked="closeCurrentModal"
     @right-button-clicked="saveCourse"
@@ -129,7 +131,7 @@ export default defineComponent({
       return `Collection ${newCollectionNum}`;
     },
     isNumCollectionGreaterThanFour() {
-      return store.state.savedCourses.length >= 4;
+      return store.state.savedCourses.length > 4;
     },
   },
   mounted() {
@@ -188,7 +190,8 @@ export default defineComponent({
 @import '@/components/Modals/SaveCourseModal.scss';
 
 .content-plan {
-  width: 20rem;
+  width: 302px;
+  height: 293px;
   margin-top: 8rem;
 }
 

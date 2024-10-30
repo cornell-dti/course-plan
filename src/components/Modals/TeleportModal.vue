@@ -19,7 +19,7 @@
           <slot name="title">
             <h1>{{ title }}</h1>
           </slot>
-          <button @click="close" data-cyId="modal-exit">
+          <button v-if="showCloseButton" @click="close" data-cyId="modal-exit">
             <img class="modal-exit" src="@/assets/images/x.png" alt="x to close modal" />
           </button>
         </div>
@@ -39,6 +39,7 @@
               'modal-button--disabled': rightButtonIsDisabled,
               'modal-button--highlighted': rightButtonIsHighlighted,
               'modal-button--big': isPlanModal || isCollectionModal,
+              'modal-button--addCollection': isSaveCourseModal,
             }"
             @click="rightButtonClicked"
             data-cyId="modal-button"
@@ -81,6 +82,8 @@ export default defineComponent({
       type: Object as PropType<{ x: number; y: number }>,
       default: () => ({ x: 0, y: 0 }),
     }, // custom position (hasCustomPosition must be true)
+    showCloseButton: { type: Boolean, default: true }, // controls the visibility of the close button,
+    isSaveCourseModal: { type: Boolean, default: false },
   },
   data() {
     const customPosition = this.hasCustomPosition
@@ -224,6 +227,11 @@ export default defineComponent({
 
     &--big {
       width: 7rem;
+    }
+
+    &--addCollection {
+      margin-top: 3rem;
+      margin-right: 0.2rem;
     }
   }
 }

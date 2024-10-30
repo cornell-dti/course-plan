@@ -120,7 +120,6 @@
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
 import { coursesColorSet } from '@/assets/constants/colors';
-import featureFlagCheckers from '@/feature-flags';
 
 export default defineComponent({
   props: {

@@ -43,7 +43,6 @@
           @toggleMinimized="toggleMinimizeRequirements"
           :startTour="startTour"
           @showTourEndWindow="showTourEnd"
-          :startNewFeatureTour="startNewFeatureTour"
           :isDisplayingCollection="isShowCollectionOpen"
           :startMultiplePlansTour="startMultiplePlansTour"
         />

@@ -279,7 +279,6 @@ export default defineComponent({
     isDisplayingMobile: { type: Boolean, required: true },
     isMobile: { type: Boolean, required: true },
     isMinimized: { type: Boolean, required: true },
-    startNewFeatureTour: { type: Boolean, required: true },
     isDisplayingCollection: { type: Boolean, required: true },
     startMultiplePlansTour: { type: Boolean, required: true },
   },
