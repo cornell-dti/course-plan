@@ -118,7 +118,7 @@ export default defineComponent({
     padding-bottom: 0.5rem;
     &--label {
       :hover > & {
-        color: $einBlue;
+        color: $viewLabelGray;
       }
       font-weight: 500;
       font-size: 19px;
