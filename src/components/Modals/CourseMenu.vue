@@ -1,6 +1,16 @@
 <template>
   <div class="courseMenu">
     <div class="courseMenu-content">
+      <div class="courseMenu-section" @click="openNoteModal(courseObj.code)">
+        <div class="courseMenu-left">
+          <img
+            class="courseMenu-icon"
+            src="@/assets/images/noteIconSmall.svg"
+            alt="note course icon"
+          />
+          <span class="courseMenu-text">Note</span>
+        </div>
+      </div>
       <div
         class="courseMenu-section"
         v-if="saveCourseIconVisible"
@@ -194,6 +204,11 @@ export default defineComponent({
         this.zIndexEditCredits = 1;
       }
       this.displayColors = false;
+    },
+    openNoteModal(courseCode: string) {
+      // Implement the functionality to handle "Note" option click
+      console.log(`Note clicked for course ${courseCode}`);
+      // You can add further logic here as needed.
     },
     openSaveCourseModal(courseCode: string) {
       this.courseCode = courseCode;
