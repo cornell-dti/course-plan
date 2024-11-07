@@ -167,7 +167,7 @@ export default defineComponent({
       deletingCourse: false,
       trashIcon: trashGrayIcon, // Default icon
       courseCode: '',
-      isExpanded: false, // Controls the expanded state of the rectangle
+      isExpanded: false,
     };
   },
   computed: {
@@ -264,13 +264,7 @@ export default defineComponent({
     unhoverTrashIcon() {
       this.trashIcon = trashGrayIcon;
     },
-    // toggleRectangle() {
-    //   this.isExpanded = !this.isExpanded;
-    // },
-    // handleToggleNote(isExpanded) {
-    //   console.log("Note expanded state:", isExpanded);
-    // },
-    handleToggleNote(isExpanded) {
+    handleToggleNote(isExpanded: boolean) {
       console.log('Note expanded state:', isExpanded);
     },
   },
@@ -285,21 +279,11 @@ export default defineComponent({
 
 .course-container {
   position: relative;
-  padding-bottom: 20px; /* Additional space for the rectangle */
+  padding-bottom: 20px;
 }
 
 .course {
-  // position: relative;
-  // z-index: 1;
-  // box-sizing: border-box;
-  // border-radius: 0.5rem;
-  // display: flex;
-  // flex-direction: row;
-  // background-color: $white; /* Ensure solid background color */
   box-shadow: 0px 0px 10px 4px $boxShadowGray;
-  // height: 5.625rem;
-  // touch-action: none;
-  // cursor: grab;
   position: relative;
   z-index: 1;
   box-sizing: border-box;
@@ -307,40 +291,17 @@ export default defineComponent({
   display: flex;
   flex-direction: row;
   background-color: $white;
-
   height: 5.625rem;
   cursor: grab;
 
   &:hover {
-    background: $white; /* Remove transparency here */
+    background: $white;
   }
 
   &:active:hover {
     touch-action: none;
     cursor: grabbing;
   }
-  // .course {
-  //   z-index: 1; /* Ensure the course is above the rectangle */
-  //   box-sizing: border-box;
-  //   border-radius: 0.5rem;
-  //   display: flex;
-  //   flex-direction: row;
-  //   background-color: $white;
-  //   box-shadow: 0px 0px 10px 4px $boxShadowGray;
-  //   position: relative;
-  //   height: 5.625rem;
-  //   touch-action: none;
-  //   cursor: grab;
-
-  //   &:hover {
-  //     background: rgba(255, 255, 255, 0.15);
-  //   }
-
-  //   &:active:hover {
-  //     touch-action: none;
-  //     cursor: grabbing;
-  //   }
-
   &--min {
     height: 2.125rem;
 
@@ -465,54 +426,20 @@ export default defineComponent({
 .active {
   border: 1px solid $yuxuanBlue;
 }
-
-// .rectangle {
-//   position: absolute;
-//   bottom: 0;
-//   left: 50%;
-//   transform: translateX(-50%);
-//   width: calc(106% - #{$colored-grabber-width}); /* Rectangle width */
-//   // width: 473px;
-//   height: 81px; /* Rectangle height */
-//   background-color: #a8e6cf; /* Pastel green color */
-//   border-radius: 12.49px; /* Optional: to slightly curve the corners */
-//   z-index: 0; /* Layer the rectangle behind the course */
-// }
-// .rectangle {
-//   position: absolute;
-//   bottom: -10px; /* Peeks out slightly from the bottom */
-//   left: 50%;
-//   transform: translateX(-50%);
-//   width: calc(106% - #{$colored-grabber-width});
-//   background-color: #a8e6cf;
-//   border-radius: 12.49px;
-//   cursor: pointer;
-//   z-index: 0;
-//   transition: height 0.3s ease; /* Smooth transition for height */
-//   height: 10px; /* Initial height for peeking out */
-// }
-
-// /* Expanded state with sliding effect */
-// .rectangle.expanded {
-//   height: 80px; /* Height when fully expanded */
-// }
 .rectangle {
   position: absolute;
   left: 50%;
-  transform: translateX(-50%) translateY(-65px); /* Start partially visible from below */
-  // transform: translateX(-50%) translateY(-10px); /* Slide up to align with course card */
+  transform: translateX(-50%) translateY(-65px);
   width: calc(106% - #{$colored-grabber-width});
-  height: 80px; /* Full rectangle height */
+  height: 80px;
   background-color: #a8e6cf;
   border-radius: 12.49px;
   cursor: pointer;
   z-index: 0;
-  transition: transform 0.3s ease; /* Smooth slide transition */
+  transition: transform 0.3s ease;
 }
 
-/* Expanded state with slide-up effect */
 .rectangle.expanded {
-  transform: translateX(-50%) translateY(0px); /* Slide up to align with course card */
-  // transform: translateX(-50%) translateY(-60px); /* Start partially visible from below */
+  transform: translateX(-50%) translateY(0px);
 }
 </style>

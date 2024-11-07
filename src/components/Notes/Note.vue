@@ -1,15 +1,7 @@
 <template>
   <div class="note" :class="{ expanded: isExpanded }" :style="noteStyle" @click="expandNote">
-    <!-- Show editable text area and icon only when expanded -->
     <div v-if="isExpanded" class="note-content">
-      <!-- <textarea
-        v-model="noteText"
-        placeholder="Add a note..."
-        class="note-textarea"
-      ></textarea> -->
-      <!-- <span>Add a note...</span> -->
       <input v-model="noteText" placeholder="Add a note..." class="note-input" />
-
       <img
         src="@/assets/images/notes/arrow.svg"
         alt="Arrow icon"
@@ -32,7 +24,7 @@ export default {
   data() {
     return {
       isExpanded: false,
-      noteText: '', // Holds the note text entered by the user
+      noteText: '',
     };
   },
   computed: {
@@ -43,7 +35,7 @@ export default {
         })`,
         width: this.width,
         backgroundColor: this.color,
-        filter: 'brightness(1.7) saturate(0.3)', // Adjust for a lighter, pastel look
+        filter: 'brightness(1.7) saturate(0.3)',
       };
     },
   },
@@ -69,7 +61,7 @@ export default {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  height: 80px; /* Initial height */
+  height: 80px;
   border-radius: 12.49px;
   cursor: pointer;
   z-index: 0;
@@ -78,51 +70,46 @@ export default {
   justify-content: center;
   align-items: flex-end;
   padding-bottom: 10px;
-  overflow: hidden; /* Ensures text stays within bounds */
+  overflow: hidden;
 }
 
 .note.expanded {
-  height: 80px; /* Full height for expanded state */
+  height: 80px;
 }
 
-/* Style for the text area container */
 .note-content {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  align-items: center;
   width: 100%;
-  padding-top: 25px; /* Increased padding to push down content */
+  padding-top: 15px;
   padding-left: 10px;
 }
 
-/* Style for the text area */
-.note-textarea {
-  width: 100%;
-  height: 100%;
+.note-input {
+  flex: 1;
   border: none;
   outline: none;
-  resize: none;
   background-color: transparent;
-  color: #555; /* Text color */
+  color: #555;
   font-size: 14.48px;
   font-family: inherit;
-  text-align: left;
-  padding-top: 15px; /* Adjusts position of placeholder text */
+  padding: 5px 0;
 }
 
-/* Style for the icon */
 .note-icon {
-  width: 20.18px; /* Adjust size as needed */
+  width: 20.18px;
   height: 20.18px;
-  position: absolute;
-  bottom: 12px;
-  right: 10px;
+  margin-left: 8px;
+  vertical-align: middle;
   color: grey;
   opacity: 1;
-  cursor: pointer; /* Show cursor to indicate it's clickable */
-  transition: color 0.3s ease; /* Smooth transition for hover effect */
+  cursor: pointer;
+  transition: filter 0.3s ease;
+  margin-right: 10px;
 }
 
 .note-icon:hover {
-  color: blue; /* Darker shade on hover */
+  filter: brightness(0.7);
 }
 </style>
