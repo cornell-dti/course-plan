@@ -104,7 +104,18 @@
     ></div>
   </div> -->
     <!-- Rectangle that slides up and down on click -->
-    <div class="rectangle" :class="{ expanded: isExpanded }" @click.stop="toggleRectangle"></div>
+    <!-- <div class="rectangle" :class="{ expanded: isExpanded }" @click.stop="toggleRectangle"></div>
+  </div> -->
+    <!-- Use Note component here -->
+    <!-- <Note @toggle="handleToggleNote" />
+  </div> -->
+    <!-- Use Note component here with the specified width and initial translate values -->
+    <Note
+      :initialTranslateY="'-60px'"
+      :expandedTranslateY="'0px'"
+      :width="'calc(103% - 10px)'"
+      @toggle="handleToggleNote"
+    />
   </div>
 </template>
 
@@ -123,11 +134,11 @@ import { clickOutside } from '@/utilities';
 import EditColor from '../Modals/EditColor.vue';
 import trashGrayIcon from '@/assets/images/trash-gray.svg';
 import trashRedIcon from '@/assets/images/trash.svg';
-import { toggleRequirementChoice } from '@/global-firestore-data';
+import Note from '../Notes/Note.vue';
 
 export default defineComponent({
   name: 'Course',
-  components: { CourseCaution, CourseMenu, EditColor, SaveCourseModal },
+  components: { CourseCaution, CourseMenu, EditColor, SaveCourseModal, Note },
   props: {
     courseObj: { type: Object as PropType<FirestoreSemesterCourse>, required: true },
     compact: { type: Boolean, required: true },
@@ -268,8 +279,14 @@ export default defineComponent({
     unhoverTrashIcon() {
       this.trashIcon = trashGrayIcon;
     },
-    toggleRectangle() {
-      this.isExpanded = !this.isExpanded;
+    // toggleRectangle() {
+    //   this.isExpanded = !this.isExpanded;
+    // },
+    // handleToggleNote(isExpanded) {
+    //   console.log("Note expanded state:", isExpanded);
+    // },
+    handleToggleNote(isExpanded) {
+      console.log('Note expanded state:', isExpanded);
     },
   },
   directives: {
@@ -287,16 +304,26 @@ export default defineComponent({
 }
 
 .course {
+  // position: relative;
+  // z-index: 1;
+  // box-sizing: border-box;
+  // border-radius: 0.5rem;
+  // display: flex;
+  // flex-direction: row;
+  // background-color: $white; /* Ensure solid background color */
+  // box-shadow: 0px 0px 10px 4px $boxShadowGray;
+  // height: 5.625rem;
+  // touch-action: none;
+  // cursor: grab;
   position: relative;
   z-index: 1;
   box-sizing: border-box;
   border-radius: 0.5rem;
   display: flex;
   flex-direction: row;
-  background-color: $white; /* Ensure solid background color */
+  background-color: $white;
   box-shadow: 0px 0px 10px 4px $boxShadowGray;
   height: 5.625rem;
-  touch-action: none;
   cursor: grab;
 
   &:hover {
