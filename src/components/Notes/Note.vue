@@ -1,12 +1,25 @@
 <template>
-  <div class="note" :class="{ expanded: isExpanded }" :style="noteStyle" @click.stop="toggleNote">
-    <!-- Show "Add a note..." text only when expanded -->
+  <div class="note" :class="{ expanded: isExpanded }" :style="noteStyle" @click="expandNote">
+    <!-- Show editable text area and icon only when expanded -->
     <div v-if="isExpanded" class="note-content">
-      <span>Add a note...</span>
-      <img src="@/assets/images/notes/arrow.svg" alt="Arrow icon" class="note-icon" />
+      <!-- <textarea
+        v-model="noteText"
+        placeholder="Add a note..."
+        class="note-textarea"
+      ></textarea> -->
+      <!-- <span>Add a note...</span> -->
+      <input v-model="noteText" placeholder="Add a note..." class="note-input" />
+
+      <img
+        src="@/assets/images/notes/arrow.svg"
+        alt="Arrow icon"
+        class="note-icon"
+        @click.stop="collapseNote"
+      />
     </div>
   </div>
 </template>
+
 <script>
 export default {
   name: 'Note',
@@ -19,6 +32,7 @@ export default {
   data() {
     return {
       isExpanded: false,
+      noteText: '', // Holds the note text entered by the user
     };
   },
   computed: {
@@ -34,9 +48,17 @@ export default {
     },
   },
   methods: {
-    toggleNote() {
-      this.isExpanded = !this.isExpanded;
-      this.$emit('toggle', this.isExpanded);
+    expandNote() {
+      if (!this.isExpanded) {
+        this.isExpanded = true;
+        this.$emit('toggle', this.isExpanded);
+      }
+    },
+    collapseNote() {
+      if (this.isExpanded) {
+        this.isExpanded = false;
+        this.$emit('toggle', this.isExpanded);
+      }
     },
   },
 };
@@ -63,17 +85,30 @@ export default {
   height: 80px; /* Full height for expanded state */
 }
 
-/* Style for the "Add a note..." text */
+/* Style for the text area container */
 .note-content {
-  /* font-size: 1rem; */
-  font-size: 14.48px;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding-top: 25px; /* Increased padding to push down content */
+  padding-left: 10px;
+}
+
+/* Style for the text area */
+.note-textarea {
+  width: 100%;
+  height: 100%;
+  border: none;
+  outline: none;
+  resize: none;
+  background-color: transparent;
   color: #555; /* Text color */
+  font-size: 14.48px;
   font-family: inherit;
   text-align: left;
-  padding: 2px 10px;
-  width: 100%;
-  /* padding-bottom: 5px; */
+  padding-top: 15px; /* Adjusts position of placeholder text */
 }
+
 /* Style for the icon */
 .note-icon {
   width: 20.18px; /* Adjust size as needed */
@@ -83,5 +118,11 @@ export default {
   right: 10px;
   color: grey;
   opacity: 1;
+  cursor: pointer; /* Show cursor to indicate it's clickable */
+  transition: color 0.3s ease; /* Smooth transition for hover effect */
+}
+
+.note-icon:hover {
+  color: blue; /* Darker shade on hover */
 }
 </style>

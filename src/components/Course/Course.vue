@@ -97,7 +97,7 @@
     <Note
       :initialTranslateY="'-67px'"
       :expandedTranslateY="'-35px'"
-      :width="'calc(103% - 10px)'"
+      :width="'calc(102.8% - 10px)'"
       :color="cssVars['--bg-color']"
       @toggle="handleToggleNote"
     />
@@ -296,7 +296,7 @@ export default defineComponent({
   // display: flex;
   // flex-direction: row;
   // background-color: $white; /* Ensure solid background color */
-  // box-shadow: 0px 0px 10px 4px $boxShadowGray;
+  box-shadow: 0px 0px 10px 4px $boxShadowGray;
   // height: 5.625rem;
   // touch-action: none;
   // cursor: grab;
@@ -307,7 +307,6 @@ export default defineComponent({
   display: flex;
   flex-direction: row;
   background-color: $white;
-  box-shadow: 0px 10px 15px -10px rgba(0, 0, 0, 0.3); /* Shadow appears only at the bottom */
 
   height: 5.625rem;
   cursor: grab;
