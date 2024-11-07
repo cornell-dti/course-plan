@@ -8,7 +8,7 @@
             src="@/assets/images/noteIconSmall.svg"
             alt="note course icon"
           />
-          <span class="courseMenu-text">Note</span>
+          <span class="courseMenu-text">Note </span>
         </div>
       </div>
       <div
