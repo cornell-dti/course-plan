@@ -93,30 +93,7 @@
         :getCreditRange="getCreditRange || []"
         v-click-outside="closeMenuIfOpen"
       />
-      <!-- Triangle element positioned under the course card -->
-      <!-- <div class="rectangle"></div> -->
     </div>
-    <!-- Rectangle that slides out on click -->
-    <!-- <div
-      class="rectangle"
-      :class="{ expanded: isExpanded }"
-      @click.stop="toggleRectangle"
-    ></div>
-  </div> -->
-    <!-- Rectangle that slides up and down on click -->
-    <!-- <div class="rectangle" :class="{ expanded: isExpanded }" @click.stop="toggleRectangle"></div>
-  </div> -->
-    <!-- Use Note component here -->
-    <!-- <Note @toggle="handleToggleNote" />
-  </div> -->
-    <!-- Use Note component here with the specified width and initial translate values -->
-    <!-- <Note
-      :initialTranslateY="'-60px'"
-      :expandedTranslateY="'0px'"
-      :width="'calc(103% - 10px)'"
-      @toggle="handleToggleNote"
-    /> -->
-    <!-- Use Note component with the color prop set to match the course card -->
     <Note
       :initialTranslateY="'-67px'"
       :expandedTranslateY="'-35px'"
@@ -330,7 +307,8 @@ export default defineComponent({
   display: flex;
   flex-direction: row;
   background-color: $white;
-  box-shadow: 0px 0px 10px 4px $boxShadowGray;
+  box-shadow: 0px 10px 15px -10px rgba(0, 0, 0, 0.3); /* Shadow appears only at the bottom */
+
   height: 5.625rem;
   cursor: grab;
 
