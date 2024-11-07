@@ -110,10 +110,18 @@
     <!-- <Note @toggle="handleToggleNote" />
   </div> -->
     <!-- Use Note component here with the specified width and initial translate values -->
-    <Note
+    <!-- <Note
       :initialTranslateY="'-60px'"
       :expandedTranslateY="'0px'"
       :width="'calc(103% - 10px)'"
+      @toggle="handleToggleNote"
+    /> -->
+    <!-- Use Note component with the color prop set to match the course card -->
+    <Note
+      :initialTranslateY="'-63px'"
+      :expandedTranslateY="'-10px'"
+      :width="'calc(103% - 10px)'"
+      :color="cssVars['--bg-color']"
       @toggle="handleToggleNote"
     />
   </div>
