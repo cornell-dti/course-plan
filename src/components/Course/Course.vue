@@ -118,8 +118,8 @@
     /> -->
     <!-- Use Note component with the color prop set to match the course card -->
     <Note
-      :initialTranslateY="'-63px'"
-      :expandedTranslateY="'-10px'"
+      :initialTranslateY="'-67px'"
+      :expandedTranslateY="'-35px'"
       :width="'calc(103% - 10px)'"
       :color="cssVars['--bg-color']"
       @toggle="handleToggleNote"
