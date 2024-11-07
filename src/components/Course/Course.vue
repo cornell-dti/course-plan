@@ -1,97 +1,110 @@
 <template>
-  <div
-    :class="{
-      'course--min': compact,
-      conflict: isCourseConflict(courseObj.uniqueID),
-      active: active,
-    }"
-    class="course"
-  >
-    <save-course-modal
-      :courseCode="courseCode"
-      @close-save-course-modal="closeSaveCourseModal"
-      @save-course="saveCourse"
-      @add-collection="addCollection"
-      v-if="isSaveCourseOpen"
-    />
-    <edit-color
-      :editedColor="editedColor"
-      @color-course="colorCourse"
-      @color-subject="colorSubject"
-      @close-edit-color="closeEditColorModal"
-      v-if="isEditColorOpen"
-    />
+  <div class="course-container">
     <div
-      class="course-color"
-      :style="cssVars"
       :class="{
-        'course-color--active': active,
+        'course--min': compact,
+        conflict: isCourseConflict(courseObj.uniqueID),
+        active: active,
       }"
+      class="course"
     >
-      <img src="@/assets/images/dots/sixDots.svg" alt="" />
-    </div>
-    <div class="course-content" @click="courseOnClick()">
-      <div class="course-main">
-        <div class="course-top">
-          <div class="course-left">
-            <div
-              class="course-code"
-              data-cyId="courseCode"
-              :style="{
-                color: compact ? '#3d3d3d' : '#858585',
-              }"
-            >
-              {{ courseObj.code }}
+      <save-course-modal
+        :courseCode="courseCode"
+        @close-save-course-modal="closeSaveCourseModal"
+        @save-course="saveCourse"
+        @add-collection="addCollection"
+        v-if="isSaveCourseOpen"
+      />
+      <edit-color
+        :editedColor="editedColor"
+        @color-course="colorCourse"
+        @color-subject="colorSubject"
+        @close-edit-color="closeEditColorModal"
+        v-if="isEditColorOpen"
+      />
+      <div
+        class="course-color"
+        :style="cssVars"
+        :class="{
+          'course-color--active': active,
+        }"
+      >
+        <img src="@/assets/images/dots/sixDots.svg" alt="" />
+      </div>
+      <div class="course-content" @click="courseOnClick()">
+        <div class="course-main">
+          <div class="course-top">
+            <div class="course-left">
+              <div
+                class="course-code"
+                data-cyId="courseCode"
+                :style="{
+                  color: compact ? '#3d3d3d' : '#858585',
+                }"
+              >
+                {{ courseObj.code }}
+              </div>
+              <course-caution
+                v-if="!isReqCourse && compact"
+                :course="courseObj"
+                :isCompactView="true"
+              />
             </div>
+            <button
+              v-if="!isReqCourse && isSemesterCourseCard"
+              class="course-dotRow"
+              @click="openMenu"
+            >
+              <img src="@/assets/images/dots/threeDots.svg" alt="open menu for course card" />
+            </button>
+            <button
+              v-else-if="!isReqCourse && !isSemesterCourseCard"
+              class="course-trash"
+              @click.stop="deleteCourseFromCollection"
+              @mouseover="hoverTrashIcon"
+              @mouseleave="unhoverTrashIcon"
+            >
+              <img :src="trashIcon" alt="delete course from collection" />
+            </button>
+          </div>
+          <div v-if="!compact" class="course-name">{{ courseObj.name }}</div>
+          <div v-if="!compact" class="course-info">
+            <span class="course-credits">{{ creditString }}</span>
+            <span v-if="semesterString" class="course-semesters">{{ semesterString }}</span>
             <course-caution
-              v-if="!isReqCourse && compact"
+              v-if="!isReqCourse && !isSchedGenCourse"
               :course="courseObj"
-              :isCompactView="true"
+              :isCompactView="false"
             />
           </div>
-          <button
-            v-if="!isReqCourse && isSemesterCourseCard"
-            class="course-dotRow"
-            @click="openMenu"
-          >
-            <img src="@/assets/images/dots/threeDots.svg" alt="open menu for course card" />
-          </button>
-          <button
-            v-else-if="!isReqCourse && !isSemesterCourseCard"
-            class="course-trash"
-            @click.stop="deleteCourseFromCollection"
-            @mouseover="hoverTrashIcon"
-            @mouseleave="unhoverTrashIcon"
-          >
-            <img :src="trashIcon" alt="delete course from collection" />
-          </button>
-        </div>
-        <div v-if="!compact" class="course-name">{{ courseObj.name }}</div>
-        <div v-if="!compact" class="course-info">
-          <span class="course-credits">{{ creditString }}</span>
-          <span v-if="semesterString" class="course-semesters">{{ semesterString }}</span>
-          <course-caution
-            v-if="!isReqCourse && !isSchedGenCourse"
-            :course="courseObj"
-            :isCompactView="false"
-          />
         </div>
       </div>
+      <course-menu
+        v-if="menuOpen"
+        :courseObj="courseObj"
+        :semesterIndex="semesterIndex"
+        :isCompact="compact"
+        :courseColor="courseObj.color"
+        :courseCode="courseObj.code"
+        @open-edit-color-modal="openEditColorModal"
+        @delete-course="deleteCourse"
+        @edit-course-credit="editCourseCredit"
+        @open-save-course-modal="openSaveCourseModal"
+        :getCreditRange="getCreditRange || []"
+        v-click-outside="closeMenuIfOpen"
+      />
+      <!-- Triangle element positioned under the course card -->
+      <!-- <div class="rectangle"></div> -->
     </div>
-    <course-menu
-      v-if="menuOpen"
-      :courseObj="courseObj"
-      :semesterIndex="semesterIndex"
-      :isCompact="compact"
-      :courseColor="courseObj.color"
-      :courseCode="courseObj.code"
-      @open-edit-color-modal="openEditColorModal"
-      @delete-course="deleteCourse"
-      @edit-course-credit="editCourseCredit"
-      @open-save-course-modal="openSaveCourseModal"
-      :getCreditRange="getCreditRange || []"
-      v-click-outside="closeMenuIfOpen"
-    />
+    <!-- Rectangle that slides out on click -->
+    <!-- <div
+      class="rectangle"
+      :class="{ expanded: isExpanded }"
+      @click.stop="toggleRectangle"
+    ></div>
+  </div> -->
+    <!-- Rectangle that slides up and down on click -->
+    <div class="rectangle" :class="{ expanded: isExpanded }" @click.stop="toggleRectangle"></div>
   </div>
 </template>
 
@@ -110,8 +123,10 @@ import { clickOutside } from '@/utilities';
 import EditColor from '../Modals/EditColor.vue';
 import trashGrayIcon from '@/assets/images/trash-gray.svg';
 import trashRedIcon from '@/assets/images/trash.svg';
+import { toggleRequirementChoice } from '@/global-firestore-data';
 
 export default defineComponent({
+  name: 'Course',
   components: { CourseCaution, CourseMenu, EditColor, SaveCourseModal },
   props: {
     courseObj: { type: Object as PropType<FirestoreSemesterCourse>, required: true },
@@ -156,6 +171,7 @@ export default defineComponent({
       deletingCourse: false,
       trashIcon: trashGrayIcon, // Default icon
       courseCode: '',
+      isExpanded: false, // Controls the expanded state of the rectangle
     };
   },
   computed: {
@@ -252,6 +268,9 @@ export default defineComponent({
     unhoverTrashIcon() {
       this.trashIcon = trashGrayIcon;
     },
+    toggleRectangle() {
+      this.isExpanded = !this.isExpanded;
+    },
   },
   directives: {
     'click-outside': clickOutside,
@@ -262,26 +281,53 @@ export default defineComponent({
 <style scoped lang="scss">
 @import '@/assets/scss/_variables.scss';
 
+.course-container {
+  position: relative;
+  padding-bottom: 20px; /* Additional space for the rectangle */
+}
+
 .course {
+  position: relative;
+  z-index: 1;
   box-sizing: border-box;
   border-radius: 0.5rem;
   display: flex;
   flex-direction: row;
-  background-color: $white;
+  background-color: $white; /* Ensure solid background color */
   box-shadow: 0px 0px 10px 4px $boxShadowGray;
-  position: relative;
   height: 5.625rem;
   touch-action: none;
   cursor: grab;
 
   &:hover {
-    background: rgba(255, 255, 255, 0.15);
+    background: $white; /* Remove transparency here */
   }
 
   &:active:hover {
     touch-action: none;
     cursor: grabbing;
   }
+  // .course {
+  //   z-index: 1; /* Ensure the course is above the rectangle */
+  //   box-sizing: border-box;
+  //   border-radius: 0.5rem;
+  //   display: flex;
+  //   flex-direction: row;
+  //   background-color: $white;
+  //   box-shadow: 0px 0px 10px 4px $boxShadowGray;
+  //   position: relative;
+  //   height: 5.625rem;
+  //   touch-action: none;
+  //   cursor: grab;
+
+  //   &:hover {
+  //     background: rgba(255, 255, 255, 0.15);
+  //   }
+
+  //   &:active:hover {
+  //     touch-action: none;
+  //     cursor: grabbing;
+  //   }
 
   &--min {
     height: 2.125rem;
@@ -406,5 +452,55 @@ export default defineComponent({
 
 .active {
   border: 1px solid $yuxuanBlue;
+}
+
+// .rectangle {
+//   position: absolute;
+//   bottom: 0;
+//   left: 50%;
+//   transform: translateX(-50%);
+//   width: calc(106% - #{$colored-grabber-width}); /* Rectangle width */
+//   // width: 473px;
+//   height: 81px; /* Rectangle height */
+//   background-color: #a8e6cf; /* Pastel green color */
+//   border-radius: 12.49px; /* Optional: to slightly curve the corners */
+//   z-index: 0; /* Layer the rectangle behind the course */
+// }
+// .rectangle {
+//   position: absolute;
+//   bottom: -10px; /* Peeks out slightly from the bottom */
+//   left: 50%;
+//   transform: translateX(-50%);
+//   width: calc(106% - #{$colored-grabber-width});
+//   background-color: #a8e6cf;
+//   border-radius: 12.49px;
+//   cursor: pointer;
+//   z-index: 0;
+//   transition: height 0.3s ease; /* Smooth transition for height */
+//   height: 10px; /* Initial height for peeking out */
+// }
+
+// /* Expanded state with sliding effect */
+// .rectangle.expanded {
+//   height: 80px; /* Height when fully expanded */
+// }
+.rectangle {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%) translateY(-65px); /* Start partially visible from below */
+  // transform: translateX(-50%) translateY(-10px); /* Slide up to align with course card */
+  width: calc(106% - #{$colored-grabber-width});
+  height: 80px; /* Full rectangle height */
+  background-color: #a8e6cf;
+  border-radius: 12.49px;
+  cursor: pointer;
+  z-index: 0;
+  transition: transform 0.3s ease; /* Smooth slide transition */
+}
+
+/* Expanded state with slide-up effect */
+.rectangle.expanded {
+  transform: translateX(-50%) translateY(0px); /* Slide up to align with course card */
+  // transform: translateX(-50%) translateY(-60px); /* Start partially visible from below */
 }
 </style>
