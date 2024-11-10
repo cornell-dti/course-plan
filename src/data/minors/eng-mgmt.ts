@@ -1,7 +1,5 @@
 import { CollegeOrMajorRequirement } from '../../requirements/types';
-import {
-  includesWithSingleRequirement,
-} from '../../requirements/checkers';
+import { includesWithSingleRequirement } from '../../requirements/checkers';
 import { AdvisorGroup } from '../../tools/advisors/types';
 
 const engMgmtMinorRequirements: readonly CollegeOrMajorRequirement[] = [
@@ -65,5 +63,5 @@ export default engMgmtMinorRequirements;
 
 // TODO: advisor(s)
 export const engMgmtMinorAdvisors: AdvisorGroup = {
-  advisors: []
-}
+  advisors: [],
+};
