@@ -8,7 +8,7 @@
             src="@/assets/images/noteIconSmall.svg"
             alt="note course icon"
           />
-          <span class="courseMenu-text">Note </span>
+          <span class="courseMenu-text">Note</span>
         </div>
       </div>
       <div
@@ -205,11 +205,6 @@ export default defineComponent({
       }
       this.displayColors = false;
     },
-    openNoteModal(courseCode: string) {
-      // Implement the functionality to handle "Note" option click
-      console.log(`Note clicked for course ${courseCode}`);
-      // You can add further logic here as needed.
-    },
     openSaveCourseModal(courseCode: string) {
       this.courseCode = courseCode;
       this.$emit('open-save-course-modal', courseCode);
@@ -264,6 +259,9 @@ export default defineComponent({
         }
       }
       return creditArray;
+    },
+    openNoteModal(courseCode: string) {
+      this.$emit('open-note-modal');
     },
   },
 });

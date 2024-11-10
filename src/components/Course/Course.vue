@@ -86,6 +86,7 @@
         :isCompact="compact"
         :courseColor="courseObj.color"
         :courseCode="courseObj.code"
+        @open-note-modal="openNoteModal"
         @open-edit-color-modal="openEditColorModal"
         @delete-course="deleteCourse"
         @edit-course-credit="editCourseCredit"
@@ -95,6 +96,7 @@
       />
     </div>
     <Note
+      v-if="isNoteVisible"
       :initialTranslateY="'-67px'"
       :expandedTranslateY="'-35px'"
       :width="'calc(102.8% - 10px)'"
@@ -168,6 +170,7 @@ export default defineComponent({
       trashIcon: trashGrayIcon, // Default icon
       courseCode: '',
       isExpanded: false,
+      isNoteVisible: false,
     };
   },
   computed: {
@@ -266,6 +269,13 @@ export default defineComponent({
     },
     handleToggleNote(isExpanded: boolean) {
       console.log('Note expanded state:', isExpanded);
+    },
+    openNoteModal() {
+      this.isNoteVisible = true;
+      this.menuOpen = false;
+    },
+    closeNote() {
+      this.isNoteVisible = false;
     },
   },
   directives: {
