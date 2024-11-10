@@ -60,6 +60,7 @@ import dsMinorRequirements, { dsMinorAdvisors } from './minors/ds';
 import dbmeMinorRequirements, { dbmeAdvisors } from './minors/dbme';
 import deaMinorRequirements from './minors/dea';
 import eceMinorRequirements, { eceMinorAdvisors } from './minors/ece';
+import engMgmtMinorRequirements, { engMgmtMinorAdvisors } from './minors/eng-mgmt';
 import gameDesignMinorRequirements, { gameDesignMinorAdvisors } from './minors/game-design';
 import hpMinorRequirements, { hpMinorAdvisors } from './minors/hp';
 import hdMinorRequirements, { hdMinorAdvisors } from './minors/hd';
@@ -528,6 +529,12 @@ const json: RequirementsJson = {
       requirements: eceMinorRequirements,
       advisors: eceMinorAdvisors,
       abbrev: 'ECE',
+    },
+    ENGMGMT: {
+      name: 'Engineering Management',
+      schools: ['EN'],
+      requirements: engMgmtMinorRequirements,
+      advisors: engMgmtMinorAdvisors,
     },
     GAMEDESIGN: {
       name: 'Game Design',
