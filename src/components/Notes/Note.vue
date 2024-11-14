@@ -13,6 +13,8 @@
 </template>
 
 <script>
+import { coursesColorSet } from '@/assets/constants/colors';
+
 export default {
   name: 'Note',
   props: {
@@ -27,6 +29,16 @@ export default {
       noteText: '',
     };
   },
+  mounted() {
+    if (this.expand) {
+      this.isExpanded = true;
+    }
+  },
+  watch: {
+    expand(newVal) {
+      if (newVal) this.isExpanded = true;
+    },
+  },
   computed: {
     noteStyle() {
       return {
@@ -34,8 +46,7 @@ export default {
           this.isExpanded ? this.expandedTranslateY : this.initialTranslateY
         })`,
         width: this.width,
-        backgroundColor: this.color,
-        filter: 'brightness(1.7) saturate(0.3)',
+        backgroundColor: this.getLighterColor(this.color),
       };
     },
   },
@@ -52,12 +63,17 @@ export default {
         this.$emit('toggle', this.isExpanded);
       }
     },
+    getLighterColor(color) {
+      const colorObj = coursesColorSet.find(c => c.hex.toUpperCase() === color.toUpperCase());
+      return colorObj ? colorObj.lighterHex : color;
+    },
   },
 };
 </script>
 
 <style scoped>
 .note {
+  box-shadow: 0px 0px 10px 4px rgba(0, 0, 0, 0.055);
   position: absolute;
   left: 50%;
   transform: translateX(-50%);

@@ -88,7 +88,7 @@
         :courseCode="courseObj.code"
         @open-note-modal="openNoteModal"
         @open-edit-color-modal="openEditColorModal"
-        @delete-course="deleteCourse"
+        @delete-course="deleteCourscoe"
         @edit-course-credit="editCourseCredit"
         @open-save-course-modal="openSaveCourseModal"
         :getCreditRange="getCreditRange || []"
@@ -97,10 +97,12 @@
     </div>
     <Note
       v-if="isNoteVisible"
+      class="note"
       :initialTranslateY="'-67px'"
       :expandedTranslateY="'-35px'"
       :width="'calc(102.8% - 10px)'"
       :color="cssVars['--bg-color']"
+      :expand="expandNote"
       @toggle="handleToggleNote"
     />
   </div>
@@ -171,6 +173,7 @@ export default defineComponent({
       courseCode: '',
       isExpanded: false,
       isNoteVisible: false,
+      expandNote: false,
     };
   },
   computed: {
@@ -267,12 +270,13 @@ export default defineComponent({
     unhoverTrashIcon() {
       this.trashIcon = trashGrayIcon;
     },
-    handleToggleNote(isExpanded: boolean) {
-      console.log('Note expanded state:', isExpanded);
+    handleToggleNote() {
+      this.expandNote = !this.expandNote;
     },
     openNoteModal() {
       this.isNoteVisible = true;
       this.menuOpen = false;
+      this.expandNote = true;
     },
     closeNote() {
       this.isNoteVisible = false;
@@ -293,7 +297,7 @@ export default defineComponent({
 }
 
 .course {
-  box-shadow: 0px 0px 10px 4px $boxShadowGray;
+  box-shadow: 0px 0px 10px 4px rgba(0, 0, 0, 0.055);
   position: relative;
   z-index: 1;
   box-sizing: border-box;
