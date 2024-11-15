@@ -1,96 +1,109 @@
 <template>
-  <div
-    :class="{
-      'course--min': compact,
-      conflict: isCourseConflict(courseObj.uniqueID),
-      active: active,
-    }"
-    class="course"
-  >
-    <save-course-modal
-      :courseCode="courseCode"
-      @close-save-course-modal="closeSaveCourseModal"
-      @save-course="saveCourse"
-      @add-collection="addCollection"
-      v-if="isSaveCourseOpen"
-    />
-    <edit-color
-      :editedColor="editedColor"
-      @color-course="colorCourse"
-      @color-subject="colorSubject"
-      @close-edit-color="closeEditColorModal"
-      v-if="isEditColorOpen"
-    />
+  <div class="course-container">
     <div
-      class="course-color"
-      :style="cssVars"
       :class="{
-        'course-color--active': active,
+        'course--min': compact,
+        conflict: isCourseConflict(courseObj.uniqueID),
+        active: active,
       }"
+      class="course"
     >
-      <img src="@/assets/images/dots/sixDots.svg" alt="" />
-    </div>
-    <div class="course-content" @click="courseOnClick()">
-      <div class="course-main">
-        <div class="course-top">
-          <div class="course-left">
-            <div
-              class="course-code"
-              data-cyId="courseCode"
-              :style="{
-                color: compact ? '#3d3d3d' : '#858585',
-              }"
-            >
-              {{ courseObj.code }}
+      <save-course-modal
+        :courseCode="courseCode"
+        @close-save-course-modal="closeSaveCourseModal"
+        @save-course="saveCourse"
+        @add-collection="addCollection"
+        v-if="isSaveCourseOpen"
+      />
+      <edit-color
+        :editedColor="editedColor"
+        @color-course="colorCourse"
+        @color-subject="colorSubject"
+        @close-edit-color="closeEditColorModal"
+        v-if="isEditColorOpen"
+      />
+      <div
+        class="course-color"
+        :style="cssVars"
+        :class="{
+          'course-color--active': active,
+        }"
+      >
+        <img src="@/assets/images/dots/sixDots.svg" alt="" />
+      </div>
+      <div class="course-content" @click="courseOnClick()">
+        <div class="course-main">
+          <div class="course-top">
+            <div class="course-left">
+              <div
+                class="course-code"
+                data-cyId="courseCode"
+                :style="{
+                  color: compact ? '#3d3d3d' : '#858585',
+                }"
+              >
+                {{ courseObj.code }}
+              </div>
+              <course-caution
+                v-if="!isReqCourse && compact"
+                :course="courseObj"
+                :isCompactView="true"
+              />
             </div>
+            <button
+              v-if="!isReqCourse && isSemesterCourseCard"
+              class="course-dotRow"
+              @click="openMenu"
+            >
+              <img src="@/assets/images/dots/threeDots.svg" alt="open menu for course card" />
+            </button>
+            <button
+              v-else-if="!isReqCourse && !isSemesterCourseCard"
+              class="course-trash"
+              @click.stop="deleteCourseFromCollection"
+              @mouseover="hoverTrashIcon"
+              @mouseleave="unhoverTrashIcon"
+            >
+              <img :src="trashIcon" alt="delete course from collection" />
+            </button>
+          </div>
+          <div v-if="!compact" class="course-name">{{ courseObj.name }}</div>
+          <div v-if="!compact" class="course-info">
+            <span class="course-credits">{{ creditString }}</span>
+            <span v-if="semesterString" class="course-semesters">{{ semesterString }}</span>
             <course-caution
-              v-if="!isReqCourse && compact"
+              v-if="!isReqCourse && !isSchedGenCourse"
               :course="courseObj"
-              :isCompactView="true"
+              :isCompactView="false"
             />
           </div>
-          <button
-            v-if="!isReqCourse && isSemesterCourseCard"
-            class="course-dotRow"
-            @click="openMenu"
-          >
-            <img src="@/assets/images/dots/threeDots.svg" alt="open menu for course card" />
-          </button>
-          <button
-            v-else-if="!isReqCourse && !isSemesterCourseCard"
-            class="course-trash"
-            @click.stop="deleteCourseFromCollection"
-            @mouseover="hoverTrashIcon"
-            @mouseleave="unhoverTrashIcon"
-          >
-            <img :src="trashIcon" alt="delete course from collection" />
-          </button>
-        </div>
-        <div v-if="!compact" class="course-name">{{ courseObj.name }}</div>
-        <div v-if="!compact" class="course-info">
-          <span class="course-credits">{{ creditString }}</span>
-          <span v-if="semesterString" class="course-semesters">{{ semesterString }}</span>
-          <course-caution
-            v-if="!isReqCourse && !isSchedGenCourse"
-            :course="courseObj"
-            :isCompactView="false"
-          />
         </div>
       </div>
+      <course-menu
+        v-if="menuOpen"
+        :courseObj="courseObj"
+        :semesterIndex="semesterIndex"
+        :isCompact="compact"
+        :courseColor="courseObj.color"
+        :courseCode="courseObj.code"
+        @open-note-modal="openNoteModal"
+        @open-edit-color-modal="openEditColorModal"
+        @delete-course="deleteCourscoe"
+        @edit-course-credit="editCourseCredit"
+        @open-save-course-modal="openSaveCourseModal"
+        :getCreditRange="getCreditRange || []"
+        v-click-outside="closeMenuIfOpen"
+      />
     </div>
-    <course-menu
-      v-if="menuOpen"
-      :courseObj="courseObj"
-      :semesterIndex="semesterIndex"
-      :isCompact="compact"
-      :courseColor="courseObj.color"
-      :courseCode="courseObj.code"
-      @open-edit-color-modal="openEditColorModal"
-      @delete-course="deleteCourse"
-      @edit-course-credit="editCourseCredit"
-      @open-save-course-modal="openSaveCourseModal"
-      :getCreditRange="getCreditRange || []"
-      v-click-outside="closeMenuIfOpen"
+    <Note
+      v-if="isNoteVisible"
+      class="note"
+      :initialTranslateY="'-67px'"
+      :expandedTranslateY="'-35px'"
+      :width="'calc(102.8% - 10px)'"
+      :color="cssVars['--bg-color']"
+      :expand="expandNote"
+      @toggle="handleToggleNote"
     />
   </div>
 </template>
@@ -110,9 +123,11 @@ import { clickOutside } from '@/utilities';
 import EditColor from '../Modals/EditColor.vue';
 import trashGrayIcon from '@/assets/images/trash-gray.svg';
 import trashRedIcon from '@/assets/images/trash.svg';
+import Note from '../Notes/Note.vue';
 
 export default defineComponent({
-  components: { CourseCaution, CourseMenu, EditColor, SaveCourseModal },
+  name: 'Course',
+  components: { CourseCaution, CourseMenu, EditColor, SaveCourseModal, Note },
   props: {
     courseObj: { type: Object as PropType<FirestoreSemesterCourse>, required: true },
     compact: { type: Boolean, required: true },
@@ -156,6 +171,9 @@ export default defineComponent({
       deletingCourse: false,
       trashIcon: trashGrayIcon, // Default icon
       courseCode: '',
+      isExpanded: false,
+      isNoteVisible: false,
+      expandNote: false,
     };
   },
   computed: {
@@ -252,6 +270,17 @@ export default defineComponent({
     unhoverTrashIcon() {
       this.trashIcon = trashGrayIcon;
     },
+    handleToggleNote() {
+      this.expandNote = !this.expandNote;
+    },
+    openNoteModal() {
+      this.isNoteVisible = true;
+      this.menuOpen = false;
+      this.expandNote = true;
+    },
+    closeNote() {
+      this.isNoteVisible = false;
+    },
   },
   directives: {
     'click-outside': clickOutside,
@@ -262,27 +291,31 @@ export default defineComponent({
 <style scoped lang="scss">
 @import '@/assets/scss/_variables.scss';
 
+.course-container {
+  position: relative;
+  padding-bottom: 20px;
+}
+
 .course {
+  box-shadow: 0px 0px 10px 4px rgba(0, 0, 0, 0.055);
+  position: relative;
+  z-index: 1;
   box-sizing: border-box;
   border-radius: 0.5rem;
   display: flex;
   flex-direction: row;
   background-color: $white;
-  box-shadow: 0px 0px 10px 4px $boxShadowGray;
-  position: relative;
   height: 5.625rem;
-  touch-action: none;
   cursor: grab;
 
   &:hover {
-    background: rgba(255, 255, 255, 0.15);
+    background: $white;
   }
 
   &:active:hover {
     touch-action: none;
     cursor: grabbing;
   }
-
   &--min {
     height: 2.125rem;
 
@@ -406,5 +439,21 @@ export default defineComponent({
 
 .active {
   border: 1px solid $yuxuanBlue;
+}
+.rectangle {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%) translateY(-65px);
+  width: calc(106% - #{$colored-grabber-width});
+  height: 80px;
+  background-color: #a8e6cf;
+  border-radius: 12.49px;
+  cursor: pointer;
+  z-index: 0;
+  transition: transform 0.3s ease;
+}
+
+.rectangle.expanded {
+  transform: translateX(-50%) translateY(0px);
 }
 </style>

@@ -1,6 +1,16 @@
 <template>
   <div class="courseMenu">
     <div class="courseMenu-content">
+      <div class="courseMenu-section" @click="openNoteModal(courseObj.code)">
+        <div class="courseMenu-left">
+          <img
+            class="courseMenu-icon"
+            src="@/assets/images/noteIconSmall.svg"
+            alt="note course icon"
+          />
+          <span class="courseMenu-text">Note</span>
+        </div>
+      </div>
       <div
         class="courseMenu-section"
         v-if="saveCourseIconVisible"
@@ -249,6 +259,9 @@ export default defineComponent({
         }
       }
       return creditArray;
+    },
+    openNoteModal(courseCode: string) {
+      this.$emit('open-note-modal');
     },
   },
 });
