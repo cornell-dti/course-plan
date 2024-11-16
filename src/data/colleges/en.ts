@@ -137,7 +137,7 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
     perSlotMinCount: [6],
     slotNames: ['Course'],
     additionalRequirements: {
-      'Courses must be from 3 categories.': {
+      'Courses must be from 3 groups.': {
         checker: [
           (course: Course): boolean =>
             engineeringLiberalArtsGroups['Group 1'].some(
