@@ -56,7 +56,8 @@ const econILRMinorRequirements: readonly CollegeOrMajorRequirement[] = [
     description:
       'Additional 3000 or 4000 level ECON courses to reach a total of 9 courses. ' +
       'ECON 4990, 4991, and 4999 cannot be counted. ' +
-      'At least 5 of your 3000/4000-level courses must be taken at Cornell.',
+      'At least 5 of your 3000/4000-level courses must be taken at Cornell. ' +
+      'The exception for this is for Study Abroad, in which you must take at least 4 of these courses at Cornell.',
     source: 'https://economics.cornell.edu/minor',
     checker: [
       (course: Course): boolean => {
