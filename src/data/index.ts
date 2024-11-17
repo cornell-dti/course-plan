@@ -81,6 +81,7 @@ import mpaRequirements, { mpaAdvisors } from './grad/mpa';
 
 import { MATH2940, CHEM2080 } from './specializations/en';
 import nsRequirements, { nsAdvisors } from './majors/ns';
+import econILRMinorRequirements, { econILRMinorAdvisors } from './minors/econILR';
 
 const json: RequirementsJson = {
   university: {
@@ -528,6 +529,13 @@ const json: RequirementsJson = {
       requirements: eceMinorRequirements,
       advisors: eceMinorAdvisors,
       abbrev: 'ECE',
+    },
+    ECONILR: {
+      name: 'Economics [ILR]',
+      schools: ['IL'],
+      requirements: econILRMinorRequirements,
+      advisors: econILRMinorAdvisors,
+      abbrev: 'EconILR',
     },
     GAMEDESIGN: {
       name: 'Game Design',
