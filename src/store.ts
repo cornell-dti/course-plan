@@ -346,7 +346,7 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
       const plan = getFirstPlan(data);
       store.commit('setPlans', data.plans);
       store.commit('setCurrentPlan', plan);
-      store.commit('setSavedCourses', data.savedCourses); 
+      store.commit('setSavedCourses', data.savedCourses);
       const { orderByNewest } = data;
       store.commit('setSemesters', plan.semesters);
       updateDoc(doc(fb.semestersCollection, simplifiedUser.email), {
@@ -357,7 +357,7 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
       store.commit('setOrderByNewest', orderByNewest === undefined ? true : orderByNewest);
     } else {
       const plans = [{ name: 'Plan 1', semesters: [] }];
-      const savedCourses = [{ name: 'All', courses: [] }]; 
+      const savedCourses = [{ name: 'All', courses: [] }];
       store.commit('setPlans', plans);
       store.commit('setCurrentPlan', plans[0]);
       store.commit('setSavedCourses', savedCourses);
