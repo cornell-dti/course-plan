@@ -531,7 +531,7 @@ const json: RequirementsJson = {
       abbrev: 'ECE',
     },
     ECONILR: {
-      name: 'Economics for ILR Students',
+      name: 'Economics [ILR]',
       schools: ['IL'],
       requirements: econILRMinorRequirements,
       advisors: econILRMinorAdvisors,
