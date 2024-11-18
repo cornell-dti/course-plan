@@ -72,8 +72,7 @@ const csRequirements: readonly CollegeOrMajorRequirement[] = [
         );
       },
     ],
-    checkerWarning:
-      'We do not check whether you are allowed to take CS 3700/3780 towards this requirement.',
+    checkerWarning: 'We do not check whether you are allowed to take CS 3700/3780 towards this requirement.',
     fulfilledBy: 'courses',
     perSlotMinCount: [2],
     slotNames: ['Course'],
@@ -217,13 +216,7 @@ export const csMigrations: RequirementMigration[] = [
       checker: [
         (course: Course): boolean => {
           if (
-            courseMatchesCodeOptions(course, [
-              'CS 4090',
-              'CS 4998',
-              'CS 4999',
-              'CS 4410',
-              'CS 4820',
-            ])
+            courseMatchesCodeOptions(course, ['CS 4090', 'CS 4998', 'CS 4999', 'CS 4410', 'CS 4820'])
           ) {
             return false;
           }
