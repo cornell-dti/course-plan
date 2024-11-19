@@ -455,6 +455,9 @@ export default defineComponent({
       }
     },
     saveNote(uniqueID: number, note: string) {
+      if (!note) {
+        return;
+      }
       editSemester(
         store.state.currentPlan,
         this.year,

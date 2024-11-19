@@ -103,18 +103,16 @@
       :expandedTranslateY="'-35px'"
       :width="'calc(102.8% - 10px)'"
       :color="cssVars['--bg-color']"
-      :expand="expandNote"
       :initialNote="courseObj.note || ''"
-      @toggle="handleToggleNote"
       @save-note="saveNote"
-      v-click-outside="handleClickOutside"
       ref="note"
+      v-click-outside="handleClickOutsideNote"
     />
   </div>
 </template>
 
 <script lang="ts">
-import { CSSProperties, PropType, defineComponent } from 'vue';
+import { PropType, defineComponent } from 'vue';
 import CourseMenu from '@/components/Modals/CourseMenu.vue';
 import CourseCaution from '@/components/Course/CourseCaution.vue';
 import SaveCourseModal from '@/components/Modals/SaveCourseModal.vue';
@@ -129,6 +127,14 @@ import EditColor from '../Modals/EditColor.vue';
 import trashGrayIcon from '@/assets/images/trash-gray.svg';
 import trashRedIcon from '@/assets/images/trash.svg';
 import Note from '../Notes/Note.vue';
+
+interface MinimalNoteComponent {
+  note: string;
+  isDirty: boolean;
+  isExpanded: boolean;
+  collapseNote: () => void;
+  expandNote: () => void;
+}
 
 export default defineComponent({
   name: 'Course',
@@ -178,9 +184,8 @@ export default defineComponent({
       deletingCourse: false,
       trashIcon: trashGrayIcon, // Default icon
       courseCode: '',
-      isExpanded: Boolean(this.courseObj.note), // NOTE: might want different behavior than showing all notes
+      isExpanded: false,
       isNoteVisible: Boolean(this.courseObj.note),
-      expandNote: false,
       isShaking: false,
     };
   },
@@ -204,10 +209,10 @@ export default defineComponent({
       return `${this.courseObj.credits} credits`;
     },
 
-    cssVars(): CSSProperties {
+    cssVars(): Record<string, string> {
       return {
         '--bg-color': `#${this.courseObj.color}`,
-      } as CSSProperties;
+      };
     },
   },
   methods: {
@@ -278,22 +283,36 @@ export default defineComponent({
     unhoverTrashIcon() {
       this.trashIcon = trashGrayIcon;
     },
-    handleToggleNote() {
-      this.expandNote = !this.expandNote;
-    },
     openNoteModal() {
       if (!this.isNoteVisible) {
         this.isNoteVisible = true;
         this.menuOpen = false;
-        this.expandNote = true;
+        this.$nextTick(() => {
+          const noteComponent = this.$refs.note as MinimalNoteComponent | undefined;
+          if (noteComponent) {
+            noteComponent.expandNote();
+          }
+        });
       } else {
-        // Note already open — trigger a shake and close the modal.
-        this.triggerCourseCardShake();
-        this.menuOpen = false;
+        const noteComponent = this.$refs.note as MinimalNoteComponent | undefined;
+        if (!noteComponent) {
+          return;
+        }
+        // Note already open — trigger a shake.
+        if (noteComponent.isExpanded) {
+          this.triggerCourseCardShake();
+        } else {
+          noteComponent.expandNote();
+        }
       }
+      this.menuOpen = false;
     },
     closeNote() {
-      this.isNoteVisible = false;
+      // NOTE: this function hides the note entirely!
+      // Grant time for the slide-back-in animation to play out.
+      setTimeout(() => {
+        this.isNoteVisible = false;
+      }, 300);
     },
     triggerCourseCardShake() {
       this.isShaking = true;
@@ -303,16 +322,26 @@ export default defineComponent({
     },
     saveNote(note: string) {
       this.$emit('save-note', this.courseObj.uniqueID, note);
-      this.closeNote();
     },
-    handleClickOutside() {
-      if (
-        this.$refs.note &&
-        (this.$refs.note as {
-          isDirty: boolean;
-        }).isDirty
-      ) {
+    handleClickOutsideNote(event: MouseEvent) {
+      // Don't count a click on the open note or three dots as a click outside.
+      const target = event.target as HTMLElement;
+      if (target.closest('.courseMenu') || target.closest('.course-dotRow')) {
+        return;
+      }
+
+      const noteComponent = this.$refs.note as MinimalNoteComponent | undefined;
+
+      if (!noteComponent || !this.isNoteVisible) {
+        return;
+      }
+
+      if (noteComponent.isDirty) {
         this.triggerCourseCardShake();
+      } else if (noteComponent.note && this.isNoteVisible) {
+        noteComponent.collapseNote();
+      } else {
+        this.closeNote();
       }
     },
   },

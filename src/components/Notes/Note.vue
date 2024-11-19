@@ -1,8 +1,8 @@
 <template>
   <div class="note" :class="{ expanded: isExpanded }" :style="noteStyle" @click="expandNote">
-    <div v-if="isExpanded" class="note-content">
+    <div class="note-content" :class="{ visible: isExpanded }">
       <input
-        v-model="noteText"
+        v-model="note"
         placeholder="Add a note..."
         class="note-input"
         @keyup.enter="saveNote"
@@ -18,7 +18,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { coursesColorSet } from '@/assets/constants/colors';
 
 export default {
@@ -32,15 +32,10 @@ export default {
   },
   data() {
     return {
-      isExpanded: Boolean(this.initialNote), // NOTE: might want different behavior than showing all notes
-      noteText: this.initialNote,
+      isExpanded: false,
+      note: this.initialNote,
       isDirty: false,
     };
-  },
-  mounted() {
-    if (this.expand) {
-      this.isExpanded = true;
-    }
   },
   watch: {
     expand(newVal) {
@@ -62,29 +57,24 @@ export default {
     expandNote() {
       if (!this.isExpanded) {
         this.isExpanded = true;
-        this.$emit('toggle', this.isExpanded);
       }
     },
     collapseNote() {
       if (this.isExpanded) {
         this.isExpanded = false;
-        this.$emit('toggle', this.isExpanded);
       }
     },
-    getLighterColor(color) {
+    getLighterColor(color: string) {
       const colorObj = coursesColorSet.find(c => c.hex.toUpperCase() === color.toUpperCase());
       return colorObj ? colorObj.lighterHex : color;
     },
     saveNote() {
-      this.$emit('save-note', this.noteText);
+      this.$emit('save-note', this.note);
       this.isDirty = false;
       this.collapseNote();
     },
-    handleEnter() {
-      this.saveNote();
-    },
     handleInput() {
-      this.isDirty = this.noteText !== this.initialNote;
+      this.isDirty = this.note !== this.initialNote;
     },
   },
 };
@@ -119,6 +109,14 @@ export default {
   width: 100%;
   padding-top: 15px;
   padding-left: 10px;
+  opacity: 0;
+  transform: translateY(100%);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.note-content.visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .note-input {
