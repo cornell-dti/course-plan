@@ -104,8 +104,11 @@
       :width="'calc(102.8% - 10px)'"
       :color="cssVars['--bg-color']"
       :expand="expandNote"
+      :initialNote="courseObj.note || ''"
       @toggle="handleToggleNote"
-      @trigger-shake="triggerCourseCardShake"
+      @save-note="saveNote"
+      v-click-outside="handleClickOutside"
+      ref="note"
     />
   </div>
 </template>
@@ -161,6 +164,8 @@ export default defineComponent({
       typeof deletedFromCollection === 'object',
     'add-collection': (name: string) => typeof name === 'string',
     'delete-course-from-collection': (courseCode: string) => typeof courseCode === 'string',
+    'save-note': (uniqueID: number, note: string) =>
+      typeof uniqueID === 'number' && typeof note === 'string',
   },
   data() {
     return {
@@ -173,8 +178,8 @@ export default defineComponent({
       deletingCourse: false,
       trashIcon: trashGrayIcon, // Default icon
       courseCode: '',
-      isExpanded: false,
-      isNoteVisible: false,
+      isExpanded: Boolean(this.courseObj.note), // NOTE: might want different behavior than showing all notes
+      isNoteVisible: Boolean(this.courseObj.note),
       expandNote: false,
       isShaking: false,
     };
@@ -277,9 +282,15 @@ export default defineComponent({
       this.expandNote = !this.expandNote;
     },
     openNoteModal() {
-      this.isNoteVisible = true;
-      this.menuOpen = false;
-      this.expandNote = true;
+      if (!this.isNoteVisible) {
+        this.isNoteVisible = true;
+        this.menuOpen = false;
+        this.expandNote = true;
+      } else {
+        // Note already open — trigger a shake and close the modal.
+        this.triggerCourseCardShake();
+        this.menuOpen = false;
+      }
     },
     closeNote() {
       this.isNoteVisible = false;
@@ -289,6 +300,20 @@ export default defineComponent({
       setTimeout(() => {
         this.isShaking = false;
       }, 900); // 3 shakes * 0.3s = 0.9s
+    },
+    saveNote(note: string) {
+      this.$emit('save-note', this.courseObj.uniqueID, note);
+      this.closeNote();
+    },
+    handleClickOutside() {
+      if (
+        this.$refs.note &&
+        (this.$refs.note as {
+          isDirty: boolean;
+        }).isDirty
+      ) {
+        this.triggerCourseCardShake();
+      }
     },
   },
   directives: {

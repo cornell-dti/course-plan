@@ -18,6 +18,7 @@ type FirestoreSemesterCourse = {
   readonly creditRange: readonly [number, number];
   readonly semesters: readonly string[];
   readonly color: string;
+  readonly note?: string;
 };
 
 type FirestoreSemesterPlaceholder = {

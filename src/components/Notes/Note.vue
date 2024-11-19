@@ -5,13 +5,14 @@
         v-model="noteText"
         placeholder="Add a note..."
         class="note-input"
-        @keyup.enter="handleEnter"
+        @keyup.enter="saveNote"
+        @input="handleInput"
       />
       <img
         src="@/assets/images/notes/arrow.svg"
         alt="Arrow icon"
         class="note-icon"
-        @click.stop="collapseNote"
+        @click.stop="saveNote"
       />
     </div>
   </div>
@@ -27,11 +28,13 @@ export default {
     expandedTranslateY: { type: String, default: '-10px' },
     width: { type: String, default: '200px' },
     color: { type: String, default: '#a8e6cf' },
+    initialNote: { type: String, default: '' },
   },
   data() {
     return {
-      isExpanded: false,
-      noteText: '',
+      isExpanded: Boolean(this.initialNote), // NOTE: might want different behavior than showing all notes
+      noteText: this.initialNote,
+      isDirty: false,
     };
   },
   mounted() {
@@ -72,8 +75,16 @@ export default {
       const colorObj = coursesColorSet.find(c => c.hex.toUpperCase() === color.toUpperCase());
       return colorObj ? colorObj.lighterHex : color;
     },
+    saveNote() {
+      this.$emit('save-note', this.noteText);
+      this.isDirty = false;
+      this.collapseNote();
+    },
     handleEnter() {
-      this.$emit('trigger-shake');
+      this.saveNote();
+    },
+    handleInput() {
+      this.isDirty = this.noteText !== this.initialNote;
     },
   },
 };

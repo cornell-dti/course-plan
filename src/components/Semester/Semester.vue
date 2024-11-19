@@ -110,6 +110,7 @@
                 @course-on-click="courseOnClick"
                 @edit-course-credit="editCourseCredit"
                 @save-course="saveCourse"
+                @save-note="saveNote"
                 @add-collection="addCollection"
                 @edit-collection="editCollection"
               />
@@ -452,6 +453,19 @@ export default defineComponent({
           ` Deleted ${course.code} from ${deletedFromCollections.join(', ')}`
         );
       }
+    },
+    saveNote(uniqueID: number, note: string) {
+      editSemester(
+        store.state.currentPlan,
+        this.year,
+        this.season,
+        (semester: FirestoreSemester) => ({
+          ...semester,
+          courses: semester.courses.map(course =>
+            course.uniqueID === uniqueID ? { ...course, note } : course
+          ),
+        })
+      );
     },
     addCollection(name: string) {
       addCollection(name, []);
