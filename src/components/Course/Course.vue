@@ -1,5 +1,8 @@
 <template>
-  <div class="course-container">
+  <div 
+    class="course-container" 
+    :class="{ 'figma-shake': isShaking }"
+  >
     <div
       :class="{
         'course--min': compact,
@@ -7,6 +10,7 @@
         active: active,
       }"
       class="course"
+      :id="`course-${courseObj.uniqueID}`"
     >
       <save-course-modal
         :courseCode="courseCode"
@@ -88,7 +92,7 @@
         :courseCode="courseObj.code"
         @open-note-modal="openNoteModal"
         @open-edit-color-modal="openEditColorModal"
-        @delete-course="deleteCourscoe"
+        @delete-course="deleteCourse"
         @edit-course-credit="editCourseCredit"
         @open-save-course-modal="openSaveCourseModal"
         :getCreditRange="getCreditRange || []"
@@ -104,6 +108,7 @@
       :color="cssVars['--bg-color']"
       :expand="expandNote"
       @toggle="handleToggleNote"
+      @trigger-shake="triggerCourseCardShake"
     />
   </div>
 </template>
@@ -174,6 +179,7 @@ export default defineComponent({
       isExpanded: false,
       isNoteVisible: false,
       expandNote: false,
+      isShaking: false,
     };
   },
   computed: {
@@ -281,6 +287,12 @@ export default defineComponent({
     closeNote() {
       this.isNoteVisible = false;
     },
+    triggerCourseCardShake() {
+      this.isShaking = true;
+      setTimeout(() => {
+        this.isShaking = false;
+      }, 900); // 3 shakes * 0.3s = 0.9s
+    },
   },
   directives: {
     'click-outside': clickOutside,
@@ -294,6 +306,29 @@ export default defineComponent({
 .course-container {
   position: relative;
   padding-bottom: 20px;
+}
+
+.figma-shake {
+  animation: tilt-shaking 0.3s cubic-bezier(0.36, 0.07, 0.19, 0.97) 3;
+  transform-origin: center center;
+}
+
+@keyframes tilt-shaking {
+  0% {
+    transform: rotate(0deg) translateX(0);
+  }
+  25% {
+    transform: rotate(4deg) translateX(6px);
+  }
+  50% {
+    transform: rotate(0deg) translateX(0);
+  }
+  75% {
+    transform: rotate(-4deg) translateX(-6px);
+  }
+  100% {
+    transform: rotate(0deg) translateX(0);
+  }
 }
 
 .course {

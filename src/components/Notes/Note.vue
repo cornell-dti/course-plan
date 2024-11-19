@@ -1,7 +1,12 @@
 <template>
   <div class="note" :class="{ expanded: isExpanded }" :style="noteStyle" @click="expandNote">
     <div v-if="isExpanded" class="note-content">
-      <input v-model="noteText" placeholder="Add a note..." class="note-input" />
+      <input
+        v-model="noteText"
+        placeholder="Add a note..."
+        class="note-input"
+        @keyup.enter="handleEnter"
+      />
       <img
         src="@/assets/images/notes/arrow.svg"
         alt="Arrow icon"
@@ -66,6 +71,9 @@ export default {
     getLighterColor(color) {
       const colorObj = coursesColorSet.find(c => c.hex.toUpperCase() === color.toUpperCase());
       return colorObj ? colorObj.lighterHex : color;
+    },
+    handleEnter() {
+      this.$emit('trigger-shake');
     },
   },
 };
