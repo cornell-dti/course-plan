@@ -1,8 +1,5 @@
 <template>
-  <div 
-    class="course-container" 
-    :class="{ 'figma-shake': isShaking }"
-  >
+  <div class="course-container" :class="{ 'figma-shake': isShaking }">
     <div
       :class="{
         'course--min': compact,
