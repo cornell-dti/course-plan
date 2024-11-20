@@ -53,6 +53,7 @@ import vienRequirements, { vienAdvisors } from './majors/vien';
 import aerospaceMinorRequirements, { aerospaceMinorAdvisors } from './minors/aerospace';
 import animalSciRequirements, { animalSciAdvisors } from './minors/animal-sci';
 import appliedMathMinorRequirements, { appliedMathMinorAdvisors } from './minors/applied-math';
+import atmoSciMinorRequirements, { atmoSciMinorAdvisors } from './minors/atmo-sci';
 import buMinorRequirements, { buMinorAdvisors } from './minors/bu';
 import cogsciMinorRequirements, { cogsciMinorAdvisors } from './minors/cogsci';
 import csMinorRequirements, { csMinorAdvisors } from './minors/cs';
@@ -474,6 +475,13 @@ const json: RequirementsJson = {
       requirements: appliedMathMinorRequirements,
       advisors: appliedMathMinorAdvisors,
       abbrev: 'AppliedMath',
+    },
+    ATMOSCI: {
+      name: 'Atmospheric Science',
+      schools: ['EN'],
+      requirements: atmoSciMinorRequirements,
+      advisors: atmoSciMinorAdvisors,
+      abbrev: 'AtmoSci',
     },
     BU: {
       name: 'Business',
