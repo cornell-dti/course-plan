@@ -19,9 +19,10 @@
 </template>
 
 <script lang="ts">
+import { defineComponent } from 'vue';
 import { coursesColorSet } from '@/assets/constants/colors';
 
-export default {
+export default defineComponent({
   name: 'Note',
   props: {
     initialTranslateY: { type: String, default: '-50px' },
@@ -77,7 +78,7 @@ export default {
       this.isDirty = this.note !== this.initialNote;
     },
   },
-};
+});
 </script>
 
 <style scoped>
