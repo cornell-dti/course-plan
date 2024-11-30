@@ -144,14 +144,14 @@ export default defineComponent({
         this.curQuery = this.prevQuery;
         this.boxBorder = inactiveGray;
         this.arrowColor = inactiveGray;
-        this.arrowDirection = upsideDown;
+        this.arrowDirection = '';
       }
     },
     onSelect([acronym, name]: [string, string]) {
       const box = this.$refs.selectbox as HTMLInputElement;
       this.shown = false;
       this.arrowColor = inactiveGray;
-      this.arrowDirection = upsideDown;
+      this.arrowDirection = '';
       this.boxBorder = inactiveGray;
       this.placeholderColor = lightPlaceholderGray;
       this.$emit('on-select', acronym);
