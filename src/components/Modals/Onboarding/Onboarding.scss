@@ -389,10 +389,10 @@ input {
   }
   &-select {
     background: $white;
-    border: 1px solid $inactiveGray;
+    border: 0.5px solid $inactiveGray;
 
     box-sizing: border-box;
-    border-radius: 1px;
+    border-radius: 2px;
     width: 100%;
     font-size: 14px;
     line-height: 17px;
