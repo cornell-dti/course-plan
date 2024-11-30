@@ -132,7 +132,7 @@
               <div class="requestForm">
                 *Don't see your major/minor? We are working hard to add them soon! Get updated when
                 we add it by signing up
-                <a href="https://forms.gle/MDvVDoRapUp2VeBb9" target="_blank" class="link">here</a>
+                <a href="https://forms.gle/MDvVDoRapUp2VeBb9" target="_blank" class="link">here</a>.
               </div>
             </div>
           </div>
