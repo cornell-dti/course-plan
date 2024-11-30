@@ -370,12 +370,13 @@ input {
     }
 
     &--disabled {
-      opacity: 0.3;
+      opacity: 0.6;
       border: 1px solid $sangBlue;
       background-color: $disabledGray;
 
       &:hover {
-        opacity: 0.3;
+        opacity: 0.6;
+        cursor: not-allowed;
       }
     }
   }
