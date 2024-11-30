@@ -124,7 +124,7 @@
               <onboarding-basic-multi-dropdown
                 :availableChoices="majors"
                 :dropdownChoices="majorAcronyms"
-                add-dropdown-text="+ another major"
+                add-dropdown-text="+ Another major"
                 @on-select="selectMajor"
                 @on-remove="removeMajor"
                 @on-add="addMajor"
@@ -145,7 +145,7 @@
               <onboarding-basic-multi-dropdown
                 :availableChoices="minors"
                 :dropdownChoices="minorAcronyms"
-                add-dropdown-text="+ another minor"
+                add-dropdown-text="+ Another minor"
                 @on-select="selectMinor"
                 @on-remove="removeMinor"
                 @on-add="addMinor"
