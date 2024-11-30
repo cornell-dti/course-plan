@@ -52,7 +52,12 @@
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
 import { clickOutside } from '@/utilities';
-import { inactiveGray, yuxuanBlue, lightPlaceholderGray, upsideDown } from '@/assets/constants/scss-variables';
+import {
+  inactiveGray,
+  yuxuanBlue,
+  lightPlaceholderGray,
+  upsideDown,
+} from '@/assets/constants/scss-variables';
 
 export default defineComponent({
   props: {
