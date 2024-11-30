@@ -495,11 +495,12 @@ input {
     width: inherit;
     background: $white;
     box-shadow: -4px 4px 10px rgba(0, 0, 0, 0.25);
-    border-radius: 7px;
+    border: 0.5px solid $inactiveGray;
+    border-radius: 2px 2px 7px 7px;
     max-height: 150px;
     overflow: auto;
 
-    margin-top: 6px;
+    margin-top: 5.0px;
 
     &-item {
       height: 2.25rem;
