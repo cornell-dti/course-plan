@@ -20,10 +20,10 @@
       class="note-footer"
       :class="{ visible: isExpanded && note && !isEditing && initialNote !== '' }"
     >
-      <div class="note-footer-left">Last Updated: {{ formattedLastUpdated }}</div>
+      <div class="note-footer-left note-footer-text">Last Updated: {{ formattedLastUpdated }}</div>
       <div class="note-footer-right">
         <img
-          src="@/assets/images/edit.svg"
+          src="@/assets/images/edit-note.svg"
           alt="Edit note"
           class="note-footer-icon"
           @click.stop="startEditing"
@@ -202,7 +202,6 @@ export default defineComponent({
   justify-content: space-between;
   align-items: center;
   padding: 5px 10px;
-  font-size: 12px;
   color: #858585;
   opacity: 0;
   transform: translateY(100%);
@@ -214,8 +213,8 @@ export default defineComponent({
   transform: translateY(0);
 }
 
-.note-footer-left {
-  font-size: 12px;
+.note-footer-text {
+  opacity: 0.7;
 }
 
 .note-footer-right {
@@ -224,10 +223,9 @@ export default defineComponent({
 }
 
 .note-footer-icon {
-  width: 16px;
-  height: 16px;
+  width: 14px;
+  height: 14px;
   cursor: pointer;
-  opacity: 0.6;
   transition: opacity 0.2s ease;
 }
 
