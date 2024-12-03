@@ -44,7 +44,7 @@ type FirestoreSemestersData = {
   readonly orderByNewest: boolean;
 };
 
-type FirestoreCollegeOrMajorOrMinor = { readonly acronym: string; };
+type FirestoreCollegeOrMajorOrMinor = { readonly acronym: string };
 
 /** Represents the name of an exam a student can take for transfer credit */
 type TransferExamType = 'AP' | 'IB' | 'CASE';
@@ -56,7 +56,7 @@ type FirestoreTransferExam = {
   readonly type?: TransferExamType; // TODO @bshen migrate away
 };
 
-type FirestoreCollegeMajorMinorOrGrad = { readonly acronym: string; };
+type FirestoreCollegeMajorMinorOrGrad = { readonly acronym: string };
 type FirestoreOnboardingUserData = {
   readonly gradYear: string;
   readonly gradSem: FirestoreSemesterSeason | '';
@@ -83,7 +83,7 @@ type FirestoreCourseOptInOptOutChoices = {
    * It's for attaching completely unknown courses to a requirement
    * (e.g. opt-in CS 2112 for history requirement).
    */
-  readonly arbitraryOptIn: { readonly [requirement: string]: readonly string[]; };
+  readonly arbitraryOptIn: { readonly [requirement: string]: readonly string[] };
 };
 type FirestoreOverriddenFulfillmentChoices = {
   readonly [courseUniqueId: string]: FirestoreCourseOptInOptOutChoices;
@@ -93,7 +93,7 @@ type FirestoreUserData = {
   readonly name: FirestoreUserName;
   readonly orderByNewest: boolean;
   readonly toggleableRequirementChoices: AppToggleableRequirementChoices;
-  readonly subjectColors: { readonly [subject: string]: string; };
+  readonly subjectColors: { readonly [subject: string]: string };
   readonly uniqueIncrementer: number;
   readonly userData: FirestoreOnboardingUserData;
   // TODO: add overriddenFulfillmentChoices once we connect new requirement flow to prod.
@@ -121,18 +121,18 @@ type FirestoreTrackUsersOnboardingData = {
   undergradUsers: number;
   gradUsers: number;
   undergradAndGradUsers: number;
-  majorFrequences: { readonly [group: string]: number; };
-  minorFrequencies: { readonly [group: string]: number; };
-  collegeFrequencies: { readonly [group: string]: number; };
-  graduateProgramFrequencies: { readonly [group: string]: number; };
+  majorFrequences: { readonly [group: string]: number };
+  minorFrequencies: { readonly [group: string]: number };
+  collegeFrequencies: { readonly [group: string]: number };
+  graduateProgramFrequencies: { readonly [group: string]: number };
   averageNumberUndergradMajors: number;
   averageNumberUndergradMinors: number;
   averageNumberUndergradAPIBExams: number;
-  entranceYearFrequencies: { readonly [group: string]: number; };
-  gradYearFrequencies: { readonly [group: string]: number; };
+  entranceYearFrequencies: { readonly [group: string]: number };
+  gradYearFrequencies: { readonly [group: string]: number };
 };
 
-type FirestoreUniqueIncrementer = { readonly uniqueIncrementer: number; };
+type FirestoreUniqueIncrementer = { readonly uniqueIncrementer: number };
 
 interface CornellCourseRosterCourse {
   readonly crseId: number;
