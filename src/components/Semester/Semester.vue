@@ -46,7 +46,7 @@
     <delete-note-modal
       @delete-note="deleteNote"
       @close-delete-note="closeDeleteNoteModal"
-      v-if="isDeleteNoteOpen"
+      v-if="isDeleteNoteOpen && noteCourseUniqueID !== undefined"
       :noteCourseUniqueID="noteCourseUniqueID"
     />
     <button
