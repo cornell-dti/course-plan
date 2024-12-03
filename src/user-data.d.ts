@@ -1,6 +1,7 @@
 // Convention:
 // - all the types describing data in Firestore is prefixed with Firestore.
 // - all the data describing data converted from Firestore to be used by the app is prefixed with App.
+import { Timestamp } from 'firebase-admin/firestore';
 
 type FirestoreUserName = {
   readonly firstName: string;
@@ -18,7 +19,8 @@ type FirestoreSemesterCourse = {
   readonly creditRange: readonly [number, number];
   readonly semesters: readonly string[];
   readonly color: string;
-  readonly note?: string;
+  readonly note?: string | null;
+  readonly lastUpdated?: Timestamp | null;
 };
 
 type FirestoreSemesterPlaceholder = {
