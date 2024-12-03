@@ -1,9 +1,10 @@
 <template>
-  <div class="note" :class="{ expanded: isExpanded }" :style="noteStyle" @click="expandNote">
-    <div class="note-content" :class="{ visible: isExpanded }">
+  <div class="note" :class="{ expanded: isExpanded }" :style="noteStyle" @click="handleClick">
+    <div class="note-content" :class="{ visible: isExpanded, editing: isEditing }">
       <input
         v-model="note"
         placeholder="Add a note..."
+        :disabled="!isEditing && initialNote !== ''"
         class="note-input"
         @keyup.enter="saveNote"
         @input="handleInput"
@@ -15,25 +16,51 @@
         @click.stop="saveNote"
       />
     </div>
+    <div
+      class="note-footer"
+      :class="{ visible: isExpanded && note && !isEditing && initialNote !== '' }"
+    >
+      <div class="note-footer-left">Last Updated: {{ formattedLastUpdated }}</div>
+      <div class="note-footer-right">
+        <img
+          src="@/assets/images/edit.svg"
+          alt="Edit note"
+          class="note-footer-icon"
+          @click.stop="startEditing"
+        />
+        <img
+          src="@/assets/images/trash.svg"
+          alt="Delete note"
+          class="note-footer-icon"
+          @click.stop="$emit('open-delete-note-modal')"
+        />
+      </div>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { Timestamp } from 'firebase/firestore';
 import { coursesColorSet } from '@/assets/constants/colors';
 
 export default defineComponent({
   name: 'Note',
   props: {
-    initialTranslateY: { type: String, default: '-50px' },
-    expandedTranslateY: { type: String, default: '-10px' },
+    initialTranslateY: { type: String, required: true },
+    expandedTranslateY: { type: String, required: true },
     width: { type: String, default: '200px' },
     color: { type: String, default: '#a8e6cf' },
     initialNote: { type: String, default: '' },
+    lastUpdated: {
+      type: [Object, Date],
+      default: () => Timestamp.now(),
+    },
   },
   data() {
     return {
       isExpanded: false,
+      isEditing: false,
       note: this.initialNote,
       isDirty: false,
     };
@@ -53,26 +80,45 @@ export default defineComponent({
         backgroundColor: this.getLighterColor(this.color),
       };
     },
+    formattedLastUpdated() {
+      if (!this.lastUpdated) return '';
+
+      let date;
+      if (this.lastUpdated instanceof Date) {
+        date = this.lastUpdated;
+      } else if (typeof this.lastUpdated.toDate === 'function') {
+        date = this.lastUpdated.toDate();
+      } else {
+        return '';
+      }
+
+      return `${date.getMonth() + 1}/${date.getDate()}`;
+    },
   },
   methods: {
-    expandNote() {
+    handleClick() {
       if (!this.isExpanded) {
         this.isExpanded = true;
       }
     },
+    startEditing() {
+      this.isEditing = true;
+      this.isExpanded = true;
+    },
+    saveNote() {
+      this.$emit('save-note', this.note);
+      this.isDirty = false;
+      this.isEditing = false;
+    },
     collapseNote() {
       if (this.isExpanded) {
         this.isExpanded = false;
+        this.isEditing = false;
       }
     },
     getLighterColor(color: string) {
       const colorObj = coursesColorSet.find(c => c.hex.toUpperCase() === color.toUpperCase());
       return colorObj ? colorObj.lighterHex : color;
-    },
-    saveNote() {
-      this.$emit('save-note', this.note);
-      this.isDirty = false;
-      this.collapseNote();
     },
     handleInput() {
       this.isDirty = this.note !== this.initialNote;
@@ -145,5 +191,64 @@ export default defineComponent({
 
 .note-icon:hover {
   filter: brightness(0.7);
+}
+
+.note-footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 10px;
+  font-size: 12px;
+  color: #858585;
+  opacity: 0;
+  transform: translateY(100%);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.note-footer.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.note-footer-left {
+  font-size: 12px;
+}
+
+.note-footer-right {
+  display: flex;
+  gap: 8px;
+}
+
+.note-footer-icon {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.2s ease;
+}
+
+.note-footer-icon:hover {
+  opacity: 1;
+}
+
+.note-content.editing {
+  background-color: rgba(255, 255, 255, 0.6);
+  border-radius: 13px;
+  margin: 0 10px;
+  padding: 0 5px;
+}
+
+.note-content.editing .note-input {
+  padding: 5px 5px;
+  margin-right: 0;
+  background-color: transparent;
+}
+
+.note-content.editing .note-icon {
+  margin-right: 5px;
 }
 </style>

@@ -104,7 +104,9 @@
       :width="'calc(102.8% - 10px)'"
       :color="cssVars['--bg-color']"
       :initialNote="courseObj.note || ''"
+      :lastUpdated="courseObj.lastUpdated"
       @save-note="saveNote"
+      @open-delete-note-modal="openDeleteNoteModal"
       ref="note"
       v-click-outside="handleClickOutsideNote"
     />
@@ -172,6 +174,7 @@ export default defineComponent({
     'delete-course-from-collection': (courseCode: string) => typeof courseCode === 'string',
     'save-note': (uniqueID: number, note: string) =>
       typeof uniqueID === 'number' && typeof note === 'string',
+    'open-delete-note-modal': (uniqueID: number) => typeof uniqueID === 'number',
   },
   data() {
     return {
@@ -343,6 +346,9 @@ export default defineComponent({
       } else {
         this.closeNote();
       }
+    },
+    openDeleteNoteModal() {
+      this.$emit('open-delete-note-modal', this.courseObj.uniqueID);
     },
   },
   directives: {

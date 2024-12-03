@@ -43,6 +43,12 @@
       @close-clear-sem="closeClearSemesterModal"
       v-if="isClearSemesterOpen"
     />
+    <delete-note-modal
+      @delete-note="deleteNote"
+      @close-delete-note="closeDeleteNoteModal"
+      v-if="isDeleteNoteOpen"
+      :noteCourseUniqueID="noteCourseUniqueID"
+    />
     <button
       v-if="isFirstSem"
       class="semester-addSemesterButton"
@@ -113,6 +119,7 @@
                 @save-note="saveNote"
                 @add-collection="addCollection"
                 @edit-collection="editCollection"
+                @open-delete-note-modal="openDeleteNoteModal"
               />
               <placeholder
                 v-else
@@ -145,10 +152,12 @@
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
 import draggable from 'vuedraggable';
+import { Timestamp } from 'firebase/firestore';
 import Course from '@/components/Course/Course.vue';
 import Placeholder from '@/components/Course/Placeholder.vue';
 import NewCourseModal from '@/components/Modals/NewCourse/NewCourseModal.vue';
 import CourseConflictModal from '@/components/Modals/NewCourse/CourseConflictModal.vue';
+import DeleteNoteModal from '@/components/Modals/DeleteNoteModal.vue';
 import Confirmation from '@/components/Modals/Confirmation.vue';
 import SemesterMenu from '@/components/Modals/SemesterMenu.vue';
 import DeleteSemester from '@/components/Modals/DeleteSemester.vue';
@@ -197,6 +206,7 @@ export default defineComponent({
     ClearSemester,
     NewCourseModal,
     CourseConflictModal,
+    DeleteNoteModal,
     SemesterMenu,
     Placeholder,
   },
@@ -221,6 +231,8 @@ export default defineComponent({
       conflictCourse: {} as FirestoreSemesterCourse,
       courseConflicts: new Set<string[]>(),
       selfCheckRequirements: [] as readonly RequirementWithIDSourceType[],
+      isDeleteNoteOpen: false,
+      noteCourseUniqueID: undefined as number | undefined,
 
       seasonImg: {
         Fall: fall,
@@ -465,8 +477,28 @@ export default defineComponent({
         (semester: FirestoreSemester) => ({
           ...semester,
           courses: semester.courses.map(course =>
-            course.uniqueID === uniqueID ? { ...course, note } : course
+            course.uniqueID === uniqueID
+              ? {
+                  ...course,
+                  note,
+                  lastUpdated: Timestamp.now(),
+                }
+              : course
           ),
+        })
+      );
+    },
+    deleteNote(uniqueID: number) {
+      editSemester(
+        store.state.currentPlan,
+        this.year,
+        this.season,
+        (semester: FirestoreSemester) => ({
+          ...semester,
+          courses: semester.courses.map(course => {
+            const { note, lastUpdated, ...rest } = course;
+            return course.uniqueID === uniqueID ? rest : course;
+          }),
         })
       );
     },
@@ -646,6 +678,14 @@ export default defineComponent({
     },
     closeDeleteSemesterModal() {
       this.isDeleteSemesterOpen = false;
+    },
+    openDeleteNoteModal(uniqueID: number) {
+      this.noteCourseUniqueID = uniqueID;
+      this.isDeleteNoteOpen = true;
+    },
+    closeDeleteNoteModal() {
+      this.isDeleteNoteOpen = false;
+      this.noteCourseUniqueID = undefined;
     },
     deleteSemester(season: string, year: number) {
       this.$emit('delete-semester', season, year);
