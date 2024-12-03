@@ -130,6 +130,8 @@ import trashGrayIcon from '@/assets/images/trash-gray.svg';
 import trashRedIcon from '@/assets/images/trash.svg';
 import Note from '../Notes/Note.vue';
 
+// MinimalNoteComponent is a representation of everything required for a functional,
+// but minimal Note component to work statefully.
 interface MinimalNoteComponent {
   note: string;
   isDirty: boolean;
@@ -188,6 +190,9 @@ export default defineComponent({
       trashIcon: trashGrayIcon, // Default icon
       courseCode: '',
       isExpanded: false,
+      // isNotVisible represents a small open 'portrusion' indicating that there is a note
+      // for the course in question. The note itself will not be visible without `isExpanded`
+      // being true as well.
       isNoteVisible: Boolean(this.courseObj.note),
       isShaking: false,
     };
@@ -290,6 +295,9 @@ export default defineComponent({
       if (!this.isNoteVisible) {
         this.isNoteVisible = true;
         this.menuOpen = false;
+        // NOTE: should use $nextTick, as the browser engine could optimize away the
+        // UI update by applying changes in the same render pass. Also important for allowing
+        // for time for the note component to be rendered before attempting to access it.
         this.$nextTick(() => {
           const noteComponent = this.$refs.note as MinimalNoteComponent | undefined;
           if (noteComponent) {
@@ -301,7 +309,7 @@ export default defineComponent({
         if (!noteComponent) {
           return;
         }
-        // Note already open — trigger a shake.
+        // Note already open — trigger a shake to indicate this to the user.
         if (noteComponent.isExpanded) {
           this.triggerCourseCardShake();
         } else {
@@ -324,10 +332,14 @@ export default defineComponent({
       }, 900); // 3 shakes * 0.3s = 0.9s
     },
     saveNote(note: string) {
+      if (!note || note === this.courseObj.note) {
+        return;
+      }
       this.$emit('save-note', this.courseObj.uniqueID, note);
     },
     handleClickOutsideNote(event: MouseEvent) {
-      // Don't count a click on the open note or three dots as a click outside.
+      // Don't count a click on the open note (.courseMenu) or three dots (.course-dotRow)
+      // as a click outside.
       const target = event.target as HTMLElement;
       if (target.closest('.courseMenu') || target.closest('.course-dotRow')) {
         return;
@@ -340,6 +352,7 @@ export default defineComponent({
       }
 
       if (noteComponent.isDirty) {
+        // Warn if the user is trying to leave a note with unsaved changes.
         this.triggerCourseCardShake();
       } else if (noteComponent.note && this.isNoteVisible) {
         noteComponent.collapseNote();
@@ -355,6 +368,8 @@ export default defineComponent({
     'click-outside': clickOutside,
   },
   watch: {
+    // NOTE: this is required for reactive deletion of notes client-side after the deletion
+    // modal is confirmed, as isNoteVisible is not reactive.
     'courseObj.note': {
       handler(newNote) {
         if (!newNote) {
@@ -375,6 +390,7 @@ export default defineComponent({
   padding-bottom: 20px;
 }
 
+// Emulates a slight side-to-side sway à la Figma micro-interaction.
 .figma-shake {
   animation: tilt-shaking 0.3s cubic-bezier(0.36, 0.07, 0.19, 0.97) 3;
   transform-origin: center center;

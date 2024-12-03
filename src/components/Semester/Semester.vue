@@ -481,6 +481,8 @@ export default defineComponent({
               ? {
                   ...course,
                   note,
+                  // We know that this must be an update as otherwise the frontend wouldn't allow
+                  // saveNote to be called.
                   lastUpdated: Timestamp.now(),
                 }
               : course
@@ -496,6 +498,8 @@ export default defineComponent({
         (semester: FirestoreSemester) => ({
           ...semester,
           courses: semester.courses.map(course =>
+            // NOTE: we must explicitly set note and lastUpdated to null, as Firestore cannot handle
+            // undefined values and extracting them would not be type-safe.
             course.uniqueID === uniqueID ? { ...course, note: null, lastUpdated: null } : course
           ),
         })

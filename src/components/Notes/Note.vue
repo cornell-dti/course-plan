@@ -1,6 +1,9 @@
 <template>
   <div class="note" :class="{ expanded: isExpanded }" :style="noteStyle" @click="handleClick">
     <div class="note-content" :class="{ visible: isExpanded, editing: isEditing }">
+      <!-- NOTE: the disabled attribute is used to prevent the user from being able to edit the note
+      when it is expanded, but the edit icon has not been pressed. This only applies when the note
+      is not empty (already had something written in it previously and read from the database). -->
       <input
         v-model="note"
         placeholder="Add a note..."
@@ -47,13 +50,16 @@ import { coursesColorSet } from '@/assets/constants/colors';
 export default defineComponent({
   name: 'Note',
   props: {
-    initialTranslateY: { type: String, required: true },
-    expandedTranslateY: { type: String, required: true },
+    initialTranslateY: { type: String, default: '-50px', required: true },
+    expandedTranslateY: { type: String, default: '-10px', required: true },
     width: { type: String, default: '200px' },
     color: { type: String, default: '#a8e6cf' },
     initialNote: { type: String, default: '' },
     lastUpdated: {
       type: [Object, Date],
+      // NOTE: we must use a Timestamp object here, as this is the internal type used by Firestore
+      // for storing the created JavaScript Date object. Helper functions are available by default
+      // on the Timestamp object to convert between the two.
       default: () => Timestamp.now(),
     },
   },
@@ -80,6 +86,7 @@ export default defineComponent({
         backgroundColor: this.getLighterColor(this.color),
       };
     },
+    // Displays
     formattedLastUpdated() {
       if (!this.lastUpdated) return '';
 
