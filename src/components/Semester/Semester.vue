@@ -495,12 +495,12 @@ export default defineComponent({
         this.season,
         (semester: FirestoreSemester) => ({
           ...semester,
-          courses: semester.courses.map(course => {
-            const { note, lastUpdated, ...rest } = course;
-            return course.uniqueID === uniqueID ? rest : course;
-          }),
+          courses: semester.courses.map(course =>
+            course.uniqueID === uniqueID ? { ...course, note: null, lastUpdated: null } : course
+          ),
         })
       );
+      this.closeDeleteNoteModal();
     },
     addCollection(name: string) {
       addCollection(name, []);

@@ -354,6 +354,16 @@ export default defineComponent({
   directives: {
     'click-outside': clickOutside,
   },
+  watch: {
+    'courseObj.note': {
+      handler(newNote) {
+        if (!newNote) {
+          this.isNoteVisible = false;
+        }
+      },
+      immediate: true,
+    },
+  },
 });
 </script>
 
