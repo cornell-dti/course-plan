@@ -1,5 +1,5 @@
 <template>
-  <div class="course-container">
+  <div class="course-container" :class="{ 'figma-shake': isShaking }">
     <div
       :class="{
         'course--min': compact,
@@ -7,6 +7,7 @@
         active: active,
       }"
       class="course"
+      :id="`course-${courseObj.uniqueID}`"
     >
       <save-course-modal
         :courseCode="courseCode"
@@ -88,7 +89,7 @@
         :courseCode="courseObj.code"
         @open-note-modal="openNoteModal"
         @open-edit-color-modal="openEditColorModal"
-        @delete-course="deleteCourscoe"
+        @delete-course="deleteCourse"
         @edit-course-credit="editCourseCredit"
         @open-save-course-modal="openSaveCourseModal"
         :getCreditRange="getCreditRange || []"
@@ -102,14 +103,18 @@
       :expandedTranslateY="'-35px'"
       :width="'calc(102.8% - 10px)'"
       :color="cssVars['--bg-color']"
-      :expand="expandNote"
-      @toggle="handleToggleNote"
+      :initialNote="courseObj.note || ''"
+      :lastUpdated="courseObj.lastUpdated"
+      @save-note="saveNote"
+      @open-delete-note-modal="openDeleteNoteModal"
+      ref="note"
+      v-click-outside="handleClickOutsideNote"
     />
   </div>
 </template>
 
 <script lang="ts">
-import { CSSProperties, PropType, defineComponent } from 'vue';
+import { PropType, defineComponent } from 'vue';
 import CourseMenu from '@/components/Modals/CourseMenu.vue';
 import CourseCaution from '@/components/Course/CourseCaution.vue';
 import SaveCourseModal from '@/components/Modals/SaveCourseModal.vue';
@@ -124,6 +129,16 @@ import EditColor from '../Modals/EditColor.vue';
 import trashGrayIcon from '@/assets/images/trash-gray.svg';
 import trashRedIcon from '@/assets/images/trash.svg';
 import Note from '../Notes/Note.vue';
+
+// MinimalNoteComponent is a representation of everything required for a functional,
+// but minimal Note component to work statefully.
+interface MinimalNoteComponent {
+  note: string;
+  isDirty: boolean;
+  isExpanded: boolean;
+  collapseNote: () => void;
+  expandNote: () => void;
+}
 
 export default defineComponent({
   name: 'Course',
@@ -159,6 +174,9 @@ export default defineComponent({
       typeof deletedFromCollection === 'object',
     'add-collection': (name: string) => typeof name === 'string',
     'delete-course-from-collection': (courseCode: string) => typeof courseCode === 'string',
+    'save-note': (uniqueID: number, note: string) =>
+      typeof uniqueID === 'number' && typeof note === 'string',
+    'open-delete-note-modal': (uniqueID: number) => typeof uniqueID === 'number',
   },
   data() {
     return {
@@ -172,8 +190,11 @@ export default defineComponent({
       trashIcon: trashGrayIcon, // Default icon
       courseCode: '',
       isExpanded: false,
-      isNoteVisible: false,
-      expandNote: false,
+      // isNotVisible represents a small open 'portrusion' indicating that there is a note
+      // for the course in question. The note itself will not be visible without `isExpanded`
+      // being true as well.
+      isNoteVisible: Boolean(this.courseObj.note),
+      isShaking: false,
     };
   },
   computed: {
@@ -196,10 +217,10 @@ export default defineComponent({
       return `${this.courseObj.credits} credits`;
     },
 
-    cssVars(): CSSProperties {
+    cssVars(): Record<string, string> {
       return {
         '--bg-color': `#${this.courseObj.color}`,
-      } as CSSProperties;
+      };
     },
   },
   methods: {
@@ -270,20 +291,93 @@ export default defineComponent({
     unhoverTrashIcon() {
       this.trashIcon = trashGrayIcon;
     },
-    handleToggleNote() {
-      this.expandNote = !this.expandNote;
-    },
     openNoteModal() {
-      this.isNoteVisible = true;
+      if (!this.isNoteVisible) {
+        this.isNoteVisible = true;
+        this.menuOpen = false;
+        // NOTE: should use $nextTick, as the browser engine could optimize away the
+        // UI update by applying changes in the same render pass. Also important for allowing
+        // for time for the note component to be rendered before attempting to access it.
+        this.$nextTick(() => {
+          const noteComponent = this.$refs.note as MinimalNoteComponent | undefined;
+          if (noteComponent) {
+            noteComponent.expandNote();
+          }
+        });
+      } else {
+        const noteComponent = this.$refs.note as MinimalNoteComponent | undefined;
+        if (!noteComponent) {
+          return;
+        }
+        // Note already open — trigger a shake to indicate this to the user.
+        if (noteComponent.isExpanded) {
+          this.triggerCourseCardShake();
+        } else {
+          noteComponent.expandNote();
+        }
+      }
       this.menuOpen = false;
-      this.expandNote = true;
     },
     closeNote() {
-      this.isNoteVisible = false;
+      // NOTE: this function hides the note entirely!
+      // Grant time for the slide-back-in animation to play out.
+      setTimeout(() => {
+        this.isNoteVisible = false;
+      }, 300);
+    },
+    triggerCourseCardShake() {
+      this.isShaking = true;
+      setTimeout(() => {
+        this.isShaking = false;
+      }, 900); // 3 shakes * 0.3s = 0.9s
+    },
+    saveNote(note: string) {
+      if (!note || note === this.courseObj.note) {
+        return;
+      }
+      this.$emit('save-note', this.courseObj.uniqueID, note);
+    },
+    handleClickOutsideNote(event: MouseEvent) {
+      // Don't count a click on the open note (.courseMenu) or three dots (.course-dotRow)
+      // as a click outside.
+      const target = event.target as HTMLElement;
+      if (target.closest('.courseMenu') || target.closest('.course-dotRow')) {
+        return;
+      }
+
+      const noteComponent = this.$refs.note as MinimalNoteComponent | undefined;
+
+      if (!noteComponent || !this.isNoteVisible) {
+        return;
+      }
+
+      if (noteComponent.isDirty) {
+        // Warn if the user is trying to leave a note with unsaved changes.
+        this.triggerCourseCardShake();
+      } else if (noteComponent.note && this.isNoteVisible) {
+        noteComponent.collapseNote();
+      } else {
+        this.closeNote();
+      }
+    },
+    openDeleteNoteModal() {
+      this.$emit('open-delete-note-modal', this.courseObj.uniqueID);
     },
   },
   directives: {
     'click-outside': clickOutside,
+  },
+  watch: {
+    // NOTE: this is required for reactive deletion of notes client-side after the deletion
+    // modal is confirmed, as isNoteVisible is not reactive.
+    'courseObj.note': {
+      handler(newNote) {
+        if (!newNote) {
+          this.isNoteVisible = false;
+        }
+      },
+      immediate: true,
+    },
   },
 });
 </script>
@@ -294,6 +388,30 @@ export default defineComponent({
 .course-container {
   position: relative;
   padding-bottom: 20px;
+}
+
+// Emulates a slight side-to-side sway à la Figma micro-interaction.
+.figma-shake {
+  animation: tilt-shaking 0.3s cubic-bezier(0.36, 0.07, 0.19, 0.97) 3;
+  transform-origin: center center;
+}
+
+@keyframes tilt-shaking {
+  0% {
+    transform: rotate(0deg) translateX(0);
+  }
+  25% {
+    transform: rotate(4deg) translateX(6px);
+  }
+  50% {
+    transform: rotate(0deg) translateX(0);
+  }
+  75% {
+    transform: rotate(-4deg) translateX(-6px);
+  }
+  100% {
+    transform: rotate(0deg) translateX(0);
+  }
 }
 
 .course {
