@@ -140,7 +140,8 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
       'Courses must be from 3 groups.': {
         checker: [
           ...engineeringLiberalArtsGroups.map(group => (course: Course): boolean =>
-              group.some(distribution => hasCategory(course, distribution) ?? false)),
+            group.some(distribution => hasCategory(course, distribution) ?? false)
+          ),
         ],
         fulfilledBy: 'courses',
         perSlotMinCount: [1, 1, 1, 1, 1, 1],
