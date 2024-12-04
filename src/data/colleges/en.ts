@@ -10,22 +10,40 @@ import {
 import { AdvisorGroup } from '../../tools/advisors/types';
 import { lastNameRange, lastNameRanges } from '../../tools/advisors/checkers';
 
-const engineeringLiberalArtsDistributions: readonly string[] = [
-  'CA',
-  'HA',
-  'LA',
-  'LAD',
-  'KCM',
-  'SBA',
-  'FL',
-  'CE',
-  'ALC',
-  'SCD',
-  'HST',
-  'ETM',
-  'SSC',
-  'GLC',
-];
+const engineeringLiberalArtsGroups: string[][] = Object.values({
+  'Group 1': [
+    'CA-AAP',
+    'CA-AG',
+    'CA-AS',
+    'CA-HE',
+    'LA-AAP',
+    'LA-AG',
+    'LA-AS',
+    'LAD-HE',
+    'ALC-AAP',
+    'ALC-AS',
+    'ALC-HA',
+    'SCD-AAP',
+    'SCD-AS',
+    'SCD-HA',
+  ],
+  'Group 2': ['HA-AAP', 'HA-AG', 'HA-AS', 'HA-HE', 'HST-AAP', 'HST-AS', 'HST-HA'],
+  'Group 3': ['KCM-AAP', 'KCM-AG', 'KCM-AS', 'KCM-HE', 'ETM-AAP', 'ETM-AS', 'ETM-HA'],
+  'Group 4': [
+    'SBA-AAP',
+    'SBA-AG',
+    'SBA-AS',
+    'SBA-HE',
+    'SSC-AAP',
+    'SSC-AS',
+    'SSC-HA',
+    'GLC-AAP',
+    'GLC-AS',
+    'GLC-HA',
+  ],
+  'Group 5': ['FL-AAP', 'FL-AG'],
+  'Group 6': ['CE-EN'],
+});
 
 const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
   {
@@ -111,37 +129,30 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
       'https://www.engineering.cornell.edu/students/undergraduate-students/advising/liberal-studies',
     checker: [
       (course: Course): boolean =>
-        engineeringLiberalArtsDistributions.some(
-          distribution => hasCategory(course, distribution) ?? false
+        engineeringLiberalArtsGroups.some(group =>
+          group.some(distribution => hasCategory(course, distribution) ?? false)
         ) || courseIsForeignLang(course),
     ],
     fulfilledBy: 'courses',
     perSlotMinCount: [6],
     slotNames: ['Course'],
     additionalRequirements: {
-      'Courses must be from 3 categories.': {
+      'Courses must be from 3 groups.': {
         checker: [
-          (course: Course): boolean =>
-            (course.catalogDistr?.includes('LA') || course.catalogDistr?.includes('LAD')) ?? false,
-          ...engineeringLiberalArtsDistributions
-            .filter(it => it !== 'LA' && it !== 'LAD')
-            .map(distribution => (course: Course): boolean =>
-              hasCategory(course, distribution) ?? false
-            ),
+          ...engineeringLiberalArtsGroups.map(group => (course: Course): boolean =>
+            group.some(distribution => hasCategory(course, distribution) ?? false)
+          ),
         ],
         fulfilledBy: 'courses',
-        perSlotMinCount: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-        slotNames: [
-          'LA',
-          ...engineeringLiberalArtsDistributions.filter(it => it !== 'LA' && it !== 'LAD'),
-        ],
+        perSlotMinCount: [1, 1, 1, 1, 1, 1],
+        slotNames: ['Group 1', 'Group 2', 'Group 3', 'Group 4', 'Group 5', 'Group 6'],
         minNumberOfSlots: 3,
       },
       'Courses must have at least 18 credits.': {
         checker: [
           (course: Course): boolean =>
-            engineeringLiberalArtsDistributions.some(
-              distribution => hasCategory(course, distribution) ?? false
+            engineeringLiberalArtsGroups.some(group =>
+              group.some(distribution => hasCategory(course, distribution) ?? false)
             ) || courseIsForeignLang(course),
         ],
         fulfilledBy: 'credits',
@@ -153,8 +164,8 @@ const engineeringRequirements: readonly CollegeOrMajorRequirement[] = [
             const { catalogNbr } = course;
             return (
               !ifCodeMatch(catalogNbr, '1***') &&
-              (engineeringLiberalArtsDistributions.some(
-                category => hasCategory(course, category) ?? false
+              (engineeringLiberalArtsGroups.some(group =>
+                group.some(distribution => hasCategory(course, distribution) ?? false)
               ) ||
                 courseIsForeignLang(course))
             );
