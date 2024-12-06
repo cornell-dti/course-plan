@@ -343,7 +343,7 @@ export const engMigrations: RequirementMigration[] = [
       perSlotMinCount: [6],
       slotNames: ['Course'],
       additionalRequirements: {
-        'Courses must be from 3 categories.': {
+        'Courses must be from 3 groups.': {
           checker: [
             ...previousEngineeringLiberalArtsGroups.map(group => (course: Course): boolean =>
               group.some(distribution => hasCategory(course, distribution) ?? false)
