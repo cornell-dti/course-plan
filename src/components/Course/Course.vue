@@ -80,27 +80,25 @@
           </div>
         </div>
       </div>
-      <course-menu
-        v-if="menuOpen"
-        :courseObj="courseObj"
-        :semesterIndex="semesterIndex"
-        :isCompact="compact"
-        :courseColor="courseObj.color"
-        :courseCode="courseObj.code"
-        @open-note-modal="openNoteModal"
-        @open-edit-color-modal="openEditColorModal"
-        @delete-course="deleteCourse"
-        @edit-course-credit="editCourseCredit"
-        @open-save-course-modal="openSaveCourseModal"
-        :getCreditRange="getCreditRange || []"
-        v-click-outside="closeMenuIfOpen"
-      />
     </div>
+    <course-menu
+      v-if="menuOpen"
+      :courseObj="courseObj"
+      :semesterIndex="semesterIndex"
+      :isCompact="compact"
+      :courseColor="courseObj.color"
+      :courseCode="courseObj.code"
+      @open-note-modal="openNoteModal"
+      @open-edit-color-modal="openEditColorModal"
+      @delete-course="deleteCourse"
+      @edit-course-credit="editCourseCredit"
+      @open-save-course-modal="openSaveCourseModal"
+      :getCreditRange="getCreditRange || []"
+      v-click-outside="closeMenuIfOpen"
+    />
     <Note
       v-if="isNoteVisible"
       class="note"
-      :initialTranslateY="'-67px'"
-      :expandedTranslateY="'-35px'"
       :width="'calc(102.8% - 10px)'"
       :color="cssVars['--bg-color']"
       :initialNote="courseObj.note || ''"
@@ -109,6 +107,7 @@
       @open-delete-note-modal="openDeleteNoteModal"
       ref="note"
       v-click-outside="handleClickOutsideNote"
+      :noteId="`course-${courseObj.uniqueID}`"
     />
   </div>
 </template>
@@ -137,7 +136,7 @@ interface MinimalNoteComponent {
   isDirty: boolean;
   isExpanded: boolean;
   collapseNote: () => void;
-  expandNote: () => void;
+  expandNote: () => void; // Note: This function does not exist in the Note component, but is used here.
 }
 
 export default defineComponent({
@@ -387,7 +386,6 @@ export default defineComponent({
 
 .course-container {
   position: relative;
-  padding-bottom: 20px;
 }
 
 // Emulates a slight side-to-side sway à la Figma micro-interaction.
@@ -417,7 +415,6 @@ export default defineComponent({
 .course {
   box-shadow: 0px 0px 10px 4px rgba(0, 0, 0, 0.055);
   position: relative;
-  z-index: 1;
   box-sizing: border-box;
   border-radius: 0.5rem;
   display: flex;
@@ -425,6 +422,7 @@ export default defineComponent({
   background-color: $white;
   height: 5.625rem;
   cursor: grab;
+  z-index: 1;
 
   &:hover {
     background: $white;
