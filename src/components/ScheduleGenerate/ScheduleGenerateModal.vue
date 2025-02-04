@@ -203,7 +203,7 @@ export default defineComponent({
         const secondScheduleEntries = Array.from(first.schedule.entries());
         return firstScheduleEntries.every(([firstKey, firstValue], index) => {
           const [secondKey, secondValue] = secondScheduleEntries[index];
-          return firstKey === secondKey && _.isEqual(firstValue, secondValue);
+          return _.isEqual(firstKey, secondKey) && _.isEqual(firstValue, secondValue);
         });
       }
 
