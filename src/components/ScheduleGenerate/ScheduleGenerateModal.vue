@@ -59,11 +59,23 @@
             <button
               @click="() => paginate(1)"
               :disabled="currentPage === generatedScheduleOutputs.length"
-              :class="'footer-button' + (currentPage === generatedScheduleOutputs.length ? ' footer-button-disabled' : ' ')"
+              :class="
+                'footer-button' +
+                (currentPage === generatedScheduleOutputs.length ? ' footer-button-disabled' : ' ')
+              "
             >
-              <span :class="currentPage === generatedScheduleOutputs.length ? 'footer-text-disabled' : 'footer-text'">Next</span>
+              <span
+                :class="
+                  currentPage === generatedScheduleOutputs.length
+                    ? 'footer-text-disabled'
+                    : 'footer-text'
+                "
+                >Next</span
+              >
             </button>
-            <span class="pagination-text ml-25">Page {{ currentPage }}/{{ generatedScheduleOutputs.length }}</span>
+            <span class="pagination-text ml-25"
+              >Page {{ currentPage }}/{{ generatedScheduleOutputs.length }}</span
+            >
           </div>
           <div class="download-button" @click="downloadSchedule">
             <svg
@@ -339,7 +351,10 @@ export default defineComponent({
       this.currentPage = 1;
     },
     paginate(direction: number) {
-      if ((this.currentPage < this.generatedScheduleOutputs.length && direction === 1) || (this.currentPage > 1 && direction === -1)) {
+      if (
+        (this.currentPage < this.generatedScheduleOutputs.length && direction === 1) ||
+        (this.currentPage > 1 && direction === -1)
+      ) {
         this.currentPage += direction;
       }
     },
