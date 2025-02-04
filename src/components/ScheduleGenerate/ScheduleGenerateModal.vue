@@ -168,7 +168,7 @@ export default defineComponent({
       );
     },
     generateSchedules() {
-      const outputs: {
+      const output: {
         semester: string;
         schedule: Map<Course, Timeslot[]>;
         fulfilledRequirements: Map<string, Requirement[]>;
@@ -191,31 +191,7 @@ export default defineComponent({
         );
       }
 
-      /** Checks if two `GeneratedScheduleOutput` objects `first` and `second` are equal. Outputs
-       *  are equal if all three of the following conditions are true: outputs are in the same
-       *  semester, they contain the same courses in the same order, and they have the same total credits.
-       */
-      function isEqual(first: GeneratedScheduleOutput, second: GeneratedScheduleOutput) {
-        if (first.totalCredits !== second.totalCredits || first.semester !== second.semester) {
-          return false;
-        }
-
-        const firstScheduleEntries = Array.from(first.schedule.entries());
-        const secondScheduleEntries = Array.from(first.schedule.entries());
-        if (firstScheduleEntries.length !== secondScheduleEntries.length) {
-          return false;
-        }
-        for (let i = 0; i < firstScheduleEntries.length; i += 1) {
-          if (firstScheduleEntries[i][0].code !== secondScheduleEntries[i][0].code) {
-            return false;
-          }
-        }
-
-        return true;
-      }
-
-      const startTime = Date.now();
-      while (outputs.length < 5 && Date.now() - startTime < 1000) {
+      for (let i = 0; i < 5; i += 1) {
         const courses = this.courses.map(
           course =>
             new Course(
@@ -335,11 +311,10 @@ export default defineComponent({
         momentary.fulfilledRequirements = newFullfilledReqs;
         momentary.totalCredits += deltaCredits;
 
-        if (outputs.every(output => !isEqual(output, momentary))) {
-          outputs.push(momentary);
-        }
+        output.push(momentary);
       }
-      this.generatedScheduleOutputs = outputs;
+
+      this.generatedScheduleOutputs = output;
     },
     regenerateSchedule() {
       this.generateSchedules();

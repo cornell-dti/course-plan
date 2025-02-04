@@ -29,20 +29,28 @@ export default class ScheduleGenerator {
         let performAdditionFlag = true;
         const onlyCourseRequirement = course.requirements[0].name ?? 'nonsense-requirement';
 
+        // New logic: must be free for *all* time slots.
         if (
           actualFulfilledRequirements.has(onlyCourseRequirement) ||
           fulfilledRequirements.has(course.code) ||
           creditLimit - course.credits < 0
         ) {
           performAdditionFlag = false;
+        } else {
+          for (const timeslot of course.timeslots) {
+            if (ScheduleGenerator.isTimeslotOccupied(schedule, timeslot)) {
+              performAdditionFlag = false;
+            }
+          }
         }
 
-        if (
-          performAdditionFlag &&
-          course.timeslots.some(
-            timeslot => !ScheduleGenerator.isTimeslotOccupied(schedule, timeslot)
-          )
-        ) {
+        course.timeslots.forEach(timeslot => {
+          if (ScheduleGenerator.isTimeslotOccupied(schedule, timeslot)) {
+            performAdditionFlag = false;
+          }
+        });
+
+        if (performAdditionFlag) {
           ScheduleGenerator.addToSchedule(schedule, course, course.timeslots);
           creditLimit -= course.credits;
           totalCredits += course.credits;
@@ -53,6 +61,7 @@ export default class ScheduleGenerator {
         }
       }
     });
+
     return { semester, schedule, fulfilledRequirements, totalCredits };
   }
 
