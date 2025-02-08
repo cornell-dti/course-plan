@@ -133,7 +133,7 @@ export default defineComponent({
         height: `${visibleHeight}px`, // The height of the note itself
         width: this.width,
         position: 'relative',
-        botton: '0',
+        marginBottom: '-10px',
         backgroundColor: this.getLighterColor(this.color, 0.8),
       };
     },
@@ -161,6 +161,7 @@ export default defineComponent({
     handleClick() {
       if (!this.isExpanded) {
         this.isExpanded = true;
+        this.$emit('note-state-change', true);
       }
     },
     startEditing() {
@@ -177,6 +178,7 @@ export default defineComponent({
       if (this.isExpanded) {
         this.isExpanded = false;
         this.isEditing = false;
+        this.$emit('note-state-change', false);
       }
     },
     // getLighterColor(color: string) {

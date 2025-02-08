@@ -105,6 +105,7 @@
       :lastUpdated="courseObj.lastUpdated"
       @save-note="saveNote"
       @open-delete-note-modal="openDeleteNoteModal"
+      @note-state-change="handleNoteStateChange"
       ref="note"
       v-click-outside="handleClickOutsideNote"
       :noteId="`course-${courseObj.uniqueID}`"
@@ -176,6 +177,8 @@ export default defineComponent({
     'save-note': (uniqueID: number, note: string) =>
       typeof uniqueID === 'number' && typeof note === 'string',
     'open-delete-note-modal': (uniqueID: number) => typeof uniqueID === 'number',
+    'note-state-change': (uniqueID: number, isExpanded: boolean) =>
+      typeof uniqueID === 'number' && typeof isExpanded === 'boolean',
   },
   data() {
     return {
@@ -361,6 +364,9 @@ export default defineComponent({
     },
     openDeleteNoteModal() {
       this.$emit('open-delete-note-modal', this.courseObj.uniqueID);
+    },
+    handleNoteStateChange(isExpanded: boolean) {
+      this.$emit('note-state-change', this.courseObj.uniqueID, isExpanded);
     },
   },
   directives: {
@@ -556,20 +562,21 @@ export default defineComponent({
 .active {
   border: 1px solid $yuxuanBlue;
 }
-.rectangle {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%) translateY(-65px);
-  width: calc(106% - #{$colored-grabber-width});
-  height: 80px;
-  background-color: #a8e6cf;
-  border-radius: 12.49px;
-  cursor: pointer;
-  z-index: 0;
-  transition: transform 0.3s ease;
-}
+// Hannah's note: are these even needed?
+// .rectangle {
+//   position: absolute;
+//   left: 50%;
+//   transform: translateX(-50%) translateY(-65px);
+//   width: calc(106% - #{$colored-grabber-width});
+//   height: 80px;
+//   background-color: #a8e6cf;
+//   border-radius: 12.49px;
+//   cursor: pointer;
+//   z-index: 0;
+//   transition: transform 0.3s ease;
+// }
 
-.rectangle.expanded {
-  transform: translateX(-50%) translateY(0px);
-}
+// .rectangle.expanded {
+//   transform: translateX(-50%) translateY(0px);
+// }
 </style>
