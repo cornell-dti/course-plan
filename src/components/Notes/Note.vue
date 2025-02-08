@@ -105,7 +105,7 @@ export default defineComponent({
     note: 'updateSvgState', // Update SVG whenever note changes
   },
   computed: {
-    noteStyle() {
+    noteStyle(): Record<string, string> {
       // Parse the heights and translate values
       const trueExpandedTranslateY =
         this.isExpanded && this.initialNote === '' // note is empty
@@ -132,7 +132,7 @@ export default defineComponent({
         transform: `translateX(-50%) translateY(${translateY}px)`,
         height: `${visibleHeight}px`, // The height of the note itself
         width: this.width,
-        position: 'relative',
+        position: 'relative' as const,
         marginBottom: '-10px',
         backgroundColor: this.getLighterColor(this.color, 0.8),
       };
