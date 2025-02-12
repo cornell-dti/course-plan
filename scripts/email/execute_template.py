@@ -4,7 +4,10 @@ import resend
 from typing import List
 
 # Load relevant template to run this script on.
-from templates.versioned_preenroll.sp25.current_freshman import *
+# from templates.versioned_preenroll.sp25.current_freshman import *
+from templates.feb2025_vday.vday import *
+
+# from templates.dryrun import *
 
 # Load environment variables from .env
 load_dotenv(".env.private")
