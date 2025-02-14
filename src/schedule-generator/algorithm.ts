@@ -18,8 +18,8 @@ export default class ScheduleGenerator {
     const { classes, semester } = request;
     let { creditLimit } = request;
 
-    const hashedScheduleString = this.computeScheduleString(classes, creditLimit, semester);
-    const scheduleDoc = doc(db, "generated-schedules", hashedScheduleString)
+    const scheduleString = this.computeScheduleString(classes, creditLimit, semester);
+    const scheduleDoc = doc(db, "generated-schedules", scheduleString)
     const scheduleSnap = await getDoc(scheduleDoc);
     if (scheduleSnap.exists()) {
       return scheduleSnap.data() as GeneratedScheduleOutput;
