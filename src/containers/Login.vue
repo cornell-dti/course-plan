@@ -99,7 +99,7 @@
 
       <!-- DRAG -->
       <div class="container-fluid plan p-0 center">
-        <div class="drag phonepad row no-gutters">
+        <div class="drag drag--first phonepad row no-gutters">
           <img
             class="hide preview"
             src="@/assets/images/landing_new/img1.svg"
@@ -109,8 +109,8 @@
           />
           <div class="comment comment-drag">
             <h1 class="head">Drag and Drop Courses</h1>
-            <p class="sub-text">
-              CoursePlan’s intuitive interface recommends courses based on unfulfilled requirements
+            <p class="sub-text drag-text">
+              CoursePlan's intuitive interface recommends courses based on unfulfilled requirements
               and allows you to easily drag and drop them into your planner
             </p>
           </div>
@@ -122,20 +122,117 @@
         <div class="semester phonepad row no-gutters">
           <div class="comment comment-sem">
             <h1 class="head">Plan Your Semesters</h1>
-            <p class="sub-text">
-              Use CoursePlan’s semesterly planner to choose courses well in advance and ensure that
+            <p class="sub-text semester-text">
+              Use CoursePlan's semesterly planner to choose courses well in advance and ensure that
               you never miss a requirement
             </p>
           </div>
           <img
-            class="hide schedule"
+            class="hide schedule-centered"
             src="@/assets/images/landing_new/img2.svg"
             alt="Plan preview"
             aria-label="plan preview"
+            style="position: absolute"
           />
         </div>
       </div>
-      <br style="clear: both" />
+
+      <!-- TRACKING -->
+      <div class="container-fluid plan p-0 center">
+        <div class="drag phonepad row no-gutters">
+          <img
+            class="hide preview"
+            src="@/assets/images/landing_new/img3.svg"
+            alt="Dragging preview"
+            aria-label="dragging preview"
+            style="position: absolute"
+          />
+          <div class="comment comment-drag">
+            <h1 class="head">Plan With Academic Tools</h1>
+            <p class="sub-text track-text">
+              CoursePlan provides a collection of useful tools to help you plan your semesters. This
+              includes a dashboard page ands
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- GENERATE -->
+      <div class="container-fluid p-0 center">
+        <div class="semester phonepad row no-gutters">
+          <div class="comment comment-sem notes-text-left">
+            <h1 class="head">Schedule Generator</h1>
+            <p class="sub-text generate-text">
+              Select the classes you're interested in and get auto-generated schedule suggestions.
+            </p>
+          </div>
+          <img
+            class="hide schedule-centered"
+            src="@/assets/images/landing_new/img4.svg"
+            alt="Notes preview"
+            aria-label="Notes preview"
+            style="position: absolute"
+          />
+        </div>
+      </div>
+
+      <!-- MULTIPLE -->
+      <div class="container-fluid plan p-0 center">
+        <div class="drag phonepad row no-gutters">
+          <img
+            class="hide preview"
+            src="@/assets/images/landing_new/img5.svg"
+            alt="Multiple-plan preview"
+            aria-label="multiple-plan preview"
+            style="position: absolute"
+          />
+          <div class="comment comment-drag">
+            <h1 class="head">Multiple Plans</h1>
+            <p class="sub-text multiple-text">
+              Create multiple versions of your 4 year plan to find the best one suited for you.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SAVED -->
+      <div class="container-fluid p-0 center">
+        <div class="semester phonepad row no-gutters">
+          <div class="comment comment-sem">
+            <h1 class="head">Saved Courses</h1>
+            <p class="sub-text saved-text">
+              Want to note a course to take in the future? Save a course into an existing or new
+              collection! View, modify and update your collections on the Save page.
+            </p>
+          </div>
+          <img
+            class="hide schedule-centered"
+            src="@/assets/images/landing_new/img6.svg"
+            alt="Plan preview"
+            aria-label="plan preview"
+            style="position: absolute"
+          />
+        </div>
+      </div>
+
+      <!-- NOTES -->
+      <div class="container-fluid plan p-0 center">
+        <div class="drag phonepad row no-gutters">
+          <img
+            class="hide preview"
+            src="@/assets/images/landing_new/img7.svg"
+            alt="Notes preview"
+            aria-label="notes preview"
+            style="position: absolute"
+          />
+          <div class="comment comment-drag">
+            <h1 class="head">Notes Feature</h1>
+            <p class="sub-text notes-text">
+              When planning your courses, jot down notes and comments to remember for later.
+            </p>
+          </div>
+        </div>
+      </div>
 
       <!--FOOTER-->
       <custom-footer />
@@ -206,11 +303,40 @@ export default defineComponent({
       return today.getFullYear();
     },
   },
+  mounted() {
+    const observer = new IntersectionObserver(
+      entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            setTimeout(() => {
+              entry.target.classList.add('visible');
+            }, 100);
+          }
+        });
+      },
+      {
+        threshold: 0.2,
+        rootMargin: '0px',
+      }
+    );
+
+    document.querySelectorAll('.container-fluid').forEach(section => {
+      section.classList.add('slide-in');
+      observer.observe(section);
+    });
+  },
 });
 </script>
 
 <style scoped lang="scss">
 @import '@/assets/scss/_variables.scss';
+
+@font-face {
+  font-family: 'Proxima Nova';
+  src: url('@/assets/fonts/ProximaNova-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+}
 
 .top-sec {
   background-image: url('@/assets/images/landing_new/top_rect.svg');
@@ -261,14 +387,17 @@ export default defineComponent({
 }
 .plan-head {
   padding-bottom: 2rem;
+  font-family: normal;
+  font-weight: 700;
   font-size: 72px;
-  line-height: 72px;
-  color: $white;
+  line-height: 73px;
+  letter-spacing: 0;
+  color: #ffffff;
 }
 .plan-subhead {
   padding-bottom: 2rem;
   font-style: normal;
-  font-weight: 10;
+  font-weight: 300;
   font-size: 32px;
   line-height: 34px;
   color: $white;
@@ -373,7 +502,8 @@ figure {
   text-align: left;
   color: $black;
   margin-top: 32px;
-  max-width: 425px;
+  max-width: 700px;
+  line-height: 2;
   @media (max-width: $large-breakpoint) {
     text-align: center;
   }
@@ -411,6 +541,11 @@ figure {
 
 .drag {
   padding: 6.25rem 6.25rem 0 6.25rem;
+
+  &--first {
+    margin-top: -300px;
+  }
+
   @media (max-width: $large-breakpoint) {
     padding-left: 4rem;
   }
@@ -419,8 +554,23 @@ figure {
   position: relative;
   left: -50px;
   margin-right: -32px;
-  width: 700px;
+  width: 950px;
+  margin-top: 300px;
+  margin-bottom: 300px;
 }
+
+.schedule-centered {
+  width: 1200px;
+  margin-left: -100px;
+  margin-right: -290px;
+  justify-self: flex-end;
+  flex-shrink: 0;
+
+  @media (max-width: $large-breakpoint) {
+    display: none;
+  }
+}
+
 .schedule {
   justify-self: flex-end;
   flex-shrink: 0;
@@ -437,15 +587,31 @@ figure {
   }
   &-drag {
     padding: 12.75rem 0rem 15.75rem 3.25rem;
-    margin-left: 600px;
+    margin-left: 900px; // Increase this to move text more to the right
+    margin-top: 600px;
+    transform: translateY(-250px); // Adjust this to move text up/down
     @media (max-width: $large-breakpoint) {
       margin-left: 0;
+    }
+
+    .head:contains('Drag and Drop') + .sub-text {
+      margin-right: 200px;
+    }
+
+    .head:contains('Track Requirements') + .sub-text {
+      margin-right: 300px;
+    }
+
+    .head:contains('Multiple Plans') + .sub-text {
+      margin-right: 250px;
     }
   }
   &-sem {
     padding: 8.75rem 3.25rem 15.75rem 3.25rem;
     margin: 0;
-    margin-top: 200px;
+    margin-top: 550px;
+    margin-right: 1150px; // Add this to move text more to the left
+    transform: translate(10px, -120px); // Adjust this to move text up/down
     flex-shrink: 2;
     @media (max-width: $large-breakpoint) {
       margin-right: 0;
@@ -521,5 +687,91 @@ p {
 html {
   padding: 0;
   margin: 0;
+}
+
+.section-new {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  margin-top: 2rem;
+  overflow: hidden;
+
+  @media (max-width: $large-breakpoint) {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+  }
+}
+
+.preview-new {
+  width: 800px;
+  margin: 0 2rem;
+
+  @media (max-width: $large-breakpoint) {
+    width: 100%;
+    margin: 1rem 0;
+  }
+}
+
+.comment-new {
+  padding: 4rem 3.25rem;
+  margin: 0;
+  flex-shrink: 0;
+  max-width: 500px;
+
+  @media (max-width: $large-breakpoint) {
+    text-align: center;
+    max-width: 100%;
+    padding: 2rem;
+  }
+}
+
+.notes-text-left {
+  margin-left: 100px;
+  text-align: left;
+
+  .head,
+  .sub-text {
+    text-align: left;
+  }
+
+  @media (max-width: $large-breakpoint) {
+    margin-left: 0;
+    text-align: center;
+
+    .head,
+    .sub-text {
+      text-align: center;
+    }
+  }
+}
+
+.slide-in {
+  opacity: 0;
+  visibility: hidden;
+  transition: all 2s ease-out; // Even slower animation
+
+  // Even sections slide from right
+  &:nth-child(even) {
+    transform: translateX(200px); // Start further right
+
+    &.visible {
+      opacity: 1;
+      transform: translateX(0);
+      visibility: visible;
+    }
+  }
+
+  // Odd sections slide from left
+  &:nth-child(odd) {
+    transform: translateX(-200px); // Start further left
+
+    &.visible {
+      opacity: 1;
+      transform: translateX(0);
+      visibility: visible;
+    }
+  }
 }
 </style>

@@ -34,6 +34,9 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
+.container-fluid.footer {
+  margin-top: 400px;
+}
 p.footer {
   text-align: center;
   font-style: normal;
