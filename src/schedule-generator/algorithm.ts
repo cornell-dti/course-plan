@@ -1,3 +1,6 @@
+import { db } from '@/firebase-config';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
+
 import Course, { Timeslot } from './course-unit';
 import GeneratorRequest from './generator-request';
 import Requirement from './requirement';
@@ -11,9 +14,16 @@ export type GeneratedScheduleOutput = {
 };
 
 export default class ScheduleGenerator {
-  static generateSchedule(request: GeneratorRequest): GeneratedScheduleOutput {
+  static async generateSchedule(request: GeneratorRequest): Promise<GeneratedScheduleOutput> {
     const { classes, semester } = request;
     let { creditLimit } = request;
+
+    const scheduleString = this.computeScheduleString(classes, creditLimit, semester);
+    const scheduleDoc = doc(db, "generated-schedules", scheduleString)
+    const scheduleSnap = await getDoc(scheduleDoc);
+    if (scheduleSnap.exists()) {
+      return scheduleSnap.data() as GeneratedScheduleOutput;
+    }
 
     const schedule: Map<Course, Timeslot[]> = new Map();
     const fulfilledRequirements: Map<string, Requirement[]> = new Map(); // used for checking no course duplicates
@@ -62,7 +72,25 @@ export default class ScheduleGenerator {
       }
     });
 
+    await setDoc(scheduleDoc, {
+      semester,
+      schedule,
+      fulfilledRequirements,
+      totalCredits
+    })
+
     return { semester, schedule, fulfilledRequirements, totalCredits };
+  }
+
+  static computeScheduleString(courses: Course[], creditLimit: number, semester: string): string {
+    let scheduleString = "";
+    const sortedCourses = courses.sort((a, b) => a.code.localeCompare(b.code));
+    for (const course of sortedCourses) {
+      scheduleString += `${course.code};`
+    }
+    scheduleString += `|${creditLimit}|`
+    scheduleString += `$${semester}$`
+    return scheduleString
   }
 
   static prettyPrintSchedule(output: GeneratedScheduleOutput): void {

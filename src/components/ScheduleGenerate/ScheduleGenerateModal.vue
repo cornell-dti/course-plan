@@ -167,7 +167,7 @@ export default defineComponent({
         this.season
       );
     },
-    generateSchedules() {
+    async generateSchedules() {
       const output: {
         semester: string;
         schedule: Map<Course, Timeslot[]>;
@@ -228,7 +228,7 @@ export default defineComponent({
         // NOTE: ideally we want to move this to the algorithm itself.
         // But also NOTE that this might not want to be hardcoded — consider e.g. liberal studies.
 
-        const momentary = ScheduleGenerator.generateSchedule(generatorRequest);
+        const momentary = await ScheduleGenerator.generateSchedule(generatorRequest);
 
         // Basic algorithm: now we want to clean up output.
         // Make it so that for every element of output, we keep track of

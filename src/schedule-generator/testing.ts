@@ -4,7 +4,7 @@ import GeneratorRequest from './generator-request';
 import ScheduleGenerator from './algorithm';
 
 class Testing {
-  public static main(): void {
+  public static async main(): Promise<void> {
     // Create some requirements
     const techElective = new Requirement('Technical Elective', 'College', 'CoE');
     const engrdReq = new Requirement('ENGRD Requirement', 'Major', 'CS');
@@ -239,7 +239,7 @@ class Testing {
     const interestingRequest = new GeneratorRequest(courses, requirements, 9, 'Fall');
 
     // Generate schedule with request
-    const output = ScheduleGenerator.generateSchedule(interestingRequest);
+    const output = await ScheduleGenerator.generateSchedule(interestingRequest);
     ScheduleGenerator.prettyPrintSchedule(output);
   }
 }
