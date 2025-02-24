@@ -9,15 +9,17 @@ sys.path.append(
 from scripts.email.helpers.firebase_users_loader import USERS
 
 
-# BCC = [user["email"] for user_list in USERS.values() for user in user_list]
-BCC = ["dl979@cornell.edu", "nmp79@cornell.edu"]
+BCC = [user["email"] for user_list in USERS.values() for user in user_list]
+# BCC = ["dl979@cornell.edu", "nmp79@cornell.edu"]
+# BCC = ["nidhi.mylavarapu@gmail.com"]
+
 print(f"{len(BCC)} users are relevant to this template.\n")
 SUBJECT = "Make your Schedule Swoon Worthy - Hello from CoursePlan💙"
 HTML = f"""
+
 <div style="font-family: Proxima Nova, sans-serif; margin: 0 auto; background-color: #F7F7F7; font-size: 16px;">
     <div style="text-align: center; padding: 40px 0px;">
-        <img src="https://i.postimg.cc/3RFF8VpK/logo.png"
-            alt="Cornell CoursePlan Logo" style="height: 50px; width: 172px;">
+        <a href="https://ibb.co/dsg7Ww5R"><img src="https://i.ibb.co/NgS7VdyM/Screenshot-2025-02-13-at-5-12-07-PM.png" alt="CoursePlan Logo" border="0" style="height: 60px; width: 60px;";></a>
     </div>
     <div
         style="background-color: #FFFFFF; border-radius: 10px; padding: 40px 48px; margin-bottom: 20px; max-width: 600px; margin: 0 auto;">
@@ -34,7 +36,7 @@ HTML = f"""
         <h3 style="font-size: 24px; text-align: center; margin-bottom: 5px;">Love is in the Air… and So is Course Planning!</h3>
 
         <div style="padding: 20px;">
-            <img src="https://i.postimg.cc/tgYSvyZB/Screenshot-2025-02-11-at-4-33-08-PM.png"
+            <img src="https://user-images.githubusercontent.com/55263191/117371152-669f2d00-ae95-11eb-9b92-3d18a0505f57.png"
                 alt="Schedule Planning" style="width: 100%; height: auto; margin-bottom: -4px;">
             <p style="color: #3D3D3D; text-align: center; font-size: 15px; width: 50%; margin: 0 auto 16px;">Your dream schedule is just one click away!</p>
             <div style="text-align: center;">
@@ -54,8 +56,7 @@ HTML = f"""
             Your Valentine - CoursePlan DTI 💕 </p>
 
        
-        <img src="https://i.postimg.cc/yYYvd1v2/cp-square.png"
-            alt="Cornell CoursePlan Icon" style="height: 32px;">
+        <a href="https://ibb.co/dsg7Ww5R"><img src="https://i.ibb.co/NgS7VdyM/Screenshot-2025-02-13-at-5-12-07-PM.png" alt="CoursePlan Logo" border="0" style="height: 60px; width: 60px; ";></a>
 
         <p style="line-height: 1.5; margin-top: 37.5px; font-size: 16px;">
             Not a user yet? <a href="https://courseplan.io" target="_blank"
@@ -78,4 +79,5 @@ HTML = f"""
         </p>
     </div>
 </div>
+
 """
