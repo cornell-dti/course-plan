@@ -29,7 +29,7 @@ async function runOnUser(userEmail: string) {
   for (const semester of semestersData) {
     for (const course of semester.courses) {
       if ('note' in course === false) {
-        console.log(`Adding note to course ${course.name}`);
+        // console.log(`Adding note to course ${course.name}`);
         course.note = null;
         course.lastUpdated = null;
       }
