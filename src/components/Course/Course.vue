@@ -109,6 +109,7 @@
       ref="note"
       v-click-outside="handleClickOutsideNote"
       :noteId="`course-${courseObj.uniqueID}`"
+      :isSemesterCourseNote="isSemesterCourseCard"
     />
   </div>
 </template>

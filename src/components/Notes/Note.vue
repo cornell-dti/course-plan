@@ -44,12 +44,14 @@
       <div class="note-footer-left note-footer-text">Last Updated: {{ formattedLastUpdated }}</div>
       <div class="note-footer-right">
         <img
+          v-if="isSemesterCourseNote"
           src="@/assets/images/edit-note.svg"
           alt="Edit note"
           class="note-footer-icon"
           @click.stop="startEditing"
         />
         <img
+          v-if="isSemesterCourseNote"
           src="@/assets/images/trash.svg"
           alt="Delete note"
           class="note-footer-icon"
@@ -80,6 +82,7 @@ export default defineComponent({
     width: { type: String, default: '200px' },
     color: { type: String, default: '#a8e6cf' },
     initialNote: { type: String, default: '' },
+    isSemesterCourseNote: { type: Boolean, default: true },
     lastUpdated: {
       type: [Object, Date],
       // NOTE: we must use a Timestamp object here, as this is the internal type used by Firestore
