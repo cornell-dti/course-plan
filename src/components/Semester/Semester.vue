@@ -488,6 +488,7 @@ export default defineComponent({
       if (!note) {
         return;
       }
+
       editSemester(
         store.state.currentPlan,
         this.year,

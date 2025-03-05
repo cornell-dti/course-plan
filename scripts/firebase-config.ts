@@ -41,6 +41,7 @@ const userCollections = {
   colors: 'user-subject-colors',
   unique: 'user-unique-incrementer',
   onboarding: 'user-onboarding-data',
+  allNotes: 'user-all-notes',
 };
 
 export const userCollectionNames = Object.values(userCollections);
@@ -57,3 +58,4 @@ export const coursesCollection = db.collection('courses');
 export const availableRostersForCourseCollection = db.collection('available-rosters-for-course');
 export const crseIdToCatalogNbrCollection = db.collection('crseid-to-catalognbr');
 export const giveawayCollection = db.collection('giveaway-entries');
+export const userAllNotes = db.collection('user-all-notes');

@@ -91,3 +91,5 @@ export const trackUsersCollection = collection(db, 'track-users').withConverter(
 );
 
 export const giveawayCollection = collection(db, 'giveaway-entries');
+
+export const allNotes = collection(db, 'user-all-notes');

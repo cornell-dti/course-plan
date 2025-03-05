@@ -115,6 +115,7 @@
 
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
+import { Timestamp } from 'firebase/firestore';
 import CourseMenu from '@/components/Modals/CourseMenu.vue';
 import CourseCaution from '@/components/Course/CourseCaution.vue';
 import SaveCourseModal from '@/components/Modals/SaveCourseModal.vue';
@@ -153,6 +154,10 @@ export default defineComponent({
     year: { type: Number, required: false, default: 0 },
     isSemesterCourseCard: { type: Boolean, required: true },
     isSchedGenCourse: { type: Boolean, required: false, default: false },
+    noteData: {
+      type: Object as PropType<{ content: string; lastUpdated: Timestamp | null }>,
+      default: () => ({ content: '', lastUpdated: null }),
+    },
   },
   emits: {
     'delete-course': (code: string, uniqueID: number) =>
