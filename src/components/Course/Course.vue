@@ -180,6 +180,7 @@ export default defineComponent({
     'open-delete-note-modal': (uniqueID: number) => typeof uniqueID === 'number',
     'note-state-change': (uniqueID: number, isExpanded: boolean) =>
       typeof uniqueID === 'number' && typeof isExpanded === 'boolean',
+    'new-note-created': (uniqueID: number) => typeof uniqueID === 'number',
   },
   data() {
     return {
@@ -295,6 +296,10 @@ export default defineComponent({
       this.trashIcon = trashGrayIcon;
     },
     openNoteModal() {
+      if (!this.isNoteVisible && !this.courseObj.note) {
+        // creation of a new note (regardless if it's saved or not)
+        this.$emit('new-note-created', this.courseObj.uniqueID);
+      }
       if (!this.isNoteVisible) {
         this.isNoteVisible = true;
         this.menuOpen = false;
@@ -360,6 +365,8 @@ export default defineComponent({
       } else if (noteComponent.note && this.isNoteVisible) {
         noteComponent.collapseNote();
       } else {
+        // this is a new note that hasn't been saved yet, and it gets cancelled
+        this.$emit('new-note-created', this.courseObj.uniqueID);
         this.closeNote();
       }
     },
@@ -563,21 +570,21 @@ export default defineComponent({
 .active {
   border: 1px solid $yuxuanBlue;
 }
-// Hannah's note: are these even needed?
-// .rectangle {
-//   position: absolute;
-//   left: 50%;
-//   transform: translateX(-50%) translateY(-65px);
-//   width: calc(106% - #{$colored-grabber-width});
-//   height: 80px;
-//   background-color: #a8e6cf;
-//   border-radius: 12.49px;
-//   cursor: pointer;
-//   z-index: 0;
-//   transition: transform 0.3s ease;
-// }
 
-// .rectangle.expanded {
-//   transform: translateX(-50%) translateY(0px);
-// }
+.rectangle {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%) translateY(-65px);
+  width: calc(106% - #{$colored-grabber-width});
+  height: 80px;
+  background-color: #a8e6cf;
+  border-radius: 12.49px;
+  cursor: pointer;
+  z-index: 0;
+  transition: transform 0.3s ease;
+}
+
+.rectangle.expanded {
+  transform: translateX(-50%) translateY(0px);
+}
 </style>

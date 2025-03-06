@@ -70,15 +70,9 @@ export default defineComponent({
   name: 'Note',
   props: {
     // NOTE: each node has an ID (just the courseID)
-    // Each note has three types of heights and translateY values: initial, expandedInitial (empty input), and expanded. For now,
+    // Each note has three types of heights and translateY values: initial, expandedNotEditing, and expandedEditing. For now,
     // all translateY values are the same, but this can be changed in the future.
     noteId: { type: String, required: true },
-    initialTranslateY: { type: String, default: '-10px' },
-    expandedInitialTranslateY: { type: String, default: '-10px' },
-    expandedTranslateY: { type: String, default: '-10px' },
-    initialHeight: { type: String, default: '20px' },
-    expandedInitialHeight: { type: String, default: '40px' },
-    expandedHeight: { type: String, default: '60px' },
     width: { type: String, default: '200px' },
     color: { type: String, default: '#a8e6cf' },
     initialNote: { type: String, default: '' },
@@ -108,35 +102,35 @@ export default defineComponent({
     note: 'updateSvgState', // Update SVG whenever note changes
   },
   computed: {
+    /**
+     * The style of the note element
+     * three different heights to consider:
+      (1) the height of the note when it is not expanded
+      (2) the height of the note when it is expanded and it is in editing mode
+      (3) the height of the note when it is expanded and it is not in editing mode
+      @returns {Record<string, string>} - The style of the note element
+     */
     noteStyle(): Record<string, string> {
-      // Parse the heights and translate values
-      const trueExpandedTranslateY =
-        this.isExpanded && this.initialNote === '' // note is empty
-          ? this.expandedInitialTranslateY
-          : this.expandedTranslateY;
-
-      const trueExpandedHeight =
-        this.isExpanded && this.initialNote === '' // note is empty
-          ? this.expandedInitialHeight
-          : this.expandedHeight;
-
-      const translateY = this.isExpanded
-        ? parseInt(trueExpandedTranslateY, 10)
-        : parseInt(this.initialTranslateY, 10);
-
-      const baseHeight = this.isExpanded
-        ? parseInt(trueExpandedHeight, 10)
-        : parseInt(this.initialHeight, 10);
-
-      const visibleHeight = baseHeight + Math.max(0, -translateY); // Add the visible part of the translated note
-      console.log('visibleHeight', visibleHeight);
-
+      let baseHeight = 1.875;
+      const expandedEditing = -1.25;
+      const expandedNotEditing = -0.625;
+      let translateY = -0.625;
+      if (this.isExpanded) {
+        if (this.initialNote === '') {
+          translateY = expandedEditing;
+          baseHeight = 3.75;
+        } else {
+          translateY = expandedNotEditing;
+          baseHeight = 4.375;
+        }
+      }
+      const visibleHeight = baseHeight; // The height of the note itself that can be seen on the user interface
       return {
-        transform: `translateX(-50%) translateY(${translateY}px)`,
-        height: `${visibleHeight}px`, // The height of the note itself
+        transform: `translateX(-50%) translateY(${translateY}rem)`,
+        height: `${visibleHeight}rem`,
         width: this.width,
         position: 'relative' as const,
-        marginBottom: '-10px',
+        marginBottom: '-0.7rem',
         backgroundColor: this.getLighterColor(this.color, 0.8),
       };
     },
@@ -184,10 +178,12 @@ export default defineComponent({
         this.$emit('note-state-change', false);
       }
     },
-    // getLighterColor(color: string) {
-    //   const colorObj = coursesColorSet.find(c => c.hex.toUpperCase() === color.toUpperCase());
-    //   return colorObj ? colorObj.lighterHex : color;
-    // },
+    expandNote() {
+      if (!this.isExpanded) {
+        this.isExpanded = true;
+        this.$emit('note-state-change', true);
+      }
+    },
     /**
      * Lighten a color in hex code by a percentage
      * @param {string} unconvertedColor - The color to lighten in hex code
@@ -216,7 +212,6 @@ export default defineComponent({
     updateSvgColor(noteId: string) {
       const color = this.isDisabled ? 'grey' : this.color;
       const opacity = this.isDisabled ? '0.5' : '1';
-
       nextTick(() => {
         const svgElement = document.querySelector(`.note-icon[data-id="${noteId}"]`);
         if (!svgElement) return;
@@ -248,7 +243,7 @@ export default defineComponent({
   flex-direction: row;
   align-items: center;
   width: 100%;
-  padding: 5px 0px 10px 10px;
+  padding: 0px 0px 10px 10px;
   opacity: 0;
   transform: translateY(100%);
   transition: opacity 0.3s ease, transform 0.3s ease;

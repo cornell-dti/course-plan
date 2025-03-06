@@ -123,6 +123,7 @@
                 @edit-collection="editCollection"
                 @open-delete-note-modal="openDeleteNoteModal"
                 @note-state-change="handleNoteStateChange"
+                @new-note-update="handleNewNoteCreated"
               />
               <placeholder
                 v-else
@@ -245,6 +246,7 @@ export default defineComponent({
       },
       expandedNotes: new Map<number, boolean>(), // Track expanded state of notes by course uniqueID
       isNoteTransitioning: false,
+      newNoteUniqueID: undefined as number | undefined,
     };
   },
   props: {
@@ -358,19 +360,26 @@ export default defineComponent({
         factor = 2.6;
       }
 
-      // Add extra height for courses with visible notes
-      const extraNoteHeight = this.courses.reduce((acc, course) => {
+      const noteMarginBottom = 0.7; // ~0.7rem margin below a note
+      const noteCollapsedHeightRem = 1.875; // ~1.875rem for a collapsed note
+      const firstExpandedNoteRem = 3.75; // ~3.75rem for an expanded note in editing mode
+      const noteExpandedNotEditingHeightRem = 4.375; // ~4.785rem for an expanded note in non-editing mode
+
+      // Sum the extra note height for each course that has a note
+      const extraNoteHeightRem = this.courses.reduce((acc, course) => {
         if (!isPlaceholderCourse(course) && course.note) {
-          const isExpanded = this.expandedNotes.get(course.uniqueID);
-          if (isExpanded) {
-            return acc + 3.5; // Expanded note height
+          if (this.expandedNotes.get(course.uniqueID) === true) {
+            return acc + noteExpandedNotEditingHeightRem - noteMarginBottom;
           }
-          return acc + 1.0; // Collapsed but visible note height
+          return acc + noteCollapsedHeightRem - noteMarginBottom;
+        }
+        if (this.newNoteUniqueID === course.uniqueID) {
+          return acc + firstExpandedNoteRem - noteMarginBottom;
         }
         return acc;
       }, 0);
 
-      return (this.courses.length + 1 + extraIncrementer) * factor + extraNoteHeight;
+      return (this.courses.length + 1 + extraIncrementer) * factor + extraNoteHeightRem;
     },
     creditString() {
       let credits = 0;
@@ -488,6 +497,9 @@ export default defineComponent({
       if (!note) {
         return;
       }
+      if (this.newNoteUniqueID === uniqueID) {
+        this.newNoteUniqueID = undefined;
+      } // the note is saved, so we can remove the new note flag
       editSemester(
         store.state.currentPlan,
         this.year,
@@ -523,6 +535,13 @@ export default defineComponent({
         })
       );
       this.closeDeleteNoteModal();
+    },
+    handleNewNoteCreated(uniqueID: number) {
+      if (this.newNoteUniqueID === undefined) {
+        this.newNoteUniqueID = uniqueID;
+      } else {
+        this.newNoteUniqueID = undefined;
+      }
     },
     addCollection(name: string) {
       addCollection(name, []);
@@ -755,7 +774,7 @@ export default defineComponent({
       // Remove transitioning flag after animation completes
       setTimeout(() => {
         this.isNoteTransitioning = false;
-      }, 300); // Match this with your transition duration
+      }, 300);
     },
   },
   directives: {
