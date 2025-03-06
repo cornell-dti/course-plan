@@ -15,17 +15,20 @@ Then in comparison to other email services like Sendgrid, Resend stood out for i
 ## Getting Started
 
 1. Install dependencies in the `scripts/email` directory:
+
    ```bash
    python3 -m pip install -r requirements.txt
    ```
 
 2. Set up environment variables in `.env.private` **in the root directory of the project (`courseplan`)**:
+
    ```
-   RESEND_API_KEY=your_resend_api_key  # contact Simon or your TPM for access
-   GLOBAL_FROM_NAME=CoursePlan  # what the name of the sender will be
-   GLOBAL_FROM_EMAIL=noreply@courseplan.io  # what the email of the sender will be (once DNS records for courseplan.io are configured)
-   GLOBAL_TO_EMAIL=dummy@courseplan.io  # a dummy email address to ensure bcc works
+    RESEND_API_KEY=some_api  # contact Simon or your TPM for access
+    GLOBAL_FROM_NAME=CoursePlan  # what the name of the sender will be
+    GLOBAL_FROM_EMAIL=noreply@updates.courseplan.io  # what the email of the sender will be (once DNS records for courseplan.io are configured)
+    GLOBAL_TO_EMAIL=user@courseplan.io  # a dummy email address to ensure bcc works
    ```
+
    **Never commit this file!** (Should already be in `.gitignore`.)
 
 3. Create a new template in `scripts/email/templates/` or use the existing `dryrun.py` as a test example with your own email.
@@ -49,12 +52,13 @@ Then in comparison to other email services like Sendgrid, Resend stood out for i
 
 1. Create a new Python file in `scripts/email/templates/`.
 2. Define `BCC`, `SUBJECT`, and `HTML` variables.
-    - `BCC` should be a list of emails to send to.
-    - `SUBJECT` is the subject of the email.
-    - `HTML` is the body of the email.
+   - `BCC` should be a list of emails to send to.
+   - `SUBJECT` is the subject of the email.
+   - `HTML` is the body of the email.
 3. **Test your template** by running `python3 scripts/email/execute_template.py` with a simplified BCC list before sending to a large audience.
 
 A couple notes:
+
 - You can refer to existing templates for best practices and to see how to e.g. have the `BCC` list be dynamically generated from our Firebase users.
 - **Important**: Ensure all HTML styling is inline as we unfortunately cannot use external CSS directives.
 
@@ -63,8 +67,8 @@ A couple notes:
 We use Firebase to store user data and retrieve it for our email templates. The process is handled by the `firebase_users_loader.py` helper script under `scripts/email/helpers/`.
 
 1. The script connects to Firebase using a service account key, stored in the root directory of the project as `serviceAccountKey.json`.
-3. It retrieves user data from the `user-onboarding-data` collection.
-2. Then, it fetches all user names from the `user-name` collection.
+2. It retrieves user data from the `user-onboarding-data` collection.
+3. Then, it fetches all user names from the `user-name` collection.
 4. The data is processed and organized into a dictionary, with keys being tuples of (graduation_semester, graduation_year).
 5. Each user's data includes email, name, colleges, grad programs, majors, minors, and graduation information.
 
