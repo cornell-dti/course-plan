@@ -35,13 +35,13 @@ it('Onboard a new user with all required fields', () => {
   cy.get('[data-cyId=onboarding]').clickOutside();
   cy.get('[data-cyId=onboarding]').should('be.visible');
 
-  // set Entrance semester to 2018 (default Fall)
+  // set Entrance semester to 2023 (default Fall)
   cy.get('[data-cyId=onboarding-dropdown]').eq(1).click();
   cy.get('[data-cyId=onboarding-dropdownItem]').each($el => {
     cy.wrap($el)
       .invoke('text')
       .then(text => {
-        if (text.includes('2018')) {
+        if (text.includes('2023')) {
           cy.wrap($el).click();
         }
       });
@@ -49,7 +49,7 @@ it('Onboard a new user with all required fields', () => {
   cy.get('[data-cyId=onboarding-nextButton]').should('be.disabled');
   cy.get('[data-cyId=onboarding-error]').scrollIntoView().should('be.visible');
 
-  // set Graduation semester to Summer 2022
+  // set Graduation semester to Summer 2025
   cy.get('[data-cyId=onboarding-dropdown]').eq(2).click();
   cy.get('[data-cyId=onboarding-dropdownItem]').each($el => {
     cy.wrap($el)
@@ -68,7 +68,7 @@ it('Onboard a new user with all required fields', () => {
     cy.wrap($el)
       .invoke('text')
       .then(text => {
-        if (text.includes('2022')) {
+        if (text.includes('2025')) {
           cy.wrap($el).click();
         }
       });
@@ -94,9 +94,9 @@ it('Onboard a new user with all required fields', () => {
   cy.get('[data-cyId=onboarding-nextButton]').click();
 
   // confirm Fall 2018, Summer 2022, and engineering are selected on the review screen
-  cy.get('[data-cyId=onboarding-entranceYear]').contains('2018');
+  cy.get('[data-cyId=onboarding-entranceYear]').contains('2022');
   cy.get('[data-cyId=onboarding-entranceSeason]').contains('Fall');
-  cy.get('[data-cyId=onboarding-gradYear]').contains('2022');
+  cy.get('[data-cyId=onboarding-gradYear]').contains('2025');
   cy.get('[data-cyId=onboarding-gradSeason]').contains('Summer');
   cy.get('[data-cyId=onboarding-college]').contains('Engineering');
   cy.get('[data-cyId=onboarding-finishButton]').click();
