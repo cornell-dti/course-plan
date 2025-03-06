@@ -29,6 +29,7 @@ before('Delete test user data, then visit site and log in', () => {
 it('Onboard a new user with all required fields', () => {
   // confirm the next button is disabled and the error text is visible until all required fields filled out
   cy.get('[data-cyId=onboarding-nextButton]').should('be.disabled');
+  cy.wait(5000); // ensure the page has time to load
   cy.get('[data-cyId=onboarding-error]').scrollIntoView().should('be.visible');
 
   // confirm that onboarding cannot be clicked outsideto close when creating a new user
@@ -75,7 +76,9 @@ it('Onboard a new user with all required fields', () => {
         }
       });
   });
+  cy.wait(5000); // ensure the page has time to load
   cy.get('[data-cyId=onboarding-nextButton]').should('be.disabled');
+  cy.wait(5000); // ensure the page has time to load
   cy.get('[data-cyId=onboarding-error]').scrollIntoView().should('be.visible');
   cy.wait(5000); // ensure the page has time to load
   // set to Engineering college
