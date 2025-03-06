@@ -78,13 +78,13 @@ it('Check accessibility of the bottom bar', () => {
 it('Check accessibility of onboarding modal pages', () => {
   cy.get('[data-cyId=editProfile]').click();
   cy.checkA11y('[data-cyId=onboarding]', null, null, true); // only check accessibility within the onboarding modal
-
+  cy.get('[data-cyId=onboarding-nextButton]').scrollIntoView().should('be.visible'); // scroll until the next button is visible
   cy.get('[data-cyId=onboarding-nextButton]').click();
   cy.checkA11y('[data-cyId=onboarding]', null, null, true);
-
+  cy.get('[data-cyId=onboarding-nextButton]').scrollIntoView().should('be.visible'); // scroll until the next button is visible
   cy.get('[data-cyId=onboarding-nextButton]').click();
   cy.checkA11y('[data-cyId=onboarding]', null, null, true);
-
+  cy.get('[data-cyId=onboarding-nextButton]').scrollIntoView().should('be.visible'); // scroll until the next button is visible
   cy.get('[data-cyId=onboarding-finishButton]').click();
 });
 
