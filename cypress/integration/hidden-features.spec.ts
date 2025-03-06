@@ -89,6 +89,7 @@ it('Onboard a new user with all required fields', () => {
   });
 
   // next button can be clicked and error not visible now that every field has been selected
+  cy.get('[data-cyId=onboarding-nextButton]').scrollIntoView().should('be.visible');
   cy.get('[data-cyId=onboarding-nextButton]').click();
   cy.get('[data-cyId=onboarding-error]').should('not.exist');
   cy.get('[data-cyId=onboarding-nextButton]').click();
