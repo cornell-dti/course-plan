@@ -19,8 +19,11 @@
             </div>
             <div class="row no-gutters top-section">
               <div class="plan-subhead">
-                <div>Introducing the newest and easiest</div>
-                <div>way to plan courses at Cornell</div>
+                <div>
+                  Introducing the <span class="highlight">newest</span> and
+                  <span class="highlight">easiest</span>
+                </div>
+                <div>way to <span class="highlight">plan your courses</span> at Cornell</div>
               </div>
             </div>
             <div class="row justify-content-center">
@@ -110,8 +113,9 @@
           <div class="comment comment-drag">
             <h1 class="head">Drag and Drop Courses</h1>
             <p class="sub-text drag-text">
-              CoursePlan's intuitive interface recommends courses based on unfulfilled requirements
-              and allows you to easily drag and drop them into your planner
+              Easily organize your schedule with CoursePlan's intuitive
+              <strong>drag-and-drop interface,</strong>
+              which recommends courses based on your unfulfilled requirements.
             </p>
           </div>
         </div>
@@ -123,8 +127,9 @@
           <div class="comment comment-sem">
             <h1 class="head">Plan Your Semesters</h1>
             <p class="sub-text semester-text">
-              Use CoursePlan's semesterly planner to choose courses well in advance and ensure that
-              you never miss a requirement
+              Stay ahead with CoursePlan’s
+              <strong>semesterly planner</strong>—select your courses early and ensure you never
+              miss a requirement.
             </p>
           </div>
           <img
@@ -199,6 +204,12 @@
       <div class="container-fluid p-0 center">
         <div class="semester phonepad row no-gutters">
           <div class="comment comment-sem">
+            <img
+              src="@/assets/images/new_badge.svg"
+              alt="NEW!"
+              class="new-badge"
+              aria-label="new feature badge"
+            />
             <h1 class="head">Saved Courses</h1>
             <p class="sub-text saved-text">
               Want to note a course to take in the future? Save a course into an existing or new
@@ -226,6 +237,12 @@
             style="position: absolute"
           />
           <div class="comment comment-drag">
+            <img
+              src="@/assets/images/new_badge.svg"
+              alt="NEW!"
+              class="new-badge"
+              aria-label="new feature badge"
+            />
             <h1 class="head">Notes Feature</h1>
             <p class="sub-text notes-text">
               When planning your courses, jot down notes and comments to remember for later.
@@ -333,13 +350,27 @@ export default defineComponent({
 
 @font-face {
   font-family: 'Proxima Nova';
+  src: url('@/assets/fonts/ProximaNova-Light.woff2') format('woff2');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Proxima Nova';
+  src: url('@/assets/fonts/ProximaNova-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Proxima Nova';
   src: url('@/assets/fonts/ProximaNova-Bold.woff2') format('woff2');
   font-weight: 700;
   font-style: normal;
 }
 
 .top-sec {
-  background-image: url('@/assets/images/landing_new/top_rect.svg');
+  background: url('@/assets/images/landing_new/top_rect.svg');
   background-repeat: no-repeat;
   background-size: 100vw 900px;
   overflow: hidden;
@@ -397,10 +428,15 @@ export default defineComponent({
 .plan-subhead {
   padding-bottom: 2rem;
   font-style: normal;
+  font-family: 'Proxima Nova', sans-serif;
   font-weight: 300;
   font-size: 32px;
   line-height: 34px;
   color: $white;
+
+  .highlight {
+    font-weight: 700;
+  }
 }
 input {
   width: 100%;
@@ -419,9 +455,8 @@ input {
 }
 .email-button {
   border: 0;
-  background-color: #539d9b;
+  background-color: #13807c;
   border-radius: 6px;
-  border-color: $emGreen;
   font-size: 20px;
   width: 100%;
   padding: 1rem 2rem;
@@ -429,8 +464,8 @@ input {
   &:hover,
   &:focus,
   &:active {
-    border-color: #13807c;
-    background-color: #13807c;
+    border-color: #0e6561;
+    background-color: #0e6561;
   }
 
   &--top {
@@ -463,15 +498,18 @@ input {
 }
 
 .new-way {
-  margin-top: 350px;
+  margin-top: 0;
 }
 
 .new {
-  padding: 3.25rem 6.5rem 6rem 6.5rem;
+  padding: 3.25rem 6.5rem 3rem 6.5rem;
   color: $black;
   display: flex;
+  margin-top: 8rem;
+
   @media (max-width: $large-breakpoint) {
     flex-direction: column;
+    margin-top: 4rem;
   }
 }
 .new-1 {
@@ -498,14 +536,83 @@ figure {
 
 .sub-text {
   font-weight: normal;
-  font-size: 32px;
+  font-size: 30px;
   text-align: left;
   color: $black;
   margin-top: 32px;
-  max-width: 700px;
   line-height: 2;
+
+  strong {
+    font-family: 'Proxima Nova', sans-serif;
+    font-weight: 700;
+    font-style: normal;
+  }
+
   @media (max-width: $large-breakpoint) {
     text-align: center;
+  }
+
+  // Drag and Drop section
+  &.drag-text {
+    max-width: 550px;
+    margin-top: 32px;
+    margin-right: 200px;
+    margin-bottom: 0;
+    margin-left: 0;
+  }
+
+  // Plan Your Semesters section
+  &.semester-text {
+    max-width: 520px;
+    margin-top: 32px;
+    margin-right: 0;
+    margin-bottom: 0;
+    margin-left: 0;
+  }
+
+  // Academic Tools section
+  &.track-text {
+    max-width: 500px;
+    margin-top: 32px;
+    margin-right: 300px;
+    margin-bottom: 0;
+    margin-left: 0;
+  }
+
+  // Schedule Generator section
+  &.generate-text {
+    max-width: 450px;
+    margin-top: 32px;
+    margin-right: 0;
+    margin-bottom: 0;
+    margin-left: 0;
+  }
+
+  // Multiple Plans section
+  &.multiple-text {
+    max-width: 500px;
+    margin-top: 32px;
+    margin-right: 250px;
+    margin-bottom: 0;
+    margin-left: 0;
+  }
+
+  // Saved Courses section
+  &.saved-text {
+    max-width: 600px;
+    margin-top: 32px;
+    margin-right: 0;
+    margin-bottom: 0;
+    margin-left: 0;
+  }
+
+  // Notes Feature section
+  &.notes-text {
+    max-width: 500px;
+    margin-top: 32px;
+    margin-right: 0;
+    margin-bottom: 0;
+    margin-left: 0;
   }
 }
 
@@ -540,19 +647,19 @@ figure {
 }
 
 .drag {
-  padding: 6.25rem 6.25rem 0 6.25rem;
+  padding: 6.25rem 6.25rem;
 
   &--first {
-    margin-top: -300px;
+    margin-top: 0;
   }
 
   @media (max-width: $large-breakpoint) {
-    padding-left: 4rem;
+    padding: 3rem 2rem;
   }
 }
 .preview {
   position: relative;
-  left: -50px;
+  left: 0px;
   margin-right: -32px;
   width: 950px;
   margin-top: 300px;
@@ -560,9 +667,12 @@ figure {
 }
 
 .schedule-centered {
-  width: 1200px;
-  margin-left: -100px;
-  margin-right: -290px;
+  position: relative;
+  right: 0px;
+  margin-left: 0;
+  width: 1050px;
+  margin-top: 300px;
+  margin-bottom: 300px;
   justify-self: flex-end;
   flex-shrink: 0;
 
@@ -587,34 +697,66 @@ figure {
   }
   &-drag {
     padding: 12.75rem 0rem 15.75rem 3.25rem;
-    margin-left: 900px; // Increase this to move text more to the right
+    margin-left: 950px;
     margin-top: 600px;
-    transform: translateY(-250px); // Adjust this to move text up/down
+    transform: translateY(-125px);
+    width: 800px;
+
     @media (max-width: $large-breakpoint) {
       margin-left: 0;
+      width: auto;
     }
 
-    .head:contains('Drag and Drop') + .sub-text {
-      margin-right: 200px;
+    .sub-text {
+      width: 600px;
+      margin-right: 0;
     }
 
-    .head:contains('Track Requirements') + .sub-text {
-      margin-right: 300px;
+    &:has(.track-text) {
+      margin-top: 400px;
+      transform: translateY(-150px);
     }
 
-    .head:contains('Multiple Plans') + .sub-text {
-      margin-right: 250px;
+    &:has(.multiple-text) {
+      margin-top: 500px;
+      transform: translateY(-100px);
+    }
+
+    &:has(.notes-text) {
+      margin-top: 450px;
+      transform: translateY(-125px);
     }
   }
   &-sem {
-    padding: 8.75rem 3.25rem 15.75rem 3.25rem;
+    padding: 0rem 3.25rem 15.75rem 3.25rem;
     margin: 0;
     margin-top: 550px;
-    margin-right: 1150px; // Add this to move text more to the left
-    transform: translate(10px, -120px); // Adjust this to move text up/down
+    margin-right: 900px;
+    transform: translate(10px, -120px);
     flex-shrink: 2;
+
+    // Specific styling for Plan Your Semesters section
+    &:has(.semester-text) {
+      margin-right: 950px; // Adjust this value to move left/right
+      margin-top: 700px; // Adjust this value to move up/down
+      transform: translate(10px, -100px); // Fine-tune the position
+      width: 800px; // Set a fixed width to maintain text layout
+
+      .sub-text {
+        width: 550px; // Keep text width consistent
+        margin-right: 0;
+      }
+    }
+
+    &.notes-text-left {
+      margin-right: 850px;
+      margin-left: 100px;
+    }
+
     @media (max-width: $large-breakpoint) {
       margin-right: 0;
+      margin-left: 0;
+      width: auto;
     }
   }
 }
@@ -773,5 +915,81 @@ html {
       visibility: visible;
     }
   }
+}
+
+.new-badge {
+  display: block;
+  margin-top: -2rem;
+  margin-bottom: 3rem;
+  width: 102px;
+  height: 39px;
+
+  @media (max-width: $large-breakpoint) {
+    margin: 0 auto 2rem;
+    width: 85px;
+    height: auto;
+  }
+}
+
+.comment-sem,
+.comment-drag {
+  position: relative;
+
+  @media (max-width: $large-breakpoint) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+}
+
+.container-fluid.center {
+  margin-bottom: 10rem;
+  margin-top: -10rem;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  // Plan Your Semesters section
+  &:has(.semester-text) {
+    margin-bottom: -15rem;
+    margin-top: -20rem;
+  }
+
+  // Schedule Generator section
+  &:has(.generate-text) {
+    margin-bottom: -20rem;
+    margin-top: -25rem;
+  }
+
+  // Saved Courses section
+  &:has(.saved-text) {
+    margin-bottom: -15rem;
+    margin-top: -20rem;
+  }
+}
+
+.container-fluid.plan:has(.track-text) {
+  margin-bottom: 6rem;
+  margin-top: 10rem; //adjust spacing of the progress tracker
+}
+
+// Add specific styling for Multiple Plans section
+.container-fluid.plan:has(.multiple-text) {
+  margin-bottom: -20rem;
+  margin-top: 15rem;
+}
+
+// Add specific styling for Notes Feature section
+.container-fluid.plan:has(.notes-text) {
+  margin-bottom: -15rem;
+  margin-top: -25rem;
+}
+
+// Add specific styling for Drag and Drop section
+.container-fluid.plan:has(.drag-text) {
+  margin-bottom: 6rem;
+  margin-top: -18rem;
 }
 </style>
