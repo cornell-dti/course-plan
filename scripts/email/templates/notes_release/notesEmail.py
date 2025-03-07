@@ -49,8 +49,7 @@ HTML = f"""
         <p>Make Notes work for you! Edit them anytime by clicking on the note field.</p>
 
         <div style="text-align: center;">
-        <a href="https://gifyu.com/image/bblsg"><img src="https://s3.gifyu.com/images/bblsg.png" alt="Editing Note" border="0" style="height: 240px; width: 300px; border-radius: 0" /></a>
-
+        <a href="https://ibb.co/f5TcbRw"><img src="https://i.ibb.co/f5TcbRw/Untitled-design.png" alt="Editing Node" border="0" style="height: 240px; width: 300px; border-radius: 0" /></a>
         <h3 style="font-weight: bold;">Delete When You're Done ❌</h3>
         <p>Changing plans? Removing a note is as easy as clicking the "X" next to it. Keep your CoursePlan clean and up to date!</p>
          <div style="text-align: center; margin: 20px 0;">
