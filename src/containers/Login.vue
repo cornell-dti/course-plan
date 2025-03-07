@@ -357,23 +357,28 @@ export default defineComponent({
 
 @font-face {
   font-family: 'Proxima Nova';
-  src: url('@/assets/fonts/ProximaNova-Light.woff2') format('woff2');
+  src: url('@/assets/fonts/Proxima Nova Alt Light.otf') format('opentype');
   font-weight: 300;
   font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
   font-family: 'Proxima Nova';
-  src: url('@/assets/fonts/ProximaNova-Regular.woff2') format('woff2');
+  src: url('@/assets/fonts/ProximaNova-Regular.otf') format('opentype'),
+    url('@/assets/fonts/ProximaNova-Regular.ttf') format('truetype');
   font-weight: 400;
   font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
   font-family: 'Proxima Nova';
-  src: url('@/assets/fonts/ProximaNova-Bold.woff2') format('woff2');
+  src: url('@/assets/fonts/ProximaNova-Bold.otf') format('opentype'),
+    url('@/assets/fonts/ProximaNova-Bold.ttf') format('truetype');
   font-weight: 700;
   font-style: normal;
+  font-display: swap;
 }
 
 .top-sec {
