@@ -248,7 +248,7 @@
               class="new-badge"
               aria-label="new feature badge"
             />
-            <h1 class="head">Notes Feature</h1>
+            <h1 class="head">Personal Notes</h1>
             <p class="sub-text notes-text">
               <strong>Keep track of important details</strong> by <br />
               adding notes and comments while <br />
@@ -736,6 +736,23 @@ figure {
       margin-right: 0;
     }
 
+    &:has(.notes-text) {
+      margin-top: 450px;
+      margin-left: 950px;
+      transform: translate(-20px, 200px);
+      width: 800px;
+
+      .head {
+        margin-bottom: 30px;
+      }
+
+      .sub-text {
+        width: 600px;
+        margin-right: 0;
+        line-height: 1.5;
+      }
+    }
+
     &:has(.track-text) {
       margin-top: 400px;
       transform: translateY(-150px);
@@ -746,12 +763,6 @@ figure {
       transform: translateY(-100px);
     }
 
-    &:has(.notes-text) {
-      margin-top: 450px;
-      transform: translateY(-125px);
-    }
-
-    // Specific styling for Plan With Academic Tools section
     &:has(.track-text) {
       margin-top: 450px;
       margin-left: 950px;
@@ -770,8 +781,8 @@ figure {
         white-space: normal;
 
         strong {
-          white-space: nowrap; // Keep the strong text together
-          display: inline; // Ensure inline display
+          white-space: nowrap;
+          display: inline;
         }
       }
     }
@@ -784,29 +795,26 @@ figure {
     transform: translate(10px, -120px);
     flex-shrink: 2;
 
-    // Specific styling for Plan Your Semesters section
     &:has(.semester-text) {
-      margin-right: 750px; // Decrease this value to move text left
-      margin-top: 650px; // Increase this to move text down
-      margin-left: 250px; // Increase this to move text right
-      transform: translate(-300px, -50px); // Fine-tune position (negative X moves left)
+      margin-right: 750px;
+      margin-top: 650px;
+      margin-left: 250px;
+      transform: translate(-300px, -50px);
     }
 
-    // Specific styling for Schedule Generator section
     &:has(.generate-text) {
-      margin-right: 850px; // Adjust this value to move left/right
-      margin-top: 500px; // Adjust this value to move up/down
-      margin-left: 100px; // Adjust this for additional left/right positioning
-      transform: translate(0px, 190px); // Fine-tune the position
-      width: 800px; // Set a fixed width to maintain text layout
+      margin-right: 850px;
+      margin-top: 500px;
+      margin-left: 100px;
+      transform: translate(0px, 190px);
+      width: 800px;
 
       .sub-text {
-        width: 450px; // Keep text width consistent
+        width: 450px;
         margin-right: 0;
       }
     }
 
-    // Specific styling for Saved Courses section
     &:has(.saved-text) {
       margin-right: 850px;
       margin-top: 600px;
