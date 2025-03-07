@@ -127,7 +127,7 @@
           <div class="comment comment-sem">
             <h1 class="head">Plan Your Semesters</h1>
             <p class="sub-text semester-text">
-              Stay ahead with CoursePlan’s
+              Stay ahead with CoursePlan's
               <strong>semesterly planner</strong>—select your courses early and ensure you never
               miss a requirement.
             </p>
@@ -155,8 +155,9 @@
           <div class="comment comment-drag">
             <h1 class="head">Plan With Academic Tools</h1>
             <p class="sub-text track-text">
-              CoursePlan provides a collection of useful tools to help you plan your semesters. This
-              includes a dashboard page ands
+              <strong>Streamline your semester planning</strong> <br />
+              with CoursePlan's academic tools, <br />
+              including a dashboard, progress <br />tracker, and advisor contact list.
             </p>
           </div>
         </div>
@@ -168,7 +169,8 @@
           <div class="comment comment-sem notes-text-left">
             <h1 class="head">Schedule Generator</h1>
             <p class="sub-text generate-text">
-              Select the classes you're interested in and get auto-generated schedule suggestions.
+              Effortlessly create your ideal schedule. Select your preferred classes and let
+              CoursePlan generate <strong>optimized schedule suggestions</strong> on the Build page.
             </p>
           </div>
           <img
@@ -194,7 +196,9 @@
           <div class="comment comment-drag">
             <h1 class="head">Multiple Plans</h1>
             <p class="sub-text multiple-text">
-              Create multiple versions of your 4 year plan to find the best one suited for you.
+              <strong>Explore different academic paths</strong> by<br />
+              creating multiple versions of your <br />four-year plan to find the one that fits you
+              best.
             </p>
           </div>
         </div>
@@ -212,8 +216,9 @@
             />
             <h1 class="head">Saved Courses</h1>
             <p class="sub-text saved-text">
-              Want to note a course to take in the future? Save a course into an existing or new
-              collection! View, modify and update your collections on the Save page.
+              Easily <strong>save courses for the future</strong> <br />
+              by adding them to a new or <br />existing collection. View, update, <br />and manage
+              your saved courses <br />anytime on the Save page.
             </p>
           </div>
           <img
@@ -245,7 +250,9 @@
             />
             <h1 class="head">Notes Feature</h1>
             <p class="sub-text notes-text">
-              When planning your courses, jot down notes and comments to remember for later.
+              <strong>Keep track of important details</strong> by <br />
+              adding notes and comments while <br />
+              planning your courses.
             </p>
           </div>
         </div>
@@ -418,7 +425,7 @@ export default defineComponent({
 }
 .plan-head {
   padding-bottom: 2rem;
-  font-family: normal;
+  font-family: 'Proxima Nova', sans-serif;
   font-weight: 700;
   font-size: 72px;
   line-height: 73px;
@@ -572,11 +579,18 @@ figure {
 
   // Academic Tools section
   &.track-text {
-    max-width: 500px;
+    max-width: 800px;
     margin-top: 32px;
-    margin-right: 300px;
+    margin-right: 0;
     margin-bottom: 0;
     margin-left: 0;
+    line-height: 1.5;
+    white-space: normal;
+
+    strong {
+      white-space: nowrap; // Keep the strong text together
+      display: inline; // Ensure inline display
+    }
   }
 
   // Schedule Generator section
@@ -590,11 +604,14 @@ figure {
 
   // Multiple Plans section
   &.multiple-text {
-    max-width: 500px;
+    max-width: 520px;
     margin-top: 32px;
-    margin-right: 250px;
     margin-bottom: 0;
     margin-left: 0;
+
+    @media (max-width: $large-breakpoint) {
+      max-width: 100%;
+    }
   }
 
   // Saved Courses section
@@ -629,14 +646,16 @@ figure {
   }
 }
 .head {
-  font-weight: 600;
+  font-family: 'Proxima Nova', sans-serif;
+  font-weight: 700;
   line-height: 42px;
   font-size: 40px;
   color: $black;
   padding-bottom: 0px;
 }
 .head-center {
-  font-weight: 600;
+  font-family: 'Proxima Nova', sans-serif;
+  font-weight: 700;
   font-size: 40px;
   color: $black;
   padding-bottom: 0px;
@@ -726,6 +745,31 @@ figure {
       margin-top: 450px;
       transform: translateY(-125px);
     }
+
+    // Specific styling for Plan With Academic Tools section
+    &:has(.track-text) {
+      margin-top: 450px;
+      margin-left: 950px;
+      transform: translateY(-150px);
+      width: 1000px;
+
+      .head {
+        margin-bottom: 30px;
+      }
+
+      .sub-text {
+        width: 800px;
+        margin-right: 0;
+        margin-left: 0;
+        line-height: 1.5;
+        white-space: normal;
+
+        strong {
+          white-space: nowrap; // Keep the strong text together
+          display: inline; // Ensure inline display
+        }
+      }
+    }
   }
   &-sem {
     padding: 0rem 3.25rem 15.75rem 3.25rem;
@@ -737,13 +781,36 @@ figure {
 
     // Specific styling for Plan Your Semesters section
     &:has(.semester-text) {
-      margin-right: 950px; // Adjust this value to move left/right
-      margin-top: 700px; // Adjust this value to move up/down
-      transform: translate(10px, -100px); // Fine-tune the position
+      margin-right: 750px; // Decrease this value to move text left
+      margin-top: 650px; // Increase this to move text down
+      margin-left: 250px; // Increase this to move text right
+      transform: translate(-300px, -50px); // Fine-tune position (negative X moves left)
+    }
+
+    // Specific styling for Schedule Generator section
+    &:has(.generate-text) {
+      margin-right: 850px; // Adjust this value to move left/right
+      margin-top: 500px; // Adjust this value to move up/down
+      margin-left: 100px; // Adjust this for additional left/right positioning
+      transform: translate(0px, 190px); // Fine-tune the position
       width: 800px; // Set a fixed width to maintain text layout
 
       .sub-text {
-        width: 550px; // Keep text width consistent
+        width: 450px; // Keep text width consistent
+        margin-right: 0;
+      }
+    }
+
+    // Specific styling for Saved Courses section
+    &:has(.saved-text) {
+      margin-right: 850px;
+      margin-top: 600px;
+      margin-left: 100px;
+      transform: translate(-75px, 125px);
+      width: 800px;
+
+      .sub-text {
+        width: 600px;
         margin-right: 0;
       }
     }
@@ -921,12 +988,12 @@ html {
   display: block;
   margin-top: -2rem;
   margin-bottom: 3rem;
-  width: 102px;
-  height: 39px;
+  width: 140px;
+  height: 54px;
 
   @media (max-width: $large-breakpoint) {
     margin: 0 auto 2rem;
-    width: 85px;
+    width: 120px;
     height: auto;
   }
 }
@@ -983,8 +1050,8 @@ html {
 
 // Add specific styling for Notes Feature section
 .container-fluid.plan:has(.notes-text) {
-  margin-bottom: -15rem;
-  margin-top: -25rem;
+  margin-bottom: -5rem;
+  margin-top: 7.5rem;
 }
 
 // Add specific styling for Drag and Drop section
