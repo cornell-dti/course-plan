@@ -8,6 +8,7 @@ from typing import List
 # from templates.feb2025_vday.vday import *
 
 # from templates.dryrun import *
+from templates.notes_release.notesEmail import *
 
 # Load environment variables from .env
 load_dotenv(".env.private")

@@ -26,23 +26,38 @@ db = firestore.client()
 #     return user_names
 
 
+def get_all_user_names() -> Dict[str, Tuple[str, str, str]]:
+    """Fetches all user names from Firebase and returns a mapping of email to (first, middle, last) names."""
+    print("Fetching all user names from Firebase...")
+    user_names = {}
+    docs = db.collection("user-name").get()
+    for doc in docs:
+        data = doc.to_dict()
+        user_names[doc.id] = (
+            data.get("firstName", None),
+            data.get("middleName", None),
+            data.get("lastName", None),
+        )
+    return user_names
+
+
 def get_users() -> Dict[Tuple[str, str], List[Dict]]:
     print("Fetching all user data from Firebase...")
-    # user_names = get_all_user_names()
+    user_names = get_all_user_names()
     users = db.collection("user-onboarding-data").get()
     user_map = defaultdict(list)
 
     for user in users:
         user_data = user.to_dict()
         email = user.id
-        # first_name, middle_name, last_name = user_names.get(
-        #     email, (None, None, None)
-        # )  # NOTE: may cause type errors if we don't have a name for this user and try
-        # # to send them an email regardless. (Deliberate decision.)
+        first_name, middle_name, last_name = user_names.get(
+            email, (None, None, None)
+        )  # NOTE: may cause type errors if we don't have a name for this user and try
+        # to send them an email regardless. (Deliberate decision.)
 
-        # # Deleted accounts or something? Not sure to do with these people.
-        # if first_name is None and middle_name is None and last_name is None:
-        #     print(f"User {email} not found in user-name collection!")
+        # Deleted accounts or something? Not sure to do with these people.
+        if first_name is None and middle_name is None and last_name is None:
+            print(f"User {email} not found in user-name collection!")
 
         colleges = [
             college.get("acronym", "") for college in user_data.get("colleges", [])
@@ -59,9 +74,9 @@ def get_users() -> Dict[Tuple[str, str], List[Dict]]:
         user_map[key].append(
             {
                 "email": email,
-                # "first_name": first_name,
-                # "middle_name": middle_name,
-                # "last_name": last_name,
+                "first_name": first_name,
+                "middle_name": middle_name,
+                "last_name": last_name,
                 "colleges": colleges,
                 "grad_programs": grad_programs,
                 "entrance_semester": entrance_sem,
