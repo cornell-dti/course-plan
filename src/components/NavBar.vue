@@ -13,13 +13,23 @@
         <div class="navbar-iconWrapper hairlineWrapper no-hover">
           <img class="navbar-icon hairline" src="@/assets/images/navbar/hairline.svg" />
         </div>
-        <div class="navbar-buttonWrapper desktop" @click="openPlan" :class="{ 'active': activePage === 'plan' }" data-cyId="openPlan">
+        <div
+          class="navbar-buttonWrapper desktop"
+          @click="openPlan"
+          :class="{ active: activePage === 'plan' }"
+          data-cyId="openPlan"
+        >
           <button class="navbar-iconWrapper plan-icon full-opacity-on-hover" />
           <div class="navbar-iconText">
             <span>Plan</span>
           </div>
         </div>
-        <div class="navbar-buttonWrapper desktop" @click="openTools" :class="{ 'active': activePage === 'tools' }" data-cyId="openTools">
+        <div
+          class="navbar-buttonWrapper desktop"
+          @click="openTools"
+          :class="{ active: activePage === 'tools' }"
+          data-cyId="openTools"
+        >
           <button class="navbar-iconWrapper tools-icon full-opacity-on-hover" />
           <div class="navbar-iconText">
             <span>Tools</span>
@@ -34,7 +44,7 @@
         <div
           class="navbar-buttonWrapper desktop"
           @click="openCollection"
-          :class="{ 'active': activePage === 'collection' }"
+          :class="{ active: activePage === 'collection' }"
           data-cyId="openCollection"
         >
           <button class="navbar-iconWrapper saved-courses-icon full-opacity-on-hover" />
@@ -42,7 +52,10 @@
             <span>Saved</span>
           </div>
         </div>
-        <div class="navbar-buttonWrapper desktop" :class="{ 'active': activePage === 'scheduleGenerate' }">
+        <div
+          class="navbar-buttonWrapper desktop"
+          :class="{ active: activePage === 'scheduleGenerate' }"
+        >
           <button
             id="schedule-generator"
             class="navbar-iconWrapper schedule-builder-icon full-opacity-on-hover"
@@ -133,7 +146,7 @@ export default defineComponent({
   ],
   data() {
     return {
-      activePage: "plan",
+      activePage: 'plan',
       menuOpen: false,
     };
   },
@@ -164,17 +177,17 @@ export default defineComponent({
     },
     openCollection() {
       this.menuOpen = false;
-      this.activePage = "collection";
+      this.activePage = 'collection';
       this.$emit('openCollection');
     },
     openPlan() {
       this.menuOpen = false;
-      this.activePage = "plan";
+      this.activePage = 'plan';
       this.$emit('openPlan');
     },
     openTools() {
       this.menuOpen = false;
-      this.activePage = "tools";
+      this.activePage = 'tools';
       this.$emit('openTools');
     },
     editProfile() {
@@ -186,7 +199,7 @@ export default defineComponent({
     },
     openScheduleGenerate() {
       this.menuOpen = false;
-      this.activePage = "scheduleGenerate";
+      this.activePage = 'scheduleGenerate';
       this.$emit('openScheduleGenerate');
     },
     toggleRequirementsMobile() {
