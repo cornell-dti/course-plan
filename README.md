@@ -22,7 +22,35 @@ Then access http://localhost:8080/
 
 ## Contributors
 
+## SP25
+
+- **Nigel Tatem** - Developer
+- **Eric Cheng** - Developer
+- **Hannah Zhou** - Developer
+- **Lazim Jarif** - Designer
+- **Nitya Pakala** - PM
+- **Arsh Aggarwal** - APM
+- **Diya Lavu** - PMM
+- **Nidhi Mylavarapu** - TPM
+
+
+
+## FA24
+
+- **Nigel Tatem** - Developer
+- **Eric Cheng** - Developer
+- **Hannah Zhou** - Developer
+- **Simon Ilincev** - Developer
+- **Joanna Chen** - Desginer
+- **Lazim Jarif** - Designer
+- **Ilyssa Yan** - PM
+- **Nitya Pakala** - APM
+- **An Le** - PMM
+- **Nidhi Mylavarapu** - TPM
+
+
 ## SP24 
+
 - **Hannah Zhou** - Developer
 - **Nidhi Mylavarapu** - Developer
 - **Simon Ilincev** - Developer
@@ -34,6 +62,7 @@ Then access http://localhost:8080/
 - **Ilyssa Yan** - APM
 
 ### FA23
+
 - **Nidhi Mylavarapu** - Developer
 - **Simon Ilincev** - Developer
 - **Jerry Wang** - Developer
