@@ -13,13 +13,23 @@
         <div class="navbar-iconWrapper hairlineWrapper no-hover">
           <img class="navbar-icon hairline" src="@/assets/images/navbar/hairline.svg" />
         </div>
-        <div class="navbar-buttonWrapper desktop" @click="openPlan" data-cyId="openPlan">
+        <div
+          class="navbar-buttonWrapper desktop"
+          @click="openPlan"
+          :class="{ active: activePage === 'plan' }"
+          data-cyId="openPlan"
+        >
           <button class="navbar-iconWrapper plan-icon full-opacity-on-hover" />
           <div class="navbar-iconText">
             <span>Plan</span>
           </div>
         </div>
-        <div class="navbar-buttonWrapper desktop" @click="openTools" data-cyId="openTools">
+        <div
+          class="navbar-buttonWrapper desktop"
+          @click="openTools"
+          :class="{ active: activePage === 'tools' }"
+          data-cyId="openTools"
+        >
           <button class="navbar-iconWrapper tools-icon full-opacity-on-hover" />
           <div class="navbar-iconText">
             <span>Tools</span>
@@ -34,6 +44,7 @@
         <div
           class="navbar-buttonWrapper desktop"
           @click="openCollection"
+          :class="{ active: activePage === 'collection' }"
           data-cyId="openCollection"
         >
           <button class="navbar-iconWrapper saved-courses-icon full-opacity-on-hover" />
@@ -41,7 +52,10 @@
             <span>Saved</span>
           </div>
         </div>
-        <div class="navbar-buttonWrapper desktop">
+        <div
+          class="navbar-buttonWrapper desktop"
+          :class="{ active: activePage === 'scheduleGenerate' }"
+        >
           <button
             id="schedule-generator"
             class="navbar-iconWrapper schedule-builder-icon full-opacity-on-hover"
@@ -132,6 +146,7 @@ export default defineComponent({
   ],
   data() {
     return {
+      activePage: 'plan',
       menuOpen: false,
     };
   },
@@ -162,14 +177,17 @@ export default defineComponent({
     },
     openCollection() {
       this.menuOpen = false;
+      this.activePage = 'collection';
       this.$emit('openCollection');
     },
     openPlan() {
       this.menuOpen = false;
+      this.activePage = 'plan';
       this.$emit('openPlan');
     },
     openTools() {
       this.menuOpen = false;
+      this.activePage = 'tools';
       this.$emit('openTools');
     },
     editProfile() {
@@ -181,6 +199,7 @@ export default defineComponent({
     },
     openScheduleGenerate() {
       this.menuOpen = false;
+      this.activePage = 'scheduleGenerate';
       this.$emit('openScheduleGenerate');
     },
     toggleRequirementsMobile() {
@@ -227,9 +246,28 @@ $mobile-navbar-height: 4.5rem;
   &-buttonWrapper {
     cursor: pointer;
     margin-bottom: 1.5rem;
+    &.active {
+      .navbar-iconText {
+        color: #0d7acb;
+      }
+      .plan-icon {
+        background-image: url('@/assets/images/navbar/planIconBlue.svg');
+      }
+      .tools-icon {
+        background-image: url('@/assets/images/navbar/toolboxIconBlue.svg');
+      }
+      .profile-icon {
+        background-image: url('@/assets/images/navbar/profileIconBlue.svg');
+      }
+      .saved-courses-icon {
+        background-image: url('@/assets/images/navbar/savedCoursesIconBlue.svg');
+      }
+      .schedule-builder-icon {
+        background-image: url('@/assets/images/navbar/scheduleBuilderIconBlue.svg');
+      }
+    }
     &:hover,
-    &:focus,
-    &:active {
+    &:focus {
       .navbar-iconText {
         color: #0d7acb;
       }
