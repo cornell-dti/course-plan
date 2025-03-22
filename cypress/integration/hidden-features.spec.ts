@@ -88,7 +88,7 @@ it('Onboarding Process', () => {
   cy.get('[data-cyId=onboarding-nextButton]').scrollIntoView().should('be.visible');
   cy.get('[data-cyId=onboarding-nextButton]').click();
 
-  // confirm Fall 2018, Summer 2022, engineering, and computer science are selected on the review screen
+  // confirm Fall 2022, Summer 2026, engineering, and computer science are selected on the review screen
   cy.get('[data-cyId=onboarding-entranceYear]').contains('2022');
   cy.get('[data-cyId=onboarding-entranceSeason]').contains('Fall');
   cy.get('[data-cyId=onboarding-gradYear]').contains('2026');
