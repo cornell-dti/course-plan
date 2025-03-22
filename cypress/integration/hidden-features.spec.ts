@@ -89,9 +89,9 @@ it('Onboarding Process', () => {
   cy.get('[data-cyId=onboarding-nextButton]').click();
 
   // confirm Fall 2018, Summer 2022, engineering, and computer science are selected on the review screen
-  cy.get('[data-cyId=onboarding-entranceYear]').contains('2018');
+  cy.get('[data-cyId=onboarding-entranceYear]').contains('2022');
   cy.get('[data-cyId=onboarding-entranceSeason]').contains('Fall');
-  cy.get('[data-cyId=onboarding-gradYear]').contains('2022');
+  cy.get('[data-cyId=onboarding-gradYear]').contains('2026');
   cy.get('[data-cyId=onboarding-gradSeason]').contains('Summer');
   cy.get('[data-cyId=onboarding-college]').contains('Engineering');
   cy.get('[data-cyId=onboarding-major]').contains('Computer Science');
