@@ -19,19 +19,19 @@ before('Visit site logged in', () => {
 
 // After logging in for the first time, the onboarding process begins
 it('Onboarding Process', () => {
-  // set Entrance semester to 2018
+  // set Entrance semester to 2022
   cy.get('[data-cyId=onboarding-dropdown]').eq(1).click();
   cy.get('[data-cyId=onboarding-dropdownItem]').each($el => {
     cy.wrap($el)
       .invoke('text')
       .then(text => {
-        if (text.includes('2018')) {
+        if (text.includes('2022')) {
           cy.wrap($el).click();
         }
       });
   });
 
-  // set Graduation semester to Summer 2022
+  // set Graduation semester to Summer 2026
   cy.get('[data-cyId=onboarding-dropdown]').eq(2).click();
   cy.get('[data-cyId=onboarding-dropdownItem]').each($el => {
     cy.wrap($el)
@@ -48,7 +48,7 @@ it('Onboarding Process', () => {
     cy.wrap($el)
       .invoke('text')
       .then(text => {
-        if (text.includes('2022')) {
+        if (text.includes('2026')) {
           cy.wrap($el).click();
         }
       });
