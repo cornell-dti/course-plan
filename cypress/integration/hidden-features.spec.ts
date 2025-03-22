@@ -6,6 +6,7 @@
 import { getCurrentYear, entranceYearRange } from '../../src/utilities';
 
 const startYear = getCurrentYear() - entranceYearRange;
+const gradYear = startYear + 4;
 
 // Before running tests, starts on landing page, logs in to firebase, then visits the dashboard
 // Log in occurs with TEST_UID of the courseplan testing account using a function from the cypress-firebase package
@@ -19,13 +20,13 @@ before('Visit site logged in', () => {
 
 // After logging in for the first time, the onboarding process begins
 it('Onboarding Process', () => {
-  // set Entrance semester to 2022
+  // set Entrance semester to currentYear-3
   cy.get('[data-cyId=onboarding-dropdown]').eq(1).click();
   cy.get('[data-cyId=onboarding-dropdownItem]').each($el => {
     cy.wrap($el)
       .invoke('text')
       .then(text => {
-        if (text.includes('2022')) {
+        if (text.includes(startYear.toString())) {
           cy.wrap($el).click();
         }
       });
@@ -48,7 +49,7 @@ it('Onboarding Process', () => {
     cy.wrap($el)
       .invoke('text')
       .then(text => {
-        if (text.includes('2026')) {
+        if (text.includes(gradYear.toString())) {
           cy.wrap($el).click();
         }
       });
@@ -89,9 +90,9 @@ it('Onboarding Process', () => {
   cy.get('[data-cyId=onboarding-nextButton]').click();
 
   // confirm Fall 2022, Summer 2026, engineering, and computer science are selected on the review screen
-  cy.get('[data-cyId=onboarding-entranceYear]').contains('2022');
+  cy.get('[data-cyId=onboarding-entranceYear]').contains(startYear);
   cy.get('[data-cyId=onboarding-entranceSeason]').contains('Fall');
-  cy.get('[data-cyId=onboarding-gradYear]').contains('2026');
+  cy.get('[data-cyId=onboarding-gradYear]').contains(gradYear);
   cy.get('[data-cyId=onboarding-gradSeason]').contains('Summer');
   cy.get('[data-cyId=onboarding-college]').contains('Engineering');
   cy.get('[data-cyId=onboarding-major]').contains('Computer Science');
