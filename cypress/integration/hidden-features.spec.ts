@@ -122,6 +122,47 @@ it('Add a semester (Fall of oldest year)', () => {
   cy.get('[data-cyId=semesterName]').last().contains(`Fall ${startYear}`);
 });
 
+// Confirm that duplicate semesters cannot be added
+it('Fail to add a duplicate semester', () => {
+  // because a semester exists, get semester-addSemesterButton instead of semesterVIew-addSemesterButton
+  cy.get('[data-cyId=semester-addSemesterButton]').click();
+
+  // click fall
+  cy.get('[data-cyId=newSemester-seasonWrapper]').first().click();
+  cy.get('[data-cyId=newSemester-seasonItem]').first().click();
+
+  // click oldest year
+  cy.get('[data-cyId=newSemester-yearWrapper]').first().click();
+  cy.get('[data-cyId=newSemester-yearItem]').first().click();
+
+  // confirm button is disabled
+  cy.get('[data-cyId=modal-button]').should('be.disabled');
+
+  // exit the modal
+  cy.get('[data-cyId=modal-exit]').click();
+});
+
+// Confirm that the newly added semester can be edited
+it('Edit a semester (Fall of oldest year -> Spring of second oldest year)', () => {
+  // open the edit semester menu
+  cy.get('[data-cyId=semesterMenu]').first().click();
+  cy.get('[data-cyId=semesterMenu-edit]').click();
+
+  // click spring
+  cy.get('[data-cyId=newSemester-seasonWrapper]').last().click();
+  cy.get('[data-cyId=newSemester-seasonItem]').eq(1).click();
+
+  // click second oldest year
+  cy.get('[data-cyId=newSemester-yearWrapper]').last().click();
+  cy.get('[data-cyId=newSemester-yearItem]').eq(1).click();
+
+  // finish editing and confirm it has been updated
+  cy.get('[data-cyId=modal-button]').click();
+  cy.get('[data-cyId=semesterName]')
+    .last()
+    .contains(`Spring ${startYear + 1}`);
+});
+
 // // Test to confirm that the new user walkthrough works as expected
 // // Click through the initial explanation, then the 4 following steps, and finally the finishing page
 // it('Click through new feature tour', () => {
@@ -138,67 +179,6 @@ it('Add a semester (Fall of oldest year)', () => {
 //       cy.get('[data-cyId=modal-button]').click();
 //     });
 //   }
-// });
-
-// // Confirm that a semester can be added to the plan
-// it('Add a semester (Fall of oldest year)', () => {
-//   // open the new semester modal
-//   cy.get('[data-cyId=semesterView-addSemesterButton]').click();
-
-//   // click Fall
-//   cy.get('[data-cyId=newSemester-seasonWrapper]').click();
-//   cy.get('[data-cyId=newSemester-seasonItem]').first().click();
-
-//   // click oldest year
-//   cy.get('[data-cyId=newSemester-yearWrapper]').click();
-//   cy.get('[data-cyId=newSemester-yearItem]').first().click();
-
-//   // add semester
-//   cy.get('[data-cyId=modal-button]').click();
-
-//   // confirm the oldest semester is the newly added one
-//   cy.get('[data-cyId=semesterName]').last().contains(`Fall ${startYear}`);
-// });
-
-// // Confirm that duplicate semesters cannot be added
-// it('Fail to add a duplicate semester', () => {
-//   // because a semester exists, get semester-addSemesterButton instead of semesterVIew-addSemesterButton
-//   cy.get('[data-cyId=semester-addSemesterButton]').click();
-
-//   // click fall
-//   cy.get('[data-cyId=newSemester-seasonWrapper]').first().click();
-//   cy.get('[data-cyId=newSemester-seasonItem]').first().click();
-
-//   // click oldest year
-//   cy.get('[data-cyId=newSemester-yearWrapper]').first().click();
-//   cy.get('[data-cyId=newSemester-yearItem]').first().click();
-
-//   // confirm button is disabled
-//   cy.get('[data-cyId=modal-button]').should('be.disabled');
-
-//   // exit the modal
-//   cy.get('[data-cyId=modal-exit]').click();
-// });
-
-// // Confirm that the newly added semester can be edited
-// it('Edit a semester (Fall of oldest year -> Spring of second oldest year)', () => {
-//   // open the edit semester menu
-//   cy.get('[data-cyId=semesterMenu]').first().click();
-//   cy.get('[data-cyId=semesterMenu-edit]').click();
-
-//   // click spring
-//   cy.get('[data-cyId=newSemester-seasonWrapper]').last().click();
-//   cy.get('[data-cyId=newSemester-seasonItem]').eq(1).click();
-
-//   // click second oldest year
-//   cy.get('[data-cyId=newSemester-yearWrapper]').last().click();
-//   cy.get('[data-cyId=newSemester-yearItem]').eq(1).click();
-
-//   // finish editing and confirm it has been updated
-//   cy.get('[data-cyId=modal-button]').click();
-//   cy.get('[data-cyId=semesterName]')
-//     .last()
-//     .contains(`Spring ${startYear + 1}`);
 // });
 
 // // Test that you can change entrance semester, grad semester, colleges and majors. A later requirements test is dependent on these choices
