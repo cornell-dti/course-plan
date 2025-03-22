@@ -102,6 +102,26 @@ it('Onboarding Process', () => {
   cy.get('[data-cyId=collegeTitle]').contains('(Engineering (ENG))');
 });
 
+// Confirm that a semester can be added to the plan
+it('Add a semester (Fall of oldest year)', () => {
+  // open the new semester modal
+  cy.get('[data-cyId=semesterView-addSemesterButton]').click();
+
+  // click Fall
+  cy.get('[data-cyId=newSemester-seasonWrapper]').click();
+  cy.get('[data-cyId=newSemester-seasonItem]').first().click();
+
+  // click oldest year
+  cy.get('[data-cyId=newSemester-yearWrapper]').click();
+  cy.get('[data-cyId=newSemester-yearItem]').first().click();
+
+  // add semester
+  cy.get('[data-cyId=modal-button]').click();
+
+  // confirm the oldest semester is the newly added one
+  cy.get('[data-cyId=semesterName]').last().contains(`Fall ${startYear}`);
+});
+
 // // Test to confirm that the new user walkthrough works as expected
 // // Click through the initial explanation, then the 4 following steps, and finally the finishing page
 // it('Click through new feature tour', () => {
