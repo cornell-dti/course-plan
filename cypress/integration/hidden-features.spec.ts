@@ -85,6 +85,7 @@ it('Onboarding Process', () => {
   // click through the rest of onboarding
   cy.get('[data-cyId=onboarding-nextButton]').scrollIntoView().should('be.visible');
   cy.get('[data-cyId=onboarding-nextButton]').click();
+  cy.get('[data-cyId=onboarding-nextButton]').scrollIntoView().should('be.visible');
   cy.get('[data-cyId=onboarding-nextButton]').click();
 
   // confirm Fall 2018, Summer 2022, engineering, and computer science are selected on the review screen
