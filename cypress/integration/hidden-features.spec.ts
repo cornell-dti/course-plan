@@ -65,6 +65,8 @@ it('Onboarding Process', () => {
         }
       });
   });
+  // eslint-disable-next-line cypress/no-unnecessary-waiting
+  cy.wait(5000);
 
   // set to CS major
   cy.get('[data-cyId=onboarding-dropdown]').eq(5).click();
@@ -77,6 +79,8 @@ it('Onboarding Process', () => {
         }
       });
   });
+  // eslint-disable-next-line cypress/no-unnecessary-waiting
+  cy.wait(5000);
 
   // click through the rest of onboarding
   cy.get('[data-cyId=onboarding-nextButton]').scrollIntoView().should('be.visible');
