@@ -79,6 +79,7 @@ it('Onboarding Process', () => {
   });
 
   // click through the rest of onboarding
+  cy.get('[data-cyId=onboarding-nextButton]').scrollIntoView().should('be.visible');
   cy.get('[data-cyId=onboarding-nextButton]').click();
   cy.get('[data-cyId=onboarding-nextButton]').click();
 
