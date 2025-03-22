@@ -102,6 +102,12 @@ it('Onboarding Process', () => {
   cy.get('[data-cyId=collegeTitle]').contains('(Engineering (ENG))');
 });
 
+// Test to confirm that the new user walkthrough works as expected
+// Click through the initial explanation, then the 4 following steps, and finally the finishing page
+it('Click through new feature tour', () => {
+  cy.get('.introjs-nextbutton').click();
+});
+
 // Confirm that a semester can be added to the plan
 it('Add a semester (Fall of oldest year)', () => {
   // open the new semester modal
@@ -162,12 +168,6 @@ it('Edit a semester (Fall of oldest year -> Spring of second oldest year)', () =
     .last()
     .contains(`Spring ${startYear + 1}`);
 });
-
-// // Test to confirm that the new user walkthrough works as expected
-// // Click through the initial explanation, then the 4 following steps, and finally the finishing page
-// it('Click through new feature tour', () => {
-//   cy.get('.introjs-nextbutton').click();
-// });
 
 // // Delete existing semesters to ensure existing data does not mess with tests
 // it('Delete all existing semesters, if any exist', () => {
