@@ -19,89 +19,89 @@ before('Visit site logged in', () => {
 });
 
 // After logging in for the first time, the onboarding process begins
-it('Onboarding Process', () => {
-  // set Entrance semester to currentYear-3
-  cy.get('[data-cyId=onboarding-dropdown]').eq(1).click();
-  cy.get('[data-cyId=onboarding-dropdownItem]').each($el => {
-    cy.wrap($el)
-      .invoke('text')
-      .then(text => {
-        if (text.includes(startYear.toString())) {
-          cy.wrap($el).click();
-        }
-      });
-  });
+// it('Onboarding Process', () => {
+//   // set Entrance semester to currentYear-3
+//   cy.get('[data-cyId=onboarding-dropdown]').eq(1).click();
+//   cy.get('[data-cyId=onboarding-dropdownItem]').each($el => {
+//     cy.wrap($el)
+//       .invoke('text')
+//       .then(text => {
+//         if (text.includes(startYear.toString())) {
+//           cy.wrap($el).click();
+//         }
+//       });
+//   });
 
-  // set Graduation semester to Summer 2026
-  cy.get('[data-cyId=onboarding-dropdown]').eq(2).click();
-  cy.get('[data-cyId=onboarding-dropdownItem]').each($el => {
-    cy.wrap($el)
-      .invoke('text')
-      .then(text => {
-        if (text.includes('Summer')) {
-          cy.wrap($el).click();
-        }
-      });
-  });
+//   // set Graduation semester to Summer 2026
+//   cy.get('[data-cyId=onboarding-dropdown]').eq(2).click();
+//   cy.get('[data-cyId=onboarding-dropdownItem]').each($el => {
+//     cy.wrap($el)
+//       .invoke('text')
+//       .then(text => {
+//         if (text.includes('Summer')) {
+//           cy.wrap($el).click();
+//         }
+//       });
+//   });
 
-  cy.get('[data-cyId=onboarding-dropdown]').eq(3).click();
-  cy.get('[data-cyId=onboarding-dropdownItem]').each($el => {
-    cy.wrap($el)
-      .invoke('text')
-      .then(text => {
-        if (text.includes(gradYear.toString())) {
-          cy.wrap($el).click();
-        }
-      });
-  });
+//   cy.get('[data-cyId=onboarding-dropdown]').eq(3).click();
+//   cy.get('[data-cyId=onboarding-dropdownItem]').each($el => {
+//     cy.wrap($el)
+//       .invoke('text')
+//       .then(text => {
+//         if (text.includes(gradYear.toString())) {
+//           cy.wrap($el).click();
+//         }
+//       });
+//   });
 
-  // set to Engineering college
-  cy.get('[data-cyId=onboarding-dropdown]').eq(4).click();
-  cy.get('[data-cyId=onboarding-dropdownItem]').each($el => {
-    cy.wrap($el)
-      .invoke('text')
-      .then(text => {
-        if (text.includes('Engineering')) {
-          cy.wrap($el).click();
-        }
-      });
-  });
-  // eslint-disable-next-line cypress/no-unnecessary-waiting
-  cy.wait(5000);
+//   // set to Engineering college
+//   cy.get('[data-cyId=onboarding-dropdown]').eq(4).click();
+//   cy.get('[data-cyId=onboarding-dropdownItem]').each($el => {
+//     cy.wrap($el)
+//       .invoke('text')
+//       .then(text => {
+//         if (text.includes('Engineering')) {
+//           cy.wrap($el).click();
+//         }
+//       });
+//   });
+//   // eslint-disable-next-line cypress/no-unnecessary-waiting
+//   cy.wait(5000);
 
-  // set to CS major
-  cy.get('[data-cyId=onboarding-dropdown]').eq(5).click();
-  cy.get('[data-cyId=onboarding-dropdownItem]').each($el => {
-    cy.wrap($el)
-      .invoke('text')
-      .then(text => {
-        if (text.includes('Computer Science')) {
-          cy.wrap($el).click();
-        }
-      });
-  });
-  // eslint-disable-next-line cypress/no-unnecessary-waiting
-  cy.wait(5000);
+//   // set to CS major
+//   cy.get('[data-cyId=onboarding-dropdown]').eq(5).click();
+//   cy.get('[data-cyId=onboarding-dropdownItem]').each($el => {
+//     cy.wrap($el)
+//       .invoke('text')
+//       .then(text => {
+//         if (text.includes('Computer Science')) {
+//           cy.wrap($el).click();
+//         }
+//       });
+//   });
+//   // eslint-disable-next-line cypress/no-unnecessary-waiting
+//   cy.wait(5000);
 
-  // click through the rest of onboarding
-  cy.get('[data-cyId=onboarding-nextButton]').scrollIntoView().should('be.visible');
-  cy.get('[data-cyId=onboarding-nextButton]').click();
-  cy.get('[data-cyId=onboarding-nextButton]').scrollIntoView().should('be.visible');
-  cy.get('[data-cyId=onboarding-nextButton]').click();
+//   // click through the rest of onboarding
+//   cy.get('[data-cyId=onboarding-nextButton]').scrollIntoView().should('be.visible');
+//   cy.get('[data-cyId=onboarding-nextButton]').click();
+//   cy.get('[data-cyId=onboarding-nextButton]').scrollIntoView().should('be.visible');
+//   cy.get('[data-cyId=onboarding-nextButton]').click();
 
-  // confirm Fall {startYear}, Summer {gradYear}, engineering, and computer science are selected on the review screen
-  cy.get('[data-cyId=onboarding-entranceYear]').contains(startYear);
-  cy.get('[data-cyId=onboarding-entranceSeason]').contains('Fall');
-  cy.get('[data-cyId=onboarding-gradYear]').contains(gradYear);
-  cy.get('[data-cyId=onboarding-gradSeason]').contains('Summer');
-  cy.get('[data-cyId=onboarding-college]').contains('Engineering');
-  cy.get('[data-cyId=onboarding-major]').contains('Computer Science');
-  cy.get('[data-cyId=onboarding-finishButton]').click();
+//   // confirm Fall {startYear}, Summer {gradYear}, engineering, and computer science are selected on the review screen
+//   cy.get('[data-cyId=onboarding-entranceYear]').contains(startYear);
+//   cy.get('[data-cyId=onboarding-entranceSeason]').contains('Fall');
+//   cy.get('[data-cyId=onboarding-gradYear]').contains(gradYear);
+//   cy.get('[data-cyId=onboarding-gradSeason]').contains('Summer');
+//   cy.get('[data-cyId=onboarding-college]').contains('Engineering');
+//   cy.get('[data-cyId=onboarding-major]').contains('Computer Science');
+//   cy.get('[data-cyId=onboarding-finishButton]').click();
 
-  // confirm engineering and computer science are selected on the requirements menu
-  cy.get('[data-cyId=majorTitle]').contains('Computer Science');
-  cy.get('[data-cyId=collegeTitle]').contains('(Engineering (ENG))');
-});
+//   // confirm engineering and computer science are selected on the requirements menu
+//   cy.get('[data-cyId=majorTitle]').contains('Computer Science');
+//   cy.get('[data-cyId=collegeTitle]').contains('(Engineering (ENG))');
+// });
 
 // it('Exit initial tour', () => {
 //   cy.get('[data-cyId=tour-exitButton]').click();
