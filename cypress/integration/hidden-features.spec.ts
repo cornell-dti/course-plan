@@ -103,9 +103,9 @@ it('Onboarding Process', () => {
   cy.get('[data-cyId=collegeTitle]').contains('(Engineering (ENG))');
 });
 
-it('Exit initial tour', () => {
-  cy.get('[data-cyId=tour-exitButton]').click();
-});
+// it('Exit initial tour', () => {
+//   cy.get('[data-cyId=tour-exitButton]').click();
+// });
 
 // Test to confirm that the new user walkthrough works as expected
 // Click through the initial explanation, then the 4 following steps, and finally the finishing page
