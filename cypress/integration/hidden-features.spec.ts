@@ -89,7 +89,7 @@ it('Onboarding Process', () => {
   cy.get('[data-cyId=onboarding-nextButton]').scrollIntoView().should('be.visible');
   cy.get('[data-cyId=onboarding-nextButton]').click();
 
-  // confirm Fall 2022, Summer 2026, engineering, and computer science are selected on the review screen
+  // confirm Fall {startYear}, Summer {gradYear}, engineering, and computer science are selected on the review screen
   cy.get('[data-cyId=onboarding-entranceYear]').contains(startYear);
   cy.get('[data-cyId=onboarding-entranceSeason]').contains('Fall');
   cy.get('[data-cyId=onboarding-gradYear]').contains(gradYear);
@@ -101,6 +101,10 @@ it('Onboarding Process', () => {
   // confirm engineering and computer science are selected on the requirements menu
   cy.get('[data-cyId=majorTitle]').contains('Computer Science');
   cy.get('[data-cyId=collegeTitle]').contains('(Engineering (ENG))');
+});
+
+it('Exit initial tour', () => {
+  cy.get('[data-cyId=tour-exitButton]').click();
 });
 
 // Test to confirm that the new user walkthrough works as expected
