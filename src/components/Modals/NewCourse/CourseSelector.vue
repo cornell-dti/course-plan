@@ -18,7 +18,20 @@
         @click="selectCourse(matchingCourse)"
         data-cyId="newCourse-searchResult"
       >
-        {{ matchingCourse.subject }} {{ matchingCourse.catalogNbr }}: {{ matchingCourse.titleLong }}
+        <span
+          v-for="(part, idx) in highlightMatch(
+            matchingCourse.subject + ' ' + matchingCourse.catalogNbr
+          )"
+          :key="'code' + idx"
+        >
+          <strong v-if="part.match" v-text="part.text"></strong>
+          <span v-else v-text="part.text"></span>
+        </span>
+        :
+        <span v-for="(part, idx) in highlightMatch(matchingCourse.titleLong)" :key="'title' + idx">
+          <strong v-if="part.match" v-text="part.text"></strong>
+          <span v-else v-text="part.text"></span>
+        </span>
       </div>
     </div>
   </div>
@@ -119,6 +132,23 @@ export default defineComponent({
       const result = this.matches[this.currentFocus];
       if (result != null) this.selectCourse(result);
     },
+    /**
+     * Highlights the matching text in the search results
+     * @param text - the text to highlight
+     * @returns an array of objects with the text and whether it is a match
+     */
+    highlightMatch(text: string) {
+      const searchText = this.searchText.trim();
+      if (!searchText) return [{ text, match: false }];
+
+      const regex = new RegExp(`(${searchText})`, 'gi');
+      const parts = text.split(regex);
+
+      return parts.map(part => ({
+        text: part,
+        match: part.toLowerCase() === searchText.toLowerCase(),
+      }));
+    },
   },
 });
 </script>
@@ -131,6 +161,12 @@ export default defineComponent({
   background-color: $searchBoxWhite;
   padding: 10px;
   font-size: 16px;
+
+  // TODO: add a specific focus style
+  // &:focus {
+  //   border-color: $yuxuanBlue; /* Replace with your desired border color */
+  //   outline: none; /* Remove the default outline */
+  // }
 }
 
 .autocomplete {
