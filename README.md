@@ -31,9 +31,7 @@ Then access http://localhost:8080/
 - **Nitya Pakala** - PM
 - **Arsh Aggarwal** - APM
 - **Diya Lavu** - PMM
-- **Nidhi Mylavarapu** - TPM
-
-
+- **Nidhi Mylavarapu** - T PM
 
 ## FA24
 
@@ -48,8 +46,7 @@ Then access http://localhost:8080/
 - **An Le** - PMM
 - **Nidhi Mylavarapu** - TPM
 
-
-## SP24 
+## SP24
 
 - **Hannah Zhou** - Developer
 - **Nidhi Mylavarapu** - Developer
