@@ -191,6 +191,7 @@ export default defineComponent({
   &-exit {
     width: 10.5px;
     height: 10.5px;
+    margin-top: -11px;
   }
 
   &-icon {

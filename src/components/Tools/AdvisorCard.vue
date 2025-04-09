@@ -10,7 +10,7 @@
         <span class="advisors-info advisors-heading-content">Email</span>
       </div>
       <div v-for="(advisor, index) in advisors" :key="index" class="advisors-row">
-        <span class="advisors-info advisors-type"> {{ advisor.type }} </span>
+        <span class="advisors-info advisors-type"> {{ capitalizeFirstLetter(advisor.type) }} </span>
         <span class="advisors-info advisors-name">
           {{ advisor.name }}
         </span>
@@ -65,6 +65,9 @@ export default defineComponent({
   methods: {
     getCollegeFullName,
     getMajorFullName,
+    capitalizeFirstLetter(string: string): string {
+      return string.charAt(0).toUpperCase() + string.slice(1);
+    },
   },
 });
 </script>
@@ -123,7 +126,8 @@ export default defineComponent({
   &-email {
     grid-column-start: 3;
     grid-column-end: 3;
-    color: #3d3d3d;
+    // color: #3d3d3d;
+    color: $lightPlaceholderGray;
     text-decoration: underline;
 
     &:hover,
