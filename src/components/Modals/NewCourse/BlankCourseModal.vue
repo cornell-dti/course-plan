@@ -142,35 +142,22 @@ export default defineComponent({
     addBlankCourse() {
       if (!this.isFormValid) return;
 
-      // Split course code into subject and catalog number
-      let subject = 'TBD';
-      let catalogNbr = '0000';
-
-      const codeMatch = this.courseCode.match(/([A-Za-z]+)\s*(\w+)/);
-      if (codeMatch && codeMatch.length >= 3) {
-        [, subject, catalogNbr] = codeMatch;
-        subject = subject.toUpperCase();
-      }
-
       // Create blank course object
-      const blankCourse: FirestoreSemesterCourse = {
+      const blankCourse = {
         uniqueID: incrementUniqueID(),
         code: this.courseCode.trim(),
         name: this.courseName.trim(),
         credits: parseInt(this.courseCredits.toString(), 10),
         color: 'FFFFFF', // Default white color
         crseId: 0,
-        acadGroup: this.courseType,
-        acadCareer: this.courseType,
+        lastRoster: '',
+        creditRange: [
+          parseInt(this.courseCredits.toString(), 10),
+          parseInt(this.courseCredits.toString(), 10),
+        ],
         semesters: this.season ? [this.season] : [],
-        distribution: [],
-        currRoster: '',
-        rosterSemester: this.season || '',
-        rosterYear: this.year || 0,
         note: '',
-        catalogNbr,
-        subject,
-      };
+      } as FirestoreSemesterCourse;
 
       // Close this modal first, then open the distribution modal
       this.closeCurrentModal();
