@@ -11,8 +11,10 @@
     @left-button-clicked="closeCurrentModal"
     @right-button-clicked="clearSemester"
   >
-    <div class="clearSemesterModal-body">
-      <div class="clearSemesterModal-body-text">{{ text }}</div>
+    <div class="clear-semester-modal-body">
+      <p class="modal-message">
+        Are you sure you want to clear the courses in this semester? This action cannot be undone.
+      </p>
     </div>
   </teleport-modal>
 </template>
@@ -29,9 +31,6 @@ export default defineComponent({
     'clear-semester': () => true,
   },
   computed: {
-    text() {
-      return 'Are you sure you want to clear the courses in this semester?';
-    },
     icon() {
       return eraseIcon;
     },
@@ -53,6 +52,24 @@ export default defineComponent({
 
 .content-clear {
   width: 24rem;
+  text-align: center;
+}
+
+.clear-semester-modal-body {
+  padding: 0 1rem;
+  display: flex;
+  justify-content: center;
+}
+
+.modal-message {
+  white-space: nowrap; // Prevent line wrapping
+  overflow: hidden; // Hide overflow if it's too long
+  text-overflow: ellipsis; // Add "..." if it overflows
+  font-size: 1rem;
+  color: #333;
+  margin: 0 auto;
+  text-align: center;
+  max-width: 100%; // Or set a fixed width if needed
 }
 
 @media only screen and (max-width: $small-medium-breakpoint) {

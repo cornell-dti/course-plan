@@ -8,6 +8,13 @@ type FirestoreUserName = {
   readonly lastName: string;
 };
 
+type FirestoreEquivalentCourse = {
+  readonly subject: string;
+  readonly catalogNbr: string;
+  readonly titleLong: string;
+  readonly crseId: number;
+};
+
 type FirestoreSemesterCourse = {
   readonly crseId: number;
   readonly lastRoster: string;
@@ -20,6 +27,7 @@ type FirestoreSemesterCourse = {
   readonly color: string;
   readonly note?: string | null;
   readonly lastUpdated?: Timestamp | null; // NB: the Timestamp here is deliberately left untyped — importing from Firestore causes all sorts of namespace issues.
+  readonly equivalentCourse?: FirestoreEquivalentCourse | null;
 };
 
 type FirestoreSemesterPlaceholder = {
