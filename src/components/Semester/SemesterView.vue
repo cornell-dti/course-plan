@@ -25,6 +25,9 @@
         >
           + New Semester
         </button>
+        <div>
+          <FallGiveawayProgress :progress="3" />
+        </div>
         <view-dropdown
           data-intro-group="req-tooltip"
           :data-intro="getToggleTooltipText()"
@@ -82,9 +85,10 @@ import { GTagEvent } from '@/gtag';
 import { addSemester, deleteSemester } from '@/global-firestore-data';
 import { closeBottomBar } from '@/components/BottomBar/BottomBarState';
 import ViewDropdown from './ViewDropdown.vue';
+import FallGiveawayProgress from './FallGiveawayProgress.vue';
 
 export default defineComponent({
-  components: { Confirmation, NewSemesterModal, Semester, ViewDropdown },
+  components: { Confirmation, NewSemesterModal, Semester, ViewDropdown, FallGiveawayProgress },
   props: {
     compact: { type: Boolean, required: true },
     isBottomBar: { type: Boolean, required: true },
