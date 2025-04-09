@@ -106,6 +106,14 @@
       v-if="showGiveawayModal && isBeforeCutoff"
     >
     </giveaway-modal>
+    <fall-giveaway-modal
+      title="Fall 2025 Pre-Enroll Giveaway"
+      right-button-text="Submit"
+      rightButtonAlt="giveaway submit icon"
+      @modal-closed="closeGiveawayModal"
+      v-if="showGiveawayModal && isBeforeFallGiveawayCutoff"
+    >
+    </fall-giveaway-modal>
   </div>
 </template>
 
@@ -126,6 +134,7 @@ import ToolsContainer from '@/containers/Tools.vue';
 import ProfileEditor from '@/containers/Profile.vue';
 import featureFlagCheckers from '@/feature-flags';
 import GiveawayModal from '@/components/Modals/GiveawayModal.vue';
+import FallGiveawayModal from '@/components/Modals/FallGiveawayModal.vue';
 
 import store, { initializeFirestoreListeners } from '@/store';
 import { immutableBottomBarState } from '@/components/BottomBar/BottomBarState';
@@ -179,6 +188,7 @@ export default defineComponent({
     ToolsContainer,
     ProfileEditor,
     GiveawayModal,
+    FallGiveawayModal,
   },
   data() {
     return {
@@ -261,6 +271,12 @@ export default defineComponent({
     isBeforeCutoff(): boolean {
       const currentDate = new Date();
       const cutoffDate = new Date('2024-10-30T23:59:00'); // October 30th, 2024, at 11:59 PM
+      console.log(currentDate < cutoffDate);
+      return currentDate < cutoffDate;
+    },
+    isBeforeFallGiveawayCutoff(): boolean {
+      const currentDate = new Date();
+      const cutoffDate = new Date('2025-04-16T23:59:00'); // April 16th, 2025, at 11:59 PM
       console.log(currentDate < cutoffDate);
       return currentDate < cutoffDate;
     },
