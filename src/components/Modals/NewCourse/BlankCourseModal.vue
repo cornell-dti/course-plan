@@ -142,22 +142,22 @@ export default defineComponent({
     addBlankCourse() {
       if (!this.isFormValid) return;
 
-      // Create blank course object
-      const blankCourse = {
+      // Get the credits value as a number
+      const creditsValue = parseInt(this.courseCredits.toString(), 10);
+
+      // Use only the properties defined in FirestoreSemesterCourse
+      const blankCourse: FirestoreSemesterCourse = {
         uniqueID: incrementUniqueID(),
         code: this.courseCode.trim(),
         name: this.courseName.trim(),
-        credits: parseInt(this.courseCredits.toString(), 10),
+        credits: creditsValue,
         color: 'FFFFFF', // Default white color
         crseId: 0,
         lastRoster: '',
-        creditRange: [
-          parseInt(this.courseCredits.toString(), 10),
-          parseInt(this.courseCredits.toString(), 10),
-        ],
+        creditRange: [creditsValue, creditsValue] as const,
         semesters: this.season ? [this.season] : [],
         note: '',
-      } as FirestoreSemesterCourse;
+      };
 
       // Close this modal first, then open the distribution modal
       this.closeCurrentModal();
