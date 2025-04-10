@@ -16,7 +16,11 @@
         @close-sem-modal="closeSemesterModal"
         v-if="isSemesterModalOpen"
       />
-      <div class="semesterView-settings" :class="{ 'semesterView-settings--two': noSemesters }">
+      <div
+        class="semesterView-settings"
+        :class="{ 'semesterView-settings--two': noSemesters }"
+        style="position: relative"
+      >
         <button
           v-if="noSemesters"
           class="semesterView-addSemesterButton"
@@ -25,18 +29,22 @@
         >
           + New Semester
         </button>
-        <div>
-          <FallGiveawayProgress :progress="3" />
+        <div class="view-toggle-wrapper">
+          <FallGiveawayProgress
+            :progress="giveawayProgress"
+            @openFall2025Giveaway="$emit('openFall2025Giveaway')"
+            class="fall-giveaway-progress"
+          />
+          <view-dropdown
+            data-intro-group="req-tooltip"
+            :data-intro="getToggleTooltipText()"
+            data-disable-interaction="1"
+            data-step="4"
+            data-tooltipClass="tooltipCenter tourStep4"
+            :compact="compact"
+            @click-compact="toggleCompact"
+          />
         </div>
-        <view-dropdown
-          data-intro-group="req-tooltip"
-          :data-intro="getToggleTooltipText()"
-          data-disable-interaction="1"
-          data-step="4"
-          data-tooltipClass="tooltipCenter tourStep4"
-          :compact="compact"
-          @click-compact="toggleCompact"
-        />
       </div>
       <confirmation :text="confirmationText" v-if="isSemesterConfirmationOpen" />
       <div class="semesterView-content" :class="{ 'semesterView-content--compact': compact }">
@@ -107,6 +115,7 @@ export default defineComponent({
       isCourseClicked: false,
       isSemesterConfirmationOpen: false,
       isSemesterModalOpen: false,
+      showFallGiveawayModal: false,
     };
   },
   computed: {
@@ -118,6 +127,21 @@ export default defineComponent({
     },
     noSemesters(): boolean {
       return this.semesters.length === 0;
+    },
+    giveawayProgress(): number {
+      const { step1 } = store.state.onboardingData.fa25giveaway;
+      const { step2 } = store.state.onboardingData.fa25giveaway;
+      const { step3 } = store.state.onboardingData.fa25giveaway;
+      if (step1 && step2 && step3) {
+        return 3;
+      }
+      if ((step1 && step2) || (step1 && step3) || (step2 && step3)) {
+        return 2;
+      }
+      if (step1 || step2 || step3) {
+        return 1;
+      }
+      return 0;
     },
   },
   methods: {
@@ -301,6 +325,19 @@ export default defineComponent({
   &-heart {
     height: 18px;
   }
+}
+
+.view-toggle-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.fall-giveaway-progress {
+  position: absolute;
+  left: -110px;
+  top: -35px;
+  transform: scale(0.5);
 }
 
 .collapsedBottomBarSemesterView {

@@ -16,29 +16,59 @@
       </div>
       <div class="modal-textWrapper">
         <img class="modal-logo" src="@/assets/images/branding/logo.svg" />
-        <h1 class="modal-title">{{ title }}</h1>
-        <h2 class="modal-subtitle">
-          <p>Plan your semester by April 17th<br />and win a free prize!</p>
-        </h2>
+        <template v-if="!isEligibleForGiveaway && !hasEnteredGiveaway">
+          <h1 class="modal-title">{{ title }}</h1>
+          <h2 class="modal-subtitle">
+            <p>Plan your semester by April 17th<br />and win a free prize!</p>
+          </h2>
 
-        <div class="modal-steps">
-          <div class="modal-step">
-            <div class="modal-step-circle">1</div>
-            <p>Make your F25 Plan</p>
+          <div class="modal-steps">
+            <div class="modal-step">
+              <div class="modal-step-circle" :class="{ 'modal-step-circle--active': step1Status }">
+                1
+              </div>
+              <p>Add your<br />F25 Semester</p>
+            </div>
+            <div class="modal-step">
+              <div class="modal-step-circle" :class="{ 'modal-step-circle--active': step2Status }">
+                2
+              </div>
+              <p>Add a<br />Note</p>
+            </div>
+            <div class="modal-step">
+              <div class="modal-step-circle" :class="{ 'modal-step-circle--active': step3Status }">
+                3
+              </div>
+              <p>Generate a Schedule</p>
+            </div>
           </div>
-          <div class="modal-step">
-            <div class="modal-step-circle">2</div>
-            <p>Add a<br />Note</p>
-          </div>
-          <div class="modal-step">
-            <div class="modal-step-circle">3</div>
-            <p>Generate a Schedule</p>
-          </div>
-        </div>
 
-        <button class="modal-button modal-button--big modal-button--ready" @click="submitEntry">
-          I’m ready to plan!
-        </button>
+          <button class="modal-button modal-button--big modal-button--ready" @click="close">
+            {{ atLeastOneStepCompleted ? 'Continue Planning!' : 'I’m ready to plan!' }}
+          </button>
+        </template>
+        <template v-if="isEligibleForGiveaway && !hasEnteredGiveaway">
+          <h1 class="modal-title">Congratulations, you’re eligible<br />to enter our giveaway!</h1>
+
+          <div class="textInput-wrapper">
+            <label class="textInput-label">Cornell NetID</label>
+            <input class="textInput-userinput" placeholder="Enter netid" v-model="netId" />
+          </div>
+
+          <div class="textInput-wrapper">
+            <label class="textInput-label">Instagram Username</label>
+            <input class="textInput-userinput" placeholder="Enter username" v-model="igUsername" />
+          </div>
+
+          <button class="modal-button modal-button--ready" @click="submitEntry">Submit</button>
+        </template>
+        <template v-if="hasEnteredGiveaway">
+          <h1 class="modal-title">
+            <br /><br />You’re entered into our giveaway!<br />We’ll check in over email or on
+            social media about prizes soon 🎁<br />In the meantime check out our socials
+            @courseplan.io
+          </h1>
+        </template>
       </div>
     </div>
   </div>
@@ -46,8 +76,8 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import enterGiveaway from '@/global-firestore-data/giveaway-entries';
-import { updateSawGiveaway } from '@/global-firestore-data';
+import store, { updateFA25GiveawayField } from '@/store';
+import enterGiveaway from '@/global-firestore-data/fa25-giveaway-entries';
 
 export default defineComponent({
   props: {
@@ -61,22 +91,58 @@ export default defineComponent({
   },
   emits: ['left-button-clicked', 'right-button-clicked', 'modal-closed'],
   data() {
-    return { netId: '', igUsername: '' };
+    return {
+      netId: '',
+      igUsername: '',
+    };
   },
   methods: {
-    submitEntry() {
-      if (this.netId !== '' && this.igUsername !== '') {
-        enterGiveaway(this.netId, this.igUsername);
-        this.$emit('modal-closed', true);
+    async submitEntry() {
+      if (this.netId && this.igUsername) {
+        try {
+          await enterGiveaway(this.netId.trim(), this.igUsername.trim());
+          updateFA25GiveawayField({ entered: true });
+          this.hasEnteredGiveaway = true;
+          console.log(this.hasEnteredGiveaway, ' = hasEnteredGiveaway');
+        } catch (error) {
+          console.error('🔥 Failed to submit giveaway entry:', error);
+        }
       }
-      updateSawGiveaway(true);
+      updateFA25GiveawayField({ saw: true });
+    },
+  },
+  computed: {
+    onboardingData(): AppOnboardingData {
+      return store.state.onboardingData;
+    },
+    hasEnteredGiveaway(): boolean {
+      return this.onboardingData.fa25giveaway.entered === true;
+    },
+    isEligibleForGiveaway(): boolean {
+      return (
+        this.onboardingData.fa25giveaway.step1 &&
+        this.onboardingData.fa25giveaway.step2 &&
+        this.onboardingData.fa25giveaway.step3
+      );
+    },
+    step1Status(): boolean {
+      return this.onboardingData.fa25giveaway.step1;
+    },
+    step2Status(): boolean {
+      return this.onboardingData.fa25giveaway.step2;
+    },
+    step3Status(): boolean {
+      return this.onboardingData.fa25giveaway.step3;
+    },
+    atLeastOneStepCompleted(): boolean {
+      return this.step1Status || this.step2Status || this.step3Status;
     },
   },
   setup(props, { emit }) {
     const modalBackground = ref((null as unknown) as HTMLDivElement);
 
     const close = () => {
-      updateSawGiveaway(true);
+      updateFA25GiveawayField({ saw: true });
       emit('modal-closed', true);
     };
 
@@ -183,6 +249,10 @@ export default defineComponent({
         justify-content: center;
         font-weight: bold;
         margin-bottom: 0.25rem;
+      }
+      .modal-step-circle--active {
+        background-color: $sangBlue;
+        color: $white;
       }
 
       p {
