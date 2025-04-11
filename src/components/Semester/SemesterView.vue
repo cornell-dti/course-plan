@@ -34,6 +34,7 @@
             :progress="giveawayProgress"
             @openFall2025Giveaway="$emit('openFall2025Giveaway')"
             class="fall-giveaway-progress"
+            v-if="isBeforeFall2025GiveawayCutoff"
           />
           <view-dropdown
             data-intro-group="req-tooltip"
@@ -88,7 +89,7 @@ import Semester from '@/components/Semester/Semester.vue';
 import Confirmation from '@/components/Modals/Confirmation.vue';
 import NewSemesterModal from '@/components/Modals/NewSemesterModal.vue';
 
-import store from '@/store';
+import store, { updateFA25GiveawayField } from '@/store';
 import { GTagEvent } from '@/gtag';
 import { addSemester, deleteSemester } from '@/global-firestore-data';
 import { closeBottomBar } from '@/components/BottomBar/BottomBarState';
@@ -144,6 +145,7 @@ export default defineComponent({
       return 0;
     },
   },
+
   methods: {
     checkIfFirstSem(semester: FirestoreSemester) {
       return (
@@ -197,6 +199,12 @@ export default defineComponent({
     getToggleTooltipText() {
       return `<div class="introjs-tooltipTop"><div class="introjs-customTitle">Toggle between Views</div><div class="introjs-customProgress">4/4</div>
       </div><div class = "introjs-bodytext">View semesters and courses in full or compact mode.</div>`;
+    },
+    isBeforeFall2025GiveawayCutoff(): boolean {
+      const currentDate = new Date();
+      const cutoffDate = new Date('2025-04-17T23:59:00'); // April 17th, 2025, at 11:59 PM
+      console.log('comparing dates for fall giveaway', currentDate < cutoffDate);
+      return currentDate < cutoffDate;
     },
   },
 });
