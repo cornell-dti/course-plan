@@ -91,3 +91,4 @@ export const trackUsersCollection = collection(db, 'track-users').withConverter(
 );
 
 export const giveawayCollection = collection(db, 'giveaway-entries');
+export const fa25giveawayCollection = collection(db, 'fa25-giveaway-entries');

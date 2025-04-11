@@ -16,6 +16,7 @@ export {
   deleteTransferCredit,
   updateSawNewFeature,
   updateSawGiveaway,
+  updateFA25Giveaway,
 } from './user-onboarding-data';
 export {
   editCollections,
