@@ -283,7 +283,7 @@ export default defineComponent({
     isBeforeFall2025GiveawayCutoff(): boolean {
       const currentDate = new Date();
       const cutoffDate = new Date('2025-04-17T23:59:00'); // April 17th, 2025, at 11:59 PM
-      console.log(currentDate < cutoffDate);
+      console.log('Current date is before cuttoff date', currentDate < cutoffDate);
       return currentDate < cutoffDate;
     },
   },

@@ -189,7 +189,7 @@ import {
   editDefaultCollection,
   deleteCourseFromCollection,
 } from '@/global-firestore-data';
-import store, { updateSubjectColorData } from '@/store';
+import store, { updateFA25GiveawayField, updateSubjectColorData } from '@/store';
 import {
   getRelatedRequirementIdsForCourseOptOut,
   getRelatedUnfulfilledRequirements,
@@ -282,6 +282,13 @@ export default defineComponent({
     droppable.addEventListener('dragleave', this.onDragExit);
     const savedSemesterMinimize = localStorage.getItem(JSON.stringify(this.semesterIndex));
     this.isSemesterMinimized = savedSemesterMinimize ? JSON.parse(savedSemesterMinimize) : false;
+    if (
+      this.season === 'Fall' &&
+      this.year === 2025 &&
+      !store.state.onboardingData.fa25giveaway.step1
+    ) {
+      updateFA25GiveawayField({ step1: true });
+    }
   },
   beforeUnmount() {
     this.$el.removeEventListener('touchmove', this.dragListener);

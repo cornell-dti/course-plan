@@ -116,9 +116,18 @@ export default defineComponent({
       isCourseClicked: false,
       isSemesterConfirmationOpen: false,
       isSemesterModalOpen: false,
-      showFallGiveawayModal: false,
+      showFall2025GiveawayModal: false,
     };
   },
+  watch: {
+    giveawayProgress(newVal) {
+      const hasEntered = store.state.onboardingData.fa25giveaway.entered;
+      if (newVal === 3 && !hasEntered && this.isBeforeFall2025GiveawayCutoff) {
+        this.showFall2025GiveawayModal = true;
+      }
+    },
+  },
+
   computed: {
     semesters(): readonly FirestoreSemester[] {
       if (store.state.plans.length === 0) {
@@ -143,6 +152,12 @@ export default defineComponent({
         return 1;
       }
       return 0;
+    },
+    isBeforeFall2025GiveawayCutoff(): boolean {
+      const currentDate = new Date();
+      const cutoffDate = new Date('2025-04-17T23:59:00');
+      console.log('Current date is before cutoff date', currentDate < cutoffDate);
+      return currentDate < cutoffDate;
     },
   },
 
@@ -199,12 +214,6 @@ export default defineComponent({
     getToggleTooltipText() {
       return `<div class="introjs-tooltipTop"><div class="introjs-customTitle">Toggle between Views</div><div class="introjs-customProgress">4/4</div>
       </div><div class = "introjs-bodytext">View semesters and courses in full or compact mode.</div>`;
-    },
-    isBeforeFall2025GiveawayCutoff(): boolean {
-      const currentDate = new Date();
-      const cutoffDate = new Date('2025-04-17T23:59:00'); // April 17th, 2025, at 11:59 PM
-      console.log('comparing dates for fall giveaway', currentDate < cutoffDate);
-      return currentDate < cutoffDate;
     },
   },
 });
