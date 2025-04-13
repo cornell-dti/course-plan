@@ -118,6 +118,7 @@
 
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
+import _ from 'lodash';
 import Schedule from '@/components/ScheduleGenerate/Schedule.vue';
 import ScheduleCourses from '@/components/ScheduleGenerate/ScheduleCourses.vue';
 import { generateSchedulePDF } from '@/tools/export-plan';
@@ -130,7 +131,6 @@ import Course, {
   Timeslot,
 } from '@/schedule-generator/course-unit';
 import Requirement from '@/schedule-generator/requirement';
-import _ from 'lodash';
 
 export default defineComponent({
   props: {
@@ -211,12 +211,46 @@ export default defineComponent({
         if (first.totalCredits !== second.totalCredits || first.semester !== second.semester) {
           return false;
         }
-        const firstScheduleEntries = Array.from(first.schedule.entries());
-        const secondScheduleEntries = Array.from(first.schedule.entries());
-        return firstScheduleEntries.every(([firstKey, firstValue], index) => {
-          const [secondKey, secondValue] = secondScheduleEntries[index];
-          return _.isEqual(firstKey, secondKey) && _.isEqual(firstValue, secondValue);
-        });
+
+        const firstCourses = Array.from(first.schedule.keys());
+        const secondCourses = Array.from(second.schedule.keys());
+
+        if (firstCourses.length !== secondCourses.length) {
+          return false;
+        }
+
+        const sortedFirstCourses = firstCourses.sort((a, b) => a.code.localeCompare(b.code));
+        const sortedSecondCourses = secondCourses.sort((a, b) => a.code.localeCompare(b.code));
+
+        for (let i = 0; i < sortedFirstCourses.length; i += 1) {
+          const firstCourse = sortedFirstCourses[i];
+          const secondCourse = sortedSecondCourses[i];
+
+          if (!_.isEqual(firstCourse, secondCourse)) {
+            return false;
+          }
+
+          const firstTimeslots = first.schedule.get(firstCourse) || [];
+          const secondTimeslots = second.schedule.get(secondCourse) || [];
+
+          if (firstTimeslots.length !== secondTimeslots.length) {
+            return false;
+          }
+
+          const firstTimeslotKeys = firstTimeslots
+            .map(ts => `${ts.start}-${ts.end}-${ts.daysOfTheWeek.sort().join(',')}`)
+            .sort();
+
+          const secondTimeslotKeys = secondTimeslots
+            .map(ts => `${ts.start}-${ts.end}-${ts.daysOfTheWeek.sort().join(',')}`)
+            .sort();
+
+          if (!_.isEqual(firstTimeslotKeys, secondTimeslotKeys)) {
+            return false;
+          }
+        }
+
+        return true;
       }
 
       const startTime = Date.now();
