@@ -32,6 +32,7 @@
         <div class="view-toggle-wrapper">
           <FallGiveawayProgress
             :progress="giveawayProgress"
+            :shouldGlow="shouldGlowForGiveaway"
             @openFall2025Giveaway="$emit('openFall2025Giveaway')"
             class="fall-giveaway-progress"
             v-if="isBeforeFall2025GiveawayCutoff"
@@ -158,6 +159,10 @@ export default defineComponent({
       const cutoffDate = new Date('2025-04-17T23:59:00');
       console.log('Current date is before cutoff date', currentDate < cutoffDate);
       return currentDate < cutoffDate;
+    },
+    shouldGlowForGiveaway(): boolean {
+      const { step1, step2, step3, entered } = store.state.onboardingData.fa25giveaway;
+      return step1 && step2 && step3 && !entered;
     },
   },
 
