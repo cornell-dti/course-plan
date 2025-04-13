@@ -55,7 +55,7 @@ export default {
 
 .icon-container {
   position: absolute;
-  font-size: 45px;
+  font-size: 40px;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -105,7 +105,7 @@ export default {
     box-shadow: 0 0 0px #4d7d92;
   }
   50% {
-    box-shadow: 0 0 100px #4d7d92;
+    box-shadow: 0 0 50px #4d7d92;
   }
   100% {
     box-shadow: 0 0 0px #4d7d92;

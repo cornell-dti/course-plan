@@ -90,7 +90,7 @@ import Semester from '@/components/Semester/Semester.vue';
 import Confirmation from '@/components/Modals/Confirmation.vue';
 import NewSemesterModal from '@/components/Modals/NewSemesterModal.vue';
 
-import store, { updateFA25GiveawayField } from '@/store';
+import store from '@/store';
 import { GTagEvent } from '@/gtag';
 import { addSemester, deleteSemester } from '@/global-firestore-data';
 import { closeBottomBar } from '@/components/BottomBar/BottomBarState';
@@ -108,6 +108,7 @@ export default defineComponent({
   },
   emits: {
     'compact-updated': (compact: boolean) => typeof compact === 'boolean',
+    openFall2025Giveaway: () => true,
   },
   data() {
     return {
