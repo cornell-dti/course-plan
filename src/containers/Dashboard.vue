@@ -113,8 +113,8 @@
       rightButtonAlt="giveaway submit icon"
       @modal-closed="closeFall2025GiveawayModal"
       v-if="
-        (showFall2025GiveawayModal && isBeforeFall2025GiveawayCutoff) ||
-        userClickedFall2025GiveawayProgress
+        (showFall2025GiveawayModal || userClickedFall2025GiveawayProgress) &&
+        isBeforeFall2025GiveawayCutoff
       "
     >
     </fall-giveaway-modal>
