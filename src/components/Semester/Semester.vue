@@ -402,6 +402,7 @@ export default defineComponent({
           return acc + noteCollapsedHeightRem - noteMarginBottom;
         }
         if (this.newNoteUniqueID === course.uniqueID) {
+          // for new notes that aren't saved
           return acc + firstExpandedNoteRem - noteMarginBottom;
         }
         return acc;
@@ -526,6 +527,7 @@ export default defineComponent({
         return;
       }
       if (this.newNoteUniqueID === uniqueID) {
+        // this note is now saved
         this.newNoteUniqueID = undefined;
       } // the note is saved, so we can remove the new note flag
       editSemester(

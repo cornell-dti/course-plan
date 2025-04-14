@@ -107,6 +107,7 @@
       @open-delete-note-modal="openDeleteNoteModal"
       @note-state-change="handleNoteStateChange"
       @height-change="handleNoteHeightChange"
+      @new-note-created="handleNewNote"
       ref="note"
       v-click-outside="handleClickOutsideNote"
       :noteId="`course-${courseObj.uniqueID}`"
@@ -384,6 +385,7 @@ export default defineComponent({
         this.triggerCourseCardShake();
       } else if (noteComponent.note && this.isNoteVisible) {
         noteComponent.collapseNote();
+        this.$emit('new-note-created', this.courseObj.uniqueID, false); // toggles new note back to undefined
       } else {
         // this is a new note that hasn't been saved yet, and it gets cancelled
         this.$emit('new-note-created', this.courseObj.uniqueID, false); // toggles new note back to undefined
