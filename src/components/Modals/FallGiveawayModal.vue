@@ -8,7 +8,7 @@
     @click="closeOnClickOutside"
     ref="modalBackground"
   >
-    <div class="modal-content">
+    <div :class="['modal-content', { 'with-confetti': shouldShowConfetti }]">
       <div class="modal-top">
         <button @click="close" class="modal-exitbutton">
           <img class="modal-exit" src="@/assets/images/x.png" alt="x to close modal" />
@@ -137,6 +137,9 @@ export default defineComponent({
     atLeastOneStepCompleted(): boolean {
       return this.step1Status || this.step2Status || this.step3Status;
     },
+    shouldShowConfetti(): boolean {
+      return (this.isEligibleForGiveaway && !this.hasEnteredGiveaway) || this.hasEnteredGiveaway;
+    },
   },
   setup(props, { emit }) {
     const modalBackground = ref((null as unknown) as HTMLDivElement);
@@ -191,11 +194,14 @@ export default defineComponent({
     margin-left: auto;
     margin-right: auto;
     padding: 1rem;
-    background-image: url('@/assets/images/confetti.gif');
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
     box-sizing: border-box;
+
+    &.with-confetti {
+      background-image: url('@/assets/images/confetti.gif');
+    }
   }
 
   &-logo {
