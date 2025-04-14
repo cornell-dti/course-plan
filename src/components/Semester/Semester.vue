@@ -123,7 +123,7 @@
                 @edit-collection="editCollection"
                 @open-delete-note-modal="openDeleteNoteModal"
                 @note-state-change="handleNoteStateChange"
-                @new-note-update="handleNewNoteCreated"
+                @new-note-created="handleNewNoteCreated"
               />
               <placeholder
                 v-else
@@ -374,6 +374,7 @@ export default defineComponent({
           return acc + noteCollapsedHeightRem - noteMarginBottom;
         }
         if (this.newNoteUniqueID === course.uniqueID) {
+          // for new notes that aren't saved
           return acc + firstExpandedNoteRem - noteMarginBottom;
         }
         return acc;
@@ -498,6 +499,7 @@ export default defineComponent({
         return;
       }
       if (this.newNoteUniqueID === uniqueID) {
+        // this note is now saved
         this.newNoteUniqueID = undefined;
       } // the note is saved, so we can remove the new note flag
       editSemester(
@@ -536,8 +538,8 @@ export default defineComponent({
       );
       this.closeDeleteNoteModal();
     },
-    handleNewNoteCreated(uniqueID: number) {
-      if (this.newNoteUniqueID === undefined) {
+    handleNewNoteCreated(uniqueID: number, isNewNote: boolean) {
+      if (isNewNote === true) {
         this.newNoteUniqueID = uniqueID;
       } else {
         this.newNoteUniqueID = undefined;
