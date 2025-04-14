@@ -20,8 +20,10 @@
       :autoFocus="true"
       @on-escape="closeCurrentModal"
       @on-select="selectCourse"
+      @on-add-blank-course="addBlankCourseCard"
       data-cyId="newCourse-dropdown"
       :courses-array="courseArrayBySem"
+      :allow-blank-card="true"
     />
     <div v-else class="selected-course" data-cyId="newCourse-selectedCourse">
       {{ selectedCourse.subject }} {{ selectedCourse.catalogNbr }}:
@@ -39,6 +41,11 @@
         @on-selected-change="onSelectedChange"
         @edit-mode="toggleEditMode"
       />
+    </div>
+
+    <!-- Add a blank course card button in a fixed position at the bottom -->
+    <div class="blank-course-button-container" v-if="selectedCourse === null">
+      <button class="add-blank-course" @click="addBlankCourseCard">+ Add Blank Course Card</button>
     </div>
   </TeleportModal>
 </template>
@@ -81,6 +88,7 @@ export default defineComponent({
     'select-course': (course: CornellCourseRosterCourse) => typeof course === 'object',
     'add-course': (course: CornellCourseRosterCourse, choice: FirestoreCourseOptInOptOutChoices) =>
       typeof course === 'object' && typeof choice === 'object',
+    'add-blank-course-card': () => true,
   },
   data() {
     return {
@@ -205,6 +213,11 @@ export default defineComponent({
     toggleEditMode() {
       this.editMode = !this.editMode;
     },
+    // New method for adding a blank course card
+    addBlankCourseCard() {
+      this.$emit('add-blank-course-card');
+      this.closeCurrentModal();
+    },
   },
 });
 </script>
@@ -262,6 +275,31 @@ export default defineComponent({
 
 .content-course {
   width: 27.75rem;
+}
+
+/* New styles for the blank course card button */
+.blank-course-button-container {
+  position: absolute;
+  left: 16px;
+  bottom: 18px;
+  display: flex;
+  align-items: center;
+  height: 28px; /* Match the height of the buttons */
+}
+
+.add-blank-course {
+  background: none;
+  border: none;
+  color: $sangBlue;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 0;
+  text-align: left;
+  transition: opacity 0.2s ease;
+
+  &:hover {
+    opacity: 0.7;
+  }
 }
 
 @media only screen and (max-width: $small-medium-breakpoint) {

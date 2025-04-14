@@ -33,8 +33,6 @@ Then access http://localhost:8080/
 - **Diya Lavu** - PMM
 - **Nidhi Mylavarapu** - TPM
 
-
-
 ## FA24
 
 - **Nigel Tatem** - Developer
@@ -47,7 +45,6 @@ Then access http://localhost:8080/
 - **Nitya Pakala** - APM
 - **An Le** - PMM
 - **Nidhi Mylavarapu** - TPM
-
 
 ## SP24 
 
