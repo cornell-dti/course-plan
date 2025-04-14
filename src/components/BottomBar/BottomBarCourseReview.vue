@@ -75,7 +75,7 @@
     </div>
     <div class="details-head">Prerequisites</div>
     <p class="info-fact">{{ coursePrereqs }}</p>
-    <div class="details-head">Description</div>
+    <div class="details-head" v-if="courseObj.description.length > 0">Description</div>
     <p class="info-fact">{{ courseObj.description }}</p>
   </div>
 </template>
