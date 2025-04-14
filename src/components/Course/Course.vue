@@ -77,6 +77,7 @@
               :course="courseObj"
               :isCompactView="false"
             />
+            <span class="course-requirements">{{ requirementsString }}</span>
           </div>
         </div>
       </div>
@@ -146,6 +147,7 @@ export default defineComponent({
   components: { CourseCaution, CourseMenu, EditColor, SaveCourseModal, Note },
   props: {
     courseObj: { type: Object as PropType<FirestoreSemesterCourse>, required: true },
+    requirements: { type: Array as PropType<string[]>, required: false, default: () => [] },
     compact: { type: Boolean, required: true },
     active: { type: Boolean, required: true },
     isReqCourse: { type: Boolean, required: true },
@@ -212,6 +214,18 @@ export default defineComponent({
       }
 
       return semesterString;
+    },
+
+    requirementsString(): string {
+      let requirementsString = '';
+      this.requirements.forEach(req => {
+        requirementsString += `${req}, `;
+      });
+      if (requirementsString.length > 0) {
+        return requirementsString.substring(0, requirementsString.length - 2);
+      }
+      return 'testingRequirementsString';
+      // todo: if requirements string is too long, the course card text gets crunched together
     },
 
     creditString(): string {
@@ -542,6 +556,19 @@ export default defineComponent({
   }
 
   &-semesters {
+    margin-left: 0.2rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+
+    &:before {
+      margin-right: 0.2rem;
+      font-style: normal;
+      content: '|';
+    }
+  }
+
+  &-requirements {
     margin-left: 0.2rem;
     text-overflow: ellipsis;
     white-space: nowrap;
