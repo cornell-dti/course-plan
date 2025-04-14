@@ -138,7 +138,17 @@ export default defineComponent({
       return this.step1Status || this.step2Status || this.step3Status;
     },
     shouldShowConfetti(): boolean {
-      return (this.isEligibleForGiveaway && !this.hasEnteredGiveaway) || this.hasEnteredGiveaway;
+      const { fa25giveaway } = this.onboardingData;
+      if (!fa25giveaway.saw) {
+        return true;
+      }
+      if (fa25giveaway.step1 && fa25giveaway.step2 && fa25giveaway.step3) {
+        return true;
+      }
+      if (fa25giveaway.entered) {
+        return true;
+      }
+      return false;
     },
   },
   setup(props, { emit }) {
@@ -201,6 +211,8 @@ export default defineComponent({
 
     &.with-confetti {
       background-image: url('@/assets/images/confetti.gif');
+      background-size: 100% 100%; // make the confetti appear bigger
+      background-position: center;
     }
   }
 
