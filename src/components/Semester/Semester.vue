@@ -123,7 +123,7 @@
                 @edit-collection="editCollection"
                 @open-delete-note-modal="openDeleteNoteModal"
                 @note-state-change="handleNoteStateChange"
-                @new-note-update="handleNewNoteCreated"
+                @new-note-created="handleNewNoteCreated"
               />
               <placeholder
                 v-else
@@ -543,8 +543,8 @@ export default defineComponent({
       );
       this.closeDeleteNoteModal();
     },
-    handleNewNoteCreated(uniqueID: number) {
-      if (this.newNoteUniqueID === undefined) {
+    handleNewNoteCreated(uniqueID: number, isNewNote: boolean) {
+      if (isNewNote === true) {
         this.newNoteUniqueID = uniqueID;
       } else {
         this.newNoteUniqueID = undefined;

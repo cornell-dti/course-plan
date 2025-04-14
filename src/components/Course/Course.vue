@@ -180,7 +180,8 @@ export default defineComponent({
     'open-delete-note-modal': (uniqueID: number) => typeof uniqueID === 'number',
     'note-state-change': (uniqueID: number, isExpanded: boolean) =>
       typeof uniqueID === 'number' && typeof isExpanded === 'boolean',
-    'new-note-created': (uniqueID: number) => typeof uniqueID === 'number',
+    'new-note-created': (uniqueID: number, isNewNote: boolean) =>
+      typeof uniqueID === 'number' && typeof isNewNote === 'boolean',
   },
   data() {
     return {
@@ -302,10 +303,6 @@ export default defineComponent({
       if (now < deadline) {
         updateFA25GiveawayField({ step2: true });
       }
-      if (!this.isNoteVisible && !this.courseObj.note) {
-        // creation of a new note (regardless if it's saved or not)
-        this.$emit('new-note-created', this.courseObj.uniqueID);
-      }
       if (!this.isNoteVisible) {
         this.isNoteVisible = true;
         this.menuOpen = false;
@@ -315,6 +312,7 @@ export default defineComponent({
         this.$nextTick(() => {
           const noteComponent = this.$refs.note as MinimalNoteComponent | undefined;
           if (noteComponent) {
+            this.$emit('new-note-created', this.courseObj.uniqueID, true); // toggles new note to true
             noteComponent.expandNote();
           }
         });
@@ -350,6 +348,7 @@ export default defineComponent({
         return;
       }
       this.$emit('save-note', this.courseObj.uniqueID, note);
+      this.$emit('new-note-created', this.courseObj.uniqueID, false); // toggles new note back to undefined
     },
     handleClickOutsideNote(event: MouseEvent) {
       // Don't count a click on the open note (.courseMenu) or three dots (.course-dotRow)
@@ -369,10 +368,11 @@ export default defineComponent({
         // Warn if the user is trying to leave a note with unsaved changes.
         this.triggerCourseCardShake();
       } else if (noteComponent.note && this.isNoteVisible) {
+        this.$emit('new-note-created', this.courseObj.uniqueID, false); // toggles new note back to undefined
         noteComponent.collapseNote();
       } else {
         // this is a new note that hasn't been saved yet, and it gets cancelled
-        this.$emit('new-note-created', this.courseObj.uniqueID);
+        this.$emit('new-note-created', this.courseObj.uniqueID, false); // toggles new note back to undefined
         this.closeNote();
       }
     },
@@ -381,6 +381,9 @@ export default defineComponent({
     },
     handleNoteStateChange(isExpanded: boolean) {
       this.$emit('note-state-change', this.courseObj.uniqueID, isExpanded);
+    },
+    handleNewNote(isNewNote: boolean) {
+      this.$emit('new-note-created', this.courseObj.uniqueID, isNewNote);
     },
   },
   directives: {
