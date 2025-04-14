@@ -70,6 +70,7 @@
         :isBottomBar="hasBottomCourses"
         :isMobile="isMobile"
         @compact-updated="compactUpdated"
+        @openFall2025Giveaway="userClickedFall2025GiveawayProgress = true"
       />
       <tools-container class="toolsPage" v-if="showToolsPage" />
       <profile-editor
@@ -106,6 +107,17 @@
       v-if="showGiveawayModal && isBeforeCutoff"
     >
     </giveaway-modal>
+    <fall-giveaway-modal
+      title="Fall 2025 Pre-Enroll Giveaway"
+      right-button-text="Submit"
+      rightButtonAlt="giveaway submit icon"
+      @modal-closed="closeFall2025GiveawayModal"
+      v-if="
+        (showFall2025GiveawayModal || userClickedFall2025GiveawayProgress) &&
+        isBeforeFall2025GiveawayCutoff
+      "
+    >
+    </fall-giveaway-modal>
   </div>
 </template>
 
@@ -126,8 +138,9 @@ import ToolsContainer from '@/containers/Tools.vue';
 import ProfileEditor from '@/containers/Profile.vue';
 import featureFlagCheckers from '@/feature-flags';
 import GiveawayModal from '@/components/Modals/GiveawayModal.vue';
+import FallGiveawayModal from '@/components/Modals/FallGiveawayModal.vue';
 
-import store, { initializeFirestoreListeners } from '@/store';
+import store, { initializeFirestoreListeners, updateFA25GiveawayField } from '@/store';
 import { immutableBottomBarState } from '@/components/BottomBar/BottomBarState';
 import {
   smallBreakpoint,
@@ -179,6 +192,7 @@ export default defineComponent({
     ToolsContainer,
     ProfileEditor,
     GiveawayModal,
+    FallGiveawayModal,
   },
   data() {
     return {
@@ -201,6 +215,8 @@ export default defineComponent({
       isProfileOpen: false,
       isShowCollectionOpen: false,
       showGiveawayModal: false,
+      showFall2025GiveawayModal: false,
+      userClickedFall2025GiveawayProgress: false,
       isScheduleGenerateOpen: false,
       isScheduleGenerateModalOpen: false,
       coursesForGeneration: [] as CourseForFrontend[],
@@ -264,6 +280,12 @@ export default defineComponent({
       console.log(currentDate < cutoffDate);
       return currentDate < cutoffDate;
     },
+    isBeforeFall2025GiveawayCutoff(): boolean {
+      const currentDate = new Date();
+      const cutoffDate = new Date('2025-04-17T23:59:00'); // April 17th, 2025, at 11:59 PM
+      console.log('Current date is before cuttoff date', currentDate < cutoffDate);
+      return currentDate < cutoffDate;
+    },
   },
   created() {
     window.addEventListener('resize', this.resizeEventHandler);
@@ -280,6 +302,9 @@ export default defineComponent({
         if (!this.onboardingData.sawGiveaway) {
           // if user did not see the giveaway
           this.showGiveawayModal = true; // show the giveaway
+        }
+        if (!this.onboardingData.fa25giveaway.entered) {
+          this.showFall2025GiveawayModal = true;
         }
       } else {
         this.startOnboarding();
@@ -405,6 +430,12 @@ export default defineComponent({
 
     closeGiveawayModal() {
       this.showGiveawayModal = false;
+    },
+
+    closeFall2025GiveawayModal() {
+      this.showFall2025GiveawayModal = false;
+      this.userClickedFall2025GiveawayProgress = false;
+      updateFA25GiveawayField({ saw: true });
     },
   },
 });

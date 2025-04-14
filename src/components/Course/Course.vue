@@ -125,7 +125,7 @@ import {
   reportCourseColorChange,
   reportSubjectColorChange,
 } from '@/components/BottomBar/BottomBarState';
-import { isCourseConflict } from '@/store';
+import { isCourseConflict, updateFA25GiveawayField } from '@/store';
 import { clickOutside } from '@/utilities';
 import EditColor from '../Modals/EditColor.vue';
 import trashGrayIcon from '@/assets/images/trash-gray.svg';
@@ -298,6 +298,12 @@ export default defineComponent({
       this.trashIcon = trashGrayIcon;
     },
     openNoteModal() {
+      const now = new Date();
+      const deadline = new Date('2025-04-17T23:59:00');
+
+      if (now < deadline) {
+        updateFA25GiveawayField({ step2: true });
+      }
       if (!this.isNoteVisible) {
         this.isNoteVisible = true;
         this.menuOpen = false;

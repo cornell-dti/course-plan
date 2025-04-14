@@ -28,6 +28,7 @@ export const setAppOnboardingData = (
     tookSwim: onboarding.tookSwim,
     sawNewFeature: onboarding.sawNewFeature,
     sawGiveaway: onboarding.sawGiveaway,
+    fa25giveaway: onboarding.fa25giveaway,
     sawScheduleGenerator: onboarding.sawScheduleGenerator,
   });
 };
@@ -67,6 +68,20 @@ export const updateSawGiveaway = (sawGiveaway: boolean): void => {
   updateDoc(doc(onboardingDataCollection, store.state.currentFirebaseUser.email), {
     sawGiveaway,
   });
+};
+
+export const updateFA25Giveaway = (): void => {
+  const update = {
+    fa25giveaway: {
+      saw: true,
+      step1: true,
+      step2: true,
+      step3: true,
+      entered: true,
+    },
+  };
+
+  updateDoc(doc(onboardingDataCollection, store.state.currentFirebaseUser.email), update);
 };
 
 export const updateSawScheduleGenerator = (sawScheduleGenerator: boolean): void => {

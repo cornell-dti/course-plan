@@ -42,6 +42,7 @@
     "node-fetch": "^2.6.7",
     "pdfjs-dist": "^3.5.141",
     "vue": "^3.2.19",
+    "vue-confetti": "^2.3.0",
     "vue-gtag-next": "^1.14.0",
     "vue-router": "^4.0.6",
     "vuedraggable": "^4.0.0",

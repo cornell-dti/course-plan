@@ -2,7 +2,7 @@
 
 Access CoursePlan at [courseplan.io](https://courseplan.io)!
 
-CoursePlan is a four-year academic planner for Cornell undergraduates developed by the Digital Tech & Innovation. CoursePlan helps undergraduates track their courses and their requirements automatically depending on their college, major, and minor. It aims to allow students view the big picture of their time at Cornell.
+CoursePlan is a four-year academic planner for Cornell undergraduates developed by the Digital Tech & Innovation project team. CoursePlan helps undergraduates track their courses and their requirements automatically depending on their college, major, and minor. It aims to allow students view the big picture of their time at Cornell.
 
 View documentation in our [wiki](https://github.com/cornell-dti/course-plan/wiki).
 
@@ -22,7 +22,35 @@ Then access http://localhost:8080/
 
 ## Contributors
 
+## SP25
+
+- **Nigel Tatem** - Developer
+- **Eric Cheng** - Developer
+- **Hannah Zhou** - Developer
+- **Lazim Jarif** - Designer
+- **Nitya Pakala** - PM
+- **Arsh Aggarwal** - APM
+- **Diya Lavu** - PMM
+- **Nidhi Mylavarapu** - TPM
+
+
+
+## FA24
+
+- **Nigel Tatem** - Developer
+- **Eric Cheng** - Developer
+- **Hannah Zhou** - Developer
+- **Simon Ilincev** - Developer
+- **Joanna Chen** - Desginer
+- **Lazim Jarif** - Designer
+- **Ilyssa Yan** - PM
+- **Nitya Pakala** - APM
+- **An Le** - PMM
+- **Nidhi Mylavarapu** - TPM
+
+
 ## SP24 
+
 - **Hannah Zhou** - Developer
 - **Nidhi Mylavarapu** - Developer
 - **Simon Ilincev** - Developer
@@ -34,6 +62,7 @@ Then access http://localhost:8080/
 - **Ilyssa Yan** - APM
 
 ### FA23
+
 - **Nidhi Mylavarapu** - Developer
 - **Simon Ilincev** - Developer
 - **Jerry Wang** - Developer
