@@ -46,3 +46,7 @@ python/secret_api_keys.py
 
 # Pytest
 python/__pycache__
+
+# Additional files to ignore
+test
+vscode-extensions.txt
