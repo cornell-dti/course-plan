@@ -44,6 +44,7 @@ import { sumBy } from '@/utilities';
 
 /** Discrete progress towards completing requirements */
 enum ProgressState {
+  Zero,
   First,
   Second,
   Third,
@@ -72,6 +73,9 @@ export default defineComponent({
       return sumBy(this.requirementProgressBundles, req => req.totalRequired);
     },
     progressState(): ProgressState {
+      if (this.dangerousProgress === 0) {
+        return ProgressState.Zero;
+      }
       if (this.dangerousProgress / this.totalRequired < 0.25) {
         return ProgressState.First;
       }
@@ -88,6 +92,8 @@ export default defineComponent({
     },
     emoji(): string {
       switch (this.progressState) {
+        case ProgressState.Zero:
+          return hands;
         case ProgressState.First:
           return hands;
         case ProgressState.Second:
@@ -109,6 +115,8 @@ export default defineComponent({
     },
     progressMessage(): string {
       switch (this.progressState) {
+        case ProgressState.Zero:
+          return "Let's get started!";
         case ProgressState.First:
           return 'Strong start!';
         case ProgressState.Second:
@@ -155,7 +163,7 @@ export default defineComponent({
 
   &-row {
     display: grid;
-    grid-template-columns: 20% 80%;
+    grid-template-columns: 15% 85%;
     justify-content: space-evenly;
   }
 
@@ -187,8 +195,8 @@ export default defineComponent({
     color: white;
     background-color: white;
     border: 0.5rem solid #eee;
-    border-bottom-color: #0bf;
-    border-right-color: #0bf;
+    border-bottom-color: sangBlue;
+    border-right-color: sangBlue;
 
     &-caption {
       height: 3.125rem;
@@ -226,7 +234,7 @@ export default defineComponent({
 
     &-text {
       text-align: center;
-      color: #0bf;
+      color: $sangBlue;
       z-index: 1;
       font-weight: bolder;
     }
