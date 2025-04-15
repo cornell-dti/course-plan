@@ -58,6 +58,7 @@
     "@tsconfig/node14": "^1.0.3",
     "@types/gtag.js": "^0.0.12",
     "@types/jest": "^26.0.21",
+    "@types/lodash": "^4.17.16",
     "@types/minimist": "^1.2.2",
     "@types/node-fetch": "^2.5.8",
     "@typescript-eslint/eslint-plugin": "^5.3.1",
