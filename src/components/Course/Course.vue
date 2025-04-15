@@ -368,7 +368,6 @@ export default defineComponent({
         // Warn if the user is trying to leave a note with unsaved changes.
         this.triggerCourseCardShake();
       } else if (noteComponent.note && this.isNoteVisible) {
-        this.$emit('new-note-created', this.courseObj.uniqueID, false); // toggles new note back to undefined
         noteComponent.collapseNote();
       } else {
         // this is a new note that hasn't been saved yet, and it gets cancelled
