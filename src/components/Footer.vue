@@ -35,16 +35,13 @@ export default defineComponent({
 
 <style scoped lang="scss">
 .container-fluid.footer {
-  margin-top: 400px;
+  margin-top: 30vh;
+
+  @media (max-width: 768px) {
+    margin-top: 10vh;
+  }
 }
-p.footer {
-  text-align: center;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 24px;
-  line-height: 28px;
-  color: #757575;
-}
+p.footer,
 a.footer {
   text-align: center;
   font-style: normal;
@@ -52,6 +49,16 @@ a.footer {
   font-size: 24px;
   line-height: 28px;
   color: #757575;
+
+  @media (max-width: 768px) {
+    font-size: 20px;
+    line-height: 24px;
+  }
+
+  @media (max-width: 576px) {
+    font-size: 16px;
+    line-height: 20px;
+  }
 }
 .col-3 {
   margin-left: 0.5rem;
@@ -64,6 +71,10 @@ a.footer {
 }
 .row.footer {
   padding: 40px;
+
+  @media (max-width: 768px) {
+    padding: 20px;
+  }
 }
 a:hover {
   opacity: 0.95;

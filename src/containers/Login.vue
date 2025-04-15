@@ -384,12 +384,13 @@ export default defineComponent({
 .top-sec {
   background: url('@/assets/images/landing_new/top_rect.svg');
   background-repeat: no-repeat;
-  background-size: 100vw 900px;
+  background-size: 100% auto;
   overflow: hidden;
   padding-top: 6.25rem;
 
   @media (max-width: $large-breakpoint) {
     padding-top: 0;
+    background-size: cover;
   }
 }
 
@@ -494,18 +495,30 @@ input {
   @media (max-width: $large-breakpoint) {
     display: none;
   }
+
   &--drag {
     overflow: unset;
   }
+
   &--laptop {
     display: block;
+
+    @media (max-width: $large-breakpoint) {
+      display: block;
+      text-align: center;
+      margin-top: 2rem;
+    }
   }
 }
 .laptop {
   position: relative;
-  width: 900px;
+  max-width: 100%;
+  width: auto;
+  height: auto;
+
   @media (max-width: $large-breakpoint) {
-    max-width: inherit;
+    max-width: 90%;
+    margin: 0 auto;
   }
 }
 
@@ -685,15 +698,21 @@ figure {
   position: relative;
   left: 0px;
   margin-right: -32px;
+  max-width: 100%;
   width: 950px;
   margin-top: 300px;
   margin-bottom: 300px;
+
+  @media (max-width: 1200px) {
+    width: 750px;
+  }
 }
 
 .schedule-centered {
   position: relative;
   right: 0px;
   margin-left: 0;
+  max-width: 100%;
   width: 1050px;
   margin-top: 300px;
   margin-bottom: 300px;
@@ -719,21 +738,30 @@ figure {
     max-width: 100%;
     flex: unset;
   }
+
   &-drag {
     padding: 12.75rem 0rem 15.75rem 3.25rem;
     margin-left: 950px;
     margin-top: 600px;
     transform: translateY(-125px);
     width: 800px;
+    z-index: 2; /* Ensure text appears above images */
 
     @media (max-width: $large-breakpoint) {
       margin-left: 0;
       width: auto;
+      padding: 2rem;
+      margin-top: 0;
+      transform: none;
     }
 
     .sub-text {
       width: 600px;
       margin-right: 0;
+
+      @media (max-width: $large-breakpoint) {
+        width: 100%;
+      }
     }
 
     &:has(.notes-text) {
@@ -741,6 +769,13 @@ figure {
       margin-left: 950px;
       transform: translate(-20px, 200px);
       width: 800px;
+
+      @media (max-width: $large-breakpoint) {
+        margin-left: 0;
+        margin-top: 0;
+        transform: none;
+        width: auto;
+      }
 
       .head {
         margin-bottom: 30px;
@@ -750,17 +785,31 @@ figure {
         width: 600px;
         margin-right: 0;
         line-height: 1.5;
+
+        @media (max-width: $large-breakpoint) {
+          width: 100%;
+        }
       }
     }
 
     &:has(.track-text) {
       margin-top: 400px;
       transform: translateY(-150px);
+
+      @media (max-width: $large-breakpoint) {
+        margin-top: 0;
+        transform: none;
+      }
     }
 
     &:has(.multiple-text) {
       margin-top: 500px;
       transform: translateY(-100px);
+
+      @media (max-width: $large-breakpoint) {
+        margin-top: 0;
+        transform: none;
+      }
     }
 
     &:has(.track-text) {
@@ -768,6 +817,13 @@ figure {
       margin-left: 950px;
       transform: translateY(-150px);
       width: 1000px;
+
+      @media (max-width: $large-breakpoint) {
+        margin-left: 0;
+        margin-top: 0;
+        transform: none;
+        width: auto;
+      }
 
       .head {
         margin-bottom: 30px;
@@ -780,6 +836,10 @@ figure {
         line-height: 1.5;
         white-space: normal;
 
+        @media (max-width: $large-breakpoint) {
+          width: 100%;
+        }
+
         strong {
           white-space: nowrap;
           display: inline;
@@ -787,6 +847,7 @@ figure {
       }
     }
   }
+
   &-sem {
     padding: 0rem 3.25rem 15.75rem 3.25rem;
     margin: 0;
@@ -794,12 +855,29 @@ figure {
     margin-right: 900px;
     transform: translate(10px, -120px);
     flex-shrink: 2;
+    z-index: 2; /* Ensure text appears above images */
+
+    @media (max-width: $large-breakpoint) {
+      margin-right: 0;
+      margin-left: 0;
+      margin-top: 0;
+      width: auto;
+      padding: 2rem;
+      transform: none;
+    }
 
     &:has(.semester-text) {
       margin-right: 750px;
       margin-top: 650px;
       margin-left: 250px;
       transform: translate(-300px, -50px);
+
+      @media (max-width: $large-breakpoint) {
+        margin-right: 0;
+        margin-left: 0;
+        margin-top: 0;
+        transform: none;
+      }
     }
 
     &:has(.generate-text) {
@@ -809,9 +887,21 @@ figure {
       transform: translate(0px, 190px);
       width: 800px;
 
+      @media (max-width: $large-breakpoint) {
+        margin-right: 0;
+        margin-left: 0;
+        margin-top: 0;
+        width: auto;
+        transform: none;
+      }
+
       .sub-text {
         width: 450px;
         margin-right: 0;
+
+        @media (max-width: $large-breakpoint) {
+          width: 100%;
+        }
       }
     }
 
@@ -822,21 +912,32 @@ figure {
       transform: translate(-75px, 125px);
       width: 800px;
 
+      @media (max-width: $large-breakpoint) {
+        margin-right: 0;
+        margin-left: 0;
+        margin-top: 0;
+        width: auto;
+        transform: none;
+      }
+
       .sub-text {
         width: 600px;
         margin-right: 0;
+
+        @media (max-width: $large-breakpoint) {
+          width: 100%;
+        }
       }
     }
 
     &.notes-text-left {
       margin-right: 850px;
       margin-left: 100px;
-    }
 
-    @media (max-width: $large-breakpoint) {
-      margin-right: 0;
-      margin-left: 0;
-      width: auto;
+      @media (max-width: $large-breakpoint) {
+        margin-right: 0;
+        margin-left: 0;
+      }
     }
   }
 }
@@ -880,7 +981,7 @@ p {
 }
 @media (max-width: $large-breakpoint) {
   img.hide {
-    display: none;
+    display: none !important;
   }
   .top-bar {
     padding: 3rem;
@@ -972,11 +1073,10 @@ html {
 .slide-in {
   opacity: 0;
   visibility: hidden;
-  transition: all 2s ease-out; // Even slower animation
+  transition: all 1s ease-out;
 
-  // Even sections slide from right
   &:nth-child(even) {
-    transform: translateX(200px); // Start further right
+    transform: translateX(50px);
 
     &.visible {
       opacity: 1;
@@ -985,9 +1085,8 @@ html {
     }
   }
 
-  // Odd sections slide from left
   &:nth-child(odd) {
-    transform: translateX(-200px); // Start further left
+    transform: translateX(-50px);
 
     &.visible {
       opacity: 1;
@@ -1024,52 +1123,461 @@ html {
 }
 
 .container-fluid.center {
-  margin-bottom: 10rem;
-  margin-top: -10rem;
+  margin-bottom: 10vh;
+  margin-top: -10vh;
 
   &:last-child {
     margin-bottom: 0;
   }
 
-  // Plan Your Semesters section
   &:has(.semester-text) {
-    margin-bottom: -15rem;
-    margin-top: -20rem;
+    margin-bottom: -15vh;
+    margin-top: -20vh;
+
+    @media (max-width: $large-breakpoint) {
+      margin-bottom: -5vh;
+      margin-top: -5vh;
+    }
   }
 
-  // Schedule Generator section
   &:has(.generate-text) {
-    margin-bottom: -20rem;
-    margin-top: -25rem;
+    margin-bottom: -20vh;
+    margin-top: -25vh;
+
+    @media (max-width: $large-breakpoint) {
+      margin-bottom: -5vh;
+      margin-top: -5vh;
+    }
   }
 
-  // Saved Courses section
   &:has(.saved-text) {
-    margin-bottom: -15rem;
-    margin-top: -20rem;
+    margin-bottom: -15vh;
+    margin-top: -20vh;
+
+    @media (max-width: $large-breakpoint) {
+      margin-bottom: -5vh;
+      margin-top: -5vh;
+    }
   }
 }
 
 .container-fluid.plan:has(.track-text) {
   margin-bottom: 6rem;
-  margin-top: 10rem; //adjust spacing of the progress tracker
+  margin-top: 10rem;
 }
 
-// Add specific styling for Multiple Plans section
 .container-fluid.plan:has(.multiple-text) {
   margin-bottom: -20rem;
   margin-top: 15rem;
 }
 
-// Add specific styling for Notes Feature section
 .container-fluid.plan:has(.notes-text) {
-  margin-bottom: -5rem;
+  margin-bottom: 2rem;
   margin-top: 7.5rem;
+
+  @media (max-width: $large-breakpoint) {
+    margin-bottom: 4rem;
+  }
 }
 
-// Add specific styling for Drag and Drop section
 .container-fluid.plan:has(.drag-text) {
   margin-bottom: 6rem;
   margin-top: -18rem;
+}
+
+/* Add more specific mobile styling */
+@media (max-width: 768px) {
+  .plan-head {
+    font-size: 56px;
+    line-height: 60px;
+  }
+
+  .plan-subhead {
+    font-size: 26px;
+    line-height: 30px;
+  }
+
+  .head {
+    font-size: 36px;
+    line-height: 40px;
+  }
+
+  .sub-text {
+    font-size: 24px;
+    line-height: 32px;
+  }
+
+  .new {
+    padding: 3rem 2rem;
+  }
+
+  .tasks {
+    flex: 0 0 50%;
+    max-width: 50%;
+    margin-bottom: 2rem;
+  }
+}
+
+/* Extra small devices */
+@media (max-width: 576px) {
+  .plan-head {
+    font-size: 42px;
+    line-height: 46px;
+  }
+
+  .plan-subhead {
+    font-size: 22px;
+    line-height: 26px;
+  }
+
+  .head {
+    font-size: 32px;
+    line-height: 36px;
+  }
+
+  .sub-text {
+    font-size: 20px;
+    line-height: 28px;
+  }
+
+  .sub {
+    font-size: 18px;
+  }
+
+  .tasks {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+
+  .email-button {
+    font-size: 16px;
+    padding: 0.8rem 1.5rem;
+  }
+
+  .top-bar {
+    padding: 1.5rem 1rem;
+  }
+
+  .phonepad {
+    padding: 1.5rem;
+  }
+}
+
+/* Make new-way section spacing more responsive */
+.new-way {
+  margin-top: 5vw;
+
+  @media (max-width: $large-breakpoint) {
+    margin-top: 2rem;
+  }
+}
+
+/* Handle mobile image display */
+@media (max-width: $large-breakpoint) {
+  .drag,
+  .semester {
+    position: relative;
+    padding-top: 200px; /* Add space for the background image */
+
+    &::before {
+      content: '';
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 180px;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: contain;
+      opacity: 0.8;
+    }
+  }
+
+  /* Set background images for each section when in mobile view */
+  .drag:has(.drag-text)::before {
+    background-image: url('@/assets/images/landing_new/img1.svg');
+  }
+
+  .semester:has(.semester-text)::before {
+    background-image: url('@/assets/images/landing_new/img2.svg');
+  }
+
+  .drag:has(.track-text)::before {
+    background-image: url('@/assets/images/landing_new/img3.svg');
+  }
+
+  .semester:has(.generate-text)::before {
+    background-image: url('@/assets/images/landing_new/img4.svg');
+  }
+
+  .drag:has(.multiple-text)::before {
+    background-image: url('@/assets/images/landing_new/img5.svg');
+  }
+
+  .semester:has(.saved-text)::before {
+    background-image: url('@/assets/images/landing_new/img6.svg');
+  }
+
+  .drag:has(.notes-text)::before {
+    background-image: url('@/assets/images/landing_new/img7.svg');
+  }
+}
+
+/* Make "Plan Your Semesters" section match others */
+.semester:has(.semester-text) {
+  @media (max-width: $large-breakpoint) {
+    &::before {
+      background-size: contain !important;
+      height: 180px !important;
+      margin-bottom: 1rem;
+    }
+  }
+}
+
+/* Ensure layout is consistent between all sections */
+.semester,
+.drag {
+  @media (max-width: $large-breakpoint) {
+    padding-top: 200px !important; /* Consistent padding for all sections */
+  }
+}
+
+/* Fix specific styling for Plan Your Semesters section's image */
+.semester:has(.semester-text) {
+  .schedule-centered {
+    position: relative;
+    top: -200px;
+    right: -310px; /* Keep the current right positioning */
+    width: 1400px; /* Increase the width from default 1050px */
+    max-width: 120%; /* Allow image to be slightly larger than container */
+  }
+}
+
+/* Improve consistency in section spacing for smaller screens */
+@media (max-width: $large-breakpoint) {
+  /* Ensure consistent section margins and spacing */
+  .container-fluid.center,
+  .container-fluid.plan {
+    margin: 3rem 0 !important; /* Override all other margin settings to ensure consistency */
+    padding: 0 1rem;
+  }
+
+  /* Make sure all images are properly hidden on smaller screens */
+  .hide,
+  .preview,
+  .schedule-centered {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
+  /* Ensure consistent text section spacing */
+  .comment-drag,
+  .comment-sem {
+    padding: 2rem 1rem !important; /* Consistent padding */
+    margin: 0 auto !important; /* Center and reset all margins */
+    width: 100% !important; /* Consistent width */
+    max-width: 600px !important; /* Consistent max width */
+    transform: none !important; /* Reset all transforms */
+  }
+
+  /* Consistent section padding */
+  .drag,
+  .semester {
+    padding: 200px 1rem 2rem 1rem !important; /* Space for images + consistent padding */
+  }
+}
+
+/* Ensure image background quality on mobile */
+@media (max-width: $large-breakpoint) {
+  .drag::before,
+  .semester::before {
+    height: 180px !important;
+    background-size: contain !important;
+    background-position: center !important;
+    opacity: 0.85 !important;
+    top: 10px !important; /* Adjust position for consistency */
+  }
+}
+
+/* Fix NEW badge display on mobile */
+@media (max-width: $large-breakpoint) {
+  .new-badge {
+    margin: 0 auto 1.5rem !important;
+    width: 100px !important;
+    height: auto !important;
+  }
+
+  /* Ensure feature headings have consistent spacing */
+  .head {
+    margin-bottom: 1rem !important;
+  }
+
+  /* Consistent spacing between sections */
+  .container-fluid.center:last-of-type {
+    margin-bottom: 6rem !important; /* Extra space for the last section before footer */
+  }
+}
+
+/* Keep these specific media queries that only hide images on smaller screens */
+@media (max-width: $large-breakpoint) {
+  .hide,
+  img.hide,
+  .preview,
+  .schedule-centered {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
+  .drag::before,
+  .semester::before {
+    display: none !important;
+  }
+}
+
+/* Improve mobile layout for feature text */
+@media (max-width: 1200px) {
+  .tasks {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem 1rem;
+    margin-bottom: 1rem;
+  }
+
+  /* Ensure icons are properly sized */
+  .sub--task {
+    width: 60px;
+    height: auto;
+    padding-bottom: 1rem;
+  }
+
+  /* Fix layout to prioritize centered content */
+  .new {
+    text-align: center;
+    padding: 2rem 1rem;
+  }
+
+  .row.new.no-gutters {
+    justify-content: center;
+  }
+
+  /* Center all feature section text */
+  .sub,
+  .sub-text,
+  .head {
+    text-align: center !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  /* Ensure tasks elements are centered */
+  .tasks figure {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+
+  /* Center text in middle feature sections */
+  .sub-text {
+    max-width: 90% !important;
+  }
+}
+
+/* Improve mobile layout for feature text */
+@media (max-width: 576px) {
+  /* Add padding for better readability */
+  .sub-text {
+    padding: 0 0.5rem;
+    max-width: 100% !important;
+  }
+
+  /* Ensure consistent text alignment */
+  .tasks figcaption {
+    padding: 0 1rem;
+  }
+}
+
+/* Specific fix for feature descriptions in the screenshot */
+@media (max-width: 1200px) {
+  /* Add space between features */
+  .tasks {
+    margin-bottom: 2.5rem;
+  }
+
+  /* Fix specific feature text alignment shown in screenshot */
+  .figure .sub {
+    padding: 0 1rem;
+    line-height: 1.4;
+  }
+}
+
+/* General text alignment fix for responsive views */
+@media (max-width: $large-breakpoint) {
+  .figure {
+    width: 100%;
+    max-width: 280px;
+  }
+
+  figure figcaption.sub {
+    width: 100%;
+    margin: 0 auto;
+  }
+}
+
+/* Ensure images are visible on desktop - add this at the end of the file */
+@media (min-width: 977px) {
+  .preview {
+    display: block !important;
+    visibility: visible !important;
+    position: relative;
+  }
+
+  .schedule-centered {
+    display: block !important;
+    visibility: visible !important;
+    position: relative;
+  }
+
+  img.hide {
+    display: block !important;
+    visibility: visible !important;
+  }
+
+  /* Fix specific Plan Your Semesters image */
+  .semester:has(.semester-text) .schedule-centered {
+    display: block !important;
+    visibility: visible !important;
+  }
+}
+
+/* Consolidate redundant media queries for desktop */
+@media (min-width: 977px) and (max-width: 1400px) {
+  /* Use one combined rule for all adjustments to minimize duplication */
+  .image-wrapper--laptop {
+    transform: scale(0.9);
+    transform-origin: right center;
+  }
+
+  .laptop {
+    max-width: 700px;
+    margin-right: -50px;
+  }
+
+  /* Tasks styling */
+  .tasks {
+    padding: 0.5rem;
+  }
+
+  .sub--task {
+    padding-bottom: 1.5rem;
+    max-width: 80px;
+  }
+
+  .sub {
+    font-size: 20px;
+  }
 }
 </style>
