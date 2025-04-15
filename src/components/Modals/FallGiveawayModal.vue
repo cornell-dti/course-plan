@@ -66,7 +66,14 @@
           <h1 class="modal-title">
             <br /><br />You’re entered into our giveaway!<br />We’ll check in over email or on
             social media about prizes soon 🎁<br />In the meantime check out our socials
-            @courseplan.io
+            <a
+              href="https://www.instagram.com/courseplan.io"
+              target="_blank"
+              rel="noopener noreferrer"
+              style="color: #4d7d92"
+            >
+              @courseplan.io
+            </a>
           </h1>
         </template>
       </div>
