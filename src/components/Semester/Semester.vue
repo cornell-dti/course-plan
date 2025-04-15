@@ -123,7 +123,7 @@
                 @edit-collection="editCollection"
                 @open-delete-note-modal="openDeleteNoteModal"
                 @note-state-change="handleNoteStateChange"
-                @new-note-update="handleNewNoteCreated"
+                @new-note-created="handleNewNoteCreated"
               />
               <placeholder
                 v-else
@@ -189,7 +189,7 @@ import {
   editDefaultCollection,
   deleteCourseFromCollection,
 } from '@/global-firestore-data';
-import store, { updateSubjectColorData } from '@/store';
+import store, { updateFA25GiveawayField, updateSubjectColorData } from '@/store';
 import {
   getRelatedRequirementIdsForCourseOptOut,
   getRelatedUnfulfilledRequirements,
@@ -282,6 +282,13 @@ export default defineComponent({
     droppable.addEventListener('dragleave', this.onDragExit);
     const savedSemesterMinimize = localStorage.getItem(JSON.stringify(this.semesterIndex));
     this.isSemesterMinimized = savedSemesterMinimize ? JSON.parse(savedSemesterMinimize) : false;
+    if (
+      this.season === 'Fall' &&
+      this.year === 2025 &&
+      !store.state.onboardingData.fa25giveaway.step1
+    ) {
+      updateFA25GiveawayField({ step1: true });
+    }
   },
   beforeUnmount() {
     this.$el.removeEventListener('touchmove', this.dragListener);
@@ -536,8 +543,8 @@ export default defineComponent({
       );
       this.closeDeleteNoteModal();
     },
-    handleNewNoteCreated(uniqueID: number) {
-      if (this.newNoteUniqueID === undefined) {
+    handleNewNoteCreated(uniqueID: number, isNewNote: boolean) {
+      if (isNewNote === true) {
         this.newNoteUniqueID = uniqueID;
       } else {
         this.newNoteUniqueID = undefined;

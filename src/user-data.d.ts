@@ -57,6 +57,7 @@ type FirestoreTransferExam = {
 };
 
 type FirestoreCollegeMajorMinorOrGrad = { readonly acronym: string };
+
 type FirestoreOnboardingUserData = {
   readonly gradYear: string;
   readonly gradSem: FirestoreSemesterSeason | '';
@@ -71,6 +72,13 @@ type FirestoreOnboardingUserData = {
   sawNewFeature: boolean;
   sawGiveaway: boolean;
   sawScheduleGenerator: boolean;
+  fa25giveaway: {
+    saw: boolean;
+    step1: boolean;
+    step2: boolean;
+    step3: boolean;
+    entered: boolean;
+  };
 };
 
 type FirestoreCourseOptInOptOutChoices = {
@@ -198,6 +206,13 @@ type AppOnboardingData = {
   sawNewFeature: boolean;
   sawGiveaway: boolean;
   sawScheduleGenerator: boolean;
+  fa25giveaway: {
+    saw: boolean;
+    step1: boolean;
+    step2: boolean;
+    step3: boolean;
+    entered: boolean;
+  };
 };
 
 type AppBottomBarCourse = {
