@@ -71,6 +71,13 @@ const store: TypedVuexStore = new TypedVuexStore({
       gradSem: '',
       entranceYear: '',
       entranceSem: '',
+      fa25giveaway: {
+        saw: false,
+        step1: false,
+        step2: false,
+        step3: false,
+        entered: false,
+      },
       college: '',
       major: [],
       minor: [],
@@ -203,6 +210,15 @@ const store: TypedVuexStore = new TypedVuexStore({
     },
     setSawScheduleGenerator(state: VuexStoreState, seen: boolean) {
       state.onboardingData.sawScheduleGenerator = seen;
+    },
+    setFA25Giveaway(
+      state: VuexStoreState,
+      giveawayUpdate: Partial<AppOnboardingData['fa25giveaway']>
+    ) {
+      state.onboardingData.fa25giveaway = {
+        ...state.onboardingData.fa25giveaway,
+        ...giveawayUpdate,
+      };
     },
   },
 });
@@ -441,6 +457,19 @@ export const updateSubjectColorData = (color: string, code: string): void => {
 export const isCourseConflict = (uniqueId: string | number): boolean =>
   featureFlagCheckers.isRequirementConflictsEnabled() &&
   store.state.doubleCountedCourseUniqueIDSet.has(uniqueId);
+
+export const updateFA25GiveawayField = (
+  update: Partial<AppOnboardingData['fa25giveaway']>
+): void => {
+  store.commit('setFA25Giveaway', update);
+
+  updateDoc(doc(fb.onboardingDataCollection, store.state.currentFirebaseUser.email), {
+    fa25giveaway: {
+      ...store.state.onboardingData.fa25giveaway,
+      ...update,
+    },
+  });
+};
 
 fb.auth.onAuthStateChanged(user => {
   if (user) {

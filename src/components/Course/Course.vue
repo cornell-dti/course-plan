@@ -124,7 +124,7 @@ import {
   reportCourseColorChange,
   reportSubjectColorChange,
 } from '@/components/BottomBar/BottomBarState';
-import { isCourseConflict } from '@/store';
+import { isCourseConflict, updateFA25GiveawayField } from '@/store';
 import { clickOutside } from '@/utilities';
 import EditColor from '../Modals/EditColor.vue';
 import trashGrayIcon from '@/assets/images/trash-gray.svg';
@@ -180,7 +180,8 @@ export default defineComponent({
     'open-delete-note-modal': (uniqueID: number) => typeof uniqueID === 'number',
     'note-state-change': (uniqueID: number, isExpanded: boolean) =>
       typeof uniqueID === 'number' && typeof isExpanded === 'boolean',
-    'new-note-created': (uniqueID: number) => typeof uniqueID === 'number',
+    'new-note-created': (uniqueID: number, isNewNote: boolean) =>
+      typeof uniqueID === 'number' && typeof isNewNote === 'boolean',
   },
   data() {
     return {
@@ -296,9 +297,11 @@ export default defineComponent({
       this.trashIcon = trashGrayIcon;
     },
     openNoteModal() {
-      if (!this.isNoteVisible && !this.courseObj.note) {
-        // creation of a new note (regardless if it's saved or not)
-        this.$emit('new-note-created', this.courseObj.uniqueID);
+      const now = new Date();
+      const deadline = new Date('2025-04-17T23:59:00');
+
+      if (now < deadline) {
+        updateFA25GiveawayField({ step2: true });
       }
       if (!this.isNoteVisible) {
         this.isNoteVisible = true;
@@ -309,6 +312,7 @@ export default defineComponent({
         this.$nextTick(() => {
           const noteComponent = this.$refs.note as MinimalNoteComponent | undefined;
           if (noteComponent) {
+            this.$emit('new-note-created', this.courseObj.uniqueID, true); // toggles new note to true
             noteComponent.expandNote();
           }
         });
@@ -344,6 +348,7 @@ export default defineComponent({
         return;
       }
       this.$emit('save-note', this.courseObj.uniqueID, note);
+      this.$emit('new-note-created', this.courseObj.uniqueID, false); // toggles new note back to undefined
     },
     handleClickOutsideNote(event: MouseEvent) {
       // Don't count a click on the open note (.courseMenu) or three dots (.course-dotRow)
@@ -366,7 +371,7 @@ export default defineComponent({
         noteComponent.collapseNote();
       } else {
         // this is a new note that hasn't been saved yet, and it gets cancelled
-        this.$emit('new-note-created', this.courseObj.uniqueID);
+        this.$emit('new-note-created', this.courseObj.uniqueID, false); // toggles new note back to undefined
         this.closeNote();
       }
     },
@@ -375,6 +380,9 @@ export default defineComponent({
     },
     handleNoteStateChange(isExpanded: boolean) {
       this.$emit('note-state-change', this.courseObj.uniqueID, isExpanded);
+    },
+    handleNewNote(isNewNote: boolean) {
+      this.$emit('new-note-created', this.courseObj.uniqueID, isNewNote);
     },
   },
   directives: {
