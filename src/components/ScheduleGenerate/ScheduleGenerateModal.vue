@@ -118,7 +118,6 @@
 
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
-import _ from 'lodash';
 import Schedule from '@/components/ScheduleGenerate/Schedule.vue';
 import ScheduleCourses from '@/components/ScheduleGenerate/ScheduleCourses.vue';
 import { generateSchedulePDF } from '@/tools/export-plan';
@@ -203,6 +202,9 @@ export default defineComponent({
           Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
         );
       }
+      function deepEqual(a: GeneratedScheduleOutput, b: GeneratedScheduleOutput): boolean {
+        return JSON.stringify(a) === JSON.stringify(b);
+      }
 
       /**
        * Checks if two `GeneratedScheduleOutput` objects `first` and `second` are equal.
@@ -226,7 +228,7 @@ export default defineComponent({
           const firstCourse = sortedFirstCourses[i];
           const secondCourse = sortedSecondCourses[i];
 
-          if (!_.isEqual(firstCourse, secondCourse)) {
+          if (!deepEqual(firstCourse, secondCourse)) {
             return false;
           }
 
@@ -245,7 +247,7 @@ export default defineComponent({
             .map(ts => `${ts.start}-${ts.end}-${ts.daysOfTheWeek.sort().join(',')}`)
             .sort();
 
-          if (!_.isEqual(firstTimeslotKeys, secondTimeslotKeys)) {
+          if (!deepEqual(firstTimeslotKeys, secondTimeslotKeys)) {
             return false;
           }
         }
@@ -613,6 +615,7 @@ input {
     margin-top: -0.5rem;
     background-color: $white;
     padding: 0rem 0.5rem 0rem 0.5rem;
+
     &--font {
       color: $black;
       flex-direction: row;
