@@ -58,12 +58,24 @@
             </button>
             <button
               @click="() => paginate(1)"
-              :disabled="currentPage === 5"
-              :class="'footer-button' + (currentPage === 5 ? ' footer-button-disabled' : ' ')"
+              :disabled="currentPage === generatedScheduleOutputs.length"
+              :class="
+                'footer-button' +
+                (currentPage === generatedScheduleOutputs.length ? ' footer-button-disabled' : ' ')
+              "
             >
-              <span :class="currentPage === 5 ? 'footer-text-disabled' : 'footer-text'">Next</span>
+              <span
+                :class="
+                  currentPage === generatedScheduleOutputs.length
+                    ? 'footer-text-disabled'
+                    : 'footer-text'
+                "
+                >Next</span
+              >
             </button>
-            <span class="pagination-text ml-25">Page {{ currentPage }}/5</span>
+            <span class="pagination-text ml-25"
+              >Page {{ currentPage }}/{{ generatedScheduleOutputs.length }}</span
+            >
           </div>
           <div class="download-button" @click="downloadSchedule">
             <svg
@@ -168,7 +180,7 @@ export default defineComponent({
       );
     },
     generateSchedules() {
-      const output: {
+      const outputs: {
         semester: string;
         schedule: Map<Course, Timeslot[]>;
         fulfilledRequirements: Map<string, Requirement[]>;
@@ -190,8 +202,61 @@ export default defineComponent({
           Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
         );
       }
+      function deepEqual(a: GeneratedScheduleOutput, b: GeneratedScheduleOutput): boolean {
+        return JSON.stringify(a) === JSON.stringify(b);
+      }
 
-      for (let i = 0; i < 5; i += 1) {
+      /**
+       * Checks if two `GeneratedScheduleOutput` objects `first` and `second` are equal.
+       */
+      function isEqual(first: GeneratedScheduleOutput, second: GeneratedScheduleOutput) {
+        if (first.totalCredits !== second.totalCredits || first.semester !== second.semester) {
+          return false;
+        }
+
+        const firstCourses = Array.from(first.schedule.keys());
+        const secondCourses = Array.from(second.schedule.keys());
+
+        if (firstCourses.length !== secondCourses.length) {
+          return false;
+        }
+
+        const sortedFirstCourses = firstCourses.sort((a, b) => a.code.localeCompare(b.code));
+        const sortedSecondCourses = secondCourses.sort((a, b) => a.code.localeCompare(b.code));
+
+        for (let i = 0; i < sortedFirstCourses.length; i += 1) {
+          const firstCourse = sortedFirstCourses[i];
+          const secondCourse = sortedSecondCourses[i];
+
+          if (!deepEqual(firstCourse, secondCourse)) {
+            return false;
+          }
+
+          const firstTimeslots = first.schedule.get(firstCourse) || [];
+          const secondTimeslots = second.schedule.get(secondCourse) || [];
+
+          if (firstTimeslots.length !== secondTimeslots.length) {
+            return false;
+          }
+
+          const firstTimeslotKeys = firstTimeslots
+            .map(ts => `${ts.start}-${ts.end}-${ts.daysOfTheWeek.sort().join(',')}`)
+            .sort();
+
+          const secondTimeslotKeys = secondTimeslots
+            .map(ts => `${ts.start}-${ts.end}-${ts.daysOfTheWeek.sort().join(',')}`)
+            .sort();
+
+          if (!deepEqual(firstTimeslotKeys, secondTimeslotKeys)) {
+            return false;
+          }
+        }
+
+        return true;
+      }
+
+      const startTime = Date.now();
+      while (outputs.length < 5 && Date.now() - startTime < 1500) {
         const courses = this.courses.map(
           course =>
             new Course(
@@ -311,17 +376,21 @@ export default defineComponent({
         momentary.fulfilledRequirements = newFullfilledReqs;
         momentary.totalCredits += deltaCredits;
 
-        output.push(momentary);
+        if (outputs.every(output => !isEqual(output, momentary))) {
+          outputs.push(momentary);
+        }
       }
-
-      this.generatedScheduleOutputs = output;
+      this.generatedScheduleOutputs = outputs;
     },
     regenerateSchedule() {
       this.generateSchedules();
       this.currentPage = 1;
     },
     paginate(direction: number) {
-      if ((this.currentPage < 5 && direction === 1) || (this.currentPage > 1 && direction === -1)) {
+      if (
+        (this.currentPage < this.generatedScheduleOutputs.length && direction === 1) ||
+        (this.currentPage > 1 && direction === -1)
+      ) {
         this.currentPage += direction;
       }
     },
@@ -546,6 +615,7 @@ input {
     margin-top: -0.5rem;
     background-color: $white;
     padding: 0rem 0.5rem 0rem 0.5rem;
+
     &--font {
       color: $black;
       flex-direction: row;
