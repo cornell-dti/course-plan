@@ -180,12 +180,7 @@ export default defineComponent({
       );
     },
     generateSchedules() {
-      const outputs: {
-        semester: string;
-        schedule: Map<Course, Timeslot[]>;
-        fulfilledRequirements: Map<string, Requirement[]>;
-        totalCredits: number;
-      }[] = [];
+      const outputs: GeneratedScheduleOutput[] = [];
 
       function getRandomDaySet(): DayOfTheWeek[] {
         const daySets = [
@@ -293,7 +288,9 @@ export default defineComponent({
         // NOTE: ideally we want to move this to the algorithm itself.
         // But also NOTE that this might not want to be hardcoded — consider e.g. liberal studies.
 
-        const momentary = ScheduleGenerator.generateSchedule(generatorRequest);
+        const momentary = ScheduleGenerator.generateSchedule(
+          generatorRequest
+        ) as GeneratedScheduleOutput;
 
         // Basic algorithm: now we want to clean up output.
         // Make it so that for every element of output, we keep track of
