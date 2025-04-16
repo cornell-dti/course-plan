@@ -124,11 +124,7 @@ import { generateSchedulePDF } from '@/tools/export-plan';
 import GeneratorRequest from '@/schedule-generator/generator-request';
 import ScheduleGenerator from '@/schedule-generator/algorithm';
 import type { GeneratedScheduleOutput } from '@/schedule-generator/algorithm';
-import Course, {
-  CourseForFrontend,
-  DayOfTheWeek,
-  Timeslot,
-} from '@/schedule-generator/course-unit';
+import Course, { CourseForFrontend, DayOfTheWeek } from '@/schedule-generator/course-unit';
 import Requirement from '@/schedule-generator/requirement';
 
 export default defineComponent({
