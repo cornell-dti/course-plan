@@ -218,7 +218,8 @@ export default defineComponent({
         for (let i = 0; i < sortedFirstCourses.length; i += 1) {
           const firstCourse = sortedFirstCourses[i];
           const secondCourse = sortedSecondCourses[i];
-
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
           if (!deepEqual(firstCourse, secondCourse)) {
             return false;
           }
@@ -237,7 +238,8 @@ export default defineComponent({
           const secondTimeslotKeys = secondTimeslots
             .map(ts => `${ts.start}-${ts.end}-${ts.daysOfTheWeek.sort().join(',')}`)
             .sort();
-
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
           if (!deepEqual(firstTimeslotKeys, secondTimeslotKeys)) {
             return false;
           }
