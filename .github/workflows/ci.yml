@@ -29,4 +29,4 @@ jobs:
       - name: Run req-gen
         run: npm run req-gen
       - name: Check that the requirements json has no changes
-        run: exit $(git status --porcelain | wc -l)
+        run: exit $(git status --porcelain | wc -l) 
