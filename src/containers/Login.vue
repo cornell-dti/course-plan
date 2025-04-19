@@ -102,14 +102,15 @@
 
       <!-- DRAG -->
       <div class="container-fluid plan p-0 center">
-        <div class="drag drag--first phonepad row no-gutters">
-          <img
-            class="hide preview"
-            src="@/assets/images/landing_new/img1.svg"
-            alt="Dragging preview"
-            aria-label="dragging preview"
-            style="position: absolute"
-          />
+        <div class="drag drag--first phonepad feature-section">
+          <div class="feature-image">
+            <img
+              class="preview"
+              src="@/assets/images/landing_new/img1.svg"
+              alt="Dragging preview"
+              aria-label="dragging preview"
+            />
+          </div>
           <div class="comment comment-drag">
             <h1 class="head">Drag and Drop Courses</h1>
             <p class="sub-text drag-text">
@@ -123,7 +124,7 @@
 
       <!-- SEMESTERS -->
       <div class="container-fluid p-0 center">
-        <div class="semester phonepad row no-gutters">
+        <div class="semester phonepad feature-section">
           <div class="comment comment-sem">
             <h1 class="head">Plan Your Semesters</h1>
             <p class="sub-text semester-text">
@@ -132,26 +133,28 @@
               miss a requirement.
             </p>
           </div>
-          <img
-            class="hide schedule-centered"
-            src="@/assets/images/landing_new/img2.svg"
-            alt="Plan preview"
-            aria-label="plan preview"
-            style="position: absolute"
-          />
+          <div class="feature-image" id="plan-preview-requiring-offset">
+            <img
+              class="schedule-centered"
+              src="@/assets/images/landing_new/img2.svg"
+              alt="Plan preview"
+              aria-label="plan preview"
+            />
+          </div>
         </div>
       </div>
 
       <!-- TRACKING -->
       <div class="container-fluid plan p-0 center">
-        <div class="drag phonepad row no-gutters">
-          <img
-            class="hide preview"
-            src="@/assets/images/landing_new/img3.svg"
-            alt="Dragging preview"
-            aria-label="dragging preview"
-            style="position: absolute"
-          />
+        <div class="drag phonepad feature-section">
+          <div class="feature-image">
+            <img
+              class="preview"
+              src="@/assets/images/landing_new/img3.svg"
+              alt="Dragging preview"
+              aria-label="dragging preview"
+            />
+          </div>
           <div class="comment comment-drag">
             <h1 class="head">Plan With Academic Tools</h1>
             <p class="sub-text track-text">
@@ -165,7 +168,7 @@
 
       <!-- GENERATE -->
       <div class="container-fluid p-0 center">
-        <div class="semester phonepad row no-gutters">
+        <div class="semester phonepad feature-section">
           <div class="comment comment-sem notes-text-left">
             <h1 class="head">Schedule Generator</h1>
             <p class="sub-text generate-text">
@@ -173,26 +176,28 @@
               CoursePlan generate <strong>optimized schedule suggestions</strong> on the Build page.
             </p>
           </div>
-          <img
-            class="hide schedule-centered"
-            src="@/assets/images/landing_new/img4.svg"
-            alt="Notes preview"
-            aria-label="Notes preview"
-            style="position: absolute"
-          />
+          <div class="feature-image">
+            <img
+              class="schedule-centered"
+              src="@/assets/images/landing_new/img4.svg"
+              alt="Notes preview"
+              aria-label="Notes preview"
+            />
+          </div>
         </div>
       </div>
 
       <!-- MULTIPLE -->
       <div class="container-fluid plan p-0 center">
-        <div class="drag phonepad row no-gutters">
-          <img
-            class="hide preview"
-            src="@/assets/images/landing_new/img5.svg"
-            alt="Multiple-plan preview"
-            aria-label="multiple-plan preview"
-            style="position: absolute"
-          />
+        <div class="drag phonepad feature-section">
+          <div class="feature-image">
+            <img
+              class="preview"
+              src="@/assets/images/landing_new/img5.svg"
+              alt="Multiple-plan preview"
+              aria-label="multiple-plan preview"
+            />
+          </div>
           <div class="comment comment-drag">
             <h1 class="head">Multiple Plans</h1>
             <p class="sub-text multiple-text">
@@ -206,7 +211,7 @@
 
       <!-- SAVED -->
       <div class="container-fluid p-0 center">
-        <div class="semester phonepad row no-gutters">
+        <div class="semester phonepad feature-section">
           <div class="comment comment-sem">
             <img
               src="@/assets/images/new_badge.svg"
@@ -221,26 +226,28 @@
               your saved courses <br />anytime on the Save page.
             </p>
           </div>
-          <img
-            class="hide schedule-centered"
-            src="@/assets/images/landing_new/img6.svg"
-            alt="Plan preview"
-            aria-label="plan preview"
-            style="position: absolute"
-          />
+          <div class="feature-image">
+            <img
+              class="schedule-centered"
+              src="@/assets/images/landing_new/img6.svg"
+              alt="Saved courses preview"
+              aria-label="saved courses preview"
+            />
+          </div>
         </div>
       </div>
 
       <!-- NOTES -->
       <div class="container-fluid plan p-0 center">
-        <div class="drag phonepad row no-gutters">
-          <img
-            class="hide preview"
-            src="@/assets/images/landing_new/img7.svg"
-            alt="Notes preview"
-            aria-label="notes preview"
-            style="position: absolute"
-          />
+        <div class="drag phonepad feature-section">
+          <div class="feature-image">
+            <img
+              class="preview"
+              src="@/assets/images/landing_new/img7.svg"
+              alt="Notes preview"
+              aria-label="notes preview"
+            />
+          </div>
           <div class="comment comment-drag">
             <img
               src="@/assets/images/new_badge.svg"
@@ -407,9 +414,14 @@ export default defineComponent({
 }
 .top-bar {
   padding: 1.75rem 0 0 6.5rem;
+  display: flex;
+  align-items: center;
+  max-width: 1600px;
+  margin-left: auto;
+  margin-right: auto;
 
   @media (max-width: $large-breakpoint) {
-    padding: 1.75rem 6.5rem 0px 6.5rem;
+    padding: 1.75rem 1.5rem 0px 1.5rem;
     display: flex;
     flex-direction: column;
   }
@@ -531,6 +543,9 @@ input {
   color: $black;
   display: flex;
   margin-top: 8rem;
+  max-width: 1600px;
+  margin-left: auto;
+  margin-right: auto;
 
   @media (max-width: $large-breakpoint) {
     flex-direction: column;
@@ -576,79 +591,6 @@ figure {
   @media (max-width: $large-breakpoint) {
     text-align: center;
   }
-
-  // Drag and Drop section
-  &.drag-text {
-    max-width: 550px;
-    margin-top: 32px;
-    margin-right: 200px;
-    margin-bottom: 0;
-    margin-left: 0;
-  }
-
-  // Plan Your Semesters section
-  &.semester-text {
-    max-width: 520px;
-    margin-top: 32px;
-    margin-right: 0;
-    margin-bottom: 0;
-    margin-left: 0;
-  }
-
-  // Academic Tools section
-  &.track-text {
-    max-width: 800px;
-    margin-top: 32px;
-    margin-right: 0;
-    margin-bottom: 0;
-    margin-left: 0;
-    line-height: 1.5;
-    white-space: normal;
-
-    strong {
-      white-space: nowrap; // Keep the strong text together
-      display: inline; // Ensure inline display
-    }
-  }
-
-  // Schedule Generator section
-  &.generate-text {
-    max-width: 450px;
-    margin-top: 32px;
-    margin-right: 0;
-    margin-bottom: 0;
-    margin-left: 0;
-  }
-
-  // Multiple Plans section
-  &.multiple-text {
-    max-width: 520px;
-    margin-top: 32px;
-    margin-bottom: 0;
-    margin-left: 0;
-
-    @media (max-width: $large-breakpoint) {
-      max-width: 100%;
-    }
-  }
-
-  // Saved Courses section
-  &.saved-text {
-    max-width: 600px;
-    margin-top: 32px;
-    margin-right: 0;
-    margin-bottom: 0;
-    margin-left: 0;
-  }
-
-  // Notes Feature section
-  &.notes-text {
-    max-width: 500px;
-    margin-top: 32px;
-    margin-right: 0;
-    margin-bottom: 0;
-    margin-left: 0;
-  }
 }
 
 .sub {
@@ -667,13 +609,6 @@ figure {
   font-family: 'Proxima Nova', sans-serif;
   font-weight: 700;
   line-height: 42px;
-  font-size: 40px;
-  color: $black;
-  padding-bottom: 0px;
-}
-.head-center {
-  font-family: 'Proxima Nova', sans-serif;
-  font-weight: 700;
   font-size: 40px;
   color: $black;
   padding-bottom: 0px;
@@ -942,16 +877,8 @@ figure {
   }
 }
 .semester {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  justify-content: flex-end;
   margin-top: -4rem;
   overflow: hidden;
-  @media (max-width: $large-breakpoint) {
-    display: flex;
-    justify-content: center;
-  }
 }
 .first {
   background-color: $sangBlue;
@@ -980,9 +907,6 @@ p {
   max-width: 600px;
 }
 @media (max-width: $large-breakpoint) {
-  img.hide {
-    display: none !important;
-  }
   .top-bar {
     padding: 3rem;
   }
@@ -993,16 +917,9 @@ p {
     padding: 3rem;
   }
   .comment {
-    text-align: center;
     padding: 6.25rem 2rem 6.25rem 2rem;
   }
-  .input {
-    width: 200px;
-  }
   .center {
-    display: flex;
-    justify-content: center;
-    align-items: center;
     margin: 0;
   }
 }
@@ -1050,26 +967,6 @@ html {
   }
 }
 
-.notes-text-left {
-  margin-left: 100px;
-  text-align: left;
-
-  .head,
-  .sub-text {
-    text-align: left;
-  }
-
-  @media (max-width: $large-breakpoint) {
-    margin-left: 0;
-    text-align: center;
-
-    .head,
-    .sub-text {
-      text-align: center;
-    }
-  }
-}
-
 .slide-in {
   opacity: 0;
   visibility: hidden;
@@ -1098,8 +995,8 @@ html {
 
 .new-badge {
   display: block;
-  margin-top: -2rem;
-  margin-bottom: 3rem;
+  margin-top: 0;
+  margin-bottom: 1.5rem;
   width: 140px;
   height: 54px;
 
@@ -1112,13 +1009,16 @@ html {
 
 .comment-sem,
 .comment-drag {
-  position: relative;
+  padding: 0;
+  margin: 0;
+  transform: none;
+  width: auto;
+  position: static;
+  z-index: auto;
 
-  @media (max-width: $large-breakpoint) {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
+  .sub-text,
+  .head {
+    text-align: inherit;
   }
 }
 
@@ -1272,58 +1172,6 @@ html {
   }
 }
 
-/* Handle mobile image display */
-@media (max-width: $large-breakpoint) {
-  .drag,
-  .semester {
-    position: relative;
-    padding-top: 200px; /* Add space for the background image */
-
-    &::before {
-      content: '';
-      display: block;
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 180px;
-      background-position: center;
-      background-repeat: no-repeat;
-      background-size: contain;
-      opacity: 0.8;
-    }
-  }
-
-  /* Set background images for each section when in mobile view */
-  .drag:has(.drag-text)::before {
-    background-image: url('@/assets/images/landing_new/img1.svg');
-  }
-
-  .semester:has(.semester-text)::before {
-    background-image: url('@/assets/images/landing_new/img2.svg');
-  }
-
-  .drag:has(.track-text)::before {
-    background-image: url('@/assets/images/landing_new/img3.svg');
-  }
-
-  .semester:has(.generate-text)::before {
-    background-image: url('@/assets/images/landing_new/img4.svg');
-  }
-
-  .drag:has(.multiple-text)::before {
-    background-image: url('@/assets/images/landing_new/img5.svg');
-  }
-
-  .semester:has(.saved-text)::before {
-    background-image: url('@/assets/images/landing_new/img6.svg');
-  }
-
-  .drag:has(.notes-text)::before {
-    background-image: url('@/assets/images/landing_new/img7.svg');
-  }
-}
-
 /* Make "Plan Your Semesters" section match others */
 .semester:has(.semester-text) {
   @media (max-width: $large-breakpoint) {
@@ -1363,14 +1211,6 @@ html {
     padding: 0 1rem;
   }
 
-  /* Make sure all images are properly hidden on smaller screens */
-  .hide,
-  .preview,
-  .schedule-centered {
-    display: none !important;
-    visibility: hidden !important;
-  }
-
   /* Ensure consistent text section spacing */
   .comment-drag,
   .comment-sem {
@@ -1403,7 +1243,7 @@ html {
 /* Fix NEW badge display on mobile */
 @media (max-width: $large-breakpoint) {
   .new-badge {
-    margin: 0 auto 1.5rem !important;
+    margin: 0 auto 1.5rem auto !important;
     width: 100px !important;
     height: auto !important;
   }
@@ -1416,22 +1256,6 @@ html {
   /* Consistent spacing between sections */
   .container-fluid.center:last-of-type {
     margin-bottom: 6rem !important; /* Extra space for the last section before footer */
-  }
-}
-
-/* Keep these specific media queries that only hide images on smaller screens */
-@media (max-width: $large-breakpoint) {
-  .hide,
-  img.hide,
-  .preview,
-  .schedule-centered {
-    display: none !important;
-    visibility: hidden !important;
-  }
-
-  .drag::before,
-  .semester::before {
-    display: none !important;
   }
 }
 
@@ -1527,35 +1351,124 @@ html {
   }
 }
 
-/* Ensure images are visible on desktop - add this at the end of the file */
-@media (min-width: 977px) {
-  .preview {
-    display: block !important;
-    visibility: visible !important;
-    position: relative;
+.feature-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 3rem;
+  padding: 4rem 2rem;
+  margin-bottom: 4rem;
+  overflow: hidden;
+  width: 100%;
+
+  .feature-image {
+    flex: 1 1 66%;
+    max-width: 66%;
+    text-align: center;
+
+    img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+    }
   }
 
-  .schedule-centered {
-    display: block !important;
-    visibility: visible !important;
-    position: relative;
+  #plan-preview-requiring-offset {
+    @media (min-width: $large-breakpoint) {
+      margin-right: -15rem;
+    }
   }
 
-  img.hide {
-    display: block !important;
-    visibility: visible !important;
+  .comment {
+    flex: 1 1 33%;
+    max-width: 33%;
+    padding: 0;
+    margin: 0;
+    transform: none;
+    position: static;
+    z-index: auto;
+    text-align: left;
+
+    .sub-text {
+      max-width: 100%;
+      margin: 1rem 0 0 0;
+      text-align: left;
+    }
+
+    .head {
+      margin-bottom: 1rem;
+      text-align: left;
+    }
+
+    .new-badge {
+      margin-top: 0;
+      margin-bottom: 1.5rem;
+      display: block;
+      margin-left: 0;
+    }
   }
 
-  /* Fix specific Plan Your Semesters image */
-  .semester:has(.semester-text) .schedule-centered {
-    display: block !important;
-    visibility: visible !important;
+  @media (max-width: $large-breakpoint) {
+    flex-direction: column;
+    padding: 2rem 1.5rem;
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+
+    .feature-image {
+      order: 1;
+      max-width: 90%;
+      width: 100%;
+      flex-basis: auto;
+      margin-bottom: 1rem;
+      display: block;
+    }
+
+    .comment {
+      order: 2;
+      max-width: 100%;
+      flex-basis: auto;
+      text-align: center;
+
+      .head,
+      .sub-text {
+        text-align: center;
+        max-width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .new-badge {
+        margin: 0 auto 1.5rem auto !important;
+      }
+    }
   }
 }
 
-/* Consolidate redundant media queries for desktop */
+.container-fluid.center,
+.container-fluid.plan {
+  margin: 0 auto !important;
+  padding: 0 !important;
+  max-width: 1600px;
+}
+
+.preview,
+.schedule-centered {
+  display: block;
+  visibility: visible;
+  position: static !important;
+  margin: 1em !important;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  left: auto;
+  right: auto;
+  top: auto;
+  bottom: auto;
+  transform: none;
+}
+
 @media (min-width: 977px) and (max-width: 1400px) {
-  /* Use one combined rule for all adjustments to minimize duplication */
   .image-wrapper--laptop {
     transform: scale(0.9);
     transform-origin: right center;
@@ -1566,7 +1479,6 @@ html {
     margin-right: -50px;
   }
 
-  /* Tasks styling */
   .tasks {
     padding: 0.5rem;
   }
@@ -1578,6 +1490,19 @@ html {
 
   .sub {
     font-size: 20px;
+  }
+}
+
+// Changed color for particular screens as otherwise the icons are invisible
+@media (max-width: $large-breakpoint) {
+  .tasks .figure .sub--task {
+    filter: brightness(0) invert(0);
+  }
+}
+
+@media (min-width: 2000px) {
+  .tasks .figure .sub--task {
+    filter: brightness(0) invert(0);
   }
 }
 </style>
