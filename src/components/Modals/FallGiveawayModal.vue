@@ -19,7 +19,7 @@
         <template v-if="!isEligibleForGiveaway && !hasEnteredGiveaway">
           <h1 class="modal-title">{{ title }}</h1>
           <h2 class="modal-subtitle">
-            <p>Plan your semester by April 17th<br />and win a free prize!</p>
+            <p>Plan your semester by April 20th<br />and win a free prize!</p>
           </h2>
 
           <div class="modal-steps">

@@ -226,7 +226,7 @@ export default defineComponent({
     },
     async openScheduleGenerateModal() {
       const now = new Date();
-      const deadline = new Date('2025-04-17T23:59:00');
+      const deadline = new Date('2025-04-20T23:59:00');
       if (now < deadline) {
         updateFA25GiveawayField({ step3: true });
       }
