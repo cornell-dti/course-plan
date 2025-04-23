@@ -15,6 +15,7 @@
       @select-course="selectCourse"
       v-if="isCourseModalOpen"
       @add-course="addCourse"
+      @add-blank-course-card="openBlankCourseModal"
     />
     <course-conflict-modal
       @close-course-modal="closeConflictModal"
@@ -50,6 +51,38 @@
       @close-delete-note="closeDeleteNoteModal"
       v-if="isDeleteNoteOpen && noteCourseUniqueID !== undefined"
       :noteCourseUniqueID="noteCourseUniqueID"
+    />
+    <blank-course-modal
+      v-if="isBlankCourseModalOpen"
+      :year="year"
+      :season="season"
+      @close-modal="closeBlankCourseModal"
+      @add-blank-course="addBlankCourse"
+      @open-distribution-modal="openDistributionModal"
+    />
+    <distribution-requirements-modal
+      v-if="isDistributionModalOpen"
+      :course="currentBlankCourse"
+      @close-modal="closeDistributionModal"
+      @back-to-course-modal="backToBlankCourseModal"
+      @save-course="addBlankCourse"
+      @add-manual-requirements="handleManualRequirements"
+      @proceed-to-confirmation="proceedToConfirmation"
+    />
+    <course-confirmation-modal
+      v-if="isConfirmationModalOpen"
+      :course="currentBlankCourse"
+      :requirements="courseRequirements"
+      @close-modal="closeCourseConfirmationModal"
+      @back-to-distribution-modal="backToDistributionModal"
+      @confirm-course="confirmAndAddCourse"
+    />
+    <manual-requirements-modal
+      v-if="isManualRequirementsModalOpen"
+      :course="currentBlankCourse"
+      @close-modal="closeManualRequirementsModal"
+      @back-to-course-modal="backToDistributionModal"
+      @save-requirements="proceedToConfirmationWithManualRequirements"
     />
     <button
       v-if="isFirstSem"
@@ -168,6 +201,10 @@ import DeleteSemester from '@/components/Modals/DeleteSemester.vue';
 import EditSemester from '@/components/Modals/EditSemester.vue';
 import ClearSemester from '@/components/Modals/ClearSemester.vue';
 import AddCourseButton from '@/components/AddCourseButton.vue';
+import BlankCourseModal from '@/components/Modals/NewCourse/BlankCourseModal.vue';
+import DistributionRequirementsModal from '@/components/Modals/NewCourse/DistributionRequirementsModal.vue';
+import CourseConfirmationModal from '@/components/Modals/NewCourse/CourseConfirmationModal.vue';
+import ManualRequirementsModal from '@/components/Modals/NewCourse/ManualRequirementsModal.vue';
 
 import { clickOutside, isPlaceholderCourse } from '@/utilities';
 
@@ -213,6 +250,10 @@ export default defineComponent({
     DeleteNoteModal,
     SemesterMenu,
     Placeholder,
+    BlankCourseModal,
+    DistributionRequirementsModal,
+    CourseConfirmationModal,
+    ManualRequirementsModal,
   },
   data() {
     return {
@@ -247,6 +288,13 @@ export default defineComponent({
       expandedNotes: new Map<number, boolean>(), // Track expanded state of notes by course uniqueID
       isNoteTransitioning: false,
       newNoteUniqueID: undefined as number | undefined,
+
+      isBlankCourseModalOpen: false,
+      isDistributionModalOpen: false,
+      currentBlankCourse: {} as FirestoreSemesterCourse,
+      isConfirmationModalOpen: false,
+      isManualRequirementsModalOpen: false,
+      courseRequirements: [] as string[],
     };
   },
   props: {
@@ -421,7 +469,7 @@ export default defineComponent({
     },
     openCourseModal() {
       // Delete confirmation for the use case of adding multiple courses consecutively
-      this.closeConfirmationModal();
+      this.closeCourseConfirmationModal();
       this.isCourseModalOpen = !this.isCourseModalOpen;
     },
     closeCourseModal() {
@@ -442,7 +490,7 @@ export default defineComponent({
     },
     openSemesterModal() {
       // Delete confirmation for the use case of adding multiple semesters consecutively
-      this.closeConfirmationModal();
+      this.closeCourseConfirmationModal();
 
       this.$emit('new-semester');
     },
@@ -777,6 +825,87 @@ export default defineComponent({
       setTimeout(() => {
         this.isNoteTransitioning = false;
       }, 300);
+    },
+    openBlankCourseModal() {
+      this.isBlankCourseModalOpen = true;
+    },
+    closeBlankCourseModal() {
+      this.isBlankCourseModalOpen = false;
+    },
+    addBlankCourse(course: FirestoreSemesterCourse) {
+      // Add the course to the semester
+      addCourseToSemester(
+        store.state.currentPlan,
+        this.year,
+        this.season,
+        course,
+        () => ({
+          optOut: [],
+          acknowledgedCheckerWarningOptIn: [],
+          arbitraryOptIn: {},
+        }),
+        this.$gtag
+      );
+
+      // Close all related modals
+      this.closeBlankCourseModal();
+      this.closeDistributionModal();
+
+      // Show confirmation
+      this.openConfirmationModal(`Added course ${course.code} to ${this.season} ${this.year}`);
+    },
+    openDistributionModal(course: FirestoreSemesterCourse) {
+      this.currentBlankCourse = course;
+      this.isBlankCourseModalOpen = false;
+      this.isDistributionModalOpen = true;
+    },
+    closeDistributionModal() {
+      this.isDistributionModalOpen = false;
+      this.currentBlankCourse = {} as FirestoreSemesterCourse;
+    },
+    backToBlankCourseModal() {
+      this.isDistributionModalOpen = false;
+      this.isBlankCourseModalOpen = true;
+    },
+    handleManualRequirements() {
+      // Close the distribution modal and open the manual requirements modal
+      this.isDistributionModalOpen = false;
+      this.isManualRequirementsModalOpen = true;
+    },
+    closeManualRequirementsModal() {
+      this.isManualRequirementsModalOpen = false;
+      this.currentBlankCourse = {} as FirestoreSemesterCourse;
+    },
+    proceedToConfirmationWithManualRequirements(
+      course: FirestoreSemesterCourse,
+      requirements: string[]
+    ) {
+      // Set course and requirements, then proceed to confirmation
+      this.currentBlankCourse = course;
+      this.courseRequirements = requirements;
+      this.isManualRequirementsModalOpen = false;
+      this.isConfirmationModalOpen = true;
+    },
+    proceedToConfirmation(course: FirestoreSemesterCourse, requirements: string[]) {
+      this.currentBlankCourse = course;
+      this.courseRequirements = requirements;
+      this.isDistributionModalOpen = false;
+      this.isConfirmationModalOpen = true;
+    },
+    closeCourseConfirmationModal() {
+      this.isConfirmationModalOpen = false;
+      this.currentBlankCourse = {} as FirestoreSemesterCourse;
+      this.courseRequirements = [];
+    },
+    backToDistributionModal() {
+      this.isConfirmationModalOpen = false;
+      this.isDistributionModalOpen = true;
+    },
+    confirmAndAddCourse(course: FirestoreSemesterCourse) {
+      // The course already has color and proper semesters from the confirmation modal
+      // We don't need to modify it further
+      this.addBlankCourse(course);
+      this.isConfirmationModalOpen = false;
     },
   },
   directives: {
