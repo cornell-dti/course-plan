@@ -2,6 +2,16 @@
 import { usernameCollection, semestersCollection } from '../firebase-config';
 
 /**
+ * Removes the `type` field from a course object.
+ * @param course - The course object to rollback.
+ * @returns The rolled-back course object.
+ */
+function rollbackCourseType(course: any): any {
+  const { type, ...rest } = course; // Remove the `type` field
+  return rest;
+}
+
+/**
  * Runs the rollback for a specific user.
  * @param userEmail - The email of the user whose data is being rolled back.
  */
@@ -13,49 +23,22 @@ async function runOnUser(userEmail: string) {
       return;
     }
 
-    console.log('semestersDoc', semestersDoc.data());
-
     const data = semestersDoc.data();
     if (!data || !data.semesters) {
       console.log(`No semesters data found for user: ${userEmail}`);
       return;
     }
 
-    const { plans: plansData } = data;
-    if (plansData == null) {
-      console.log(`No semesters data found for user: ${userEmail}`);
-      return;
-    }
-
-    // check the data type of semestersData
-
-    if (Array.isArray(plansData)) {
-      console.log(`Semesters data is an array for user: ${userEmail}`);
-      // return;
-    }
-
-    console.log('plan data:', plansData);
-    // check the data type of each course in semestersData
-
-    for (const plan of plansData) {
-      const planSemesters = plan.semesters;
-      console.log('semestersData', planSemesters);
-
-      for (const semester of planSemesters) {
-        console.log('semester', semester);
-        for (const course of semester.courses) {
-          console.log('course', course);
-          if ('type' in course) {
-            // remove the type field from course
-            console.log(`Removing type from course ${course.name}`);
-            delete course.type;
-          }
-        }
-      }
-    }
+    const updatedSemesters = data.semesters.map((semester: any) => {
+      const updatedCourses = semester.courses.map((course: any) => rollbackCourseType(course));
+      return {
+        ...semester,
+        courses: updatedCourses,
+      };
+    });
 
     // Update the Firestore document with the rolled-back data
-    await semestersCollection.doc(userEmail).update({ plans: plansData });
+    await semestersCollection.doc(userEmail).update({ semesters: updatedSemesters });
     console.log(`Rollback completed for user: ${userEmail}`);
   } catch (error) {
     console.error(`Failed to rollback data for user: ${userEmail}`, error);
