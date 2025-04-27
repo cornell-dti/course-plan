@@ -31,6 +31,7 @@
     </div>
     <div v-if="selectedCourse != null">
       <!-- if a course is selected -->
+      <!-- Hannah's Note, the blank course card seleced-quirement-editor will have very similar code-->
       <selected-requirement-editor
         :key="courseSelectorKey"
         :editMode="editMode"
@@ -89,6 +90,7 @@ export default defineComponent({
     'add-course': (course: CornellCourseRosterCourse, choice: FirestoreCourseOptInOptOutChoices) =>
       typeof course === 'object' && typeof choice === 'object',
     'add-blank-course-card': () => true,
+    // Hannah's note: a new emit for add blank course card
   },
   data() {
     return {
@@ -130,6 +132,7 @@ export default defineComponent({
     },
   },
   methods: {
+    // Hannah's note: only call this function for user is adding a cornell course
     selectCourse(result: CornellCourseRosterCourse) {
       this.selectedCourse = result;
       this.$emit('select-course', this.selectedCourse);
@@ -138,6 +141,7 @@ export default defineComponent({
     closeCurrentModal() {
       this.$emit('close-course-modal');
     },
+    // Hannah's note: selectedCourse: CornellCourseRosterCourse | FirestoreSemesterBlankCourse
     getReqsRelatedToCourse(selectedCourse: CornellCourseRosterCourse) {
       const {
         relatedRequirements,
@@ -177,6 +181,9 @@ export default defineComponent({
         this.addCourse();
       }
     },
+    // Hannah's note: check the selectedCourse type
+    // if its a cornellcourseroster, then keep this code
+    // else, we are adding a new blank course card, do not follow through
     addCourse() {
       if (this.selectedCourse == null) return;
       this.$emit('add-course', this.selectedCourse, {
@@ -194,6 +201,9 @@ export default defineComponent({
         arbitraryOptIn: {},
       });
       this.closeCurrentModal();
+
+      // Hannah's note: addBlankCourseCard() function is needed here. frontend alreay have some
+      // so can merge later
     },
     onSelectedChange(selected: string) {
       this.selectedRequirementID = selected;

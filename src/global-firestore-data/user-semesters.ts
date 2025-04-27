@@ -277,7 +277,7 @@ export const addCourseToSemester = (
     if (semesterFound) return newSemestersWithCourse;
     return [...oldSemesters, createSemester(year, season, [newCourse])];
   });
-  updateRequirementChoice(newCourse.uniqueID, choiceUpdater);
+  updateRequirementChoice(newCourse.uniqueID, choiceUpdater); // Hannah's Note: should not be changed with blank coures card either
 };
 
 export const deleteCourseFromSemester = (
