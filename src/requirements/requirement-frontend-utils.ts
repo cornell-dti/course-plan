@@ -218,13 +218,57 @@ const getMajors = (majorNames: readonly string[]) =>
  *
  * @param collegeName the name of the college the user is enrolled in
  * @param majorNames an array of the names of the majors the user is planning for
+ * @param entryYear the year the user entered Cornell
  * @returns An array of college requirements specialized for the user based on
- * their majors
+ * their majors and entry year
  */
-const specializedForCollege = (collegeName: string, majorNames: readonly string[]) => {
+const specializedForCollege = (
+  collegeName: string,
+  majorNames: readonly string[],
+  entryYear: string
+) => {
   const majors = getMajors(majorNames);
-  const collegeReqs = requirementJson.college[collegeName].requirements;
-  const spec = specialized(collegeReqs, majors);
+  const collegeObj = requirementJson.college[collegeName];
+  const collegeReqs = collegeObj.requirements;
+  const requirementMigrations = collegeObj.migrations || [];
+
+  const filteredMigrations = requirementMigrations.filter(
+    migration => parseInt(entryYear, 10) <= migration.entryYear
+  );
+
+  const addMigrationNewValues = filteredMigrations
+    .filter(migration => migration.type === 'Add')
+    .map(migration => migration.newValue);
+
+  const migratedReqs = collegeReqs
+    .filter(it => {
+      const matchingMigration = filteredMigrations.find(
+        migration => migration.fieldName === it.name
+      );
+
+      if (matchingMigration) {
+        if (matchingMigration.type === 'Delete') {
+          return false;
+        }
+      }
+      return true;
+    })
+    .map(it => {
+      const matchingMigration = filteredMigrations.find(
+        migration => migration.fieldName === it.name
+      );
+
+      if (matchingMigration) {
+        if (matchingMigration.type === 'Modify') {
+          return matchingMigration.newValue as DecoratedCollegeOrMajorRequirement;
+        }
+      }
+      return it;
+    })
+    .concat(addMigrationNewValues.filter(Boolean) as DecoratedCollegeOrMajorRequirement[]);
+
+  const spec = specialized(migratedReqs, majors);
+
   return spec.map(
     req =>
       ({
@@ -260,7 +304,7 @@ export function getUserRequirements({
           } as const)
       )
     : [];
-  const collegeReqs = college ? specializedForCollege(college, majors) : [];
+  const collegeReqs = college ? specializedForCollege(college, majors, entranceYear) : [];
   const majorReqs = fieldOfStudyReqs('Major', majors, entranceYear);
   const minorReqs = fieldOfStudyReqs('Minor', minors, entranceYear);
   const gradReqs = grad
