@@ -2,28 +2,8 @@
 import { usernameCollection, semestersCollection } from '../firebase-config';
 
 /**
- * Updates a course to include the `type` field and migrate it to either
- * `FirestoreSemesterCornellCourse` or `FirestoreSemesterBlankCourse`.
- * Note: There is no blank coures yet on Courseplan so by default all courses are Cornell courses.
- * @param course - The course object to migrate.
- * @returns The migrated course object.
- */
-function migrateCourseType(course: any): any {
-  if ('crseId' in course) {
-    // It's a Cornell course
-    return {
-      ...course,
-      type: 'CornellCourse', // Add the type field
-    };
-  }
-  // None of the courses right now on Courseplan are blank courses
-  console.warn(`Unknown course type for course: ${JSON.stringify(course)}`);
-  return course; // Return the course unchanged if it doesn't match any known type
-}
-
-/**
- * Runs the migration for a specific user.
- * @param userEmail - The email of the user whose data is being migrated.
+ * Runs the rollback for a specific user.
+ * @param userEmail - The email of the user whose data is being rolled back.
  */
 async function runOnUser(userEmail: string) {
   try {
@@ -33,41 +13,68 @@ async function runOnUser(userEmail: string) {
       return;
     }
 
+    console.log('semestersDoc', semestersDoc.data());
+
     const data = semestersDoc.data();
     if (!data || !data.semesters) {
       console.log(`No semesters data found for user: ${userEmail}`);
       return;
     }
 
-    const updatedSemesters = data.semesters.map((semester: any) => {
-      const updatedCourses = semester.courses.map((course: any) => migrateCourseType(course));
-      return {
-        ...semester,
-        courses: updatedCourses,
-      };
-    });
+    const { plans: plansData } = data;
+    if (plansData == null) {
+      console.log(`No semesters data found for user: ${userEmail}`);
+      return;
+    }
 
-    // Update the Firestore document with the migrated data
-    await semestersCollection.doc(userEmail).update({ semesters: updatedSemesters });
-    console.log(`Migration completed for user: ${userEmail}`);
+    // check the data type of semestersData
+
+    if (Array.isArray(plansData)) {
+      console.log(`Semesters data is an array for user: ${userEmail}`);
+      // return;
+    }
+
+    console.log('plan data:', plansData);
+    // check the data type of each course in semestersData
+
+    for (const plan of plansData) {
+      const planSemesters = plan.semesters;
+      console.log('semestersData', planSemesters);
+
+      for (const semester of planSemesters) {
+        console.log('semester', semester);
+        for (const course of semester.courses) {
+          console.log('course', course);
+          if (!('type' in course)) {
+            // add the type field to course
+            course.type = 'CornellCourse'; // Default type
+            console.log(`Adding cornell type to course ${course.name}`);
+          }
+        }
+      }
+    }
+
+    // Update the Firestore document with the rolled-back data
+    await semestersCollection.doc(userEmail).update({ plans: plansData });
+    console.log(`Rollback completed for user: ${userEmail}`);
   } catch (error) {
-    console.error(`Failed to migrate data for user: ${userEmail}`, error);
+    console.error(`Failed to rollback data for user: ${userEmail}`, error);
   }
 }
 
 /**
- * Main migration function.
+ * Main rollback function.
  */
 async function main() {
   const userEmail = process.argv[2];
   if (userEmail) {
-    // Run migration for a single user
-    console.log(`Running migration for user: ${userEmail}`);
+    // Run rollback for a single user
+    console.log(`Running rollback for user: ${userEmail}`);
     await runOnUser(userEmail);
   } else {
     const collection = await usernameCollection.get();
     for (const { id } of collection.docs) {
-      console.group(`Running on ${id}...`);
+      console.group(`Rolling back for ${id}...`);
       // Intentionally await in a loop to have no interleaved console logs.
       // eslint-disable-next-line no-await-in-loop
       await runOnUser(id);
@@ -77,6 +84,5 @@ async function main() {
 }
 
 main().catch(error => {
-  // added a error block
-  console.error('Migration failed:', error);
+  console.error('Rollback failed:', error);
 });

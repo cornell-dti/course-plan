@@ -72,6 +72,7 @@
           <div v-if="!compact" class="course-info">
             <span class="course-credits">{{ creditString }}</span>
             <span v-if="semesterString" class="course-semesters">{{ semesterString }}</span>
+            <span v-if="isBlankCourse"> {{ courseObj.blankCourseType }}</span>
             <course-caution
               v-if="!isReqCourse && !isSchedGenCourse"
               :course="courseObj"
@@ -211,18 +212,20 @@ export default defineComponent({
       // being true as well.
       isNoteVisible: Boolean(this.courseObj.note),
       isShaking: false,
+      isBlankCourse: this.courseObj.type === 'BlankCourse',
     };
   },
   computed: {
     semesterString(): string {
       let semesterString = '';
+      console.log(this.courseObj.semesters);
+      // const semesters = ; // TODO: figure out why this is not inferred correctly :(
       this.courseObj.semesters.forEach(semester => {
         semesterString += `${semester}, `;
       });
       if (semesterString.length > 0) {
         return semesterString.substring(0, semesterString.length - 2);
       }
-
       return semesterString;
     },
 
@@ -293,7 +296,7 @@ export default defineComponent({
     courseOnClick() {
       if (!this.menuOpen && !this.deletingCourse) {
         this.$emit('course-on-click', this.courseObj);
-        addCourseToBottomBar(this.courseObj, this.season, this.year);
+        addCourseToBottomBar(this.courseObj, this.season, this.year); // Hannah's Note: addCourseToBottomBar explicity checks courseObj.type to make sure it can't display a blank course
       }
     },
     editCourseCredit(credit: number) {

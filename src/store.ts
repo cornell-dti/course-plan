@@ -362,7 +362,7 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
       const plan = getFirstPlan(data);
       store.commit('setPlans', data.plans);
       store.commit('setCurrentPlan', plan);
-      store.commit('setSavedCourses', data.savedCourses); // Note: toggle this on and off to save collections progress after refresh
+      store.commit('setSavedCourses', data.savedCourses);
       const { orderByNewest } = data;
       store.commit('setSemesters', plan.semesters);
       updateDoc(doc(fb.semestersCollection, simplifiedUser.email), {
