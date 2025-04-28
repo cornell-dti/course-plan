@@ -4,7 +4,7 @@
 import store from '../store';
 
 import { cornellCourseRosterCourseToFirebaseSemesterCourse } from '../user-data-converter';
-import incrementUniqueID from './user-unique-incrementer';
+import { incrementUniqueID, incrementBlankCourseCrseID } from './user-unique-incrementer';
 
 export const cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData = (
   course: CornellCourseRosterCourse
@@ -47,6 +47,6 @@ export {
   updateRequirementChoices,
   deleteCourseFromRequirementChoices,
 } from './user-overridden-fulfillment-choices';
-export { incrementUniqueID };
+export { incrementUniqueID, incrementBlankCourseCrseID };
 
 export { default as retrieveAnalytics } from './track-users';

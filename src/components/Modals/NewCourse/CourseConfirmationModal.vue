@@ -19,7 +19,8 @@
           :compact="false"
           :active="false"
           :isReqCourse="false"
-          :isSemesterCourseCard="true"
+          :isSemesterCourseCard="false"
+          :isCourseConfirmationCard="true"
         />
       </div>
 
@@ -61,7 +62,7 @@ export default defineComponent({
   components: { TeleportModal, Course },
   props: {
     course: {
-      type: Object as PropType<FirestoreSemesterCourse>,
+      type: Object as PropType<FirestoreSemesterBlankCourse>,
       required: true,
     },
     requirements: {
@@ -88,7 +89,7 @@ export default defineComponent({
   emits: {
     'close-modal': () => true,
     'back-to-distribution-modal': () => true,
-    'confirm-course': (course: FirestoreSemesterCourse) => typeof course === 'object',
+    'confirm-course': (course: FirestoreSemesterBlankCourse) => typeof course === 'object',
   },
   methods: {
     closeCurrentModal() {

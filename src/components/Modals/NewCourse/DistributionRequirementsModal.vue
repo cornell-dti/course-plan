@@ -81,6 +81,7 @@ import TeleportModal from '@/components/Modals/TeleportModal.vue';
 import CourseSelector from '@/components/Modals/NewCourse/CourseSelector.vue';
 import store from '@/store';
 import { getRelatedUnfulfilledRequirements } from '@/requirements/requirement-frontend-utils';
+import { incrementUniqueID, incrementBlankCourseCrseID } from '@/global-firestore-data';
 
 type Data = {
   selectedCourse: CornellCourseRosterCourse | null;
@@ -94,7 +95,7 @@ export default defineComponent({
   components: { TeleportModal, CourseSelector },
   props: {
     course: {
-      type: Object as PropType<FirestoreSemesterCourse>,
+      type: Object as PropType<FirestoreSemesterBlankCourse>,
       required: true,
     },
   },
@@ -124,7 +125,9 @@ export default defineComponent({
       this.$emit('close-modal');
     },
     backToCourseModal() {
-      this.$emit('back-to-course-modal');
+      if (this.selectedCourse) {
+        this.selectedCourse = null; // Reset selected course to allow re-selection
+      } else this.$emit('back-to-course-modal');
     },
     selectCourse(result: CornellCourseRosterCourse) {
       this.selectedCourse = result;
@@ -135,18 +138,33 @@ export default defineComponent({
       if (!this.selectedCourse) return;
 
       // Update the course with the selected equivalent course info
-      const updatedCourse = {
+      // Hannah's Note: This function will be changed completely to support
+      // the current backend idea
+
+      // Update course with the selectedCourse info!
+      const updatedCourse: FirestoreSemesterBlankCourse = {
         ...this.course,
-        equivalentCourse: {
-          subject: this.selectedCourse.subject,
-          catalogNbr: this.selectedCourse.catalogNbr,
-          titleLong: this.selectedCourse.titleLong,
-          crseId: this.selectedCourse.crseId,
-        },
+        // code: this.selectedCourse.crseId,
+        // name: this.selectedCourse.titleLong,
+        // subject: this.selectedCourse.subject,
+        uniqueID: incrementUniqueID(),
+        crseId: 100000 + incrementBlankCourseCrseID(),
+        userID: 'dummy for now',
+        requirementsFulfilled: this.automaticallyFulfilledRequirements,
       };
 
+      // const updatedCourse = {
+      //   ...this.selectedCourse,
+      //   crseId: this.selectedCourse.crseId,
+      //   subject: this.selectedCourse.subject,
+      //   catalogNbr: this.selectedCourse.catalogNbr,
+      //   titleLong: this.selectedCourse.titleLong,
+      //   // Add any other necessary fields here
+      // };
+
       // Instead of saving directly, proceed to the confirmation step
-      this.$emit('proceed-to-confirmation', updatedCourse, this.automaticallyFulfilledRequirements);
+      this.$emit('proceed-to-confirmation', updatedCourse, this.automaticallyFulfilledRequirements); // TODO: remove the automaticallyRequirements from the arguements
+      // this.$emit('prooceed-to-confirmation', updatedCourse);
     },
     addManualRequirements() {
       this.$emit('add-manual-requirements');
