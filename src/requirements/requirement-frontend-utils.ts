@@ -630,6 +630,13 @@ export function getRelatedRequirementIdsForCourseOptOut(
         userRequirementsMap[reqB]
       )
   );
+  console.log(
+    'getRelatedRequirementIdsForCourseOptOut',
+    courseId,
+    associatedRequirementId,
+    requirementsThatDoNotAllowDoubleCounting,
+    requirements
+  );
   // order does not need to be preserved
   return Array.from(requirementsThatDoNotAllowDoubleCounting).filter(
     it => it !== associatedRequirementId

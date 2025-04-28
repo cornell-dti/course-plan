@@ -859,8 +859,12 @@ export default defineComponent({
     closeBlankCourseModal() {
       this.isBlankCourseModalOpen = false;
     },
-    addBlankCourse(course: FirestoreSemesterCourse) {
+    addBlankCourse(course: FirestoreSemesterBlankCourse) {
+      // TODO: fix this so that it works with blank course card type now!!
       // Add the course to the semester
+
+      console.log('Adding blank course:', course);
+
       addCourseToSemester(
         store.state.currentPlan,
         this.year,
@@ -928,7 +932,7 @@ export default defineComponent({
       this.isConfirmationModalOpen = false;
       this.isDistributionModalOpen = true;
     },
-    confirmAndAddCourse(course: FirestoreSemesterCourse) {
+    confirmAndAddCourse(course: FirestoreSemesterBlankCourse) {
       // The course already has color and proper semesters from the confirmation modal
       // We don't need to modify it further
       this.addBlankCourse(course);

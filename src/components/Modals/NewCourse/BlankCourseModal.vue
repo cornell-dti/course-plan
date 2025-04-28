@@ -99,7 +99,6 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
 import TeleportModal from '@/components/Modals/TeleportModal.vue';
-import { incrementUniqueID } from '@/global-firestore-data';
 
 export default defineComponent({
   components: { TeleportModal },
@@ -146,18 +145,22 @@ export default defineComponent({
       const creditsValue = parseInt(this.courseCredits.toString(), 10);
 
       // Use only the properties defined in FirestoreSemesterCourse
-      const blankCourse: FirestoreSemesterCourse = {
-        uniqueID: incrementUniqueID(),
+      const blankCourse: FirestoreSemesterBlankCourse = {
+        // uniqueID: incrementUniqueID(), // Note: should not call incrementID functions here because the course is saved yet so it would be a waste to call it.
+        type: 'BlankCourse',
         code: this.courseCode.trim(),
         name: this.courseName.trim(),
         credits: creditsValue,
+        creditRange: [creditsValue, creditsValue] as const, // Assuming can't edit credit value
         color: 'FFFFFF', // Default white color
-        crseId: 0,
-        lastRoster: '',
-        creditRange: [creditsValue, creditsValue] as const,
+        // crseId: incrementBlankCourseCrseID(), // TODO: new function for blank course card only in other modal
         semesters: this.season ? [this.season] : [],
-        note: '',
+        courseType: this.courseType,
       };
+
+      console.log('Blank Course:', blankCourse);
+      console.log('blank course course type:', blankCourse.courseType);
+      console.log('blank course type:', blankCourse.type);
 
       // Close this modal first, then open the distribution modal
       this.closeCurrentModal();

@@ -59,7 +59,7 @@
               <img src="@/assets/images/dots/threeDots.svg" alt="open menu for course card" />
             </button>
             <button
-              v-else-if="!isReqCourse && !isSemesterCourseCard"
+              v-else-if="!isReqCourse && !isSemesterCourseCard && !isCourseConfirmationCard"
               class="course-trash"
               @click.stop="deleteCourseFromCollection"
               @mouseover="hoverTrashIcon"
@@ -70,11 +70,15 @@
           </div>
           <div v-if="!compact" class="course-name">{{ courseObj.name }}</div>
           <div v-if="!compact" class="course-info">
-            <span class="course-credits">{{ creditString }}</span>
-            <span v-if="semesterString" class="course-semesters">{{ semesterString }}</span>
-            <span v-if="isBlankCourse"> {{ courseObj.blankCourseType }}</span>
+            <span class="course-credits">{{ creditString }} </span>
+            <span
+              v-if="semesterString && !isCourseConfirmationCard && !isBlankCourse"
+              class="course-semesters"
+              >{{ semesterString }}</span
+            >
+            <span v-if="isBlankCourse" class="course-semesters">{{ courseObj.courseType }}</span>
             <course-caution
-              v-if="!isReqCourse && !isSchedGenCourse"
+              v-if="!isReqCourse && !isSchedGenCourse && !isCourseConfirmationCard"
               :course="courseObj"
               :isCompactView="false"
             />
@@ -157,6 +161,7 @@ export default defineComponent({
     year: { type: Number, required: false, default: 0 },
     isSemesterCourseCard: { type: Boolean, required: true },
     isSchedGenCourse: { type: Boolean, required: false, default: false },
+    isCourseConfirmationCard: { type: Boolean, required: false, default: false },
   },
   mounted() {
     if (this.isNoteVisible) {
