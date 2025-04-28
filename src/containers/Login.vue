@@ -619,6 +619,9 @@ figure {
 }
 
 .drag {
+  overflow: visible;
+  position: relative;
+
   padding: 6.25rem 6.25rem;
 
   &--first {
@@ -630,14 +633,19 @@ figure {
   }
 }
 .preview {
-  position: relative;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: auto;
+  transform: none;
   left: 0px;
   margin-right: -32px;
   max-width: 100%;
   width: 950px;
   margin-top: 300px;
   margin-bottom: 300px;
-
+  transform: translateX(-8vw) !important;
   @media (max-width: 1200px) {
     width: 750px;
   }
@@ -653,6 +661,7 @@ figure {
   margin-bottom: 300px;
   justify-self: flex-end;
   flex-shrink: 0;
+  transform: translateX(8vw) !important;
 
   @media (max-width: $large-breakpoint) {
     display: none;
@@ -927,44 +936,6 @@ p {
 html {
   padding: 0;
   margin: 0;
-}
-
-.section-new {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  justify-content: space-between;
-  margin-top: 2rem;
-  overflow: hidden;
-
-  @media (max-width: $large-breakpoint) {
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-  }
-}
-
-.preview-new {
-  width: 800px;
-  margin: 0 2rem;
-
-  @media (max-width: $large-breakpoint) {
-    width: 100%;
-    margin: 1rem 0;
-  }
-}
-
-.comment-new {
-  padding: 4rem 3.25rem;
-  margin: 0;
-  flex-shrink: 0;
-  max-width: 500px;
-
-  @media (max-width: $large-breakpoint) {
-    text-align: center;
-    max-width: 100%;
-    padding: 2rem;
-  }
 }
 
 .slide-in {
@@ -1360,11 +1331,15 @@ html {
   margin-bottom: 4rem;
   overflow: hidden;
   width: 100%;
+  overflow: visible;
+  position: relative;
 
   .feature-image {
     flex: 1 1 66%;
     max-width: 66%;
     text-align: center;
+    overflow: visible; /* Allow children (like the img) to spill outside */
+    position: relative;
 
     img {
       max-width: 100%;
@@ -1505,4 +1480,35 @@ html {
     filter: brightness(0) invert(0);
   }
 }
+
+/* Hide images on smaller devices */
+@media (max-width: 1200px) {
+  /* Hide all images by default */
+  img:not(.sub--task) {
+    display: none !important;
+  }
+
+  /* Hide image containers */
+  .image-wrapper,
+  .feature-image {
+    display: none !important;
+  }
+
+  /* Ensure specific elements are hidden */
+  .preview,
+  .schedule-centered,
+  .container-fluid img:not(.sub--task),
+  .feature-section img:not(.sub--task),
+  .drag img:not(.sub--task),
+  .semester img:not(.sub--task) {
+    display: none !important;
+  }
+
+  /* Keep task icons visible */
+  .tasks img.sub--task {
+    display: inline-block !important;
+  }
+}
+
+/* Additional image hiding for mobile - removed as consolidated above */
 </style>
