@@ -5,7 +5,7 @@ import aapRequirements, { aapAdvisors } from './colleges/ar';
 import casPreFA2020Requirements from './colleges/asPreFA2020';
 import casFA2020Requirements, { casAdvisors } from './colleges/asFA2020';
 import businessRequirements, { businessAdvisors } from './colleges/bu';
-import engineeringRequirements, { engineeringAdvisors } from './colleges/en';
+import engineeringRequirements, { engineeringAdvisors, engineeringMigrations } from './colleges/en';
 import humanEcologyRequirements, { humanEcologyAdvisors } from './colleges/he';
 import ilrRequirements, { ilrAdvisors } from './colleges/il';
 import aemRequirements, { aemAdvisors } from './majors/aem';
@@ -120,6 +120,7 @@ const json: RequirementsJson = {
       name: 'Engineering (ENG)',
       requirements: engineeringRequirements,
       advisors: engineeringAdvisors,
+      migrations: engineeringMigrations,
       abbrev: 'CoE',
     },
     HE: {

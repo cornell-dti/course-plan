@@ -323,7 +323,7 @@ export const engineeringAdvisors: AdvisorGroup = {
   source: 'https://www.engineering.cornell.edu/students/undergraduate-students/advising/meet-staff',
 };
 
-export const engMigrations: RequirementMigration[] = [
+export const engineeringMigrations: RequirementMigration[] = [
   {
     entryYear: 2023,
     type: 'Modify',
