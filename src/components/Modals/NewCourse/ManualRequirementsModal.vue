@@ -276,38 +276,30 @@ export default defineComponent({
       let selectedRequirements: string[] = [];
 
       // Add selected college requirements
+      // check if req.selected && req.course size === 1, then we also append the course name to the requirement name
       const collegeReqs = this.collegeRequirements
         .filter(req => req.selected)
-        .map(req => `${req.name} Requirements`);
+        .map(req => {
+          const courseNames = req.courses
+            .filter(course => course.selected)
+            .map(course => course.name);
+          return courseNames.length === 1
+            ? `${req.name} Requirements (${courseNames[0]})`
+            : `${req.name} Requirements`;
+        });
 
       // Add selected major requirements
       const majorReqs = this.majorRequirements
         .filter(req => req.selected)
-        .map(req => `${req.name} Requirements`);
-
+        .map(req => {
+          const courseNames = req.courses
+            .filter(course => course.selected)
+            .map(course => course.name);
+          return courseNames.length === 1
+            ? `${req.name} Requirements (${courseNames[0]})`
+            : `${req.name} Requirements`;
+        });
       selectedRequirements = [...collegeReqs, ...majorReqs];
-
-      // Add specific CS course selections if Computer Science Core is selected
-      if (this.majorRequirements[1].selected) {
-        const csOptions = this.csCourseOptions
-          .filter(option => option.selected)
-          .map(option => option.name);
-
-        if (csOptions.length > 0) {
-          // Format to match the screenshot: "Computer Science Core Requirements (CS 3110)"
-          const selectedCourses = csOptions.join(', ');
-          const csRequirement = `Computer Science Core Requirements (${selectedCourses})`;
-
-          // Replace the generic "Computer Science Core Requirements" with the specific one
-          const coreIndex = selectedRequirements.indexOf('Computer Science Core Requirements');
-          if (coreIndex >= 0) {
-            selectedRequirements[coreIndex] = csRequirement;
-          } else {
-            selectedRequirements.push(csRequirement);
-          }
-        }
-      }
-
       this.$emit('save-requirements', this.course, selectedRequirements);
     },
 
