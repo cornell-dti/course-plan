@@ -102,9 +102,9 @@ export default defineComponent({
   emits: {
     'close-modal': () => true,
     'back-to-course-modal': () => true,
-    'save-course': (course: FirestoreSemesterCourse) => typeof course === 'object',
-    'add-manual-requirements': () => true,
-    'proceed-to-confirmation': (course: FirestoreSemesterCourse, requirements: string[]) =>
+    'save-course': (course: FirestoreSemesterBlankCourse) => typeof course === 'object',
+    'add-manual-requirements': (course: FirestoreSemesterBlankCourse) => typeof course === 'object',
+    'proceed-to-confirmation': (course: FirestoreSemesterBlankCourse, requirements: string[]) =>
       typeof course === 'object' && Array.isArray(requirements),
   },
   data(): Data {
@@ -167,7 +167,7 @@ export default defineComponent({
       // this.$emit('prooceed-to-confirmation', updatedCourse);
     },
     addManualRequirements() {
-      this.$emit('add-manual-requirements');
+      this.$emit('add-manual-requirements', this.selectedCourse);
     },
     getRequirementsFulfilled(course: CornellCourseRosterCourse) {
       // Convert course to a format that can be used by the requirements functions
