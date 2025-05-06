@@ -141,7 +141,6 @@ export default defineComponent({
     closeCurrentModal() {
       this.$emit('close-course-modal');
     },
-    // Hannah's note: selectedCourse: CornellCourseRosterCourse | FirestoreSemesterBlankCourse
     getReqsRelatedToCourse(selectedCourse: CornellCourseRosterCourse) {
       const {
         relatedRequirements,
@@ -201,9 +200,6 @@ export default defineComponent({
         arbitraryOptIn: {},
       });
       this.closeCurrentModal();
-
-      // Hannah's note: addBlankCourseCard() function is needed here. frontend alreay have some
-      // so can merge later
     },
     onSelectedChange(selected: string) {
       this.selectedRequirementID = selected;

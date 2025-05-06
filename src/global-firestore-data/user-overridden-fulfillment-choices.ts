@@ -7,6 +7,12 @@ export const updateRequirementChoice = (
   courseUniqueID: string | number,
   choiceUpdater: (choice: FirestoreCourseOptInOptOutChoices) => FirestoreCourseOptInOptOutChoices
 ): void => {
+  console.log('Updating requirement choice for course:');
+  console.log('the choice update at updateRequiremetnChoice:', choiceUpdater);
+  console.log(
+    'the choice for choice updater:',
+    store.state.overriddenFulfillmentChoices[courseUniqueID]
+  );
   setDoc(doc(overriddenFulfillmentChoicesCollection, store.state.currentFirebaseUser.email), {
     ...store.state.overriddenFulfillmentChoices,
     [courseUniqueID]: choiceUpdater(
@@ -17,6 +23,7 @@ export const updateRequirementChoice = (
       }
     ),
   });
+  console.log('finished Updated requirement choice for course:');
 };
 
 export const toggleRequirementChoice = (
