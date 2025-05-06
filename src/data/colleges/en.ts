@@ -351,7 +351,7 @@ export const engineeringMigrations: RequirementMigration[] = [
           ],
           fulfilledBy: 'courses',
           perSlotMinCount: [1, 1, 1, 1, 1, 1],
-          slotNames: Object.keys(previousEngineeringLiberalArtsGroups),
+          slotNames: ['Group 1', 'Group 2', 'Group 3', 'Group 4', 'Group 5', 'Group 6'],
           minNumberOfSlots: 3,
         },
         'Courses must have at least 18 credits.': {
