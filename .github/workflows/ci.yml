@@ -9,7 +9,7 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
-          node-version: '16'
+          node-version: '20'
           cache: 'npm'
       - name: NPM Install
         run: npm install
@@ -22,11 +22,11 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
-          node-version: '16'
+          node-version: '20'
           cache: 'npm'
       - name: NPM Install
         run: npm install
       - name: Run req-gen
         run: npm run req-gen
       - name: Check that the requirements json has no changes
-        run: exit $(git status --porcelain | wc -l) 
+        run: exit $(git status --porcelain | wc -l)
