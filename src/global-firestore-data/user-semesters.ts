@@ -264,6 +264,7 @@ export const addCourseToSemester = (
   choiceUpdater: (choice: FirestoreCourseOptInOptOutChoices) => FirestoreCourseOptInOptOutChoices,
   gtag?: VueGtag
 ): void => {
+  console.log('addCourseToSemester first line');
   GTagEvent(gtag, 'add-course');
   editSemesters(plan, oldSemesters => {
     let semesterFound = false;
@@ -277,7 +278,8 @@ export const addCourseToSemester = (
     if (semesterFound) return newSemestersWithCourse;
     return [...oldSemesters, createSemester(year, season, [newCourse])];
   });
-  updateRequirementChoice(newCourse.uniqueID, choiceUpdater);
+  console.log('editSemesters called. will call updateRequirementChoice');
+  updateRequirementChoice(newCourse.uniqueID, choiceUpdater); // Hannah's Note: should not be changed with blank coures card either
 };
 
 export const deleteCourseFromSemester = (

@@ -59,7 +59,7 @@
               <img src="@/assets/images/dots/threeDots.svg" alt="open menu for course card" />
             </button>
             <button
-              v-else-if="!isReqCourse && !isSemesterCourseCard"
+              v-else-if="!isReqCourse && !isSemesterCourseCard && !isCourseConfirmationCard"
               class="course-trash"
               @click.stop="deleteCourseFromCollection"
               @mouseover="hoverTrashIcon"
@@ -70,10 +70,15 @@
           </div>
           <div v-if="!compact" class="course-name">{{ courseObj.name }}</div>
           <div v-if="!compact" class="course-info">
-            <span class="course-credits">{{ creditString }}</span>
-            <span v-if="semesterString" class="course-semesters">{{ semesterString }}</span>
+            <span class="course-credits">{{ creditString }} </span>
+            <span
+              v-if="semesterString && !isCourseConfirmationCard && !isBlankCourse"
+              class="course-semesters"
+              >{{ semesterString }}</span
+            >
+            <span v-if="isBlankCourse" class="course-semesters">{{ courseObj.courseType }}</span>
             <course-caution
-              v-if="!isReqCourse && !isSchedGenCourse"
+              v-if="!isReqCourse && !isSchedGenCourse && !isCourseConfirmationCard"
               :course="courseObj"
               :isCompactView="false"
             />
@@ -155,6 +160,7 @@ export default defineComponent({
     year: { type: Number, required: false, default: 0 },
     isSemesterCourseCard: { type: Boolean, required: true },
     isSchedGenCourse: { type: Boolean, required: false, default: false },
+    isCourseConfirmationCard: { type: Boolean, required: false, default: false },
   },
   emits: {
     'delete-course': (code: string, uniqueID: number) =>
@@ -201,18 +207,20 @@ export default defineComponent({
       // being true as well.
       isNoteVisible: Boolean(this.courseObj.note),
       isShaking: false,
+      isBlankCourse: this.courseObj.type === 'BlankCourse',
     };
   },
   computed: {
     semesterString(): string {
       let semesterString = '';
+      console.log(this.courseObj.semesters);
+      // const semesters = ; // TODO: figure out why this is not inferred correctly :(
       this.courseObj.semesters.forEach(semester => {
         semesterString += `${semester}, `;
       });
       if (semesterString.length > 0) {
         return semesterString.substring(0, semesterString.length - 2);
       }
-
       return semesterString;
     },
 
@@ -283,7 +291,7 @@ export default defineComponent({
     courseOnClick() {
       if (!this.menuOpen && !this.deletingCourse) {
         this.$emit('course-on-click', this.courseObj);
-        addCourseToBottomBar(this.courseObj, this.season, this.year);
+        addCourseToBottomBar(this.courseObj, this.season, this.year); // Hannah's Note: addCourseToBottomBar explicity checks courseObj.type to make sure it can't display a blank course
       }
     },
     editCourseCredit(credit: number) {
