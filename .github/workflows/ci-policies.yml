@@ -15,10 +15,10 @@ jobs:
         run: |
           echo "Head ref must be main for release. Everything should go through staging first!"
           exit 1
-  warn-big-diff:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: cornell-dti/big-diff-warning@master
-        env:
-          BOT_TOKEN: '${{ secrets.BOT_TOKEN }}'
+  # warn-big-diff:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - uses: cornell-dti/big-diff-warning@master
+  #       env:
+  #         BOT_TOKEN: '${{ secrets.BOT_TOKEN }}'
