@@ -146,15 +146,12 @@ export default defineComponent({
 
       // Use only the properties defined in FirestoreSemesterCourse
       const blankCourse: FirestoreSemesterBlankCourse = {
-        // uniqueID: incrementUniqueID(), // Note: should not call incrementID functions here because the course is saved yet so it would be a waste to call it.
         type: 'BlankCourse',
         code: this.courseCode.trim(),
         name: this.courseName.trim(),
         credits: creditsValue,
         creditRange: [creditsValue, creditsValue] as const, // Assuming can't edit credit value
         color: 'FFFFFF', // Default white color
-        // crseId: incrementBlankCourseCrseID(), // TODO: new function for blank course card only in other modal
-        semesters: this.season ? [this.season] : [],
         courseType: this.courseType,
       };
 

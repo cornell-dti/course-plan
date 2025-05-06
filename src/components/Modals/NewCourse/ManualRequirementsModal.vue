@@ -228,7 +228,7 @@ export default defineComponent({
   components: { TeleportModal, DropDownArrow },
   props: {
     course: {
-      type: Object as PropType<FirestoreSemesterCourse>,
+      type: Object as PropType<FirestoreSemesterBlankCourse>,
       required: true,
     },
   },
@@ -275,8 +275,6 @@ export default defineComponent({
     saveRequirements() {
       let selectedRequirements: string[] = [];
 
-      // Add selected college requirements
-      // check if req.selected && req.course size === 1, then we also append the course name to the requirement name
       const collegeReqs = this.collegeRequirements
         .filter(req => req.selected)
         .map(req => {
@@ -284,7 +282,7 @@ export default defineComponent({
             .filter(course => course.selected)
             .map(course => course.name);
           return courseNames.length === 1
-            ? `${req.name} Requirements (${courseNames[0]})`
+            ? `${req.name} Requirements (${courseNames[0]})` // If there's only one course that a user can pick then we include it in the description of the string
             : `${req.name} Requirements`;
         });
 
@@ -300,7 +298,13 @@ export default defineComponent({
             : `${req.name} Requirements`;
         });
       selectedRequirements = [...collegeReqs, ...majorReqs];
-      this.$emit('save-requirements', this.course, selectedRequirements);
+
+      const updatedCourse = {
+        ...this.course,
+        requirements: selectedRequirements,
+      } as FirestoreSemesterBlankCourse;
+
+      this.$emit('save-requirements', updatedCourse, selectedRequirements);
     },
 
     // A copy of the function from RequirementSFulfillmentSlots.vue

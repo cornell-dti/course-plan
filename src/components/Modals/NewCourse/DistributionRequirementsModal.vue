@@ -70,6 +70,14 @@
             </div>
           </div>
         </div>
+        <div v-else>
+          <div class="section-label">
+            <div class="requirement-item">
+              <!--FRONTEND FIX: can change to a different style later-->
+              This class does not automatically fulfill any requirements.
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </TeleportModal>
@@ -80,15 +88,17 @@ import { defineComponent, PropType } from 'vue';
 import TeleportModal from '@/components/Modals/TeleportModal.vue';
 import CourseSelector from '@/components/Modals/NewCourse/CourseSelector.vue';
 import store from '@/store';
-import { getRelatedUnfulfilledRequirements } from '@/requirements/requirement-frontend-utils';
-import { incrementUniqueID, incrementBlankCourseCrseID } from '@/global-firestore-data';
+import {
+  getRelatedUnfulfilledRequirements,
+  getRelatedRequirementIdsForCourseOptOut,
+} from '@/requirements/requirement-frontend-utils';
 
-type Data = {
-  selectedCourse: CornellCourseRosterCourse | null;
-  courseSelectorKey: number;
-  automaticallyFulfilledRequirements: string[];
-  potentialRequirements: string[];
-};
+// type Data = {
+//   selectedCourse: CornellCourseRosterCourse | null;
+//   courseSelectorKey: number;
+//   automaticallyFulfilledRequirements: string[];
+//   potentialRequirements: string[];
+// };
 
 export default defineComponent({
   name: 'DistributionRequirementsModal',
@@ -104,15 +114,20 @@ export default defineComponent({
     'back-to-course-modal': () => true,
     'save-course': (course: FirestoreSemesterBlankCourse) => typeof course === 'object',
     'add-manual-requirements': (course: FirestoreSemesterBlankCourse) => typeof course === 'object',
-    'proceed-to-confirmation': (course: FirestoreSemesterBlankCourse, requirements: string[]) =>
-      typeof course === 'object' && Array.isArray(requirements),
+    'proceed-to-confirmation': (
+      course: FirestoreSemesterBlankCourse,
+      choice: FirestoreCourseOptInOptOutChoices
+    ) => typeof course === 'object' && typeof choice === 'object',
   },
-  data(): Data {
+  data() {
     return {
-      selectedCourse: null,
+      selectedCourse: null as CornellCourseRosterCourse | null,
+      selectedRequirementID: '' as string,
       courseSelectorKey: 0,
-      automaticallyFulfilledRequirements: [],
-      potentialRequirements: [],
+      automaticallyFulfilledRequirements: [] as readonly string[],
+      potentialRequirements: [] as readonly string[],
+      relatedRequirements: [] as readonly RequirementWithIDSourceType[],
+      selfCheckRequirements: [] as readonly RequirementWithIDSourceType[],
     };
   },
   computed: {
@@ -131,8 +146,10 @@ export default defineComponent({
     },
     selectCourse(result: CornellCourseRosterCourse) {
       this.selectedCourse = result;
+
       this.courseSelectorKey += 1; // Force re-render of the component
       this.getRequirementsFulfilled(result);
+      this.getReqsRelatedToCourse(result);
     },
     saveCourse() {
       if (!this.selectedCourse) return;
@@ -142,47 +159,84 @@ export default defineComponent({
       // the current backend idea
 
       // Update course with the selectedCourse info!
+
+      // Semesters: remove periods and split on ', '
+      // alternateSemesters option in case catalogWhenOffered for the course is null, undef, or ''
+      const alternateSemesters =
+        !this.selectedCourse.catalogWhenOffered || this.selectedCourse.catalogWhenOffered === ''
+          ? []
+          : this.selectedCourse.catalogWhenOffered.replace(/\./g, '').split(', ');
+      const semesters = alternateSemesters;
+
       const updatedCourse: FirestoreSemesterBlankCourse = {
         ...this.course,
-        // code: this.selectedCourse.crseId,
-        // name: this.selectedCourse.titleLong,
-        // subject: this.selectedCourse.subject,
-        uniqueID: incrementUniqueID(),
-        crseId: 100000 + incrementBlankCourseCrseID(),
-        userID: 'dummy for now',
+        semesters,
         requirementsFulfilled: this.automaticallyFulfilledRequirements,
       };
 
-      // const updatedCourse = {
-      //   ...this.selectedCourse,
-      //   crseId: this.selectedCourse.crseId,
-      //   subject: this.selectedCourse.subject,
-      //   catalogNbr: this.selectedCourse.catalogNbr,
-      //   titleLong: this.selectedCourse.titleLong,
-      //   // Add any other necessary fields here
-      // };
+      console.log('the course requiremnt fulfillments in saveCourse on distribution modal:', {
+        updatedCourse,
+        automaticallyFulfilledRequirements: this.automaticallyFulfilledRequirements,
+      });
 
+      const choice: FirestoreCourseOptInOptOutChoices = {
+        optOut: getRelatedRequirementIdsForCourseOptOut(
+          this.selectedCourse.crseId,
+          this.selectedRequirementID,
+          store.state.groupedRequirementFulfillmentReport,
+          store.state.toggleableRequirementChoices,
+          store.state.userRequirementsMap
+        ),
+        // Only include the selected requirement from opt-in.
+        acknowledgedCheckerWarningOptIn: this.selfCheckRequirements
+          .filter(it => it.id === this.selectedRequirementID)
+          .map(it => it.id),
+        arbitraryOptIn: {},
+      };
+
+      console.log('Course to be added; confirm course on DistributionRequirementsModal:', {
+        updatedCourse,
+        choice,
+      });
       // Instead of saving directly, proceed to the confirmation step
-      this.$emit('proceed-to-confirmation', updatedCourse, this.automaticallyFulfilledRequirements); // TODO: remove the automaticallyRequirements from the arguements
-      // this.$emit('prooceed-to-confirmation', updatedCourse);
+      this.$emit('proceed-to-confirmation', updatedCourse, choice); // TODO: remove the automaticallyRequirements from the arguements
     },
     addManualRequirements() {
       this.$emit('add-manual-requirements', this.selectedCourse);
     },
-    getRequirementsFulfilled(course: CornellCourseRosterCourse) {
-      // Convert course to a format that can be used by the requirements functions
-      const courseToCheck: Partial<CornellCourseRosterCourse> = {
-        crseId: course.crseId,
-        subject: course.subject,
-        catalogNbr: course.catalogNbr,
-        titleLong: course.titleLong,
-        // Fields needed by requirement checking functions
-        acadGroup: course.acadGroup || '',
-        acadCareer: course.acadCareer || '',
-        enrollGroups: course.enrollGroups || [],
-        catalogWhenOffered: course.catalogWhenOffered || '',
-      };
+    getReqsRelatedToCourse(selectedCourse: CornellCourseRosterCourse) {
+      const {
+        relatedRequirements,
+        selfCheckRequirements,
+        automaticallyFulfilledRequirements,
+      } = getRelatedUnfulfilledRequirements(
+        selectedCourse,
+        store.state.groupedRequirementFulfillmentReport,
+        store.state.onboardingData,
+        store.state.toggleableRequirementChoices,
+        store.state.overriddenFulfillmentChoices,
+        store.state.userRequirementsMap
+      );
+      const automaticallyFulfilledRequirementIds = new Set(
+        automaticallyFulfilledRequirements.map(({ id }) => id)
+      );
 
+      this.automaticallyFulfilledRequirements = automaticallyFulfilledRequirements.map(
+        ({ name }) => name
+      );
+      this.relatedRequirements = relatedRequirements.filter(
+        req => !automaticallyFulfilledRequirementIds.has(req.id)
+      );
+      this.selfCheckRequirements = selfCheckRequirements.filter(
+        req => !automaticallyFulfilledRequirementIds.has(req.id)
+      );
+      if (this.relatedRequirements.length > 0) {
+        this.selectedRequirementID = this.relatedRequirements[0].id;
+      } else {
+        this.selectedRequirementID = '';
+      }
+    },
+    getRequirementsFulfilled(course: CornellCourseRosterCourse) {
       try {
         // Use the same requirements function that's used in the regular Add Course flow
         const {
@@ -190,7 +244,7 @@ export default defineComponent({
           selfCheckRequirements,
           automaticallyFulfilledRequirements,
         } = getRelatedUnfulfilledRequirements(
-          courseToCheck as CornellCourseRosterCourse,
+          course as CornellCourseRosterCourse,
           store.state.groupedRequirementFulfillmentReport,
           store.state.onboardingData,
           store.state.toggleableRequirementChoices,
@@ -221,57 +275,13 @@ export default defineComponent({
           ...new Set([...potentialRelatedRequirements, ...potentialSelfCheckRequirements]),
         ];
 
-        // If no requirements were found, show placeholders based on subject
-        if (
-          this.automaticallyFulfilledRequirements.length === 0 &&
-          this.potentialRequirements.length === 0
-        ) {
-          const { subject } = course;
-
-          if (subject === 'CS') {
-            this.automaticallyFulfilledRequirements = ['CS Electives'];
-            this.potentialRequirements = [
-              'Advisor-Approved Electives',
-              'Technical Electives',
-              'Major-approved Elective(s)',
-            ];
-          } else if (subject === 'MATH') {
-            this.automaticallyFulfilledRequirements = ['Calculus Requirements'];
-            this.potentialRequirements = [
-              'Math Major Requirements',
-              'Engineering Math Requirements',
-            ];
-          } else {
-            this.automaticallyFulfilledRequirements = ['Liberal Studies Requirements'];
-            this.potentialRequirements = [
-              'College Distribution Requirements',
-              'Major-approved Elective(s)',
-            ];
-          }
-        }
+        console.log('Potential requirements:', this.potentialRequirements);
+        console.log(
+          'Automatically fulfilled requirements:',
+          this.automaticallyFulfilledRequirements
+        );
       } catch (error) {
         console.error('Error getting requirements fulfilled:', error);
-
-        // Fall back to default requirements based on subject
-        const { subject } = course;
-
-        if (subject === 'CS') {
-          this.automaticallyFulfilledRequirements = ['CS Electives'];
-          this.potentialRequirements = [
-            'Advisor-Approved Electives',
-            'Technical Electives',
-            'Major-approved Elective(s)',
-          ];
-        } else if (subject === 'MATH') {
-          this.automaticallyFulfilledRequirements = ['Calculus Requirements'];
-          this.potentialRequirements = ['Math Major Requirements', 'Engineering Math Requirements'];
-        } else {
-          this.automaticallyFulfilledRequirements = ['Liberal Studies Requirements'];
-          this.potentialRequirements = [
-            'College Distribution Requirements',
-            'Major-approved Elective(s)',
-          ];
-        }
       }
     },
   },

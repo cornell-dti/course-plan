@@ -31,8 +31,12 @@
 
       <!-- Requirements list -->
       <div class="requirements-items">
-        <div v-if="requirements && requirements.length > 0">
-          <div v-for="(req, index) in requirements" :key="index" class="requirement-item">
+        <div v-if="course.requirementsFulfilled && course.requirementsFulfilled.length > 0">
+          <div
+            v-for="(req, index) in course.requirementsFulfilled"
+            :key="index"
+            class="requirement-item"
+          >
             {{ req }}
           </div>
         </div>
@@ -56,6 +60,7 @@ import { defineComponent, PropType } from 'vue';
 import TeleportModal from '@/components/Modals/TeleportModal.vue';
 import Course from '@/components/Course/Course.vue';
 import store from '@/store';
+import { incrementUniqueID, incrementBlankCourseCrseID } from '@/global-firestore-data';
 
 export default defineComponent({
   name: 'CourseConfirmationModal',
@@ -65,8 +70,8 @@ export default defineComponent({
       type: Object as PropType<FirestoreSemesterBlankCourse>,
       required: true,
     },
-    requirements: {
-      type: Array as PropType<string[]>,
+    choice: {
+      type: Object as PropType<FirestoreCourseOptInOptOutChoices>,
       required: true,
     },
   },
@@ -89,7 +94,10 @@ export default defineComponent({
   emits: {
     'close-modal': () => true,
     'back-to-distribution-modal': () => true,
-    'confirm-course': (course: FirestoreSemesterBlankCourse) => typeof course === 'object',
+    'confirm-course': (
+      course: FirestoreSemesterBlankCourse,
+      choice: FirestoreCourseOptInOptOutChoices
+    ) => typeof course === 'object' && typeof choice === 'object',
   },
   methods: {
     closeCurrentModal() {
@@ -100,7 +108,19 @@ export default defineComponent({
     },
     confirmCourse() {
       // Pass the course with color
-      this.$emit('confirm-course', this.courseWithColor);
+      const updatedCourse = {
+        ...this.course,
+        uniqueID: incrementUniqueID(),
+        crseId: 100000 + incrementBlankCourseCrseID(),
+        userID: 'dummy for now',
+        color: this.courseWithColor.color,
+      };
+      console.log(
+        'Course to be added; confirm course on CourseConfirmationModal:',
+        updatedCourse,
+        this.choice
+      );
+      this.$emit('confirm-course', updatedCourse, this.choice);
     },
   },
 });

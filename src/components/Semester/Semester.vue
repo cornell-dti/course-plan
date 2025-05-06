@@ -57,22 +57,22 @@
       :year="year"
       :season="season"
       @close-modal="closeBlankCourseModal"
-      @add-blank-course="addBlankCourse"
       @open-distribution-modal="openDistributionModal"
     />
+    <!-- @add-blank-course="addBlankCourse" -->
     <distribution-requirements-modal
       v-if="isDistributionModalOpen"
       :course="currentBlankCourse"
       @close-modal="closeDistributionModal"
       @back-to-course-modal="backToBlankCourseModal"
-      @save-course="addBlankCourse"
       @add-manual-requirements="handleManualRequirements"
       @proceed-to-confirmation="proceedToConfirmation"
     />
+    <!-- @save-course="addBlankCourse"-->
     <course-confirmation-modal
       v-if="isConfirmationModalOpen"
       :course="currentBlankCourse"
-      :requirements="courseRequirements"
+      :choice="currentBlankCourseChoice"
       @close-modal="closeCourseConfirmationModal"
       @back-to-distribution-modal="backToDistributionModal"
       @confirm-course="confirmAndAddCourse"
@@ -295,6 +295,7 @@ export default defineComponent({
       isConfirmationModalOpen: false,
       isManualRequirementsModalOpen: false,
       courseRequirements: [] as string[],
+      currentBlankCourseChoice: {} as FirestoreCourseOptInOptOutChoices,
     };
   },
   props: {
@@ -622,6 +623,8 @@ export default defineComponent({
     addCourse(data: CornellCourseRosterCourse, choice: FirestoreCourseOptInOptOutChoices) {
       const newCourse = cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData(data);
       // Since the course is new, we know the old choice does not exist.
+
+      console.log('Adding course and choice noromally :', newCourse, choice);
       addCourseToSemester(
         store.state.currentPlan,
         this.year,
@@ -832,22 +835,22 @@ export default defineComponent({
     closeBlankCourseModal() {
       this.isBlankCourseModalOpen = false;
     },
-    addBlankCourse(course: FirestoreSemesterBlankCourse) {
+    addBlankCourse(
+      course: FirestoreSemesterBlankCourse,
+      choice: FirestoreCourseOptInOptOutChoices
+    ) {
       // TODO: fix this so that it works with blank course card type now!!
       // Add the course to the semester
 
       console.log('Adding blank course:', course);
+      console.log('Choice:', choice);
 
       addCourseToSemester(
         store.state.currentPlan,
         this.year,
         this.season,
         course,
-        () => ({
-          optOut: [],
-          acknowledgedCheckerWarningOptIn: [],
-          arbitraryOptIn: {},
-        }),
+        () => choice,
         this.$gtag
       );
 
@@ -890,9 +893,13 @@ export default defineComponent({
       this.isManualRequirementsModalOpen = false;
       this.isConfirmationModalOpen = true;
     },
-    proceedToConfirmation(course: FirestoreSemesterCourse, requirements: string[]) {
+    proceedToConfirmation(
+      course: FirestoreSemesterCourse,
+      choice: FirestoreCourseOptInOptOutChoices
+    ) {
       this.currentBlankCourse = course;
-      this.courseRequirements = requirements;
+      this.courseRequirements = course.requirements;
+      this.currentBlankCourseChoice = choice;
       this.isDistributionModalOpen = false;
       this.isConfirmationModalOpen = true;
     },
@@ -905,10 +912,13 @@ export default defineComponent({
       this.isConfirmationModalOpen = false;
       this.isDistributionModalOpen = true;
     },
-    confirmAndAddCourse(course: FirestoreSemesterBlankCourse) {
+    confirmAndAddCourse(
+      course: FirestoreSemesterBlankCourse,
+      choice: FirestoreCourseOptInOptOutChoices
+    ) {
       // The course already has color and proper semesters from the confirmation modal
       // We don't need to modify it further
-      this.addBlankCourse(course);
+      this.addBlankCourse(course, choice);
       this.isConfirmationModalOpen = false;
     },
   },
