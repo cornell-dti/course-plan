@@ -1,7 +1,11 @@
 <template>
   <button
     class="bottombartab full-opacity-on-hover"
-    :style="{ background: `#${color}` }"
+    :style="{
+      background: `#${Math.floor(Math.random() * 0xffffff)
+        .toString(16)
+        .padEnd(6, '0')}`,
+    }"
     @click="$emit('on-change-focus')"
   >
     <div class="bottombartab-wrapper">
