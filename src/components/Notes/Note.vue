@@ -275,6 +275,7 @@ export default defineComponent({
   opacity: 0;
   transform: translateY(100%);
   transition: opacity 0.3s ease, transform 0.3s ease;
+  position: relative;
 }
 
 .note-content.visible {
@@ -320,9 +321,12 @@ export default defineComponent({
   opacity: 1;
   cursor: pointer;
   transition: filter 0.3s ease;
-  margin-right: 10px;
+  margin-right: 0px;
   --svg-filter-color: grey; /* Default color */
   filter: drop-shadow(0 0 0 var(--svg-filter-color)) saturate(5);
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
 
   &:hover {
     filter: opacity(0.5) drop-shadow(0 0 0 var(--svg-filter-color));
