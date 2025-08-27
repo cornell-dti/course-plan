@@ -178,15 +178,15 @@ export default defineComponent({
     startEditing() {
       this.isEditing = true;
       this.isExpanded = true;
-      const el = this.$refs.textareaRef as HTMLTextAreaElement | undefined;
-      if (el) {
-        this.autoGrowTextarea(el);
-        el.focus();
-      }
-      setTimeout(() => {
+      nextTick(() => {
+        const el = this.$refs.textareaRef as HTMLTextAreaElement | undefined;
+        if (el) {
+          this.autoGrowTextarea(el);
+          el.focus();
+        }
         // Grant some rendering time so that the height is figured out.
         this.$emit('height-change');
-      }, 100);
+      });
     },
     saveNote() {
       if (this.isDisabled) return;
