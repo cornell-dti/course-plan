@@ -324,7 +324,6 @@ export default defineComponent({
           if (noteComponent) {
             this.$emit('new-note-created', this.courseObj.uniqueID, true); // toggles new note to true
             noteComponent.expandNote();
-            // Report initial height after expansion
             setTimeout(() => {
               this.reportNoteHeight();
             }, 320);
