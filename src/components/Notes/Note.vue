@@ -275,7 +275,6 @@ export default defineComponent({
   opacity: 0;
   transform: translateY(100%);
   transition: opacity 0.3s ease, transform 0.3s ease;
-  position: relative;
 }
 
 .note-content.visible {
@@ -287,6 +286,8 @@ export default defineComponent({
 .note-content.visibleEmpty {
   opacity: 1;
   transform: translateY(15px);
+  /* Ensure the icon is aligned with the bottom of the note during the first edit phase. */
+  align-items: end;
 }
 
 .note-textarea {
@@ -321,12 +322,9 @@ export default defineComponent({
   opacity: 1;
   cursor: pointer;
   transition: filter 0.3s ease;
-  margin-right: 0px;
+  margin-right: 10px;
   --svg-filter-color: grey; /* Default color */
   filter: drop-shadow(0 0 0 var(--svg-filter-color)) saturate(5);
-  position: absolute;
-  right: 10px;
-  bottom: 10px;
 
   &:hover {
     filter: opacity(0.5) drop-shadow(0 0 0 var(--svg-filter-color));
@@ -378,6 +376,7 @@ export default defineComponent({
   border-radius: 13px;
   margin: 20px 10px 15px 10px;
   padding: 5px;
+  align-items: end;
 }
 
 .note-content.editing .note-textarea {
