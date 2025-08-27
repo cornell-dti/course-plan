@@ -186,7 +186,7 @@ export default defineComponent({
       setTimeout(() => {
         // Grant some rendering time so that the height is figured out.
         this.$emit('height-change');
-      }, 50);
+      }, 100);
     },
     saveNote() {
       if (this.isDisabled) return;
