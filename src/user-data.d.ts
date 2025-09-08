@@ -27,24 +27,10 @@ type FirestoreSemesterCourseBase = {
   readonly credits: number;
   readonly creditRange: readonly [number, number];
   readonly semesters: readonly string[]; // TODO: figure out if this is needed
+  readonly requirementsFulfilled: readonly string[];
   readonly color: string;
   readonly note?: string | null;
   readonly lastUpdated?: Timestamp | null;
-};
-
-type FirestoreSemesterCornellCourse = FirestoreSemesterCourseBase & {
-  readonly type: 'CornellCourse'; // Discrminator for the type of course; Default type
-  readonly crseId: number;
-  readonly lastRoster: string;
-  // readonly uniqueID: number;
-  // readonly code: string;
-  // readonly name: string;
-  // readonly credits: number;
-  // readonly creditRange: readonly [number, number];
-  // readonly semesters: readonly string[]; // TODO: figure out if this is needed
-  // readonly color: string;
-  // readonly note?: string | null;
-  // readonly lastUpdated?: Timestamp | null; // NB: the Timestamp here is deliberately left untyped — importing from Firestore causes all sorts of namespace issues.
 };
 
 type FirestoreSemesterCornellCourse = FirestoreSemesterCourseBase & {

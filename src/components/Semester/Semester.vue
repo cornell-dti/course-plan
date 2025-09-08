@@ -157,7 +157,6 @@
                 @open-delete-note-modal="openDeleteNoteModal"
                 @note-state-change="handleNoteStateChange"
                 @new-note-created="handleNewNoteCreated"
-                @note-height-change="handleNoteHeightChange"
               />
               <placeholder
                 v-else
