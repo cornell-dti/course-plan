@@ -1,11 +1,5 @@
 import { CollegeOrMajorRequirement, Course } from '../../requirements/types';
-import {
-  includesWithSingleRequirement,
-  includesWithSubRequirements,
-  courseMatchesCodeOptions,
-  courseMatchesCode,
-  ifCodeMatch,
-} from '../../requirements/checkers';
+import { includesWithSubRequirements, courseMatchesCodeOptions } from '../../requirements/checkers';
 import { AdvisorGroup } from '../../tools/advisors/types';
 
 const aiMinorRequirements: readonly CollegeOrMajorRequirement[] = [
