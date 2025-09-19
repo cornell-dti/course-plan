@@ -17,6 +17,7 @@ export type CollegeRequirements<R> = {
     readonly name: string;
     readonly requirements: readonly R[];
     readonly advisors?: AdvisorGroup;
+    readonly migrations?: RequirementMigration[];
     readonly abbrev?: string;
   };
 };

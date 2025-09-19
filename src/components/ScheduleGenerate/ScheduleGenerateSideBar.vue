@@ -75,7 +75,7 @@
 import { PropType, defineComponent } from 'vue';
 import RequirementCourses from '@/components/ScheduleGenerate/RequirementCourses.vue';
 import Confirmation from '@/components/Modals/Confirmation.vue';
-import store from '@/store';
+import store, { updateFA25GiveawayField } from '@/store';
 import { cornellCourseRosterCourseToFirebaseSemesterCourseWithCustomIDAndColor } from '@/user-data-converter';
 import { getCourseWithCrseIdAndRoster } from '@/global-firestore-data/courses';
 import Requirement from '@/schedule-generator/requirement';
@@ -225,6 +225,12 @@ export default defineComponent({
       );
     },
     async openScheduleGenerateModal() {
+      const now = new Date();
+      const deadline = new Date('2025-04-20T23:59:00');
+      if (now < deadline) {
+        updateFA25GiveawayField({ step3: true });
+      }
+
       this.isGenerating = true;
       function formatTime(timeStr: string): string {
         const timeParts = timeStr.match(/(\d+):(\d+)(\w{2})/);

@@ -106,7 +106,7 @@
       @save-note="saveNote"
       @open-delete-note-modal="openDeleteNoteModal"
       @note-state-change="handleNoteStateChange"
-      @new-note-created="handleNewNote"
+      @height-change="handleNoteHeightChange"
       ref="note"
       v-click-outside="handleClickOutsideNote"
       :noteId="`course-${courseObj.uniqueID}`"
@@ -125,7 +125,7 @@ import {
   reportCourseColorChange,
   reportSubjectColorChange,
 } from '@/components/BottomBar/BottomBarState';
-import { isCourseConflict } from '@/store';
+import { isCourseConflict, updateFA25GiveawayField } from '@/store';
 import { clickOutside } from '@/utilities';
 import EditColor from '../Modals/EditColor.vue';
 import trashGrayIcon from '@/assets/images/trash-gray.svg';
@@ -139,7 +139,7 @@ interface MinimalNoteComponent {
   isDirty: boolean;
   isExpanded: boolean;
   collapseNote: () => void;
-  expandNote: () => void; // Note: This function does not exist in the Note component, but is used here.
+  expandNote: () => void;
 }
 
 export default defineComponent({
@@ -155,6 +155,13 @@ export default defineComponent({
     year: { type: Number, required: false, default: 0 },
     isSemesterCourseCard: { type: Boolean, required: true },
     isSchedGenCourse: { type: Boolean, required: false, default: false },
+  },
+  mounted() {
+    if (this.isNoteVisible) {
+      this.$nextTick(() => {
+        this.reportNoteHeight();
+      });
+    }
   },
   emits: {
     'delete-course': (code: string, uniqueID: number) =>
@@ -183,6 +190,8 @@ export default defineComponent({
       typeof uniqueID === 'number' && typeof isExpanded === 'boolean',
     'new-note-created': (uniqueID: number, isNewNote: boolean) =>
       typeof uniqueID === 'number' && typeof isNewNote === 'boolean',
+    'note-height-change': (uniqueID: number, heightRem: number) =>
+      typeof uniqueID === 'number' && typeof heightRem === 'number',
   },
   data() {
     return {
@@ -298,6 +307,12 @@ export default defineComponent({
       this.trashIcon = trashGrayIcon;
     },
     openNoteModal() {
+      const now = new Date();
+      const deadline = new Date('2025-04-20T23:59:00');
+
+      if (now < deadline) {
+        updateFA25GiveawayField({ step2: true });
+      }
       if (!this.isNoteVisible) {
         this.isNoteVisible = true;
         this.menuOpen = false;
@@ -309,6 +324,9 @@ export default defineComponent({
           if (noteComponent) {
             this.$emit('new-note-created', this.courseObj.uniqueID, true); // toggles new note to true
             noteComponent.expandNote();
+            setTimeout(() => {
+              this.reportNoteHeight();
+            }, 320);
           }
         });
       } else {
@@ -328,9 +346,11 @@ export default defineComponent({
     closeNote() {
       // NOTE: this function hides the note entirely!
       // Grant time for the slide-back-in animation to play out.
-      setTimeout(() => {
-        this.isNoteVisible = false;
-      }, 300);
+      this.isNoteVisible = false;
+      this.$nextTick(() => {
+        // Note closed; height goes to 0
+        this.$emit('note-height-change', this.courseObj.uniqueID, 0);
+      });
     },
     triggerCourseCardShake() {
       this.isShaking = true;
@@ -366,6 +386,7 @@ export default defineComponent({
         noteComponent.collapseNote();
         this.$emit('new-note-created', this.courseObj.uniqueID, false); // toggles new note back to undefined
       } else {
+        // this is a new note that hasn't been saved yet, and it gets cancelled
         this.$emit('new-note-created', this.courseObj.uniqueID, false); // toggles new note back to undefined
         this.closeNote();
       }
@@ -379,6 +400,33 @@ export default defineComponent({
     handleNewNote(isNewNote: boolean) {
       this.$emit('new-note-created', this.courseObj.uniqueID, isNewNote);
     },
+    handleNoteHeightChange() {
+      this.$nextTick(() => {
+        this.reportNoteHeight();
+      });
+    },
+    reportNoteHeight() {
+      const comp = (this.$refs.note as unknown) as { $el?: HTMLElement } | undefined;
+      const el = comp && comp.$el ? comp.$el : undefined;
+      if (!el) return;
+      const rectH = el.getBoundingClientRect().height;
+      const { transform } = getComputedStyle(el);
+      let translateYPx = 0;
+      if (transform && transform !== 'none') {
+        const match = transform.match(/matrix\(([^)]+)\)/);
+        if (match) {
+          const parts = match[1].split(',').map(s => s.trim());
+          const ty = parts[5];
+          if (ty) translateYPx = parseFloat(ty);
+        }
+      }
+      const rootFontSizePx = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+      const marginBottomRem = 0.7;
+      // Effective extra height added below the card is the element height plus its translateY offset
+      // (which is usually negative), converted to rem, minus the note's negative bottom margin.
+      const effectiveRem = Math.max(0, rectH + translateYPx) / rootFontSizePx - marginBottomRem;
+      this.$emit('note-height-change', this.courseObj.uniqueID, Math.max(0, effectiveRem));
+    },
   },
   directives: {
     'click-outside': clickOutside,
@@ -390,6 +438,8 @@ export default defineComponent({
       handler(newNote) {
         if (!newNote) {
           this.isNoteVisible = false;
+          // Note removed; inform parent
+          this.$emit('note-height-change', this.courseObj.uniqueID, 0);
         }
       },
       immediate: true,
@@ -437,6 +487,7 @@ export default defineComponent({
   display: flex;
   flex-direction: row;
   background-color: $white;
+  // If modifying this, then adjust the note height calculations in `../Semester/Semester.vue`
   height: 5.625rem;
   cursor: grab;
   z-index: 1;

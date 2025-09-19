@@ -16,7 +16,11 @@
         @close-sem-modal="closeSemesterModal"
         v-if="isSemesterModalOpen"
       />
-      <div class="semesterView-settings" :class="{ 'semesterView-settings--two': noSemesters }">
+      <div
+        class="semesterView-settings"
+        :class="{ 'semesterView-settings--two': noSemesters }"
+        style="position: relative"
+      >
         <button
           v-if="noSemesters"
           class="semesterView-addSemesterButton"
@@ -25,15 +29,24 @@
         >
           + New Semester
         </button>
-        <view-dropdown
-          data-intro-group="req-tooltip"
-          :data-intro="getToggleTooltipText()"
-          data-disable-interaction="1"
-          data-step="4"
-          data-tooltipClass="tooltipCenter tourStep4"
-          :compact="compact"
-          @click-compact="toggleCompact"
-        />
+        <div class="view-toggle-wrapper">
+          <FallGiveawayProgress
+            :progress="giveawayProgress"
+            :shouldGlow="shouldGlowForGiveaway"
+            @openFall2025Giveaway="$emit('openFall2025Giveaway')"
+            class="fall-giveaway-progress"
+            v-if="isBeforeFall2025GiveawayCutoff"
+          />
+          <view-dropdown
+            data-intro-group="req-tooltip"
+            :data-intro="getToggleTooltipText()"
+            data-disable-interaction="1"
+            data-step="4"
+            data-tooltipClass="tooltipCenter tourStep4"
+            :compact="compact"
+            @click-compact="toggleCompact"
+          />
+        </div>
       </div>
       <confirmation :text="confirmationText" v-if="isSemesterConfirmationOpen" />
       <div class="semesterView-content" :class="{ 'semesterView-content--compact': compact }">
@@ -82,9 +95,10 @@ import { GTagEvent } from '@/gtag';
 import { addSemester, deleteSemester } from '@/global-firestore-data';
 import { closeBottomBar } from '@/components/BottomBar/BottomBarState';
 import ViewDropdown from './ViewDropdown.vue';
+import FallGiveawayProgress from './FallGiveawayProgress.vue';
 
 export default defineComponent({
-  components: { Confirmation, NewSemesterModal, Semester, ViewDropdown },
+  components: { Confirmation, NewSemesterModal, Semester, ViewDropdown, FallGiveawayProgress },
   props: {
     compact: { type: Boolean, required: true },
     isBottomBar: { type: Boolean, required: true },
@@ -94,6 +108,7 @@ export default defineComponent({
   },
   emits: {
     'compact-updated': (compact: boolean) => typeof compact === 'boolean',
+    openFall2025Giveaway: () => true,
   },
   data() {
     return {
@@ -103,8 +118,18 @@ export default defineComponent({
       isCourseClicked: false,
       isSemesterConfirmationOpen: false,
       isSemesterModalOpen: false,
+      showFall2025GiveawayModal: false,
     };
   },
+  watch: {
+    giveawayProgress(newVal) {
+      const hasEntered = store.state.onboardingData.fa25giveaway.entered;
+      if (newVal === 3 && !hasEntered && this.isBeforeFall2025GiveawayCutoff) {
+        this.showFall2025GiveawayModal = true;
+      }
+    },
+  },
+
   computed: {
     semesters(): readonly FirestoreSemester[] {
       if (store.state.plans.length === 0) {
@@ -115,7 +140,33 @@ export default defineComponent({
     noSemesters(): boolean {
       return this.semesters.length === 0;
     },
+    giveawayProgress(): number {
+      const { step1 } = store.state.onboardingData.fa25giveaway;
+      const { step2 } = store.state.onboardingData.fa25giveaway;
+      const { step3 } = store.state.onboardingData.fa25giveaway;
+      if (step1 && step2 && step3) {
+        return 3;
+      }
+      if ((step1 && step2) || (step1 && step3) || (step2 && step3)) {
+        return 2;
+      }
+      if (step1 || step2 || step3) {
+        return 1;
+      }
+      return 0;
+    },
+    isBeforeFall2025GiveawayCutoff(): boolean {
+      const currentDate = new Date();
+      const cutoffDate = new Date('2025-04-20T23:59:00');
+      console.log('Current date is before cutoff date', currentDate < cutoffDate);
+      return currentDate < cutoffDate;
+    },
+    shouldGlowForGiveaway(): boolean {
+      const { step1, step2, step3, entered } = store.state.onboardingData.fa25giveaway;
+      return step1 && step2 && step3 && !entered;
+    },
   },
+
   methods: {
     checkIfFirstSem(semester: FirestoreSemester) {
       return (
@@ -297,6 +348,19 @@ export default defineComponent({
   &-heart {
     height: 18px;
   }
+}
+
+.view-toggle-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.fall-giveaway-progress {
+  position: absolute;
+  left: -110px;
+  top: -35px;
+  transform: scale(0.5);
 }
 
 .collapsedBottomBarSemesterView {
