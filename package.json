@@ -23,7 +23,8 @@
     "test": "jest",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",
-    "cypress:e2e": "npm run build:dev && concurrently \"npm run serve:build\" \"wait-on http-get://localhost:8080 && npm run cypress:run\" --kill-others --success first"
+    "cypress:e2e": "npm run build:dev && concurrently \"npm run serve:build\" \"wait-on http-get://localhost:8080 && npm run cypress:run\" --kill-others --success first",
+    "parse-transcript": "ts-node src/assets/pdf-scraper/parseTranscript.ts"
   },
   "dependencies": {
     "@types/intro.js": "^3.0.0",
@@ -40,6 +41,7 @@
     "jspdf": "^2.5.1",
     "jspdf-autotable": "^3.5.25",
     "node-fetch": "^2.6.7",
+    "pdf-parse": "^1.1.1",
     "pdfjs-dist": "^3.5.141",
     "vue": "^3.2.19",
     "vue-gtag-next": "^1.14.0",
@@ -56,6 +58,7 @@
     "@types/jest": "^26.0.21",
     "@types/minimist": "^1.2.2",
     "@types/node-fetch": "^2.5.8",
+    "@types/pdf-parse": "^1.1.5",
     "@typescript-eslint/eslint-plugin": "^5.3.1",
     "@typescript-eslint/parser": "^5.3.1",
     "@vitejs/plugin-vue": "^1.10.2",
