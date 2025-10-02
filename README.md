@@ -22,7 +22,12 @@ Then access http://localhost:8080/
 
 ## Contributors
 
-## SP25
+### FA25
+- **Nigel Tatem** - Developer
+- **Hannah Zhou** - TPM
+- **Nitya Pakala** - PM Advisor 
+
+### SP25
 
 - **Nigel Tatem** - Developer
 - **Eric Cheng** - Developer
@@ -35,7 +40,7 @@ Then access http://localhost:8080/
 
 
 
-## FA24
+### FA24
 
 - **Nigel Tatem** - Developer
 - **Eric Cheng** - Developer
@@ -49,7 +54,7 @@ Then access http://localhost:8080/
 - **Nidhi Mylavarapu** - TPM
 
 
-## SP24 
+### SP24 
 
 - **Hannah Zhou** - Developer
 - **Nidhi Mylavarapu** - Developer
