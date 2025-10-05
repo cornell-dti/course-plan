@@ -79,7 +79,7 @@
       v-if="isManualRequirementsModalOpen"
       :course="currentBlankCourse"
       @close-modal="closeManualRequirementsModal"
-      @back-to-course-modal="backToDistributionModal"
+      @back-to-distribution-modal="backToDistributionModal"
       @save-requirements="proceedToConfirmationWithManualRequirements"
     />
     <button
@@ -925,6 +925,7 @@ export default defineComponent({
     },
     backToDistributionModal() {
       this.isConfirmationModalOpen = false;
+      this.isManualRequirementsModalOpen = false;
       this.isDistributionModalOpen = true;
     },
     confirmAndAddCourse(

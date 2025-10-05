@@ -1,22 +1,21 @@
 <template>
   <TeleportModal
     title="Distribution Requirements"
-    content-class="content-course"
+    content-class="content-manual-requirement"
     leftButtonText="Back"
     rightButtonText="Next"
     :rightButtonIsDisabled="false"
     @modal-closed="closeCurrentModal"
     @left-button-clicked="backToCourseModal"
     @right-button-clicked="saveRequirements"
-    class="requirements-modal"
   >
     <div class="requirements-form">
       <!-- College Requirements Section -->
       <div class="requirements-section">
         <div class="requirements-accordion" @click="toggleCollegeRequirements">
           <div class="requirements-accordion-header">
-            <drop-down-arrow :isFlipped="showCollegeRequirements" :fillColor="emGreen" />
-            <span class="title">College Requirements</span>
+            <drop-down-arrow :isFlipped="showCollegeRequirements" :fillColor="chrisGreen" />
+            <span class="titleCollege">View All College Requirements</span>
           </div>
         </div>
 
@@ -31,17 +30,18 @@
             <!-- Dropdown Header -->
             <div class="requirements-accordion" @click="toggleCollegeRequirement(index)">
               <div class="requirements-accordion-header">
-                <drop-down-arrow :isFlipped="req.expanded" :fillColor="emGreen" />
+                <drop-down-arrow :isFlipped="req.expanded" :fillColor="dropdownGray" />
                 <span class="requirement-name">{{ req.name }}</span>
                 <span class="requirement-progress">{{ req.progress }}</span>
               </div>
               <!-- Checkboxes -->
               <div class="checkbox-container">
-                <div class="squared-checkbox">
+                <div class="squared-checkbox" :class="{ fulfilled: areAllCoursesFulfilled(req) }">
                   <input
                     type="checkbox"
                     :id="`college-req-${index}`"
                     v-model="req.selected"
+                    :disabled="areAllCoursesFulfilled(req)"
                     @change="handleRequirementChange(req)"
                   />
                   <label :for="`college-req-${index}`"></label>
@@ -58,15 +58,17 @@
                   v-for="(slot, slotIndex) in requirementCourseOptions(req)"
                   :key="`slot-${index}-${slotIndex}`"
                   class="option-item"
+                  :class="{ fulfilled: slot.fulfilled }"
                 >
-                  <span>{{ slot.name }}</span>
+                  <span>{{ slot.name }}{{ slot.fulfilled ? ' (Already Fulfilled)' : '' }}</span>
                   <div class="checkbox-container">
-                    <div class="squared-checkbox">
+                    <div class="squared-checkbox" :class="{ fulfilled: slot.fulfilled }">
                       <input
                         :id="`course-option-${index}-${slotIndex}`"
                         type="checkbox"
                         :value="slot.name"
                         v-model="slot.selected"
+                        :disabled="slot.fulfilled"
                         @change="
                           handleRequirementCourseOptionChange(index, slot, collegeRequirements)
                         "
@@ -79,6 +81,8 @@
             </div>
           </div>
         </div>
+        <!-- Separator at bottom of college requirements expanded content -->
+        <div v-if="showCollegeRequirements" class="expanded-content-separator"></div>
       </div>
       <div class="separator"></div>
       <!-- Major Requirements Section -->
@@ -86,7 +90,7 @@
         <div class="requirements-accordion" @click="toggleMajorRequirements">
           <div class="requirements-accordion-header">
             <drop-down-arrow :isFlipped="showMajorRequirements" :fillColor="emGreen" />
-            <span class="title">Major Requirements</span>
+            <span class="titleMajor">View All Major Requirements</span>
           </div>
         </div>
 
@@ -102,17 +106,18 @@
             <!-- Dropdown Header -->
             <div class="requirements-accordion" @click="toggleMajorRequirement(index)">
               <div class="requirements-accordion-header">
-                <drop-down-arrow :isFlipped="req.expanded" :fillColor="emGreen" />
+                <drop-down-arrow :isFlipped="req.expanded" :fillColor="dropdownGray" />
                 <span class="requirement-name">{{ req.name }}</span>
                 <span class="requirement-progress">{{ req.progress }}</span>
               </div>
               <!-- Checkboxes -->
               <div class="checkbox-container">
-                <div class="squared-checkbox">
+                <div class="squared-checkbox" :class="{ fulfilled: areAllCoursesFulfilled(req) }">
                   <input
                     type="checkbox"
                     :id="`major-req-${index}`"
                     v-model="req.selected"
+                    :disabled="areAllCoursesFulfilled(req)"
                     @change="handleRequirementChange(req)"
                   />
                   <label :for="`major-req-${index}`"></label>
@@ -129,15 +134,17 @@
                   v-for="(slot, slotIndex) in requirementCourseOptions(req)"
                   :key="`slot-${index}-${slotIndex}`"
                   class="option-item"
+                  :class="{ fulfilled: slot.fulfilled }"
                 >
-                  <span>{{ slot.name }}</span>
+                  <span>{{ slot.name }}{{ slot.fulfilled ? ' (Already Fulfilled)' : '' }}</span>
                   <div class="checkbox-container">
-                    <div class="squared-checkbox">
+                    <div class="squared-checkbox" :class="{ fulfilled: slot.fulfilled }">
                       <input
                         :id="`course-option-${index}-${slotIndex}`"
                         type="checkbox"
                         :value="slot.name"
                         v-model="slot.selected"
+                        :disabled="slot.fulfilled"
                         @change="
                           handleRequirementCourseOptionChange(index, slot, majorRequirements)
                         "
@@ -150,6 +157,8 @@
             </div>
           </div>
         </div>
+        <!-- Separator at bottom of major requirements expanded content -->
+        <div v-if="showMajorRequirements" class="expanded-content-separator"></div>
       </div>
     </div>
   </TeleportModal>
@@ -197,6 +206,7 @@ type SubReqCourseSlot = CompletedSubReqCourseSlot | IncompleteSubReqCourseSlot;
 interface CourseOption {
   name: string;
   selected: boolean;
+  fulfilled: boolean;
 }
 
 // A function copied from RequirementFulfillmentSlots.vue
@@ -232,12 +242,14 @@ export default defineComponent({
   },
   emits: {
     'close-modal': () => true,
-    'back-to-course-modal': () => true,
+    'back-to-distribution-modal': () => true,
     'save-requirements': (course: FirestoreSemesterCourse, requirements: string[]) =>
       typeof course === 'object' && Array.isArray(requirements),
   },
   data() {
     return {
+      dropdownGray: '#7b7d7e',
+      chrisGreen: '#105351',
       emGreen: '#479B75',
       showCollegeRequirements: false,
       showMajorRequirements: false,
@@ -264,11 +276,17 @@ export default defineComponent({
     onCompoundRequirementChoiceChange() {
       console.log('Selected compound requirement choice:', this.compoundRequirementChoice);
     },
+    // Check if all courses in a requirement are already fulfilled
+    areAllCoursesFulfilled(requirement: Requirement): boolean {
+      return (
+        requirement.courses.length > 0 && requirement.courses.every(course => course.fulfilled)
+      );
+    },
     closeCurrentModal() {
       this.$emit('close-modal');
     },
     backToCourseModal() {
-      this.$emit('back-to-course-modal');
+      this.$emit('back-to-distribution-modal');
     },
     saveRequirements() {
       let selectedRequirements: string[] = [];
@@ -285,6 +303,8 @@ export default defineComponent({
         });
 
       // Add selected major requirements
+      // TODO: need to actually pick one Cornell Course crseId to
+      // map to all these requirements
       const majorReqs = this.majorRequirements
         .filter(req => req.selected)
         .map(req => {
@@ -295,6 +315,8 @@ export default defineComponent({
             ? `${req.name} Requirements (${courseNames[0]})`
             : `${req.name} Requirements`;
         });
+
+      // add selected college and major requirements
       selectedRequirements = [...collegeReqs, ...majorReqs];
 
       const updatedCourse = {
@@ -302,6 +324,11 @@ export default defineComponent({
         crseId: this.course.crseId, // TODO: will fix this if no specific is selected
         requirements: selectedRequirements,
       } as FirestoreSemesterBlankCourse;
+      console.log(
+        'Course to be added; save requirements on ManualRequirementsModal:',
+        updatedCourse,
+        selectedRequirements
+      );
 
       this.$emit('save-requirements', updatedCourse, selectedRequirements);
     },
@@ -397,9 +424,8 @@ export default defineComponent({
       slots.forEach(slot => {
         courseOptions.push({
           name: slot.name,
-          selected: false, // NOTE: if you want completed
-          // courses to be selected at default, then you can write
-          // slot.isCompleted here instead
+          selected: slot.isCompleted, // Automatically select fulfilled slots
+          fulfilled: slot.isCompleted, // Mark as fulfilled if already completed
         });
       });
       return courseOptions;
@@ -412,11 +438,13 @@ export default defineComponent({
               const courseOptions = this.getAvailableCoursesForRequirement(subReq);
               const isFulfilledByCourse = subReq.fulfillment.fulfilledBy === 'courses';
               const courseOrCredit = isFulfilledByCourse ? 'courses' : 'credits';
+              const allCoursesFulfilled =
+                courseOptions.length > 0 && courseOptions.every(course => course.fulfilled);
               acc.push({
                 name: subReq.requirement.name,
                 progress: `${subReq.fulfillment.safeMinCountFulfilled}/${subReq.fulfillment.minCountRequired} ${courseOrCredit}`,
                 expanded: false,
-                selected: false,
+                selected: allCoursesFulfilled, // Auto-select if all courses are fulfilled
                 completed:
                   subReq.fulfillment.safeMinCountFulfilled >= subReq.fulfillment.minCountRequired,
                 courses: courseOptions,
@@ -425,7 +453,6 @@ export default defineComponent({
             });
           }
           console.log('acc for major requirements', acc);
-
           return acc;
         },
         [] as Requirement[]
@@ -439,11 +466,13 @@ export default defineComponent({
               const courseOptions = this.getAvailableCoursesForRequirement(subReq);
               const isFulfilledByCourse = subReq.fulfillment.fulfilledBy === 'courses';
               const courseOrCredit = isFulfilledByCourse ? 'courses' : 'credits';
+              const allCoursesFulfilled =
+                courseOptions.length > 0 && courseOptions.every(course => course.fulfilled);
               acc.push({
                 name: subReq.requirement.name,
                 progress: `${subReq.fulfillment.safeMinCountFulfilled}/${subReq.fulfillment.minCountRequired} ${courseOrCredit}`,
                 expanded: false,
-                selected: false,
+                selected: allCoursesFulfilled, // Auto-select if all courses are fulfilled
                 completed:
                   subReq.fulfillment.safeMinCountFulfilled >= subReq.fulfillment.minCountRequired,
                 courses: courseOptions,
@@ -492,13 +521,18 @@ export default defineComponent({
         requirement.expanded = true;
         const hasSelectedCourse = requirement.courses.some(course => course.selected);
         if (!hasSelectedCourse) {
-          // If no course options are selected, select the first one by default
-          requirement.courses[0].selected = true;
+          // If no course options are selected, select the first non-fulfilled one by default
+          const firstNonFulfilled = requirement.courses.find(course => !course.fulfilled);
+          if (firstNonFulfilled) {
+            firstNonFulfilled.selected = true;
+          }
         }
       } else {
-        // If deselected, ensure all course options are also deselected
+        // If deselected, ensure all non-fulfilled course options are also deselected
         requirement.courses.forEach(course => {
-          course.selected = false;
+          if (!course.fulfilled) {
+            course.selected = false;
+          }
         });
         requirement.expanded = false;
       }
@@ -508,14 +542,20 @@ export default defineComponent({
       courseOption: CourseOption,
       requirements: Requirement[]
     ) {
+      // Don't process change events for fulfilled courses
+      if (courseOption.fulfilled) {
+        return;
+      }
       const requirement = requirements[requirementIndex];
 
       if (courseOption.selected) {
         // If a course option is selected, ensure the requirement is selected
         requirement.selected = true;
       } else {
-        // If no course options are selected, deselect the requirement
-        const hasSelectedCourse = requirement.courses.some(course => course.selected);
+        // Check if any course options are selected (including fulfilled ones)
+        const hasSelectedCourse = requirement.courses.some(
+          course => course.selected && !course.fulfilled
+        );
         if (!hasSelectedCourse) {
           requirement.selected = false;
         }
@@ -525,30 +565,35 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 @import '@/assets/scss/_variables.scss';
 
 .requirements-form {
   display: flex;
   flex-direction: column;
-  padding: 16px 0;
-}
-
-.requirements-section {
-  margin-bottom: 16px;
+  // padding: 16px 0;
+  max-height: 60vh;
+  overflow-y: auto;
+  gap: 10px;
 }
 
 .section-heading {
   font-size: 15px;
   font-weight: 600;
   color: #333;
-  margin-bottom: 16px;
+  margin: 16px 0;
 }
 
 .separator {
+  height: 2px;
+  background-color: #e0e0e0;
+}
+
+.expanded-content-separator {
   height: 1px;
   background-color: #e0e0e0;
-  margin: 16px 0;
+  margin-top: 5px;
+  margin-bottom: 16px;
 }
 
 .requirements-accordion {
@@ -565,19 +610,26 @@ export default defineComponent({
   min-height: 38px;
 }
 
-.title {
+.titleCollege,
+.titleMajor {
   font-size: 15px;
-  color: $emGreen;
   font-weight: 500;
   margin-left: 10px;
+}
+
+.titleCollege {
+  color: $chrisGreen;
+}
+
+.titleMajor {
+  color: $emGreen;
 }
 
 .requirement-item {
   display: flex;
   flex-direction: column;
   // align-items: center;
-  padding: 8px 0;
-  border-bottom: 1px solid #f0f0f0;
+  padding: 2px 0;
 }
 
 .requirement-name {
@@ -648,6 +700,31 @@ export default defineComponent({
   transform: rotate(45deg);
 }
 
+/* Styling for fulfilled (disabled) checkboxes */
+.squared-checkbox.fulfilled {
+  opacity: 0.7;
+
+  input {
+    cursor: not-allowed;
+  }
+
+  label {
+    cursor: not-allowed;
+    background: #f0f0f0;
+    border-color: #ccc;
+  }
+
+  input:checked + label {
+    background: #ccc;
+    border-color: #ccc;
+  }
+
+  input:checked + label:after {
+    border: solid #666;
+    border-width: 0 2px 2px 0;
+  }
+}
+
 .course-options {
   padding: 10px 0 20px 0;
   margin-left: 30px;
@@ -675,27 +752,25 @@ export default defineComponent({
     padding-right: 20px;
     justify-content: flex-end;
   }
+
+  &.fulfilled {
+    opacity: 0.8;
+
+    span {
+      color: #888;
+      font-style: italic;
+    }
+  }
 }
 
 .expanded-content {
   margin-top: 8px;
+  padding-right: 18px;
 }
 
-:deep(.content-course) {
+.content-manual-requirement {
   padding: 16px 24px;
-  width: 520px;
+  width: 30rem;
   max-width: 100%;
-}
-
-:deep(.modal-top) {
-  padding-left: 4px;
-  padding-right: 4px;
-}
-
-:deep(.modal-top h1) {
-  font-size: 22px;
-  font-weight: 600;
-  margin-top: 4px;
-  margin-bottom: 18px;
 }
 </style>

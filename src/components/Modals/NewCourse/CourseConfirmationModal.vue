@@ -1,14 +1,13 @@
 <template>
   <TeleportModal
     title="Does Everything Look Okay?"
-    content-class="content-course"
+    content-class="content-course-confirmation"
     leftButtonText="Back"
     rightButtonText="Add"
     :rightButtonIsDisabled="false"
     @modal-closed="closeCurrentModal"
     @left-button-clicked="backToDistributionModal"
     @right-button-clicked="confirmCourse"
-    class="confirmation-modal"
   >
     <div class="confirmation-form">
       <!-- Use the actual Course component with proper color -->
@@ -20,6 +19,7 @@
           :isReqCourse="false"
           :isSemesterCourseCard="false"
           :isCourseConfirmationCard="true"
+          @note-height-change="() => {}"
         />
       </div>
 
@@ -44,10 +44,10 @@
 
       <!-- Advisory Note -->
       <div class="advisory-note">
-        <span class="advisory-icon">⚠️</span>
         <p>
+          <span class="advisory-icon">⚠️</span>
           Please note, we recommend checking in with your academic advisor regarding requirements to
-          make sure you are selecting the right class.
+          make sure you are inputting the correct info.
         </p>
       </div>
     </div>
@@ -125,34 +125,19 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 @import '@/assets/scss/_variables.scss';
 
 .confirmation-form {
   display: flex;
   flex-direction: column;
   padding: 16px 0;
-}
-
-:deep(.modal-top) {
-  padding-left: 4px;
-  padding-right: 4px;
-}
-
-:deep(.modal-top h1) {
-  font-size: 24px;
-  font-weight: 600;
-  margin-top: 4px;
-  margin-bottom: 6px;
-}
-
-:deep(.modal-exit) {
-  margin-top: 6px;
+  margin-bottom: 16px;
 }
 
 .course-card-container {
-  width: 90%;
-  margin: 0 auto 24px auto;
+  width: 80%;
+  margin: 0 auto 24px 0;
   max-width: 480px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
@@ -177,13 +162,8 @@ export default defineComponent({
 }
 
 .advisory-note {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-
   .advisory-icon {
     font-size: 16px;
-    margin-top: 2px;
   }
 
   p {
@@ -191,12 +171,13 @@ export default defineComponent({
     color: #666;
     margin: 0;
     line-height: 1.5;
+    display: inline;
   }
 }
 
-:deep(.content-course) {
-  padding: 16px;
-  width: 520px;
-  max-width: 100%;
+.content-course-confirmation {
+  width: 32rem;
+  max-width: 50%;
+  padding: 20px;
 }
 </style>
