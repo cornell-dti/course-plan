@@ -1,6 +1,6 @@
 <template>
   <div class="bottombartitle" :style="{ background: `#${color}` }">
-    <div class="bottombar-square-title">{{ name }}</div>
+    <div class="bottombar-square-title">{{ code }} - {{ name }}</div>
     <img
       v-if="!isExpanded"
       class="bottombartitle-arrow"
@@ -22,6 +22,7 @@ import { defineComponent } from 'vue';
 export default defineComponent({
   props: {
     color: { type: String, required: true },
+    code: { type: String, required: true },
     name: { type: String, required: true },
     isExpanded: { type: Boolean, required: true },
   },
