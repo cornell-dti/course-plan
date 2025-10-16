@@ -65,12 +65,12 @@
             <span>Build</span>
           </div>
         </div>
-      </div>
-      <div class="navbar-bottom">
-        <button
-          class="navbar-iconWrapper desktop logout-icon full-opacity-on-hover"
-          @click="logout"
-        />
+        <div class="navbar-buttonWrapper desktop" @click="logout">
+          <button class="navbar-iconWrapper logout-icon full-opacity-on-hover" />
+          <div class="navbar-iconText">
+            <span>Logout</span>
+          </div>
+        </div>
       </div>
       <div v-if="menuOpen" class="navbar-menu" data-cyId="navbar-menu">
         <button
@@ -446,14 +446,6 @@ $mobile-navbar-height: 4.5rem;
       display: flex;
       flex-direction: row;
       justify-content: space-between;
-    }
-
-    &-bottom {
-      // Give the RHS section the same width as left side icon, so that the logo can be centered.
-      // --------------------------------------------
-      // | hamburger | icon | empty but dummy width |
-      // --------------------------------------------
-      width: $icon-size;
     }
 
     &-iconWrapper {
