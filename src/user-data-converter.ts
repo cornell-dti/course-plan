@@ -41,6 +41,7 @@ export const cornellCourseRosterCourseToFirebaseSemesterCourseWithCustomIDAndCol
   const semesters = alternateSemesters;
 
   return {
+    type: 'CornellCourse',
     crseId: course.crseId,
     lastRoster,
     code: `${subject} ${number}`,
