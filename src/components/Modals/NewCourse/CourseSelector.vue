@@ -99,6 +99,11 @@ export default defineComponent({
       required: false,
       default: undefined,
     },
+    allowBlankCard: {
+      type: Boolean,
+      required: false,
+      default: true,
+    },
   },
   emits: {
     'on-escape': () => true,
@@ -141,6 +146,9 @@ export default defineComponent({
       const result = this.matches[this.currentFocus];
       if (result != null) this.selectCourse(result);
     },
+    addBlankCourseCard() {
+      this.$emit('on-add-blank-course');
+    },
     /**
      * Highlights the matching text in the search results
      * @param text - the text to highlight
@@ -170,7 +178,7 @@ export default defineComponent({
 
 .search-box {
   border: 1px solid transparent;
-  background-color: $searchBoxWhite;
+  background-color: $white;
   padding: 10px;
   font-size: 16px;
 

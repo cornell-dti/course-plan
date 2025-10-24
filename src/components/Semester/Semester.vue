@@ -287,6 +287,12 @@ export default defineComponent({
       expandedNotes: new Map<number, boolean>(), // Track expanded state of notes by course uniqueID
       isNoteTransitioning: false,
       newNoteUniqueID: undefined as number | undefined,
+      isBlankCourseModalOpen: false,
+      isDistributionModalOpen: false,
+      currentBlankCourse: {} as FirestoreSemesterCourse,
+      isConfirmationModalOpen: false,
+      isManualRequirementsModalOpen: false,
+      courseRequirements: [] as string[],
       noteHeights: new Map<number, number>(),
       isBlankCourseModalOpen: false,
       isDistributionModalOpen: false,
@@ -451,6 +457,7 @@ export default defineComponent({
           return acc + noteCollapsedHeightRem - noteMarginBottom;
         }
         if (this.newNoteUniqueID === course.uniqueID) {
+          // for new notes that aren't saved
           return acc + firstExpandedNoteRem - noteMarginBottom;
         }
         return acc;
@@ -497,7 +504,7 @@ export default defineComponent({
     },
     openCourseModal() {
       // Delete confirmation for the use case of adding multiple courses consecutively
-      this.closeConfirmationModal();
+      this.closeCourseConfirmationModal();
       this.isCourseModalOpen = !this.isCourseModalOpen;
     },
     closeCourseModal() {

@@ -396,6 +396,7 @@ export default defineComponent({
         this.triggerCourseCardShake();
       } else if (noteComponent.note && this.isNoteVisible) {
         noteComponent.collapseNote();
+        this.$emit('new-note-created', this.courseObj.uniqueID, false); // toggles new note back to undefined
       } else {
         // this is a new note that hasn't been saved yet, and it gets cancelled
         this.$emit('new-note-created', this.course.uniqueID, false); // toggles new note back to undefined
