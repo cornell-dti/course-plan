@@ -53,25 +53,11 @@
             </div>
           </div>
         </div>
-
-        <div class="form-group" v-if="potentialRequirements.length > 0">
-          <div class="section-label">
-            This class could potentially fulfill the following requirement(s):
-          </div>
-          <div class="requirements-list">
-            <div
-              v-for="(req, index) in potentialRequirements"
-              :key="index"
-              class="requirement-item"
-            >
-              {{ req }}
-            </div>
-          </div>
-        </div>
         <div v-else>
           <div class="section-label">
             <div class="requirement-item">
-              This class does not automatically fulfill any requirements.
+              This class does not automatically fulfill any requirements. Instead, please add
+              requirements manually.
             </div>
           </div>
         </div>
@@ -121,6 +107,9 @@ export default defineComponent({
     };
   },
   computed: {
+    blankCourse(): FirestoreSemesterBlankCourse {
+      return this.course as FirestoreSemesterBlankCourse;
+    },
     isValid(): boolean {
       return this.selectedCourse !== null;
     },
@@ -143,13 +132,7 @@ export default defineComponent({
     },
     saveCourse() {
       if (!this.selectedCourse) return;
-
-      // Update the course with the selected equivalent course info
-      // Hannah's Note: This function will be changed completely to support
-      // the current backend idea
-
       // Update course with the selectedCourse info!
-
       // Semesters: remove periods and split on ', '
       // alternateSemesters option in case catalogWhenOffered for the course is null, undef, or ''
       const alternateSemesters =
@@ -158,18 +141,13 @@ export default defineComponent({
           : this.selectedCourse.catalogWhenOffered.replace(/\./g, '').split(', ');
       const semesters = alternateSemesters;
 
+      // Update the course with the selected equivalent course info
       const updatedCourse: FirestoreSemesterBlankCourse = {
-        ...this.course,
+        ...this.blankCourse,
         crseId: this.selectedCourse.crseId,
         semesters,
         requirementsFulfilled: this.automaticallyFulfilledRequirements,
       };
-
-      console.log('the course requiremnt fulfillments in saveCourse on distribution modal:', {
-        updatedCourse,
-        automaticallyFulfilledRequirements: this.automaticallyFulfilledRequirements,
-      });
-
       const choice: FirestoreCourseOptInOptOutChoices = {
         optOut: getRelatedRequirementIdsForCourseOptOut(
           this.selectedCourse.crseId,
@@ -184,13 +162,8 @@ export default defineComponent({
           .map(it => it.id),
         arbitraryOptIn: {},
       };
-
-      console.log('Course to be added; confirm course on DistributionRequirementsModal:', {
-        updatedCourse,
-        choice,
-      });
       // Instead of saving directly, proceed to the confirmation step
-      this.$emit('proceed-to-confirmation', updatedCourse, choice); // TODO: remove the automaticallyRequirements from the arguements
+      this.$emit('proceed-to-confirmation', updatedCourse, choice);
     },
     addManualRequirements() {
       this.$emit('add-manual-requirements', this.selectedCourse);
@@ -265,12 +238,6 @@ export default defineComponent({
         this.potentialRequirements = [
           ...new Set([...potentialRelatedRequirements, ...potentialSelfCheckRequirements]),
         ];
-
-        console.log('Potential requirements:', this.potentialRequirements);
-        console.log(
-          'Automatically fulfilled requirements:',
-          this.automaticallyFulfilledRequirements
-        );
       } catch (error) {
         console.error('Error getting requirements fulfilled:', error);
       }
