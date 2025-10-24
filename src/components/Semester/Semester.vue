@@ -71,7 +71,7 @@
       v-if="isConfirmationModalOpen"
       :course="currentBlankCourse"
       :choice="currentBlankCourseChoice"
-      @close-modal="closeCourseConfirmationModal"
+      @close-modal="closeBlankCourseConfirmationModal"
       @back-to-distribution-modal="backToDistributionModal"
       @confirm-course="confirmAndAddBlankCourse"
     />
@@ -294,12 +294,6 @@ export default defineComponent({
       isManualRequirementsModalOpen: false,
       courseRequirements: [] as string[],
       noteHeights: new Map<number, number>(),
-      isBlankCourseModalOpen: false,
-      isDistributionModalOpen: false,
-      currentBlankCourse: {} as FirestoreSemesterBlankCourse,
-      isConfirmationModalOpen: false,
-      isManualRequirementsModalOpen: false,
-      courseRequirements: [] as string[],
       currentBlankCourseChoice: {} as FirestoreCourseOptInOptOutChoices,
     };
   },
@@ -504,7 +498,7 @@ export default defineComponent({
     },
     openCourseModal() {
       // Delete confirmation for the use case of adding multiple courses consecutively
-      this.closeCourseConfirmationModal();
+      this.closeConfirmationModal();
       this.isCourseModalOpen = !this.isCourseModalOpen;
     },
     closeCourseModal() {
@@ -540,7 +534,6 @@ export default defineComponent({
     closeConfirmationModal() {
       this.isConfirmationOpen = false;
     },
-
     saveCourse(
       course: FirestoreSemesterCourse,
       addedToCollections: string[],
@@ -929,7 +922,7 @@ export default defineComponent({
       this.isDistributionModalOpen = false;
       this.isConfirmationModalOpen = true;
     },
-    closeCourseConfirmationModal() {
+    closeBlankCourseConfirmationModal() {
       this.isConfirmationModalOpen = false;
       this.currentBlankCourse = {} as FirestoreSemesterCourse;
       this.courseRequirements = [];
