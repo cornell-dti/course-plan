@@ -3,11 +3,11 @@
     <div
       :class="{
         'course--min': compact,
-        conflict: isCourseConflict(courseObj.uniqueID),
+        conflict: isCourseConflict(course.uniqueID),
         active: active,
       }"
       class="course"
-      :id="`course-${courseObj.uniqueID}`"
+      :id="`course-${course.uniqueID}`"
     >
       <save-course-modal
         :courseCode="courseCode"
@@ -43,11 +43,11 @@
                   color: compact ? '#3d3d3d' : '#858585',
                 }"
               >
-                {{ courseObj.code }}
+                {{ course.code }}
               </div>
               <course-caution
                 v-if="!isReqCourse && compact"
-                :course="courseObj"
+                :course="course"
                 :isCompactView="true"
               />
             </div>
@@ -68,7 +68,7 @@
               <img :src="trashIcon" alt="delete course from collection" />
             </button>
           </div>
-          <div v-if="!compact" class="course-name">{{ courseObj.name }}</div>
+          <div v-if="!compact" class="course-name">{{ course.name }}</div>
           <div v-if="!compact" class="course-info">
             <span class="course-credits">{{ creditString }}</span>
             <span
@@ -76,10 +76,10 @@
               class="course-semesters"
               >{{ semesterString }}</span
             >
-            <span v-if="isBlankCourse" class="course-semesters">{{ courseObj.courseType }}</span>
+            <span v-if="isBlankCourse" class="course-semesters">{{ course.courseType }}</span>
             <course-caution
               v-if="!isReqCourse && !isSchedGenCourse && !isCourseConfirmationCard"
-              :course="courseObj"
+              :course="course"
               :isCompactView="false"
             />
           </div>
@@ -88,11 +88,11 @@
     </div>
     <course-menu
       v-if="menuOpen"
-      :courseObj="courseObj"
+      :courseObj="course"
       :semesterIndex="semesterIndex"
       :isCompact="compact"
-      :courseColor="courseObj.color"
-      :courseCode="courseObj.code"
+      :courseColor="course.color"
+      :courseCode="course.code"
       @open-note-modal="openNoteModal"
       @open-edit-color-modal="openEditColorModal"
       @delete-course="deleteCourse"
@@ -106,15 +106,15 @@
       class="note"
       :width="'calc(102.8% - 10px)'"
       :color="cssVars['--bg-color']"
-      :initialNote="courseObj.note || ''"
-      :lastUpdated="courseObj.lastUpdated"
+      :initialNote="course.note || ''"
+      :lastUpdated="course.lastUpdated"
       @save-note="saveNote"
       @open-delete-note-modal="openDeleteNoteModal"
       @note-state-change="handleNoteStateChange"
       @height-change="handleNoteHeightChange"
       ref="note"
       v-click-outside="handleClickOutsideNote"
-      :noteId="`course-${courseObj.uniqueID}`"
+      :noteId="`course-${course.uniqueID}`"
       :isSemesterCourseNote="isSemesterCourseCard"
     />
   </div>
@@ -200,10 +200,11 @@ export default defineComponent({
       typeof uniqueID === 'number' && typeof heightRem === 'number',
   },
   data() {
+    const course = this.courseObj as FirestoreSemesterCourse;
     return {
       menuOpen: false,
       stopCloseFlag: false,
-      getCreditRange: this.courseObj.creditRange,
+      getCreditRange: course.creditRange,
       isEditColorOpen: false,
       isSaveCourseOpen: false,
       editedColor: '',
@@ -214,15 +215,19 @@ export default defineComponent({
       // isNotVisible represents a small open 'portrusion' indicating that there is a note
       // for the course in question. The note itself will not be visible without `isExpanded`
       // being true as well.
-      isNoteVisible: Boolean(this.courseObj.note),
+      isNoteVisible: Boolean(course.note),
       isShaking: false,
-      isBlankCourse: this.courseObj.type === 'BlankCourse',
+      isBlankCourse: course.type === 'BlankCourse',
     };
   },
   computed: {
+    // refactored courseObj prop
+    course(): FirestoreSemesterCourse {
+      return this.courseObj as FirestoreSemesterCourse;
+    },
     semesterString(): string {
       let semesterString = '';
-      this.courseObj.semesters.forEach(semester => {
+      this.course.semesters.forEach((semester: string) => {
         semesterString += `${semester}, `;
       });
       if (semesterString.length > 0) {
@@ -233,15 +238,15 @@ export default defineComponent({
     },
 
     creditString(): string {
-      if (this.courseObj.credits === 1) {
-        return `${this.courseObj.credits} credit`;
+      if (this.course.credits === 1) {
+        return `${this.course.credits} credit`;
       }
-      return `${this.courseObj.credits} credits`;
+      return `${this.course.credits} credits`;
     },
 
     cssVars(): Record<string, string> {
       return {
-        '--bg-color': `#${this.courseObj.color}`,
+        '--bg-color': `#${this.course.color}`,
       };
     },
   },
@@ -266,11 +271,11 @@ export default defineComponent({
       this.isSaveCourseOpen = false;
     },
     deleteCourse() {
-      this.$emit('delete-course', this.courseObj.code, this.courseObj.uniqueID);
+      this.$emit('delete-course', this.course.code, this.course.uniqueID);
       this.closeMenuIfOpen();
     },
     deleteCourseFromCollection() {
-      this.$emit('delete-course-from-collection', this.courseObj.code);
+      this.$emit('delete-course-from-collection', this.course.code);
     },
     openEditColorModal(color: string) {
       this.editedColor = color;
@@ -283,27 +288,27 @@ export default defineComponent({
       this.$emit('add-collection', name);
     },
     saveCourse(addedToCollections: string[], deletedFromCollections: string[]) {
-      const course = { ...this.courseObj };
+      const course = { ...this.course };
       this.$emit('save-course', course, addedToCollections, deletedFromCollections);
     },
     colorCourse(color: string) {
-      this.$emit('color-course', color, this.courseObj.uniqueID, this.courseObj.code);
-      reportCourseColorChange(this.courseObj.uniqueID, color);
+      this.$emit('color-course', color, this.course.uniqueID, this.course.code);
+      reportCourseColorChange(this.course.uniqueID, color);
       this.closeMenuIfOpen();
     },
     colorSubject(color: string) {
-      this.$emit('color-subject', color, this.courseObj.code);
-      reportSubjectColorChange(this.courseObj.code, color);
+      this.$emit('color-subject', color, this.course.code);
+      reportSubjectColorChange(this.course.code, color);
       this.closeMenuIfOpen();
     },
     courseOnClick() {
       if (!this.menuOpen && !this.deletingCourse) {
-        this.$emit('course-on-click', this.courseObj);
-        addCourseToBottomBar(this.courseObj, this.season, this.year);
+        this.$emit('course-on-click', this.course);
+        addCourseToBottomBar(this.course, this.season, this.year);
       }
     },
     editCourseCredit(credit: number) {
-      this.$emit('edit-course-credit', credit, this.courseObj.uniqueID);
+      this.$emit('edit-course-credit', credit, this.course.uniqueID);
       this.closeMenuIfOpen();
     },
     isCourseConflict,
@@ -329,7 +334,7 @@ export default defineComponent({
         this.$nextTick(() => {
           const noteComponent = this.$refs.note as MinimalNoteComponent | undefined;
           if (noteComponent) {
-            this.$emit('new-note-created', this.courseObj.uniqueID, true); // toggles new note to true
+            this.$emit('new-note-created', this.course.uniqueID, true); // toggles new note to true
             noteComponent.expandNote();
             setTimeout(() => {
               this.reportNoteHeight();
@@ -356,7 +361,7 @@ export default defineComponent({
       this.isNoteVisible = false;
       this.$nextTick(() => {
         // Note closed; height goes to 0
-        this.$emit('note-height-change', this.courseObj.uniqueID, 0);
+        this.$emit('note-height-change', this.course.uniqueID, 0);
       });
     },
     triggerCourseCardShake() {
@@ -366,11 +371,11 @@ export default defineComponent({
       }, 900); // 3 shakes * 0.3s = 0.9s
     },
     saveNote(note: string) {
-      if (!note || note === this.courseObj.note) {
+      if (!note || note === this.course.note) {
         return;
       }
-      this.$emit('save-note', this.courseObj.uniqueID, note);
-      this.$emit('new-note-created', this.courseObj.uniqueID, false); // toggles new note back to undefined
+      this.$emit('save-note', this.course.uniqueID, note);
+      this.$emit('new-note-created', this.course.uniqueID, false); // toggles new note back to undefined
     },
     handleClickOutsideNote(event: MouseEvent) {
       // Don't count a click on the open note (.courseMenu) or three dots (.course-dotRow)
@@ -393,18 +398,18 @@ export default defineComponent({
         noteComponent.collapseNote();
       } else {
         // this is a new note that hasn't been saved yet, and it gets cancelled
-        this.$emit('new-note-created', this.courseObj.uniqueID, false); // toggles new note back to undefined
+        this.$emit('new-note-created', this.course.uniqueID, false); // toggles new note back to undefined
         this.closeNote();
       }
     },
     openDeleteNoteModal() {
-      this.$emit('open-delete-note-modal', this.courseObj.uniqueID);
+      this.$emit('open-delete-note-modal', this.course.uniqueID);
     },
     handleNoteStateChange(isExpanded: boolean) {
-      this.$emit('note-state-change', this.courseObj.uniqueID, isExpanded);
+      this.$emit('note-state-change', this.course.uniqueID, isExpanded);
     },
     handleNewNote(isNewNote: boolean) {
-      this.$emit('new-note-created', this.courseObj.uniqueID, isNewNote);
+      this.$emit('new-note-created', this.course.uniqueID, isNewNote);
     },
     handleNoteHeightChange() {
       this.$nextTick(() => {
@@ -431,7 +436,7 @@ export default defineComponent({
       // Effective extra height added below the card is the element height plus its translateY offset
       // (which is usually negative), converted to rem, minus the note's negative bottom margin.
       const effectiveRem = Math.max(0, rectH + translateYPx) / rootFontSizePx - marginBottomRem;
-      this.$emit('note-height-change', this.courseObj.uniqueID, Math.max(0, effectiveRem));
+      this.$emit('note-height-change', this.course.uniqueID, Math.max(0, effectiveRem));
     },
   },
   directives: {
@@ -445,7 +450,7 @@ export default defineComponent({
         if (!newNote) {
           this.isNoteVisible = false;
           // Note removed; inform parent
-          this.$emit('note-height-change', this.courseObj.uniqueID, 0);
+          this.$emit('note-height-change', this.course.uniqueID, 0);
         }
       },
       immediate: true,

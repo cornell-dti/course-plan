@@ -49,6 +49,7 @@ export const cornellCourseRosterCourseToFirebaseSemesterCourseWithCustomIDAndCol
     credits,
     creditRange,
     semesters,
+    requirementsFulfilled: [],
     color,
     uniqueID,
   };

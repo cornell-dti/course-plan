@@ -73,7 +73,7 @@
       :choice="currentBlankCourseChoice"
       @close-modal="closeCourseConfirmationModal"
       @back-to-distribution-modal="backToDistributionModal"
-      @confirm-course="confirmAndAddCourse"
+      @confirm-course="confirmAndAddBlankCourse"
     />
     <manual-requirements-modal
       v-if="isManualRequirementsModalOpen"
@@ -138,7 +138,7 @@
                 :season="season"
                 :isReqCourse="false"
                 :compact="compact"
-                :active="activatedCourse.uniqueID === element.uniqueID"
+                :active="typedActivatedCourse.uniqueID === element.uniqueID"
                 :isSemesterCourseCard="true"
                 class="semester-course"
                 data-cyId="semester-course"
@@ -290,7 +290,7 @@ export default defineComponent({
       noteHeights: new Map<number, number>(),
       isBlankCourseModalOpen: false,
       isDistributionModalOpen: false,
-      currentBlankCourse: {} as FirestoreSemesterCourse,
+      currentBlankCourse: {} as FirestoreSemesterBlankCourse,
       isConfirmationModalOpen: false,
       isManualRequirementsModalOpen: false,
       courseRequirements: [] as string[],
@@ -346,6 +346,9 @@ export default defineComponent({
   },
 
   computed: {
+    typedActivatedCourse(): FirestoreSemesterCourse {
+      return this.activatedCourse as FirestoreSemesterCourse;
+    },
     coursesForDraggable: {
       get(): readonly (FirestoreSemesterCourse | FirestoreSemesterPlaceholder)[] {
         return this.courses;
@@ -876,14 +879,14 @@ export default defineComponent({
       // Show confirmation
       this.openConfirmationModal(`Added course ${course.code} to ${this.season} ${this.year}`);
     },
-    openDistributionModal(course: FirestoreSemesterCourse) {
+    openDistributionModal(course: FirestoreSemesterBlankCourse) {
       this.currentBlankCourse = course;
       this.isBlankCourseModalOpen = false;
       this.isDistributionModalOpen = true;
     },
     closeDistributionModal() {
       this.isDistributionModalOpen = false;
-      this.currentBlankCourse = {} as FirestoreSemesterCourse;
+      this.currentBlankCourse = {} as FirestoreSemesterBlankCourse;
     },
     backToBlankCourseModal() {
       this.isDistributionModalOpen = false;
@@ -896,15 +899,16 @@ export default defineComponent({
     },
     closeManualRequirementsModal() {
       this.isManualRequirementsModalOpen = false;
-      this.currentBlankCourse = {} as FirestoreSemesterCourse;
+      this.currentBlankCourse = {} as FirestoreSemesterBlankCourse;
     },
     proceedToConfirmationWithManualRequirements(
       course: FirestoreSemesterCourse,
-      requirements: string[]
+      requirements: string[],
+      choice: FirestoreCourseOptInOptOutChoices
     ) {
-      // Set course and requirements, then proceed to confirmation
       this.currentBlankCourse = course;
       this.courseRequirements = requirements;
+      this.currentBlankCourseChoice = choice; // Set the choice to bypass checker validation
       this.isManualRequirementsModalOpen = false;
       this.isConfirmationModalOpen = true;
     },
@@ -928,7 +932,7 @@ export default defineComponent({
       this.isManualRequirementsModalOpen = false;
       this.isDistributionModalOpen = true;
     },
-    confirmAndAddCourse(
+    confirmAndAddBlankCourse(
       course: FirestoreSemesterBlankCourse,
       choice: FirestoreCourseOptInOptOutChoices
     ) {

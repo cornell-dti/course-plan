@@ -30,9 +30,11 @@
 
       <!-- Requirements list -->
       <div class="requirements-items">
-        <div v-if="course.requirementsFulfilled && course.requirementsFulfilled.length > 0">
+        <div
+          v-if="typedCourse.requirementsFulfilled && typedCourse.requirementsFulfilled.length > 0"
+        >
           <div
-            v-for="(req, index) in course.requirementsFulfilled"
+            v-for="(req, index) in typedCourse.requirementsFulfilled"
             :key="index"
             class="requirement-item"
           >
@@ -75,17 +77,21 @@ export default defineComponent({
     },
   },
   computed: {
-    courseWithColor() {
+    // type-safe blank course card
+    typedCourse(): FirestoreSemesterBlankCourse {
+      return this.course as FirestoreSemesterBlankCourse;
+    },
+    courseWithColor(): FirestoreSemesterBlankCourse {
       // Get subject from course code
-      const subject = this.course.code.split(' ')[0];
+      const subject = this.typedCourse.code.split(' ')[0];
 
       // Apply color and fix semesters if needed
       return {
-        ...this.course,
+        ...this.typedCourse,
         color: store.state.subjectColors[subject] || '32A0F2', // Use subject color or default blue
         semesters:
-          this.course.semesters && this.course.semesters.length > 0
-            ? this.course.semesters
+          this.typedCourse.semesters && this.typedCourse.semesters.length > 0
+            ? this.typedCourse.semesters
             : ['Transfer'], // Default to Transfer if no semesters specified
       };
     },
@@ -107,18 +113,13 @@ export default defineComponent({
     },
     confirmCourse() {
       // Pass the course with color
-      const updatedCourse = {
-        ...this.course,
+      const updatedCourse: FirestoreSemesterBlankCourse = {
+        ...this.typedCourse,
         uniqueID: incrementUniqueID(),
-        crseId: this.course.crseId,
+        crseId: this.typedCourse.crseId,
         userID: 'dummy for now',
         color: this.courseWithColor.color,
       };
-      console.log(
-        'Course to be added; confirm course on CourseConfirmationModal:',
-        updatedCourse,
-        this.choice
-      );
       this.$emit('confirm-course', updatedCourse, this.choice);
     },
   },
