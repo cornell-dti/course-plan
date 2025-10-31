@@ -8,19 +8,32 @@ type FirestoreUserName = {
   readonly lastName: string;
 };
 
-type FirestoreSemesterCourse = {
-  readonly crseId: number;
-  readonly lastRoster: string;
+type FirestoreSemesterCourseBase = {
   readonly uniqueID: number;
   readonly code: string;
   readonly name: string;
   readonly credits: number;
+  readonly crseId: number;
   readonly creditRange: readonly [number, number];
   readonly semesters: readonly string[];
+  readonly requirementsFulfilled: readonly string[];
   readonly color: string;
   readonly note?: string | null;
-  readonly lastUpdated?: Timestamp | null; // NB: the Timestamp here is deliberately left untyped — importing from Firestore causes all sorts of namespace issues.
+  readonly lastUpdated?: Timestamp | null;
 };
+
+type FirestoreSemesterCornellCourse = FirestoreSemesterCourseBase & {
+  readonly type: 'CornellCourse'; // Discrminator for the type of course; Default type
+  readonly lastRoster: string;
+};
+
+type FirestoreSemesterBlankCourse = FirestoreSemesterBase & {
+  readonly type: 'BlankCourse'; // Discriminator for the type of course;
+  readonly userID: string; // to associate with the specific user
+  readonly courseType: Enumerator; // Transfer, Study Abroad, etc.
+};
+
+type FirestoreSemesterCourse = FirestoreSemesterCornellCourse | FirestoreSemesterBlankCourse;
 
 type FirestoreSemesterPlaceholder = {
   readonly name: string;
@@ -140,7 +153,10 @@ type FirestoreTrackUsersOnboardingData = {
   gradYearFrequencies: { readonly [group: string]: number };
 };
 
-type FirestoreUniqueIncrementer = { readonly uniqueIncrementer: number };
+type FirestoreUniqueIncrementer = {
+  readonly uniqueIncrementer: number;
+  readonly uniqueBlankCourseIncrementer: number;
+};
 
 interface CornellCourseRosterCourse {
   readonly crseId: number;

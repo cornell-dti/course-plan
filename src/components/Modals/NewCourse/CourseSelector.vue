@@ -36,7 +36,7 @@
     </div>
     <!-- No results message with option to add blank course card -->
     <div
-      v-else-if="searchText.length >= 2 && allowBlankCard"
+      v-else-if="searchText.length >= 2"
       class="no-results-container"
       @click="addBlankCourseCard"
     >
@@ -98,11 +98,6 @@ export default defineComponent({
       type: Object as PropType<readonly CornellCourseRosterCourse[]>,
       required: false,
       default: undefined,
-    },
-    allowBlankCard: {
-      type: Boolean,
-      required: false,
-      default: true,
     },
   },
   emits: {
@@ -175,7 +170,7 @@ export default defineComponent({
 
 .search-box {
   border: 1px solid transparent;
-  background-color: $white;
+  background-color: $searchBoxWhite;
   padding: 10px;
   font-size: 16px;
 

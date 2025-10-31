@@ -8,7 +8,6 @@
     @modal-closed="closeCurrentModal"
     @left-button-clicked="closeCurrentModal"
     @right-button-clicked="addBlankCourse"
-    :titleBold="true"
   >
     <div class="blank-course-form">
       <div class="form-group">
@@ -20,7 +19,7 @@
           type="text"
           class="form-input"
           v-model="courseCode"
-          placeholder="CS 114"
+          placeholder='"CSE 114"'
         />
       </div>
 
@@ -33,7 +32,7 @@
           type="text"
           class="form-input"
           v-model="courseName"
-          placeholder="Introduction to Object Oriented Programming"
+          placeholder='"Introduction to Object Oriented Programming"'
         />
       </div>
 
@@ -48,7 +47,7 @@
           max="8"
           class="form-input"
           v-model="courseCredits"
-          placeholder="4"
+          placeholder='"4"'
         />
       </div>
 
@@ -99,7 +98,6 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
 import TeleportModal from '@/components/Modals/TeleportModal.vue';
-import { incrementUniqueID } from '@/global-firestore-data';
 
 export default defineComponent({
   components: { TeleportModal },
@@ -146,20 +144,15 @@ export default defineComponent({
       const creditsValue = parseInt(this.courseCredits.toString(), 10);
 
       // Use only the properties defined in FirestoreSemesterCourse
-      const blankCourse: FirestoreSemesterCourse = {
-        uniqueID: incrementUniqueID(),
+      const blankCourse: FirestoreSemesterBlankCourse = {
+        type: 'BlankCourse',
         code: this.courseCode.trim(),
         name: this.courseName.trim(),
         credits: creditsValue,
+        creditRange: [creditsValue, creditsValue] as const, // Assuming can't edit credit value
         color: 'FFFFFF', // Default white color
-        crseId: 0,
-        lastRoster: '',
-        creditRange: [creditsValue, creditsValue] as const,
-        semesters: this.season ? [this.season] : [],
-        note: '',
+        courseType: this.courseType,
       };
-
-      // Close this modal first, then open the distribution modal
       this.closeCurrentModal();
       this.$emit('open-distribution-modal', blankCourse);
     },
@@ -170,12 +163,7 @@ export default defineComponent({
 <style lang="scss">
 @import '@/assets/scss/_variables.scss';
 
-.blank-course-form {
-  padding: 16px 0;
-}
-
 .form-group {
-  margin-bottom: 24px;
   position: relative;
 }
 
@@ -184,17 +172,17 @@ export default defineComponent({
   font-size: 14px;
   margin-bottom: 10px;
   font-weight: 500;
-  color: #333;
+  color: #858585 !important;
 
   .required {
-    color: #d32f2f;
+    color: #105351;
     margin-left: 2px;
   }
 }
 
 .form-input {
-  width: 100%;
-  height: 36px;
+  width: 92%;
+  height: 30px;
   padding: 6px 12px;
   font-size: 15px;
   border: 1px solid #ddd;
@@ -216,7 +204,6 @@ export default defineComponent({
 .radio-group {
   display: flex;
   flex-direction: column;
-  gap: 16px;
 }
 
 .radio-option {
@@ -258,9 +245,7 @@ export default defineComponent({
     border-radius: 50%;
     border: 1px solid #ccc;
     background: white;
-    position: absolute;
-    top: 0;
-    left: 0;
+    position: relative;
     transition: all 0.2s ease;
   }
 
@@ -271,13 +256,13 @@ export default defineComponent({
     &:after {
       content: '';
       position: absolute;
-      top: 5px;
-      left: 8px;
+      top: 45%;
+      left: 50%;
       width: 6px;
       height: 10px;
       border: solid white;
       border-width: 0 2px 2px 0;
-      transform: rotate(45deg);
+      transform: translate(-50%, -50%) rotate(45deg);
     }
   }
 }
@@ -285,34 +270,34 @@ export default defineComponent({
 .radio-label {
   font-size: 15px;
   font-weight: 400;
-  color: #333;
+  color: #858585;
 }
 
 .modal-button {
-  color: $sangBlue !important;
-  background-color: transparent !important;
-  border: 1px solid #ccc !important;
-  border-radius: 4px !important;
+  color: $sangBlue;
+  background-color: transparent;
+  border: 1px solid #ccc;
+  border-radius: 4px;
   font-weight: 500;
 
   &:hover {
-    background-color: #f9f9f9 !important;
+    background-color: #f9f9f9;
   }
 
   &--add {
-    background-color: $sangBlue !important;
-    color: white !important;
+    background-color: $sangBlue;
+    color: white;
     font-weight: 500;
-    border: none !important;
-    border-radius: 4px !important;
+    border: none;
+    border-radius: 4px;
 
     &:not(.modal-button--disabled):hover {
-      background-color: darken($sangBlue, 5%) !important;
+      background-color: darken($sangBlue, 5%);
     }
 
     &.modal-button--disabled {
-      background-color: #cccccc !important;
-      color: #666666 !important;
+      background-color: #cccccc;
+      color: #666666;
       opacity: 0.7;
     }
   }

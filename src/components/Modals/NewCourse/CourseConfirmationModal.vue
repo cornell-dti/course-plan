@@ -1,15 +1,13 @@
 <template>
   <TeleportModal
     title="Does Everything Look Okay?"
-    content-class="content-course"
+    content-class="content-course-confirmation"
     leftButtonText="Back"
     rightButtonText="Add"
     :rightButtonIsDisabled="false"
     @modal-closed="closeCurrentModal"
     @left-button-clicked="backToDistributionModal"
     @right-button-clicked="confirmCourse"
-    :titleBold="true"
-    class="confirmation-modal"
   >
     <div class="confirmation-form">
       <!-- Use the actual Course component with proper color -->
@@ -19,7 +17,9 @@
           :compact="false"
           :active="false"
           :isReqCourse="false"
-          :isSemesterCourseCard="true"
+          :isSemesterCourseCard="false"
+          :isCourseConfirmationCard="true"
+          @note-height-change="() => {}"
         />
       </div>
 
@@ -30,8 +30,14 @@
 
       <!-- Requirements list -->
       <div class="requirements-items">
-        <div v-if="requirements && requirements.length > 0">
-          <div v-for="(req, index) in requirements" :key="index" class="requirement-item">
+        <div
+          v-if="typedCourse.requirementsFulfilled && typedCourse.requirementsFulfilled.length > 0"
+        >
+          <div
+            v-for="(req, index) in typedCourse.requirementsFulfilled"
+            :key="index"
+            class="requirement-item"
+          >
             {{ req }}
           </div>
         </div>
@@ -40,10 +46,10 @@
 
       <!-- Advisory Note -->
       <div class="advisory-note">
-        <span class="advisory-icon">⚠️</span>
         <p>
+          <span class="advisory-icon">⚠️</span>
           Please note, we recommend checking in with your academic advisor regarding requirements to
-          make sure you are selecting the right class.
+          make sure you are inputting the correct info.
         </p>
       </div>
     </div>
@@ -55,32 +61,37 @@ import { defineComponent, PropType } from 'vue';
 import TeleportModal from '@/components/Modals/TeleportModal.vue';
 import Course from '@/components/Course/Course.vue';
 import store from '@/store';
+import { incrementUniqueID } from '@/global-firestore-data';
 
 export default defineComponent({
   name: 'CourseConfirmationModal',
   components: { TeleportModal, Course },
   props: {
     course: {
-      type: Object as PropType<FirestoreSemesterCourse>,
+      type: Object as PropType<FirestoreSemesterBlankCourse>,
       required: true,
     },
-    requirements: {
-      type: Array as PropType<string[]>,
+    choice: {
+      type: Object as PropType<FirestoreCourseOptInOptOutChoices>,
       required: true,
     },
   },
   computed: {
-    courseWithColor() {
+    // type-safe blank course card
+    typedCourse(): FirestoreSemesterBlankCourse {
+      return this.course as FirestoreSemesterBlankCourse;
+    },
+    courseWithColor(): FirestoreSemesterBlankCourse {
       // Get subject from course code
-      const subject = this.course.code.split(' ')[0];
+      const subject = this.typedCourse.code.split(' ')[0];
 
       // Apply color and fix semesters if needed
       return {
-        ...this.course,
+        ...this.typedCourse,
         color: store.state.subjectColors[subject] || '32A0F2', // Use subject color or default blue
         semesters:
-          this.course.semesters && this.course.semesters.length > 0
-            ? this.course.semesters
+          this.typedCourse.semesters && this.typedCourse.semesters.length > 0
+            ? this.typedCourse.semesters
             : ['Transfer'], // Default to Transfer if no semesters specified
       };
     },
@@ -88,7 +99,10 @@ export default defineComponent({
   emits: {
     'close-modal': () => true,
     'back-to-distribution-modal': () => true,
-    'confirm-course': (course: FirestoreSemesterCourse) => typeof course === 'object',
+    'confirm-course': (
+      course: FirestoreSemesterBlankCourse,
+      choice: FirestoreCourseOptInOptOutChoices
+    ) => typeof course === 'object' && typeof choice === 'object',
   },
   methods: {
     closeCurrentModal() {
@@ -99,40 +113,32 @@ export default defineComponent({
     },
     confirmCourse() {
       // Pass the course with color
-      this.$emit('confirm-course', this.courseWithColor);
+      const updatedCourse: FirestoreSemesterBlankCourse = {
+        ...this.typedCourse,
+        uniqueID: incrementUniqueID(),
+        crseId: this.typedCourse.crseId,
+        userID: 'dummy for now',
+        color: this.courseWithColor.color,
+      };
+      this.$emit('confirm-course', updatedCourse, this.choice);
     },
   },
 });
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 @import '@/assets/scss/_variables.scss';
 
 .confirmation-form {
   display: flex;
   flex-direction: column;
   padding: 16px 0;
-}
-
-:deep(.modal-top) {
-  padding-left: 4px;
-  padding-right: 4px;
-}
-
-:deep(.modal-top h1) {
-  font-size: 24px;
-  font-weight: 600;
-  margin-top: 4px;
-  margin-bottom: 6px;
-}
-
-:deep(.modal-exit) {
-  margin-top: 6px;
+  margin-bottom: 16px;
 }
 
 .course-card-container {
-  width: 90%;
-  margin: 0 auto 24px auto;
+  width: 80%;
+  margin: 0 auto 24px 0;
   max-width: 480px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
@@ -157,13 +163,8 @@ export default defineComponent({
 }
 
 .advisory-note {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-
   .advisory-icon {
     font-size: 16px;
-    margin-top: 2px;
   }
 
   p {
@@ -171,12 +172,13 @@ export default defineComponent({
     color: #666;
     margin: 0;
     line-height: 1.5;
+    display: inline;
   }
 }
 
-:deep(.content-course) {
-  padding: 16px;
-  width: 520px;
-  max-width: 100%;
+.content-course-confirmation {
+  width: 32rem;
+  max-width: 50%;
+  padding: 20px;
 }
 </style>

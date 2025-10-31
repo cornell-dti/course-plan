@@ -130,6 +130,7 @@ export default defineComponent({
     },
   },
   methods: {
+    // Hannah's note: only call this function for user is adding a cornell course
     selectCourse(result: CornellCourseRosterCourse) {
       this.selectedCourse = result;
       this.$emit('select-course', this.selectedCourse);
@@ -177,6 +178,9 @@ export default defineComponent({
         this.addCourse();
       }
     },
+    // Hannah's note: check the selectedCourse type
+    // if its a cornellcourseroster, then keep this code
+    // else, we are adding a new blank course card, do not follow through
     addCourse() {
       if (this.selectedCourse == null) return;
       this.$emit('add-course', this.selectedCourse, {
@@ -284,7 +288,7 @@ export default defineComponent({
   bottom: 18px;
   display: flex;
   align-items: center;
-  height: 28px; /* Match the height of the buttons */
+  height: 28px;
 }
 
 .add-blank-course {
