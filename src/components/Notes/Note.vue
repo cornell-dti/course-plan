@@ -8,17 +8,21 @@
         editing: isEditing,
       }"
     >
-      <!-- NOTE: the disabled attribute is used to prevent the user from being able to edit the note
-      when it is expanded, but the edit icon has not been pressed. This only applies when the note
-      is not empty (already had something written in it previously and read from the database). -->
-      <input
-        v-model="note"
-        placeholder="Add a note..."
-        :disabled="!isEditing && initialNote !== ''"
-        class="note-input"
-        @keyup.enter="saveNote"
-        @input="handleInput"
-      />
+      <template v-if="isExpanded">
+        <textarea
+          v-if="isEditing || initialNote === ''"
+          ref="textareaRef"
+          v-model="note"
+          placeholder="Add a note..."
+          :disabled="!isEditing && initialNote !== ''"
+          class="note-textarea"
+          rows="1"
+          @input="handleTextareaInput"
+        />
+
+        <!-- Read-only wrapped view when not editing -->
+        <div v-else class="note-display">{{ note }}</div>
+      </template>
       <img
         v-if="isExpanded && initialNote === ''"
         src="@/assets/images/notes/arrow.svg"
@@ -111,23 +115,21 @@ export default defineComponent({
       @returns {Record<string, string>} - The style of the note element
      */
     noteStyle(): Record<string, string> {
-      let baseHeight = 1.875;
+      const baseHeight = 1.875;
       const expandedEditing = -1.25;
       const expandedNotEditing = -0.625;
       let translateY = -0.625;
       if (this.isExpanded) {
         if (this.initialNote === '') {
           translateY = expandedEditing;
-          baseHeight = 3.75;
         } else {
           translateY = expandedNotEditing;
-          baseHeight = 4.375;
         }
       }
-      const visibleHeight = baseHeight; // The height of the note itself that can be seen on the user interface
+      const isAuto = this.isExpanded;
       return {
         transform: `translateX(-50%) translateY(${translateY}rem)`,
-        height: `${visibleHeight}rem`,
+        height: isAuto ? 'auto' : `${baseHeight}rem`,
         width: this.width,
         position: 'relative' as const,
         marginBottom: '-0.7rem',
@@ -155,33 +157,57 @@ export default defineComponent({
     },
   },
   methods: {
+    handleTextareaInput(event: Event) {
+      this.handleInput();
+      const el = event.target as HTMLTextAreaElement;
+      this.autoGrowTextarea(el);
+      this.$emit('height-change');
+    },
     handleClick() {
       if (!this.isExpanded) {
         this.isExpanded = true;
         this.$emit('note-state-change', true);
+        this.$emit('height-change');
       }
+    },
+    autoGrowTextarea(textarea: HTMLTextAreaElement | undefined) {
+      if (!textarea) return;
+      textarea.style.height = 'auto';
+      textarea.style.height = `${textarea.scrollHeight}px`;
     },
     startEditing() {
       this.isEditing = true;
       this.isExpanded = true;
+      nextTick(() => {
+        const el = this.$refs.textareaRef as HTMLTextAreaElement | undefined;
+        if (el) {
+          this.autoGrowTextarea(el);
+          el.focus();
+        }
+        // Grant some rendering time so that the height is figured out.
+        this.$emit('height-change');
+      });
     },
     saveNote() {
       if (this.isDisabled) return;
       this.$emit('save-note', this.note);
       this.isDirty = false;
       this.isEditing = false;
+      this.$emit('height-change');
     },
     collapseNote() {
       if (this.isExpanded) {
         this.isExpanded = false;
         this.isEditing = false;
         this.$emit('note-state-change', false);
+        this.$emit('height-change');
       }
     },
     expandNote() {
       if (!this.isExpanded) {
         this.isExpanded = true;
         this.$emit('note-state-change', true);
+        this.$emit('height-change');
       }
     },
     /**
@@ -225,6 +251,7 @@ export default defineComponent({
   },
 });
 </script>
+
 <style scoped>
 .note {
   box-shadow: -4px -4px 10px 4px rgba(160, 91, 91, 0.055);
@@ -238,6 +265,7 @@ export default defineComponent({
   align-items: flex-end;
   overflow: hidden;
 }
+
 .note-content {
   display: flex;
   flex-direction: row;
@@ -248,16 +276,21 @@ export default defineComponent({
   transform: translateY(100%);
   transition: opacity 0.3s ease, transform 0.3s ease;
 }
+
 .note-content.visible {
   opacity: 1;
-  transform: translateY(-15px);
-}
-.note-content.visibleEmpty {
-  opacity: 1;
   transform: translateY(0px);
+  margin: 15px 0px;
 }
 
-.note-input {
+.note-content.visibleEmpty {
+  opacity: 1;
+  transform: translateY(15px);
+  /* Ensure the icon is aligned with the bottom of the note during the first edit phase. */
+  align-items: end;
+}
+
+.note-textarea {
   flex: 1;
   padding: 0;
   border: none;
@@ -266,6 +299,18 @@ export default defineComponent({
   color: #555;
   font-size: 14.48px;
   font-family: inherit;
+  resize: none;
+  overflow: hidden;
+  line-height: 1.35;
+  white-space: pre-wrap;
+}
+
+.note-display {
+  flex: 1;
+  color: #555;
+  font-size: 14.48px;
+  font-family: inherit;
+  white-space: pre-wrap;
 }
 
 .note-icon {
@@ -329,12 +374,12 @@ export default defineComponent({
 .note-content.editing {
   background-color: rgba(255, 255, 255, 0.6);
   border-radius: 13px;
-  margin: 0 10px;
-  padding: 0 5px;
+  margin: 20px 10px 15px 10px;
+  padding: 5px;
+  align-items: end;
 }
 
-.note-content.editing .note-input {
-  padding: 5px 5px;
+.note-content.editing .note-textarea {
   margin-right: 0;
   background-color: transparent;
 }
