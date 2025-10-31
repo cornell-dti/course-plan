@@ -125,7 +125,7 @@ export default defineComponent({
     },
     selectCourse(result: CornellCourseRosterCourse) {
       this.$emit('on-select', result);
-      this.searchText = `${result.subject} ${result.catalogNbr}: ${result.titleLong}`;
+      this.searchText = '';
       this.currentFocus = -1;
     },
     onEnter() {

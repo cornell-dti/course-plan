@@ -108,7 +108,7 @@ export default defineComponent({
 <style scoped lang="scss">
 @import '@/assets/scss/_variables.scss';
 .dropdown {
-  z-index: 1;
+  z-index: 2;
   position: relative;
   float: right;
   &-button {
