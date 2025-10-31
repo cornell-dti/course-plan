@@ -42,6 +42,12 @@ export default defineComponent({
     conflictNumber: { type: Number, required: true },
     numSelfChecks: { type: Number, required: true },
   },
+  computed: {
+    // Type-safe accessor for selectedCourse prop
+    typedCourse(): FirestoreSemesterCourse {
+      return this.selectedCourse as FirestoreSemesterCourse;
+    },
+  },
   emits: {
     'conflict-changed': (reqName: string, conflictNum: number) =>
       typeof reqName === 'string' && typeof conflictNum === 'number',
@@ -53,13 +59,13 @@ export default defineComponent({
       // edit the requirements assigned to the course when editor changed
       if (this.isReqSelfCheck(index)) {
         toggleRequirementChoice(
-          this.selectedCourse.uniqueID,
+          this.typedCourse.uniqueID,
           store.state.userRequirementsMap[reqName].id,
           'acknowledgedCheckerWarningOptIn'
         );
       } else {
         toggleRequirementChoice(
-          this.selectedCourse.uniqueID,
+          this.typedCourse.uniqueID,
           store.state.userRequirementsMap[reqName].id,
           'optOut'
         );

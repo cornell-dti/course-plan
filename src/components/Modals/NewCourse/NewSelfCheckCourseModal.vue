@@ -18,6 +18,7 @@
       :autoFocus="true"
       @on-escape="closeCurrentModal"
       @on-select="setCourse"
+      :allow-blank-card="false"
     />
     <div>
       <div class="newCourse-title">Add this class to the following semester</div>

@@ -84,6 +84,7 @@ export const addCourseToBottomBar = async (
   season: string,
   year: number
 ): Promise<void> => {
+  if (course.type !== 'CornellCourse') return; // Only add Cornell courses to the bottom bar
   vueForBottomBar.isExpanded = true;
 
   for (let i = 0; i < vueForBottomBar.bottomCourses.length; i += 1) {

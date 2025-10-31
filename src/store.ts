@@ -48,6 +48,7 @@ export type VuexStoreState = {
   groupedRequirementFulfillmentReport: readonly GroupedRequirementFulfillmentReport[];
   subjectColors: Readonly<Record<string, string>>;
   uniqueIncrementer: number;
+  uniqueBlankCourseIncrementer: number;
   isTeleportModalOpen: boolean;
   plans: readonly Plan[];
   currentPlan: Plan;
@@ -107,6 +108,7 @@ const store: TypedVuexStore = new TypedVuexStore({
     groupedRequirementFulfillmentReport: [],
     subjectColors: {},
     uniqueIncrementer: 0,
+    uniqueBlankCourseIncrementer: 0,
     isTeleportModalOpen: false,
     plans: [],
     currentPlan: { name: '', semesters: [] },
@@ -175,6 +177,9 @@ const store: TypedVuexStore = new TypedVuexStore({
     },
     setUniqueIncrementer(state: VuexStoreState, newIncrementerValue: number) {
       state.uniqueIncrementer = newIncrementerValue;
+    },
+    setUniqueBlankCourseIncrementer(state: VuexStoreState, newIncrementerValue: number) {
+      state.uniqueBlankCourseIncrementer = newIncrementerValue;
     },
     setIsTeleportModalOpen(state: VuexStoreState, newTeleportModalValue: boolean) {
       state.isTeleportModalOpen = newTeleportModalValue;
@@ -311,6 +316,7 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
   let overriddenFulfillmentChoiceInitialLoadFinished = false;
   let subjectColorInitialLoadFinished = false;
   let uniqueIncrementerInitialLoadFinished = false;
+  let uniqueBlankCourseIncrementerInitialLoadFinished = false;
 
   let emitted = false;
 
@@ -324,6 +330,7 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
       overriddenFulfillmentChoiceInitialLoadFinished &&
       subjectColorInitialLoadFinished &&
       uniqueIncrementerInitialLoadFinished &&
+      uniqueBlankCourseIncrementerInitialLoadFinished &&
       !emitted
     ) {
       emitted = true;
@@ -431,6 +438,18 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
       emitOnLoadWhenLoaded();
     }
   );
+  const uniqueBlankCourseIncrementerUnsubscriber = onSnapshot(
+    doc(fb.uniqueIncrementerCollection, simplifiedUser.email),
+    snapshot => {
+      const data = snapshot.data();
+      store.commit(
+        'setUniqueBlankCourseIncrementer',
+        data == null ? 0 : data.uniqueBlankCourseIncrementer ?? 0
+      );
+      uniqueBlankCourseIncrementerInitialLoadFinished = true;
+      emitOnLoadWhenLoaded();
+    }
+  );
   const derivedDataComputationUnsubscriber = autoRecomputeDerivedData();
 
   const unsubscriber = () => {
@@ -439,6 +458,7 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
     toggleableRequirementChoiceUnsubscriber();
     overriddenFulfillmentChoiceUnsubscriber();
     uniqueIncrementerUnsubscriber();
+    uniqueBlankCourseIncrementerUnsubscriber();
     derivedDataComputationUnsubscriber();
   };
   return unsubscriber;

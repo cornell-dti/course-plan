@@ -16,7 +16,7 @@
       <div
         class="courseMenu-section"
         v-if="saveCourseIconVisible"
-        @click="openSaveCourseModal(courseObj.code)"
+        @click="openSaveCourseModal(course.code)"
       >
         <div class="courseMenu-left">
           <img
@@ -163,6 +163,10 @@ export default defineComponent({
     };
   },
   computed: {
+    // Type-safe accessor for courseObj prop
+    course(): FirestoreSemesterCourse {
+      return this.courseObj as FirestoreSemesterCourse;
+    },
     // TODO: implement this without DOM manipulation and with semID changing (right now, stays the same if a sem is added)
     numPerRow(): number {
       const itemWidth = 406; // width of a semester div

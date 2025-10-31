@@ -9,8 +9,8 @@
   >
     <div class="courseConflict-text">Selected Course</div>
     <div class="selected-course" data-cyId="courseConflict-selectedCourse">
-      {{ selectedCourse.code }}:
-      {{ selectedCourse.name }}
+      {{ selectedTypedCourse.code }}:
+      {{ selectedTypedCourse.name }}
     </div>
 
     <div class="courseConflict-description">
@@ -71,6 +71,7 @@ export default defineComponent({
     // includes self checks only if in conflict with the other reqs in group
     const selectedReqsPerConflict: Map<string, boolean>[] = [];
     const numSelfChecksPerConflict: number[] = [];
+    const selectedTypedCourse = this.selectedCourse as FirestoreSemesterCourse;
 
     const selectableReqIds: string[] = [];
     this.selfCheckRequirements.forEach(singleSelfCheckReq => {
@@ -86,7 +87,7 @@ export default defineComponent({
       });
 
       const reqsInConflict = this.getReqsInConflict(
-        this.selectedCourse.uniqueID,
+        selectedTypedCourse.uniqueID,
         conflictReqIds,
         selectableReqIds
       );
@@ -112,6 +113,10 @@ export default defineComponent({
     };
   },
   computed: {
+    // type-safe selected course
+    selectedTypedCourse(): FirestoreSemesterCourse {
+      return this.selectedCourse as FirestoreSemesterCourse;
+    },
     conflictsFullyResolved(): boolean {
       return !this.hasUnresolvedConflicts && !this.hasUnselectedConflicts;
     },
@@ -136,11 +141,11 @@ export default defineComponent({
     },
     removeCourseAndCloseModal() {
       this.closeCurrentModal();
-      this.$emit('remove-course', this.selectedCourse.uniqueID);
+      this.$emit('remove-course', this.selectedTypedCourse.uniqueID);
     },
     addCourse() {
       this.closeCurrentModal();
-      this.$emit('resolve-conflicts', this.selectedCourse);
+      this.$emit('resolve-conflicts', this.selectedTypedCourse);
     },
     handleChangedConflict(selectedReq: string, index: number) {
       const conflict = this.selectedReqsPerConflict[index - 1];
