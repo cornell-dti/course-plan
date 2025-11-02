@@ -1,19 +1,10 @@
 <template>
-  <div class="card" :class="{ 'card--collapsed': isCollapsed }">
+  <div class="card">
     <div class="card-top">
-      <div class="card-minspacer">
-        <img v-if="!isCollapsed" src="@/assets/images/minimize.svg" alt="minimize card" />
-        <img v-else src="@/assets/images/expand.svg" alt="expand card" />
-      </div>
       <div class="card-name">{{ name }}</div>
-      <button class="card-minimize" @click="collapse">
-        <img v-if="!isCollapsed" src="@/assets/images/minimize.svg" alt="minimize card" />
-        <img v-else src="@/assets/images/expand.svg" alt="expand card" />
-      </button>
     </div>
-    <div v-if="isCollapsed"></div>
-    <hr class="card-divider" v-if="!isCollapsed" />
-    <div class="card-content" v-if="!isCollapsed">
+    <hr class="card-divider" />
+    <div class="card-content">
       <slot></slot>
     </div>
   </div>
@@ -26,22 +17,6 @@ export default defineComponent({
   props: {
     id: { type: String, required: true },
     name: { type: String, required: true },
-  },
-
-  data() {
-    return {
-      isCollapsed: false,
-    };
-  },
-  mounted() {
-    const savedMinimize = localStorage.getItem(JSON.stringify(this.name));
-    this.isCollapsed = savedMinimize ? JSON.parse(savedMinimize) : false;
-  },
-  methods: {
-    collapse() {
-      this.isCollapsed = !this.isCollapsed;
-      localStorage.setItem(JSON.stringify(this.name), JSON.stringify(this.isCollapsed));
-    },
   },
 });
 </script>
@@ -58,11 +33,6 @@ export default defineComponent({
   align-items: center;
   background-color: $white;
   margin: 0;
-
-  &--collapsed {
-    min-height: 0 !important;
-    height: 50px !important;
-  }
 
   &-top {
     :first-child {
@@ -104,17 +74,6 @@ export default defineComponent({
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-  }
-
-  &-minimize {
-    margin-right: 2rem;
-    margin-left: 2rem;
-    padding: 0;
-  }
-
-  &-minspacer {
-    @extend .card-minimize;
-    visibility: hidden;
   }
 }
 </style>

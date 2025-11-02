@@ -1,3 +1,11 @@
 <svg width="1440" height="900" viewBox="0 0 1440 900" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
-<path d="M-0.735214 0H1440V868.736C969 987.419 368.861 719.147 -0.735214 868.736C-370.331 1018.32 -0.735214 0 -0.735214 0Z" fill="#148481"/>
+  <defs>
+    <linearGradient id="gradient" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#148481"/>
+      <stop offset="40%" stop-color="#148481"/>
+      <stop offset="85%" stop-color="#F4F9FC" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#F4F9FC" stop-opacity="0.8"/>
+    </linearGradient>
+  </defs>
+  <path d="M-0.735214 0H1440V868.736C969 987.419 368.861 719.147 -0.735214 868.736C-370.331 1018.32 -0.735214 0 -0.735214 0Z" fill="url(#gradient)"/>
 </svg>

@@ -47,10 +47,10 @@
         target="_blank"
         @click="clickViewCourseInformationOnRoster()"
       >
-        View Course Information on Roster
-        <span class="info-link-blue-img"
-          ><img src="@/assets/images/link-blue.svg" alt="link arrow"
-        /></span>
+        <span class="info-link-blue-text">View Course Information on Roster</span>
+        <span class="info-link-blue-img">
+          <img src="@/assets/images/link-blue.svg" alt="link arrow" />
+        </span>
       </a>
     </div>
   </div>
@@ -148,16 +148,25 @@ export default defineComponent({
   &-link {
     font-size: 16px;
     line-height: 16px;
-    text-decoration-line: underline;
+
     margin-top: inherit;
 
     &-blue {
-      color: $yuxuanBlue;
-      // TODO: update picture
-      font-weight: 500;
+      // display: flex;
+      align-items: center;
+
+      &-text {
+        color: $yuxuanBlue;
+        font-weight: 500;
+        text-decoration-line: underline;
+      }
 
       &-img {
         margin-left: 0.2rem;
+
+        img {
+          transform: scale(0.9);
+        }
       }
     }
   }

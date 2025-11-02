@@ -68,6 +68,13 @@ it('Exam is converted to correct course', () => {
     gradSem: 'Spring',
     entranceYear: '2016',
     entranceSem: 'Fall',
+    fa25giveaway: {
+      saw: true,
+      step1: true,
+      step2: true,
+      step3: true,
+      entered: true,
+    },
     college: 'EN',
     major: [],
     exam: [{ examType: 'AP', score: 5, subject: 'Computer Science A' }],

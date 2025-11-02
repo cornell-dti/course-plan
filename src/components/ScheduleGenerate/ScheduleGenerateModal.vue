@@ -124,11 +124,7 @@ import { generateSchedulePDF } from '@/tools/export-plan';
 import GeneratorRequest from '@/schedule-generator/generator-request';
 import ScheduleGenerator from '@/schedule-generator/algorithm';
 import type { GeneratedScheduleOutput } from '@/schedule-generator/algorithm';
-import Course, {
-  CourseForFrontend,
-  DayOfTheWeek,
-  Timeslot,
-} from '@/schedule-generator/course-unit';
+import Course, { CourseForFrontend, DayOfTheWeek } from '@/schedule-generator/course-unit';
 import Requirement from '@/schedule-generator/requirement';
 
 export default defineComponent({
@@ -180,12 +176,7 @@ export default defineComponent({
       );
     },
     generateSchedules() {
-      const outputs: {
-        semester: string;
-        schedule: Map<Course, Timeslot[]>;
-        fulfilledRequirements: Map<string, Requirement[]>;
-        totalCredits: number;
-      }[] = [];
+      const outputs: GeneratedScheduleOutput[] = [];
 
       function getRandomDaySet(): DayOfTheWeek[] {
         const daySets = [
@@ -227,7 +218,8 @@ export default defineComponent({
         for (let i = 0; i < sortedFirstCourses.length; i += 1) {
           const firstCourse = sortedFirstCourses[i];
           const secondCourse = sortedSecondCourses[i];
-
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
           if (!deepEqual(firstCourse, secondCourse)) {
             return false;
           }
@@ -246,7 +238,8 @@ export default defineComponent({
           const secondTimeslotKeys = secondTimeslots
             .map(ts => `${ts.start}-${ts.end}-${ts.daysOfTheWeek.sort().join(',')}`)
             .sort();
-
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
           if (!deepEqual(firstTimeslotKeys, secondTimeslotKeys)) {
             return false;
           }
@@ -293,7 +286,9 @@ export default defineComponent({
         // NOTE: ideally we want to move this to the algorithm itself.
         // But also NOTE that this might not want to be hardcoded — consider e.g. liberal studies.
 
-        const momentary = ScheduleGenerator.generateSchedule(generatorRequest);
+        const momentary = ScheduleGenerator.generateSchedule(
+          generatorRequest
+        ) as GeneratedScheduleOutput;
 
         // Basic algorithm: now we want to clean up output.
         // Make it so that for every element of output, we keep track of

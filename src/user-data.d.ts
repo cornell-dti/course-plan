@@ -18,6 +18,8 @@ type FirestoreSemesterCourse = {
   readonly creditRange: readonly [number, number];
   readonly semesters: readonly string[];
   readonly color: string;
+  readonly note?: string | null;
+  readonly lastUpdated?: Timestamp | null; // NB: the Timestamp here is deliberately left untyped — importing from Firestore causes all sorts of namespace issues.
 };
 
 type FirestoreSemesterPlaceholder = {
@@ -55,6 +57,7 @@ type FirestoreTransferExam = {
 };
 
 type FirestoreCollegeMajorMinorOrGrad = { readonly acronym: string };
+
 type FirestoreOnboardingUserData = {
   readonly gradYear: string;
   readonly gradSem: FirestoreSemesterSeason | '';
@@ -69,6 +72,13 @@ type FirestoreOnboardingUserData = {
   sawNewFeature: boolean;
   sawGiveaway: boolean;
   sawScheduleGenerator: boolean;
+  fa25giveaway: {
+    saw: boolean;
+    step1: boolean;
+    step2: boolean;
+    step3: boolean;
+    entered: boolean;
+  };
 };
 
 type FirestoreCourseOptInOptOutChoices = {
@@ -196,6 +206,13 @@ type AppOnboardingData = {
   sawNewFeature: boolean;
   sawGiveaway: boolean;
   sawScheduleGenerator: boolean;
+  fa25giveaway: {
+    saw: boolean;
+    step1: boolean;
+    step2: boolean;
+    step3: boolean;
+    entered: boolean;
+  };
 };
 
 type AppBottomBarCourse = {

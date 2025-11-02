@@ -5,7 +5,7 @@ import aapRequirements, { aapAdvisors } from './colleges/ar';
 import casPreFA2020Requirements from './colleges/asPreFA2020';
 import casFA2020Requirements, { casAdvisors } from './colleges/asFA2020';
 import businessRequirements, { businessAdvisors } from './colleges/bu';
-import engineeringRequirements, { engineeringAdvisors } from './colleges/en';
+import engineeringRequirements, { engineeringAdvisors, engineeringMigrations } from './colleges/en';
 import humanEcologyRequirements, { humanEcologyAdvisors } from './colleges/he';
 import ilrRequirements, { ilrAdvisors } from './colleges/il';
 import aemRequirements, { aemAdvisors } from './majors/aem';
@@ -21,7 +21,7 @@ import chemERequirements, { chemEAdvisors } from './majors/chemE';
 import civilRequirements, { civilAdvisors } from './majors/ce';
 import commRequirements, { commAdvisors } from './majors/comm';
 import crpRequirements, { crpAdvisors } from './majors/crp';
-import csRequirements, { csAdvisors } from './majors/cs';
+import csRequirements, { csAdvisors, csMigrations } from './majors/cs';
 import deaRequirements, { deaAdvisors } from './majors/dea';
 import easRequirements, { easAdvisors } from './majors/eas';
 import economicsRequirements, { economicsAdvisors } from './majors/econ';
@@ -120,6 +120,7 @@ const json: RequirementsJson = {
       name: 'Engineering (ENG)',
       requirements: engineeringRequirements,
       advisors: engineeringAdvisors,
+      migrations: engineeringMigrations,
       abbrev: 'CoE',
     },
     HE: {
@@ -239,6 +240,7 @@ const json: RequirementsJson = {
       requirements: csRequirements,
       specializations: [MATH2940, CHEM2080],
       advisors: csAdvisors,
+      migrations: csMigrations,
       abbrev: 'CS',
     },
     DEA: {

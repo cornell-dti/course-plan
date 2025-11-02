@@ -1,80 +1,83 @@
 <template>
-  <div
-    :class="{
-      'course--min': compact,
-      conflict: isCourseConflict(courseObj.uniqueID),
-      active: active,
-    }"
-    class="course"
-  >
-    <save-course-modal
-      :courseCode="courseCode"
-      @close-save-course-modal="closeSaveCourseModal"
-      @save-course="saveCourse"
-      @add-collection="addCollection"
-      v-if="isSaveCourseOpen"
-    />
-    <edit-color
-      :editedColor="editedColor"
-      @color-course="colorCourse"
-      @color-subject="colorSubject"
-      @close-edit-color="closeEditColorModal"
-      v-if="isEditColorOpen"
-    />
+  <div class="course-container" :class="{ 'figma-shake': isShaking }">
     <div
-      class="course-color"
-      :style="cssVars"
       :class="{
-        'course-color--active': active,
+        'course--min': compact,
+        conflict: isCourseConflict(courseObj.uniqueID),
+        active: active,
       }"
+      class="course"
+      :id="`course-${courseObj.uniqueID}`"
     >
-      <img src="@/assets/images/dots/sixDots.svg" alt="" />
-    </div>
-    <div class="course-content" @click="courseOnClick()">
-      <div class="course-main">
-        <div class="course-top">
-          <div class="course-left">
-            <div
-              class="course-code"
-              data-cyId="courseCode"
-              :style="{
-                color: compact ? '#3d3d3d' : '#858585',
-              }"
-            >
-              {{ courseObj.code }}
+      <save-course-modal
+        :courseCode="courseCode"
+        @close-save-course-modal="closeSaveCourseModal"
+        @save-course="saveCourse"
+        @add-collection="addCollection"
+        v-if="isSaveCourseOpen"
+      />
+      <edit-color
+        :editedColor="editedColor"
+        @color-course="colorCourse"
+        @color-subject="colorSubject"
+        @close-edit-color="closeEditColorModal"
+        v-if="isEditColorOpen"
+      />
+      <div
+        class="course-color"
+        :style="cssVars"
+        :class="{
+          'course-color--active': active,
+        }"
+      >
+        <img src="@/assets/images/dots/sixDots.svg" alt="" />
+      </div>
+      <div class="course-content" @click="courseOnClick()">
+        <div class="course-main">
+          <div class="course-top">
+            <div class="course-left">
+              <div
+                class="course-code"
+                data-cyId="courseCode"
+                :style="{
+                  color: compact ? '#3d3d3d' : '#858585',
+                }"
+              >
+                {{ courseObj.code }}
+              </div>
+              <course-caution
+                v-if="!isReqCourse && compact"
+                :course="courseObj"
+                :isCompactView="true"
+              />
             </div>
+            <button
+              v-if="!isReqCourse && isSemesterCourseCard"
+              class="course-dotRow"
+              @click="openMenu"
+            >
+              <img src="@/assets/images/dots/threeDots.svg" alt="open menu for course card" />
+            </button>
+            <button
+              v-else-if="!isReqCourse && !isSemesterCourseCard"
+              class="course-trash"
+              @click.stop="deleteCourseFromCollection"
+              @mouseover="hoverTrashIcon"
+              @mouseleave="unhoverTrashIcon"
+            >
+              <img :src="trashIcon" alt="delete course from collection" />
+            </button>
+          </div>
+          <div v-if="!compact" class="course-name">{{ courseObj.name }}</div>
+          <div v-if="!compact" class="course-info">
+            <span class="course-credits">{{ creditString }}</span>
+            <span v-if="semesterString" class="course-semesters">{{ semesterString }}</span>
             <course-caution
-              v-if="!isReqCourse && compact"
+              v-if="!isReqCourse && !isSchedGenCourse"
               :course="courseObj"
-              :isCompactView="true"
+              :isCompactView="false"
             />
           </div>
-          <button
-            v-if="!isReqCourse && isSemesterCourseCard"
-            class="course-dotRow"
-            @click="openMenu"
-          >
-            <img src="@/assets/images/dots/threeDots.svg" alt="open menu for course card" />
-          </button>
-          <button
-            v-else-if="!isReqCourse && !isSemesterCourseCard"
-            class="course-trash"
-            @click.stop="deleteCourseFromCollection"
-            @mouseover="hoverTrashIcon"
-            @mouseleave="unhoverTrashIcon"
-          >
-            <img :src="trashIcon" alt="delete course from collection" />
-          </button>
-        </div>
-        <div v-if="!compact" class="course-name">{{ courseObj.name }}</div>
-        <div v-if="!compact" class="course-info">
-          <span class="course-credits">{{ creditString }}</span>
-          <span v-if="semesterString" class="course-semesters">{{ semesterString }}</span>
-          <course-caution
-            v-if="!isReqCourse && !isSchedGenCourse"
-            :course="courseObj"
-            :isCompactView="false"
-          />
         </div>
       </div>
     </div>
@@ -85,6 +88,7 @@
       :isCompact="compact"
       :courseColor="courseObj.color"
       :courseCode="courseObj.code"
+      @open-note-modal="openNoteModal"
       @open-edit-color-modal="openEditColorModal"
       @delete-course="deleteCourse"
       @edit-course-credit="editCourseCredit"
@@ -92,11 +96,27 @@
       :getCreditRange="getCreditRange || []"
       v-click-outside="closeMenuIfOpen"
     />
+    <Note
+      v-if="isNoteVisible"
+      class="note"
+      :width="'calc(102.8% - 10px)'"
+      :color="cssVars['--bg-color']"
+      :initialNote="courseObj.note || ''"
+      :lastUpdated="courseObj.lastUpdated"
+      @save-note="saveNote"
+      @open-delete-note-modal="openDeleteNoteModal"
+      @note-state-change="handleNoteStateChange"
+      @height-change="handleNoteHeightChange"
+      ref="note"
+      v-click-outside="handleClickOutsideNote"
+      :noteId="`course-${courseObj.uniqueID}`"
+      :isSemesterCourseNote="isSemesterCourseCard"
+    />
   </div>
 </template>
 
 <script lang="ts">
-import { CSSProperties, PropType, defineComponent } from 'vue';
+import { PropType, defineComponent } from 'vue';
 import CourseMenu from '@/components/Modals/CourseMenu.vue';
 import CourseCaution from '@/components/Course/CourseCaution.vue';
 import SaveCourseModal from '@/components/Modals/SaveCourseModal.vue';
@@ -105,14 +125,26 @@ import {
   reportCourseColorChange,
   reportSubjectColorChange,
 } from '@/components/BottomBar/BottomBarState';
-import { isCourseConflict } from '@/store';
+import { isCourseConflict, updateFA25GiveawayField } from '@/store';
 import { clickOutside } from '@/utilities';
 import EditColor from '../Modals/EditColor.vue';
 import trashGrayIcon from '@/assets/images/trash-gray.svg';
 import trashRedIcon from '@/assets/images/trash.svg';
+import Note from '../Notes/Note.vue';
+
+// MinimalNoteComponent is a representation of everything required for a functional,
+// but minimal Note component to work statefully.
+interface MinimalNoteComponent {
+  note: string;
+  isDirty: boolean;
+  isExpanded: boolean;
+  collapseNote: () => void;
+  expandNote: () => void;
+}
 
 export default defineComponent({
-  components: { CourseCaution, CourseMenu, EditColor, SaveCourseModal },
+  name: 'Course',
+  components: { CourseCaution, CourseMenu, EditColor, SaveCourseModal, Note },
   props: {
     courseObj: { type: Object as PropType<FirestoreSemesterCourse>, required: true },
     compact: { type: Boolean, required: true },
@@ -123,6 +155,13 @@ export default defineComponent({
     year: { type: Number, required: false, default: 0 },
     isSemesterCourseCard: { type: Boolean, required: true },
     isSchedGenCourse: { type: Boolean, required: false, default: false },
+  },
+  mounted() {
+    if (this.isNoteVisible) {
+      this.$nextTick(() => {
+        this.reportNoteHeight();
+      });
+    }
   },
   emits: {
     'delete-course': (code: string, uniqueID: number) =>
@@ -144,6 +183,15 @@ export default defineComponent({
       typeof deletedFromCollection === 'object',
     'add-collection': (name: string) => typeof name === 'string',
     'delete-course-from-collection': (courseCode: string) => typeof courseCode === 'string',
+    'save-note': (uniqueID: number, note: string) =>
+      typeof uniqueID === 'number' && typeof note === 'string',
+    'open-delete-note-modal': (uniqueID: number) => typeof uniqueID === 'number',
+    'note-state-change': (uniqueID: number, isExpanded: boolean) =>
+      typeof uniqueID === 'number' && typeof isExpanded === 'boolean',
+    'new-note-created': (uniqueID: number, isNewNote: boolean) =>
+      typeof uniqueID === 'number' && typeof isNewNote === 'boolean',
+    'note-height-change': (uniqueID: number, heightRem: number) =>
+      typeof uniqueID === 'number' && typeof heightRem === 'number',
   },
   data() {
     return {
@@ -156,6 +204,12 @@ export default defineComponent({
       deletingCourse: false,
       trashIcon: trashGrayIcon, // Default icon
       courseCode: '',
+      isExpanded: false,
+      // isNotVisible represents a small open 'portrusion' indicating that there is a note
+      // for the course in question. The note itself will not be visible without `isExpanded`
+      // being true as well.
+      isNoteVisible: Boolean(this.courseObj.note),
+      isShaking: false,
     };
   },
   computed: {
@@ -178,10 +232,10 @@ export default defineComponent({
       return `${this.courseObj.credits} credits`;
     },
 
-    cssVars(): CSSProperties {
+    cssVars(): Record<string, string> {
       return {
         '--bg-color': `#${this.courseObj.color}`,
-      } as CSSProperties;
+      };
     },
   },
   methods: {
@@ -252,9 +306,143 @@ export default defineComponent({
     unhoverTrashIcon() {
       this.trashIcon = trashGrayIcon;
     },
+    openNoteModal() {
+      const now = new Date();
+      const deadline = new Date('2025-04-20T23:59:00');
+
+      if (now < deadline) {
+        updateFA25GiveawayField({ step2: true });
+      }
+      if (!this.isNoteVisible) {
+        this.isNoteVisible = true;
+        this.menuOpen = false;
+        // NOTE: should use $nextTick, as the browser engine could optimize away the
+        // UI update by applying changes in the same render pass. Also important for allowing
+        // for time for the note component to be rendered before attempting to access it.
+        this.$nextTick(() => {
+          const noteComponent = this.$refs.note as MinimalNoteComponent | undefined;
+          if (noteComponent) {
+            this.$emit('new-note-created', this.courseObj.uniqueID, true); // toggles new note to true
+            noteComponent.expandNote();
+            setTimeout(() => {
+              this.reportNoteHeight();
+            }, 320);
+          }
+        });
+      } else {
+        const noteComponent = this.$refs.note as MinimalNoteComponent | undefined;
+        if (!noteComponent) {
+          return;
+        }
+        // Note already open — trigger a shake to indicate this to the user.
+        if (noteComponent.isExpanded) {
+          this.triggerCourseCardShake();
+        } else {
+          noteComponent.expandNote();
+        }
+      }
+      this.menuOpen = false;
+    },
+    closeNote() {
+      // NOTE: this function hides the note entirely!
+      // Grant time for the slide-back-in animation to play out.
+      this.isNoteVisible = false;
+      this.$nextTick(() => {
+        // Note closed; height goes to 0
+        this.$emit('note-height-change', this.courseObj.uniqueID, 0);
+      });
+    },
+    triggerCourseCardShake() {
+      this.isShaking = true;
+      setTimeout(() => {
+        this.isShaking = false;
+      }, 900); // 3 shakes * 0.3s = 0.9s
+    },
+    saveNote(note: string) {
+      if (!note || note === this.courseObj.note) {
+        return;
+      }
+      this.$emit('save-note', this.courseObj.uniqueID, note);
+      this.$emit('new-note-created', this.courseObj.uniqueID, false); // toggles new note back to undefined
+    },
+    handleClickOutsideNote(event: MouseEvent) {
+      // Don't count a click on the open note (.courseMenu) or three dots (.course-dotRow)
+      // as a click outside.
+      const target = event.target as HTMLElement;
+      if (target.closest('.courseMenu') || target.closest('.course-dotRow')) {
+        return;
+      }
+
+      const noteComponent = this.$refs.note as MinimalNoteComponent | undefined;
+
+      if (!noteComponent || !this.isNoteVisible) {
+        return;
+      }
+
+      if (noteComponent.isDirty) {
+        // Warn if the user is trying to leave a note with unsaved changes.
+        this.triggerCourseCardShake();
+      } else if (noteComponent.note && this.isNoteVisible) {
+        noteComponent.collapseNote();
+      } else {
+        // this is a new note that hasn't been saved yet, and it gets cancelled
+        this.$emit('new-note-created', this.courseObj.uniqueID, false); // toggles new note back to undefined
+        this.closeNote();
+      }
+    },
+    openDeleteNoteModal() {
+      this.$emit('open-delete-note-modal', this.courseObj.uniqueID);
+    },
+    handleNoteStateChange(isExpanded: boolean) {
+      this.$emit('note-state-change', this.courseObj.uniqueID, isExpanded);
+    },
+    handleNewNote(isNewNote: boolean) {
+      this.$emit('new-note-created', this.courseObj.uniqueID, isNewNote);
+    },
+    handleNoteHeightChange() {
+      this.$nextTick(() => {
+        this.reportNoteHeight();
+      });
+    },
+    reportNoteHeight() {
+      const comp = (this.$refs.note as unknown) as { $el?: HTMLElement } | undefined;
+      const el = comp && comp.$el ? comp.$el : undefined;
+      if (!el) return;
+      const rectH = el.getBoundingClientRect().height;
+      const { transform } = getComputedStyle(el);
+      let translateYPx = 0;
+      if (transform && transform !== 'none') {
+        const match = transform.match(/matrix\(([^)]+)\)/);
+        if (match) {
+          const parts = match[1].split(',').map(s => s.trim());
+          const ty = parts[5];
+          if (ty) translateYPx = parseFloat(ty);
+        }
+      }
+      const rootFontSizePx = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+      const marginBottomRem = 0.7;
+      // Effective extra height added below the card is the element height plus its translateY offset
+      // (which is usually negative), converted to rem, minus the note's negative bottom margin.
+      const effectiveRem = Math.max(0, rectH + translateYPx) / rootFontSizePx - marginBottomRem;
+      this.$emit('note-height-change', this.courseObj.uniqueID, Math.max(0, effectiveRem));
+    },
   },
   directives: {
     'click-outside': clickOutside,
+  },
+  watch: {
+    // NOTE: this is required for reactive deletion of notes client-side after the deletion
+    // modal is confirmed, as isNoteVisible is not reactive.
+    'courseObj.note': {
+      handler(newNote) {
+        if (!newNote) {
+          this.isNoteVisible = false;
+          // Note removed; inform parent
+          this.$emit('note-height-change', this.courseObj.uniqueID, 0);
+        }
+      },
+      immediate: true,
+    },
   },
 });
 </script>
@@ -262,27 +450,55 @@ export default defineComponent({
 <style scoped lang="scss">
 @import '@/assets/scss/_variables.scss';
 
+.course-container {
+  position: relative;
+}
+
+// Emulates a slight side-to-side sway à la Figma micro-interaction.
+.figma-shake {
+  animation: tilt-shaking 0.3s cubic-bezier(0.36, 0.07, 0.19, 0.97) 3;
+  transform-origin: center center;
+}
+
+@keyframes tilt-shaking {
+  0% {
+    transform: rotate(0deg) translateX(0);
+  }
+  25% {
+    transform: rotate(4deg) translateX(6px);
+  }
+  50% {
+    transform: rotate(0deg) translateX(0);
+  }
+  75% {
+    transform: rotate(-4deg) translateX(-6px);
+  }
+  100% {
+    transform: rotate(0deg) translateX(0);
+  }
+}
+
 .course {
+  box-shadow: 0px 0px 10px 4px rgba(0, 0, 0, 0.055);
+  position: relative;
   box-sizing: border-box;
   border-radius: 0.5rem;
   display: flex;
   flex-direction: row;
   background-color: $white;
-  box-shadow: 0px 0px 10px 4px $boxShadowGray;
-  position: relative;
+  // If modifying this, then adjust the note height calculations in `../Semester/Semester.vue`
   height: 5.625rem;
-  touch-action: none;
   cursor: grab;
+  z-index: 1;
 
   &:hover {
-    background: rgba(255, 255, 255, 0.15);
+    background: $white;
   }
 
   &:active:hover {
     touch-action: none;
     cursor: grabbing;
   }
-
   &--min {
     height: 2.125rem;
 
@@ -406,5 +622,22 @@ export default defineComponent({
 
 .active {
   border: 1px solid $yuxuanBlue;
+}
+
+.rectangle {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%) translateY(-65px);
+  width: calc(106% - #{$colored-grabber-width});
+  height: 80px;
+  background-color: #a8e6cf;
+  border-radius: 12.49px;
+  cursor: pointer;
+  z-index: 0;
+  transition: transform 0.3s ease;
+}
+
+.rectangle.expanded {
+  transform: translateX(-50%) translateY(0px);
 }
 </style>

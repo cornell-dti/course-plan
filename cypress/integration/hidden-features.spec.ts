@@ -29,6 +29,7 @@
 // it('Onboard a new user with all required fields', () => {
 //   // confirm the next button is disabled and the error text is visible until all required fields filled out
 //   cy.get('[data-cyId=onboarding-nextButton]').should('be.disabled');
+//   cy.wait(5000); // ensure the page has time to load
 //   cy.get('[data-cyId=onboarding-error]').scrollIntoView().should('be.visible');
 
 //   // confirm that onboarding cannot be clicked outsideto close when creating a new user
@@ -46,9 +47,10 @@
 //         }
 //       });
 //   });
+//   cy.wait(5000); // ensure the page has time to load
 //   cy.get('[data-cyId=onboarding-nextButton]').should('be.disabled');
 //   cy.get('[data-cyId=onboarding-error]').scrollIntoView().should('be.visible');
-
+//   cy.wait(5000); // ensure the page has time to load
 //   // set Graduation semester to Summer 2022
 //   cy.get('[data-cyId=onboarding-dropdown]').eq(2).click();
 //   cy.get('[data-cyId=onboarding-dropdownItem]').each($el => {
@@ -60,9 +62,10 @@
 //         }
 //       });
 //   });
+//   cy.wait(5000); // ensure the page has time to load
 //   cy.get('[data-cyId=onboarding-nextButton]').should('be.disabled');
 //   cy.get('[data-cyId=onboarding-error]').scrollIntoView().should('be.visible');
-
+//   cy.wait(5000); // ensure the page has time to load
 //   cy.get('[data-cyId=onboarding-dropdown]').eq(3).click();
 //   cy.get('[data-cyId=onboarding-dropdownItem]').each($el => {
 //     cy.wrap($el)
@@ -73,9 +76,11 @@
 //         }
 //       });
 //   });
+//   cy.wait(5000); // ensure the page has time to load
 //   cy.get('[data-cyId=onboarding-nextButton]').should('be.disabled');
+//   cy.wait(5000); // ensure the page has time to load
 //   cy.get('[data-cyId=onboarding-error]').scrollIntoView().should('be.visible');
-
+//   cy.wait(5000); // ensure the page has time to load
 //   // set to Engineering college
 //   cy.get('[data-cyId=onboarding-dropdown]').eq(4).click();
 //   cy.get('[data-cyId=onboarding-dropdownItem]').each($el => {
@@ -87,8 +92,9 @@
 //         }
 //       });
 //   });
-
+//   cy.wait(5000); // ensure the page has time to load
 //   // next button can be clicked and error not visible now that every field has been selected
+//   cy.get('[data-cyId=onboarding-nextButton]').scrollIntoView().should('be.visible');
 //   cy.get('[data-cyId=onboarding-nextButton]').click();
 //   cy.get('[data-cyId=onboarding-error]').should('not.exist');
 //   cy.get('[data-cyId=onboarding-nextButton]').click();

@@ -327,6 +327,7 @@ const generateDecoratedRequirementsJson = (): DecoratedRequirementsJson => {
       [key: string]: {
         readonly name: string;
         readonly requirements: readonly DecoratedCollegeOrMajorRequirement[];
+        readonly migrations?: RequirementMigration[];
       };
     };
     major: MutableMajorRequirements<DecoratedCollegeOrMajorRequirement>;
@@ -368,10 +369,13 @@ const generateDecoratedRequirementsJson = (): DecoratedRequirementsJson => {
     };
   });
   Object.entries(college).forEach(([collegeName, collegeRequirement]) => {
-    const { requirements, advisors, abbrev: abbr, ...rest } = collegeRequirement;
+    const { requirements, migrations, advisors, abbrev: abbr, ...rest } = collegeRequirement;
     decoratedJson.college[collegeName] = {
       ...rest,
       requirements: decorateRequirements(requirements),
+      migrations: migrations
+        ? (decorateMigrations(migrations) as RequirementMigration[])
+        : undefined,
     };
   });
   Object.entries(major).forEach(([majorName, majorRequirement]) => {
