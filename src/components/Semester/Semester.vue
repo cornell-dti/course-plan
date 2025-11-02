@@ -124,6 +124,7 @@
                 @open-delete-note-modal="openDeleteNoteModal"
                 @note-state-change="handleNoteStateChange"
                 @new-note-created="handleNewNoteCreated"
+                @note-height-change="handleNoteHeightChange"
               />
               <placeholder
                 v-else
@@ -247,6 +248,7 @@ export default defineComponent({
       expandedNotes: new Map<number, boolean>(), // Track expanded state of notes by course uniqueID
       isNoteTransitioning: false,
       newNoteUniqueID: undefined as number | undefined,
+      noteHeights: new Map<number, number>(),
     };
   },
   props: {
@@ -371,10 +373,29 @@ export default defineComponent({
       const noteCollapsedHeightRem = 1.875; // ~1.875rem for a collapsed note
       const firstExpandedNoteRem = 3.75; // ~3.75rem for an expanded note in editing mode
       const noteExpandedNotEditingHeightRem = 4.375; // ~4.785rem for an expanded note in non-editing mode
+      const nonLegacyExpansionRemDiscount = 2.55; // ~2.55rem adjustment if using the new mode
+      const nonLegacyFirstExpandedNoteRemDiscount = 1.8; // ~1.8rem adjustment if using the new mode
 
-      // Sum the extra note height for each course that has a note
+      // Sum the extra note height for each course, using measured heights when available
       const extraNoteHeightRem = this.courses.reduce((acc, course) => {
-        if (!isPlaceholderCourse(course) && course.note) {
+        if (isPlaceholderCourse(course)) return acc;
+        const measuredEffective = this.noteHeights.get(course.uniqueID);
+        if (measuredEffective != null && measuredEffective > 0) {
+          // there is a note for this!
+          return (
+            acc +
+            Math.max(measuredEffective, noteCollapsedHeightRem) -
+            noteMarginBottom +
+            // eslint-disable-next-line no-nested-ternary
+            (course.note && this.expandedNotes.get(course.uniqueID) === true
+              ? noteExpandedNotEditingHeightRem - nonLegacyExpansionRemDiscount
+              : this.newNoteUniqueID === course.uniqueID
+              ? nonLegacyFirstExpandedNoteRemDiscount
+              : 0)
+          );
+        }
+        // Legacy calculations...
+        if (course.note) {
           if (this.expandedNotes.get(course.uniqueID) === true) {
             return acc + noteExpandedNotEditingHeightRem - noteMarginBottom;
           }
@@ -782,6 +803,9 @@ export default defineComponent({
       setTimeout(() => {
         this.isNoteTransitioning = false;
       }, 300);
+    },
+    handleNoteHeightChange(courseUniqueID: number, heightRem: number) {
+      this.noteHeights.set(courseUniqueID, heightRem);
     },
   },
   directives: {
