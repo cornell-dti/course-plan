@@ -50,6 +50,7 @@
               :compact="false"
               :isSchedGenCourse="true"
               @delete-course="deleteCourse"
+              @delete-course-from-schedule="deleteCourse"
               :isSemesterCourseCard="false"
             />
           </div>
