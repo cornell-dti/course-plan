@@ -45,6 +45,9 @@ const router: Router = createRouter({
   ],
 });
 
+const { posthog } = usePostHog();
+posthog?.capture('$pageview');
+
 router.beforeEach((to, from, next) => {
   const { matched } = to;
 
@@ -59,7 +62,5 @@ router.beforeEach((to, from, next) => {
     next();
   }
 });
-
-const { posthog } = usePostHog();
 
 export default router;
