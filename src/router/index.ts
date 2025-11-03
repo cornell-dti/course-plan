@@ -6,6 +6,7 @@ import Page404 from '@/containers/404.vue';
 import Policy from '@/containers/Policy.vue';
 import Analytics from '@/containers/Analytics.vue';
 import store from '../store';
+import { usePostHog } from '@/composables/usePostHog';
 
 const router: Router = createRouter({
   history: createWebHistory(),
@@ -43,6 +44,9 @@ const router: Router = createRouter({
     },
   ],
 });
+
+const { posthog } = usePostHog();
+posthog?.capture('$pageview');
 
 router.beforeEach((to, from, next) => {
   const { matched } = to;
