@@ -15,6 +15,7 @@
       @select-course="selectCourse"
       v-if="isCourseModalOpen"
       @add-course="addCourse"
+      @add-blank-course-card="openBlankCourseModal"
     />
     <course-conflict-modal
       @close-course-modal="closeConflictModal"
@@ -50,6 +51,36 @@
       @close-delete-note="closeDeleteNoteModal"
       v-if="isDeleteNoteOpen && noteCourseUniqueID !== undefined"
       :noteCourseUniqueID="noteCourseUniqueID"
+    />
+    <blank-course-modal
+      v-if="isBlankCourseModalOpen"
+      :year="year"
+      :season="season"
+      @close-modal="closeBlankCourseModal"
+      @open-distribution-modal="openDistributionModal"
+    />
+    <distribution-requirements-modal
+      v-if="isDistributionModalOpen"
+      :course="currentBlankCourse"
+      @close-modal="closeDistributionModal"
+      @back-to-course-modal="backToBlankCourseModal"
+      @add-manual-requirements="handleManualRequirements"
+      @proceed-to-confirmation="proceedToConfirmation"
+    />
+    <course-confirmation-modal
+      v-if="isConfirmationModalOpen"
+      :course="currentBlankCourse"
+      :choice="currentBlankCourseChoice"
+      @close-modal="closeBlankCourseConfirmationModal"
+      @back-to-distribution-modal="backToDistributionModal"
+      @confirm-course="confirmAndAddBlankCourse"
+    />
+    <manual-requirements-modal
+      v-if="isManualRequirementsModalOpen"
+      :course="currentBlankCourse"
+      @close-modal="closeManualRequirementsModal"
+      @back-to-distribution-modal="backToDistributionModal"
+      @save-requirements="proceedToConfirmationWithManualRequirements"
     />
     <button
       v-if="isFirstSem"
@@ -107,7 +138,7 @@
                 :season="season"
                 :isReqCourse="false"
                 :compact="compact"
-                :active="activatedCourse.uniqueID === element.uniqueID"
+                :active="typedActivatedCourse.uniqueID === element.uniqueID"
                 :isSemesterCourseCard="true"
                 class="semester-course"
                 data-cyId="semester-course"
@@ -158,6 +189,7 @@
 import { PropType, defineComponent } from 'vue';
 import draggable from 'vuedraggable';
 import { Timestamp } from 'firebase/firestore';
+import posthog from 'posthog-js';
 import Course from '@/components/Course/Course.vue';
 import Placeholder from '@/components/Course/Placeholder.vue';
 import NewCourseModal from '@/components/Modals/NewCourse/NewCourseModal.vue';
@@ -169,6 +201,10 @@ import DeleteSemester from '@/components/Modals/DeleteSemester.vue';
 import EditSemester from '@/components/Modals/EditSemester.vue';
 import ClearSemester from '@/components/Modals/ClearSemester.vue';
 import AddCourseButton from '@/components/AddCourseButton.vue';
+import BlankCourseModal from '@/components/Modals/NewCourse/BlankCourseModal.vue';
+import DistributionRequirementsModal from '@/components/Modals/NewCourse/DistributionRequirementsModal.vue';
+import CourseConfirmationModal from '@/components/Modals/NewCourse/CourseConfirmationModal.vue';
+import ManualRequirementsModal from '@/components/Modals/NewCourse/ManualRequirementsModal.vue';
 
 import { clickOutside, isPlaceholderCourse } from '@/utilities';
 
@@ -214,6 +250,10 @@ export default defineComponent({
     DeleteNoteModal,
     SemesterMenu,
     Placeholder,
+    BlankCourseModal,
+    DistributionRequirementsModal,
+    CourseConfirmationModal,
+    ManualRequirementsModal,
   },
   data() {
     return {
@@ -248,7 +288,14 @@ export default defineComponent({
       expandedNotes: new Map<number, boolean>(), // Track expanded state of notes by course uniqueID
       isNoteTransitioning: false,
       newNoteUniqueID: undefined as number | undefined,
+      isBlankCourseModalOpen: false,
+      isDistributionModalOpen: false,
+      currentBlankCourse: {} as FirestoreSemesterCourse,
+      isConfirmationModalOpen: false,
+      isManualRequirementsModalOpen: false,
+      courseRequirements: [] as string[],
       noteHeights: new Map<number, number>(),
+      currentBlankCourseChoice: {} as FirestoreCourseOptInOptOutChoices,
     };
   },
   props: {
@@ -300,6 +347,9 @@ export default defineComponent({
   },
 
   computed: {
+    typedActivatedCourse(): FirestoreSemesterCourse {
+      return this.activatedCourse as FirestoreSemesterCourse;
+    },
     coursesForDraggable: {
       get(): readonly (FirestoreSemesterCourse | FirestoreSemesterPlaceholder)[] {
         return this.courses;
@@ -402,6 +452,7 @@ export default defineComponent({
           return acc + noteCollapsedHeightRem - noteMarginBottom;
         }
         if (this.newNoteUniqueID === course.uniqueID) {
+          // for new notes that aren't saved
           return acc + firstExpandedNoteRem - noteMarginBottom;
         }
         return acc;
@@ -427,6 +478,30 @@ export default defineComponent({
   },
   methods: {
     isPlaceholderCourse,
+    // Track semester updates for PostHog analytics
+    trackSemesterUpdate() {
+      // Calculate total credits
+      let totalCredits = 0;
+      let numCourses = 0;
+
+      this.courses.forEach(course => {
+        if (!isPlaceholderCourse(course)) {
+          totalCredits += course.credits;
+          numCourses += 1;
+        }
+      });
+
+      // Track semester plan creation/update
+      posthog.capture('semester_updated', {
+        semester: `${this.season} ${this.year}`,
+        season: this.season,
+        year: this.year,
+        num_courses: numCourses,
+        total_credits: totalCredits,
+        is_valid_plan: totalCredits >= 12, // Valid semester plan = ≥ 12 credits
+        timestamp: new Date().toISOString(),
+      });
+    },
     onDragStart() {
       this.isDraggedFrom = true;
       this.scrollable = true;
@@ -470,7 +545,6 @@ export default defineComponent({
     openSemesterModal() {
       // Delete confirmation for the use case of adding multiple semesters consecutively
       this.closeConfirmationModal();
-
       this.$emit('new-semester');
     },
     openConfirmationModal(msg: string) {
@@ -485,7 +559,6 @@ export default defineComponent({
     closeConfirmationModal() {
       this.isConfirmationOpen = false;
     },
-
     saveCourse(
       course: FirestoreSemesterCourse,
       addedToCollections: string[],
@@ -526,6 +599,7 @@ export default defineComponent({
         return;
       }
       if (this.newNoteUniqueID === uniqueID) {
+        // this note is now saved
         this.newNoteUniqueID = undefined;
       } // the note is saved, so we can remove the new note flag
       editSemester(
@@ -611,6 +685,11 @@ export default defineComponent({
 
       const courseCode = `${data.subject} ${data.catalogNbr}`;
       this.openConfirmationModal(`Added ${courseCode} to ${this.season} ${this.year}`);
+
+      // Track semester update after adding course
+      this.$nextTick(() => {
+        this.trackSemesterUpdate();
+      });
     },
     selectCourse(data: CornellCourseRosterCourse) {
       // only perform operations if the gatekeep is true
@@ -676,6 +755,11 @@ export default defineComponent({
       );
       // Update requirements menu
       this.openConfirmationModal(`Removed ${courseCode} from ${this.season} ${this.year}`);
+
+      // Track semester update after deleting course
+      this.$nextTick(() => {
+        this.trackSemesterUpdate();
+      });
     },
     colorCourse(color: string, uniqueID: number, courseCode: string) {
       editSemester(
@@ -720,6 +804,11 @@ export default defineComponent({
           ),
         })
       );
+
+      // Track semester update after editing course credit
+      this.$nextTick(() => {
+        this.trackSemesterUpdate();
+      });
     },
     dragListener(event: Event) {
       if (!this.$data.scrollable) event.preventDefault();
@@ -803,6 +892,101 @@ export default defineComponent({
       setTimeout(() => {
         this.isNoteTransitioning = false;
       }, 300);
+    },
+    openBlankCourseModal() {
+      this.isBlankCourseModalOpen = true;
+      posthog.capture('enter_bcc');
+    },
+    closeBlankCourseModal() {
+      this.isBlankCourseModalOpen = false;
+    },
+    addBlankCourse(
+      course: FirestoreSemesterBlankCourse,
+      choice: FirestoreCourseOptInOptOutChoices
+    ) {
+      addCourseToSemester(
+        store.state.currentPlan,
+        this.year,
+        this.season,
+        course,
+        () => choice,
+        this.$gtag
+      );
+
+      // Close all related modals
+      this.closeBlankCourseModal();
+      this.closeDistributionModal();
+
+      // Show confirmation
+      this.openConfirmationModal(`Added course ${course.code} to ${this.season} ${this.year}`);
+      posthog.capture('added_bcc', { course_code: course.code });
+    },
+    openDistributionModal(course: FirestoreSemesterBlankCourse) {
+      this.currentBlankCourse = course;
+      this.isBlankCourseModalOpen = false;
+      this.isDistributionModalOpen = true;
+    },
+    closeDistributionModal() {
+      this.isDistributionModalOpen = false;
+      this.currentBlankCourse = {} as FirestoreSemesterBlankCourse;
+    },
+    backToBlankCourseModal() {
+      this.isDistributionModalOpen = false;
+      this.isBlankCourseModalOpen = true;
+    },
+    handleManualRequirements() {
+      // Close the distribution modal and open the manual requirements modal
+      this.isDistributionModalOpen = false;
+      this.isManualRequirementsModalOpen = true;
+    },
+    closeManualRequirementsModal() {
+      this.isManualRequirementsModalOpen = false;
+      this.currentBlankCourse = {} as FirestoreSemesterBlankCourse;
+    },
+    proceedToConfirmationWithManualRequirements(
+      course: FirestoreSemesterCourse,
+      requirements: string[],
+      choice: FirestoreCourseOptInOptOutChoices
+    ) {
+      this.currentBlankCourse = course;
+      this.courseRequirements = requirements;
+      this.currentBlankCourseChoice = choice; // Set the choice to bypass checker validation
+      this.isManualRequirementsModalOpen = false;
+      this.isConfirmationModalOpen = true;
+    },
+    proceedToConfirmation(
+      course: FirestoreSemesterCourse,
+      choice: FirestoreCourseOptInOptOutChoices
+    ) {
+      this.currentBlankCourse = course;
+      this.courseRequirements = course.requirements;
+      this.currentBlankCourseChoice = choice;
+      this.isDistributionModalOpen = false;
+      this.isConfirmationModalOpen = true;
+    },
+    closeBlankCourseConfirmationModal() {
+      this.isConfirmationModalOpen = false;
+      this.currentBlankCourse = {} as FirestoreSemesterCourse;
+      this.courseRequirements = [];
+    },
+    backToDistributionModal() {
+      this.isConfirmationModalOpen = false;
+      this.isManualRequirementsModalOpen = false;
+      this.isDistributionModalOpen = true;
+    },
+    confirmAndAddBlankCourse(
+      course: FirestoreSemesterBlankCourse,
+      choice: FirestoreCourseOptInOptOutChoices
+    ) {
+      // The course already has color and proper semesters from the confirmation modal
+      // We don't need to modify it further
+      this.addBlankCourse(course, choice);
+      this.isConfirmationModalOpen = false;
+
+      // Track semester update after adding blank course
+      this.$nextTick(() => {
+        this.trackSemesterUpdate();
+      });
     },
     handleNoteHeightChange(courseUniqueID: number, heightRem: number) {
       this.noteHeights.set(courseUniqueID, heightRem);

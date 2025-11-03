@@ -34,6 +34,14 @@
         </span>
       </div>
     </div>
+    <!-- No results message with option to add blank course card -->
+    <div
+      v-else-if="searchText.length >= 2"
+      class="no-results-container"
+      @click="addBlankCourseCard"
+    >
+      <div class="no-results-message">Can't find your class? Add blank course card!</div>
+    </div>
   </div>
 </template>
 
@@ -95,6 +103,7 @@ export default defineComponent({
   emits: {
     'on-escape': () => true,
     'on-select': (result: CornellCourseRosterCourse) => typeof result === 'object',
+    'on-add-blank-course': () => true,
   },
   data() {
     return {
@@ -125,12 +134,15 @@ export default defineComponent({
     },
     selectCourse(result: CornellCourseRosterCourse) {
       this.$emit('on-select', result);
-      this.searchText = `${result.subject} ${result.catalogNbr}: ${result.titleLong}`;
+      this.searchText = '';
       this.currentFocus = -1;
     },
     onEnter() {
       const result = this.matches[this.currentFocus];
       if (result != null) this.selectCourse(result);
+    },
+    addBlankCourseCard() {
+      this.$emit('on-add-blank-course');
     },
     /**
      * Highlights the matching text in the search results
@@ -208,5 +220,27 @@ export default defineComponent({
   /*when navigating through the items using the arrow keys:*/
   background-color: DodgerBlue !important;
   color: $white;
+}
+
+.no-results-container {
+  margin-top: 8px;
+  padding: 10px;
+  background-color: #ffffff;
+  border-radius: 4px;
+  text-align: left;
+  color: $sangBlue;
+  cursor: pointer;
+  box-shadow: 0px 6px 16px rgba(0, 0, 0, 0.15);
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: #e9e9e9;
+  }
+}
+
+.no-results-message {
+  font-size: 14px;
+  line-height: 1.5;
+  font-weight: 400;
 }
 </style>

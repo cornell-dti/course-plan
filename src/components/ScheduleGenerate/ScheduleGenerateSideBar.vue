@@ -246,15 +246,15 @@ export default defineComponent({
       function getStartTime(course: FirestoreSemesterCourse): Promise<string> {
         return getCourseWithCrseIdAndRoster(course.lastRoster, course.crseId)
           .then(firestoreCourse => {
-            const { meetings } = firestoreCourse.enrollGroups[0].classSections[0];
-            if (meetings.length > 0 && meetings[0].timeStart) {
-              const timeUnformatted = meetings[0].timeStart as string;
+            if (firestoreCourse.enrollGroups?.[0]?.classSections?.[0]?.meetings?.[0]?.timeStart) {
+              const timeUnformatted = firestoreCourse.enrollGroups[0].classSections[0].meetings[0]
+                .timeStart as string;
               return formatTime(timeUnformatted);
             }
             return '12:00AM';
           })
           .catch(error => {
-            console.error(`Failed to fetch the course details. ${error}`);
+            console.error(`Failed to fetch the course start time for ${course.code}. ${error}`);
             return '12:00AM';
           });
       }
@@ -262,15 +262,15 @@ export default defineComponent({
       function getEndTime(course: FirestoreSemesterCourse): Promise<string> {
         return getCourseWithCrseIdAndRoster(course.lastRoster, course.crseId)
           .then(firestoreCourse => {
-            const { meetings } = firestoreCourse.enrollGroups[0].classSections[0];
-            if (meetings.length > 0 && meetings[0].timeEnd) {
-              const timeUnformatted = meetings[0].timeEnd as string;
+            if (firestoreCourse.enrollGroups?.[0]?.classSections?.[0]?.meetings?.[0]?.timeEnd) {
+              const timeUnformatted = firestoreCourse.enrollGroups[0].classSections[0].meetings[0]
+                .timeEnd as string;
               return formatTime(timeUnformatted);
             }
             return '1:00AM';
           })
           .catch(error => {
-            console.error(`Failed to fetch the course details. ${error}`);
+            console.error(`Failed to fetch the course end time for ${course.code}. ${error}`);
             return '1:00AM';
           });
       }
@@ -278,12 +278,16 @@ export default defineComponent({
       function getPattern(course: FirestoreSemesterCourse): Promise<string> {
         return getCourseWithCrseIdAndRoster(course.lastRoster, course.crseId)
           .then(firestoreCourse => {
-            const pattern = firestoreCourse.enrollGroups[0].classSections[0].meetings[0]
-              .pattern as string;
-            return pattern;
+            if (firestoreCourse.enrollGroups?.[0]?.classSections?.[0]?.meetings?.[0]?.pattern) {
+              const pattern = firestoreCourse.enrollGroups[0].classSections[0].meetings[0]
+                .pattern as string;
+              return pattern;
+            }
+            return ''; // Return empty string if pattern not found
           })
           .catch(error => {
-            throw new Error(`Failed to fetch the course pattern. ${error}`);
+            console.error(`Failed to fetch the course pattern for ${course.code}. ${error}`);
+            return ''; // Return empty string on error instead of throwing
           });
       }
 
