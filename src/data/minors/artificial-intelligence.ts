@@ -7,7 +7,7 @@ const aiMinorRequirements: readonly CollegeOrMajorRequirement[] = [
     name: 'Foundations of AI Core Courses',
     description:
       'Four required core courses covering computational AI methods, human-AI systems, and AI ethics',
-    source: 'https://www.cs.cornell.edu/undergrad/aiminor',
+    source: 'https://bowers.cornell.edu/programs/artificial-intelligence-minor',
     checker: includesWithSubRequirements(
       ['CS 4780', 'CS 4786', 'CS 4740'],
       ['CS 4700', 'CS 4701', 'CS 4720'],
