@@ -189,6 +189,7 @@
 import { PropType, defineComponent } from 'vue';
 import draggable from 'vuedraggable';
 import { Timestamp } from 'firebase/firestore';
+import posthog from 'posthog-js';
 import Course from '@/components/Course/Course.vue';
 import Placeholder from '@/components/Course/Placeholder.vue';
 import NewCourseModal from '@/components/Modals/NewCourse/NewCourseModal.vue';
@@ -477,6 +478,30 @@ export default defineComponent({
   },
   methods: {
     isPlaceholderCourse,
+    // Track semester updates for PostHog analytics
+    trackSemesterUpdate() {
+      // Calculate total credits
+      let totalCredits = 0;
+      let numCourses = 0;
+
+      this.courses.forEach(course => {
+        if (!isPlaceholderCourse(course)) {
+          totalCredits += course.credits;
+          numCourses += 1;
+        }
+      });
+
+      // Track semester plan creation/update
+      posthog.capture('semester_updated', {
+        semester: `${this.season} ${this.year}`,
+        season: this.season,
+        year: this.year,
+        num_courses: numCourses,
+        total_credits: totalCredits,
+        is_valid_plan: totalCredits >= 12, // Valid semester plan = ≥ 12 credits
+        timestamp: new Date().toISOString(),
+      });
+    },
     onDragStart() {
       this.isDraggedFrom = true;
       this.scrollable = true;
@@ -660,6 +685,11 @@ export default defineComponent({
 
       const courseCode = `${data.subject} ${data.catalogNbr}`;
       this.openConfirmationModal(`Added ${courseCode} to ${this.season} ${this.year}`);
+
+      // Track semester update after adding course
+      this.$nextTick(() => {
+        this.trackSemesterUpdate();
+      });
     },
     selectCourse(data: CornellCourseRosterCourse) {
       // only perform operations if the gatekeep is true
@@ -725,6 +755,11 @@ export default defineComponent({
       );
       // Update requirements menu
       this.openConfirmationModal(`Removed ${courseCode} from ${this.season} ${this.year}`);
+
+      // Track semester update after deleting course
+      this.$nextTick(() => {
+        this.trackSemesterUpdate();
+      });
     },
     colorCourse(color: string, uniqueID: number, courseCode: string) {
       editSemester(
@@ -769,6 +804,11 @@ export default defineComponent({
           ),
         })
       );
+
+      // Track semester update after editing course credit
+      this.$nextTick(() => {
+        this.trackSemesterUpdate();
+      });
     },
     dragListener(event: Event) {
       if (!this.$data.scrollable) event.preventDefault();
@@ -855,6 +895,7 @@ export default defineComponent({
     },
     openBlankCourseModal() {
       this.isBlankCourseModalOpen = true;
+      posthog.capture('enter_bcc');
     },
     closeBlankCourseModal() {
       this.isBlankCourseModalOpen = false;
@@ -878,6 +919,7 @@ export default defineComponent({
 
       // Show confirmation
       this.openConfirmationModal(`Added course ${course.code} to ${this.season} ${this.year}`);
+      posthog.capture('added_bcc', { course_code: course.code });
     },
     openDistributionModal(course: FirestoreSemesterBlankCourse) {
       this.currentBlankCourse = course;
@@ -940,6 +982,11 @@ export default defineComponent({
       // We don't need to modify it further
       this.addBlankCourse(course, choice);
       this.isConfirmationModalOpen = false;
+
+      // Track semester update after adding blank course
+      this.$nextTick(() => {
+        this.trackSemesterUpdate();
+      });
     },
     handleNoteHeightChange(courseUniqueID: number, heightRem: number) {
       this.noteHeights.set(courseUniqueID, heightRem);

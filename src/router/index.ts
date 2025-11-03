@@ -6,6 +6,7 @@ import Page404 from '@/containers/404.vue';
 import Policy from '@/containers/Policy.vue';
 import Analytics from '@/containers/Analytics.vue';
 import store from '../store';
+import { usePostHog } from '@/composables/usePostHog';
 
 const router: Router = createRouter({
   history: createWebHistory(),
@@ -58,5 +59,7 @@ router.beforeEach((to, from, next) => {
     next();
   }
 });
+
+const { posthog } = usePostHog();
 
 export default router;
