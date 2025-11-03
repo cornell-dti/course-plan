@@ -246,9 +246,7 @@ export default defineComponent({
       function getStartTime(course: FirestoreSemesterCourse): Promise<string> {
         return getCourseWithCrseIdAndRoster(course.lastRoster, course.crseId)
           .then(firestoreCourse => {
-            if (
-              firestoreCourse.enrollGroups?.[0]?.classSections?.[0]?.meetings?.[0]?.timeStart
-            ) {
+            if (firestoreCourse.enrollGroups?.[0]?.classSections?.[0]?.meetings?.[0]?.timeStart) {
               const timeUnformatted = firestoreCourse.enrollGroups[0].classSections[0].meetings[0]
                 .timeStart as string;
               return formatTime(timeUnformatted);
@@ -264,9 +262,7 @@ export default defineComponent({
       function getEndTime(course: FirestoreSemesterCourse): Promise<string> {
         return getCourseWithCrseIdAndRoster(course.lastRoster, course.crseId)
           .then(firestoreCourse => {
-            if (
-              firestoreCourse.enrollGroups?.[0]?.classSections?.[0]?.meetings?.[0]?.timeEnd
-            ) {
+            if (firestoreCourse.enrollGroups?.[0]?.classSections?.[0]?.meetings?.[0]?.timeEnd) {
               const timeUnformatted = firestoreCourse.enrollGroups[0].classSections[0].meetings[0]
                 .timeEnd as string;
               return formatTime(timeUnformatted);
@@ -282,9 +278,7 @@ export default defineComponent({
       function getPattern(course: FirestoreSemesterCourse): Promise<string> {
         return getCourseWithCrseIdAndRoster(course.lastRoster, course.crseId)
           .then(firestoreCourse => {
-            if (
-              firestoreCourse.enrollGroups?.[0]?.classSections?.[0]?.meetings?.[0]?.pattern
-            ) {
+            if (firestoreCourse.enrollGroups?.[0]?.classSections?.[0]?.meetings?.[0]?.pattern) {
               const pattern = firestoreCourse.enrollGroups[0].classSections[0].meetings[0]
                 .pattern as string;
               return pattern;
