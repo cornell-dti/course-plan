@@ -35,21 +35,6 @@
 //   cy.checkA11y('[data-cyId=navbar]', null, null, true); // only check accessibility within the navbar
 // });
 
-// // Check the accessibility of each page of Onboarding
-// // Note that the selector in checkA11y ensures violations behind the modal are not caught
-// it('Check accessibility of onboarding modal pages', () => {
-//   cy.get('[data-cyId=editProfile]').click();
-//   cy.checkA11y('[data-cyId=onboarding]', null, null, true); // only check accessibility within the onboarding modal
-//   cy.get('[data-cyId=onboarding-nextButton]').scrollIntoView().should('be.visible'); // scroll until the next button is visible
-//   cy.get('[data-cyId=onboarding-nextButton]').click();
-//   cy.checkA11y('[data-cyId=onboarding]', null, null, true);
-//   cy.get('[data-cyId=onboarding-nextButton]').scrollIntoView().should('be.visible'); // scroll until the next button is visible
-//   cy.get('[data-cyId=onboarding-nextButton]').click();
-//   cy.checkA11y('[data-cyId=onboarding]', null, null, true);
-//   cy.get('[data-cyId=onboarding-nextButton]').scrollIntoView().should('be.visible'); // scroll until the next button is visible
-//   cy.get('[data-cyId=onboarding-finishButton]').click();
-// });
-
 // // Test to confirm that the new user walkthrough works as expected
 // // Click through the initial explanation, then the 4 following steps, and finally the finishing page
 // it('Click through schedule generator tour', () => {
@@ -86,6 +71,21 @@
 //   // eslint-disable-next-line cypress/no-unnecessary-waiting
 //   cy.wait(5000);
 //   cy.checkA11y('[data-cyId=bottombar]', null, null, true); // only check accessibility within the bottom bar
+// });
+
+// // Check the accessibility of each page of Onboarding
+// // Note that the selector in checkA11y ensures violations behind the modal are not caught
+// it('Check accessibility of onboarding modal pages', () => {
+//   cy.get('[data-cyId=editProfile]').click();
+//   cy.checkA11y('[data-cyId=onboarding]', null, null, true); // only check accessibility within the onboarding modal
+//   cy.get('[data-cyId=onboarding-nextButton]').scrollIntoView().should('be.visible'); // scroll until the next button is visible
+//   cy.get('[data-cyId=onboarding-nextButton]').click();
+//   cy.checkA11y('[data-cyId=onboarding]', null, null, true);
+//   cy.get('[data-cyId=onboarding-nextButton]').scrollIntoView().should('be.visible'); // scroll until the next button is visible
+//   cy.get('[data-cyId=onboarding-nextButton]').click();
+//   cy.checkA11y('[data-cyId=onboarding]', null, null, true);
+//   cy.get('[data-cyId=onboarding-nextButton]').scrollIntoView().should('be.visible'); // scroll until the next button is visible
+//   cy.get('[data-cyId=onboarding-finishButton]').click();
 // });
 
 // it('Visit privacy policy and check accessibility', () => {
