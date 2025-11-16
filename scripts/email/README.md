@@ -23,7 +23,7 @@ Then in comparison to other email services like Sendgrid, Resend stood out for i
    ```
    RESEND_API_KEY=your_resend_api_key  # contact Simon or your TPM for access
    GLOBAL_FROM_NAME=CoursePlan  # what the name of the sender will be
-   GLOBAL_FROM_EMAIL=noreply@courseplan.io  # what the email of the sender will be (once DNS records for courseplan.io are configured)
+   GLOBAL_FROM_EMAIL=pren@preenroll.courseplan.io   # what the email of the sender will be (once DNS records for courseplan.io are configured)
    GLOBAL_TO_EMAIL=dummy@courseplan.io  # a dummy email address to ensure bcc works
    ```
    **Never commit this file!** (Should already be in `.gitignore`.)
