@@ -39,11 +39,18 @@ Then in comparison to other email services like Sendgrid, Resend stood out for i
 
 **Important**: Please revert your import change to `execute_template.py` before pushing any changes. By always sticking with `dryrun.py` as the base template, we can avoid accidentally sending emails to thousands of users (surefire way to worsen your chances at getting an A/A+ for the semester 😅).
 
+**Important**: Ensure you are collecting Users from the correct environment (Prod vs Dev). You may have to configure `firebase_users_loader.py` to collect data from the current place.
+```
+cred = credentials.Certificate("./serviceAccountProd.json")
+firebase_admin.initialize_app(cred)
+```
+
 ## How It Works
 
 1. The script loads environment variables and the specified email template.
 2. It chunks the BCC list into groups of 49 recipients to make best use of our 100-email-per-day free tier. (50 is the max number of recipients allowed in a single Resend API call, and this is shared across `to` and `bcc` recipients.)
-3. Emails are sent in batches, with progress updates printed to the console.
+3. Emails are sent in batches with a delay of 3 seconds with progress updates printed to the console.
+4. If some batches were unsuccesful, there is a function `retry_failed_batches` that will re-run the email only on `failed_batches`. Uncomment the lines of code in the `main()` function to use it, and comment the original email function.
 
 ## Creating Templates
 
@@ -62,7 +69,7 @@ A couple notes:
 
 We use Firebase to store user data and retrieve it for our email templates. The process is handled by the `firebase_users_loader.py` helper script under `scripts/email/helpers/`.
 
-1. The script connects to Firebase using a service account key, stored in the root directory of the project as `serviceAccountKey.json`.
+1. The script connects to Firebase using a service account key, stored in the root directory of the project as `serviceAccountKey.json`. NOTE: Rename this file if it is different for your directory. But when you push any changes, revert it back to `serviceAccountKey.json`.
 3. It retrieves user data from the `user-onboarding-data` collection.
 2. Then, it fetches all user names from the `user-name` collection.
 4. The data is processed and organized into a dictionary, with keys being tuples of (graduation_semester, graduation_year).
