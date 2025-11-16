@@ -3,6 +3,7 @@ from firebase_admin import credentials, firestore
 from collections import defaultdict
 from typing import Dict, List, Tuple
 
+# NOTE: May have to rename the service account file
 cred = credentials.Certificate("./serviceAccountKey.json")
 firebase_admin.initialize_app(cred)
 
