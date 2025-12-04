@@ -176,206 +176,124 @@ export default defineComponent({
       );
     },
     generateSchedules() {
-      const outputs: GeneratedScheduleOutput[] = [];
-
-      function getRandomDaySet(): DayOfTheWeek[] {
-        const daySets = [
-          ['Monday', 'Wednesday', 'Friday'],
-          ['Tuesday', 'Thursday'],
-          ['Saturday', 'Sunday'],
-        ] as DayOfTheWeek[][];
-        const randomIndex = Math.floor(Math.random() * daySets.length);
-        return daySets[randomIndex];
-      }
-
       function genRandomUUID() {
         return (
           Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
         );
       }
-      function deepEqual(a: GeneratedScheduleOutput, b: GeneratedScheduleOutput): boolean {
-        return JSON.stringify(a) === JSON.stringify(b);
-      }
 
-      /**
-       * Checks if two `GeneratedScheduleOutput` objects `first` and `second` are equal.
-       */
-      function isEqual(first: GeneratedScheduleOutput, second: GeneratedScheduleOutput) {
-        if (first.totalCredits !== second.totalCredits || first.semester !== second.semester) {
-          return false;
-        }
+      // Convert frontend courses to algorithm Course objects
+      // Now using allTimeslots if available (for courses with discussions/labs)
+      const courses = this.courses.map(
+        course =>
+          new Course(
+            course.code,
+            '#'.concat(course.color),
+            course.courseCredits,
+            // Use allTimeslots if available (includes discussion/lab times)
+            // Otherwise fall back to single timeslot for backwards compatibility
+            course.allTimeslots && course.allTimeslots.length > 0
+              ? course.allTimeslots
+              : [
+                  {
+                    start: course.timeStart,
+                    end: course.timeEnd,
+                    daysOfTheWeek: course.daysOfTheWeek as DayOfTheWeek[],
+                  },
+                ].filter(t => t.daysOfTheWeek && t.daysOfTheWeek.length > 0),
+            [`${this.year} ${this.season}`],
+            [course.fulfilledReq]
+          )
+      );
 
-        const firstCourses = Array.from(first.schedule.keys());
-        const secondCourses = Array.from(second.schedule.keys());
-
-        if (firstCourses.length !== secondCourses.length) {
-          return false;
-        }
-
-        const sortedFirstCourses = firstCourses.sort((a, b) => a.code.localeCompare(b.code));
-        const sortedSecondCourses = secondCourses.sort((a, b) => a.code.localeCompare(b.code));
-
-        for (let i = 0; i < sortedFirstCourses.length; i += 1) {
-          const firstCourse = sortedFirstCourses[i];
-          const secondCourse = sortedSecondCourses[i];
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          if (!deepEqual(firstCourse, secondCourse)) {
-            return false;
-          }
-
-          const firstTimeslots = first.schedule.get(firstCourse) || [];
-          const secondTimeslots = second.schedule.get(secondCourse) || [];
-
-          if (firstTimeslots.length !== secondTimeslots.length) {
-            return false;
-          }
-
-          const firstTimeslotKeys = firstTimeslots
-            .map(ts => `${ts.start}-${ts.end}-${ts.daysOfTheWeek.sort().join(',')}`)
-            .sort();
-
-          const secondTimeslotKeys = secondTimeslots
-            .map(ts => `${ts.start}-${ts.end}-${ts.daysOfTheWeek.sort().join(',')}`)
-            .sort();
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          if (!deepEqual(firstTimeslotKeys, secondTimeslotKeys)) {
-            return false;
-          }
-        }
-
-        return true;
-      }
-
-      const startTime = Date.now();
-      while (outputs.length < 5 && Date.now() - startTime < 1500) {
-        const courses = this.courses.map(
-          course =>
-            new Course(
-              course.code,
-              // course.credits,
-              '#'.concat(course.color),
-              course.courseCredits,
-              [
-                {
-                  start: course.timeStart,
-                  end: course.timeEnd,
-                  daysOfTheWeek: (course.daysOfTheWeek as DayOfTheWeek[]) || getRandomDaySet(),
-                },
-              ],
-              [`${this.year} ${this.season}`],
-              [course.fulfilledReq]
+      const generatorRequest = new GeneratorRequest(
+        courses,
+        this.reqs.map(
+          req =>
+            new Requirement(
+              req?.name ?? genRandomUUID(),
+              req?.for ?? 'College',
+              req?.typeValue ?? '?'
             )
-        );
+        ),
+        this.creditLimit,
+        `${this.year} ${this.season}`
+      );
 
-        const generatorRequest = new GeneratorRequest(
-          courses,
-          this.reqs.map(
-            req =>
-              new Requirement(
-                req?.name ?? genRandomUUID(),
-                req?.for ?? 'College',
-                req?.typeValue ?? '?'
-              )
-          ),
-          this.creditLimit,
-          `${this.year} ${this.season}`
-        );
+      // Use the new generateMultipleSchedules method which handles duplicates internally
+      const outputs = ScheduleGenerator.generateMultipleSchedules(generatorRequest, 5, 50);
 
-        // NOTE: ideally we want to move this to the algorithm itself.
-        // But also NOTE that this might not want to be hardcoded — consider e.g. liberal studies.
-
-        const momentary = ScheduleGenerator.generateSchedule(
-          generatorRequest
-        ) as GeneratedScheduleOutput;
-
-        // Basic algorithm: now we want to clean up output.
-        // Make it so that for every element of output, we keep track of
-        // a Collections.counter-style object of fulfilled requirements.
+      // Post-process: clean up requirement assignments to avoid duplicates
+      const processedOutputs = outputs.map(momentary => {
+        // Count how many courses fulfill each requirement
         const fulfilledRequirementsCount = new Map<string, number>();
-        for (const course of momentary.schedule.keys()) {
-          const req = course.requirements;
-          for (const requirement of req) {
-            if (fulfilledRequirementsCount.has(requirement.name)) {
-              fulfilledRequirementsCount.set(
-                requirement.name,
-                fulfilledRequirementsCount.get(requirement.name) !== undefined
-                  ? (fulfilledRequirementsCount.get(requirement.name) as number) + 1
-                  : 1
-              );
-            } else {
-              fulfilledRequirementsCount.set(requirement.name, 1);
-            }
-          }
-        }
-        // Now we can get rid of duplicates in course.requirements by using the counter object.
-        // We want to make it so that there is only one requirement count per requirement, globally.
-        // We can do this by iterate over schedule.schedule in order of smallest number of course.requirements,
-        // and when we encounter a duplicate, remove it.
+        Array.from(momentary.schedule.keys()).forEach(course => {
+          course.requirements.forEach(requirement => {
+            const count = fulfilledRequirementsCount.get(requirement.name) ?? 0;
+            fulfilledRequirementsCount.set(requirement.name, count + 1);
+          });
+        });
+
+        // Deduplicate requirements across courses
         const fulfilledReqsSet = new Set<string>();
         const sortedSchedule = Array.from(momentary.schedule.keys()).sort(
           (a, b) => a.requirements.length - b.requirements.length
         );
 
-        for (const course of sortedSchedule) {
-          const newRequirements = [];
-          // Sort course.requirements according to fulfilledRequirementsCount.
-          // Prioritize smaller ones.
-          const sortedCourseFullfilledRequirements = course.requirements.sort(
+        sortedSchedule.forEach(course => {
+          const sortedReqs = [...course.requirements].sort(
             (a, b) =>
               (fulfilledRequirementsCount.get(a.name) ?? 0) -
               (fulfilledRequirementsCount.get(b.name) ?? 0)
           );
 
-          for (const requirement of sortedCourseFullfilledRequirements) {
-            if (!fulfilledReqsSet.has(requirement.name)) {
-              fulfilledReqsSet.add(requirement.name);
-              newRequirements.push(requirement);
+          const newRequirements = sortedReqs.filter(req => {
+            if (!fulfilledReqsSet.has(req.name)) {
+              fulfilledReqsSet.add(req.name);
+              return true;
             }
-          }
+            return false;
+          });
           course.requirements = newRequirements;
-        }
+        });
 
-        // Remove those courses that have no requirements left.
-        momentary.schedule = new Map(
-          Array.from(momentary.schedule).filter(obj => obj[0].requirements.length > 0)
+        // Remove courses with no requirements left
+        const newSchedule = new Map(
+          Array.from(momentary.schedule).filter(([course]) => course.requirements.length > 0)
         );
 
-        let deltaCredits = 0;
-        const usedReqsSet = new Set<string>(); // can use it once
+        // Recalculate credits
+        let totalCredits = 0;
+        newSchedule.forEach((_, course) => {
+          totalCredits += course.credits;
+        });
 
-        // Update fulfilledReqs, which is a map of course names -> fulfilled reqs.
-        // We want to make it so that for every course name, we delete those requirements
-        // that are already in fulfilledReqsSet, and if this causes it to be empty,
-        // delete from fulfilledReqs.
-        const newFullfilledReqs = new Map<string, Requirement[]>();
-        for (const course of momentary.fulfilledRequirements.keys()) {
-          const newRequirements = [];
-          for (const requirement of momentary.fulfilledRequirements.get(course) ?? []) {
-            if (
-              !fulfilledReqsSet.has(requirement.name) ||
-              (!usedReqsSet.has(requirement.name) && fulfilledReqsSet.has(requirement.name))
-            ) {
-              newRequirements.push(requirement);
-              usedReqsSet.add(requirement.name);
+        // Update fulfilled requirements map
+        const newFulfilledReqs = new Map<string, Requirement[]>();
+        const usedReqsSet = new Set<string>();
+        Array.from(momentary.fulfilledRequirements.keys()).forEach(courseCode => {
+          const reqs = momentary.fulfilledRequirements.get(courseCode) ?? [];
+          const newReqs = reqs.filter(req => {
+            if (!usedReqsSet.has(req.name)) {
+              usedReqsSet.add(req.name);
+              return true;
             }
+            return false;
+          });
+          if (newReqs.length > 0) {
+            newFulfilledReqs.set(courseCode, newReqs);
           }
-          if (newRequirements.length > 0) {
-            newFullfilledReqs.set(course, newRequirements);
-          } else {
-            deltaCredits -= this.courses.find(c => c.code === course)?.courseCredits ?? 0;
-          }
-        }
+        });
 
-        momentary.fulfilledRequirements = newFullfilledReqs;
-        momentary.totalCredits += deltaCredits;
+        return {
+          ...momentary,
+          schedule: newSchedule,
+          fulfilledRequirements: newFulfilledReqs,
+          totalCredits,
+        };
+      });
 
-        if (outputs.every(output => !isEqual(output, momentary))) {
-          outputs.push(momentary);
-        }
-      }
-      this.generatedScheduleOutputs = outputs;
+      this.generatedScheduleOutputs = processedOutputs;
     },
     regenerateSchedule() {
       this.generateSchedules();

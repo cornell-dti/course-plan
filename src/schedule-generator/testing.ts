@@ -238,9 +238,15 @@ class Testing {
     // Create request
     const interestingRequest = new GeneratorRequest(courses, requirements, 9, 'Fall');
 
-    // Generate schedule with request
-    const output = ScheduleGenerator.generateSchedule(interestingRequest);
-    ScheduleGenerator.prettyPrintSchedule(output);
+    // Generate multiple unique schedules
+    console.log('Generating 5 unique schedules...\n');
+    const outputs = ScheduleGenerator.generateMultipleSchedules(interestingRequest, 5, 50);
+
+    console.log(`Generated ${outputs.length} unique schedules:\n`);
+    outputs.forEach((output, index) => {
+      console.log(`\n=== Schedule ${index + 1} ===`);
+      ScheduleGenerator.prettyPrintSchedule(output);
+    });
   }
 }
 
