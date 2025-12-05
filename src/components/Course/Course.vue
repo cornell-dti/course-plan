@@ -32,7 +32,25 @@
       >
         <img src="@/assets/images/dots/sixDots.svg" alt="" />
       </div>
-      <div class="course-content" @click="courseOnClick()">
+      <div
+        class="course-content"
+        @click="courseOnClick()"
+        @mouseover="requirementOnHover()"
+        @mouseleave="hideRequirementTooltip()"
+      >
+        <div
+          v-if="showRequirementTooltip && fulfilledRequirements.length > 0"
+          class="requirement-tooltip"
+          :style="{ backgroundColor: getLighterColor(cssVars['--bg-color'], 0.5) }"
+        >
+          Fulfills
+          <span v-for="(req, index) in fulfilledRequirements" :key="index">
+            <strong>{{ req.requirementName }}</strong> ({{ req.groupName || req.groupType }})<span
+              v-if="index < fulfilledRequirements.length - 1"
+              >,
+            </span>
+          </span>
+        </div>
         <div class="course-main">
           <div class="course-top">
             <div class="course-left">
@@ -136,6 +154,10 @@ import EditColor from '../Modals/EditColor.vue';
 import trashGrayIcon from '@/assets/images/trash-gray.svg';
 import trashRedIcon from '@/assets/images/trash.svg';
 import Note from '../Notes/Note.vue';
+import {
+  getRequirementsFulfilledForCourse,
+  FulfilledRequirementInfo,
+} from '@/requirements/requirement-frontend-utils';
 
 // MinimalNoteComponent is a representation of everything required for a functional,
 // but minimal Note component to work statefully.
@@ -161,6 +183,11 @@ export default defineComponent({
     isSemesterCourseCard: { type: Boolean, required: true },
     isSchedGenCourse: { type: Boolean, required: false, default: false },
     isCourseConfirmationCard: { type: Boolean, required: false, default: false },
+    groupedRequirementFulfillmentReport: {
+      type: Array as PropType<readonly GroupedRequirementFulfillmentReport[]>,
+      required: false,
+      default: () => [],
+    },
   },
   mounted() {
     if (this.isNoteVisible) {
@@ -218,6 +245,8 @@ export default defineComponent({
       isNoteVisible: Boolean(course.note),
       isShaking: false,
       isBlankCourse: course.type === 'BlankCourse',
+      showRequirementTooltip: false,
+      fulfilledRequirements: [] as FulfilledRequirementInfo[],
     };
   },
   computed: {
@@ -306,6 +335,67 @@ export default defineComponent({
         this.$emit('course-on-click', this.course);
         addCourseToBottomBar(this.course, this.season, this.year);
       }
+    },
+    /**
+     * Show tooltip with fulfilled requirements when hovering over course
+     * Output:  "Requirement Name (GroupName)" for each requirement that is fulfilled for the particular course
+     */
+    requirementOnHover() {
+      if (this.isReqCourse || this.isSchedGenCourse || this.isCourseConfirmationCard) {
+        return;
+      }
+
+      const fulfilledRequirements = getRequirementsFulfilledForCourse(
+        this.course,
+        this.groupedRequirementFulfillmentReport
+      );
+
+      if (fulfilledRequirements && fulfilledRequirements.length > 0) {
+        const reqsByType: { [key: string]: FulfilledRequirementInfo[] } = {
+          Major: [],
+          Minor: [],
+          College: [],
+          Grad: [],
+        };
+
+        fulfilledRequirements.forEach((req: FulfilledRequirementInfo) => {
+          reqsByType[req.groupType].push(req);
+        });
+
+        // Collect all requirements to display, prioritizing Major > Minor > College > Grad
+        const allDisplayReqs: FulfilledRequirementInfo[] = [];
+        ['Major', 'Minor', 'College', 'Grad'].forEach(type => {
+          if (reqsByType[type].length > 0) {
+            allDisplayReqs.push(...reqsByType[type]);
+          }
+        });
+
+        if (allDisplayReqs.length > 0) {
+          this.fulfilledRequirements = allDisplayReqs;
+          this.showRequirementTooltip = true;
+        }
+      }
+    },
+    hideRequirementTooltip() {
+      this.showRequirementTooltip = false;
+      this.fulfilledRequirements = [];
+    },
+    // Taken from Note.vue
+    getLighterColor(unconvertedColor: string, percentage: number) {
+      const hexColor = unconvertedColor.replace('#', '');
+      // Convert each color channel and lighten it
+      const lightenedHex = hexColor
+        .match(/.{2}/g)
+        ?.map(channel => {
+          // Convert channel from HEX to decimal
+          const decimal = parseInt(channel, 16);
+          // Lighten the channel
+          const lightened = Math.min(255, Math.floor(decimal + (255 - decimal) * percentage));
+          // Convert back to HEX, ensuring two characters
+          return lightened.toString(16).padStart(2, '0');
+        })
+        .join('');
+      return `#${lightenedHex}`;
     },
     editCourseCredit(credit: number) {
       this.$emit('edit-course-credit', credit, this.course.uniqueID);
@@ -652,5 +742,24 @@ export default defineComponent({
 
 .rectangle.expanded {
   transform: translateX(-50%) translateY(0px);
+}
+
+.requirement-tooltip {
+  position: absolute;
+  bottom: 0.5rem;
+  right: 0.5rem;
+  border-radius: 0.375rem;
+  padding: 0.375rem 0.625rem;
+  font-size: 12px;
+  line-height: 14px;
+  color: $primaryGray;
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.3);
+  z-index: 10;
+  pointer-events: none;
+  white-space: normal;
+  width: 50%;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  text-align: center;
 }
 </style>
