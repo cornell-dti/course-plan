@@ -1,5 +1,8 @@
 <template>
-  <div class="course-container" :class="{ 'figma-shake': isShaking }">
+  <div
+    class="course-container"
+    :class="{ 'figma-shake': isShaking, 'tooltip-active': isTooltipHovered }"
+  >
     <div
       :class="{
         'course--min': compact,
@@ -77,25 +80,27 @@
               >{{ semesterString }}</span
             >
             <span v-if="isBlankCourse" class="course-semesters">{{ course.courseType }}</span>
-            <course-base-tooltip
-              v-if="
-                !isReqCourse &&
-                !isSchedGenCourse &&
-                !isCourseConfirmationCard &&
-                fulfilledRequirements.length > 0
-              "
-              :isInformation="true"
-              :hideVerticalBar="false"
-            >
-              <div>
-                Fulfills
-                <span v-for="(req, index) in fulfilledRequirements" :key="index">
-                  <strong>{{ req.requirementName }}</strong> ({{
-                    req.groupName || req.groupType
-                  }})<span v-if="index < fulfilledRequirements.length - 1">, </span>
-                </span>
-              </div>
-            </course-base-tooltip>
+            <span @mouseenter="isTooltipHovered = true" @mouseleave="isTooltipHovered = false">
+              <course-base-tooltip
+                v-if="
+                  !isReqCourse &&
+                  !isSchedGenCourse &&
+                  !isCourseConfirmationCard &&
+                  fulfilledRequirements.length > 0
+                "
+                :isInformation="true"
+                :hideVerticalBar="false"
+              >
+                <div>
+                  Fulfills
+                  <span v-for="(req, index) in fulfilledRequirements" :key="index">
+                    <strong>{{ req.requirementName }}</strong> ({{
+                      req.groupName || req.groupType
+                    }})<span v-if="index < fulfilledRequirements.length - 1">, </span>
+                  </span>
+                </div>
+              </course-base-tooltip>
+            </span>
             <course-caution
               v-if="!isReqCourse && !isSchedGenCourse && !isCourseConfirmationCard"
               :course="course"
@@ -251,6 +256,7 @@ export default defineComponent({
       isBlankCourse: course.type === 'BlankCourse',
       fulfilledRequirements: [] as FulfilledRequirementInfo[],
       infoBlueIcon,
+      isTooltipHovered: false,
     };
   },
   computed: {
@@ -537,6 +543,9 @@ export default defineComponent({
 
 .course-container {
   position: relative;
+  &.tooltip-active {
+    z-index: 9999;
+  }
 }
 
 // Emulates a slight side-to-side sway à la Figma micro-interaction.
