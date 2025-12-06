@@ -1,5 +1,8 @@
 <template>
-  <div class="course-container" :class="{ 'figma-shake': isShaking }">
+  <div
+    class="course-container"
+    :class="{ 'figma-shake': isShaking, 'tooltip-active': isTooltipHovered }"
+  >
     <div
       :class="{
         'course--min': compact,
@@ -77,6 +80,27 @@
               >{{ semesterString }}</span
             >
             <span v-if="isBlankCourse" class="course-semesters">{{ course.courseType }}</span>
+            <span @mouseenter="isTooltipHovered = true" @mouseleave="isTooltipHovered = false">
+              <course-base-tooltip
+                v-if="
+                  !isReqCourse &&
+                  !isSchedGenCourse &&
+                  !isCourseConfirmationCard &&
+                  fulfilledRequirements.length > 0
+                "
+                :isInformation="true"
+                :hideVerticalBar="false"
+              >
+                <div>
+                  Fulfills
+                  <span v-for="(req, index) in fulfilledRequirements" :key="index">
+                    <strong>{{ req.requirementName }}</strong> ({{
+                      req.groupName || req.groupType
+                    }})<span v-if="index < fulfilledRequirements.length - 1">, </span>
+                  </span>
+                </div>
+              </course-base-tooltip>
+            </span>
             <course-caution
               v-if="!isReqCourse && !isSchedGenCourse && !isCourseConfirmationCard"
               :course="course"
@@ -136,6 +160,12 @@ import EditColor from '../Modals/EditColor.vue';
 import trashGrayIcon from '@/assets/images/trash-gray.svg';
 import trashRedIcon from '@/assets/images/trash.svg';
 import Note from '../Notes/Note.vue';
+import CourseBaseTooltip from '@/components/Course/CourseBaseTooltip.vue';
+import infoBlueIcon from '@/assets/info-blue.svg';
+import {
+  getRequirementsFulfilledForCourse,
+  FulfilledRequirementInfo,
+} from '@/requirements/requirement-frontend-utils';
 
 // MinimalNoteComponent is a representation of everything required for a functional,
 // but minimal Note component to work statefully.
@@ -149,7 +179,7 @@ interface MinimalNoteComponent {
 
 export default defineComponent({
   name: 'Course',
-  components: { CourseCaution, CourseMenu, EditColor, SaveCourseModal, Note },
+  components: { CourseCaution, CourseMenu, EditColor, SaveCourseModal, Note, CourseBaseTooltip },
   props: {
     courseObj: { type: Object as PropType<FirestoreSemesterCourse>, required: true },
     compact: { type: Boolean, required: true },
@@ -161,6 +191,11 @@ export default defineComponent({
     isSemesterCourseCard: { type: Boolean, required: true },
     isSchedGenCourse: { type: Boolean, required: false, default: false },
     isCourseConfirmationCard: { type: Boolean, required: false, default: false },
+    groupedRequirementFulfillmentReport: {
+      type: Array as PropType<readonly GroupedRequirementFulfillmentReport[]>,
+      required: false,
+      default: () => [],
+    },
   },
   mounted() {
     if (this.isNoteVisible) {
@@ -168,6 +203,7 @@ export default defineComponent({
         this.reportNoteHeight();
       });
     }
+    this.computeFulfilledRequirements();
   },
   emits: {
     'delete-course': (code: string, uniqueID: number) =>
@@ -218,6 +254,9 @@ export default defineComponent({
       isNoteVisible: Boolean(course.note),
       isShaking: false,
       isBlankCourse: course.type === 'BlankCourse',
+      fulfilledRequirements: [] as FulfilledRequirementInfo[],
+      infoBlueIcon,
+      isTooltipHovered: false,
     };
   },
   computed: {
@@ -305,6 +344,45 @@ export default defineComponent({
       if (!this.menuOpen && !this.deletingCourse) {
         this.$emit('course-on-click', this.course);
         addCourseToBottomBar(this.course, this.season, this.year);
+      }
+    },
+    /**
+     * Compute fulfilled requirements for the course to display in tooltip
+     * Output:  "Requirement Name (GroupName)" for each requirement that is fulfilled for the particular course
+     */
+    computeFulfilledRequirements() {
+      if (this.isReqCourse || this.isSchedGenCourse || this.isCourseConfirmationCard) {
+        return;
+      }
+
+      const fulfilledRequirements = getRequirementsFulfilledForCourse(
+        this.course,
+        this.groupedRequirementFulfillmentReport
+      );
+
+      if (fulfilledRequirements && fulfilledRequirements.length > 0) {
+        const reqsByType: { [key: string]: FulfilledRequirementInfo[] } = {
+          Major: [],
+          Minor: [],
+          College: [],
+          Grad: [],
+        };
+
+        fulfilledRequirements.forEach((req: FulfilledRequirementInfo) => {
+          reqsByType[req.groupType].push(req);
+        });
+
+        // Collect all requirements to display, prioritizing Major > Minor > College > Grad
+        const allDisplayReqs: FulfilledRequirementInfo[] = [];
+        ['Major', 'Minor', 'College', 'Grad'].forEach(type => {
+          if (reqsByType[type].length > 0) {
+            allDisplayReqs.push(...reqsByType[type]);
+          }
+        });
+
+        if (allDisplayReqs.length > 0) {
+          this.fulfilledRequirements = allDisplayReqs;
+        }
       }
     },
     editCourseCredit(credit: number) {
@@ -465,6 +543,9 @@ export default defineComponent({
 
 .course-container {
   position: relative;
+  &.tooltip-active {
+    z-index: 9999;
+  }
 }
 
 // Emulates a slight side-to-side sway à la Figma micro-interaction.

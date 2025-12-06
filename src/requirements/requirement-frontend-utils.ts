@@ -648,6 +648,54 @@ export function fulfillmentProgressString({
     : `${safeMinCountFulfilled}/${minCountRequired} ${fulfilledBy}`;
 }
 
+export type FulfilledRequirementInfo = {
+  readonly requirementName: string;
+  readonly groupType: 'College' | 'Major' | 'Minor' | 'Grad';
+  readonly groupName: string;
+};
+
+/**
+ * Get the list of requirements fulfilled by a course with detailed information.
+ * This function checks both Blank Course Cards (which have requirementsFulfilled stored)
+ * and Cornell Courses (which need to be looked up in the groupedRequirementFulfillmentReport).
+ *
+ * @param course The course to check requirements for
+ * @param groupedRequirementFulfillmentReport The computed requirement fulfillment report from the store
+ * @returns An array of objects containing requirement name, group type (College/Major/Minor/Grad),
+ *          and the specific group name (e.g., "CS" for College of Arts & Sciences)
+ */
+export function getRequirementsFulfilledForCourse(
+  course: FirestoreSemesterCourse,
+  groupedRequirementFulfillmentReport: readonly GroupedRequirementFulfillmentReport[]
+): readonly FulfilledRequirementInfo[] {
+  if (course.type === 'CornellCourse' || course.type === 'BlankCourse') {
+    const fulfilledRequirements: FulfilledRequirementInfo[] = [];
+
+    // Iterate through all requirement groups (College, Major, Minor, Grad)
+    groupedRequirementFulfillmentReport.forEach(group => {
+      // Iterate through all requirements in this group
+      group.reqs.forEach(requirementFulfillment => {
+        // Check if this course fulfills this requirement
+        const allCourses = requirementFulfillment.fulfillment.dangerousCourses.flat();
+        const courseFulfillsRequirement = allCourses.some(
+          courseTaken => courseTaken.courseId === course.crseId
+        );
+
+        if (courseFulfillsRequirement) {
+          fulfilledRequirements.push({
+            requirementName: requirementFulfillment.requirement.name,
+            groupType: group.groupName,
+            groupName: group.specific,
+          });
+        }
+      });
+    });
+    return fulfilledRequirements;
+  }
+
+  return [];
+}
+
 export function getRelatedUnfulfilledRequirements(
   {
     crseId: courseId,
