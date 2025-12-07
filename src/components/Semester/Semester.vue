@@ -348,11 +348,9 @@ export default defineComponent({
     const droppable = (this.$refs.droppable as ComponentRef).$el;
     droppable.removeEventListener('dragenter', this.onDragEnter);
     droppable.removeEventListener('dragleave', this.onDragExit);
-    // Clear interval if still running
     if (this.dragOpacityInterval) {
       clearInterval(this.dragOpacityInterval);
     }
-    // Disconnect observer if still running
     if (this.dragMutationObserver) {
       this.dragMutationObserver.disconnect();
     }
@@ -519,7 +517,6 @@ export default defineComponent({
       this.scrollable = true;
       this.isShadowCounter = 0;
 
-      // Flag to prevent infinite loops in MutationObserver
       let isUpdatingOpacity = false;
 
       // Force full opacity on element and all parents (opacity is multiplicative)
@@ -527,17 +524,14 @@ export default defineComponent({
         if (!element || isUpdatingOpacity) return;
         const el = element as HTMLElement;
 
-        // Check if opacity is already 1 to avoid unnecessary updates
         const currentOpacity = window.getComputedStyle(el).opacity;
         if (currentOpacity === '1') return;
 
         isUpdatingOpacity = true;
 
-        // Set opacity on the element itself
         el.style.opacity = '1';
         el.style.setProperty('opacity', '1', 'important');
 
-        // Walk up the parent tree and set opacity on all parents
         let parent = el.parentElement;
         while (parent && parent !== document.body) {
           const parentOpacity = window.getComputedStyle(parent).opacity;
@@ -548,7 +542,6 @@ export default defineComponent({
           parent = parent.parentElement;
         }
 
-        // Also set on all children (but limit depth to avoid performance issues)
         const children = el.querySelectorAll('*');
         children.forEach((child: Element) => {
           const childEl = child as HTMLElement;
@@ -559,26 +552,21 @@ export default defineComponent({
           }
         });
 
-        // Use requestAnimationFrame to reset flag after DOM update
         requestAnimationFrame(() => {
           isUpdatingOpacity = false;
         });
       };
 
-      // Try multiple ways to find the dragged element
       if (event?.item) {
         setFullOpacity(event.item);
       }
 
-      // Use nextTick to ensure DOM is updated, then find and fix opacity
       this.$nextTick(() => {
-        // Find all possible dragged elements (wrapper is what gets dragged)
         const draggedEls = document.querySelectorAll(
           '.course-dragging, .sortable-drag, .semester-courseWrapper.sortable-drag, .semester-courseWrapper.course-dragging'
         );
         draggedEls.forEach((el: Element) => {
           setFullOpacity(el);
-          // Also find course element and wrapper inside
           const courseEl = (el as HTMLElement).querySelector('.course');
           const wrapperEl =
             (el as HTMLElement).querySelector('.semester-courseWrapper') ||
@@ -587,7 +575,6 @@ export default defineComponent({
           if (wrapperEl) setFullOpacity(wrapperEl);
         });
 
-        // Set up MutationObserver with debouncing to prevent infinite loops
         const observer = new MutationObserver(mutations => {
           if (isUpdatingOpacity) return;
 
@@ -596,7 +583,6 @@ export default defineComponent({
               const target = mutation.target as HTMLElement;
               const computedOpacity = window.getComputedStyle(target).opacity;
 
-              // Only react if opacity is being set to something other than 1
               if (computedOpacity !== '1') {
                 if (
                   target.classList.contains('course-dragging') ||
@@ -604,7 +590,6 @@ export default defineComponent({
                   target.closest('.course-dragging') ||
                   target.closest('.sortable-drag')
                 ) {
-                  // Use setTimeout to break the synchronous loop
                   setTimeout(() => {
                     setFullOpacity(target);
                   }, 0);
@@ -614,15 +599,12 @@ export default defineComponent({
           });
         });
 
-        // Observe only the dragged elements, not all children (to reduce overhead)
         draggedEls.forEach((el: Element) => {
           observer.observe(el, { attributes: true, attributeFilter: ['style'] });
         });
 
-        // Store observer to disconnect later
         this.dragMutationObserver = observer;
 
-        // Set up interval to continuously override opacity during drag (less frequent)
         if (this.dragOpacityInterval) {
           clearInterval(this.dragOpacityInterval);
         }
@@ -654,7 +636,7 @@ export default defineComponent({
               }
             }
           });
-        }, 50); // Increased from 10ms to 50ms to reduce overhead
+        }, 50);
       });
     },
     onDragEnter() {
@@ -671,20 +653,17 @@ export default defineComponent({
       this.scrollable = false;
       this.isDraggedFrom = false;
 
-      // Clear the interval that was forcing opacity
       if (this.dragOpacityInterval) {
         clearInterval(this.dragOpacityInterval);
         this.dragOpacityInterval = null;
       }
 
-      // Disconnect MutationObserver
       if (this.dragMutationObserver) {
         this.dragMutationObserver.disconnect();
         this.dragMutationObserver = null;
       }
     },
     openCourseModal() {
-      // Delete confirmation for the use case of adding multiple courses consecutively
       this.closeConfirmationModal();
       this.isCourseModalOpen = !this.isCourseModalOpen;
     },
@@ -705,12 +684,10 @@ export default defineComponent({
       this.isConflictModalOpen = false;
     },
     openSemesterModal() {
-      // Delete confirmation for the use case of adding multiple semesters consecutively
       this.closeConfirmationModal();
       this.$emit('new-semester');
     },
     openConfirmationModal(msg: string) {
-      // Set text and display confirmation modal, then have it disappear after 3 seconds
       this.confirmationText = msg;
       this.isConfirmationOpen = true;
 
@@ -1298,7 +1275,6 @@ export default defineComponent({
   }
 }
 
-// Override SortableJS opacity for dragged course cards
 .course-dragging,
 .sortable-drag,
 .sortable-fallback {
@@ -1327,7 +1303,6 @@ export default defineComponent({
   }
 }
 
-// Also target wrapper specifically since that's what gets dragged
 .semester-courseWrapper.course-dragging,
 .semester-courseWrapper.sortable-drag,
 .semester-courseWrapper.sortable-fallback {
