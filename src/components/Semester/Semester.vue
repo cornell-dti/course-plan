@@ -124,6 +124,8 @@
           group="draggable-semester-courses"
           v-model="coursesForDraggable"
           item-key="uniqueID"
+          chosen-class="course-dragging"
+          :force-fallback="true"
           :componentData="{ style: { height: courseContainerHeight + 'rem' } }"
           @start="onDragStart"
           @sort="onDropped"
@@ -296,6 +298,8 @@ export default defineComponent({
       courseRequirements: [] as string[],
       noteHeights: new Map<number, number>(),
       currentBlankCourseChoice: {} as FirestoreCourseOptInOptOutChoices,
+      dragOpacityInterval: null as NodeJS.Timeout | null,
+      dragMutationObserver: null as MutationObserver | null,
     };
   },
   props: {
@@ -344,6 +348,14 @@ export default defineComponent({
     const droppable = (this.$refs.droppable as ComponentRef).$el;
     droppable.removeEventListener('dragenter', this.onDragEnter);
     droppable.removeEventListener('dragleave', this.onDragExit);
+    // Clear interval if still running
+    if (this.dragOpacityInterval) {
+      clearInterval(this.dragOpacityInterval);
+    }
+    // Disconnect observer if still running
+    if (this.dragMutationObserver) {
+      this.dragMutationObserver.disconnect();
+    }
   },
 
   computed: {
@@ -502,10 +514,148 @@ export default defineComponent({
         timestamp: new Date().toISOString(),
       });
     },
-    onDragStart() {
+    onDragStart(event: any) {
       this.isDraggedFrom = true;
       this.scrollable = true;
       this.isShadowCounter = 0;
+
+      // Flag to prevent infinite loops in MutationObserver
+      let isUpdatingOpacity = false;
+
+      // Force full opacity on element and all parents (opacity is multiplicative)
+      const setFullOpacity = (element: HTMLElement | Element | null) => {
+        if (!element || isUpdatingOpacity) return;
+        const el = element as HTMLElement;
+
+        // Check if opacity is already 1 to avoid unnecessary updates
+        const currentOpacity = window.getComputedStyle(el).opacity;
+        if (currentOpacity === '1') return;
+
+        isUpdatingOpacity = true;
+
+        // Set opacity on the element itself
+        el.style.opacity = '1';
+        el.style.setProperty('opacity', '1', 'important');
+
+        // Walk up the parent tree and set opacity on all parents
+        let parent = el.parentElement;
+        while (parent && parent !== document.body) {
+          const parentOpacity = window.getComputedStyle(parent).opacity;
+          if (parentOpacity !== '1') {
+            parent.style.opacity = '1';
+            parent.style.setProperty('opacity', '1', 'important');
+          }
+          parent = parent.parentElement;
+        }
+
+        // Also set on all children (but limit depth to avoid performance issues)
+        const children = el.querySelectorAll('*');
+        children.forEach((child: Element) => {
+          const childEl = child as HTMLElement;
+          const childOpacity = window.getComputedStyle(childEl).opacity;
+          if (childOpacity !== '1') {
+            childEl.style.opacity = '1';
+            childEl.style.setProperty('opacity', '1', 'important');
+          }
+        });
+
+        // Use requestAnimationFrame to reset flag after DOM update
+        requestAnimationFrame(() => {
+          isUpdatingOpacity = false;
+        });
+      };
+
+      // Try multiple ways to find the dragged element
+      if (event?.item) {
+        setFullOpacity(event.item);
+      }
+
+      // Use nextTick to ensure DOM is updated, then find and fix opacity
+      this.$nextTick(() => {
+        // Find all possible dragged elements (wrapper is what gets dragged)
+        const draggedEls = document.querySelectorAll(
+          '.course-dragging, .sortable-drag, .semester-courseWrapper.sortable-drag, .semester-courseWrapper.course-dragging'
+        );
+        draggedEls.forEach((el: Element) => {
+          setFullOpacity(el);
+          // Also find course element and wrapper inside
+          const courseEl = (el as HTMLElement).querySelector('.course');
+          const wrapperEl =
+            (el as HTMLElement).querySelector('.semester-courseWrapper') ||
+            (el as HTMLElement).closest('.semester-courseWrapper');
+          if (courseEl) setFullOpacity(courseEl);
+          if (wrapperEl) setFullOpacity(wrapperEl);
+        });
+
+        // Set up MutationObserver with debouncing to prevent infinite loops
+        const observer = new MutationObserver(mutations => {
+          if (isUpdatingOpacity) return;
+
+          mutations.forEach(mutation => {
+            if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
+              const target = mutation.target as HTMLElement;
+              const computedOpacity = window.getComputedStyle(target).opacity;
+
+              // Only react if opacity is being set to something other than 1
+              if (computedOpacity !== '1') {
+                if (
+                  target.classList.contains('course-dragging') ||
+                  target.classList.contains('sortable-drag') ||
+                  target.closest('.course-dragging') ||
+                  target.closest('.sortable-drag')
+                ) {
+                  // Use setTimeout to break the synchronous loop
+                  setTimeout(() => {
+                    setFullOpacity(target);
+                  }, 0);
+                }
+              }
+            }
+          });
+        });
+
+        // Observe only the dragged elements, not all children (to reduce overhead)
+        draggedEls.forEach((el: Element) => {
+          observer.observe(el, { attributes: true, attributeFilter: ['style'] });
+        });
+
+        // Store observer to disconnect later
+        this.dragMutationObserver = observer;
+
+        // Set up interval to continuously override opacity during drag (less frequent)
+        if (this.dragOpacityInterval) {
+          clearInterval(this.dragOpacityInterval);
+        }
+        this.dragOpacityInterval = setInterval(() => {
+          if (isUpdatingOpacity) return;
+
+          const draggedElsInterval = document.querySelectorAll(
+            '.course-dragging, .sortable-drag, .semester-courseWrapper.sortable-drag'
+          );
+          draggedElsInterval.forEach((el: Element) => {
+            const computedOpacity = window.getComputedStyle(el as HTMLElement).opacity;
+            if (computedOpacity !== '1') {
+              setFullOpacity(el);
+            }
+            const courseEl = (el as HTMLElement).querySelector('.course');
+            const wrapperEl =
+              (el as HTMLElement).querySelector('.semester-courseWrapper') ||
+              (el as HTMLElement).closest('.semester-courseWrapper');
+            if (courseEl) {
+              const courseOpacity = window.getComputedStyle(courseEl as HTMLElement).opacity;
+              if (courseOpacity !== '1') {
+                setFullOpacity(courseEl);
+              }
+            }
+            if (wrapperEl) {
+              const wrapperOpacity = window.getComputedStyle(wrapperEl as HTMLElement).opacity;
+              if (wrapperOpacity !== '1') {
+                setFullOpacity(wrapperEl);
+              }
+            }
+          });
+        }, 50); // Increased from 10ms to 50ms to reduce overhead
+      });
     },
     onDragEnter() {
       this.isShadowCounter += 1;
@@ -520,6 +670,18 @@ export default defineComponent({
       this.isShadowCounter = 0;
       this.scrollable = false;
       this.isDraggedFrom = false;
+
+      // Clear the interval that was forcing opacity
+      if (this.dragOpacityInterval) {
+        clearInterval(this.dragOpacityInterval);
+        this.dragOpacityInterval = null;
+      }
+
+      // Disconnect MutationObserver
+      if (this.dragMutationObserver) {
+        this.dragMutationObserver.disconnect();
+        this.dragMutationObserver = null;
+      }
     },
     openCourseModal() {
       // Delete confirmation for the use case of adding multiple courses consecutively
@@ -1105,11 +1267,19 @@ export default defineComponent({
   &-course {
     touch-action: none;
     cursor: grab;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
   }
 
   &-course:active:hover {
     touch-action: none;
     cursor: grabbing;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
   }
 
   &-hidden {
@@ -1125,6 +1295,54 @@ export default defineComponent({
     padding-top: 5px;
     padding-left: 1.125rem;
     padding-right: 1.125rem;
+  }
+}
+
+// Override SortableJS opacity for dragged course cards
+.course-dragging,
+.sortable-drag,
+.sortable-fallback {
+  opacity: 1 !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+
+  * {
+    opacity: 1 !important;
+    user-select: none !important;
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+  }
+
+  .course,
+  .semester-course,
+  .semester-courseWrapper {
+    opacity: 1 !important;
+    user-select: none !important;
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+  }
+}
+
+// Also target wrapper specifically since that's what gets dragged
+.semester-courseWrapper.course-dragging,
+.semester-courseWrapper.sortable-drag,
+.semester-courseWrapper.sortable-fallback {
+  opacity: 1 !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+
+  * {
+    opacity: 1 !important;
+    user-select: none !important;
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
   }
 }
 
