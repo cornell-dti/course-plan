@@ -124,6 +124,8 @@
           group="draggable-semester-courses"
           v-model="coursesForDraggable"
           item-key="uniqueID"
+          chosen-class="course-dragging"
+          :force-fallback="true"
           :componentData="{ style: { height: courseContainerHeight + 'rem' } }"
           @start="onDragStart"
           @sort="onDropped"
@@ -297,6 +299,8 @@ export default defineComponent({
       courseRequirements: [] as string[],
       noteHeights: new Map<number, number>(),
       currentBlankCourseChoice: {} as FirestoreCourseOptInOptOutChoices,
+      dragOpacityInterval: null as NodeJS.Timeout | null,
+      dragMutationObserver: null as MutationObserver | null,
     };
   },
   props: {
@@ -345,6 +349,12 @@ export default defineComponent({
     const droppable = (this.$refs.droppable as ComponentRef).$el;
     droppable.removeEventListener('dragenter', this.onDragEnter);
     droppable.removeEventListener('dragleave', this.onDragExit);
+    if (this.dragOpacityInterval) {
+      clearInterval(this.dragOpacityInterval);
+    }
+    if (this.dragMutationObserver) {
+      this.dragMutationObserver.disconnect();
+    }
   },
 
   computed: {
@@ -506,10 +516,132 @@ export default defineComponent({
         timestamp: new Date().toISOString(),
       });
     },
-    onDragStart() {
+    onDragStart(event: any) {
       this.isDraggedFrom = true;
       this.scrollable = true;
       this.isShadowCounter = 0;
+
+      let isUpdatingOpacity = false;
+
+      // Force full opacity on element and all parents (opacity is multiplicative)
+      const setFullOpacity = (element: HTMLElement | Element | null) => {
+        if (!element || isUpdatingOpacity) return;
+        const el = element as HTMLElement;
+
+        const currentOpacity = window.getComputedStyle(el).opacity;
+        if (currentOpacity === '1') return;
+
+        isUpdatingOpacity = true;
+
+        el.style.opacity = '1';
+        el.style.setProperty('opacity', '1', 'important');
+
+        let parent = el.parentElement;
+        while (parent && parent !== document.body) {
+          const parentOpacity = window.getComputedStyle(parent).opacity;
+          if (parentOpacity !== '1') {
+            parent.style.opacity = '1';
+            parent.style.setProperty('opacity', '1', 'important');
+          }
+          parent = parent.parentElement;
+        }
+
+        const children = el.querySelectorAll('*');
+        children.forEach((child: Element) => {
+          const childEl = child as HTMLElement;
+          const childOpacity = window.getComputedStyle(childEl).opacity;
+          if (childOpacity !== '1') {
+            childEl.style.opacity = '1';
+            childEl.style.setProperty('opacity', '1', 'important');
+          }
+        });
+
+        requestAnimationFrame(() => {
+          isUpdatingOpacity = false;
+        });
+      };
+
+      if (event?.item) {
+        setFullOpacity(event.item);
+      }
+
+      this.$nextTick(() => {
+        const draggedEls = document.querySelectorAll(
+          '.course-dragging, .sortable-drag, .semester-courseWrapper.sortable-drag, .semester-courseWrapper.course-dragging'
+        );
+        draggedEls.forEach((el: Element) => {
+          setFullOpacity(el);
+          const courseEl = (el as HTMLElement).querySelector('.course');
+          const wrapperEl =
+            (el as HTMLElement).querySelector('.semester-courseWrapper') ||
+            (el as HTMLElement).closest('.semester-courseWrapper');
+          if (courseEl) setFullOpacity(courseEl);
+          if (wrapperEl) setFullOpacity(wrapperEl);
+        });
+
+        const observer = new MutationObserver(mutations => {
+          if (isUpdatingOpacity) return;
+
+          mutations.forEach(mutation => {
+            if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
+              const target = mutation.target as HTMLElement;
+              const computedOpacity = window.getComputedStyle(target).opacity;
+
+              if (computedOpacity !== '1') {
+                if (
+                  target.classList.contains('course-dragging') ||
+                  target.classList.contains('sortable-drag') ||
+                  target.closest('.course-dragging') ||
+                  target.closest('.sortable-drag')
+                ) {
+                  setTimeout(() => {
+                    setFullOpacity(target);
+                  }, 0);
+                }
+              }
+            }
+          });
+        });
+
+        draggedEls.forEach((el: Element) => {
+          observer.observe(el, { attributes: true, attributeFilter: ['style'] });
+        });
+
+        this.dragMutationObserver = observer;
+
+        if (this.dragOpacityInterval) {
+          clearInterval(this.dragOpacityInterval);
+        }
+        this.dragOpacityInterval = setInterval(() => {
+          if (isUpdatingOpacity) return;
+
+          const draggedElsInterval = document.querySelectorAll(
+            '.course-dragging, .sortable-drag, .semester-courseWrapper.sortable-drag'
+          );
+          draggedElsInterval.forEach((el: Element) => {
+            const computedOpacity = window.getComputedStyle(el as HTMLElement).opacity;
+            if (computedOpacity !== '1') {
+              setFullOpacity(el);
+            }
+            const courseEl = (el as HTMLElement).querySelector('.course');
+            const wrapperEl =
+              (el as HTMLElement).querySelector('.semester-courseWrapper') ||
+              (el as HTMLElement).closest('.semester-courseWrapper');
+            if (courseEl) {
+              const courseOpacity = window.getComputedStyle(courseEl as HTMLElement).opacity;
+              if (courseOpacity !== '1') {
+                setFullOpacity(courseEl);
+              }
+            }
+            if (wrapperEl) {
+              const wrapperOpacity = window.getComputedStyle(wrapperEl as HTMLElement).opacity;
+              if (wrapperOpacity !== '1') {
+                setFullOpacity(wrapperEl);
+              }
+            }
+          });
+        }, 50);
+      });
     },
     onDragEnter() {
       this.isShadowCounter += 1;
@@ -524,9 +656,18 @@ export default defineComponent({
       this.isShadowCounter = 0;
       this.scrollable = false;
       this.isDraggedFrom = false;
+
+      if (this.dragOpacityInterval) {
+        clearInterval(this.dragOpacityInterval);
+        this.dragOpacityInterval = null;
+      }
+
+      if (this.dragMutationObserver) {
+        this.dragMutationObserver.disconnect();
+        this.dragMutationObserver = null;
+      }
     },
     openCourseModal() {
-      // Delete confirmation for the use case of adding multiple courses consecutively
       this.closeConfirmationModal();
       this.isCourseModalOpen = !this.isCourseModalOpen;
     },
@@ -547,12 +688,10 @@ export default defineComponent({
       this.isConflictModalOpen = false;
     },
     openSemesterModal() {
-      // Delete confirmation for the use case of adding multiple semesters consecutively
       this.closeConfirmationModal();
       this.$emit('new-semester');
     },
     openConfirmationModal(msg: string) {
-      // Set text and display confirmation modal, then have it disappear after 3 seconds
       this.confirmationText = msg;
       this.isConfirmationOpen = true;
 
@@ -1109,11 +1248,19 @@ export default defineComponent({
   &-course {
     touch-action: none;
     cursor: grab;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
   }
 
   &-course:active:hover {
     touch-action: none;
     cursor: grabbing;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
   }
 
   &-hidden {
@@ -1129,6 +1276,52 @@ export default defineComponent({
     padding-top: 5px;
     padding-left: 1.125rem;
     padding-right: 1.125rem;
+  }
+}
+
+.course-dragging,
+.sortable-drag,
+.sortable-fallback {
+  opacity: 1 !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+
+  * {
+    opacity: 1 !important;
+    user-select: none !important;
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+  }
+
+  .course,
+  .semester-course,
+  .semester-courseWrapper {
+    opacity: 1 !important;
+    user-select: none !important;
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+  }
+}
+
+.semester-courseWrapper.course-dragging,
+.semester-courseWrapper.sortable-drag,
+.semester-courseWrapper.sortable-fallback {
+  opacity: 1 !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+
+  * {
+    opacity: 1 !important;
+    user-select: none !important;
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
   }
 }
 
