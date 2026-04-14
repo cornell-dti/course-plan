@@ -140,6 +140,7 @@
                 :compact="compact"
                 :active="typedActivatedCourse.uniqueID === element.uniqueID"
                 :isSemesterCourseCard="true"
+                :groupedRequirementFulfillmentReport="groupedRequirementFulfillmentReport"
                 class="semester-course"
                 data-cyId="semester-course"
                 :semesterIndex="semesterIndex + 1"
@@ -347,6 +348,9 @@ export default defineComponent({
   },
 
   computed: {
+    groupedRequirementFulfillmentReport(): readonly GroupedRequirementFulfillmentReport[] {
+      return store.state.groupedRequirementFulfillmentReport;
+    },
     typedActivatedCourse(): FirestoreSemesterCourse {
       return this.activatedCourse as FirestoreSemesterCourse;
     },

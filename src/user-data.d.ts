@@ -16,7 +16,7 @@ type FirestoreSemesterCourseBase = {
   readonly crseId: number;
   readonly creditRange: readonly [number, number];
   readonly semesters: readonly string[];
-  readonly requirementsFulfilled: readonly string[];
+  readonly requirementsFulfilled: readonly string[]; // NOTE: this string[] is only used to store requiremens for BlankCourseCard
   readonly color: string;
   readonly note?: string | null;
   readonly lastUpdated?: Timestamp | null;

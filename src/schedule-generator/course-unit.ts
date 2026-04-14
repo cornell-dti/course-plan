@@ -24,6 +24,11 @@ export type CourseForFrontend = {
   daysOfTheWeek: DayOfTheWeek[];
   timeStart: string;
   timeEnd: string;
+  // New: all timeslots for this course variant (lecture + discussion/lab)
+  // Each course variant has its own combination of timeslots
+  allTimeslots?: Timeslot[];
+  // Variant ID to distinguish between different section combinations
+  variantId?: string;
 };
 
 export default class Course {

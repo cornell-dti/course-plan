@@ -232,6 +232,22 @@ export default defineComponent({
       }
 
       this.isGenerating = true;
+
+      type DayOfTheWeek =
+        | 'Monday'
+        | 'Tuesday'
+        | 'Wednesday'
+        | 'Thursday'
+        | 'Friday'
+        | 'Saturday'
+        | 'Sunday';
+
+      type Timeslot = {
+        daysOfTheWeek: DayOfTheWeek[];
+        start: string;
+        end: string;
+      };
+
       function formatTime(timeStr: string): string {
         const timeParts = timeStr.match(/(\d+):(\d+)(\w{2})/);
         if (!timeParts) return '';
@@ -243,60 +259,12 @@ export default defineComponent({
         return `${hours}:${minutes}${period}`;
       }
 
-      function getStartTime(course: FirestoreSemesterCourse): Promise<string> {
-        return getCourseWithCrseIdAndRoster(course.lastRoster, course.crseId)
-          .then(firestoreCourse => {
-            if (firestoreCourse.enrollGroups?.[0]?.classSections?.[0]?.meetings?.[0]?.timeStart) {
-              const timeUnformatted = firestoreCourse.enrollGroups[0].classSections[0].meetings[0]
-                .timeStart as string;
-              return formatTime(timeUnformatted);
-            }
-            return '12:00AM';
-          })
-          .catch(error => {
-            console.error(`Failed to fetch the course start time for ${course.code}. ${error}`);
-            return '12:00AM';
-          });
-      }
-
-      function getEndTime(course: FirestoreSemesterCourse): Promise<string> {
-        return getCourseWithCrseIdAndRoster(course.lastRoster, course.crseId)
-          .then(firestoreCourse => {
-            if (firestoreCourse.enrollGroups?.[0]?.classSections?.[0]?.meetings?.[0]?.timeEnd) {
-              const timeUnformatted = firestoreCourse.enrollGroups[0].classSections[0].meetings[0]
-                .timeEnd as string;
-              return formatTime(timeUnformatted);
-            }
-            return '1:00AM';
-          })
-          .catch(error => {
-            console.error(`Failed to fetch the course end time for ${course.code}. ${error}`);
-            return '1:00AM';
-          });
-      }
-
-      function getPattern(course: FirestoreSemesterCourse): Promise<string> {
-        return getCourseWithCrseIdAndRoster(course.lastRoster, course.crseId)
-          .then(firestoreCourse => {
-            if (firestoreCourse.enrollGroups?.[0]?.classSections?.[0]?.meetings?.[0]?.pattern) {
-              const pattern = firestoreCourse.enrollGroups[0].classSections[0].meetings[0]
-                .pattern as string;
-              return pattern;
-            }
-            return ''; // Return empty string if pattern not found
-          })
-          .catch(error => {
-            console.error(`Failed to fetch the course pattern for ${course.code}. ${error}`);
-            return ''; // Return empty string on error instead of throwing
-          });
-      }
-
-      function getDaysOfTheWeek(patternStr?: string): string[] {
-        if (patternStr === undefined) {
+      function getDaysOfTheWeek(patternStr?: string): DayOfTheWeek[] {
+        if (patternStr === undefined || patternStr === '') {
           return [];
         }
 
-        const dayMap: { [key: string]: string } = {
+        const dayMap: { [key: string]: DayOfTheWeek } = {
           M: 'Monday',
           T: 'Tuesday',
           W: 'Wednesday',
@@ -306,7 +274,7 @@ export default defineComponent({
           Su: 'Sunday',
         };
 
-        const days: string[] = [];
+        const days: DayOfTheWeek[] = [];
 
         for (let i = 0; i < patternStr.length; i += 1) {
           if (patternStr[i] === 'S' && i + 1 < patternStr.length && patternStr[i + 1] === 'u') {
@@ -320,35 +288,202 @@ export default defineComponent({
         return days;
       }
 
-      // TODO: if a course does not exist in the firestore (outdated) an error
-      // will be thrown. (Requires that user selected a bad course.)
+      // Get all section info from a course to create course variants
+      async function getCourseVariants(
+        course: FirestoreSemesterCourse,
+        reqName: string,
+        reqId: string
+      ) {
+        try {
+          const firestoreCourse = await getCourseWithCrseIdAndRoster(
+            course.lastRoster,
+            course.crseId
+          );
+
+          type SectionInfo = {
+            component: string; // LEC, DIS, LAB, etc.
+            timeslots: Timeslot[];
+          };
+
+          const sections: SectionInfo[] = [];
+
+          // Collect all sections from all enroll groups
+          for (const enrollGroup of firestoreCourse.enrollGroups || []) {
+            for (const classSection of enrollGroup.classSections || []) {
+              const component = classSection.ssrComponent || 'LEC';
+              const timeslots: Timeslot[] = [];
+
+              for (const meeting of classSection.meetings || []) {
+                const pattern = meeting.pattern as string | undefined;
+                const timeStart = meeting.timeStart as string | undefined;
+                const timeEnd = meeting.timeEnd as string | undefined;
+
+                if (timeStart && timeEnd) {
+                  const days = getDaysOfTheWeek(pattern);
+                  if (days.length > 0) {
+                    timeslots.push({
+                      daysOfTheWeek: days,
+                      start: formatTime(timeStart),
+                      end: formatTime(timeEnd),
+                    });
+                  }
+                }
+              }
+
+              if (timeslots.length > 0) {
+                sections.push({ component, timeslots });
+              }
+            }
+          }
+
+          // Separate lectures from discussions/labs
+          const lectures = sections.filter(s => s.component === 'LEC');
+          const discussions = sections.filter(s => s.component === 'DIS');
+          const labs = sections.filter(s => s.component === 'LAB');
+          const otherSections = sections.filter(
+            s => s.component !== 'LEC' && s.component !== 'DIS' && s.component !== 'LAB'
+          );
+
+          // If no lectures found, treat all sections as standalone options
+          if (lectures.length === 0) {
+            if (sections.length === 0) {
+              // Fallback: create a single variant with no timeslots (shouldn't happen often)
+              return [
+                {
+                  title: course.name,
+                  color: course.color,
+                  code: course.code,
+                  courseCredits: course.credits,
+                  fulfilledReq: {
+                    name: reqName,
+                    for: reqId.split('-')[0],
+                    typeValue: reqId.split('-')[1],
+                  } as Requirement,
+                  daysOfTheWeek: [] as DayOfTheWeek[],
+                  timeStart: '',
+                  timeEnd: '',
+                  allTimeslots: [] as Timeslot[],
+                  variantId: `${course.code}-0`,
+                },
+              ];
+            }
+
+            // Use all sections as standalone options
+            return sections.map((section, idx) => ({
+              title: course.name,
+              color: course.color,
+              code: course.code,
+              courseCredits: course.credits,
+              fulfilledReq: {
+                name: reqName,
+                for: reqId.split('-')[0],
+                typeValue: reqId.split('-')[1],
+              } as Requirement,
+              daysOfTheWeek: section.timeslots[0]?.daysOfTheWeek || ([] as DayOfTheWeek[]),
+              timeStart: section.timeslots[0]?.start || '',
+              timeEnd: section.timeslots[0]?.end || '',
+              allTimeslots: section.timeslots,
+              variantId: `${course.code}-${idx}`,
+            }));
+          }
+
+          // Combine required sections (lectures, labs if present)
+          // Then create variants for each discussion option
+          const variants = [];
+          let variantIdx = 0;
+
+          for (const lecture of lectures) {
+            // Base timeslots include lecture and any labs/other required components
+            const baseTimeslots = [...lecture.timeslots];
+
+            // Add lab timeslots if labs exist (assume you must take one)
+            // For simplicity, we'll create variants for each lab too
+            const labOptions = labs.length > 0 ? labs : [null];
+
+            for (const lab of labOptions) {
+              const withLabTimeslots = lab
+                ? [...baseTimeslots, ...lab.timeslots]
+                : [...baseTimeslots];
+
+              // Add other sections
+              for (const other of otherSections) {
+                withLabTimeslots.push(...other.timeslots);
+              }
+
+              // Create a variant for each discussion option (or just one if no discussions)
+              const discOptions = discussions.length > 0 ? discussions : [null];
+
+              for (const disc of discOptions) {
+                const allTimeslots = disc
+                  ? [...withLabTimeslots, ...disc.timeslots]
+                  : [...withLabTimeslots];
+
+                // Use the first timeslot for display (for backwards compatibility)
+                const primaryTimeslot = allTimeslots[0];
+
+                variants.push({
+                  title: course.name,
+                  color: course.color,
+                  code: course.code,
+                  courseCredits: course.credits,
+                  fulfilledReq: {
+                    name: reqName,
+                    for: reqId.split('-')[0],
+                    typeValue: reqId.split('-')[1],
+                  } as Requirement,
+                  daysOfTheWeek: primaryTimeslot?.daysOfTheWeek || ([] as DayOfTheWeek[]),
+                  timeStart: primaryTimeslot?.start || '',
+                  timeEnd: primaryTimeslot?.end || '',
+                  allTimeslots,
+                  variantId: `${course.code}-${variantIdx}`,
+                });
+                variantIdx += 1;
+              }
+            }
+          }
+
+          return variants;
+        } catch (error) {
+          console.error(`Failed to fetch course variants for ${course.code}. ${error}`);
+          // Return a fallback variant
+          return [
+            {
+              title: course.name,
+              color: course.color,
+              code: course.code,
+              courseCredits: course.credits,
+              fulfilledReq: {
+                name: reqName,
+                for: reqId.split('-')[0],
+                typeValue: reqId.split('-')[1],
+              } as Requirement,
+              daysOfTheWeek: [] as DayOfTheWeek[],
+              timeStart: '',
+              timeEnd: '',
+              allTimeslots: [] as Timeslot[],
+              variantId: `${course.code}-fallback`,
+            },
+          ];
+        }
+      }
+
+      // Get all course variants for all requirements
       const coursesWithReqs = await Promise.all(
         this.requirements.map(async req => ({
           reqId: req.reqId,
-          courses: await Promise.all(
-            req.courses.map(async course => {
-              const startTime = await getStartTime(course);
-              const endTime = await getEndTime(course);
-              const pattern = await getPattern(course);
-              const daysOfTheWeek = getDaysOfTheWeek(pattern);
-              return {
-                title: course.name,
-                color: course.color,
-                code: course.code,
-                courseCredits: course.credits,
-                fulfilledReq: {
-                  name: req.reqName,
-                  for: req.reqId.split('-')[0],
-                  typeValue: req.reqId.split('-')[1],
-                } as Requirement,
-                daysOfTheWeek,
-                timeStart: startTime,
-                timeEnd: endTime,
-              };
-            })
-          ),
+          req: {
+            name: req.reqName,
+            for: req.reqId.split('-')[0],
+            typeValue: req.reqId.split('-')[1],
+          } as Requirement,
+          courses: (
+            await Promise.all(
+              req.courses.map(course => getCourseVariants(course, req.reqName, req.reqId))
+            )
+          ).flat(),
         }))
       );
+
       this.isGenerating = false;
       this.$emit('openScheduleGenerateModal', coursesWithReqs, this.creditLimit);
     },

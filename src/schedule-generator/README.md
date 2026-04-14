@@ -1,6 +1,6 @@
 # schedule-generator
 
-This folder contains everything necessary to the functionality of the schedule-generation _algorithm_, for the new semesterly schedule-generation feature launching SP24.
+This folder contains everything necessary to the functionality of the schedule-generation _algorithm_, for the semesterly schedule-generation feature.
 
 Below is a detailed file-by-file breakdown:
 
@@ -8,22 +8,45 @@ Below is a detailed file-by-file breakdown:
 
 This is essentially what is imported and used by the frontend. It takes in a request (type `GeneratorRequest`, see `generator-request.ts`) and outputs a meaningful value of type `GeneratedScheduleOutput` which can be used to see what courses fulfill what requirements and are at what times.
 
-Currently the algorithm functions by randomly shuffling potential courses the user inputted, and then generating the first valid schedule that can be constructed through iteration through this randomly shuffled list.
+### How it works
+
+The algorithm generates schedules using a greedy approach with variant-aware randomization:
+
+1. **Variant Selection**: Courses with multiple discussion/lab sections are treated as "variants" (same course code, different timeslots). The algorithm randomly picks ONE variant per course code for each generation attempt. This ensures variety in discussion sections across generated schedules.
+
+2. **Shuffling**: The selected courses are randomly shuffled to vary which courses get scheduling priority.
+
+3. **Greedy Addition**: Courses are added one-by-one if they don't conflict with already-scheduled courses and don't exceed the credit limit.
+
+4. **Duplicate Detection**: When generating multiple schedules, a hash of each schedule (including timeslots) is used to detect and skip duplicates.
+
+### Key functions
+
+- `generateSchedule()`: Generates a single schedule with random variant selection
+- `generateMultipleSchedules()`: Generates N unique schedules by calling `generateSchedule()` repeatedly and filtering duplicates
+- `selectAndShuffleVariants()`: The key to discussion variety — picks one random variant per course code
+
+### Performance optimizations
+
+- Time strings are pre-parsed to milliseconds once (not on every comparison)
+- A 15-minute gap is enforced between classes for walking time
 
 ## `course-unit.ts`
 
-A `CourseUnit` is a class that represents a single course _in a single semester and "meta-timeslot"_. Example:
+A `Course` is a class that represents a single course _in a single semester and "meta-timeslot"_.
+
+When a course has multiple discussion or lab sections, we create multiple `Course` objects (variants) with the same code but different timeslots. Example:
 
 Say we have one lecture L and two discussions D1 and D2. Then there would be generated:
 
 ```typescript
-Course(name=L, timeslots=[LectureTimeslot, D1Timeslot], ...)
-Course(name=L, timeslots=[LectureTimeslot, D2Timeslot], ...)
+Course(code="CS2110", timeslots=[LectureTimeslot, D1Timeslot], ...)
+Course(code="CS2110", timeslots=[LectureTimeslot, D2Timeslot], ...)
 ```
 
-This is done to aid in the random-shuffling algorithm as well as overlap-checking mechanism (in `algorithm.ts`).
+The algorithm then randomly picks one of these variants per generation, ensuring different discussion sections get explored.
 
-A `Course` has associated with it 1-7 days of the week (hence why we need multiple `Course`s for a single class representation, as some may meet on different days — this is the easiest way to represent this).
+Also exports `CourseForFrontend`, which includes optional `allTimeslots` (for courses with discussions/labs) and `variantId` (to distinguish variants).
 
 ## `generator-request.ts`
 
@@ -31,23 +54,16 @@ Just a narrow wrapper around the information you send to `algorithm.ts` for sche
 
 ## `requirement.ts`
 
-A super-simple class that just stores the "`name`" of a class, as well as the type of the requirement (e.g. "College") and its typeValue (e.g. "CS").
+A super-simple class that just stores the "`name`" of a requirement, as well as the type of the requirement (e.g. "College") and its typeValue (e.g. "CS").
 
 ## `testing.ts`
 
-Through some custom Node configuration (see `tsconfig.json`), we can run this file to test the algorithm. It will generate a schedule and print it to the console using the `ScheduleGenerator.prettyPrintSchedule` function. Current testing is done with a manually-written static set of requirements, courses, credit limit, etc.
+Through some custom Node configuration (see `tsconfig.json`), we can run this file to test the algorithm. It will generate multiple schedules and print them to the console using the `ScheduleGenerator.prettyPrintSchedule` function. Current testing is done with a manually-written static set of requirements, courses, credit limit, etc.
 
 You can run `testing.ts` with the following command:
 
 ```bash
-ts-node testing.ts
+npx tsx src/schedule-generator/testing.ts
 ```
 
-If you get some complaint about `ts-node` not being defined you should just install it globally:
-
-```bash
-`npm install -g ts-node typescript "@types/node"`
-```
-
-Eventually, once we have frontend tests or whatnot, we can remove this file (as well as `testing.ts`
-for that matter).
+(Run from the project root, not this folder.)
