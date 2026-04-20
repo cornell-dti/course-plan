@@ -15,6 +15,7 @@
     >
       <bottom-bar-title
         :color="focusedBottomBarCourse.color"
+        :code="focusedBottomBarCourse.code"
         :name="focusedBottomBarCourse.name"
         :isExpanded="isExpanded"
       />
