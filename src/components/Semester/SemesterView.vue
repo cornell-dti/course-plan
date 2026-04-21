@@ -401,7 +401,7 @@ export default defineComponent({
 
     &-wrapper {
       flex: 1 1 auto;
-      padding: 0 2rem;
+      padding: 0 1.525rem;
     }
   }
 }
