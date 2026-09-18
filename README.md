@@ -22,10 +22,20 @@ Then access http://localhost:8080/
 
 ## Contributors
 
+### FA26
+
+- **Jason Guo** - Developer
+- **Selina Ge** - Developer
+- **Jerry Chen** - Designer
+- **Xintong Lin** - Designer
+- **Laura Zhai** - PM
+- **Anika Chandra** - TPM
+
 ### FA25
+
 - **Nigel Tatem** - Developer
 - **Hannah Zhou** - TPM
-- **Nitya Pakala** - PM Advisor 
+- **Nitya Pakala** - PM Advisor
 
 ### SP25
 
@@ -37,8 +47,6 @@ Then access http://localhost:8080/
 - **Arsh Aggarwal** - APM
 - **Diya Lavu** - PMM
 - **Nidhi Mylavarapu** - TPM
-
-
 
 ### FA24
 
@@ -53,8 +61,7 @@ Then access http://localhost:8080/
 - **An Le** - PMM
 - **Nidhi Mylavarapu** - TPM
 
-
-### SP24 
+### SP24
 
 - **Hannah Zhou** - Developer
 - **Nidhi Mylavarapu** - Developer
