@@ -270399,6 +270399,114 @@
         }
       ]
     },
+    "ASTRO": {
+      "name": "Astronomy",
+      "schools": [
+        "AS2"
+      ],
+      "requirements": [
+        {
+          "name": "2000+ Level ASTRO Credits",
+          "description": "Complete 15 credits of ASTRO courses at or above the 3000 level, or from ASTRO 2211, 2212, 2290, or 2299. At least 6 of the 15 credits must have a letter grade (not S/U).",
+          "source": "https://astro.cornell.edu/undergraduate",
+          "fulfilledBy": "credits",
+          "perSlotMinCount": [
+            15
+          ],
+          "courses": [
+            [
+              350731,
+              350738,
+              350760,
+              350769,
+              350775,
+              350781,
+              350792,
+              350804,
+              350807,
+              350818,
+              351110,
+              351113,
+              351116,
+              351119,
+              351120,
+              351124,
+              351139,
+              354974,
+              355225,
+              355237,
+              355408,
+              357473,
+              357679,
+              357680,
+              357681,
+              357682,
+              358882,
+              359160,
+              359736,
+              359737,
+              359738,
+              359739,
+              361556,
+              361949,
+              364016,
+              364154,
+              364309,
+              364314,
+              365648,
+              367982,
+              369010,
+              370265,
+              370495,
+              371264,
+              371274,
+              372037,
+              372047,
+              373727,
+              373930,
+              374123,
+              374196,
+              374844
+            ]
+          ]
+        },
+        {
+          "name": "3000+ Level ASTRO Credits",
+          "description": "At least 6 of the 15 credits must be at or above the 3000 level.",
+          "source": "https://astro.cornell.edu/undergraduate",
+          "fulfilledBy": "credits",
+          "perSlotMinCount": [
+            6
+          ],
+          "allowCourseDoubleCounting": true,
+          "courses": [
+            [
+              350769,
+              350775,
+              350781,
+              351139,
+              354974,
+              355225,
+              357680,
+              359160,
+              364016,
+              364154,
+              364309,
+              364314,
+              365648,
+              370265,
+              371264,
+              371274,
+              372037,
+              372047,
+              373930,
+              374196,
+              374844
+            ]
+          ]
+        }
+      ]
+    },
     "BU": {
       "name": "Business",
       "schools": [
