@@ -118,6 +118,7 @@
 
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
+import capturePostHogEvent from '@/composables/usePostHog';
 import Schedule from '@/components/ScheduleGenerate/Schedule.vue';
 import ScheduleCourses from '@/components/ScheduleGenerate/ScheduleCourses.vue';
 import { generateSchedulePDF } from '@/tools/export-plan';
@@ -126,6 +127,7 @@ import ScheduleGenerator from '@/schedule-generator/algorithm';
 import type { GeneratedScheduleOutput } from '@/schedule-generator/algorithm';
 import Course, { CourseForFrontend, DayOfTheWeek } from '@/schedule-generator/course-unit';
 import Requirement from '@/schedule-generator/requirement';
+import coursePlanLog from '@/posthog-logs';
 
 export default defineComponent({
   props: {
@@ -174,6 +176,12 @@ export default defineComponent({
         this.year,
         this.season
       );
+      capturePostHogEvent('schedule_downloaded', {
+        season: this.season,
+        year: this.year,
+        course_count: this.courses.length,
+      });
+      coursePlanLog.scheduleDownloadStarted(`${this.season} ${this.year}`, this.courses.length);
     },
     generateSchedules() {
       function genRandomUUID() {
@@ -298,6 +306,12 @@ export default defineComponent({
     regenerateSchedule() {
       this.generateSchedules();
       this.currentPage = 1;
+      capturePostHogEvent('schedule_regenerated', {
+        season: this.season,
+        year: this.year,
+        course_count: this.courses.length,
+      });
+      coursePlanLog.scheduleRegenerated(`${this.season} ${this.year}`, this.courses.length);
     },
     paginate(direction: number) {
       if (

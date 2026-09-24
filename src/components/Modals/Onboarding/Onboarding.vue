@@ -110,6 +110,7 @@
 
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
+import capturePostHogEvent from '@/composables/usePostHog';
 import OnboardingBasic from '@/components/Modals/Onboarding/OnboardingBasic.vue';
 import OnboardingTransfer from '@/components/Modals/Onboarding/OnboardingTransfer.vue';
 import OnboardingReview from '@/components/Modals/Onboarding/OnboardingReview.vue';
@@ -253,6 +254,7 @@ export default defineComponent({
       setAppOnboardingData(this.name, revised);
       // indicates first time user onboarding
       if (!this.isEditingProfile) populateSemesters(store.state.currentPlan, revised);
+      capturePostHogEvent('onboarding_completed', { is_profile_edit: this.isEditingProfile });
       this.$emit('onboard');
     },
     goBack() {
