@@ -207,7 +207,7 @@
 import { PropType, defineComponent } from 'vue';
 import draggable from 'vuedraggable';
 import { Timestamp } from 'firebase/firestore';
-import posthog from 'posthog-js';
+import capturePostHogEvent from '@/composables/usePostHog';
 import Course from '@/components/Course/Course.vue';
 import Placeholder from '@/components/Course/Placeholder.vue';
 import NewCourseModal from '@/components/Modals/NewCourse/NewCourseModal.vue';
@@ -526,7 +526,7 @@ export default defineComponent({
       });
 
       // Track semester plan creation/update
-      posthog.capture('semester_updated', {
+      capturePostHogEvent('semester_updated', {
         semester: `${this.season} ${this.year}`,
         season: this.season,
         year: this.year,
@@ -743,6 +743,7 @@ export default defineComponent({
       );
 
       const courseCode = `${data.subject} ${data.catalogNbr}`;
+      capturePostHogEvent('course_added', { course_code: courseCode, season: this.season });
       this.openConfirmationModal(`Added ${courseCode} to ${this.season} ${this.year}`);
 
       // Track semester update after adding course
@@ -895,6 +896,7 @@ export default defineComponent({
         this.$gtag
       );
       // Update requirements menu
+      capturePostHogEvent('course_removed', { course_code: courseCode, season: this.season });
       this.openConfirmationModal(`Removed ${courseCode} from ${this.season} ${this.year}`);
 
       // Track semester update after deleting course
@@ -1036,7 +1038,7 @@ export default defineComponent({
     },
     openBlankCourseModal() {
       this.isBlankCourseModalOpen = true;
-      posthog.capture('enter_bcc');
+      capturePostHogEvent('enter_bcc');
     },
     closeBlankCourseModal() {
       this.isBlankCourseModalOpen = false;
@@ -1060,7 +1062,7 @@ export default defineComponent({
 
       // Show confirmation
       this.openConfirmationModal(`Added course ${course.code} to ${this.season} ${this.year}`);
-      posthog.capture('added_bcc', { course_code: course.code });
+      capturePostHogEvent('added_bcc', { course_code: course.code });
     },
     openDistributionModal(course: FirestoreSemesterBlankCourse) {
       this.currentBlankCourse = course;
