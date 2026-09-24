@@ -8,11 +8,13 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import capturePostHogEvent from '@/composables/usePostHog';
 import { generatePDF } from '@/tools/export-plan';
 
 export default defineComponent({
   methods: {
     async exportSchedule() {
+      capturePostHogEvent('plan_exported');
       generatePDF();
     },
   },
