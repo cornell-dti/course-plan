@@ -24,7 +24,9 @@ Then access http://localhost:8080/
 
 ### FA26
 
+- **Abrar Amin** - Developer
 - **Jason Guo** - Developer
+- **Matthew Izaguirre** - Developer
 - **Selina Ge** - Developer
 - **Jerry Chen** - Designer
 - **Xintong Lin** - Designer
