@@ -801,6 +801,9 @@ export default defineComponent({
         });
         requirement.expanded = false;
       }
+
+      // Update the progress count
+      this.updateRequirementProgress(requirement);
     },
     handleRequirementCourseOptionChange(
       requirementIndex: number,
@@ -825,6 +828,16 @@ export default defineComponent({
           requirement.selected = false;
         }
       }
+
+      // Update the progress count based on selected courses
+      this.updateRequirementProgress(requirement);
+    },
+    updateRequirementProgress(requirement: Requirement) {
+      const selectedCount = requirement.courses.filter(course => course.selected).length;
+      const totalCount = requirement.courses.length;
+      const isFulfilledByCourse = requirement.requirement.fulfillment.fulfilledBy === 'courses';
+      const courseOrCredit = isFulfilledByCourse ? 'courses' : 'credits';
+      requirement.progress = `${selectedCount}/${totalCount} ${courseOrCredit}`;
     },
     // Method to activate a specific major (similar to RequirementHeader.vue)
     activateMajor(majorIndex: number) {
