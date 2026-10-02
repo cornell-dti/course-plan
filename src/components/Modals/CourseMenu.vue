@@ -281,8 +281,9 @@ export default defineComponent({
 }
 .courseMenu {
   position: absolute;
-  right: -3rem;
-  top: 2rem;
+  left: 100%;
+  top: 0;
+  margin-left: 0.5rem;
   z-index: 1000;
 
   &-content {
@@ -402,7 +403,8 @@ export default defineComponent({
 
 @media only screen and (max-width: $medium-breakpoint) {
   .courseMenu {
-    right: -1rem;
+    left: 100%;
+    margin-left: 0.5rem;
 
     &-arrow {
       display: none;
