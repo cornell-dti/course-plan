@@ -13,6 +13,12 @@ const incrementUniqueID = (amount = 1): number => {
   return updatedID;
 };
 
+const incrementUniqueIDBy = (count: number): readonly number[] => {
+  const base = store.state.uniqueIncrementer;
+  if (count > 0) incrementUniqueID(count);
+  return Array.from({ length: Math.max(count, 0) }, (_, i) => base + i + 1);
+};
+
 const incrementBlankCourseCrseID = (amount = 1): number => {
   const updatedBlankCourseID = store.state.uniqueBlankCourseIncrementer + amount;
   const noUpdatedID = store.state.uniqueIncrementer;
@@ -23,4 +29,4 @@ const incrementBlankCourseCrseID = (amount = 1): number => {
   return updatedBlankCourseID;
 };
 
-export { incrementBlankCourseCrseID, incrementUniqueID };
+export { incrementBlankCourseCrseID, incrementUniqueID, incrementUniqueIDBy };

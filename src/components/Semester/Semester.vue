@@ -181,7 +181,16 @@
       @open-delete-semester-modal="openDeleteSemesterModal"
       @open-edit-semester-modal="openEditSemesterModal"
       @open-clear-semester-modal="openClearSemesterModal"
+      @open-import-calendar="openImportCalendarPicker"
       v-click-outside="closeSemesterMenuIfOpen"
+    />
+    <input
+      ref="icsFileInput"
+      class="semester-hiddenFileInput"
+      type="file"
+      accept=".ics,text/calendar"
+      @change="onIcsFileSelected"
+      data-cyId="semester-icsFileInput"
     />
   </div>
 </template>
@@ -215,9 +224,11 @@ import winter from '@/assets/images/winterEmoji.svg';
 import summer from '@/assets/images/summerEmoji.svg';
 import {
   cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData,
+  cornellCourseRosterCoursesWithSchedulesToFirebaseSemesterCoursesWithGlobalData,
   editSemester,
   editSemesters,
   addCourseToSemester,
+  addCoursesToSemester,
   deleteCourseFromSemester,
   deleteAllCoursesFromSemester,
   updateRequirementChoices,
@@ -234,6 +245,8 @@ import {
 } from '@/requirements/requirement-frontend-utils';
 
 import featureFlagCheckers from '@/feature-flags';
+import { seasonAndYearToRosterIdentifier } from '@/user-data-converter';
+import { importIcsForSemester, importSummaryMessage } from '@/tools/import-calendar';
 
 type ComponentRef = { $el: HTMLDivElement };
 
@@ -277,6 +290,10 @@ export default defineComponent({
       conflictCourse: {} as FirestoreSemesterCourse,
       courseConflicts: new Set<string[]>(),
       selfCheckRequirements: [] as readonly RequirementWithIDSourceType[],
+      importConflictQueue: [] as {
+        course: FirestoreSemesterCourse;
+        data: CornellCourseRosterCourse;
+      }[],
       isDeleteNoteOpen: false,
       noteCourseUniqueID: undefined as number | undefined,
 
@@ -545,6 +562,53 @@ export default defineComponent({
     },
     closeConflictModal() {
       this.isConflictModalOpen = false;
+      this.$nextTick(() => this.openNextImportConflict());
+    },
+    openNextImportConflict() {
+      while (this.importConflictQueue.length > 0) {
+        const [{ course, data }, ...rest] = this.importConflictQueue;
+        this.importConflictQueue = rest;
+        const conflicts = store.state.courseToRequirementsInConstraintViolations.get(
+          course.uniqueID
+        );
+        if (conflicts && conflicts.size > 0) {
+          const { selfCheckRequirements } = this.relatedRequirementsOf(data);
+          this.openConflictModal(course, conflicts, selfCheckRequirements);
+          return;
+        }
+      }
+    },
+    relatedRequirementsOf(data: CornellCourseRosterCourse) {
+      return getRelatedUnfulfilledRequirements(
+        data,
+        store.state.groupedRequirementFulfillmentReport,
+        store.state.onboardingData,
+        store.state.toggleableRequirementChoices,
+        store.state.overriddenFulfillmentChoices,
+        store.state.userRequirementsMap
+      );
+    },
+    defaultRequirementChoice(data: CornellCourseRosterCourse): FirestoreCourseOptInOptOutChoices {
+      const {
+        relatedRequirements,
+        selfCheckRequirements,
+        automaticallyFulfilledRequirements,
+      } = this.relatedRequirementsOf(data);
+      const autoIds = new Set(automaticallyFulfilledRequirements.map(({ id }) => id));
+      const selected = relatedRequirements.find(req => !autoIds.has(req.id))?.id ?? '';
+      return {
+        optOut: getRelatedRequirementIdsForCourseOptOut(
+          data.crseId,
+          selected,
+          store.state.groupedRequirementFulfillmentReport,
+          store.state.toggleableRequirementChoices,
+          store.state.userRequirementsMap
+        ),
+        acknowledgedCheckerWarningOptIn: selfCheckRequirements
+          .filter(req => req.id === selected && !autoIds.has(req.id))
+          .map(req => req.id),
+        arbitraryOptIn: {},
+      };
     },
     openSemesterModal() {
       // Delete confirmation for the use case of adding multiple semesters consecutively
@@ -691,6 +755,67 @@ export default defineComponent({
       this.openConfirmationModal(`Added ${courseCode} to ${this.season} ${this.year}`);
 
       // Track semester update after adding course
+      this.$nextTick(() => {
+        this.trackSemesterUpdate();
+      });
+    },
+    openImportCalendarPicker() {
+      this.semesterMenuOpen = false;
+      (this.$refs.icsFileInput as HTMLInputElement).click();
+    },
+    onIcsFileSelected(event: Event) {
+      const input = event.target as HTMLInputElement;
+      const file = input.files != null && input.files.length > 0 ? input.files[0] : null;
+      input.value = '';
+      if (file == null) return;
+      const reader = new FileReader();
+      reader.onload = () => this.importIcsText(String(reader.result));
+      reader.onerror = () => this.openConfirmationModal('Could not read that file');
+      reader.readAsText(file);
+    },
+    importIcsText(text: string) {
+      const result = importIcsForSemester(
+        text,
+        seasonAndYearToRosterIdentifier(this.season, this.year),
+        this.courses
+      );
+      if (result.status === 'invalid-file') {
+        this.openConfirmationModal('No classes found in that file');
+        return;
+      }
+      if (result.status === 'wrong-season') {
+        this.openConfirmationModal(`That calendar isn't for a ${this.season} semester`);
+        return;
+      }
+      if (result.matched.length > 0) {
+        const newCourses = cornellCourseRosterCoursesWithSchedulesToFirebaseSemesterCoursesWithGlobalData(
+          result.matched
+        );
+        // Computed before the add, as NewCourseModal does before its course exists.
+        const choices = this.handleRequirementConflicts
+          ? []
+          : result.matched.map(({ course }, i) => [
+              newCourses[i].uniqueID,
+              this.defaultRequirementChoice(course),
+            ]);
+        addCoursesToSemester(
+          store.state.currentPlan,
+          this.year,
+          this.season,
+          newCourses,
+          this.$gtag
+        );
+        if (this.handleRequirementConflicts) {
+          this.importConflictQueue = newCourses.map((course, i) => ({
+            course,
+            data: result.matched[i].course,
+          }));
+          this.openNextImportConflict();
+        } else {
+          updateRequirementChoices(old => ({ ...old, ...Object.fromEntries(choices) }));
+        }
+      }
+      this.openConfirmationModal(importSummaryMessage(result, this.season, this.year));
       this.$nextTick(() => {
         this.trackSemesterUpdate();
       });
@@ -1083,6 +1208,10 @@ export default defineComponent({
     right: -3rem;
     top: 2rem;
     z-index: 1;
+  }
+
+  &-hiddenFileInput {
+    display: none;
   }
 
   &-name {
