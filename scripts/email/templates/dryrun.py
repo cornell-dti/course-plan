@@ -1,4 +1,5 @@
 BCC = ["hyz4@cornell.edu"]
+
 SUBJECT = "Are you signed up for CoursePlan yet 🤔 "
 HTML = (
     (
