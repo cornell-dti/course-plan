@@ -55,6 +55,9 @@ import animalSciRequirements, { animalSciAdvisors } from './minors/animal-sci';
 import aiMinorRequirements, { aiMinorAdvisors } from './minors/artificial-intelligence';
 import appliedMathMinorRequirements, { appliedMathMinorAdvisors } from './minors/applied-math';
 import buMinorRequirements, { buMinorAdvisors } from './minors/bu';
+import climateChangeMinorRequirements, {
+  climateChangeMinorAdvisors,
+} from './minors/climate-change';
 import cogsciMinorRequirements, { cogsciMinorAdvisors } from './minors/cogsci';
 import csMinorRequirements, { csMinorAdvisors } from './minors/cs';
 import dsMinorRequirements, { dsMinorAdvisors } from './minors/ds';
@@ -492,6 +495,13 @@ const json: RequirementsJson = {
       requirements: buMinorRequirements,
       advisors: buMinorAdvisors,
       abbrev: 'Business',
+    },
+    CLIMATECHANGE: {
+      name: 'Climate Change',
+      schools: ['EN', 'AG', 'AS2'],
+      requirements: climateChangeMinorRequirements,
+      advisors: climateChangeMinorAdvisors,
+      abbrev: 'ClimateChange',
     },
     COGSCI: {
       name: 'Cognitive Science',
