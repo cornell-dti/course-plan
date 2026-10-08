@@ -46,3 +46,4 @@ python/secret_api_keys.py
 
 # Pytest
 python/__pycache__
+.env
