@@ -5,6 +5,7 @@
 import fetch from 'node-fetch';
 import { writeFileSync } from 'fs';
 import { Course } from './types';
+import { getCourseDistributionString, RosterAttributeValueGroup } from './course-distributions';
 
 const PREFIX = 'https://classes.cornell.edu/api/2.0';
 
@@ -34,21 +35,6 @@ const getSubjects = async (semester: string): Promise<readonly string[]> => {
 
 const cleanField = (value: string | null | undefined) =>
   value?.replace(/\u00a0/g, ' ') || undefined;
-
-type RosterAttributeValueGroup = { readonly attrDescr: string; readonly crseAttrValues: string };
-
-/**
- * Starting in FA25, the roster API leaves catalogDistr null and reports distributions in
- * crseAttrValueGroups instead. For example, "(SBA-AG), (SSC-AS)".
- * @returns the distribution string from crseAttrValueGroups, or undefined if there is none.
- */
-const getDistributionsFromAttributeGroups = (
-  crseAttrValueGroups: readonly RosterAttributeValueGroup[] | null | undefined
-) =>
-  cleanField(
-    crseAttrValueGroups?.find(group => group.attrDescr === 'Distribution Requirements')
-      ?.crseAttrValues
-  );
 
 /** Throws away course object fields we don't need. Used for generate small-enough course json. */
 const courseFieldFilter = ({
@@ -80,8 +66,7 @@ const courseFieldFilter = ({
   })),
   catalogWhenOffered: cleanField(catalogWhenOffered),
   catalogBreadth: cleanField(catalogBreadth),
-  catalogDistr:
-    cleanField(catalogDistr) || getDistributionsFromAttributeGroups(crseAttrValueGroups),
+  catalogDistr: cleanField(getCourseDistributionString({ catalogDistr, crseAttrValueGroups })),
   catalogComments: cleanField(catalogComments),
   catalogSatisfiesReq: cleanField(catalogSatisfiesReq),
   catalogCourseSubfield: cleanField(catalogCourseSubfield),
