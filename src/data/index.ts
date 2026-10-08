@@ -72,6 +72,7 @@ import infoENMinorRequirements, { infoENMinorAdvisors } from './minors/infoEN';
 import lingMinorRequirements, { lingMinorAdvisors } from './minors/ling';
 import mathMinorRequirements, { mathMinorAdvisors } from './minors/math';
 import ormsMinorRequirements, { ormsMinorAdvisors } from './minors/orms';
+import philMinorRequirements, { philMinorAdvisors } from './minors/phil';
 import policyMinorRequirements, { policyMinorAdvisors } from './minors/policy';
 import psychMinorRequirements, { psychMinorAdvisors } from './minors/psych';
 import roboticsMinorRequirements, { roboticsMinorAdvisors } from './minors/robotics';
@@ -611,6 +612,13 @@ const json: RequirementsJson = {
       requirements: ormsMinorRequirements,
       advisors: ormsMinorAdvisors,
       abbrev: 'ORMS',
+    },
+    PHIL: {
+      name: 'Philosophy',
+      schools: ['AS1', 'AS2'],
+      requirements: philMinorRequirements,
+      advisors: philMinorAdvisors,
+      abbrev: 'Phil',
     },
     POLICY: {
       name: 'Public Policy',
