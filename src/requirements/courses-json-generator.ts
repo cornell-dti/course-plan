@@ -5,6 +5,7 @@
 import fetch from 'node-fetch';
 import { writeFileSync } from 'fs';
 import { Course } from './types';
+import { getCourseDistributionString, RosterAttributeValueGroup } from './course-distributions';
 
 const PREFIX = 'https://classes.cornell.edu/api/2.0';
 
@@ -51,7 +52,10 @@ const courseFieldFilter = ({
   catalogAttribute,
   acadCareer,
   acadGroup,
-}: Course): Course => ({
+  crseAttrValueGroups,
+}: Course & {
+  readonly crseAttrValueGroups?: readonly RosterAttributeValueGroup[] | null;
+}): Course => ({
   subject: cleanField(subject) || '',
   crseId,
   catalogNbr: cleanField(catalogNbr) || '',
@@ -62,7 +66,7 @@ const courseFieldFilter = ({
   })),
   catalogWhenOffered: cleanField(catalogWhenOffered),
   catalogBreadth: cleanField(catalogBreadth),
-  catalogDistr: cleanField(catalogDistr),
+  catalogDistr: cleanField(getCourseDistributionString({ catalogDistr, crseAttrValueGroups })),
   catalogComments: cleanField(catalogComments),
   catalogSatisfiesReq: cleanField(catalogSatisfiesReq),
   catalogCourseSubfield: cleanField(catalogCourseSubfield),
