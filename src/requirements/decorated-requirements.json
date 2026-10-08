@@ -270566,6 +270566,191 @@
         }
       ]
     },
+    "CLIMATECHANGE": {
+      "name": "Climate Change",
+      "schools": [
+        "EN",
+        "AG",
+        "AS2"
+      ],
+      "requirements": [
+        {
+          "name": "Climate Change Seminar",
+          "description": "BEE 2000 Perspectives on the Climate Change Challenge (1 credit spring seminar consisting of public lectures on climate change)",
+          "source": "https://www.duffield.cornell.edu/eas/degree/climate-change-minor-requirements/",
+          "fulfilledBy": "courses",
+          "perSlotMinCount": [
+            1
+          ],
+          "slotNames": [
+            "BEE 2000"
+          ],
+          "allowCourseDoubleCounting": true,
+          "courses": [
+            [
+              367870
+            ]
+          ]
+        },
+        {
+          "name": "Category Courses",
+          "description": "At least one course in each of the following categories: Category 1: Physical Science Behind Climate Change, Category 2: Ecosystems, Water Resources, and Climate Change, Category 3: Humans and Climate Change",
+          "source": "https://www.duffield.cornell.edu/eas/degree/climate-change-minor-requirements/",
+          "fulfilledBy": "courses",
+          "perSlotMinCount": [
+            1,
+            1,
+            1
+          ],
+          "slotNames": [
+            "Physical Science Behind Climate Change",
+            "Ecosystems, Water Resources, and Climate Change",
+            "Humans and Climate Change"
+          ],
+          "allowCourseDoubleCounting": true,
+          "courses": [
+            [
+              352952,
+              354971,
+              354978,
+              361175,
+              361625,
+              366265
+            ],
+            [
+              352131,
+              352156,
+              353953,
+              353954,
+              354148,
+              354211,
+              354980,
+              363618,
+              366316,
+              370317,
+              371705
+            ],
+            [
+              350839,
+              354775,
+              361756,
+              364303,
+              367266,
+              368682,
+              370424,
+              370507,
+              371071,
+              371307,
+              371361,
+              371555,
+              371959,
+              374092,
+              374155,
+              374427
+            ]
+          ]
+        },
+        {
+          "name": "Total Credits",
+          "description": "At least 18 credits of appropriate coursework, chosen from BEE 2000 and the courses in Categories 1-4. Only one course at the 1000 level can count for the minor. Students must earn a grade of C- or better in each course in the minor. No more than 3 unstructured credits can count towards the minor. AP credit cannot be used toward the minor.",
+          "source": "https://www.duffield.cornell.edu/eas/degree/climate-change-minor-requirements/",
+          "fulfilledBy": "credits",
+          "perSlotMinCount": [
+            18
+          ],
+          "allowCourseDoubleCounting": true,
+          "disallowTransferCredit": true,
+          "checkerWarning": "Only one 1000-level course can count toward the minor, each course must be a C- or better, and no more than 3 unstructured credits can count.",
+          "courses": [
+            [
+              350839,
+              352131,
+              352156,
+              352952,
+              353953,
+              353954,
+              354148,
+              354211,
+              354775,
+              354915,
+              354971,
+              354978,
+              354980,
+              358690,
+              361175,
+              361625,
+              361756,
+              363618,
+              364303,
+              366265,
+              366316,
+              367266,
+              367870,
+              367899,
+              368682,
+              368972,
+              370317,
+              370424,
+              370507,
+              370836,
+              371071,
+              371307,
+              371361,
+              371555,
+              371705,
+              371959,
+              374092,
+              374155,
+              374427
+            ]
+          ]
+        },
+        {
+          "name": "Upper-Level Credits",
+          "description": "At least 12 credits must be at the 3000 level or higher.",
+          "source": "https://www.duffield.cornell.edu/eas/degree/climate-change-minor-requirements/",
+          "fulfilledBy": "credits",
+          "perSlotMinCount": [
+            12
+          ],
+          "allowCourseDoubleCounting": true,
+          "courses": [
+            [
+              350839,
+              352131,
+              352156,
+              352952,
+              353953,
+              353954,
+              354211,
+              354775,
+              354978,
+              354980,
+              358690,
+              361175,
+              361625,
+              361756,
+              363618,
+              366265,
+              366316,
+              367899,
+              368682,
+              368972,
+              370317,
+              370836,
+              371071,
+              371307,
+              371555,
+              371705,
+              371959,
+              374092,
+              374155,
+              374427
+            ]
+          ]
+        }
+      ]
+    },
     "COGSCI": {
       "name": "Cognitive Science",
       "schools": [
