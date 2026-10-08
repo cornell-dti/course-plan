@@ -49,5 +49,12 @@ export {
   deleteCourseFromRequirementChoices,
 } from './user-overridden-fulfillment-choices';
 export { incrementUniqueID, incrementBlankCourseCrseID };
+export {
+  sendFriendRequest,
+  acceptFriendRequest,
+  declineFriendRequest,
+  cancelFriendRequest,
+  removeFriend,
+} from './user-friends';
 
 export { default as retrieveAnalytics } from './track-users';
