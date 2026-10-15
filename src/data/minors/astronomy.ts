@@ -29,7 +29,8 @@ const astronomyMinorRequirements: readonly CollegeOrMajorRequirement[] = [
     checker: [
       (course: Course): boolean =>
         ifCodeMatch(course.subject, 'ASTRO') &&
-        (ifCodeMatch(course.catalogNbr, '3***') || ifCodeMatch(course.catalogNbr, '4***')),
+        !ifCodeMatch(course.catalogNbr, '1***') &&
+        !ifCodeMatch(course.catalogNbr, '2***'),
     ],
     fulfilledBy: 'credits',
     perSlotMinCount: [6],
