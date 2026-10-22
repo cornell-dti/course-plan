@@ -46,3 +46,6 @@ python/secret_api_keys.py
 
 # Pytest
 python/__pycache__
+
+# Transcript for pdf scraper
+src/assets/pdf-scraper/*.pdf
