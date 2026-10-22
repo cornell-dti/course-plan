@@ -23,7 +23,7 @@
       @on-add-blank-course="addBlankCourseCard"
       data-cyId="newCourse-dropdown"
       :courses-array="courseArrayBySem"
-      :allow-blank-card="true"
+      :allow-blank-card="!filterForRequirementID"
     />
     <div v-else class="selected-course" data-cyId="newCourse-selectedCourse">
       {{ selectedCourse.subject }} {{ selectedCourse.catalogNbr }}:
@@ -44,7 +44,7 @@
     </div>
 
     <!-- Add a blank course card button in a fixed position at the bottom -->
-    <div class="blank-course-button-container" v-if="selectedCourse === null">
+    <div class="blank-course-button-container" v-if="selectedCourse === null && !filterForRequirementID">
       <button class="add-blank-course" @click="addBlankCourseCard">+ Add Blank Course Card</button>
     </div>
   </TeleportModal>
