@@ -43,7 +43,7 @@
           <button class="startButton" data-cyId="tour-startButton" @click="startTour()">
             {{ buttonText }}
           </button>
-          <button class="skipButton" @click="skipTour()">
+          <button class="skipButton" data-cyId="tour-exitButton" @click="skipTour()">
             {{ exit }}
           </button>
         </div>
