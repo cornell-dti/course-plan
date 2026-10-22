@@ -138,7 +138,7 @@ export default defineComponent({
       this.currentFocus = -1;
     },
     onEnter() {
-      const result = this.matches[this.currentFocus];
+      const result = this.matches[this.currentFocus] ?? this.matches[0];
       if (result != null) this.selectCourse(result);
     },
     addBlankCourseCard() {
