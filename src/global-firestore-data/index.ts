@@ -18,10 +18,10 @@ export const cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData = (
 ): FirestoreSemesterCourse =>
   cornellCourseRosterCourseToFirebaseSemesterCourse(course, store, incrementUniqueID);
 
-export const cornellCourseRosterCoursesWithSchedulesToFirebaseSemesterCoursesWithGlobalData = (
+export const cornellCourseRosterCoursesToFirebaseSemesterCoursesWithGlobalData = (
   entries: readonly {
     readonly course: CornellCourseRosterCourse;
-    readonly schedule: FirestoreCourseSchedule;
+    readonly schedule?: FirestoreCourseSchedule;
   }[]
 ): readonly FirestoreSemesterCourse[] => {
   const ids = incrementUniqueIDBy(entries.length);
@@ -31,13 +31,14 @@ export const cornellCourseRosterCoursesWithSchedulesToFirebaseSemesterCoursesWit
       ids[index],
       store.state.subjectColors[course.subject] || '32A0F2'
     ),
-    schedule,
+    ...(schedule ? { schedule } : {}),
   }));
 };
 
 export {
   setAppOnboardingData,
   deleteTransferCredit,
+  addTransferExams,
   updateSawNewFeature,
   updateSawGiveaway,
   updateFA25Giveaway,
@@ -61,6 +62,7 @@ export {
   deleteSemester,
   addCourseToSemester,
   addCoursesToSemester,
+  addCoursesToSemesters,
   deleteCourseFromSemester,
   deleteAllCoursesFromSemester,
   deleteCourseFromSemesters,

@@ -37,6 +37,23 @@
             class="fall-giveaway-progress"
             v-if="isBeforeFall2025GiveawayCutoff"
           />
+          <label
+            class="semesterView-importButton"
+            :class="{ 'semesterView-importButton--busy': isImportingTranscript }"
+            data-cyId="semesterView-importTranscriptButton"
+          >
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M8 10.5V2.5M4.5 6L8 2.5L11.5 6M2.5 10.5v2a1 1 0 001 1h9a1 1 0 001-1v-2" />
+            </svg>
+            {{ isImportingTranscript ? 'Importing…' : 'Import Transcript' }}
+            <input
+              type="file"
+              accept=".pdf,application/pdf"
+              :disabled="isImportingTranscript"
+              @change="onTranscriptFileSelected"
+              hidden
+            />
+          </label>
           <view-dropdown
             data-intro-group="req-tooltip"
             :data-intro="getToggleTooltipText()"
@@ -92,7 +109,17 @@ import NewSemesterModal from '@/components/Modals/NewSemesterModal.vue';
 
 import store from '@/store';
 import { GTagEvent } from '@/gtag';
-import { addSemester, deleteSemester } from '@/global-firestore-data';
+import {
+  addSemester,
+  deleteSemester,
+  addCoursesToSemesters,
+  addTransferExams,
+  cornellCourseRosterCoursesToFirebaseSemesterCoursesWithGlobalData,
+  getDefaultRequirementChoices,
+  updateRequirementChoices,
+} from '@/global-firestore-data';
+import { importTranscriptForPlan, importTranscriptSummaryMessage } from '@/tools/import-transcript';
+import type { ImportTranscriptResult } from '@/tools/import-transcript';
 import { closeBottomBar } from '@/components/BottomBar/BottomBarState';
 import ViewDropdown from './ViewDropdown.vue';
 import FallGiveawayProgress from './FallGiveawayProgress.vue';
@@ -118,6 +145,7 @@ export default defineComponent({
       isCourseClicked: false,
       isSemesterConfirmationOpen: false,
       isSemesterModalOpen: false,
+      isImportingTranscript: false,
       showFall2025GiveawayModal: false,
     };
   },
@@ -180,17 +208,66 @@ export default defineComponent({
       }
     },
     openSemesterConfirmationModal(season: FirestoreSemesterSeason, year: number, isAdd: boolean) {
-      if (isAdd) {
-        this.confirmationText = `Added ${season} ${year} to plan`;
-      } else {
-        this.confirmationText = `Deleted ${season} ${year} from plan`;
-      }
-
+      this.openConfirmation(
+        isAdd ? `Added ${season} ${year} to plan` : `Deleted ${season} ${year} from plan`
+      );
+    },
+    openConfirmation(text: string, duration = 2000) {
+      this.confirmationText = text;
       this.isSemesterConfirmationOpen = true;
 
       setTimeout(() => {
         this.isSemesterConfirmationOpen = false;
-      }, 2000);
+      }, duration);
+    },
+    async onTranscriptFileSelected(event: Event) {
+      const input = event.target as HTMLInputElement;
+      const file = input.files != null && input.files.length > 0 ? input.files[0] : null;
+      input.value = '';
+      if (file == null) return;
+      this.isImportingTranscript = true;
+      const result = await file
+        .arrayBuffer()
+        .then(pdf =>
+          importTranscriptForPlan(pdf, this.semesters, store.state.onboardingData.college)
+        )
+        .catch(() => null);
+      this.isImportingTranscript = false;
+      if (result == null) this.openConfirmation('Could not read that file');
+      else this.applyTranscriptImport(result);
+    },
+    applyTranscriptImport(result: ImportTranscriptResult) {
+      if (result.status === 'invalid-file') {
+        this.openConfirmation("That doesn't look like a Cornell transcript");
+        return;
+      }
+      const entries = result.semesters.map(({ season, year, courses }) => ({
+        season,
+        year,
+        data: courses.map(({ course }) => course),
+        courses: cornellCourseRosterCoursesToFirebaseSemesterCoursesWithGlobalData(courses).map(
+          (course, i) => {
+            const { credits } = courses[i];
+            const [min, max] = course.creditRange;
+            return credits != null && credits >= min && credits <= max
+              ? { ...course, credits }
+              : course;
+          }
+        ),
+      }));
+      const choices = getDefaultRequirementChoices(
+        entries.flatMap(({ season, year, courses, data }) =>
+          courses.map((course, i) => ({ season, year, course, data: data[i] }))
+        )
+      );
+      addCoursesToSemesters(store.state.currentPlan, entries, this.$gtag);
+      if (Object.keys(choices).length > 0) {
+        updateRequirementChoices(old => ({ ...old, ...choices }));
+      }
+      if (result.exams.length > 0 || result.tookSwim) {
+        addTransferExams(result.exams, result.tookSwim);
+      }
+      this.openConfirmation(importTranscriptSummaryMessage(result), 3500);
     },
     openSemesterModal() {
       this.isSemesterModalOpen = true;
@@ -257,6 +334,38 @@ export default defineComponent({
     color: $white;
     border: none;
     font-size: 16px;
+  }
+
+  &-importButton {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    height: 2.25rem;
+    margin: 0 1.5rem 0.5rem 0;
+    padding: 0 0.875rem;
+    border: 1px solid $sangBlue;
+    border-radius: 4px;
+    background: $white;
+    color: $sangBlue;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.15s, color 0.15s;
+
+    &:hover {
+      background: $sangBlue;
+      color: $white;
+    }
+
+    &--busy {
+      opacity: 0.6;
+      pointer-events: none;
+    }
+
+    svg {
+      width: 1rem;
+      stroke-linecap: round;
+    }
   }
 
   &-settings {
