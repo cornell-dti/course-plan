@@ -90,5 +90,13 @@ export const trackUsersCollection = collection(db, 'track-users').withConverter(
   getTypedFirestoreDataConverter<FirestoreTrackUsersData>()
 );
 
+export const friendRequestsCollection = collection(db, 'friend-requests').withConverter(
+  getTypedFirestoreDataConverter<FirestoreFriendRequest>()
+);
+
+export const userFriendsCollection = collection(db, 'user-friends').withConverter(
+  getTypedFirestoreDataConverter<FirestoreUserFriends>()
+);
+
 export const giveawayCollection = collection(db, 'giveaway-entries');
 export const fa25giveawayCollection = collection(db, 'fa25-giveaway-entries');

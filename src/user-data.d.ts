@@ -271,3 +271,24 @@ type Collection = {
   readonly name: string;
   readonly courses: readonly FirestoreSemesterCourse[];
 };
+
+type FirestoreFriendRequestStatus = 'pending' | 'accepted' | 'declined' | 'cancelled';
+
+/** Stored in `friend-requests` under the ID `<senderEmail>_<receiverEmail>`. */
+type FirestoreFriendRequest = {
+  readonly senderEmail: string;
+  readonly receiverEmail: string;
+  readonly status: FirestoreFriendRequestStatus;
+  // Milliseconds since epoch. Avoids the Firestore Timestamp namespace issues noted above.
+  readonly createdAt: number;
+  readonly respondedAt: number | null;
+};
+
+type FirestoreFriend = {
+  readonly since: number;
+};
+
+/** Stored in `user-friends`, keyed by the user's email. Friends are keyed by their email. */
+type FirestoreUserFriends = {
+  readonly friends: { readonly [friendEmail: string]: FirestoreFriend };
+};

@@ -11,7 +11,8 @@ type FeatureFlagName =
   | 'Profile'
   | 'MultiplePlans'
   | 'SavedCourses'
-  | 'Schedule Generator';
+  | 'Schedule Generator'
+  | 'Friends';
 /* | 'AddYourFeatureFlagNameHere' */
 const featureFlagCheckers: FeatureFlagCheckers = registerFeatureFlagChecker(
   'APIBFulfillment',
@@ -22,7 +23,8 @@ const featureFlagCheckers: FeatureFlagCheckers = registerFeatureFlagChecker(
   'Profile',
   'MultiplePlans',
   'SavedCourses',
-  'Schedule Generator'
+  'Schedule Generator',
+  'Friends'
   /* 'AddYourFeatureFlagNameHere' */
 );
 export default featureFlagCheckers;
