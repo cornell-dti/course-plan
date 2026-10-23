@@ -40,6 +40,18 @@ const updateTransferCredit = (exam: readonly FirestoreTransferExam[], tookSwim: 
   });
 };
 
+export const addTransferExams = (
+  exams: readonly FirestoreTransferExam[],
+  tookSwim: boolean
+): void => {
+  const isReplaced = (e: FirestoreTransferExam) =>
+    exams.some(({ examType, subject }) => e.examType === examType && e.subject === subject);
+  updateTransferCredit(
+    [...store.state.onboardingData.exam.filter(e => !isReplaced(e)), ...exams],
+    tookSwim ? 'yes' : store.state.onboardingData.tookSwim
+  );
+};
+
 export const deleteTransferCredit = (code: string): void => {
   if (code === SWIM_TEST_CODE) {
     updateTransferCredit(store.state.onboardingData.exam, 'no');
