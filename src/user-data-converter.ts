@@ -8,6 +8,7 @@
  */
 
 import type { TypedVuexStore } from './store';
+import { getCourseDistributionString } from './requirements/course-distributions';
 
 /**
  * Creates credit range based on course
@@ -106,11 +107,12 @@ export const cornellCourseRosterCourseDetailedInformationToPartialBottomCourseIn
   );
 
   // Distribution of course (e.g. MQR-AS)
-  // alternateDistributions option in case catalogDistr for the course is null, undef, ''
-  const distributions =
-    !course.catalogDistr || course.catalogDistr === ''
-      ? ['']
-      : (/\(([^)]+)\)/.exec(course.catalogDistr) || [])[1].split(', ');
+  // e.g. "(CA-AG, LA-AG), (ALC-AS)" -> ['CA-AG', 'LA-AG', 'ALC-AS']
+  const distributionGroups = Array.from(
+    (getCourseDistributionString(course) || '').matchAll(/\(([^)]+)\)/g),
+    match => match[1].split(', ')
+  ).flat();
+  const distributions = distributionGroups.length === 0 ? [''] : distributionGroups;
 
   return { description, prereqs, enrollment, lectureTimes, instructors, distributions };
 };
