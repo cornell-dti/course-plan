@@ -286,16 +286,18 @@ export const addCoursesToSemester = (
   year: number,
   season: FirestoreSemesterSeason,
   newCourses: readonly FirestoreSemesterCourse[],
-  gtag?: VueGtag
+  gtag?: VueGtag,
+  removedUniqueIDs: readonly number[] = []
 ): void => {
-  if (newCourses.length === 0) return;
+  if (newCourses.length === 0 && removedUniqueIDs.length === 0) return;
   newCourses.forEach(() => GTagEvent(gtag, 'add-course'));
   editSemesters(plan, oldSemesters => {
     let semesterFound = false;
     const newSemestersWithCourses = oldSemesters.map(sem => {
       if (semesterEquals(sem, year, season)) {
         semesterFound = true;
-        return { ...sem, courses: [...sem.courses, ...newCourses] };
+        const kept = sem.courses.filter(c => !removedUniqueIDs.includes(c.uniqueID));
+        return { ...sem, courses: [...kept, ...newCourses] };
       }
       return sem;
     });

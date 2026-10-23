@@ -80,11 +80,14 @@ export const getDefaultRequirementChoices = (
     readonly season: FirestoreSemesterSeason;
     readonly course: FirestoreSemesterCourse;
     readonly data: CornellCourseRosterCourse;
-  }[]
+  }[],
+  removedUniqueIDs: readonly number[] = []
 ): Record<string, FirestoreCourseOptInOptOutChoices> => {
   const { onboardingData, toggleableRequirementChoices, plans, currentPlan } = store.state;
   const choices: Record<string, FirestoreCourseOptInOptOutChoices> = {};
-  let semesters = plans.find(p => p.name === currentPlan.name)?.semesters ?? currentPlan.semesters;
+  let semesters = (
+    plans.find(p => p.name === currentPlan.name)?.semesters ?? currentPlan.semesters
+  ).map(s => ({ ...s, courses: s.courses.filter(c => !removedUniqueIDs.includes(c.uniqueID)) }));
   entries.forEach(({ year, season, course, data }) => {
     const overridden = { ...store.state.overriddenFulfillmentChoices, ...choices };
     const {

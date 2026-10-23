@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { importIcsTextForSemester } from '../import-ics';
+import { importIcsTextForSemester, importSummaryMessage } from '../import-ics';
 import type { IcsCourseLookup, ImportIcsResult } from '../import-ics';
 
 const fixture = fs.readFileSync(path.join(__dirname, 'fixtures/2026FA_Schedule1.ics'), 'utf8');
@@ -69,10 +69,22 @@ it('skips courses already in the semester, including under a cross-listed code',
   const existing = [
     { code: 'MATH 2930', crseId: 352295 },
     { code: 'PSYCH 1500', crseId: 353568 },
+    { code: 'CS 1110', crseId: 358526 },
   ] as FirestoreSemesterCourse[];
   const result = runImport('FA26', existing);
   expect(result.matched).toHaveLength(4);
   expect(result.skipped).toBe(2);
+  expect(result.notInCalendar).toEqual([existing[2]]);
+  expect(importSummaryMessage(result, 'Fall', 2026, 1)).toBe(
+    'Imported 4 classes into Fall 2026, replacing 1 class (2 skipped)'
+  );
+});
+
+it('never offers to replace when the calendar matched no known course', () => {
+  const existing = [{ code: 'CS 1110', crseId: 358526 }] as FirestoreSemesterCourse[];
+  const unknown = { byCrseId: () => [], rosterRank: lookup.rosterRank };
+  const result = importIcsTextForSemester(fixture, 'FA26', existing, unknown);
+  expect(result.status === 'ok' && result.notInCalendar).toEqual([]);
 });
 
 it('blocks importing into a different season', () => {

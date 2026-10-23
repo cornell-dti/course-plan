@@ -17,6 +17,7 @@ export type ImportIcsResult =
         readonly schedule: FirestoreCourseSchedule;
       }[];
       readonly skipped: number;
+      readonly notInCalendar: readonly FirestoreSemesterCourse[];
     };
 
 const courseCodeOf = (course: CornellCourseRosterCourse): string =>
@@ -51,10 +52,12 @@ export const importIcsTextForSemester = (
     (course): course is FirestoreSemesterCourse => !isPlaceholderCourse(course)
   );
   const matched: { course: CornellCourseRosterCourse; schedule: FirestoreCourseSchedule }[] = [];
+  const inCalendar: CornellCourseRosterCourse[] = [];
   let skipped = 0;
 
   groups.forEach(group => {
     const course = matchCourse(group, targetRoster, lookup);
+    if (course != null) inCalendar.push(course);
     const isDuplicate =
       course != null &&
       (existing.some(c => c.code === courseCodeOf(course) || c.crseId === course.crseId) ||
@@ -73,17 +76,27 @@ export const importIcsTextForSemester = (
     matched.push({ course, schedule: { source: 'ics', roster: group.roster, meetings } });
   });
 
-  return { status: 'ok', matched, skipped };
+  const notInCalendar = existing.filter(
+    c => !inCalendar.some(k => c.code === courseCodeOf(k) || c.crseId === k.crseId)
+  );
+  return {
+    status: 'ok',
+    matched,
+    skipped,
+    notInCalendar: inCalendar.length > 0 ? notInCalendar : [],
+  };
 };
 
 export const importSummaryMessage = (
   result: Extract<ImportIcsResult, { status: 'ok' }>,
   season: FirestoreSemesterSeason,
-  year: number
+  year: number,
+  removed = 0
 ): string => {
   const count = result.matched.length;
-  if (count === 0) return `No new Cornell classes found for ${season} ${year}`;
-  const classes = `${count} ${count === 1 ? 'class' : 'classes'}`;
+  if (count === 0 && removed === 0) return `No new Cornell classes found for ${season} ${year}`;
+  const classes = (n: number) => `${n} ${n === 1 ? 'class' : 'classes'}`;
+  const replaced = removed > 0 ? `, replacing ${classes(removed)}` : '';
   const skipped = result.skipped > 0 ? ` (${result.skipped} skipped)` : '';
-  return `Imported ${classes} into ${season} ${year}${skipped}`;
+  return `Imported ${classes(count)} into ${season} ${year}${replaced}${skipped}`;
 };

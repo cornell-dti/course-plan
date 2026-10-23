@@ -41,6 +41,14 @@
       :deleteSemYear="year"
       v-if="isEditSemesterOpen"
     />
+    <import-calendar-modal
+      v-if="pendingIcsImport"
+      :season="season"
+      :year="year"
+      :courses="pendingIcsImport.notInCalendar"
+      @import="applyIcsImport"
+      @close="pendingIcsImport = null"
+    />
     <clear-semester
       @clear-semester="clearSemester"
       @close-clear-sem="closeClearSemesterModal"
@@ -210,6 +218,7 @@ import SemesterMenu from '@/components/Modals/SemesterMenu.vue';
 import DeleteSemester from '@/components/Modals/DeleteSemester.vue';
 import EditSemester from '@/components/Modals/EditSemester.vue';
 import ClearSemester from '@/components/Modals/ClearSemester.vue';
+import ImportCalendarModal from '@/components/Modals/ImportCalendarModal.vue';
 import AddCourseButton from '@/components/AddCourseButton.vue';
 import BlankCourseModal from '@/components/Modals/NewCourse/BlankCourseModal.vue';
 import DistributionRequirementsModal from '@/components/Modals/NewCourse/DistributionRequirementsModal.vue';
@@ -248,6 +257,7 @@ import {
 import featureFlagCheckers from '@/feature-flags';
 import { seasonAndYearToRosterIdentifier } from '@/user-data-converter';
 import { importIcsForSemester, importSummaryMessage } from '@/tools/import-calendar';
+import type { ImportIcsResult } from '@/tools/import-calendar';
 
 type ComponentRef = { $el: HTMLDivElement };
 
@@ -260,6 +270,7 @@ export default defineComponent({
     DeleteSemester,
     EditSemester,
     ClearSemester,
+    ImportCalendarModal,
     NewCourseModal,
     CourseConflictModal,
     DeleteNoteModal,
@@ -291,6 +302,7 @@ export default defineComponent({
       conflictCourse: {} as FirestoreSemesterCourse,
       courseConflicts: new Set<string[]>(),
       selfCheckRequirements: [] as readonly RequirementWithIDSourceType[],
+      pendingIcsImport: null as Extract<ImportIcsResult, { status: 'ok' }> | null,
       importConflictQueue: [] as {
         course: FirestoreSemesterCourse;
         data: CornellCourseRosterCourse;
@@ -766,7 +778,15 @@ export default defineComponent({
         this.openConfirmationModal(`That calendar isn't for a ${this.season} semester`);
         return;
       }
-      if (result.matched.length > 0) {
+      this.pendingIcsImport = result;
+      if (result.notInCalendar.length === 0) this.applyIcsImport(false);
+    },
+    applyIcsImport(replace: boolean) {
+      const result = this.pendingIcsImport;
+      this.pendingIcsImport = null;
+      if (result == null) return;
+      const removed = replace ? result.notInCalendar.map(course => course.uniqueID) : [];
+      if (result.matched.length > 0 || removed.length > 0) {
         const newCourses = cornellCourseRosterCoursesWithSchedulesToFirebaseSemesterCoursesWithGlobalData(
           result.matched
         );
@@ -779,26 +799,35 @@ export default defineComponent({
                 season: this.season,
                 course,
                 data: result.matched[i].course,
-              }))
+              })),
+              removed
             );
         addCoursesToSemester(
           store.state.currentPlan,
           this.year,
           this.season,
           newCourses,
-          this.$gtag
+          this.$gtag,
+          removed
         );
+        if (!this.handleRequirementConflicts || removed.length > 0) {
+          const removedIDs = new Set(removed.map(String));
+          updateRequirementChoices(old => ({
+            ...Object.fromEntries(Object.entries(old).filter(([id]) => !removedIDs.has(id))),
+            ...choices,
+          }));
+        }
         if (this.handleRequirementConflicts) {
           this.importConflictQueue = newCourses.map((course, i) => ({
             course,
             data: result.matched[i].course,
           }));
           this.openNextImportConflict();
-        } else {
-          updateRequirementChoices(old => ({ ...old, ...choices }));
         }
       }
-      this.openConfirmationModal(importSummaryMessage(result, this.season, this.year));
+      this.openConfirmationModal(
+        importSummaryMessage(result, this.season, this.year, removed.length)
+      );
       this.$nextTick(() => {
         this.trackSemesterUpdate();
       });

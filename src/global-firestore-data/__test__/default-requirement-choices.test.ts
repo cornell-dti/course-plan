@@ -1,4 +1,5 @@
 import { getDefaultRequirementChoices } from '../user-overridden-fulfillment-choices';
+import store from '../../store';
 
 jest.mock('../../firebase-config', () => ({}));
 jest.mock('../../store', () => ({
@@ -47,4 +48,16 @@ it('picks requirements in order, so a later course sees what earlier ones took',
   const choices = getDefaultRequirementChoices([entry(1), entry(2)]);
   expect(choices[1].optOut).toEqual(['Y']);
   expect(choices[2].optOut).toEqual(['X']);
+});
+
+it('ignores the courses being replaced', () => {
+  Object.assign(store.state, {
+    overriddenFulfillmentChoices: { 9: { optOut: [] } },
+    currentPlan: {
+      name: 'Plan 1',
+      semesters: [{ year: 2026, season: 'Fall', courses: [{ uniqueID: 9 }] }],
+    },
+  });
+  expect(getDefaultRequirementChoices([entry(1)])[1].optOut).toEqual(['X']);
+  expect(getDefaultRequirementChoices([entry(1)], [9])[1].optOut).toEqual(['Y']);
 });
