@@ -72,6 +72,7 @@ export {
   toggleRequirementChoice,
   updateRequirementChoices,
   deleteCourseFromRequirementChoices,
+  getDefaultRequirementChoices,
 } from './user-overridden-fulfillment-choices';
 export { incrementUniqueID, incrementUniqueIDBy, incrementBlankCourseCrseID };
 

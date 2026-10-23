@@ -232,6 +232,7 @@ import {
   deleteCourseFromSemester,
   deleteAllCoursesFromSemester,
   updateRequirementChoices,
+  getDefaultRequirementChoices,
   addCollection,
   addCourseToCollections,
   editCollection,
@@ -588,28 +589,6 @@ export default defineComponent({
         store.state.userRequirementsMap
       );
     },
-    defaultRequirementChoice(data: CornellCourseRosterCourse): FirestoreCourseOptInOptOutChoices {
-      const {
-        relatedRequirements,
-        selfCheckRequirements,
-        automaticallyFulfilledRequirements,
-      } = this.relatedRequirementsOf(data);
-      const autoIds = new Set(automaticallyFulfilledRequirements.map(({ id }) => id));
-      const selected = relatedRequirements.find(req => !autoIds.has(req.id))?.id ?? '';
-      return {
-        optOut: getRelatedRequirementIdsForCourseOptOut(
-          data.crseId,
-          selected,
-          store.state.groupedRequirementFulfillmentReport,
-          store.state.toggleableRequirementChoices,
-          store.state.userRequirementsMap
-        ),
-        acknowledgedCheckerWarningOptIn: selfCheckRequirements
-          .filter(req => req.id === selected && !autoIds.has(req.id))
-          .map(req => req.id),
-        arbitraryOptIn: {},
-      };
-    },
     openSemesterModal() {
       // Delete confirmation for the use case of adding multiple semesters consecutively
       this.closeConfirmationModal();
@@ -793,11 +772,15 @@ export default defineComponent({
         );
         // Computed before the add, as NewCourseModal does before its course exists.
         const choices = this.handleRequirementConflicts
-          ? []
-          : result.matched.map(({ course }, i) => [
-              newCourses[i].uniqueID,
-              this.defaultRequirementChoice(course),
-            ]);
+          ? {}
+          : getDefaultRequirementChoices(
+              newCourses.map((course, i) => ({
+                year: this.year,
+                season: this.season,
+                course,
+                data: result.matched[i].course,
+              }))
+            );
         addCoursesToSemester(
           store.state.currentPlan,
           this.year,
@@ -812,7 +795,7 @@ export default defineComponent({
           }));
           this.openNextImportConflict();
         } else {
-          updateRequirementChoices(old => ({ ...old, ...Object.fromEntries(choices) }));
+          updateRequirementChoices(old => ({ ...old, ...choices }));
         }
       }
       this.openConfirmationModal(importSummaryMessage(result, this.season, this.year));
