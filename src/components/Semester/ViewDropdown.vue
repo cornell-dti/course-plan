@@ -111,11 +111,13 @@ export default defineComponent({
   z-index: 2;
   position: relative;
   float: right;
+
   &-button {
     border: none;
     display: flex;
     align-items: center;
-    padding-bottom: 0.5rem;
+    padding-right: 2.2rem;
+
     &--label {
       :hover > & {
         color: $viewLabelGray;
