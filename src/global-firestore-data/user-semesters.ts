@@ -280,6 +280,34 @@ export const addCourseToSemester = (
   updateRequirementChoice(newCourse.uniqueID, choiceUpdater);
 };
 
+export const addCoursesToSemesters = (
+  plan: Plan,
+  entries: readonly {
+    readonly year: number;
+    readonly season: FirestoreSemesterSeason;
+    readonly courses: readonly FirestoreSemesterCourse[];
+  }[],
+  gtag?: VueGtag,
+  removedUniqueIDs: readonly number[] = []
+): void => {
+  const nonEmpty = entries.filter(({ courses }) => courses.length > 0);
+  if (nonEmpty.length === 0 && removedUniqueIDs.length === 0) return;
+  nonEmpty.forEach(({ courses }) => courses.forEach(() => GTagEvent(gtag, 'add-course')));
+  editSemesters(plan, oldSemesters => {
+    const updated = oldSemesters.map(sem => {
+      const kept = sem.courses.filter(c => !removedUniqueIDs.includes(c.uniqueID));
+      const added = nonEmpty
+        .filter(({ year, season }) => semesterEquals(sem, year, season))
+        .flatMap(({ courses }) => courses);
+      return { ...sem, courses: [...kept, ...added] };
+    });
+    const created = nonEmpty
+      .filter(({ year, season }) => !oldSemesters.some(sem => semesterEquals(sem, year, season)))
+      .map(({ year, season, courses }) => createSemester(year, season, courses));
+    return [...updated, ...created];
+  });
+};
+
 /** Plan write and recompute for all courses */
 export const addCoursesToSemester = (
   plan: Plan,
@@ -288,23 +316,8 @@ export const addCoursesToSemester = (
   newCourses: readonly FirestoreSemesterCourse[],
   gtag?: VueGtag,
   removedUniqueIDs: readonly number[] = []
-): void => {
-  if (newCourses.length === 0 && removedUniqueIDs.length === 0) return;
-  newCourses.forEach(() => GTagEvent(gtag, 'add-course'));
-  editSemesters(plan, oldSemesters => {
-    let semesterFound = false;
-    const newSemestersWithCourses = oldSemesters.map(sem => {
-      if (semesterEquals(sem, year, season)) {
-        semesterFound = true;
-        const kept = sem.courses.filter(c => !removedUniqueIDs.includes(c.uniqueID));
-        return { ...sem, courses: [...kept, ...newCourses] };
-      }
-      return sem;
-    });
-    if (semesterFound) return newSemestersWithCourses;
-    return [...oldSemesters, createSemester(year, season, newCourses)];
-  });
-};
+): void =>
+  addCoursesToSemesters(plan, [{ year, season, courses: newCourses }], gtag, removedUniqueIDs);
 
 export const deleteCourseFromSemester = (
   plan: Plan,
