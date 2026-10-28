@@ -292,3 +292,33 @@ type FirestoreFriend = {
 type FirestoreUserFriends = {
   readonly friends: { readonly [friendEmail: string]: FirestoreFriend };
 };
+
+type FirestoreSavedScheduleCourse = {
+  readonly code: string;
+  readonly title: string;
+  readonly credits: number;
+  readonly color: string;
+  readonly timeslots: readonly {
+    readonly daysOfTheWeek: readonly import('./schedule-generator/course-unit').DayOfTheWeek[];
+    readonly start: string;
+    readonly end: string;
+  }[];
+};
+
+/** A generated weekly schedule the user saved. Visible to all of the user's friends. */
+type FirestoreSavedSchedule = {
+  readonly id: string;
+  readonly name: string;
+  readonly year: number;
+  readonly season: FirestoreSemesterSeason;
+  readonly totalCredits: number;
+  readonly courses: readonly FirestoreSavedScheduleCourse[];
+  // Milliseconds since epoch, like friend requests.
+  readonly createdAt: number;
+  readonly updatedAt: number;
+};
+
+/** Stored in `user-saved-schedules`, keyed by the user's email. */
+type FirestoreUserSavedSchedules = {
+  readonly schedules: readonly FirestoreSavedSchedule[];
+};

@@ -57,6 +57,7 @@ export type VuexStoreState = {
   friends: FirestoreUserFriends['friends'];
   incomingFriendRequests: readonly FirestoreFriendRequest[];
   outgoingFriendRequests: readonly FirestoreFriendRequest[];
+  savedSchedules: readonly FirestoreSavedSchedule[];
 };
 
 export class TypedVuexStore extends Store<VuexStoreState> {}
@@ -120,6 +121,7 @@ const store: TypedVuexStore = new TypedVuexStore({
     friends: {},
     incomingFriendRequests: [],
     outgoingFriendRequests: [],
+    savedSchedules: [],
   },
   actions: {},
   getters: {
@@ -231,6 +233,9 @@ const store: TypedVuexStore = new TypedVuexStore({
     setOutgoingFriendRequests(state: VuexStoreState, requests: readonly FirestoreFriendRequest[]) {
       state.outgoingFriendRequests = requests;
     },
+    setSavedSchedules(state: VuexStoreState, schedules: readonly FirestoreSavedSchedule[]) {
+      state.savedSchedules = schedules;
+    },
     setFA25Giveaway(
       state: VuexStoreState,
       giveawayUpdate: Partial<AppOnboardingData['fa25giveaway']>
@@ -321,7 +326,7 @@ const autoRecomputeDerivedData = (): (() => void) =>
   });
 
 /**
- * Subscribes to the user's friends and pending friend requests. These are not part of the initial
+ * Subscribes to the user's friends, pending friend requests, and saved schedules. These are not part of the initial
  * load gate, since nothing on the page depends on them to render.
  */
 const initializeFriendsListeners = (email: string): (() => void) => {
@@ -353,10 +358,16 @@ const initializeFriendsListeners = (email: string): (() => void) => {
       ),
     onError
   );
+  const savedSchedulesUnsubscriber = onSnapshot(
+    doc(fb.savedSchedulesCollection, email),
+    snapshot => store.commit('setSavedSchedules', snapshot.data()?.schedules ?? []),
+    onError
+  );
   return () => {
     friendsUnsubscriber();
     incomingUnsubscriber();
     outgoingUnsubscriber();
+    savedSchedulesUnsubscriber();
   };
 };
 

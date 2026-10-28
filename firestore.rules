@@ -1,0 +1,102 @@
+rules_version = '2';
+
+// Rules for the friends and shared-schedules collections.
+//
+// NOT wired into firebase.json yet: the rules for every other collection live only in the Firebase
+// console. Merge these into the console rules (or move all rules here and add
+// `"firestore": { "rules": "firestore.rules" }` to firebase.json) before relying on them.
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function me() {
+      return request.auth.token.email;
+    }
+
+    function requestPath(senderEmail, receiverEmail) {
+      return /databases/$(database)/documents/friend-requests/$(senderEmail + '_' + receiverEmail);
+    }
+
+    // True if this write moves the request from pending to accepted. Checking the before and after
+    // states means an old accepted request cannot be reused to re-add a removed friend.
+    function acceptedInThisWrite(senderEmail, receiverEmail) {
+      let path = requestPath(senderEmail, receiverEmail);
+      return exists(path)
+        && get(path).data.status == 'pending'
+        && getAfter(path).data.status == 'accepted';
+    }
+
+    function isFriendOf(owner) {
+      return me() in get(/databases/$(database)/documents/user-friends/$(owner)).data.friends;
+    }
+
+    match /friend-requests/{requestId} {
+      // Request IDs are `<sender>_<receiver>`. Cornell emails never contain `_`.
+      allow get: if me() in requestId.split('_');
+      // Matches the `where(senderEmail|receiverEmail, '==', me)` listeners in store.ts.
+      allow list: if resource.data.senderEmail == me() || resource.data.receiverEmail == me();
+
+      function isNewPendingRequest() {
+        let data = request.resource.data;
+        return data.senderEmail == me()
+          && requestId == me() + '_' + data.receiverEmail
+          && data.receiverEmail != me()
+          && data.status == 'pending'
+          && data.respondedAt == null
+          && data.keys().hasOnly(['senderEmail', 'receiverEmail', 'status', 'createdAt', 'respondedAt']);
+      }
+
+      function respondsWith(actorEmail, statuses) {
+        return resource.data.status == 'pending'
+          && actorEmail == me()
+          && request.resource.data.status in statuses
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'respondedAt']);
+      }
+
+      allow create: if isNewPendingRequest();
+      allow update: if isNewPendingRequest()
+        || respondsWith(resource.data.receiverEmail, ['accepted', 'declined'])
+        || respondsWith(resource.data.senderEmail, ['cancelled']);
+      allow delete: if false;
+    }
+
+    match /user-friends/{owner} {
+      allow read: if me() == owner;
+
+      function friendsBefore() {
+        return resource == null ? {} : resource.data.friends;
+      }
+
+      function friendsAfter() {
+        return request.resource.data.friends;
+      }
+
+      // Another user may only touch their own entry in this map: add it while accepting a request
+      // between the two of you in the same write, or remove it (unfriending).
+      function isOtherUsersOwnEntryChange() {
+        let changed = friendsAfter().diff(friendsBefore()).affectedKeys();
+        return changed.hasOnly([me()])
+          && (
+            !(me() in friendsAfter())
+            || acceptedInThisWrite(owner, me())
+            || acceptedInThisWrite(me(), owner)
+          );
+      }
+
+      // The owner can edit their own map freely. Adding someone to your own map only lets *them*
+      // read *your* shared data, so it exposes nothing of theirs.
+      allow write: if request.resource.data.keys().hasOnly(['friends'])
+        && (me() == owner || isOtherUsersOwnEntryChange());
+    }
+
+    match /user-saved-schedules/{owner} {
+      allow read: if me() == owner || isFriendOf(owner);
+      allow write: if me() == owner;
+    }
+
+    match /user-name/{owner} {
+      // Any signed-in user can read names: sendFriendRequest checks that the receiver exists by
+      // reading their user-name doc before they are friends.
+      allow read: if request.auth != null;
+      allow write: if me() == owner;
+    }
+  }
+}

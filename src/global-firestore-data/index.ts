@@ -56,5 +56,12 @@ export {
   cancelFriendRequest,
   removeFriend,
 } from './user-friends';
+export {
+  saveSchedule,
+  renameSchedule,
+  deleteSchedule,
+  getFriendSchedules,
+  getFriendNames,
+} from './user-saved-schedules';
 
 export { default as retrieveAnalytics } from './track-users';
