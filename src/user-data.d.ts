@@ -271,3 +271,54 @@ type Collection = {
   readonly name: string;
   readonly courses: readonly FirestoreSemesterCourse[];
 };
+
+type FirestoreFriendRequestStatus = 'pending' | 'accepted' | 'declined' | 'cancelled';
+
+/** Stored in `friend-requests` under the ID `<senderEmail>_<receiverEmail>`. */
+type FirestoreFriendRequest = {
+  readonly senderEmail: string;
+  readonly receiverEmail: string;
+  readonly status: FirestoreFriendRequestStatus;
+  // Milliseconds since epoch. Avoids the Firestore Timestamp namespace issues noted above.
+  readonly createdAt: number;
+  readonly respondedAt: number | null;
+};
+
+type FirestoreFriend = {
+  readonly since: number;
+};
+
+/** Stored in `user-friends`, keyed by the user's email. Friends are keyed by their email. */
+type FirestoreUserFriends = {
+  readonly friends: { readonly [friendEmail: string]: FirestoreFriend };
+};
+
+type FirestoreSavedScheduleCourse = {
+  readonly code: string;
+  readonly title: string;
+  readonly credits: number;
+  readonly color: string;
+  readonly timeslots: readonly {
+    readonly daysOfTheWeek: readonly import('./schedule-generator/course-unit').DayOfTheWeek[];
+    readonly start: string;
+    readonly end: string;
+  }[];
+};
+
+/** A generated weekly schedule the user saved. Visible to all of the user's friends. */
+type FirestoreSavedSchedule = {
+  readonly id: string;
+  readonly name: string;
+  readonly year: number;
+  readonly season: FirestoreSemesterSeason;
+  readonly totalCredits: number;
+  readonly courses: readonly FirestoreSavedScheduleCourse[];
+  // Milliseconds since epoch, like friend requests.
+  readonly createdAt: number;
+  readonly updatedAt: number;
+};
+
+/** Stored in `user-saved-schedules`, keyed by the user's email. */
+type FirestoreUserSavedSchedules = {
+  readonly schedules: readonly FirestoreSavedSchedule[];
+};
