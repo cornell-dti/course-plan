@@ -4,7 +4,7 @@ import resend
 from typing import List
 
 # Load relevant template to run this script on.
-from templates.versioned_preenroll.sp25.current_freshman import *
+from templates.dryrun import *
 
 # Load environment variables from .env
 load_dotenv(".env.private")
@@ -21,6 +21,12 @@ def chunk_list(lst: List[str], chunk_size: int) -> List[List[str]]:
 
 
 def send_emails(bcc_list: List[str]):
+    if not bcc_list:
+        print(
+            "BCC is empty, so there's no one to send to. Add recipients to the template and try again."
+        )
+        return
+
     bcc_chunks = chunk_list(bcc_list, 49)
     total_chunks = len(bcc_chunks)
 
@@ -51,6 +57,7 @@ def send_emails(bcc_list: List[str]):
             f"Starting email job with {len(bcc_list)} {'recipient' if len(bcc_list) == 1 else 'recipients'} in {total_chunks} batch(es).\n"
         )
 
+    failed = 0
     for i, bcc_chunk in enumerate(bcc_chunks, 1):
         params: resend.Emails.SendParams = {
             "from": FROM,
@@ -64,9 +71,13 @@ def send_emails(bcc_list: List[str]):
             resend.Emails.send(params)
             print(f"Batch {i}/{total_chunks} sent successfully!")
         except Exception as e:
+            failed += 1
             print(f"Batch {i}/{total_chunks} failed with error: {e}")
 
-    print("\nAll email batches sent successfully!")
+    if failed:
+        print(f"\n{failed}/{total_chunks} batch(es) failed — see the errors above.")
+    else:
+        print("\nAll email batches sent successfully!")
     print("Email job completed!")
 
 
