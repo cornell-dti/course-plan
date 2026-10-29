@@ -233,7 +233,7 @@ import winter from '@/assets/images/winterEmoji.svg';
 import summer from '@/assets/images/summerEmoji.svg';
 import {
   cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData,
-  cornellCourseRosterCoursesWithSchedulesToFirebaseSemesterCoursesWithGlobalData,
+  cornellCourseRosterCoursesToFirebaseSemesterCoursesWithGlobalData,
   editSemester,
   editSemesters,
   addCourseToSemester,
@@ -787,7 +787,7 @@ export default defineComponent({
       if (result == null) return;
       const removed = replace ? result.notInCalendar.map(course => course.uniqueID) : [];
       if (result.matched.length > 0 || removed.length > 0) {
-        const newCourses = cornellCourseRosterCoursesWithSchedulesToFirebaseSemesterCoursesWithGlobalData(
+        const newCourses = cornellCourseRosterCoursesToFirebaseSemesterCoursesWithGlobalData(
           result.matched
         );
         // Computed before the add, as NewCourseModal does before its course exists.
