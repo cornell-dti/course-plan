@@ -200,6 +200,7 @@ interface CornellCourseRosterCourseFullDetail extends CornellCourseRosterCourse 
   }[];
   readonly catalogPrereqCoreq?: string;
   readonly catalogDistr?: string;
+  readonly crseAttrValueGroups?: readonly import('./requirements/course-distributions').RosterAttributeValueGroup[];
 }
 
 interface FullClassRosterCourseWithUniqueID extends CornellCourseRosterCourseFullDetail {
