@@ -1,12 +1,10 @@
-/* eslint-disable import/prefer-default-export */
-// src/composables/usePostHog.ts
-import posthog, { PostHog } from 'posthog-js';
+import posthog from 'posthog-js';
 
-export function usePostHog(): { posthog: PostHog } {
-  posthog.init('phc_lgqGN7C2WKoLM4I0HgY51ik2pozm533V3rEyClN2xTY', {
-    api_host: 'https://us.i.posthog.com',
-    person_profiles: 'identified_only',
-  });
-
-  return { posthog };
+export default function capturePostHogEvent(
+  eventName: string,
+  properties?: Record<string, unknown>
+) {
+  if (import.meta.env.VITE_POSTHOG_PROJECT_TOKEN && import.meta.env.VITE_POSTHOG_HOST) {
+    posthog.capture(eventName, properties);
+  }
 }

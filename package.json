@@ -26,6 +26,7 @@
     "cypress:e2e": "npm run build:dev && concurrently \"npm run serve:build\" \"wait-on http-get://localhost:8080 && npm run cypress:run\" --kill-others --success first"
   },
   "dependencies": {
+    "@posthog/react": "^1.11.1",
     "@types/intro.js": "^3.0.0",
     "bootstrap": "^4.6.0",
     "bootstrap-vue": "^2.22.0",
@@ -41,7 +42,7 @@
     "jspdf-autotable": "^3.5.25",
     "node-fetch": "^2.6.7",
     "pdfjs-dist": "^3.5.141",
-    "posthog-js": "^1.284.0",
+    "posthog-js": "^1.368.0",
     "vue": "^3.2.19",
     "vue-gtag-next": "^1.14.0",
     "vue-router": "^4.0.6",
