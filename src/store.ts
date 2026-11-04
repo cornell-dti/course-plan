@@ -1,5 +1,5 @@
 import { Store } from 'vuex';
-import { doc, getDoc, onSnapshot, setDoc, updateDoc } from 'firebase/firestore';
+import { doc, getDoc, onSnapshot, query, setDoc, updateDoc, where } from 'firebase/firestore';
 
 import * as fb from './firebase-config';
 import computeGroupedRequirementFulfillmentReports from './requirements/requirement-frontend-computation';
@@ -54,6 +54,10 @@ export type VuexStoreState = {
   currentPlan: Plan;
   savedCourses: readonly Collection[];
   allSavedCourses: Collection;
+  friends: FirestoreUserFriends['friends'];
+  incomingFriendRequests: readonly FirestoreFriendRequest[];
+  outgoingFriendRequests: readonly FirestoreFriendRequest[];
+  savedSchedules: readonly FirestoreSavedSchedule[];
 };
 
 export class TypedVuexStore extends Store<VuexStoreState> {}
@@ -114,6 +118,10 @@ const store: TypedVuexStore = new TypedVuexStore({
     currentPlan: { name: '', semesters: [] },
     savedCourses: [],
     allSavedCourses: { name: '', courses: [] },
+    friends: {},
+    incomingFriendRequests: [],
+    outgoingFriendRequests: [],
+    savedSchedules: [],
   },
   actions: {},
   getters: {
@@ -216,6 +224,18 @@ const store: TypedVuexStore = new TypedVuexStore({
     setSawScheduleGenerator(state: VuexStoreState, seen: boolean) {
       state.onboardingData.sawScheduleGenerator = seen;
     },
+    setFriends(state: VuexStoreState, friends: FirestoreUserFriends['friends']) {
+      state.friends = friends;
+    },
+    setIncomingFriendRequests(state: VuexStoreState, requests: readonly FirestoreFriendRequest[]) {
+      state.incomingFriendRequests = requests;
+    },
+    setOutgoingFriendRequests(state: VuexStoreState, requests: readonly FirestoreFriendRequest[]) {
+      state.outgoingFriendRequests = requests;
+    },
+    setSavedSchedules(state: VuexStoreState, schedules: readonly FirestoreSavedSchedule[]) {
+      state.savedSchedules = schedules;
+    },
     setFA25Giveaway(
       state: VuexStoreState,
       giveawayUpdate: Partial<AppOnboardingData['fa25giveaway']>
@@ -304,6 +324,52 @@ const autoRecomputeDerivedData = (): (() => void) =>
       }
     }
   });
+
+/**
+ * Subscribes to the user's friends, pending friend requests, and saved schedules. These are not part of the initial
+ * load gate, since nothing on the page depends on them to render.
+ */
+const initializeFriendsListeners = (email: string): (() => void) => {
+  const pendingRequestsWhere = (field: 'senderEmail' | 'receiverEmail') =>
+    query(fb.friendRequestsCollection, where(field, '==', email), where('status', '==', 'pending'));
+  // eslint-disable-next-line no-console
+  const onError = (error: Error) => console.error('Friends listener failed', error);
+
+  const friendsUnsubscriber = onSnapshot(
+    doc(fb.userFriendsCollection, email),
+    snapshot => store.commit('setFriends', snapshot.data()?.friends ?? {}),
+    onError
+  );
+  const incomingUnsubscriber = onSnapshot(
+    pendingRequestsWhere('receiverEmail'),
+    snapshot =>
+      store.commit(
+        'setIncomingFriendRequests',
+        snapshot.docs.map(d => d.data())
+      ),
+    onError
+  );
+  const outgoingUnsubscriber = onSnapshot(
+    pendingRequestsWhere('senderEmail'),
+    snapshot =>
+      store.commit(
+        'setOutgoingFriendRequests',
+        snapshot.docs.map(d => d.data())
+      ),
+    onError
+  );
+  const savedSchedulesUnsubscriber = onSnapshot(
+    doc(fb.savedSchedulesCollection, email),
+    snapshot => store.commit('setSavedSchedules', snapshot.data()?.schedules ?? []),
+    onError
+  );
+  return () => {
+    friendsUnsubscriber();
+    incomingUnsubscriber();
+    outgoingUnsubscriber();
+    savedSchedulesUnsubscriber();
+  };
+};
 
 export const initializeFirestoreListeners = (onLoad: () => void): (() => void) => {
   const simplifiedUser = store.state.currentFirebaseUser;
@@ -450,6 +516,9 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
       emitOnLoadWhenLoaded();
     }
   );
+  const friendsUnsubscriber = featureFlagCheckers.isFriendsEnabled()
+    ? initializeFriendsListeners(simplifiedUser.email)
+    : undefined;
   const derivedDataComputationUnsubscriber = autoRecomputeDerivedData();
 
   const unsubscriber = () => {
@@ -459,6 +528,7 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
     overriddenFulfillmentChoiceUnsubscriber();
     uniqueIncrementerUnsubscriber();
     uniqueBlankCourseIncrementerUnsubscriber();
+    friendsUnsubscriber?.();
     derivedDataComputationUnsubscriber();
   };
   return unsubscriber;
