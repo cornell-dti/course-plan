@@ -17,6 +17,7 @@ const EXAM_TYPES: Readonly<Record<string, TransferExamType>> = {
   'Cornell Advanced Standing Exam': 'CASE',
 };
 
+const UNEARNED_GRADES = ['W', 'F', 'U', 'UX', 'INC', 'NC', 'AUD'];
 const TERM_PATTERN = /^(FALL|SPRING|SUMMER|WINTER) (\d{4})$/;
 const COURSE_PATTERN = /^([A-Z][A-Z&]{1,7} \d{4}[A-Z]?) .+? (\d+\.\d{2})(?: (\S+))?$/;
 const CODE_PATTERN = /^[A-Z][A-Z&]{1,7} \d{4}[A-Z]?\b/;
@@ -69,7 +70,7 @@ export const parseTranscriptLines = (rawLines: readonly string[]) => {
     else if (/Test Credits Detailed/.test(line)) section = 'tests';
     else if (section === 'record') {
       const course = line.match(COURSE_PATTERN);
-      if (course == null || current == null || ['W', 'F', 'U'].includes(course[3])) return;
+      if (course == null || current == null || UNEARNED_GRADES.includes(course[3])) return;
       current.courses.push({ code: course[1], credits: parseFloat(course[2]) });
     } else if (section === 'milestones') {
       if (/^Milestone Status: ?Completed/.test(line) && milestone === 'Swim Test') tookSwim = true;

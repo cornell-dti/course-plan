@@ -39,6 +39,17 @@ it('imports each term once, skipping withdrawn, failed, known and unknown course
   expect(skipped).toBe(2);
 });
 
+it('skips courses with an unearned grade', () => {
+  const unearned = ['W', 'F', 'U', 'UX', 'INC', 'NC', 'AUD'].map(
+    grade => `ENGL 1183 FWS: WORD AND IMAGE 0.00 ${grade}`
+  );
+  const { semesters } = runImport(
+    [],
+    ['Cornell University', 'FALL 2025', ...unearned, 'PE 1300 BOWLING 1.00 SX']
+  );
+  expect(semesters.flatMap(s => s.courses.map(c => c.course.catalogNbr))).toEqual(['1300']);
+});
+
 it("prefers the term's roster and keeps credits only once earned", () => {
   const { semesters } = runImport();
   expect(semesters[2].courses[1]).toEqual({ course: courses[4], credits: null });
