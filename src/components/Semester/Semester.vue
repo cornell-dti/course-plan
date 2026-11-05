@@ -41,6 +41,14 @@
       :deleteSemYear="year"
       v-if="isEditSemesterOpen"
     />
+    <import-calendar-modal
+      v-if="pendingIcsImport"
+      :season="season"
+      :year="year"
+      :courses="pendingIcsImport.notInCalendar"
+      @import="applyIcsImport"
+      @close="pendingIcsImport = null"
+    />
     <clear-semester
       @clear-semester="clearSemester"
       @close-clear-sem="closeClearSemesterModal"
@@ -181,7 +189,16 @@
       @open-delete-semester-modal="openDeleteSemesterModal"
       @open-edit-semester-modal="openEditSemesterModal"
       @open-clear-semester-modal="openClearSemesterModal"
+      @open-import-calendar="openImportCalendarPicker"
       v-click-outside="closeSemesterMenuIfOpen"
+    />
+    <input
+      ref="icsFileInput"
+      class="semester-hiddenFileInput"
+      type="file"
+      accept=".ics,text/calendar"
+      @change="onIcsFileSelected"
+      data-cyId="semester-icsFileInput"
     />
   </div>
 </template>
@@ -201,6 +218,7 @@ import SemesterMenu from '@/components/Modals/SemesterMenu.vue';
 import DeleteSemester from '@/components/Modals/DeleteSemester.vue';
 import EditSemester from '@/components/Modals/EditSemester.vue';
 import ClearSemester from '@/components/Modals/ClearSemester.vue';
+import ImportCalendarModal from '@/components/Modals/ImportCalendarModal.vue';
 import AddCourseButton from '@/components/AddCourseButton.vue';
 import BlankCourseModal from '@/components/Modals/NewCourse/BlankCourseModal.vue';
 import DistributionRequirementsModal from '@/components/Modals/NewCourse/DistributionRequirementsModal.vue';
@@ -215,12 +233,15 @@ import winter from '@/assets/images/winterEmoji.svg';
 import summer from '@/assets/images/summerEmoji.svg';
 import {
   cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData,
+  cornellCourseRosterCoursesWithSchedulesToFirebaseSemesterCoursesWithGlobalData,
   editSemester,
   editSemesters,
   addCourseToSemester,
+  addCoursesToSemester,
   deleteCourseFromSemester,
   deleteAllCoursesFromSemester,
   updateRequirementChoices,
+  getDefaultRequirementChoices,
   addCollection,
   addCourseToCollections,
   editCollection,
@@ -234,6 +255,9 @@ import {
 } from '@/requirements/requirement-frontend-utils';
 
 import featureFlagCheckers from '@/feature-flags';
+import { seasonAndYearToRosterIdentifier } from '@/user-data-converter';
+import { importIcsForSemester, importSummaryMessage } from '@/tools/import-calendar';
+import type { ImportIcsResult } from '@/tools/import-calendar';
 
 type ComponentRef = { $el: HTMLDivElement };
 
@@ -246,6 +270,7 @@ export default defineComponent({
     DeleteSemester,
     EditSemester,
     ClearSemester,
+    ImportCalendarModal,
     NewCourseModal,
     CourseConflictModal,
     DeleteNoteModal,
@@ -277,6 +302,11 @@ export default defineComponent({
       conflictCourse: {} as FirestoreSemesterCourse,
       courseConflicts: new Set<string[]>(),
       selfCheckRequirements: [] as readonly RequirementWithIDSourceType[],
+      pendingIcsImport: null as Extract<ImportIcsResult, { status: 'ok' }> | null,
+      importConflictQueue: [] as {
+        course: FirestoreSemesterCourse;
+        data: CornellCourseRosterCourse;
+      }[],
       isDeleteNoteOpen: false,
       noteCourseUniqueID: undefined as number | undefined,
 
@@ -545,6 +575,31 @@ export default defineComponent({
     },
     closeConflictModal() {
       this.isConflictModalOpen = false;
+      this.$nextTick(() => this.openNextImportConflict());
+    },
+    openNextImportConflict() {
+      while (this.importConflictQueue.length > 0) {
+        const [{ course, data }, ...rest] = this.importConflictQueue;
+        this.importConflictQueue = rest;
+        const conflicts = store.state.courseToRequirementsInConstraintViolations.get(
+          course.uniqueID
+        );
+        if (conflicts && conflicts.size > 0) {
+          const { selfCheckRequirements } = this.relatedRequirementsOf(data);
+          this.openConflictModal(course, conflicts, selfCheckRequirements);
+          return;
+        }
+      }
+    },
+    relatedRequirementsOf(data: CornellCourseRosterCourse) {
+      return getRelatedUnfulfilledRequirements(
+        data,
+        store.state.groupedRequirementFulfillmentReport,
+        store.state.onboardingData,
+        store.state.toggleableRequirementChoices,
+        store.state.overriddenFulfillmentChoices,
+        store.state.userRequirementsMap
+      );
     },
     openSemesterModal() {
       // Delete confirmation for the use case of adding multiple semesters consecutively
@@ -691,6 +746,88 @@ export default defineComponent({
       this.openConfirmationModal(`Added ${courseCode} to ${this.season} ${this.year}`);
 
       // Track semester update after adding course
+      this.$nextTick(() => {
+        this.trackSemesterUpdate();
+      });
+    },
+    openImportCalendarPicker() {
+      this.semesterMenuOpen = false;
+      (this.$refs.icsFileInput as HTMLInputElement).click();
+    },
+    onIcsFileSelected(event: Event) {
+      const input = event.target as HTMLInputElement;
+      const file = input.files != null && input.files.length > 0 ? input.files[0] : null;
+      input.value = '';
+      if (file == null) return;
+      const reader = new FileReader();
+      reader.onload = () => this.importIcsText(String(reader.result));
+      reader.onerror = () => this.openConfirmationModal('Could not read that file');
+      reader.readAsText(file);
+    },
+    importIcsText(text: string) {
+      const result = importIcsForSemester(
+        text,
+        seasonAndYearToRosterIdentifier(this.season, this.year),
+        this.courses
+      );
+      if (result.status === 'invalid-file') {
+        this.openConfirmationModal('No classes found in that file');
+        return;
+      }
+      if (result.status === 'wrong-season') {
+        this.openConfirmationModal(`That calendar isn't for a ${this.season} semester`);
+        return;
+      }
+      this.pendingIcsImport = result;
+      if (result.notInCalendar.length === 0) this.applyIcsImport(false);
+    },
+    applyIcsImport(replace: boolean) {
+      const result = this.pendingIcsImport;
+      this.pendingIcsImport = null;
+      if (result == null) return;
+      const removed = replace ? result.notInCalendar.map(course => course.uniqueID) : [];
+      if (result.matched.length > 0 || removed.length > 0) {
+        const newCourses = cornellCourseRosterCoursesWithSchedulesToFirebaseSemesterCoursesWithGlobalData(
+          result.matched
+        );
+        // Computed before the add, as NewCourseModal does before its course exists.
+        const choices = this.handleRequirementConflicts
+          ? {}
+          : getDefaultRequirementChoices(
+              newCourses.map((course, i) => ({
+                year: this.year,
+                season: this.season,
+                course,
+                data: result.matched[i].course,
+              })),
+              removed
+            );
+        addCoursesToSemester(
+          store.state.currentPlan,
+          this.year,
+          this.season,
+          newCourses,
+          this.$gtag,
+          removed
+        );
+        if (!this.handleRequirementConflicts || removed.length > 0) {
+          const removedIDs = new Set(removed.map(String));
+          updateRequirementChoices(old => ({
+            ...Object.fromEntries(Object.entries(old).filter(([id]) => !removedIDs.has(id))),
+            ...choices,
+          }));
+        }
+        if (this.handleRequirementConflicts) {
+          this.importConflictQueue = newCourses.map((course, i) => ({
+            course,
+            data: result.matched[i].course,
+          }));
+          this.openNextImportConflict();
+        }
+      }
+      this.openConfirmationModal(
+        importSummaryMessage(result, this.season, this.year, removed.length)
+      );
       this.$nextTick(() => {
         this.trackSemesterUpdate();
       });
@@ -1083,6 +1220,10 @@ export default defineComponent({
     right: -3rem;
     top: 2rem;
     z-index: 1;
+  }
+
+  &-hiddenFileInput {
+    display: none;
   }
 
   &-name {
