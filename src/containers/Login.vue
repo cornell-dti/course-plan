@@ -278,6 +278,8 @@ import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import CustomFooter from '@/components/Footer.vue';
 
 import { GTagLoginEvent } from '@/gtag';
+import capturePostHogEvent from '@/composables/usePostHog';
+import coursePlanLog from '@/posthog-logs';
 import store from '@/store';
 import { checkNotNull } from '@/utilities';
 
@@ -321,6 +323,8 @@ export default defineComponent({
           };
           store.commit('setCurrentFirebaseUser', simplifiedUser);
           this.performingRequest = false;
+          capturePostHogEvent('user_logged_in', { auth_method: 'google' });
+          coursePlanLog.loginCompleted();
           this.$router.push('/');
           GTagLoginEvent(this.$gtag, 'Google');
         })
