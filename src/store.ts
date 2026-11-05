@@ -245,6 +245,7 @@ const autoRecomputeDerivedData = (): (() => void) =>
       case 'setSemesters' || 'setPlans' || 'setSavedCourses': {
         const allCourseSet = new Set<string>();
         const duplicatedCourseCodeSet = new Set<string>();
+        const codesByCrseId = new Map<number, Set<string>>();
         const courseMap: Record<number, FirestoreSemesterCourse> = {};
         const courseToSemesterMap: Record<number, FirestoreSemester> = {};
         (state.plans.length === 0
@@ -263,9 +264,19 @@ const autoRecomputeDerivedData = (): (() => void) =>
             } else {
               allCourseSet.add(code);
             }
+            // Cross-listings share a crseId. Blank courses can reuse another course's crseId,
+            // so we do not include them in the check
+            if (course.type !== 'BlankCourse') {
+              const codes = codesByCrseId.get(course.crseId) ?? new Set<string>();
+              codes.add(code);
+              codesByCrseId.set(course.crseId, codes);
+            }
             courseMap[course.uniqueID] = course;
             courseToSemesterMap[course.uniqueID] = semester;
           });
+        });
+        codesByCrseId.forEach(codes => {
+          if (codes.size > 1) codes.forEach(code => duplicatedCourseCodeSet.add(code));
         });
         const derivedCourseData: DerivedCoursesData = {
           duplicatedCourseCodeSet,
