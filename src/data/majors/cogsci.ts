@@ -5,6 +5,19 @@ import {
 } from '../../requirements/checkers';
 import { AdvisorGroup } from '../../tools/advisors/types';
 
+/** Introductory Core options without a COGST code; they count toward the 40-credit total but are not electives. */
+const cogsciIntroductoryCoreCourses: readonly string[] = [
+  'PSYCH 2500',
+  'SOC 3010',
+  'STSCI 2150',
+  'STSCI 2200',
+  'CS 1380',
+  'CS 1700',
+  'INFO 2950',
+  'ILRST 2100',
+  'HD 2930',
+];
+
 const cogsciElectiveCourses: readonly string[] = [
   'COGST ****',
   'CLASS 4646',
@@ -160,7 +173,10 @@ const cogsciRequirements: readonly CollegeOrMajorRequirement[] = [
       'the course does not have the COGST course code. Up to 12 credits of independent study or fieldwork (COGST 4700, COGST 4710) may be counted ' +
       'toward the major (3 credits = 1 course). Graduate courses and seminars require advisor approval.',
     source: 'https://cogsci.cornell.edu/undergraduate-major',
-    checker: includesWithSingleRequirement(...cogsciElectiveCourses),
+    checker: includesWithSingleRequirement(
+      ...cogsciIntroductoryCoreCourses,
+      ...cogsciElectiveCourses
+    ),
     checkerWarning:
       'We do not check the 12-credit limit on independent study, letter-grade requirement, or minimum grade.',
     fulfilledBy: 'credits',

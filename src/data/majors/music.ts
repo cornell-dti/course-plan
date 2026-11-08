@@ -1,9 +1,13 @@
-import { CollegeOrMajorRequirement } from '../../requirements/types';
+import { CollegeOrMajorRequirement, Course } from '../../requirements/types';
 import {
+  courseMatchesCodeOptions,
   includesWithSingleRequirement,
   includesWithSubRequirements,
 } from '../../requirements/checkers';
 import { AdvisorGroup } from '../../tools/advisors/types';
+
+/** MUSIC 1100 and MUSIC 1199 do not count toward the major. */
+const NON_MAJOR_MUSIC_NUMBERS: readonly string[] = ['1100', '1199'];
 
 /** History and Culture (MUSIC-HC) courses. MUSIC 2201 is excluded because it is a required core course. */
 const historyAndCulture = [
@@ -220,39 +224,44 @@ const musicRequirements: readonly CollegeOrMajorRequirement[] = [
       'With advisor permission, at most two electives may be satisfied by MUSIC-PL courses taken for a grade (one collaborative and one individual instruction); ' +
       'no MUSIC-PL course may satisfy two 3000-level or higher electives. MUSIC 1100 and MUSIC 1199 do not count toward the major.',
     source: 'https://catalog.cornell.edu/programs/music-ba/',
+    // Courses are assigned to the first unfilled slot they match, so the most restrictive slots come
+    // first; otherwise a 3000-level MUSIC-HC course would be consumed by an any-level slot.
     checker: includesWithSubRequirements(
-      materialsAndTechniques,
-      electives,
+      atLeastLevel(historyAndCulture, 3),
+      atLeastLevel(electives, 3),
       atLeastLevel(materialsAndTechniques, 2),
       atLeastLevel(historyAndCulture, 2),
       atLeastLevel(electives, 2),
-      atLeastLevel(historyAndCulture, 3),
-      atLeastLevel(electives, 3)
+      materialsAndTechniques,
+      electives
     ),
     checkerWarning:
       'We do not check MUSIC-PL courses used as electives with advisor permission; add those to your plan and confirm with your advisor.',
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1, 1, 1, 1, 1],
     slotNames: [
-      'MUSIC-MT (any level)',
-      'MUSIC-HC or MUSIC-MT (any level)',
+      'MUSIC-HC (3000+)',
+      'MUSIC-HC or MUSIC-MT (3000+)',
       'MUSIC-MT (2000+)',
       'MUSIC-HC (2000+)',
       'MUSIC-HC or MUSIC-MT (2000+)',
-      'MUSIC-HC (3000+)',
-      'MUSIC-HC or MUSIC-MT (3000+)',
+      'MUSIC-MT (any level)',
+      'MUSIC-HC or MUSIC-MT (any level)',
     ],
   },
   {
     name: 'Minimum Credits',
     description: 'The minimum number of credits needed for the music major is 32.',
     source: 'https://catalog.cornell.edu/programs/music-ba/',
-    checker: includesWithSingleRequirement(
-      'MUSIC ****',
-      ...historyAndCulture,
-      ...materialsAndTechniques,
-      ...performanceAndLessons
-    ),
+    checker: [
+      (course: Course): boolean =>
+        (course.subject === 'MUSIC' && !NON_MAJOR_MUSIC_NUMBERS.includes(course.catalogNbr)) ||
+        courseMatchesCodeOptions(course, [
+          ...historyAndCulture,
+          ...materialsAndTechniques,
+          ...performanceAndLessons,
+        ]),
+    ],
     fulfilledBy: 'credits',
     perSlotMinCount: [32],
     allowCourseDoubleCounting: true,
