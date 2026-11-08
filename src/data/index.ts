@@ -82,6 +82,44 @@ import mpaRequirements, { mpaAdvisors } from './grad/mpa';
 
 import { MATH2940, CHEM2080 } from './specializations/en';
 import nsRequirements, { nsAdvisors } from './majors/ns';
+import africanaRequirements, { africanaAdvisors } from './majors/africana';
+import agsciRequirements, { agsciAdvisors } from './majors/agsci';
+import amstRequirements, { amstAdvisors } from './majors/amst';
+import animalsciRequirements, { animalsciAdvisors } from './majors/animalsci';
+import archRequirements, { archAdvisors } from './majors/arch';
+import arkeoRequirements, { arkeoAdvisors } from './majors/arkeo';
+import artRequirements, { artAdvisors } from './majors/art';
+import arthRequirements, { arthAdvisors } from './majors/arth';
+import asianRequirements, { asianAdvisors } from './majors/asian';
+import biometryRequirements, { biometryAdvisors } from './majors/biometry';
+import capsRequirements, { capsAdvisors } from './majors/caps';
+import classicsRequirements, { classicsAdvisors } from './majors/classics';
+import cogsciRequirements, { cogsciAdvisors } from './majors/cogsci';
+import complitRequirements, { complitAdvisors } from './majors/complit';
+import entomRequirements, { entomAdvisors } from './majors/entom';
+import fgssRequirements, { fgssAdvisors } from './majors/fgss';
+import fiberScienceRequirements, { fiberScienceAdvisors } from './majors/fibersci';
+import frenchRequirements, { frenchAdvisors } from './majors/french';
+import gdevRequirements, { gdevAdvisors } from './majors/gdev';
+import germanRequirements, { germanAdvisors } from './majors/german';
+import gphsRequirements, { gphsAdvisors } from './majors/gphs';
+import haudRequirements, { haudAdvisors } from './majors/haud';
+import hbhsRequirements, { hbhsAdvisors } from './majors/hbhs';
+import hcpRequirements, { hcpAdvisors } from './majors/hcp';
+import ilrMajorRequirements, { ilrAdvisors as ilrMajorAdvisors } from './majors/ilr';
+import italianRequirements, { italianAdvisors } from './majors/italian';
+import jwstRequirements, { jwstAdvisors } from './majors/jwst';
+import laRequirements, { laAdvisors } from './majors/la';
+import lspRequirements, { lspAdvisors } from './majors/lsp';
+import musicRequirements, { musicAdvisors } from './majors/music';
+import nesRequirements, { nesAdvisors } from './majors/nes';
+import philosophyRequirements, { philosophyAdvisors } from './majors/philosophy';
+import plantsciRequirements, { plantsciAdvisors } from './majors/plantsci';
+import pmaRequirements, { pmaAdvisors } from './majors/pma';
+import pubpolRequirements, { pubpolAdvisors } from './majors/pubpol';
+import relstRequirements, { relstAdvisors } from './majors/relst';
+import sociologyRequirements, { sociologyAdvisors } from './majors/sociology';
+import stsciRequirements, { stsciAdvisors } from './majors/stsci';
 import econILRMinorRequirements, { econILRMinorAdvisors } from './minors/econILR';
 
 const json: RequirementsJson = {
@@ -447,6 +485,272 @@ const json: RequirementsJson = {
       requirements: vienRequirements,
       advisors: vienAdvisors,
       abbrev: 'VIEN',
+    },
+    AFRICANA: {
+      name: 'Africana Studies',
+      schools: ['AS1', 'AS2'],
+      requirements: africanaRequirements,
+      advisors: africanaAdvisors,
+      abbrev: 'Africana',
+    },
+    AGSCI: {
+      name: 'Agricultural Sciences',
+      schools: ['AG'],
+      requirements: agsciRequirements,
+      advisors: agsciAdvisors,
+      abbrev: 'Ag Sciences',
+    },
+    AMST: {
+      name: 'American Studies',
+      schools: ['AS1', 'AS2'],
+      requirements: amstRequirements,
+      advisors: amstAdvisors,
+      abbrev: 'AmSt',
+    },
+    ANSC: {
+      name: 'Animal Science',
+      schools: ['AG'],
+      requirements: animalsciRequirements,
+      advisors: animalsciAdvisors,
+      abbrev: 'Animal Science',
+    },
+    ARCH: {
+      name: 'Architecture',
+      schools: ['AR'],
+      requirements: archRequirements,
+      advisors: archAdvisors,
+      abbrev: 'B.Arch',
+    },
+    ARKEO: {
+      name: 'Archaeology',
+      schools: ['AS1', 'AS2'],
+      requirements: arkeoRequirements,
+      advisors: arkeoAdvisors,
+      abbrev: 'Archaeology',
+    },
+    ART: {
+      name: 'Fine Arts',
+      schools: ['AR'],
+      requirements: artRequirements,
+      advisors: artAdvisors,
+      abbrev: 'Art (BFA)',
+    },
+    ARTH: {
+      name: 'History of Art',
+      schools: ['AS1', 'AS2'],
+      requirements: arthRequirements,
+      advisors: arthAdvisors,
+      abbrev: 'Art History',
+    },
+    ASIAN: {
+      name: 'Asian Studies',
+      schools: ['AS1', 'AS2'],
+      requirements: asianRequirements,
+      advisors: asianAdvisors,
+      abbrev: 'Asian',
+    },
+    BTRY: {
+      name: 'Statistics & Biometry',
+      schools: ['AG'],
+      requirements: biometryRequirements,
+      advisors: biometryAdvisors,
+      abbrev: 'Stats & Biometry',
+    },
+    CAPS: {
+      name: 'China and Asia-Pacific Studies',
+      schools: ['AS1', 'AS2'],
+      requirements: capsRequirements,
+      advisors: capsAdvisors,
+      abbrev: 'CAPS',
+    },
+    CLASSICS: {
+      name: 'Classics',
+      schools: ['AS1', 'AS2'],
+      requirements: classicsRequirements,
+      advisors: classicsAdvisors,
+      abbrev: 'Classics',
+    },
+    COGSCI: {
+      name: 'Cognitive Science',
+      schools: ['AS1', 'AS2'],
+      requirements: cogsciRequirements,
+      advisors: cogsciAdvisors,
+      abbrev: 'Cog Sci',
+    },
+    COML: {
+      name: 'Comparative Literature',
+      schools: ['AS1', 'AS2'],
+      requirements: complitRequirements,
+      advisors: complitAdvisors,
+      abbrev: 'Comp Lit',
+    },
+    ENTOM: {
+      name: 'Entomology',
+      schools: ['AG'],
+      requirements: entomRequirements,
+      advisors: entomAdvisors,
+      abbrev: 'Entomology',
+    },
+    FGSS: {
+      name: 'Feminist, Gender, & Sexuality Studies',
+      schools: ['AS1', 'AS2'],
+      requirements: fgssRequirements,
+      advisors: fgssAdvisors,
+      abbrev: 'FGSS',
+    },
+    FIBERSCI: {
+      name: 'Fiber Science',
+      schools: ['HE'],
+      requirements: fiberScienceRequirements,
+      advisors: fiberScienceAdvisors,
+      abbrev: 'Fiber Sci',
+    },
+    FRENCH: {
+      name: 'French',
+      schools: ['AS1', 'AS2'],
+      requirements: frenchRequirements,
+      advisors: frenchAdvisors,
+      abbrev: 'French',
+    },
+    GDEV: {
+      name: 'Global Development',
+      schools: ['AG'],
+      requirements: gdevRequirements,
+      advisors: gdevAdvisors,
+      abbrev: 'Global Dev',
+    },
+    GERMAN: {
+      name: 'German Studies',
+      schools: ['AS1', 'AS2'],
+      requirements: germanRequirements,
+      advisors: germanAdvisors,
+      abbrev: 'German',
+    },
+    GPHS: {
+      name: 'Global & Public Health Sciences',
+      schools: ['AG', 'HE'],
+      requirements: gphsRequirements,
+      advisors: gphsAdvisors,
+      abbrev: 'GPHS',
+    },
+    HAUD: {
+      name: 'History of Architecture and Urban Development',
+      schools: ['AR'],
+      requirements: haudRequirements,
+      advisors: haudAdvisors,
+      abbrev: 'HAUD',
+    },
+    HBHS: {
+      name: 'Human Biology, Health, and Society',
+      schools: ['HE'],
+      requirements: hbhsRequirements,
+      advisors: hbhsAdvisors,
+      abbrev: 'HBHS',
+    },
+    HCP: {
+      name: 'Health Care Policy',
+      schools: ['HE'],
+      requirements: hcpRequirements,
+      advisors: hcpAdvisors,
+      abbrev: 'HCP',
+    },
+    ILR: {
+      name: 'Industrial and Labor Relations',
+      schools: ['IL'],
+      requirements: ilrMajorRequirements,
+      advisors: ilrMajorAdvisors,
+      abbrev: 'ILR',
+    },
+    ITALIAN: {
+      name: 'Italian',
+      schools: ['AS1', 'AS2'],
+      requirements: italianRequirements,
+      advisors: italianAdvisors,
+      abbrev: 'Italian',
+    },
+    JWST: {
+      name: 'Jewish Studies',
+      schools: ['AS1', 'AS2'],
+      requirements: jwstRequirements,
+      advisors: jwstAdvisors,
+      abbrev: 'Jewish Studies',
+    },
+    LA: {
+      name: 'Landscape Architecture',
+      schools: ['AG'],
+      requirements: laRequirements,
+      advisors: laAdvisors,
+      abbrev: 'Landscape Arch',
+    },
+    LSP: {
+      name: 'Latina/o Studies',
+      schools: ['AS1', 'AS2'],
+      requirements: lspRequirements,
+      advisors: lspAdvisors,
+      abbrev: 'Latina/o Studies',
+    },
+    MUSIC: {
+      name: 'Music',
+      schools: ['AS1', 'AS2'],
+      requirements: musicRequirements,
+      advisors: musicAdvisors,
+      abbrev: 'Music',
+    },
+    NES: {
+      name: 'Near Eastern Studies',
+      schools: ['AS1', 'AS2'],
+      requirements: nesRequirements,
+      advisors: nesAdvisors,
+      abbrev: 'NES',
+    },
+    PHIL: {
+      name: 'Philosophy',
+      schools: ['AS1', 'AS2'],
+      requirements: philosophyRequirements,
+      advisors: philosophyAdvisors,
+      abbrev: 'Philosophy',
+    },
+    PLSCI: {
+      name: 'Plant Sciences',
+      schools: ['AG'],
+      requirements: plantsciRequirements,
+      advisors: plantsciAdvisors,
+      abbrev: 'Plant Sci',
+    },
+    PMA: {
+      name: 'Performing and Media Arts',
+      schools: ['AS1', 'AS2'],
+      requirements: pmaRequirements,
+      advisors: pmaAdvisors,
+      abbrev: 'PMA',
+    },
+    PUBPOL: {
+      name: 'Public Policy',
+      schools: ['AS1', 'AS2', 'HE'],
+      requirements: pubpolRequirements,
+      advisors: pubpolAdvisors,
+      abbrev: 'Public Policy',
+    },
+    RELST: {
+      name: 'Religious Studies',
+      schools: ['AS1', 'AS2'],
+      requirements: relstRequirements,
+      advisors: relstAdvisors,
+      abbrev: 'Religious Studies',
+    },
+    SOC: {
+      name: 'Sociology',
+      schools: ['AS1', 'AS2'],
+      requirements: sociologyRequirements,
+      advisors: sociologyAdvisors,
+      abbrev: 'Sociology',
+    },
+    STSCI: {
+      name: 'Statistical Science',
+      schools: ['AS1', 'AS2'],
+      requirements: stsciRequirements,
+      advisors: stsciAdvisors,
+      abbrev: 'Stat Sci',
     },
   },
   minor: {
