@@ -103,6 +103,7 @@ type FirestoreOnboardingUserData = {
   sawNewFeature: boolean;
   sawGiveaway: boolean;
   sawScheduleGenerator: boolean;
+  dismissedPreEnrollBanner?: Record<string, boolean>;
   fa25giveaway: {
     saw: boolean;
     step1: boolean;
@@ -240,6 +241,7 @@ type AppOnboardingData = {
   sawNewFeature: boolean;
   sawGiveaway: boolean;
   sawScheduleGenerator: boolean;
+  dismissedPreEnrollBanner: Record<string, boolean>;
   fa25giveaway: {
     saw: boolean;
     step1: boolean;

@@ -1,5 +1,5 @@
 <template>
-  <div class="dashboard">
+  <div class="dashboard" :style="`--pre-enroll-banner-height: ${preEnrollBannerHeight}px`">
     <onboarding
       class="dashboard-modal"
       v-if="isOnboarding"
@@ -19,6 +19,12 @@
       :credit-limit="creditLimitForGeneration"
       @closeScheduleGenerateModal="closeScheduleGenerateModal"
     />
+    <div ref="preEnrollBannerContainer" class="dashboard-banner">
+      <pre-enroll-banner
+        v-if="preEnrollReady && !isOnboarding && !showToolsPage && !isProfileOpen"
+        :onboarding-data="onboardingData"
+      />
+    </div>
     <div class="dashboard-mainView">
       <div class="dashboard-menus">
         <nav-bar
@@ -122,7 +128,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, onBeforeUnmount, onMounted, ref } from 'vue';
 
 import introJs from 'intro.js';
 import rosters from '@/assets/courses/rosters.json';
@@ -149,6 +155,14 @@ import {
 } from '@/assets/constants/scss-variables';
 import { CourseForFrontend } from '@/schedule-generator/course-unit';
 import Requirement from '@/schedule-generator/requirement';
+
+import PreEnrollBanner from '@/components/PreEnrollBanner.vue';
+
+// ResizeObserver is not included in this project's TypeScript 4.1 DOM types.
+declare const ResizeObserver: new (callback: () => void) => {
+  observe(target: Element): void;
+  disconnect(): void;
+};
 
 const smallBreakpointPixels = parseInt(
   smallBreakpoint.substring(0, smallBreakpoint.length - 2),
@@ -180,7 +194,32 @@ tour.setOption('exitOnOverlayClick', 'false');
 let listenerUnsubscriber = (): void => {};
 
 export default defineComponent({
+  setup() {
+    const preEnrollBannerContainer = ref<HTMLElement | null>(null);
+    const preEnrollBannerHeight = ref(0);
+    let observer: InstanceType<typeof ResizeObserver> | undefined;
+
+    onMounted(() => {
+      const container = preEnrollBannerContainer.value;
+      if (!container) return;
+
+      const updateHeight = () => {
+        preEnrollBannerHeight.value = container.getBoundingClientRect().height;
+      };
+
+      updateHeight();
+      observer = new ResizeObserver(updateHeight);
+      observer.observe(container);
+    });
+
+    onBeforeUnmount(() => {
+      observer?.disconnect();
+    });
+
+    return { preEnrollBannerContainer, preEnrollBannerHeight };
+  },
   components: {
+    PreEnrollBanner,
     BottomBar,
     NavBar,
     ScheduleGenerateSideBar,
@@ -197,6 +236,7 @@ export default defineComponent({
   data() {
     return {
       loaded: true,
+      preEnrollReady: false,
       compactVal: false,
       showSideBar: true,
       isOnboarding: false,
@@ -292,6 +332,7 @@ export default defineComponent({
   },
   mounted() {
     listenerUnsubscriber = initializeFirestoreListeners(() => {
+      this.preEnrollReady = true;
       if (this.onboardingData.college !== '' || this.onboardingData.grad !== '') {
         this.loaded = true;
         if (!this.onboardingData.sawNewFeature) {
@@ -445,13 +486,28 @@ export default defineComponent({
 @import '@/assets/scss/_variables.scss';
 
 .dashboard {
+  position: fixed;
+  inset: 0;
   display: flex;
   flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+  overscroll-behavior-y: none;
+
+  &-banner {
+    position: sticky;
+    top: 0;
+    z-index: 3;
+    flex-shrink: 0;
+    margin-bottom: 0;
+  }
 
   &-mainView {
     display: flex;
+    flex: 1;
+    min-height: 0;
+    isolation: isolate;
     background-color: $backgroundBlue;
-    min-height: 100vh;
   }
 
   &-menus {
@@ -475,12 +531,12 @@ export default defineComponent({
   }
 }
 
-.toolsPage {
-  width: 100%;
-}
-
+.toolsPage,
 .profilePage {
   width: 100%;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
 }
 
 .semester {

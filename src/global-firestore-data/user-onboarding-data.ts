@@ -1,6 +1,7 @@
 import { doc, setDoc, updateDoc } from 'firebase/firestore';
 
 import { SWIM_TEST_CODE } from '@/data/constants';
+import { getPreEnrollDismissalKey, PreEnrollReminderStage } from '../pre-enroll';
 import { onboardingDataCollection } from '../firebase-config';
 import store from '../store';
 import setUsernameData from './user-name';
@@ -30,6 +31,7 @@ export const setAppOnboardingData = (
     sawGiveaway: onboarding.sawGiveaway,
     fa25giveaway: onboarding.fa25giveaway,
     sawScheduleGenerator: onboarding.sawScheduleGenerator,
+    dismissedPreEnrollBanner: onboarding.dismissedPreEnrollBanner ?? {},
   });
 };
 
@@ -101,4 +103,22 @@ export const updateSawScheduleGenerator = (sawScheduleGenerator: boolean): void 
   updateDoc(doc(onboardingDataCollection, store.state.currentFirebaseUser.email), {
     sawScheduleGenerator,
   });
+};
+
+export const dismissPreEnrollBanner = async (
+  termId: string,
+  stage: PreEnrollReminderStage
+): Promise<void> => {
+  const dismissalKey = getPreEnrollDismissalKey(termId, stage);
+  const email = store.state.currentFirebaseUser?.email;
+
+  if (!email) {
+    throw new Error('You must be signed in');
+  }
+
+  await updateDoc(doc(onboardingDataCollection, email), {
+    [`dismissedPreEnrollBanner.${dismissalKey}`]: true,
+  });
+
+  store.commit('setPreEnrollBannerDismissed', dismissalKey);
 };

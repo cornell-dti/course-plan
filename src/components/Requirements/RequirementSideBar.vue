@@ -614,7 +614,7 @@ export default defineComponent({
 .requirement-sidebar-btn-open {
   @include requirement-sidebar-btn;
   position: fixed;
-  top: 2rem;
+  top: calc(2rem + var(--pre-enroll-banner-height, 0px));
   box-shadow: 2px 0px 10px 0px #dddddd;
   border-top-right-radius: 10px;
   border-bottom-right-radius: 10px;
@@ -650,8 +650,10 @@ export default defineComponent({
 }
 .fixed {
   position: fixed;
-  top: 0;
+  top: var(--pre-enroll-banner-height, 0px);
+  height: calc(100vh - var(--pre-enroll-banner-height, 0px));
   overflow-y: scroll;
+  overscroll-behavior-y: none;
   overflow-x: hidden;
 }
 .fixed,
@@ -773,14 +775,15 @@ h1.title {
     position: fixed;
     width: 100%;
     padding-left: 0.5rem;
-    top: 4.5rem;
+    top: calc(4.5rem + var(--pre-enroll-banner-height, 0px));
+    height: calc(100vh - 4.5rem - var(--pre-enroll-banner-height, 0px));
   }
 
   .fixed {
-    top: 4.5rem;
+    top: calc(4.5rem + var(--pre-enroll-banner-height, 0px));
     left: 0rem;
     width: 100%;
-    height: calc(100vh - 4.5rem);
+    height: calc(100vh - 4.5rem - var(--pre-enroll-banner-height, 0px));
   }
 }
 </style>
