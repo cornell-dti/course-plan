@@ -35,6 +35,31 @@ const getSubjects = async (semester: string): Promise<readonly string[]> => {
 const cleanField = (value: string | null | undefined) =>
   value?.replace(/\u00a0/g, ' ') || undefined;
 
+/**
+ * A course as returned by the roster API.
+ *
+ * Since the FA25 roster, the API returns null for `catalogDistr`, `catalogAttribute` and
+ * `catalogCourseSubfield`, and reports the same information in `crseAttrValueGroups` instead, e.g.
+ * `{ attrDescr: 'Distribution Requirements', crseAttrValues: '(BSC-AG, OPHLS-AG), (BIO-AS)' }`.
+ */
+type RosterApiCourse = Course & {
+  readonly crseAttrValueGroups?:
+    | readonly { readonly attrDescr: string; readonly crseAttrValues: string }[]
+    | null;
+};
+
+/** @returns the parenthesized attribute values of the group named `attrDescr`, if there is one. */
+const attributeGroupValues = (
+  groups: RosterApiCourse['crseAttrValueGroups'],
+  attrDescr: string
+): string | undefined =>
+  cleanField(
+    groups
+      ?.filter(group => group.attrDescr === attrDescr)
+      .map(group => group.crseAttrValues)
+      .join(', ')
+  );
+
 /** Throws away course object fields we don't need. Used for generate small-enough course json. */
 const courseFieldFilter = ({
   subject,
@@ -51,7 +76,8 @@ const courseFieldFilter = ({
   catalogAttribute,
   acadCareer,
   acadGroup,
-}: Course): Course => ({
+  crseAttrValueGroups,
+}: RosterApiCourse): Course => ({
   subject: cleanField(subject) || '',
   crseId,
   catalogNbr: cleanField(catalogNbr) || '',
@@ -62,11 +88,17 @@ const courseFieldFilter = ({
   })),
   catalogWhenOffered: cleanField(catalogWhenOffered),
   catalogBreadth: cleanField(catalogBreadth),
-  catalogDistr: cleanField(catalogDistr),
+  catalogDistr:
+    cleanField(catalogDistr) ??
+    attributeGroupValues(crseAttrValueGroups, 'Distribution Requirements'),
   catalogComments: cleanField(catalogComments),
   catalogSatisfiesReq: cleanField(catalogSatisfiesReq),
-  catalogCourseSubfield: cleanField(catalogCourseSubfield),
-  catalogAttribute: cleanField(catalogAttribute),
+  catalogCourseSubfield:
+    cleanField(catalogCourseSubfield) ??
+    attributeGroupValues(crseAttrValueGroups, 'Program Requirements'),
+  catalogAttribute:
+    cleanField(catalogAttribute) ??
+    attributeGroupValues(crseAttrValueGroups, 'Exploratory Studies'),
   acadCareer: cleanField(acadCareer) || '',
   acadGroup: cleanField(acadGroup) || '',
 });
