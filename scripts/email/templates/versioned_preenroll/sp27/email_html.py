@@ -164,7 +164,7 @@ HTML = f"""
                 </tr>
                 <tr>
                     <td align="center" style="padding-top: 4px; font-family: {FONT}; font-size: 11px; font-weight: 700; color: #3D3D3D;">
-                        Courseplan
+                        CoursePlan
                     </td>
                 </tr>
 
