@@ -7,6 +7,8 @@ export default defineConfig({
   resolve: { alias: { '@': path.resolve(__dirname, './src') } },
   server: { port: 8080 },
   plugins: [vue()],
+  // Vite's default targets with Safari raised from 13.1 to 14: the Firebase SDK uses BigInt literals.
+  build: { target: ['es2020', 'edge88', 'firefox78', 'chrome87', 'safari14'] },
   css: {
     postcss: {
       plugins: [

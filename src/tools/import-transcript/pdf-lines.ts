@@ -35,9 +35,10 @@ export const pageTextItemsToLines = (
 
 export const extractPdfLines = async (data: ArrayBuffer): Promise<string[]> => {
   const [pdfjs, { default: workerSrc }] = await Promise.all([
-    import('pdfjs-dist'),
-    // eslint-disable-next-line import/extensions, import/no-unresolved
-    import('pdfjs-dist/build/pdf.worker.min.js?url'),
+    // The legacy build avoids Promise.withResolvers/Promise.try, which the default build needs.
+    import('pdfjs-dist/legacy/build/pdf.mjs'),
+    // eslint-disable-next-line import/no-unresolved
+    import('pdfjs-dist/legacy/build/pdf.worker.min.mjs?url'),
   ]);
   pdfjs.GlobalWorkerOptions.workerSrc = workerSrc;
   const doc = await pdfjs.getDocument({ data: new Uint8Array(data) }).promise;
