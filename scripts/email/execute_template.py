@@ -75,9 +75,10 @@ def send_emails(bcc_list: List[str]):
             print(f"Batch {i}/{total_chunks} failed with error: {e}")
 
     if failed:
-        print(f"\n{failed}/{total_chunks} batch(es) failed — see the errors above.")
-    else:
-        print("\nAll email batches sent successfully!")
+        raise RuntimeError(
+            f"{failed}/{total_chunks} batch(es) failed — see the errors above."
+        )
+    print("\nAll email batches sent successfully!")
     print("Email job completed!")
 
 
