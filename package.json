@@ -40,7 +40,7 @@
     "jspdf": "^2.5.1",
     "jspdf-autotable": "^3.5.25",
     "node-fetch": "^2.6.7",
-    "pdfjs-dist": "^3.5.141",
+    "pdfjs-dist": "^4.2.67",
     "posthog-js": "^1.284.0",
     "vue": "^3.2.19",
     "vue-gtag-next": "^1.14.0",
