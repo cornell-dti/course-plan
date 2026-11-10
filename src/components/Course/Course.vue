@@ -52,6 +52,8 @@
                 v-if="!isReqCourse && compact"
                 :course="course"
                 :isCompactView="true"
+                @mouseenter="isTooltipHovered = true"
+                @mouseleave="isTooltipHovered = false"
               />
             </div>
             <button
@@ -105,6 +107,8 @@
               v-if="!isReqCourse && !isSchedGenCourse && !isCourseConfirmationCard"
               :course="course"
               :isCompactView="false"
+              @mouseenter="isTooltipHovered = true"
+              @mouseleave="isTooltipHovered = false"
             />
           </div>
         </div>

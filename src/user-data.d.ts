@@ -8,6 +8,23 @@ type FirestoreUserName = {
   readonly lastName: string;
 };
 
+type FirestoreCourseMeeting = {
+  readonly component: string;
+  readonly section: string;
+  readonly location: string | null;
+  readonly daysOfTheWeek: readonly import('./schedule-generator/course-unit').DayOfTheWeek[];
+  readonly start: string;
+  readonly end: string;
+  readonly startDate: string | null;
+  readonly endDate: string | null;
+};
+
+type FirestoreCourseSchedule = {
+  readonly source: 'ics';
+  readonly roster: string;
+  readonly meetings: readonly FirestoreCourseMeeting[];
+};
+
 type FirestoreSemesterCourseBase = {
   readonly uniqueID: number;
   readonly code: string;
@@ -25,6 +42,7 @@ type FirestoreSemesterCourseBase = {
 type FirestoreSemesterCornellCourse = FirestoreSemesterCourseBase & {
   readonly type: 'CornellCourse'; // Discrminator for the type of course; Default type
   readonly lastRoster: string;
+  readonly schedule?: FirestoreCourseSchedule | null;
 };
 
 type FirestoreSemesterBlankCourse = FirestoreSemesterBase & {

@@ -54,6 +54,7 @@ import aerospaceMinorRequirements, { aerospaceMinorAdvisors } from './minors/aer
 import animalSciRequirements, { animalSciAdvisors } from './minors/animal-sci';
 import aiMinorRequirements, { aiMinorAdvisors } from './minors/artificial-intelligence';
 import appliedMathMinorRequirements, { appliedMathMinorAdvisors } from './minors/applied-math';
+import astronomyMinorRequirements, { astronomyMinorAdvisors } from './minors/astronomy';
 import buMinorRequirements, { buMinorAdvisors } from './minors/bu';
 import climateChangeMinorRequirements, {
   climateChangeMinorAdvisors,
@@ -72,6 +73,7 @@ import infoENMinorRequirements, { infoENMinorAdvisors } from './minors/infoEN';
 import lingMinorRequirements, { lingMinorAdvisors } from './minors/ling';
 import mathMinorRequirements, { mathMinorAdvisors } from './minors/math';
 import ormsMinorRequirements, { ormsMinorAdvisors } from './minors/orms';
+import philMinorRequirements, { philMinorAdvisors } from './minors/phil';
 import policyMinorRequirements, { policyMinorAdvisors } from './minors/policy';
 import psychMinorRequirements, { psychMinorAdvisors } from './minors/psych';
 import roboticsMinorRequirements, { roboticsMinorAdvisors } from './minors/robotics';
@@ -488,6 +490,13 @@ const json: RequirementsJson = {
       advisors: appliedMathMinorAdvisors,
       abbrev: 'AppliedMath',
     },
+    ASTRO: {
+      name: 'Astronomy',
+      schools: ['AS2'],
+      requirements: astronomyMinorRequirements,
+      advisors: astronomyMinorAdvisors,
+      abbrev: 'Astro',
+    },
     BU: {
       name: 'Business',
       schools: ['BU'],
@@ -611,6 +620,13 @@ const json: RequirementsJson = {
       requirements: ormsMinorRequirements,
       advisors: ormsMinorAdvisors,
       abbrev: 'ORMS',
+    },
+    PHIL: {
+      name: 'Philosophy',
+      schools: ['AS1', 'AS2'],
+      requirements: philMinorRequirements,
+      advisors: philMinorAdvisors,
+      abbrev: 'Phil',
     },
     POLICY: {
       name: 'Public Policy',

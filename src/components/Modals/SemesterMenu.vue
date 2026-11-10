@@ -41,6 +41,25 @@
     <button
       v-if="!isOpenModal"
       class="semesterMenu-section full-opacity-on-hover"
+      @click="openImportCalendar"
+      data-cyId="semesterMenu-import-calendar"
+    >
+      <div class="semesterMenu-content">
+        <div class="semesterMenu-content">
+          <div class="semesterMenu-left">
+            <img
+              class="semesterMenu-icon semesterMenu-icon--upload"
+              src="@/assets/images/download.svg"
+              alt="import calendar upload arrow icon"
+            />
+            <span class="semesterMenu-edit">Import from Calendar</span>
+          </div>
+        </div>
+      </div>
+    </button>
+    <button
+      v-if="!isOpenModal"
+      class="semesterMenu-section full-opacity-on-hover"
       @click="openDeleteSemesterModal"
       data-cyId="semesterMenu-delete"
     >
@@ -68,11 +87,15 @@ export default defineComponent({
     'open-delete-semester-modal': () => true,
     'open-edit-semester-modal': () => true,
     'open-clear-semester-modal': () => true,
+    'open-import-calendar': () => true,
   },
   props: {
     isOpenModal: { type: Boolean, required: true },
   },
   methods: {
+    openImportCalendar() {
+      this.$emit('open-import-calendar');
+    },
     openDeleteSemesterModal() {
       this.$emit('open-delete-semester-modal');
     },
@@ -132,6 +155,11 @@ export default defineComponent({
     &--color {
       width: 16px;
       height: 16px;
+    }
+    &--upload {
+      width: 14px;
+      height: 14px;
+      transform: rotate(180deg);
     }
   }
   &-delete {
