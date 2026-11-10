@@ -227,7 +227,7 @@ HTML = f"""
                         &nbsp;•&nbsp;
                         <a href="https://www.instagram.com/courseplan.io/" style="color: #105352; text-decoration: underline;">Instagram</a>
                         <br>
-                        Don't want these emails? Email hello@preenroll.courseplan.io and let us know.
+                        Don't want these emails? Email courseplan.io@gmail.com and let us know.
                     </td>
                 </tr>
             </table>
