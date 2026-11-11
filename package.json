@@ -23,7 +23,9 @@
     "test": "jest",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",
-    "cypress:e2e": "npm run build:dev && concurrently \"npm run serve:build\" \"wait-on http-get://localhost:8080 && npm run cypress:run\" --kill-others --success first"
+    "cypress:e2e": "npm run build:dev && concurrently \"npm run serve:build\" \"wait-on http-get://localhost:8080 && npm run cypress:run\" --kill-others --success first",
+    "program-audit": "npm run ts-node -- scripts/program-audit/audit.ts",
+    "program-compare": "npm run ts-node -- scripts/program-audit/compare.ts"
   },
   "dependencies": {
     "@types/intro.js": "^3.0.0",
@@ -49,6 +51,7 @@
     "vuex": "^4.0.2"
   },
   "devDependencies": {
+    "@anthropic-ai/sdk": "^1.8.0",
     "@babel/core": "^7.13.10",
     "@babel/preset-env": "^7.13.12",
     "@babel/preset-typescript": "^7.13.0",
@@ -83,7 +86,8 @@
     "typescript": "<=4.1.5",
     "vite": "^2.9.16",
     "vue-tsc": "^0.3.0",
-    "wait-on": "^5.3.0"
+    "wait-on": "^5.3.0",
+    "zod": "^4.6.7"
   },
   "prettier": {
     "tabWidth": 2,

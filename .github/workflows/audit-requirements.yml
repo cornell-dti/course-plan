@@ -1,0 +1,89 @@
+name: Compare Requirements with Cornell Catalog
+# Asks Claude to compare CoursePlan's requirement data for supported majors and
+# minors with their catalog.cornell.edu pages, and opens a PR containing a
+# report of every difference it finds. Nothing under src/ is changed; a person
+# reads the report and decides what to fix.
+on:
+  schedule:
+    - cron: '0 12 1 * *' # 12:00 UTC on the 1st of every month
+  workflow_dispatch:
+    inputs:
+      count:
+        description: 'How many of the least recently checked programs to compare'
+        default: '10'
+      slugs:
+        description: 'Or: specific catalog slugs, space separated (e.g. "computer-science-bs robotics-minor")'
+        default: ''
+
+permissions:
+  contents: write
+  pull-requests: write
+
+env:
+  PR_BRANCH: program-audit/requirements
+
+jobs:
+  compare:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - name: NPM Clean Install
+        run: npm ci
+      - name: Keep results from an open report PR
+        # If the last report PR is still open, start from its results so this run
+        # moves on to programs that have not been checked yet.
+        run: |
+          if git fetch --depth=1 origin "$PR_BRANCH" 2>/dev/null; then
+            git checkout FETCH_HEAD -- scripts/program-audit/comparisons scripts/program-audit/REQUIREMENTS_REPORT.md || true
+            echo "Restored results from $PR_BRANCH"
+          else
+            echo "No open report branch; starting from main"
+          fi
+      - name: Refresh the list of Cornell programs
+        run: npm run --silent program-audit
+      - name: Compare requirements with the catalog using Claude
+        id: compare
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          SLUGS: ${{ inputs.slugs }}
+          COUNT: ${{ inputs.count || '10' }}
+        run: |
+          if [ -n "$SLUGS" ]; then
+            # Word splitting is intended: one argument per slug.
+            npm run --silent program-compare -- $SLUGS
+          else
+            npm run --silent program-compare -- --stale "$COUNT"
+          fi
+      - name: Create Pull Request
+        id: cpr
+        uses: peter-evans/create-pull-request@v6
+        with:
+          add-paths: scripts/program-audit
+          title: '[Automated] Requirements compared with the Cornell catalog'
+          body: |
+            Ran `npm run program-compare`, which asks Claude to compare CoursePlan's requirement data with each program's catalog.cornell.edu page.
+
+            - Programs compared this run: **${{ steps.compare.outputs.compared }}**
+            - Programs that could not be compared: **${{ steps.compare.outputs.failed }}**
+            - High-severity findings in this run: **${{ steps.compare.outputs.high_findings }}**
+
+            Start with `scripts/program-audit/REQUIREMENTS_REPORT.md`; each program links to its own file under `scripts/program-audit/comparisons/`.
+
+            The findings are Claude's reading of the catalog and have not been checked by a person. Confirm each one against the catalog page before changing a file under `src/data/`. This PR changes no requirement data itself.
+          commit-message: '[Automated] Requirements compared with the Cornell catalog'
+          committer: Cornell DTI GitHub Bot <admin@cornelldti.org>
+          branch: ${{ env.PR_BRANCH }}
+          delete-branch: true
+          labels: program-audit
+      - name: Log result
+        run: |
+          if [ -n "${{ steps.cpr.outputs.pull-request-url }}" ]; then
+            echo "Pull request: ${{ steps.cpr.outputs.pull-request-url }}"
+          else
+            echo "Nothing changed; no pull request created."
+          fi
