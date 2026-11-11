@@ -3,17 +3,42 @@
  */
 import store from '../store';
 
-import { cornellCourseRosterCourseToFirebaseSemesterCourse } from '../user-data-converter';
-import { incrementUniqueID, incrementBlankCourseCrseID } from './user-unique-incrementer';
+import {
+  cornellCourseRosterCourseToFirebaseSemesterCourse,
+  cornellCourseRosterCourseToFirebaseSemesterCourseWithCustomIDAndColor,
+} from '../user-data-converter';
+import {
+  incrementUniqueID,
+  incrementUniqueIDBy,
+  incrementBlankCourseCrseID,
+} from './user-unique-incrementer';
 
 export const cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData = (
   course: CornellCourseRosterCourse
 ): FirestoreSemesterCourse =>
   cornellCourseRosterCourseToFirebaseSemesterCourse(course, store, incrementUniqueID);
 
+export const cornellCourseRosterCoursesToFirebaseSemesterCoursesWithGlobalData = (
+  entries: readonly {
+    readonly course: CornellCourseRosterCourse;
+    readonly schedule?: FirestoreCourseSchedule;
+  }[]
+): readonly FirestoreSemesterCourse[] => {
+  const ids = incrementUniqueIDBy(entries.length);
+  return entries.map(({ course, schedule }, index) => ({
+    ...cornellCourseRosterCourseToFirebaseSemesterCourseWithCustomIDAndColor(
+      course,
+      ids[index],
+      store.state.subjectColors[course.subject] || '32A0F2'
+    ),
+    ...(schedule ? { schedule } : {}),
+  }));
+};
+
 export {
   setAppOnboardingData,
   deleteTransferCredit,
+  addTransferExams,
   updateSawNewFeature,
   updateSawGiveaway,
   updateFA25Giveaway,
@@ -36,6 +61,8 @@ export {
   deletePlan,
   deleteSemester,
   addCourseToSemester,
+  addCoursesToSemester,
+  addCoursesToSemesters,
   deleteCourseFromSemester,
   deleteAllCoursesFromSemester,
   deleteCourseFromSemesters,
@@ -47,7 +74,8 @@ export {
   toggleRequirementChoice,
   updateRequirementChoices,
   deleteCourseFromRequirementChoices,
+  getDefaultRequirementChoices,
 } from './user-overridden-fulfillment-choices';
-export { incrementUniqueID, incrementBlankCourseCrseID };
+export { incrementUniqueID, incrementUniqueIDBy, incrementBlankCourseCrseID };
 
 export { default as retrieveAnalytics } from './track-users';
