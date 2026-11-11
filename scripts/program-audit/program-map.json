@@ -1,0 +1,1892 @@
+{
+  "actuarial-science-minor": {
+    "type": "minor",
+    "name": "Actuarial Science",
+    "colleges": ["Bowers College of Computing and Information Science"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/actuarial-science-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "aerospace-engineering-minor": {
+    "type": "minor",
+    "name": "Aerospace Engineering",
+    "colleges": ["Duffield College of Engineering"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/aerospace-engineering-minor/",
+    "status": "supported",
+    "courseplan": "minor:AEROSPACE"
+  },
+  "africana-minor": {
+    "type": "minor",
+    "name": "Africana Studies",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/africana-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "africana-studies-ba": {
+    "type": "major",
+    "name": "Africana Studies",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/africana-studies-ba/",
+    "status": "supported",
+    "courseplan": "major:AFRICANA"
+  },
+  "agricultural-sciences-bs": {
+    "type": "major",
+    "name": "Agricultural Sciences",
+    "colleges": ["College of Agriculture and Life Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/agricultural-sciences-bs/",
+    "status": "supported",
+    "courseplan": "major:AGSCI"
+  },
+  "american-indian-indigenous-studies-minor": {
+    "type": "minor",
+    "name": "American Indian and Indigenous Studies",
+    "colleges": ["College of Agriculture and Life Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/american-indian-indigenous-studies-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "american-studies-ba": {
+    "type": "major",
+    "name": "American Studies",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/american-studies-ba/",
+    "status": "supported",
+    "courseplan": "major:AMST"
+  },
+  "american-studies-minor": {
+    "type": "minor",
+    "name": "American Studies",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/american-studies-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "animal-science-bs": {
+    "type": "major",
+    "name": "Animal Science",
+    "colleges": ["College of Agriculture and Life Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/animal-science-bs/",
+    "status": "supported",
+    "courseplan": "major:ANSC"
+  },
+  "animal-science-minor": {
+    "type": "minor",
+    "name": "Animal Science",
+    "colleges": ["College of Agriculture and Life Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/animal-science-minor/",
+    "status": "supported",
+    "courseplan": "minor:ANIMALSCIENCE"
+  },
+  "anthropology-ba": {
+    "type": "major",
+    "name": "Anthropology",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/anthropology-ba/",
+    "status": "supported",
+    "courseplan": "major:ANTHR"
+  },
+  "anthropology-minor": {
+    "type": "minor",
+    "name": "Anthropology",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/anthropology-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "applied-economics-management-bs": {
+    "type": "major",
+    "name": "Applied Economics and Management",
+    "colleges": [
+      "College of Agriculture and Life Sciences",
+      "SC Johnson College of Business"
+    ],
+    "catalogUrl": "https://catalog.cornell.edu/programs/applied-economics-management-bs/",
+    "status": "supported",
+    "courseplan": "major:AEM"
+  },
+  "applied-economics-minor": {
+    "type": "minor",
+    "name": "Applied Economics",
+    "colleges": ["SC Johnson College of Business"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/applied-economics-minor/",
+    "status": "supported",
+    "courseplan": "minor:APPLIEDECON"
+  },
+  "applied-exercise-science-minor": {
+    "type": "minor",
+    "name": "Applied Exercise Science",
+    "colleges": [
+      "College of Agriculture and Life Sciences",
+      "College of Human Ecology"
+    ],
+    "catalogUrl": "https://catalog.cornell.edu/programs/applied-exercise-science-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "applied-mathematics-minor": {
+    "type": "minor",
+    "name": "Applied Mathematics",
+    "colleges": ["Duffield College of Engineering"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/applied-mathematics-minor/",
+    "status": "supported",
+    "courseplan": "minor:APPLIEDMATH"
+  },
+  "arabic-minor": {
+    "type": "minor",
+    "name": "Arabic",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/arabic-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "archaeology-ba": {
+    "type": "major",
+    "name": "Archaeology",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/archaeology-ba/",
+    "status": "supported",
+    "courseplan": "major:ARKEO"
+  },
+  "archaeology-minor": {
+    "type": "minor",
+    "name": "Archaeology",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/archaeology-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "architecture-barch": {
+    "type": "major",
+    "name": "Architecture",
+    "colleges": ["College of Architecture, Art, and Planning"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/architecture-barch/",
+    "status": "supported",
+    "courseplan": "major:ARCH"
+  },
+  "architecture-minor-for-non-departmental-students": {
+    "type": "minor",
+    "name": "Architecture",
+    "colleges": ["College of Architecture, Art and Planning"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/architecture-minor-for-non-departmental-students/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "art-bfa": {
+    "type": "major",
+    "name": "Fine Arts",
+    "colleges": ["College of Architecture, Art, and Planning"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/art-bfa/",
+    "status": "supported",
+    "courseplan": "major:ART"
+  },
+  "artificial-intelligence-minor": {
+    "type": "minor",
+    "name": "Artificial Intelligence",
+    "colleges": ["Bowers College of Computing and Information Science"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/artificial-intelligence-minor/",
+    "status": "supported",
+    "courseplan": "minor:AI"
+  },
+  "asian-american-studies-minor": {
+    "type": "minor",
+    "name": "Asian American Studies",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/asian-american-studies-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "asian-studies-ba": {
+    "type": "major",
+    "name": "Asian Studies",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/asian-studies-ba/",
+    "status": "supported",
+    "courseplan": "major:ASIAN"
+  },
+  "asl-deaf-studies-minor": {
+    "type": "minor",
+    "name": "American Sign Language (ASL)/Deaf Studies",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/asl-deaf-studies-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "astrobiology-minor": {
+    "type": "minor",
+    "name": "Astrobiology",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/astrobiology-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "astronomy-ba": {
+    "type": "major",
+    "name": "Astronomy",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/astronomy-ba/",
+    "status": "supported",
+    "courseplan": "major:ASTRO"
+  },
+  "astronomy-minor": {
+    "type": "minor",
+    "name": "Astronomy",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/astronomy-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "atmospheric-science-bs": {
+    "type": "major",
+    "name": "Atmospheric Sciences",
+    "colleges": ["College of Agriculture and Life Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/atmospheric-science-bs/",
+    "status": "supported",
+    "courseplan": "major:AS"
+  },
+  "atmospheric-science-minor": {
+    "type": "minor",
+    "name": "Atmospheric Sciences",
+    "colleges": [
+      "College of Agriculture and Life Sciences",
+      "Duffield College of Engineering"
+    ],
+    "catalogUrl": "https://catalog.cornell.edu/programs/atmospheric-science-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "biological-engineering-bs": {
+    "type": "major",
+    "name": "Biological Engineering",
+    "colleges": [
+      "College of Agriculture and Life Sciences",
+      "Duffield College of Engineering"
+    ],
+    "catalogUrl": "https://catalog.cornell.edu/programs/biological-engineering-bs/",
+    "status": "supported",
+    "courseplan": "major:BE"
+  },
+  "biological-engineering-minor": {
+    "type": "minor",
+    "name": "Biological Engineering",
+    "colleges": ["Duffield College of Engineering"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/biological-engineering-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "biological-sciences-ba": {
+    "type": "major",
+    "name": "Biological Sciences",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/biological-sciences-ba/",
+    "status": "supported",
+    "courseplan": "major:BIO"
+  },
+  "biological-sciences-bs": {
+    "type": "major",
+    "name": "Biological Sciences",
+    "colleges": ["College of Agriculture and Life Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/biological-sciences-bs/",
+    "status": "supported",
+    "courseplan": "major:BIO"
+  },
+  "biology-society-ba": {
+    "type": "major",
+    "name": "Biology & Society",
+    "colleges": [
+      "College of Arts and Sciences",
+      "College of Agriculture and Life Sciences"
+    ],
+    "catalogUrl": "https://catalog.cornell.edu/programs/biology-society-ba/",
+    "status": "supported",
+    "courseplan": "major:BSOC"
+  },
+  "biomedical-engineering-bs": {
+    "type": "major",
+    "name": "Biomedical Engineering",
+    "colleges": ["Duffield College of Engineering"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/biomedical-engineering-bs/",
+    "status": "supported",
+    "courseplan": "major:BME"
+  },
+  "biomedical-engineering-minor": {
+    "type": "minor",
+    "name": "Biomedical Engineering",
+    "colleges": ["Duffield College of Engineering"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/biomedical-engineering-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "biomedical-sciences-minor": {
+    "type": "minor",
+    "name": "Biomedical Sciences",
+    "colleges": ["College of Agriculture and Life Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/biomedical-sciences-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "biometry-statistics-bs": {
+    "type": "major",
+    "name": "Statistics & Biometry",
+    "colleges": ["College of Agriculture and Life Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/biometry-statistics-bs/",
+    "status": "supported",
+    "courseplan": "major:BTRY"
+  },
+  "biometry-statistics-minor": {
+    "type": "minor",
+    "name": "Biometry and Statistics",
+    "colleges": ["College of Agriculture and Life Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/biometry-statistics-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "business-minor": {
+    "type": "minor",
+    "name": "Business",
+    "colleges": ["SC Johnson College of Business"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/business-minor/",
+    "status": "supported",
+    "courseplan": "minor:BU"
+  },
+  "caribbean-studies-minor": {
+    "type": "minor",
+    "name": "Caribbean Studies",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/caribbean-studies-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "chemical-engineering-bs": {
+    "type": "major",
+    "name": "Chemical Engineering",
+    "colleges": ["Duffield College of Engineering"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/chemical-engineering-bs/",
+    "status": "supported",
+    "courseplan": "major:CHEME"
+  },
+  "chemistry-ba": {
+    "type": "major",
+    "name": "Chemistry",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/chemistry-ba/",
+    "status": "supported",
+    "courseplan": "major:CHEM"
+  },
+  "china-asia-pacific-studies-ba": {
+    "type": "major",
+    "name": "China and Asia-Pacific Studies",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/china-asia-pacific-studies-ba/",
+    "status": "supported",
+    "courseplan": "major:CAPS"
+  },
+  "china-asia-pacific-studies-minor": {
+    "type": "minor",
+    "name": "China and Asia-Pacific Studies",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/china-asia-pacific-studies-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "civil-engineering-bs": {
+    "type": "major",
+    "name": "Civil Engineering",
+    "colleges": ["Duffield College of Engineering"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/civil-engineering-bs/",
+    "status": "supported",
+    "courseplan": "major:CE"
+  },
+  "classical-civilization-minor": {
+    "type": "minor",
+    "name": "Classical Civilization",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/classical-civilization-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "classics-ba": {
+    "type": "major",
+    "name": "Classics",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/classics-ba/",
+    "status": "supported",
+    "courseplan": "major:CLASSICS"
+  },
+  "classics-minor": {
+    "type": "minor",
+    "name": "Classics",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/classics-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "climate-change-minor": {
+    "type": "minor",
+    "name": "Climate Change",
+    "colleges": [
+      "College of Arts and Sciences",
+      "College of Agriculture and Life Sciences",
+      "Duffield College of Engineering"
+    ],
+    "catalogUrl": "https://catalog.cornell.edu/programs/climate-change-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "cognitive-science-ba": {
+    "type": "major",
+    "name": "Cognitive Science",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/cognitive-science-ba/",
+    "status": "supported",
+    "courseplan": "major:COGSCI"
+  },
+  "cognitive-science-minor": {
+    "type": "minor",
+    "name": "Cognitive Science",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/cognitive-science-minor/",
+    "status": "supported",
+    "courseplan": "minor:COGSCI"
+  },
+  "college-scholar-ba": {
+    "type": "major",
+    "name": "College Scholar",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/college-scholar-ba/",
+    "status": "ignored",
+    "reason": "Self-designed program with no fixed course requirements."
+  },
+  "communication-bs": {
+    "type": "major",
+    "name": "Communication",
+    "colleges": ["College of Agriculture and Life Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/communication-bs/",
+    "status": "supported",
+    "courseplan": "major:COMM"
+  },
+  "communications-minor": {
+    "type": "minor",
+    "name": "Communication",
+    "colleges": ["College of Agriculture and Life Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/communications-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "community-food-systems-minor-cfs": {
+    "type": "minor",
+    "name": "Community Food Systems",
+    "colleges": ["College of Agriculture and Life Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/community-food-systems-minor-cfs/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "comparative-literature-ba": {
+    "type": "major",
+    "name": "Comparative Literature",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/comparative-literature-ba/",
+    "status": "supported",
+    "courseplan": "major:COML"
+  },
+  "comparative-literature-minor": {
+    "type": "minor",
+    "name": "Comparative Literature",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/comparative-literature-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "computer-science-ba": {
+    "type": "major",
+    "name": "Computer Science",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/computer-science-ba/",
+    "status": "supported",
+    "courseplan": "major:CS"
+  },
+  "computer-science-bs": {
+    "type": "major",
+    "name": "Computer Science",
+    "colleges": ["Duffield College of Engineering"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/computer-science-bs/",
+    "status": "supported",
+    "courseplan": "major:CS"
+  },
+  "computer-science-minor": {
+    "type": "minor",
+    "name": "Computer Science",
+    "colleges": [
+      "College of Arts and Sciences",
+      "Duffield College of Engineering"
+    ],
+    "catalogUrl": "https://catalog.cornell.edu/programs/computer-science-minor/",
+    "status": "supported",
+    "courseplan": "minor:CS"
+  },
+  "creative-writing-minor": {
+    "type": "minor",
+    "name": "Creative Writing",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/creative-writing-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "crime-prisons-education-justice-minor": {
+    "type": "minor",
+    "name": "Crime, Prisons, Education, and Justice",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/crime-prisons-education-justice-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "crop-management-minor": {
+    "type": "minor",
+    "name": "Crop Management",
+    "colleges": ["College of Agriculture and Life Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/crop-management-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "dance-minor": {
+    "type": "minor",
+    "name": "Dance",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/dance-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "data-science-astronomy-minor": {
+    "type": "minor",
+    "name": "Data Science in Astronomy",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/data-science-astronomy-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "data-science-minor": {
+    "type": "minor",
+    "name": "Data Science",
+    "colleges": ["Bowers College of Computing and Information Science"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/data-science-minor/",
+    "status": "supported",
+    "courseplan": "minor:DS"
+  },
+  "demography-minor": {
+    "type": "minor",
+    "name": "Demography",
+    "colleges": ["Brooks School of Public Policy"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/demography-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "design-environmental-analysis-bs": {
+    "type": "major",
+    "name": "Design and Environmental Analysis",
+    "colleges": ["College of Human Ecology"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/design-environmental-analysis-bs/",
+    "status": "supported",
+    "courseplan": "major:DEA"
+  },
+  "design-environmental-analysis-minor": {
+    "type": "minor",
+    "name": "Design and Environmental Analysis",
+    "colleges": ["College of Human Ecology"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/design-environmental-analysis-minor/",
+    "status": "supported",
+    "courseplan": "minor:DEA"
+  },
+  "digital-agriculture-minor": {
+    "type": "minor",
+    "name": "Digital Agriculture",
+    "colleges": ["College of Agriculture and Life Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/digital-agriculture-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "dyson-business-minor-engineers": {
+    "type": "minor",
+    "name": "Business Minor for Engineers",
+    "colleges": ["SC Johnson College of Business"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/dyson-business-minor-engineers/",
+    "status": "supported",
+    "courseplan": "minor:DBME"
+  },
+  "dyson-business-minor-life-sciences": {
+    "type": "minor",
+    "name": "Dyson Business Minor for Life Sciences",
+    "colleges": ["SC Johnson College of Business"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/dyson-business-minor-life-sciences/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "earth-atmospheric-sciences-minor": {
+    "type": "minor",
+    "name": "Earth and Climate Sciences",
+    "colleges": [
+      "College of Arts and Sciences",
+      "College of Agriculture and Life Sciences",
+      "Duffield College of Engineering"
+    ],
+    "catalogUrl": "https://catalog.cornell.edu/programs/earth-atmospheric-sciences-minor/",
+    "status": "supported",
+    "courseplan": "minor:EAS"
+  },
+  "earth-climate-sciences-ba": {
+    "type": "major",
+    "name": "Earth and Climate Sciences",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/earth-climate-sciences-ba/",
+    "status": "supported",
+    "courseplan": "major:EAS"
+  },
+  "earth-climate-sciences-ecsag-bs": {
+    "type": "major",
+    "name": "Earth and Climate Sciences",
+    "colleges": ["College of Agriculture and Life Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/earth-climate-sciences-ecsag-bs/",
+    "status": "supported",
+    "courseplan": "major:EAS"
+  },
+  "earth-climate-sciences-ecsen-bs": {
+    "type": "major",
+    "name": "Earth and Climate Sciences",
+    "colleges": ["Duffield College of Engineering"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/earth-climate-sciences-ecsen-bs/",
+    "status": "supported",
+    "courseplan": "major:EAS"
+  },
+  "east-asian-studies-minor": {
+    "type": "minor",
+    "name": "East Asian Studies",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/east-asian-studies-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "economics-ba": {
+    "type": "major",
+    "name": "Economics",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/economics-ba/",
+    "status": "supported",
+    "courseplan": "major:ECON"
+  },
+  "education-minor": {
+    "type": "minor",
+    "name": "Education",
+    "colleges": ["College of Agriculture and Life Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/education-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "electrical-computer-engineering-bs": {
+    "type": "major",
+    "name": "Electrical and Computer Engineering",
+    "colleges": ["Duffield College of Engineering"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/electrical-computer-engineering-bs/",
+    "status": "supported",
+    "courseplan": "major:ECE"
+  },
+  "electrical-computer-engineering-minor": {
+    "type": "minor",
+    "name": "Electrical and Computer Engineering",
+    "colleges": ["Duffield College of Engineering"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/electrical-computer-engineering-minor/",
+    "status": "supported",
+    "courseplan": "minor:ECE"
+  },
+  "engineering-communications-minor": {
+    "type": "minor",
+    "name": "Engineering Communications",
+    "colleges": ["Duffield College of Engineering"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/engineering-communications-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "engineering-management-minor": {
+    "type": "minor",
+    "name": "Engineering Management",
+    "colleges": ["Duffield College of Engineering"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/engineering-management-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "engineering-physics-bs": {
+    "type": "major",
+    "name": "Engineering Physics",
+    "colleges": ["Duffield College of Engineering"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/engineering-physics-bs/",
+    "status": "supported",
+    "courseplan": "major:EP"
+  },
+  "english-ba": {
+    "type": "major",
+    "name": "English",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/english-ba/",
+    "status": "supported",
+    "courseplan": "major:ENGL"
+  },
+  "english-minor": {
+    "type": "minor",
+    "name": "English",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/english-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "entomology-bs": {
+    "type": "major",
+    "name": "Entomology",
+    "colleges": ["College of Agriculture and Life Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/entomology-bs/",
+    "status": "supported",
+    "courseplan": "major:ENTOM"
+  },
+  "entomology-minor": {
+    "type": "minor",
+    "name": "Entomology",
+    "colleges": ["College of Agriculture and Life Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/entomology-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "entrepreneurship-minor": {
+    "type": "minor",
+    "name": "Entrepreneurship",
+    "colleges": ["SC Johnson College of Business"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/entrepreneurship-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "environment-sustainability-ba": {
+    "type": "major",
+    "name": "Environment & Sustainability",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/environment-sustainability-ba/",
+    "status": "supported",
+    "courseplan": "major:ESS"
+  },
+  "environment-sustainability-bs": {
+    "type": "major",
+    "name": "Environment & Sustainability",
+    "colleges": ["College of Agriculture and Life Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/environment-sustainability-bs/",
+    "status": "supported",
+    "courseplan": "major:ESS"
+  },
+  "environment-sustainability-minor": {
+    "type": "minor",
+    "name": "Environment & Sustainability",
+    "colleges": [
+      "College of Arts and Sciences",
+      "College of Agriculture and Life Sciences"
+    ],
+    "catalogUrl": "https://catalog.cornell.edu/programs/environment-sustainability-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "environmental-engineering-bs": {
+    "type": "major",
+    "name": "Environmental Engineering",
+    "colleges": [
+      "College of Agriculture and Life Sciences",
+      "Duffield College of Engineering"
+    ],
+    "catalogUrl": "https://catalog.cornell.edu/programs/environmental-engineering-bs/",
+    "status": "supported",
+    "courseplan": "major:ENV"
+  },
+  "european-studies-minor": {
+    "type": "minor",
+    "name": "European Studies",
+    "colleges": ["Mario Einaudi Center for International Studies"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/european-studies-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "fashion-design-management-bs": {
+    "type": "major",
+    "name": "Fashion Design and Management",
+    "colleges": ["College of Human Ecology"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/fashion-design-management-bs/",
+    "status": "supported",
+    "courseplan": "major:FSAD"
+  },
+  "fashion-studies-minor": {
+    "type": "minor",
+    "name": "Fashion Studies",
+    "colleges": ["College of Human Ecology"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/fashion-studies-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "fgss-ba": {
+    "type": "major",
+    "name": "Feminist, Gender, & Sexuality Studies",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/fgss-ba/",
+    "status": "supported",
+    "courseplan": "major:FGSS"
+  },
+  "fgss-minor": {
+    "type": "minor",
+    "name": "Feminist, Gender, & Sexuality Studies",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/fgss-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "fiber-science-bs": {
+    "type": "major",
+    "name": "Fiber Science",
+    "colleges": ["College of Human Ecology"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/fiber-science-bs/",
+    "status": "supported",
+    "courseplan": "major:FIBERSCI"
+  },
+  "fiber-science-minor": {
+    "type": "minor",
+    "name": "Fiber Science",
+    "colleges": ["College of Human Ecology"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/fiber-science-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "film-minor": {
+    "type": "minor",
+    "name": "Film",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/film-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "fine-arts-minor-for-non-departmental-students": {
+    "type": "minor",
+    "name": "Fine Arts",
+    "colleges": ["College of Architecture, Art, and Planning"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/fine-arts-minor-for-non-departmental-students/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "food-agricultural-business-minor": {
+    "type": "minor",
+    "name": "Food and Agricultural Business",
+    "colleges": ["SC Johnson College of Business"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/food-agricultural-business-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "food-science-bs": {
+    "type": "major",
+    "name": "Food Science",
+    "colleges": ["College of Agriculture and Life Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/food-science-bs/",
+    "status": "supported",
+    "courseplan": "major:FDSC"
+  },
+  "food-science-minor": {
+    "type": "minor",
+    "name": "Food Science",
+    "colleges": ["College of Agriculture and Life Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/food-science-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "french-ba": {
+    "type": "major",
+    "name": "French",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/french-ba/",
+    "status": "supported",
+    "courseplan": "major:FRENCH"
+  },
+  "french-minor": {
+    "type": "minor",
+    "name": "French",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/french-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "fungal-biology-minor": {
+    "type": "minor",
+    "name": "Fungal Biology",
+    "colleges": ["College of Agriculture and Life Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/fungal-biology-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "game-design-minor": {
+    "type": "minor",
+    "name": "Game Design",
+    "colleges": [
+      "Duffield College of Engineering",
+      "Bowers College of Computing and Information Science"
+    ],
+    "catalogUrl": "https://catalog.cornell.edu/programs/game-design-minor/",
+    "status": "supported",
+    "courseplan": "minor:GAMEDESIGN"
+  },
+  "german-studies-ba": {
+    "type": "major",
+    "name": "German Studies",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/german-studies-ba/",
+    "status": "supported",
+    "courseplan": "major:GERMAN"
+  },
+  "german-studies-minor": {
+    "type": "minor",
+    "name": "German Studies",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/german-studies-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "gerontology-minor": {
+    "type": "minor",
+    "name": "Gerontology",
+    "colleges": ["College of Human Ecology"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/gerontology-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "global-asia-studies-minor": {
+    "type": "minor",
+    "name": "Global Asia Studies",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/global-asia-studies-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "global-development-bs": {
+    "type": "major",
+    "name": "Global Development",
+    "colleges": ["College of Agriculture and Life Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/global-development-bs/",
+    "status": "supported",
+    "courseplan": "major:GDEV"
+  },
+  "global-development-minor": {
+    "type": "minor",
+    "name": "Global Development",
+    "colleges": ["College of Agriculture and Life Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/global-development-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "global-health-minor": {
+    "type": "minor",
+    "name": "Global Health",
+    "colleges": [
+      "College of Agriculture and Life Sciences",
+      "College of Human Ecology"
+    ],
+    "catalogUrl": "https://catalog.cornell.edu/programs/global-health-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "global-public-health-sciences-bs": {
+    "type": "major",
+    "name": "Global & Public Health Sciences",
+    "colleges": ["College of Agriculture and Life Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/global-public-health-sciences-bs/",
+    "status": "supported",
+    "courseplan": "major:GPHS"
+  },
+  "global-public-health-sciences-hum-ecol-bs": {
+    "type": "major",
+    "name": "Global & Public Health Sciences",
+    "colleges": ["College of Human Ecology"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/global-public-health-sciences-hum-ecol-bs/",
+    "status": "supported",
+    "courseplan": "major:GPHS"
+  },
+  "government-ba": {
+    "type": "major",
+    "name": "Government",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/government-ba/",
+    "status": "supported",
+    "courseplan": "major:GOVT"
+  },
+  "health-care-policy-major-bs": {
+    "type": "major",
+    "name": "Health Care Policy",
+    "colleges": ["Brooks School of Public Policy"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/health-care-policy-major-bs/",
+    "status": "supported",
+    "courseplan": "major:HCP"
+  },
+  "health-policy-minor": {
+    "type": "minor",
+    "name": "Health Policy",
+    "colleges": ["Brooks School of Public Policy"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/health-policy-minor/",
+    "status": "supported",
+    "courseplan": "minor:HP"
+  },
+  "healthy-futures-minor": {
+    "type": "minor",
+    "name": "Healthy Futures",
+    "colleges": ["College of Human Ecology"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/healthy-futures-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "history-architecture-urban-development-bs-haud": {
+    "type": "major",
+    "name": "History of Architecture and Urban Development",
+    "colleges": ["College of Architecture, Art, and Planning"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/history-architecture-urban-development-bs-haud/",
+    "status": "supported",
+    "courseplan": "major:HAUD"
+  },
+  "history-art-ba": {
+    "type": "major",
+    "name": "History of Art",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/history-art-ba/",
+    "status": "supported",
+    "courseplan": "major:ARTH"
+  },
+  "history-art-minor": {
+    "type": "minor",
+    "name": "History of Art",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/history-art-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "history-ba": {
+    "type": "major",
+    "name": "History",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/history-ba/",
+    "status": "supported",
+    "courseplan": "major:HIST"
+  },
+  "history-capitalism-interdisciplinary-minor": {
+    "type": "minor",
+    "name": "History of Capitalism",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/history-capitalism-interdisciplinary-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "history-minor": {
+    "type": "minor",
+    "name": "History",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/history-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "horticulture-minor": {
+    "type": "minor",
+    "name": "Horticulture",
+    "colleges": ["College of Agriculture and Life Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/horticulture-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "hotel-management-bs": {
+    "type": "major",
+    "name": "Hotel Administration",
+    "colleges": [
+      "Nolan School of Hotel Administration",
+      "SC Johnson College of Business"
+    ],
+    "catalogUrl": "https://catalog.cornell.edu/programs/hotel-management-bs/",
+    "status": "supported",
+    "courseplan": "major:HADM"
+  },
+  "human-biology-health-society-bs": {
+    "type": "major",
+    "name": "Human Biology, Health, and Society",
+    "colleges": ["College of Human Ecology"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/human-biology-health-society-bs/",
+    "status": "supported",
+    "courseplan": "major:HBHS"
+  },
+  "human-development-bs": {
+    "type": "major",
+    "name": "Human Development",
+    "colleges": ["College of Human Ecology"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/human-development-bs/",
+    "status": "supported",
+    "courseplan": "major:HD"
+  },
+  "human-development-minor": {
+    "type": "minor",
+    "name": "Human Development",
+    "colleges": ["College of Human Ecology"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/human-development-minor/",
+    "status": "supported",
+    "courseplan": "minor:HD"
+  },
+  "independent-major": {
+    "type": "major",
+    "name": "Independent Major",
+    "colleges": ["Duffield College of Engineering"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/independent-major/",
+    "status": "ignored",
+    "reason": "Self-designed Engineering program with no fixed course requirements."
+  },
+  "industrial-labor-relations-bs": {
+    "type": "major",
+    "name": "Industrial and Labor Relations",
+    "colleges": ["School of Industrial and Labor Relations"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/industrial-labor-relations-bs/",
+    "status": "supported",
+    "courseplan": "major:ILR"
+  },
+  "inequality-studies-minor": {
+    "type": "minor",
+    "name": "Inequality Studies",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/inequality-studies-minor/",
+    "status": "supported",
+    "courseplan": "minor:INEQ"
+  },
+  "infectious-disease-biology-minor": {
+    "type": "minor",
+    "name": "Infectious Disease Biology",
+    "colleges": ["College of Agriculture and Life Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/infectious-disease-biology-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "information-science-ba": {
+    "type": "major",
+    "name": "Information Science",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/information-science-ba/",
+    "status": "supported",
+    "courseplan": "major:INFO"
+  },
+  "information-science-bs": {
+    "type": "major",
+    "name": "Information Science",
+    "colleges": ["College of Agriculture and Life Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/information-science-bs/",
+    "status": "supported",
+    "courseplan": "major:INFO"
+  },
+  "information-science-minor": {
+    "type": "minor",
+    "name": "Information Science",
+    "colleges": [
+      "College of Arts and Sciences",
+      "College of Agriculture and Life Sciences",
+      "Duffield College of Engineering",
+      "Bowers College of Computing and Information Science"
+    ],
+    "catalogUrl": "https://catalog.cornell.edu/programs/information-science-minor/",
+    "status": "supported",
+    "courseplan": "minor:ISST"
+  },
+  "information-science-systems-technology-bs": {
+    "type": "major",
+    "name": "Information Science, Systems, and Technology",
+    "colleges": ["Duffield College of Engineering"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/information-science-systems-technology-bs/",
+    "status": "supported",
+    "courseplan": "major:ISST2"
+  },
+  "interdisciplinary-studies-bs": {
+    "type": "major",
+    "name": "Interdisciplinary Studies in Agriculture & Life Sciences",
+    "colleges": ["College of Agriculture and Life Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/interdisciplinary-studies-bs/",
+    "status": "ignored",
+    "reason": "Self-designed CALS program with no fixed course requirements."
+  },
+  "international-markets-development-minor": {
+    "type": "minor",
+    "name": "International Markets & Development",
+    "colleges": ["SC Johnson College of Business"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/international-markets-development-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "international-relations-minor": {
+    "type": "minor",
+    "name": "International Relations",
+    "colleges": ["Mario Einaudi Center for International Studies"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/international-relations-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "italian-ba": {
+    "type": "major",
+    "name": "Italian",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/italian-ba/",
+    "status": "supported",
+    "courseplan": "major:ITALIAN"
+  },
+  "italian-minor": {
+    "type": "minor",
+    "name": "Italian",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/italian-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "jewish-studies-ba": {
+    "type": "major",
+    "name": "Jewish Studies",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/jewish-studies-ba/",
+    "status": "supported",
+    "courseplan": "major:JWST"
+  },
+  "jewish-studies-minor": {
+    "type": "minor",
+    "name": "Jewish Studies",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/jewish-studies-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "labor-social-justice-minor": {
+    "type": "minor",
+    "name": "Labor and Social Justice",
+    "colleges": ["School of Industrial and Labor Relations"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/labor-social-justice-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "landscape-architecture-bs": {
+    "type": "major",
+    "name": "Landscape Architecture",
+    "colleges": ["College of Agriculture and Life Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/landscape-architecture-bs/",
+    "status": "supported",
+    "courseplan": "major:LA"
+  },
+  "landscape-studies-minor": {
+    "type": "minor",
+    "name": "Landscape Studies",
+    "colleges": ["College of Agriculture and Life Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/landscape-studies-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "latin-american-studies-minor": {
+    "type": "minor",
+    "name": "Latin American Studies",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/latin-american-studies-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "latina-o-studies-ba": {
+    "type": "major",
+    "name": "Latina/o Studies",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/latina-o-studies-ba/",
+    "status": "supported",
+    "courseplan": "major:LSP"
+  },
+  "latina-o-studies-minor": {
+    "type": "minor",
+    "name": "Latina/o Studies",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/latina-o-studies-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "law-society-minor": {
+    "type": "minor",
+    "name": "Law & Society",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/law-society-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "leadership-minor": {
+    "type": "minor",
+    "name": "Leadership",
+    "colleges": ["College of Agriculture and Life Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/leadership-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "lgbt-minor": {
+    "type": "minor",
+    "name": "Lesbian, Gay, Bisexual, & Transgender",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/lgbt-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "linguistics-ba": {
+    "type": "major",
+    "name": "Linguistics",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/linguistics-ba/",
+    "status": "supported",
+    "courseplan": "major:LING"
+  },
+  "linguistics-minor": {
+    "type": "minor",
+    "name": "Linguistics",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/linguistics-minor/",
+    "status": "supported",
+    "courseplan": "minor:LING"
+  },
+  "marine-biology-minor": {
+    "type": "minor",
+    "name": "Marine Biology",
+    "colleges": ["College of Agriculture and Life Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/marine-biology-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "materials-science-engineering-bs": {
+    "type": "major",
+    "name": "Materials Science and Engineering",
+    "colleges": ["Duffield College of Engineering"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/materials-science-engineering-bs/",
+    "status": "supported",
+    "courseplan": "major:MSE"
+  },
+  "materials-science-engineering-minor": {
+    "type": "minor",
+    "name": "Materials Science and Engineering",
+    "colleges": ["Duffield College of Engineering"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/materials-science-engineering-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "mathematics-ba": {
+    "type": "major",
+    "name": "Mathematics",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/mathematics-ba/",
+    "status": "supported",
+    "courseplan": "major:MATH"
+  },
+  "mathematics-minor": {
+    "type": "minor",
+    "name": "Mathematics",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/mathematics-minor/",
+    "status": "supported",
+    "courseplan": "minor:MATH"
+  },
+  "mechanical-engineering-bs": {
+    "type": "major",
+    "name": "Mechanical Engineering",
+    "colleges": ["Duffield College of Engineering"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/mechanical-engineering-bs/",
+    "status": "supported",
+    "courseplan": "major:ME"
+  },
+  "mechanical-engineering-minor": {
+    "type": "minor",
+    "name": "Mechanical Engineering",
+    "colleges": ["Duffield College of Engineering"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/mechanical-engineering-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "media-studies-minor": {
+    "type": "minor",
+    "name": "Media Studies",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/media-studies-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "medieval-studies-minor": {
+    "type": "minor",
+    "name": "Medieval Studies",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/medieval-studies-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "microbial-science-minor": {
+    "type": "minor",
+    "name": "Microbial Science",
+    "colleges": ["College of Agriculture and Life Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/microbial-science-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "migration-studies-minor": {
+    "type": "minor",
+    "name": "Migration Studies",
+    "colleges": ["Mario Einaudi Center for International Studies"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/migration-studies-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "mitws-minor": {
+    "type": "minor",
+    "name": "Minority, Indigenous, and Third World Studies",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/mitws-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "moral-psychology-minor": {
+    "type": "minor",
+    "name": "Moral Psychology",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/moral-psychology-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "music-ba": {
+    "type": "major",
+    "name": "Music",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/music-ba/",
+    "status": "supported",
+    "courseplan": "major:MUSIC"
+  },
+  "music-minor": {
+    "type": "minor",
+    "name": "Music",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/music-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "near-eastern-studies-ba": {
+    "type": "major",
+    "name": "Near Eastern Studies",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/near-eastern-studies-ba/",
+    "status": "supported",
+    "courseplan": "major:NES"
+  },
+  "near-eastern-studies-minor": {
+    "type": "minor",
+    "name": "Near Eastern Studies",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/near-eastern-studies-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "nutrition-health-minor": {
+    "type": "minor",
+    "name": "Nutrition and Health",
+    "colleges": [
+      "College of Agriculture and Life Sciences",
+      "College of Human Ecology"
+    ],
+    "catalogUrl": "https://catalog.cornell.edu/programs/nutrition-health-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "nutritional-sciences-bs": {
+    "type": "major",
+    "name": "Nutritional Sciences",
+    "colleges": [
+      "College of Agriculture and Life Sciences",
+      "College of Human Ecology"
+    ],
+    "catalogUrl": "https://catalog.cornell.edu/programs/nutritional-sciences-bs/",
+    "status": "supported",
+    "courseplan": "major:NS"
+  },
+  "operations-research-engineering-bs": {
+    "type": "major",
+    "name": "Operations Research and Engineering",
+    "colleges": ["Duffield College of Engineering"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/operations-research-engineering-bs/",
+    "status": "supported",
+    "courseplan": "major:ORIE"
+  },
+  "operations-research-management-science-minor": {
+    "type": "minor",
+    "name": "Operations Research and Management Science",
+    "colleges": ["Duffield College of Engineering"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/operations-research-management-science-minor/",
+    "status": "supported",
+    "courseplan": "minor:ORMS"
+  },
+  "org-human-resource-management-minor": {
+    "type": "minor",
+    "name": "Organizations and Human Resource Management",
+    "colleges": ["School of Industrial and Labor Relations"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/org-human-resource-management-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "performing-media-arts-ba": {
+    "type": "major",
+    "name": "Performing and Media Arts",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/performing-media-arts-ba/",
+    "status": "supported",
+    "courseplan": "major:PMA"
+  },
+  "performing-media-arts-minor": {
+    "type": "minor",
+    "name": "Performing and Media Arts",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/performing-media-arts-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "philosophy-ba": {
+    "type": "major",
+    "name": "Philosophy",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/philosophy-ba/",
+    "status": "supported",
+    "courseplan": "major:PHIL"
+  },
+  "philosophy-minor": {
+    "type": "minor",
+    "name": "Philosophy",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/philosophy-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "physics-ba": {
+    "type": "major",
+    "name": "Physics",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/physics-ba/",
+    "status": "supported",
+    "courseplan": "major:PHYS"
+  },
+  "physics-minor": {
+    "type": "minor",
+    "name": "Physics",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/physics-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "plant-breeding-minor": {
+    "type": "minor",
+    "name": "Plant Breeding",
+    "colleges": ["College of Agriculture and Life Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/plant-breeding-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "plant-sciences-bs": {
+    "type": "major",
+    "name": "Plant Sciences",
+    "colleges": ["College of Agriculture and Life Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/plant-sciences-bs/",
+    "status": "supported",
+    "courseplan": "major:PLSCI"
+  },
+  "plant-sciences-minor": {
+    "type": "minor",
+    "name": "Plant Sciences",
+    "colleges": ["College of Agriculture and Life Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/plant-sciences-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "policy-analysis-management-minor": {
+    "type": "minor",
+    "name": "Policy Analysis and Management",
+    "colleges": ["Brooks School of Public Policy"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/policy-analysis-management-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "portuguese-brazilian-studies-minor": {
+    "type": "minor",
+    "name": "Portuguese and Brazilian Studies",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/portuguese-brazilian-studies-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "psychology-ba": {
+    "type": "major",
+    "name": "Psychology",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/psychology-ba/",
+    "status": "supported",
+    "courseplan": "major:PSYCH"
+  },
+  "psychology-minor": {
+    "type": "minor",
+    "name": "Psychology",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/psychology-minor/",
+    "status": "supported",
+    "courseplan": "minor:PSYCH"
+  },
+  "public-history-minor": {
+    "type": "minor",
+    "name": "Public History",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/public-history-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "public-policy-ba": {
+    "type": "major",
+    "name": "Public Policy",
+    "colleges": [
+      "College of Arts and Sciences",
+      "Brooks School of Public Policy"
+    ],
+    "catalogUrl": "https://catalog.cornell.edu/programs/public-policy-ba/",
+    "status": "supported",
+    "courseplan": "major:PUBPOL"
+  },
+  "public-policy-bs": {
+    "type": "major",
+    "name": "Public Policy",
+    "colleges": ["Brooks School of Public Policy"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/public-policy-bs/",
+    "status": "supported",
+    "courseplan": "major:PAM"
+  },
+  "public-policy-minor": {
+    "type": "minor",
+    "name": "Public Policy",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/public-policy-minor/",
+    "status": "supported",
+    "courseplan": "minor:POLICY"
+  },
+  "real-estate-minor-nolan-school-ug-students": {
+    "type": "minor",
+    "name": "Real Estate",
+    "colleges": ["SC Johnson College of Business"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/real-estate-minor-nolan-school-ug-students/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "religious-studies-ba": {
+    "type": "major",
+    "name": "Religious Studies",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/religious-studies-ba/",
+    "status": "supported",
+    "courseplan": "major:RELST"
+  },
+  "religious-studies-minor": {
+    "type": "minor",
+    "name": "Religious Studies",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/religious-studies-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "robotics-minor": {
+    "type": "minor",
+    "name": "Robotics",
+    "colleges": ["Duffield College of Engineering"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/robotics-minor/",
+    "status": "supported",
+    "courseplan": "minor:ROBOTICS"
+  },
+  "russian-minor": {
+    "type": "minor",
+    "name": "Russian",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/russian-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "sanskrit-studies-minor": {
+    "type": "minor",
+    "name": "Sanskrit Studies",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/sanskrit-studies-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "science-communication-public-engagement-minor": {
+    "type": "minor",
+    "name": "Science Communication and Public Engagement",
+    "colleges": [
+      "College of Arts and Sciences",
+      "College of Agriculture and Life Sciences"
+    ],
+    "catalogUrl": "https://catalog.cornell.edu/programs/science-communication-public-engagement-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "science-technology-studies-ba": {
+    "type": "major",
+    "name": "Science, Technology and Society",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/science-technology-studies-ba/",
+    "status": "supported",
+    "courseplan": "major:STS"
+  },
+  "science-technology-studies-minor": {
+    "type": "minor",
+    "name": "Science & Technology Studies",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/science-technology-studies-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "smart-cities-minor": {
+    "type": "minor",
+    "name": "Smart Cities",
+    "colleges": ["Duffield College of Engineering"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/smart-cities-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "sociology-ba": {
+    "type": "major",
+    "name": "Sociology",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/sociology-ba/",
+    "status": "supported",
+    "courseplan": "major:SOC"
+  },
+  "soil-science-minor": {
+    "type": "minor",
+    "name": "Soil Science",
+    "colleges": ["College of Agriculture and Life Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/soil-science-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "south-asian-studies-minor": {
+    "type": "minor",
+    "name": "South Asian Studies",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/south-asian-studies-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "southeast-asian-studies-minor": {
+    "type": "minor",
+    "name": "Southeast Asian Studies",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/southeast-asian-studies-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "spanish-ba": {
+    "type": "major",
+    "name": "Spanish",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/spanish-ba/",
+    "status": "supported",
+    "courseplan": "major:SPAN"
+  },
+  "spanish-minor": {
+    "type": "minor",
+    "name": "Spanish",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/spanish-minor/",
+    "status": "supported",
+    "courseplan": "minor:SPAN"
+  },
+  "statistics-data-science-ba": {
+    "type": "major",
+    "name": "Statistical Science",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/statistics-data-science-ba/",
+    "status": "supported",
+    "courseplan": "major:STSCI"
+  },
+  "sustainable-ag-food-system-minor": {
+    "type": "minor",
+    "name": "Sustainable Agricultural and Food Systems",
+    "colleges": ["College of Agriculture and Life Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/sustainable-ag-food-system-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "sustainable-business-economic-policy-minor": {
+    "type": "minor",
+    "name": "Sustainable Business and Economic Policy",
+    "colleges": ["SC Johnson College of Business"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/sustainable-business-economic-policy-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "sustainable-energy-systems-minor": {
+    "type": "minor",
+    "name": "Sustainable Energy Systems",
+    "colleges": ["Duffield College of Engineering"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/sustainable-energy-systems-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "theatre-minor": {
+    "type": "minor",
+    "name": "Theatre",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/theatre-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "translational-research-minor": {
+    "type": "minor",
+    "name": "Translational Research",
+    "colleges": ["College of Human Ecology"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/translational-research-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "urban-regional-studies-bs-urs": {
+    "type": "major",
+    "name": "Urban and Regional Studies",
+    "colleges": ["College of Architecture, Art, and Planning"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/urban-regional-studies-bs-urs/",
+    "status": "supported",
+    "courseplan": "major:CRP"
+  },
+  "urban-regional-studies-minor": {
+    "type": "minor",
+    "name": "Urban and Regional Studies",
+    "colleges": ["College of Architecture, Art, and Planning"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/urban-regional-studies-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "viking-studies-minor": {
+    "type": "minor",
+    "name": "Viking Studies",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/viking-studies-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "visual-studies-minor": {
+    "type": "minor",
+    "name": "Visual Studies",
+    "colleges": ["College of Arts and Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/visual-studies-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  },
+  "viticulture-enology-bs": {
+    "type": "major",
+    "name": "Viticulture and Enology",
+    "colleges": ["College of Agriculture and Life Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/viticulture-enology-bs/",
+    "status": "supported",
+    "courseplan": "major:VIEN"
+  },
+  "viticulture-enology-minor": {
+    "type": "minor",
+    "name": "Viticulture and Enology",
+    "colleges": ["College of Agriculture and Life Sciences"],
+    "catalogUrl": "https://catalog.cornell.edu/programs/viticulture-enology-minor/",
+    "status": "missing",
+    "firstSeen": "2026-10-22"
+  }
+}
