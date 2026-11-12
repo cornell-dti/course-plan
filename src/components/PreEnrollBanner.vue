@@ -158,7 +158,7 @@ export default defineComponent({
   width: 100%;
   min-height: 41px;
   padding: 8px 4.5rem;
-  background-color: #4daaa5;
+  background-color: $chrisGreen;
   border: 0.5px solid #508197;
 
   &-message {

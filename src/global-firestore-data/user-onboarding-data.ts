@@ -11,28 +11,32 @@ export const setAppOnboardingData = (
   onboarding: AppOnboardingData
 ): void => {
   setUsernameData(name);
-  setDoc(doc(onboardingDataCollection, store.state.currentFirebaseUser.email), {
-    gradYear: onboarding.gradYear,
-    gradSem: onboarding.gradSem,
-    entranceYear: onboarding.entranceYear,
-    entranceSem: onboarding.entranceSem,
-    colleges: onboarding.college ? [{ acronym: onboarding.college }] : [],
-    majors: onboarding.major.map(acronym => ({ acronym })),
-    minors: onboarding.minor.map(acronym => ({ acronym })),
-    gradPrograms: onboarding.grad ? [{ acronym: onboarding.grad }] : [],
-    // TODO @bshen migration script from type to examType
-    exam: onboarding.exam.map(e => ({
-      ...e,
-      type: e.examType || e.type,
-      examType: e.type || e.examType,
-    })),
-    tookSwim: onboarding.tookSwim,
-    sawNewFeature: onboarding.sawNewFeature,
-    sawGiveaway: onboarding.sawGiveaway,
-    fa25giveaway: onboarding.fa25giveaway,
-    sawScheduleGenerator: onboarding.sawScheduleGenerator,
-    dismissedPreEnrollBanner: onboarding.dismissedPreEnrollBanner ?? {},
-  });
+  // Keep reminder dismissals independent of potentially stale profile data.
+  setDoc(
+    doc(onboardingDataCollection, store.state.currentFirebaseUser.email),
+    {
+      gradYear: onboarding.gradYear,
+      gradSem: onboarding.gradSem,
+      entranceYear: onboarding.entranceYear,
+      entranceSem: onboarding.entranceSem,
+      colleges: onboarding.college ? [{ acronym: onboarding.college }] : [],
+      majors: onboarding.major.map(acronym => ({ acronym })),
+      minors: onboarding.minor.map(acronym => ({ acronym })),
+      gradPrograms: onboarding.grad ? [{ acronym: onboarding.grad }] : [],
+      // TODO @bshen migration script from type to examType
+      exam: onboarding.exam.map(e => ({
+        ...e,
+        type: e.examType || e.type,
+        examType: e.type || e.examType,
+      })),
+      tookSwim: onboarding.tookSwim,
+      sawNewFeature: onboarding.sawNewFeature,
+      sawGiveaway: onboarding.sawGiveaway,
+      fa25giveaway: onboarding.fa25giveaway,
+      sawScheduleGenerator: onboarding.sawScheduleGenerator,
+    },
+    { merge: true }
+  );
 };
 
 const updateTransferCredit = (exam: readonly FirestoreTransferExam[], tookSwim: 'yes' | 'no') => {
