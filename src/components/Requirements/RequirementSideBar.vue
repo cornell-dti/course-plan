@@ -652,6 +652,7 @@ export default defineComponent({
   position: fixed;
   top: var(--pre-enroll-banner-height, 0px);
   height: calc(100vh - var(--pre-enroll-banner-height, 0px));
+  height: calc(100dvh - var(--pre-enroll-banner-height, 0px));
   overflow-y: scroll;
   overscroll-behavior-y: none;
   overflow-x: hidden;
@@ -777,6 +778,7 @@ h1.title {
     padding-left: 0.5rem;
     top: calc(4.5rem + var(--pre-enroll-banner-height, 0px));
     height: calc(100vh - 4.5rem - var(--pre-enroll-banner-height, 0px));
+    height: calc(100dvh - 4.5rem - var(--pre-enroll-banner-height, 0px));
   }
 
   .fixed {
@@ -784,6 +786,7 @@ h1.title {
     left: 0rem;
     width: 100%;
     height: calc(100vh - 4.5rem - var(--pre-enroll-banner-height, 0px));
+    height: calc(100dvh - 4.5rem - var(--pre-enroll-banner-height, 0px));
   }
 }
 </style>
