@@ -195,6 +195,11 @@ import summer from '@/assets/images/summerEmoji.svg';
 
 const placeholderText = 'Select one';
 
+const sortChoicesByName = (
+  choices: readonly (readonly [string, string])[]
+): Readonly<Record<string, string>> =>
+  Object.fromEntries([...choices].sort((c1, c2) => c1[1].localeCompare(c2[1])));
+
 export default defineComponent({
   components: { OnboardingBasicMultiDropdown, OnboardingBasicSingleDropdown },
   props: {
@@ -282,32 +287,23 @@ export default defineComponent({
       return Object.fromEntries(base);
     },
     majors(): Readonly<Record<string, string>> {
-      const majors: Record<string, string> = {};
-      const majorJSON = reqsData.major;
       const acr = this.collegeAcronym !== 'AS' ? this.collegeAcronym : 'AS2';
-      Object.keys(majorJSON).forEach(key => {
-        // only show majors for schools the user is in
-        if (majorJSON[key].schools.includes(acr)) {
-          majors[key] = majorJSON[key].name;
-        }
-      });
-      return majors;
+      return sortChoicesByName(
+        Object.entries(reqsData.major)
+          // only show majors for schools the user is in
+          .filter(([, major]) => major.schools.includes(acr))
+          .map(([key, { name }]) => [key, name])
+      );
     },
     minors(): Readonly<Record<string, string>> {
-      const minors: Record<string, string> = {};
-      const minorJSON = reqsData.minor;
-      Object.keys(minorJSON).forEach(key => {
-        // show no minors if the user is not in a college
-        if (this.collegeAcronym) {
-          minors[key] = minorJSON[key].name;
-        }
-      });
-      return minors;
+      // show no minors if the user is not in a college
+      if (!this.collegeAcronym) return {};
+      return sortChoicesByName(
+        Object.entries(reqsData.minor).map(([key, { name }]) => [key, name])
+      );
     },
     gradPrograms(): Readonly<Record<string, string>> {
-      return Object.fromEntries(
-        Object.entries(reqsData.grad).map(([key, { name }]) => [key, name])
-      );
+      return sortChoicesByName(Object.entries(reqsData.grad).map(([key, { name }]) => [key, name]));
     },
     suggestedEntranceSem(): Readonly<number> {
       return getCurrentYear();
