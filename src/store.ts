@@ -88,6 +88,7 @@ const store: TypedVuexStore = new TypedVuexStore({
       sawNewFeature: false,
       sawGiveaway: false,
       sawScheduleGenerator: false,
+      dismissedPreEnrollBanner: {},
     },
     orderByNewest: true,
     derivedCoursesData: {
@@ -223,6 +224,12 @@ const store: TypedVuexStore = new TypedVuexStore({
       state.onboardingData.fa25giveaway = {
         ...state.onboardingData.fa25giveaway,
         ...giveawayUpdate,
+      };
+    },
+    setPreEnrollBannerDismissed(state: VuexStoreState, dismissalKey: string) {
+      state.onboardingData.dismissedPreEnrollBanner = {
+        ...state.onboardingData.dismissedPreEnrollBanner,
+        [dismissalKey]: true,
       };
     },
   },

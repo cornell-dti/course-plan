@@ -83,6 +83,7 @@ it('Exam is converted to correct course', () => {
     sawNewFeature: false,
     sawGiveaway: false,
     sawScheduleGenerator: false,
+    dismissedPreEnrollBanner: {},
   };
   const examCourses = userDataToExamCourses(userData);
   const expected = {
