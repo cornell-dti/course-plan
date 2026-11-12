@@ -2,6 +2,7 @@ import { Course, CollegeOrMajorRequirement } from '../../requirements/types';
 import {
   courseMatchesCodeOptions,
   includesWithSingleRequirement,
+  includesWithSubRequirements,
 } from '../../requirements/checkers';
 import { AdvisorGroup } from '../../tools/advisors/types';
 
@@ -14,6 +15,8 @@ const stsciElectiveCourses = [
   'STSCI 3740',
   'STSCI 3900',
   'STSCI 3600',
+  // ORIE 3510 is cross-listed as STSCI 3510, so it counts toward the three STSCI electives.
+  'STSCI 3510',
 ];
 
 const nonStsciElectiveCourses = [
@@ -60,10 +63,24 @@ const stsciRequirements: readonly CollegeOrMajorRequirement[] = [
       'MATH 2220, MATH 2230, or MATH 1920. Students following the Data Science Track replace the multivariable calculus requirement with CS 2110 ' +
       '(and use CS 4320 as one of their non-STSCI electives).',
     source: 'https://catalog.cornell.edu/programs/statistics-data-science-ba/',
-    checker: includesWithSingleRequirement('MATH 2220', 'MATH 2230', 'MATH 1920', 'CS 2110'),
-    fulfilledBy: 'courses',
-    perSlotMinCount: [1],
-    slotNames: ['Course'],
+    fulfilledBy: 'toggleable',
+    fulfillmentOptions: {
+      Standard: {
+        description: 'MATH 2220, MATH 2230, or MATH 1920.',
+        counting: 'courses',
+        checker: includesWithSubRequirements(['MATH 2220', 'MATH 2230', 'MATH 1920']),
+        perSlotMinCount: [1],
+        slotNames: ['Course'],
+      },
+      'Data Science Track': {
+        description:
+          'CS 2110 replaces multivariable calculus. Data Science Track students also use CS 4320 as one of their non-STSCI electives.',
+        counting: 'courses',
+        checker: includesWithSubRequirements(['CS 2110']),
+        perSlotMinCount: [1],
+        slotNames: ['CS 2110'],
+      },
+    },
   },
   {
     name: 'Statistical Methods II',
@@ -126,7 +143,7 @@ const stsciRequirements: readonly CollegeOrMajorRequirement[] = [
     description:
       'Five elective courses with significant statistical content, each at least 3 credits (minimum 15 credits). ' +
       'At least three of the five electives must be STSCI courses or cross-listed with STSCI courses (any 4000-level STSCI course except ' +
-      'STSCI 4970, STSCI 4980, and STSCI 4990, or STSCI 3090, 3100, 3740, 3900). The remaining two may come from the pre-approved list of ' +
+      'STSCI 4970, STSCI 4980, and STSCI 4990, or STSCI 3090, 3100, 3740, 3900, or ORIE 3510 (cross-listed as STSCI 3510)). The remaining two may come from the pre-approved list of ' +
       'non-STSCI electives; any course not on the list must be approved by the major advisor. Two of STSCI 3600, 4610, 4720, 4725, 4850, ' +
       'and 4881 together count as one elective.',
     source: 'https://catalog.cornell.edu/programs/statistics-data-science-ba/',

@@ -6,11 +6,15 @@ const arthRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'Required Courses',
     description:
-      'ARTH 1100 (offered every fall; must be passed with a grade of at least B), VISST 2000, and ARTH 4101. ' +
+      'ARTH 1100 (offered every fall; must be passed with a grade of at least B), VISST 2000 (cross-listed as ARTH 2000), and ARTH 4101. ' +
       'Students who declare the major at the end of sophomore year without having taken ARTH 1100 must complete a tutorial with a grade of at least B. ' +
       'These courses count toward the 10 History of Art courses.',
     source: 'https://catalog.cornell.edu/programs/history-art-ba/',
-    checker: includesWithSubRequirements(['ARTH 1100'], ['VISST 2000'], ['ARTH 4101']),
+    checker: includesWithSubRequirements(
+      ['ARTH 1100'],
+      ['VISST 2000', 'ARTH 2000', 'AMST 2000'],
+      ['ARTH 4101']
+    ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1],
     slotNames: ['ARTH 1100', 'VISST 2000', 'ARTH 4101'],
@@ -26,7 +30,7 @@ const arthRequirements: readonly CollegeOrMajorRequirement[] = [
       ['ARTH 2***'],
       ['ARTH 3***'],
       ['ARTH 4***'],
-      ['ARTH 3***', 'ARTH 4***']
+      ['ARTH 3***', 'ARTH 4***', 'ARTH 5***', 'ARTH 6***']
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [2, 1, 2, 2],

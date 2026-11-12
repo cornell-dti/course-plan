@@ -18,7 +18,7 @@ const africanaRequirements: readonly CollegeOrMajorRequirement[] = [
       'Three (3) ASRC courses, 2000-level or above, each falling under one of the following categories: ' +
       'African, African-American, Caribbean, or other diaspora studies.',
     source: 'https://catalog.cornell.edu/programs/africana-studies-ba/',
-    checker: includesWithSingleRequirement('ASRC 2***'),
+    checker: includesWithSingleRequirement('ASRC 2***', 'ASRC 3***', 'ASRC 4***', 'ASRC 6***'),
     checkerWarning: 'We do not check the category of the courses you add.',
     fulfilledBy: 'courses',
     perSlotMinCount: [3],

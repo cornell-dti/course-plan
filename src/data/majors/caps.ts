@@ -72,6 +72,7 @@ const capsRequirements: readonly CollegeOrMajorRequirement[] = [
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
     slotNames: ['3000-level CHIN Course'],
+    allowCourseDoubleCounting: true,
   },
   {
     name: 'CAPS Study Abroad in Beijing',

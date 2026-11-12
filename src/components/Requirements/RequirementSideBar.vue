@@ -337,6 +337,13 @@ export default defineComponent({
       newFeatureTour.start();
       updateSawNewFeature(true);
     },
+    // Removing a major or minor can leave the displayed index past the end, which hides that section
+    'onboardingData.major.length': function resetMajorIndex(length: number) {
+      if (this.displayedMajorIndex >= length) this.displayedMajorIndex = 0;
+    },
+    'onboardingData.minor.length': function resetMinorIndex(length: number) {
+      if (this.displayedMinorIndex >= length) this.displayedMinorIndex = 0;
+    },
   },
   computed: {
     multiplePlansAllowed(): boolean {

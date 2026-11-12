@@ -45,7 +45,10 @@ const jwstRequirements: readonly CollegeOrMajorRequirement[] = [
       'Up to two courses at any level in a Jewish language (Hebrew, Yiddish, Judeo-Arabic) may count, ' +
       'provided they are not used to fulfill the Arts and Sciences language requirement.',
     source: 'https://catalog.cornell.edu/programs/jewish-studies-ba/',
-    checker: includesWithSubRequirements(['JWST 3***', 'JWST 4***'], ['JWST ****']),
+    checker: includesWithSubRequirements(
+      ['JWST 3***', 'JWST 4***', 'JWST 5***', 'JWST 6***'],
+      ['JWST ****']
+    ),
     fulfilledBy: 'courses',
     perSlotMinCount: [4, 3],
     slotNames: ['3000-level or above', 'Any level'],

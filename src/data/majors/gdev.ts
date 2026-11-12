@@ -214,7 +214,8 @@ const gdevRequirements: readonly CollegeOrMajorRequirement[] = [
       'GDEV 4045',
       'GDEV 4080',
       'GDEV 4190',
-      'GDEV 4295'
+      'GDEV 4295',
+      'GDEV *55*'
     ),
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
@@ -244,10 +245,9 @@ const gdevRequirements: readonly CollegeOrMajorRequirement[] = [
     description:
       'All Global Development majors affiliate with one of three thematic focused elective areas: Social & Economic Development, ' +
       'Agriculture & Food Systems, or Environment & Development. Each area requires 2 required courses plus 5 additional courses (minimum 15 credits). ' +
-      'At least 3 of the 5 electives must be at the 3000 level or higher, and up to 2 approved study-abroad courses may count as electives.',
+      'At least 3 of the 5 electives must be at the 3000 level or higher, and up to 2 approved study-abroad courses may count as electives. ' +
+      'Note: CoursePlan does not check the minimum number of GDEV-prefixed electives, the number of electives at the 3000 level or higher, or the 15-credit minimum.',
     source: SOURCE,
-    checkerWarning:
-      'We do not check the minimum number of GDEV-prefixed electives, the number of electives at the 3000 level or higher, or the 15-credit minimum.',
     fulfilledBy: 'toggleable',
     fulfillmentOptions: {
       'Social & Economic Development': {

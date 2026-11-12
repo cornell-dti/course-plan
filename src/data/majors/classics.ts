@@ -1,5 +1,5 @@
-import { CollegeOrMajorRequirement } from '../../requirements/types';
-import { includesWithSubRequirements } from '../../requirements/checkers';
+import { Course, CollegeOrMajorRequirement } from '../../requirements/types';
+import { courseMatchesCodeOptions, includesWithSubRequirements } from '../../requirements/checkers';
 import { AdvisorGroup } from '../../tools/advisors/types';
 
 const classicsRequirements: readonly CollegeOrMajorRequirement[] = [
@@ -10,7 +10,8 @@ const classicsRequirements: readonly CollegeOrMajorRequirement[] = [
       'Only classes passed with a C- or better may be applied to the major. A minimum of 27 credits is required to complete the major.',
     source: 'https://catalog.cornell.edu/programs/classics-ba/',
     checkerWarning:
-      'We do not check the 3000-level language course distribution, the course period coverage for the Classical Civilization track, or the minimum C- grade.',
+      'We do not check the 3000-level language course distribution, the subject area (ancient history, material culture, literature in translation) or ' +
+      'period coverage of Classical Civilization courses (any CLASS course at the 2000-level or above fills those slots), or the minimum C- grade.',
     fulfilledBy: 'toggleable',
     fulfillmentOptions: {
       Classics: {
@@ -32,11 +33,15 @@ const classicsRequirements: readonly CollegeOrMajorRequirement[] = [
           'and three additional courses designated CLASS at the 2000-level or above. Students taking the Beginning Homeric Greek sequence ' +
           '(GREEK 1104-GREEK 1105) should consult the DUS about alternatives to GREEK 2101.',
         counting: 'courses',
-        checker: includesWithSubRequirements(
-          ['GREEK 2101'],
-          ['GREEK 2***', 'GREEK 3***', 'GREEK 4***'],
-          ['CLASS 2***', 'CLASS 3***', 'CLASS 4***']
-        ),
+        checker: [
+          (course: Course): boolean => courseMatchesCodeOptions(course, ['GREEK 2101']),
+          (course: Course): boolean =>
+            course.subject === 'GREEK' &&
+            Number(course.catalogNbr) >= 2102 &&
+            Number(course.catalogNbr) < 5000,
+          (course: Course): boolean =>
+            courseMatchesCodeOptions(course, ['CLASS 2***', 'CLASS 3***', 'CLASS 4***']),
+        ],
         perSlotMinCount: [1, 5, 3],
         slotNames: ['GREEK 2101', 'Greek Course (2102+)', 'CLASS Course (2000+)'],
       },
@@ -45,11 +50,16 @@ const classicsRequirements: readonly CollegeOrMajorRequirement[] = [
           'LATIN 1205 or LATIN 2201, five courses in Latin numbered 2202 or above (including at least three courses, of 3 or more credits each, at the 3000-level), ' +
           'and three additional courses designated CLASS at the 2000-level or above.',
         counting: 'courses',
-        checker: includesWithSubRequirements(
-          ['LATIN 1205', 'LATIN 2201'],
-          ['LATIN 2***', 'LATIN 3***', 'LATIN 4***'],
-          ['CLASS 2***', 'CLASS 3***', 'CLASS 4***']
-        ),
+        checker: [
+          (course: Course): boolean =>
+            courseMatchesCodeOptions(course, ['LATIN 1205', 'LATIN 2201']),
+          (course: Course): boolean =>
+            course.subject === 'LATIN' &&
+            Number(course.catalogNbr) >= 2202 &&
+            Number(course.catalogNbr) < 5000,
+          (course: Course): boolean =>
+            courseMatchesCodeOptions(course, ['CLASS 2***', 'CLASS 3***', 'CLASS 4***']),
+        ],
         perSlotMinCount: [1, 5, 3],
         slotNames: ['LATIN 1205 or LATIN 2201', 'Latin Course (2202+)', 'CLASS Course (2000+)'],
       },

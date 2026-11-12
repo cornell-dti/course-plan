@@ -1,8 +1,5 @@
 import { CollegeOrMajorRequirement } from '../../requirements/types';
-import {
-  includesWithSingleRequirement,
-  includesWithSubRequirements,
-} from '../../requirements/checkers';
+import { includesWithSubRequirements } from '../../requirements/checkers';
 import { AdvisorGroup } from '../../tools/advisors/types';
 
 const sociologyRequirements: readonly CollegeOrMajorRequirement[] = [
@@ -20,22 +17,16 @@ const sociologyRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'Sociology Electives',
     description:
-      'Seven additional (i.e., elective) courses in sociology. Ten courses, a minimum of 30 credits, are required for the major.',
+      'Seven additional (i.e., elective) courses in sociology, three of which must be at the 3000 level or higher. ' +
+      'Ten courses, a minimum of 30 credits, are required for the major.',
     source: 'https://catalog.cornell.edu/programs/sociology-ba/',
-    checker: includesWithSingleRequirement('SOC ****'),
+    checker: includesWithSubRequirements(
+      ['SOC 3***', 'SOC 4***', 'SOC 5***', 'SOC 6***'],
+      ['SOC ****']
+    ),
     fulfilledBy: 'courses',
-    perSlotMinCount: [7],
-    slotNames: ['Course'],
-  },
-  {
-    name: 'Upper-Level Electives',
-    description: 'Three of the seven sociology electives must be at the 3000 level or higher.',
-    source: 'https://catalog.cornell.edu/programs/sociology-ba/',
-    checker: includesWithSingleRequirement('SOC 3***', 'SOC 4***'),
-    fulfilledBy: 'courses',
-    perSlotMinCount: [3],
-    slotNames: ['Course'],
-    allowCourseDoubleCounting: true,
+    perSlotMinCount: [3, 4],
+    slotNames: ['3000-Level or Higher', 'Any Level'],
   },
   {
     name: 'Grade Requirement',

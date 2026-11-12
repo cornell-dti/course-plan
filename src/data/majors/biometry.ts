@@ -10,7 +10,8 @@ const source = 'https://catalog.cornell.edu/programs/biometry-statistics-bs/';
 
 const excludedStsciCourses = ['STSCI 4970', 'STSCI 4980', 'STSCI 4990'];
 
-const stsciElectiveCodes = ['STSCI 3740', 'STSCI 3900', 'STSCI 3090', 'STSCI 3100'];
+// ORIE 3510 is cross-listed as STSCI 3510, so it counts toward the three STSCI electives.
+const stsciElectiveCodes = ['STSCI 3740', 'STSCI 3900', 'STSCI 3090', 'STSCI 3100', 'STSCI 3510'];
 const nonStsciElectiveCodes = [
   'BIOCB 4830',
   'BIOCB 4840',
@@ -182,7 +183,7 @@ const biometryRequirements: readonly CollegeOrMajorRequirement[] = [
     description:
       'Five elective courses with significant statistical content, each worth at least 3 credits. ' +
       'At least three of the five electives must be STSCI courses or cross-listed with STSCI courses ' +
-      '(any 4000-level STSCI course except STSCI 4970, STSCI 4980, and STSCI 4990, or STSCI 3740, STSCI 3900, STSCI 3090, STSCI 3100). ' +
+      '(any 4000-level STSCI course except STSCI 4970, STSCI 4980, and STSCI 4990, or STSCI 3740, STSCI 3900, STSCI 3090, STSCI 3100, or ORIE 3510 (cross-listed as STSCI 3510)). ' +
       'The remaining electives may come from the pre-approved list of non-STSCI courses; any course not on the list must be approved by the major advisor. ' +
       'Two of STSCI 3600, STSCI 4610, STSCI 4720, STSCI 4725, STSCI 4850, and STSCI 4881 together count as one elective (this may be done multiple times without repeating courses).',
     source,

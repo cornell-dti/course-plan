@@ -158,8 +158,10 @@ const gphsRequirements: readonly CollegeOrMajorRequirement[] = [
     description:
       'Introductory chemistry with laboratory (4-8 credits). Pre-health students should take the two-semester sequence CHEM 2070/2071 and CHEM 2080/2081. ' +
       'Students with an AP Chemistry score of 5 may place out of CHEM 2070/2071 but must still take at least one semester of general chemistry at Cornell ' +
-      '(CHEM 2080/2081 or CHEM 2150, not CHEM 1560/1561).',
+      '(CHEM 2080/2081 or CHEM 2150, not CHEM 1560/1561). This also fulfills the college distribution natural sciences requirement.',
     source: SOURCE,
+    // Catalog: "This fulfills the college distribution natural sciences requirement."
+    allowCourseDoubleCounting: true,
     fulfilledBy: 'toggleable',
     fulfillmentOptions: {
       'Two-Semester General Chemistry': {

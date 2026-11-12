@@ -1,4 +1,5 @@
 import { Course, CollegeOrMajorRequirement } from '../../requirements/types';
+import { courseMeetsCreditMinimum } from '../../requirements/checkers';
 import { AdvisorGroup } from '../../tools/advisors/types';
 
 const germanRequirements: readonly CollegeOrMajorRequirement[] = [
@@ -12,7 +13,8 @@ const germanRequirements: readonly CollegeOrMajorRequirement[] = [
       (course: Course): boolean =>
         course.subject === 'GERST' &&
         Number(course.catalogNbr) >= 3000 &&
-        Number(course.catalogNbr) <= 3209,
+        Number(course.catalogNbr) <= 3209 &&
+        courseMeetsCreditMinimum(course, 3),
     ],
     fulfilledBy: 'courses',
     perSlotMinCount: [2],

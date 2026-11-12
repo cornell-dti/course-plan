@@ -1,5 +1,6 @@
 import { Course, CollegeOrMajorRequirement } from '../../requirements/types';
 import {
+  courseMeetsCreditMinimum,
   includesWithSingleRequirement,
   includesWithSubRequirements,
 } from '../../requirements/checkers';
@@ -31,10 +32,11 @@ const frenchRequirements: readonly CollegeOrMajorRequirement[] = [
       (course: Course): boolean =>
         course.subject === 'FREN' &&
         course.catalogNbr !== '2310' &&
-        Number(course.catalogNbr) >= 2095,
+        Number(course.catalogNbr) >= 2095 &&
+        courseMeetsCreditMinimum(course, 3),
     ],
     checkerWarning:
-      'We do not check courses from outside Romance Studies or from other institutions, nor the 3-credit minimum.',
+      'We do not check courses from outside Romance Studies or from other institutions.',
     fulfilledBy: 'courses',
     perSlotMinCount: [7],
     slotNames: ['Course'],

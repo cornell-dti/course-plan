@@ -53,13 +53,15 @@ export default function buildRequirementFulfillmentGraphFromUserData(
           [
             uniqueId,
             {
+              // Drop choices for requirements the user no longer has (e.g. a removed major),
+              // otherwise the dangling edge makes the course conflict with everything.
               optIn: Array.from(
                 new Set([
                   ...Object.keys(choice.arbitraryOptIn),
                   ...choice.acknowledgedCheckerWarningOptIn,
                 ])
-              ),
-              optOut: choice.optOut,
+              ).filter(id => id in userRequirementsMap),
+              optOut: choice.optOut.filter(id => id in userRequirementsMap),
             },
           ],
         ];

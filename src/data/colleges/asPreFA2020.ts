@@ -65,6 +65,9 @@ const casPreFA2020Requirements: readonly CollegeOrMajorRequirement[] = [
       //   fulfilledBy: 'self-check',
       // },
     },
+    // A&S: "Courses may count toward any other requirement except first-year writing seminars",
+    // so a language course can also count toward a language major (e.g. ITAL 2202/2204 for Italian).
+    allowCourseDoubleCounting: true,
   },
   {
     name: 'PBS and MQR courses',

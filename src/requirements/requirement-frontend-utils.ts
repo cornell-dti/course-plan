@@ -282,7 +282,7 @@ const specializedForCollege = (
 
 export function getUserRequirements({
   college,
-  major: majors,
+  major: rawMajors,
   minor: minors,
   entranceYear,
   grad,
@@ -290,6 +290,8 @@ export function getUserRequirements({
   // check university & college & major & minor requirements
   if (college && !(college in requirementJson.college))
     throw new Error(`College ${college} not found.`);
+  // Ignore duplicate or unknown majors (e.g. stale Firestore data) so requirement ids stay unique
+  const majors = Array.from(new Set(rawMajors)).filter(major => major in requirementJson.major);
 
   const rawUniReqs = requirementJson.university.UNI;
   // University requirements only added if college is defined, i.e. if the user has selected an undergraduate program.

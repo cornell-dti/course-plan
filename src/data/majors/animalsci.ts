@@ -90,6 +90,7 @@ const animalsciRequirements: readonly CollegeOrMajorRequirement[] = [
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1, 1, 1, 1, 1],
     slotNames: ['ANSC 1101', 'ANSC 1105', 'BIOAP 1100', 'ANSC 2120', 'ANSC 2210', 'ANSC 2400'],
+    disallowTransferCredit: true,
   },
   {
     name: 'Fundamentals of Animal Management',
@@ -108,6 +109,7 @@ const animalsciRequirements: readonly CollegeOrMajorRequirement[] = [
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
     slotNames: ['Course'],
+    disallowTransferCredit: true,
   },
   {
     name: 'Ethics and Animal Welfare',
@@ -117,6 +119,7 @@ const animalsciRequirements: readonly CollegeOrMajorRequirement[] = [
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
     slotNames: ['Course'],
+    disallowTransferCredit: true,
   },
   {
     name: 'Statistics',
@@ -129,6 +132,7 @@ const animalsciRequirements: readonly CollegeOrMajorRequirement[] = [
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
     slotNames: ['Course'],
+    disallowTransferCredit: true,
   },
   {
     name: 'Sustainability Challenges',
@@ -161,6 +165,7 @@ const animalsciRequirements: readonly CollegeOrMajorRequirement[] = [
     fulfilledBy: 'courses',
     perSlotMinCount: [1],
     slotNames: ['Course'],
+    disallowTransferCredit: true,
   },
   {
     name: 'Minimum Animal Science Credits',
@@ -182,10 +187,9 @@ const animalsciRequirements: readonly CollegeOrMajorRequirement[] = [
       'Students select one concentration and complete all of its requirements (30-42 credits): Pre-Veterinary Medicine, Dairy Management, ' +
       'Animal Ecology and Conservation, Applied Animal Biology and Management, or Integrative Physiology and Nutrition. ' +
       'A course cannot fulfill both a Core Coursework and a Concentration requirement (except ANSC 2500 for Dairy Management), ' +
-      'and a course cannot fulfill more than one requirement within a concentration.',
+      'and a course cannot fulfill more than one requirement within a concentration. ' +
+      'For credit-counted concentrations only the total credits are checked; the per-area credit minimums in each description must be confirmed with your advisor.',
     source,
-    checkerWarning:
-      'For credit-counted concentrations we only check the total credits; the per-area credit minimums in each description must be confirmed with your advisor.',
     fulfilledBy: 'toggleable',
     fulfillmentOptions: {
       'Pre-Veterinary Medicine': {

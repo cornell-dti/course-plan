@@ -75,7 +75,8 @@ const archRequirements: readonly CollegeOrMajorRequirement[] = [
     name: 'Design Studios',
     description:
       'Ten semesters of design studio: ARCH 1101, ARCH 1102, ARCH 2101, ARCH 2102, ARCH 3101, ARCH 3102, ' +
-      'ARCH 4101, ARCH 4102, ARCH 5101, and ARCH 5902 (Design X Thesis).',
+      'ARCH 4101, ARCH 4102, ARCH 5101, and ARCH 5902 (Design X Thesis). ' +
+      'Students approved for the expanded design thesis (ARCH 5903 and ARCH 5904) may use ARCH 5903 to satisfy the ARCH 5101 requirement.',
     source: SOURCE,
     checker: includesWithSubRequirements(
       ['ARCH 1101'],
@@ -86,7 +87,7 @@ const archRequirements: readonly CollegeOrMajorRequirement[] = [
       ['ARCH 3102'],
       ['ARCH 4101'],
       ['ARCH 4102'],
-      ['ARCH 5101'],
+      ['ARCH 5101', 'ARCH 5903'],
       ['ARCH 5902']
     ),
     fulfilledBy: 'courses',
@@ -100,7 +101,7 @@ const archRequirements: readonly CollegeOrMajorRequirement[] = [
       'ARCH 3102',
       'ARCH 4101',
       'ARCH 4102',
-      'ARCH 5101',
+      'ARCH 5101 or ARCH 5903',
       'ARCH 5902',
     ],
   },

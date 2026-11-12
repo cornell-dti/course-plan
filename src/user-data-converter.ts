@@ -8,6 +8,7 @@
  */
 
 import type { TypedVuexStore } from './store';
+import requirementJson from './requirements/typed-requirement-json';
 
 /**
  * Creates credit range based on course
@@ -185,7 +186,10 @@ export const createAppOnboardingData = (data: FirestoreOnboardingUserData): AppO
   entranceYear: data.entranceYear ?? '',
   entranceSem: data.entranceSem ?? '',
   college: data.colleges.length !== 0 ? data.colleges[0].acronym : undefined,
-  major: data.majors.map(({ acronym }) => acronym),
+  // Drop duplicate or no-longer-supported majors: the sidebar indexes one requirement group per major
+  major: Array.from(new Set(data.majors.map(({ acronym }) => acronym))).filter(
+    acronym => acronym in requirementJson.major
+  ),
   minor: data.minors.map(({ acronym }) => acronym),
   grad:
     'gradPrograms' in data && data.gradPrograms.length !== 0

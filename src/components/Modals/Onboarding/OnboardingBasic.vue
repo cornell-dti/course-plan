@@ -361,7 +361,9 @@ export default defineComponent({
         let foundCollege = false;
         // Do nothing if no major set
         if (majorAcronym !== '') {
-          if (majorJSON[majorAcronym].schools.includes(this.collegeAcronym)) {
+          // A&S is stored as 'AS' here and only split into AS1/AS2 on save
+          const acr = this.collegeAcronym === 'AS' ? 'AS2' : this.collegeAcronym;
+          if (majorJSON[majorAcronym]?.schools.includes(acr)) {
             foundCollege = true;
           }
         }

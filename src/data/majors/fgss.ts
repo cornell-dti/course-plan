@@ -1,6 +1,7 @@
-import { CollegeOrMajorRequirement } from '../../requirements/types';
+import { Course, CollegeOrMajorRequirement } from '../../requirements/types';
 import {
-  includesWithSingleRequirement,
+  courseMatchesCodeOptions,
+  courseMeetsCreditMinimum,
   includesWithSubRequirements,
 } from '../../requirements/checkers';
 import { AdvisorGroup } from '../../tools/advisors/types';
@@ -24,7 +25,11 @@ const fgssRequirements: readonly CollegeOrMajorRequirement[] = [
       'Courses may be registered under FGSS or under the cross-listing department. ' +
       'A student with a double major may count up to three FGSS courses toward both majors.',
     source: 'https://catalog.cornell.edu/programs/fgss-ba/',
-    checker: includesWithSingleRequirement('FGSS 2***', 'FGSS 3***', 'FGSS 4***'),
+    checker: [
+      (course: Course): boolean =>
+        courseMatchesCodeOptions(course, ['FGSS 2***', 'FGSS 3***', 'FGSS 4***']) &&
+        courseMeetsCreditMinimum(course, 3),
+    ],
     checkerWarning:
       'We do not check that cross-listed courses registered under another department count.',
     fulfilledBy: 'courses',

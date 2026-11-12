@@ -8,7 +8,6 @@ import {
 import { AdvisorGroup } from '../../tools/advisors/types';
 
 const healthPolicyElectiveCourses = [
-  'AMST 3230',
   'AMST 3261',
   'ECON 3711',
   'ECON 3720',

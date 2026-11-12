@@ -64,16 +64,18 @@ const fiberScienceRequirements: readonly CollegeOrMajorRequirement[] = [
       'Two upper-level FSAD courses (6-8 credits), at least one at the 6000 level. ' +
       'FSAD 4000, FSAD 4010, FSAD 4020, FSAD 4030, and FSAD 4990 cannot count here.',
     source: CATALOG,
+    // The 6000-level slot comes first: the engine fills slots greedily in order, so a 6000-level
+    // course must not be consumed by the general upper-level slot before the 6000-level slot.
     checker: [
+      (course: Course): boolean => course.subject === 'FSAD' && course.catalogNbr.startsWith('6'),
       (course: Course): boolean =>
         course.subject === 'FSAD' &&
         Number(course.catalogNbr) >= 4000 &&
         !EXCLUDED_ADVANCED.includes(course.catalogNbr),
-      (course: Course): boolean => course.subject === 'FSAD' && course.catalogNbr.startsWith('6'),
     ],
     fulfilledBy: 'courses',
     perSlotMinCount: [1, 1],
-    slotNames: ['Upper-level FSAD course', '6000-level FSAD course'],
+    slotNames: ['6000-level FSAD course', 'Upper-level FSAD course'],
   },
   {
     name: 'Computer Science',

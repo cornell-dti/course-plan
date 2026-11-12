@@ -20,6 +20,8 @@ const groupACourses = [
 ];
 const groupBCourses = [
   'ENTOM 2030',
+  // ENTOM 2300 and ENTOM 3800 are listed in the catalog but not in the current course data.
+  'ENTOM 2300',
   'ENTOM 2440',
   'ENTOM 2500',
   'ENTOM 3150',
@@ -28,6 +30,7 @@ const groupBCourses = [
   'ENTOM 3630',
   'ENTOM 3690',
   'ENTOM 3755',
+  'ENTOM 3800',
   'ENTOM 4000',
   'ENTOM 4700',
 ];

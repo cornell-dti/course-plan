@@ -52,7 +52,16 @@ const complitRequirements: readonly CollegeOrMajorRequirement[] = [
       'fulfilling the requirement every year. The designated theory courses for 2026-2027 are COML 4370 and COML 4902 (fall) and ' +
       'COML 2591, COML 3021, COML 3300, COML 4251, COML 4810, and COML 4842 (spring).',
     source: 'https://complit.cornell.edu/undergraduate',
-    checker: includesWithSingleRequirement('COML 3021', 'COML 3300', 'COML 4251', 'COML 4902'),
+    checker: includesWithSingleRequirement(
+      'COML 4370',
+      'COML 4902',
+      'COML 2591',
+      'COML 3021',
+      'COML 3300',
+      'COML 4251',
+      'COML 4810',
+      'COML 4842'
+    ),
     checkerWarning:
       'We only check the theory courses designated for 2026-2027; the designated list changes every year.',
     fulfilledBy: 'courses',
@@ -106,7 +115,7 @@ const complitRequirements: readonly CollegeOrMajorRequirement[] = [
       'Five of the ten major courses must be taken in the Department of Comparative Literature, including the theory course and COML 3001. ' +
       'If elected, honors majors may count COML 4930 or COML 4940 as one of the required Comparative Literature courses.',
     source: 'https://catalog.cornell.edu/programs/comparative-literature-ba/',
-    checker: includesWithSingleRequirement('COML ****'),
+    checker: includesWithSingleRequirement('COML 2***', 'COML 3***', 'COML 4***'),
     fulfilledBy: 'courses',
     perSlotMinCount: [5],
     slotNames: ['COML Course'],
