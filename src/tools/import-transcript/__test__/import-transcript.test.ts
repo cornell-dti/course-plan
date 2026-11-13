@@ -1,6 +1,10 @@
 import fs from 'fs';
 import path from 'path';
-import { importTranscriptLinesForPlan, importTranscriptSummaryMessage } from '../import-transcript';
+import {
+  importTranscriptLinesForPlan,
+  importTranscriptSummaryMessage,
+  withTranscriptCredits,
+} from '../import-transcript';
 import type { TranscriptCourseLookup } from '../import-transcript';
 import { pageTextItemsToLines } from '../pdf-lines';
 
@@ -54,6 +58,13 @@ it("prefers the term's roster and keeps credits only once earned", () => {
   const { semesters } = runImport();
   expect(semesters[2].courses[1]).toEqual({ course: courses[4], credits: null });
   expect(semesters[0].courses[0].credits).toBe(3);
+});
+
+it('trusts earned transcript credits over the roster, widening the range to fit', () => {
+  const stored = ({ credits: 1.5, creditRange: [1.5, 1.5] } as unknown) as FirestoreSemesterCourse;
+  expect(withTranscriptCredits(stored, 2)).toEqual({ credits: 2, creditRange: [1.5, 2] });
+  expect(withTranscriptCredits(stored, 1)).toEqual({ credits: 1, creditRange: [1, 1.5] });
+  expect(withTranscriptCredits(stored, null)).toBe(stored);
 });
 
 it('maps test credits onto onboarding exams, CASE only behind its flag', () => {

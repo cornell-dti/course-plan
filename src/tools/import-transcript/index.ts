@@ -4,7 +4,7 @@ import { importTranscriptLinesForPlan } from './import-transcript';
 import type { ImportTranscriptResult } from './import-transcript';
 import { extractPdfLines } from './pdf-lines';
 
-export { importTranscriptSummaryMessage } from './import-transcript';
+export { importTranscriptSummaryMessage, withTranscriptCredits } from './import-transcript';
 export type { ImportTranscriptResult } from './import-transcript';
 
 const byCode = (code: string) => {

@@ -118,7 +118,11 @@ import {
   getDefaultRequirementChoices,
   updateRequirementChoices,
 } from '@/global-firestore-data';
-import { importTranscriptForPlan, importTranscriptSummaryMessage } from '@/tools/import-transcript';
+import {
+  importTranscriptForPlan,
+  importTranscriptSummaryMessage,
+  withTranscriptCredits,
+} from '@/tools/import-transcript';
 import type { ImportTranscriptResult } from '@/tools/import-transcript';
 import { closeBottomBar } from '@/components/BottomBar/BottomBarState';
 import ViewDropdown from './ViewDropdown.vue';
@@ -245,15 +249,9 @@ export default defineComponent({
         season,
         year,
         data: courses.map(({ course }) => course),
-        courses: cornellCourseRosterCoursesToFirebaseSemesterCoursesWithGlobalData(courses).map(
-          (course, i) => {
-            const { credits } = courses[i];
-            const [min, max] = course.creditRange;
-            return credits != null && credits >= min && credits <= max
-              ? { ...course, credits }
-              : course;
-          }
-        ),
+        courses: cornellCourseRosterCoursesToFirebaseSemesterCoursesWithGlobalData(
+          courses
+        ).map((course, i) => withTranscriptCredits(course, courses[i].credits)),
       }));
       const choices = getDefaultRequirementChoices(
         entries.flatMap(({ season, year, courses, data }) =>
