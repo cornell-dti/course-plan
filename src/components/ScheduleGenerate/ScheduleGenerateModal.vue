@@ -25,6 +25,9 @@
           <div class="schedule-generate-description">
             Please download before closing or it won't be saved!
           </div>
+          <div v-if="unscheduledCourses.length > 0" class="schedule-generate-unscheduled">
+            Couldn't fit: {{ unscheduledCourses.join(', ') }}
+          </div>
         </div>
         <div class="schedule-generate-body">
           <div class="schedule-generate-subHeader schedule-generate-subHeader--smallerIndent">
@@ -309,18 +312,31 @@ export default defineComponent({
     },
   },
   computed: {
+    unscheduledCourses(): string[] {
+      return (this.generatedScheduleOutputs[this.currentPage - 1]?.unscheduledCourses ?? []).map(
+        ({ code, conflictsWith }) =>
+          `${code} (${
+            conflictsWith.length > 0
+              ? `conflicts with ${conflictsWith.join(', ')}`
+              : 'over credit limit'
+          })`
+      );
+    },
     classes() {
       const returnCourses = Array.from(
         this.generatedScheduleOutputs[this.currentPage - 1]?.schedule.keys() ?? []
-      ).map(course => ({
-        fulfilledReq: this.courses.find(c => c.code === course.code)?.fulfilledReq,
-        title: this.courses.find(c => c.code === course.code)?.title,
-        color: '#'.concat(this.courses.find(c => c.code === course.code)?.color ?? ''),
-        code: course.code,
-        credits: course.credits,
-        timeStart: this.courses.find(c => c.code === course.code)?.timeStart,
-        timeEnd: this.courses.find(c => c.code === course.code)?.timeEnd,
-      }));
+      ).map(course => {
+        const original = this.courses.find(c => c.code === course.code);
+        return {
+          fulfilledReq: original?.fulfilledReq,
+          title: original?.title,
+          color: '#'.concat(original?.color ?? ''),
+          code: course.code,
+          credits: course.credits,
+          timeStart: course.timeslots[0]?.start ?? original?.timeStart,
+          timeEnd: course.timeslots[0]?.end ?? original?.timeEnd,
+        };
+      });
       return returnCourses;
     },
     classesSchedule() {
@@ -484,6 +500,12 @@ input {
     font-size: 18px;
     line-height: 36px;
     color: $onboardingGray;
+    text-align: center;
+  }
+
+  &-unscheduled {
+    font-size: 14px;
+    color: $warning;
     text-align: center;
   }
 
