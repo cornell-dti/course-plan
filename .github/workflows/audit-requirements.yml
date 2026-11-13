@@ -4,20 +4,14 @@ name: Compare Requirements with Cornell Catalog
 # report of every difference it finds. Nothing under src/ is changed; a person
 # reads the report and decides what to fix.
 on:
-  # TEMPORARY, remove before merging: lets the workflow run from this branch.
-  # GitHub only offers the manual and scheduled triggers once the file is on main.
-  push:
-    branches: [claude-requirements-audit]
-    paths: ['.github/workflows/audit-requirements.yml']
   schedule:
-    - cron: '0 12 1 * *' # 12:00 UTC on the 1st of every month
+    # Once a semester, compare every supported program: 12:00 UTC on Sep 1 (after the new
+    # catalog edition is published) and Feb 1 (start of spring).
+    - cron: '0 12 1 2,9 *'
   workflow_dispatch:
     inputs:
-      count:
-        description: 'How many of the least recently checked programs to compare'
-        default: '10'
       slugs:
-        description: 'Or: specific catalog slugs, space separated (e.g. "computer-science-bs robotics-minor")'
+        description: 'Optional: only these catalog slugs, space separated (e.g. "computer-science-bs robotics-minor"). Leave empty to compare every program.'
         default: ''
 
 permissions:
@@ -30,6 +24,8 @@ env:
 jobs:
   compare:
     runs-on: ubuntu-latest
+    # About a minute per program, one at a time.
+    timeout-minutes: 240
     steps:
       - uses: actions/checkout@v4
       - name: Set up Node
@@ -40,8 +36,8 @@ jobs:
       - name: NPM Clean Install
         run: npm ci
       - name: Keep results from an open report PR
-        # If the last report PR is still open, start from its results so this run
-        # moves on to programs that have not been checked yet.
+        # If the last report PR is still open, start from its results so a program
+        # that fails this run keeps its previous result.
         run: |
           if git fetch --depth=1 origin "$PR_BRANCH" 2>/dev/null; then
             git checkout FETCH_HEAD -- scripts/program-audit/comparisons scripts/program-audit/REQUIREMENTS_REPORT.md || true
@@ -55,15 +51,13 @@ jobs:
         id: compare
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          # TEMPORARY: branch test runs compare one program only.
-          SLUGS: ${{ inputs.slugs || (github.event_name == 'push' && 'robotics-minor') || '' }}
-          COUNT: ${{ inputs.count || '10' }}
+          SLUGS: ${{ inputs.slugs }}
         run: |
           if [ -n "$SLUGS" ]; then
             # Word splitting is intended: one argument per slug.
             npm run --silent program-compare -- $SLUGS
           else
-            npm run --silent program-compare -- --stale "$COUNT"
+            npm run --silent program-compare -- --all
           fi
       - name: Create Pull Request
         id: cpr

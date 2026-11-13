@@ -27,6 +27,7 @@ Neither changes anything under `src/`. Both produce reports for a person to act 
 ```bash
 npm run program-audit                                    # refresh program-map.json and MISSING_PROGRAMS.md
 npm run program-compare -- computer-science-bs           # compare one program (or several slugs)
+npm run program-compare -- --all                         # compare every supported program
 npm run program-compare -- --stale 10                    # compare the 10 least recently checked programs
 npm run program-compare -- --dry-run robotics-minor      # fetch and resolve only; no API key or API call
 npm run ts-node -- scripts/program-audit/catalog.ts https://catalog.cornell.edu/programs/theatre-minor/   # see what Claude sees
@@ -61,16 +62,16 @@ editing a data file. Three limits to keep in mind:
 
 ## How the GitHub Action works
 
-`.github/workflows/audit-requirements.yml` runs on the 1st of every month and on demand (Actions
-tab, "Compare Requirements with Cornell Catalog", Run workflow).
+`.github/workflows/audit-requirements.yml` runs once a semester, on September 1 (after the new
+catalog edition is published) and February 1. You can also run it on demand from the Actions tab
+("Compare Requirements with Cornell Catalog", Run workflow).
 
 1. It refreshes `program-map.json` with `program-audit`.
-2. It compares the 10 least recently checked programs (change `count` when running by hand, or
-   give specific `slugs`). Programs never checked go first, so repeated runs work through the
-   whole list and then start again with the oldest.
+2. It compares every supported program, one at a time, which takes about an hour. When run by
+   hand, give `slugs` to compare only those programs.
 3. It opens a PR on branch `program-audit/requirements` containing the report. If that branch
-   already exists from an earlier run, its results are restored first so the next run continues
-   where the last one stopped.
+   still exists from an earlier run, its results are restored first, so a program that fails this
+   run keeps its previous result.
 
 If the catalog cannot be reached for a program, or Claude's reply cannot be used, that program is
 listed under "Last attempt failed" in the report and its previous result is kept. The run fails

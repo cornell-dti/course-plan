@@ -14,6 +14,7 @@
  * Usage:
  *   ANTHROPIC_API_KEY=... npm run program-compare -- biometry-statistics-bs robotics-minor
  *   ANTHROPIC_API_KEY=... npm run program-compare -- --stale 10   # the 10 least recently checked
+ *   ANTHROPIC_API_KEY=... npm run program-compare -- --all        # every supported program
  *   npm run program-compare -- --dry-run biometry-statistics-bs   # fetch and resolve only, no API call
  */
 import Anthropic from '@anthropic-ai/sdk';
@@ -388,6 +389,7 @@ function parseArgs(argv: string[]): { slugs: string[]; stale?: number; dryRun: b
   for (let i = 0; i < argv.length; i += 1) {
     const arg = argv[i];
     if (arg === '--dry-run') dryRun = true;
+    else if (arg === '--all') stale = Infinity;
     else if (arg === '--stale') {
       const raw = argv[(i += 1)];
       stale = Number(raw);
@@ -411,7 +413,7 @@ async function main() {
   const index = loadJson<ComparisonIndex>(INDEX_PATH, {});
   const selected = slugs.length ? slugs : staleFirst(map, index).slice(0, stale ?? 0);
   if (selected.length === 0) {
-    console.log('Nothing to compare. Pass catalog slugs or --stale <count>.');
+    console.log('Nothing to compare. Pass catalog slugs, --stale <count> or --all.');
     return;
   }
   if (!dryRun && !process.env.ANTHROPIC_API_KEY && !process.env.ANTHROPIC_AUTH_TOKEN) {
