@@ -234,8 +234,8 @@
     "name": "Astronomy",
     "colleges": ["College of Arts and Sciences"],
     "catalogUrl": "https://catalog.cornell.edu/programs/astronomy-minor/",
-    "status": "missing",
-    "firstSeen": "2026-10-22"
+    "status": "supported",
+    "courseplan": "minor:ASTRO"
   },
   "atmospheric-science-bs": {
     "type": "major",
@@ -431,8 +431,8 @@
       "Duffield College of Engineering"
     ],
     "catalogUrl": "https://catalog.cornell.edu/programs/climate-change-minor/",
-    "status": "missing",
-    "firstSeen": "2026-10-22"
+    "status": "supported",
+    "courseplan": "minor:CLIMATECHANGE"
   },
   "cognitive-science-ba": {
     "type": "major",
@@ -1552,8 +1552,8 @@
     "name": "Philosophy",
     "colleges": ["College of Arts and Sciences"],
     "catalogUrl": "https://catalog.cornell.edu/programs/philosophy-minor/",
-    "status": "missing",
-    "firstSeen": "2026-10-22"
+    "status": "supported",
+    "courseplan": "minor:PHIL"
   },
   "physics-ba": {
     "type": "major",
