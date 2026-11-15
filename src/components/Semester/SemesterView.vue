@@ -307,12 +307,14 @@ export default defineComponent({
 
 .semesterView {
   width: 100%;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   padding: 1.5rem 3rem 0;
   position: relative;
   overflow-y: auto;
+  overscroll-behavior-y: contain;
 
   &-content {
     display: grid;
