@@ -8,7 +8,8 @@
 
     <div class="landing top-sec">
       <!--PLAN AHEAD-->
-      <div class="container p-0 m-0">
+      <div class="container hero">
+      <div class="container p-0 m-0 hero-cta">
         <div class="row top-bar phonepad no-gutters">
           <div class="col">
             <div class="row no-gutters top-section">
@@ -99,6 +100,7 @@
           </div>
         </div>
       </div>
+      </div>
 
       <!-- DRAG -->
       <div class="container-fluid plan p-0 center">
@@ -158,9 +160,9 @@
           <div class="comment comment-drag">
             <h1 class="head">Plan With Academic Tools</h1>
             <p class="sub-text track-text">
-              <strong>Streamline your semester planning</strong> <br />
-              with CoursePlan's academic tools, <br />
-              including a dashboard, progress <br />tracker, and advisor contact list.
+              <strong>Streamline your semester planning</strong> 
+              with CoursePlan's academic tools, 
+              including a dashboard, progress tracker, and advisor contact list.
             </p>
           </div>
         </div>
@@ -201,8 +203,8 @@
           <div class="comment comment-drag">
             <h1 class="head">Multiple Plans</h1>
             <p class="sub-text multiple-text">
-              <strong>Explore different academic paths</strong> by<br />
-              creating multiple versions of your <br />four-year plan to find the one that fits you
+              <strong>Explore different academic paths</strong> by 
+              creating multiple versions of your four-year plan to find the one that fits you
               best.
             </p>
           </div>
@@ -221,9 +223,9 @@
             />
             <h1 class="head">Saved Courses</h1>
             <p class="sub-text saved-text">
-              Easily <strong>save courses for the future</strong> <br />
-              by adding them to a new or <br />existing collection. View, update, <br />and manage
-              your saved courses <br />anytime on the Save page.
+              Easily <strong>save courses for the future</strong> 
+              by adding them to a new or existing collection. View, update, and manage
+              your saved courses anytime on the Save page.
             </p>
           </div>
           <div class="feature-image">
@@ -257,8 +259,8 @@
             />
             <h1 class="head">Personal Notes</h1>
             <p class="sub-text notes-text">
-              <strong>Keep track of important details</strong> by <br />
-              adding notes and comments while <br />
+              <strong>Keep track of important details</strong> by 
+              adding notes and comments while 
               planning your courses.
             </p>
           </div>
@@ -393,11 +395,11 @@ export default defineComponent({
 }
 
 .top-sec {
-  background: url('@/assets/images/landing_new/top_rect.svg');
+  // background: url('@/assets/images/landing_new/top_rect.svg'); // TODO delete
   background-repeat: no-repeat;
   background-size: 100% auto;
   overflow: hidden;
-  padding-top: 6.25rem;
+  // padding-top: 6.25rem; // TODO delete
 
   @media (max-width: $large-breakpoint) {
     padding-top: 0;
@@ -538,18 +540,35 @@ input {
   }
 }
 
+.hero {
+  box-sizing: border-box;
+  min-height: 100vh;
+  background: linear-gradient(#148481 0%, #148481 30%, #fbfbfb 70%, #fbfbfb 100%);
+  display: flex;
+  flex-direction: column;
+}
+
+.hero-cta {
+  flex: 2;
+  display: flex;
+  
+}
+
 .new-way {
+  width: 100%;
   margin-top: 0;
+  flex: 1.5;
 }
 
 .new {
   padding: 3.25rem 6.5rem 3rem 6.5rem;
   color: $black;
   display: flex;
-  margin-top: 8rem;
-  max-width: 1600px;
-  margin-left: auto;
-  margin-right: auto;
+  justify-content: center;
+  // margin-top: 8rem; // TODO delete
+  // max-width: 1600px;
+  // margin-left: auto;
+  // margin-right: auto;
 
   @media (max-width: $large-breakpoint) {
     flex-direction: column;
@@ -716,7 +735,7 @@ figure {
       margin-top: 450px;
       margin-left: 950px;
       transform: translate(-20px, 200px);
-      width: 800px;
+      width: 600px;
 
       @media (max-width: $large-breakpoint) {
         margin-left: 0;
@@ -727,16 +746,6 @@ figure {
 
       .head {
         margin-bottom: 30px;
-      }
-
-      .sub-text {
-        width: 600px;
-        margin-right: 0;
-        line-height: 1.5;
-
-        @media (max-width: $large-breakpoint) {
-          width: 100%;
-        }
       }
     }
 
@@ -781,7 +790,6 @@ figure {
         width: 800px;
         margin-right: 0;
         margin-left: 0;
-        line-height: 1.5;
         white-space: normal;
 
         @media (max-width: $large-breakpoint) {
@@ -789,7 +797,7 @@ figure {
         }
 
         strong {
-          white-space: nowrap;
+          // white-space: nowrap;
           display: inline;
         }
       }
@@ -1138,14 +1146,14 @@ html {
   }
 }
 
-/* Make new-way section spacing more responsive */
-.new-way {
-  margin-top: 5vw;
+/* Make new-way section spacing more responsive */ // TODO review deletion
+// .new-way {
+//   margin-top: 5vw;
 
-  @media (max-width: $large-breakpoint) {
-    margin-top: 2rem;
-  }
-}
+//   @media (max-width: $large-breakpoint) {
+//     margin-top: 2rem;
+//   }
+// }
 
 /* Make "Plan Your Semesters" section match others */
 .semester:has(.semester-text) {
@@ -1260,6 +1268,7 @@ html {
 
   .row.new.no-gutters {
     justify-content: center;
+    align-items: center;
   }
 
   /* Center all feature section text */
@@ -1486,7 +1495,7 @@ html {
 }
 
 /* Hide images on smaller devices */
-@media (max-width: 1200px) {
+@media (max-width: $large-breakpoint) {
   /* Hide all images by default */
   img:not(.sub--task) {
     display: none !important;
@@ -1511,6 +1520,15 @@ html {
   /* Keep task icons visible */
   .tasks img.sub--task {
     display: inline-block !important;
+  }
+
+  .feature-section {
+    justify-content: center;
+  }
+
+  .comment {
+    max-width: 90% !important;
+    flex: 1;
   }
 }
 
