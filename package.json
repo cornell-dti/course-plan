@@ -26,7 +26,6 @@
     "cypress:e2e": "npm run build:dev && concurrently \"npm run serve:build\" \"wait-on http-get://localhost:8080 && npm run cypress:run\" --kill-others --success first"
   },
   "dependencies": {
-    "@posthog/react": "^1.11.1",
     "@types/intro.js": "^3.0.0",
     "bootstrap": "^4.6.0",
     "bootstrap-vue": "^2.22.0",

@@ -45,8 +45,9 @@ const router: Router = createRouter({
   ],
 });
 
-router.afterEach(() => {
-  capturePostHogEvent('$pageview');
+router.afterEach((to, from, failure) => {
+  // Skip aborted, cancelled and duplicate navigations.
+  if (!failure) capturePostHogEvent('$pageview');
 });
 
 router.beforeEach((to, from, next) => {

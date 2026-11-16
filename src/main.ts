@@ -23,12 +23,26 @@ const isPostHogConfigured = Boolean(posthogProjectToken && posthogHost);
 if (posthogProjectToken && posthogHost) {
   posthog.init(posthogProjectToken, {
     api_host: posthogHost,
-    person_profiles: 'identified_only',
+    // Analytics are anonymous per our privacy policy: never create person profiles
+    // or link events to a student's account, and keep on-screen text (names,
+    // emails, course plans) out of autocapture and session recordings.
+    person_profiles: 'never',
+    mask_all_text: true,
+    mask_all_element_attributes: true,
+    disable_session_recording: true,
+    // Exception messages can contain Firestore document paths, which are keyed by
+    // student email, so never send exceptions (this also overrides the project's
+    // remote "exception autocapture" setting).
+    capture_exceptions: false,
+    // The router sends $pageview after each successful navigation (src/router/index.ts).
+    capture_pageview: false,
     logs: {
       serviceName: 'courseplan-web',
       environment: import.meta.env.MODE,
     },
   });
+  // Dev, staging and prod share one PostHog project; tag events so they can be filtered.
+  posthog.register({ environment: import.meta.env.MODE });
 } else if (import.meta.env.DEV) {
   const missingVariable = posthogProjectToken ? 'VITE_POSTHOG_HOST' : 'VITE_POSTHOG_PROJECT_TOKEN';
   throw new Error(
@@ -36,35 +50,20 @@ if (posthogProjectToken && posthogHost) {
   );
 }
 
-let posthogDistinctId: string | undefined;
+let wasSignedIn = false;
 
 // handle page reloads
 let app: VueApp | undefined;
 auth.onAuthStateChanged(user => {
-  if (isPostHogConfigured) {
-    if (user) {
-      if (posthogDistinctId && posthogDistinctId !== user.uid) {
-        posthog.reset();
-      }
-
-      posthog.identify(user.uid, {
-        ...(user.email ? { email: user.email } : {}),
-        ...(user.displayName ? { name: user.displayName } : {}),
-      });
-      posthogDistinctId = user.uid;
-    } else if (posthogDistinctId) {
-      posthog.reset();
-      posthogDistinctId = undefined;
-    }
+  // We intentionally never call posthog.identify(). On sign-out, rotate the
+  // anonymous ID so the next person on a shared device isn't grouped with the last.
+  if (isPostHogConfigured && wasSignedIn && !user) {
+    posthog.reset();
   }
+  wasSignedIn = Boolean(user);
 
   if (!app) {
     app = createApp(App);
-    app.config.errorHandler = error => {
-      if (isPostHogConfigured) {
-        posthog.captureException(error);
-      }
-    };
     app.use(router);
     // Enable Google analytics with custom events
     app.use(VueGtag, {
