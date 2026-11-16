@@ -13,7 +13,7 @@
       If you have any questions or concerns about this privacy notice, or our practices with regards
       to your personal information, please contact us at
       <a href="mailto: courseplan.io@gmail.com">courseplan.io@gmail.com</a>
-      <p>This policy is effective as of 4 April 2021 and was last updated on 4 April 2021.</p>
+      <p>This policy is effective as of 4 April 2021 and was last updated on 15 November 2026.</p>
 
       <h3>Information We Collect</h3>
       <p>
@@ -95,6 +95,17 @@
         >
       </p>
       <p>
+        We also use PostHog to understand how our users use CoursePlan (for example, which features
+        are used and where people get stuck) so we can improve the service. PostHog receives
+        anonymous usage events, such as page views and actions like adding a course or exporting a
+        plan, along with basic browser and device information. PostHog uses cookies and similar
+        technologies to store a random identifier on your device. We do not send your name, email
+        address, or account identifier to PostHog, we do not record your sessions, and we do not
+        link these events to your account. PostHog processes this data on our behalf. For further
+        details, please see
+        <a href="https://posthog.com/privacy">PostHog’s privacy policy.</a>
+      </p>
+      <p>
         Please be aware that we may combine information we collect about you with general
         information or research data we receive from other trusted sources.
       </p>
@@ -145,7 +156,7 @@
         <li>User Account Registration and Authentication</li>
         Google OAuth 2.0
         <li>Web and Mobile Analytics</li>
-        Google Analytics and Hotjar
+        Google Analytics, Hotjar, and PostHog
       </ul>
 
       <h3>International Transfers of Personal Information</h3>
