@@ -6,7 +6,7 @@ import Page404 from '@/containers/404.vue';
 import Policy from '@/containers/Policy.vue';
 import Analytics from '@/containers/Analytics.vue';
 import store from '../store';
-import { usePostHog } from '@/composables/usePostHog';
+import capturePostHogEvent from '@/composables/usePostHog';
 
 const router: Router = createRouter({
   history: createWebHistory(),
@@ -45,8 +45,10 @@ const router: Router = createRouter({
   ],
 });
 
-const { posthog } = usePostHog();
-posthog?.capture('$pageview');
+router.afterEach((to, from, failure) => {
+  // Skip aborted, cancelled and duplicate navigations.
+  if (!failure) capturePostHogEvent('$pageview');
+});
 
 router.beforeEach((to, from, next) => {
   const { matched } = to;
