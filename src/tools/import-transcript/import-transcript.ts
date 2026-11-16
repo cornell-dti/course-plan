@@ -69,6 +69,15 @@ export const importTranscriptLinesForPlan = (
   return { status: 'ok', semesters, exams, tookSwim, skipped: skipped + skippedExams };
 };
 
+export const withTranscriptCredits = (
+  course: FirestoreSemesterCourse,
+  credits: number | null
+): FirestoreSemesterCourse => {
+  if (credits == null) return course;
+  const [min, max] = course.creditRange;
+  return { ...course, credits, creditRange: [Math.min(min, credits), Math.max(max, credits)] };
+};
+
 const count = (n: number, noun: string) => `${n} ${noun}${n === 1 ? '' : 's'}`;
 
 export const importTranscriptSummaryMessage = (

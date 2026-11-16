@@ -10,6 +10,7 @@ const incrementUniqueID = (amount = 1): number => {
     uniqueIncrementer: updatedID,
     uniqueBlankCourseIncrementer: noUpdatedBlankCourseID,
   });
+  store.commit('setUniqueIncrementer', updatedID);
   return updatedID;
 };
 
@@ -26,6 +27,7 @@ const incrementBlankCourseCrseID = (amount = 1): number => {
     uniqueIncrementer: noUpdatedID,
     uniqueBlankCourseIncrementer: updatedBlankCourseID,
   });
+  store.commit('setUniqueBlankCourseIncrementer', updatedBlankCourseID);
   return updatedBlankCourseID;
 };
 
