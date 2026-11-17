@@ -88,6 +88,7 @@ import mpaRequirements, { mpaAdvisors } from './grad/mpa';
 import { MATH2940, CHEM2080 } from './specializations/en';
 import nsRequirements, { nsAdvisors } from './majors/ns';
 import econILRMinorRequirements, { econILRMinorAdvisors } from './minors/econILR';
+import musicMinorRequirements, { musicMinorAdvisors } from './minors/music';
 
 const json: RequirementsJson = {
   university: {
@@ -613,6 +614,13 @@ const json: RequirementsJson = {
       requirements: mathMinorRequirements,
       advisors: mathMinorAdvisors,
       abbrev: 'Math',
+    },
+    MUSIC: {
+      name: 'Music',
+      schools: ['AS1', 'AS2'],
+      requirements: musicMinorRequirements,
+      advisors: musicMinorAdvisors,
+      abbrev: 'Music',
     },
     ORMS: {
       name: 'Operations Research and Management Science',
