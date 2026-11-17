@@ -225,10 +225,11 @@ $mobile-navbar-height: 4.5rem;
 .navbar {
   background-color: #f7f7f7;
   width: 4.5rem;
-  height: 100vh;
+  height: calc(100vh - var(--pre-enroll-banner-height, 0px));
+  height: calc(100dvh - var(--pre-enroll-banner-height, 0px));
   display: flex;
   position: sticky;
-  top: 0;
+  top: var(--pre-enroll-banner-height, 0px);
   z-index: 2;
   flex-direction: column;
   justify-content: space-between;
@@ -355,7 +356,7 @@ $mobile-navbar-height: 4.5rem;
     z-index: 3;
     left: 0;
     width: 16.5rem;
-    top: $mobile-navbar-height;
+    top: calc(#{$mobile-navbar-height} + var(--pre-enroll-banner-height, 0px));
     padding-top: 2rem;
     bottom: 0;
     display: none;
@@ -407,9 +408,16 @@ $mobile-navbar-height: 4.5rem;
   z-index: 2;
   left: 0;
   right: 0;
-  top: $mobile-navbar-height;
+  top: calc(#{$mobile-navbar-height} + var(--pre-enroll-banner-height, 0px));
   bottom: 0;
   background: rgba(0, 0, 0, 0.5);
+}
+
+@media only screen and (min-width: $medium-breakpoint + 1px) {
+  .navbar {
+    overflow-y: auto;
+    overscroll-behavior-y: contain;
+  }
 }
 
 @media only screen and (max-width: $medium-breakpoint) {

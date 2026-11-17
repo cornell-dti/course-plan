@@ -103,6 +103,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import capturePostHogEvent from '@/composables/usePostHog';
 import Semester from '@/components/Semester/Semester.vue';
 import Confirmation from '@/components/Modals/Confirmation.vue';
 import NewSemesterModal from '@/components/Modals/NewSemesterModal.vue';
@@ -277,10 +278,12 @@ export default defineComponent({
     },
     addSemester(season: string, year: number) {
       addSemester(store.state.currentPlan, year, season as FirestoreSemesterSeason, this.$gtag);
+      capturePostHogEvent('semester_added', { season, year });
       this.openSemesterConfirmationModal(season as FirestoreSemesterSeason, year, true);
     },
     deleteSemester(season: string, year: number) {
       deleteSemester(store.state.currentPlan, year, season as FirestoreSemesterSeason, this.$gtag);
+      capturePostHogEvent('semester_removed', { season, year });
       this.openSemesterConfirmationModal(season as FirestoreSemesterSeason, year, false);
     },
     courseOnClick(course: FirestoreSemesterCourse) {
@@ -307,12 +310,14 @@ export default defineComponent({
 
 .semesterView {
   width: 100%;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   padding: 1.5rem 3rem 0;
   position: relative;
   overflow-y: auto;
+  overscroll-behavior-y: contain;
 
   &-content {
     display: grid;
