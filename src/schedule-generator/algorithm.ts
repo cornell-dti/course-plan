@@ -3,8 +3,8 @@
  *
  * This module generates valid course schedules by:
  * 1. Taking a list of courses (including multiple variants for courses with different discussion/lab sections)
- * 2. Randomly selecting ONE variant per course code (ensures discussion variety across generations)
- * 3. Shuffling the order and greedily adding courses that don't conflict
+ * 2. Shuffling courses and their variants (ensures variety across generations)
+ * 3. Backtracking over every variant to fit as many courses as possible without conflicts
  * 4. Generating multiple unique schedules by repeating with different random selections
  */
 
@@ -17,6 +17,7 @@ export type GeneratedScheduleOutput = {
   schedule: Map<Course, Timeslot[]>;
   fulfilledRequirements: Map<string, Requirement[]>;
   totalCredits: number;
+  unscheduledCourses: { code: string; conflictsWith: string[] }[];
 };
 
 /**
@@ -107,106 +108,120 @@ function groupCoursesByCode(courses: Course[]): Map<string, Course[]> {
   return groups;
 }
 
-/**
- * Selects ONE random variant per course code, then shuffles the order.
- *
- * This is the key to getting variety in discussion sections:
- * - Without this: all variants are shuffled together, and the first valid one always wins
- * - With this: each generation randomly picks a different discussion section to try
- *
- * Example: If CS 2110 has 5 discussion sections, each call to this function
- * will randomly pick one of the 5, giving variety across schedule generations.
- */
-function selectAndShuffleVariants(classes: Course[]): Course[] {
-  const grouped = groupCoursesByCode(classes);
-
-  // For each course code, randomly pick ONE of its variants
-  const selected: Course[] = [];
-  grouped.forEach(variants => {
-    const randomIdx = Math.floor(Math.random() * variants.length);
-    selected.push(variants[randomIdx]);
-  });
-
-  // Shuffle the order of courses (affects which courses get priority)
-  return selected.sort(() => Math.random() - 0.5);
+function shuffle<T>(items: T[]): T[] {
+  const result = [...items];
+  for (let i = result.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+  return result;
 }
 
+type CandidateVariant = { course: Course; slots: ParsedTimeslot[] };
+
 export default class ScheduleGenerator {
-  /**
-   * Generates a single schedule using a greedy algorithm:
-   * 1. Select one random variant per course and shuffle the order
-   * 2. For each course, check if it can be added (no conflicts, under credit limit)
-   * 3. If valid, add it to the schedule
-   *
-   * The randomization in step 1 means calling this multiple times
-   * will produce different schedules.
-   */
-  static generateSchedule(request: GeneratorRequest): GeneratedScheduleOutput {
-    const { classes, semester } = request;
-    let { creditLimit } = request;
+  static generateSchedule(request: GeneratorRequest, maxNodes = 5000): GeneratedScheduleOutput {
+    const { classes, semester, creditLimit } = request;
 
-    const schedule: Map<Course, Timeslot[]> = new Map();
-    const fulfilledRequirements: Map<string, Requirement[]> = new Map();
-    const actualFulfilledRequirements: Set<string> = new Set(); // Track fulfilled requirement names
-    const usedCourseCodes: Set<string> = new Set(); // Prevent adding same course twice
+    const offered = classes.filter(course => course.offeredSemesters.includes(semester));
+    const candidates: CandidateVariant[][] = shuffle(
+      Array.from(groupCoursesByCode(offered).values())
+    ).map(variants =>
+      shuffle(variants).map(course => ({ course, slots: course.timeslots.map(parseTimeslot) }))
+    );
 
-    // Store pre-parsed timeslots for O(n) conflict checking
-    const scheduledParsedSlots: ParsedTimeslot[] = [];
+    let best: CandidateVariant[] = [];
+    const chosen: CandidateVariant[] = [];
+    const chosenSlots: ParsedTimeslot[] = [];
+    const usedReqs = new Set<string>();
+    let nodes = 0;
 
-    // Key step: select one variant per course, then shuffle
-    // This ensures different discussion sections are explored across generations
-    const shuffledClasses = selectAndShuffleVariants(classes);
+    const primaryReqOf = (course: Course) => course.requirements[0]?.name ?? '';
+    const maxCourses =
+      new Set(offered.map(primaryReqOf).filter(Boolean)).size +
+      candidates.filter(variants => !primaryReqOf(variants[0].course)).length;
+    const isDone = () => best.length === maxCourses || nodes >= maxNodes;
 
-    let totalCredits = 0;
+    const fits = ({ course, slots }: CandidateVariant, credits: number) => {
+      const primaryReq = primaryReqOf(course);
+      return (
+        !(primaryReq && usedReqs.has(primaryReq)) &&
+        credits + course.credits <= creditLimit &&
+        !slots.some(slot => chosenSlots.some(other => timeslotsConflict(slot, other)))
+      );
+    };
+    const add = (variant: CandidateVariant) => {
+      const newReqs = variant.course.requirements
+        .map(r => r.name)
+        .filter(name => !usedReqs.has(name));
+      newReqs.forEach(name => usedReqs.add(name));
+      chosen.push(variant);
+      chosenSlots.push(...variant.slots);
+      return newReqs;
+    };
+    const remove = (variant: CandidateVariant, newReqs: string[]) => {
+      chosen.pop();
+      chosenSlots.splice(chosenSlots.length - variant.slots.length);
+      newReqs.forEach(name => usedReqs.delete(name));
+    };
 
-    shuffledClasses.forEach(course => {
-      // Skip if not offered this semester
-      if (!course.offeredSemesters.includes(semester)) return;
+    const search = (index: number, credits: number): void => {
+      if (chosen.length > best.length) best = [...chosen];
+      if (isDone() || chosen.length + candidates.length - index <= best.length) return;
+      nodes += 1;
 
-      const primaryReq = course.requirements[0]?.name ?? '';
-
-      // Skip if:
-      // 1. This requirement is already fulfilled by another course
-      // 2. This course code is already in the schedule (shouldn't happen with variant selection)
-      // 3. Adding this course would exceed the credit limit
-      if (
-        (primaryReq && actualFulfilledRequirements.has(primaryReq)) ||
-        usedCourseCodes.has(course.code) ||
-        creditLimit - course.credits < 0
-      ) {
-        return;
-      }
-
-      // Pre-parse this course's timeslots for conflict checking
-      const courseParsedSlots = course.timeslots.map(parseTimeslot);
-
-      // Check if ANY of this course's timeslots conflict with ANY scheduled timeslot
-      let hasConflict = false;
-      for (let i = 0; i < courseParsedSlots.length && !hasConflict; i += 1) {
-        for (let j = 0; j < scheduledParsedSlots.length && !hasConflict; j += 1) {
-          if (timeslotsConflict(courseParsedSlots[i], scheduledParsedSlots[j])) {
-            hasConflict = true;
-          }
+      for (const variant of candidates[index]) {
+        if (fits(variant, credits)) {
+          const newReqs = add(variant);
+          search(index + 1, credits + variant.course.credits);
+          remove(variant, newReqs);
+          if (isDone()) return;
         }
       }
 
-      if (hasConflict) return;
+      search(index + 1, credits);
+    };
 
-      // No conflicts - add the course to the schedule
-      schedule.set(course, course.timeslots);
-      scheduledParsedSlots.push(...courseParsedSlots);
-      creditLimit -= course.credits;
-      totalCredits += course.credits;
-      usedCourseCodes.add(course.code);
-      fulfilledRequirements.set(course.code, course.requirements);
+    search(0, 0);
 
-      // Mark all requirements this course fulfills as done
-      course.requirements.forEach(requirement => {
-        actualFulfilledRequirements.add(requirement.name);
+    let totalCredits = 0;
+    const take = (variant: CandidateVariant) => {
+      add(variant);
+      totalCredits += variant.course.credits;
+    };
+    best.forEach(take);
+    candidates
+      .filter(variants => !chosen.some(c => c.course.code === variants[0].course.code))
+      .forEach(variants => {
+        const variant = variants.find(v => fits(v, totalCredits));
+        if (variant) take(variant);
       });
+
+    const schedule: Map<Course, Timeslot[]> = new Map();
+    const fulfilledRequirements: Map<string, Requirement[]> = new Map();
+    chosen.forEach(({ course }) => {
+      schedule.set(course, course.timeslots);
+      fulfilledRequirements.set(course.code, course.requirements);
     });
 
-    return { semester, schedule, fulfilledRequirements, totalCredits };
+    const clashesFor = ({ slots }: CandidateVariant) =>
+      chosen
+        .filter(other => slots.some(slot => other.slots.some(o => timeslotsConflict(slot, o))))
+        .map(other => other.course.code);
+    const unscheduledCourses = candidates
+      .filter(
+        variants =>
+          !chosen.some(c => c.course.code === variants[0].course.code) &&
+          !usedReqs.has(primaryReqOf(variants[0].course))
+      )
+      .map(variants => ({
+        code: variants[0].course.code,
+        conflictsWith: variants
+          .map(clashesFor)
+          .reduce((fewest, clashes) => (clashes.length < fewest.length ? clashes : fewest)),
+      }));
+
+    return { semester, schedule, fulfilledRequirements, totalCredits, unscheduledCourses };
   }
 
   /**
