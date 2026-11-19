@@ -26,6 +26,20 @@
         </div>
         <div
           class="navbar-buttonWrapper desktop"
+          @click="openCalendar"
+          :class="{ active: activePage === 'calendar' }"
+          data-cyId="openCalendar"
+        >
+          <button
+            class="navbar-iconWrapper calendar-icon full-opacity-on-hover"
+            aria-label="Calendar"
+          />
+          <div class="navbar-iconText">
+            <span>Calendar</span>
+          </div>
+        </div>
+        <div
+          class="navbar-buttonWrapper desktop"
           @click="openTools"
           :class="{ active: activePage === 'tools' }"
           data-cyId="openTools"
@@ -87,6 +101,10 @@
           <div class="navbar-iconWrapper plan-mobile-icon" />
           <span class="nav-mobile-button-text">Plan</span>
         </button>
+        <button class="nav-mobile-button" data-cyId="navbar-openCalendar" @click="openCalendar">
+          <div class="navbar-iconWrapper calendar-mobile-icon" />
+          <span class="nav-mobile-button-text">Calendar</span>
+        </button>
         <button class="nav-mobile-button" data-cyId="navbar-openTools" @click="openTools">
           <div class="navbar-iconWrapper tools-mobile-icon" />
           <span class="nav-mobile-button-text">Tools</span>
@@ -138,6 +156,7 @@ export default defineComponent({
   },
   emits: [
     'openPlan',
+    'openCalendar',
     'openTools',
     'toggleRequirementsMobile',
     'openProfile',
@@ -184,6 +203,11 @@ export default defineComponent({
       this.menuOpen = false;
       this.activePage = 'plan';
       this.$emit('openPlan');
+    },
+    openCalendar() {
+      this.menuOpen = false;
+      this.activePage = 'calendar';
+      this.$emit('openCalendar');
     },
     openTools() {
       this.menuOpen = false;
@@ -256,6 +280,9 @@ $mobile-navbar-height: 4.5rem;
       .tools-icon {
         background-image: url('@/assets/images/navbar/toolboxIconBlue.svg');
       }
+      .calendar-icon {
+        background-image: url('@/assets/images/navbar/calendarIconBlue.svg');
+      }
       .profile-icon {
         background-image: url('@/assets/images/navbar/profileIconBlue.svg');
       }
@@ -276,6 +303,9 @@ $mobile-navbar-height: 4.5rem;
       }
       .tools-icon {
         background-image: url('@/assets/images/navbar/toolboxIconBlue.svg');
+      }
+      .calendar-icon {
+        background-image: url('@/assets/images/navbar/calendarIconBlue.svg');
       }
       .profile-icon {
         background-image: url('@/assets/images/navbar/profileIconBlue.svg');
@@ -310,6 +340,11 @@ $mobile-navbar-height: 4.5rem;
 
   .tools-icon {
     background-image: url('@/assets/images/navbar/toolboxIcon.svg');
+  }
+
+  .calendar-icon,
+  .calendar-mobile-icon {
+    background-image: url('@/assets/images/navbar/calendarIcon.svg');
   }
 
   .profile-icon {

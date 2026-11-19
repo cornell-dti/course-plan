@@ -27,6 +27,7 @@
           :isDisplayingRequirementsMobile="requirementsIsDisplayedMobile"
           :startScheduleGeneratorTour="startScheduleGeneratorTour"
           @openPlan="openPlan"
+          @openCalendar="openCalendar"
           @openTools="openTools"
           @openProfile="openProfile"
           @openScheduleGenerate="openScheduleGenerate"
@@ -36,7 +37,9 @@
         <requirement-side-bar
           class="dashboard-reqs"
           data-cyId="reqsSidebar"
-          v-if="loaded && !showToolsPage && !isProfileOpen && !isScheduleGenerateOpen"
+          v-if="
+            loaded && !showToolsPage && !isProfileOpen && !isScheduleGenerateOpen && !isCalendarOpen
+          "
           :isMobile="isTablet"
           :isDisplayingMobile="requirementsIsDisplayedMobile"
           :isMinimized="requirementsIsMinimized"
@@ -47,13 +50,20 @@
           :startMultiplePlansTour="startMultiplePlansTour"
         />
         <schedule-generate-side-bar
-          v-if="loaded && !showToolsPage && !isProfileOpen && isScheduleGenerateOpen"
+          v-if="
+            loaded && !showToolsPage && !isProfileOpen && !isCalendarOpen && isScheduleGenerateOpen
+          "
           :year="year"
           :season="season"
           @openScheduleGenerateModal="openScheduleGenerateModal"
         />
         <bottom-bar
-          v-if="!(isTablet && requirementsIsDisplayedMobile) && !showToolsPage && !isProfileOpen"
+          v-if="
+            !(isTablet && requirementsIsDisplayedMobile) &&
+            !showToolsPage &&
+            !isProfileOpen &&
+            !isCalendarOpen
+          "
           :isNavbarWide="requirementsIsMinimized"
           :isExpanded="bottomBarIsExpanded"
           :maxBottomBarTabs="maxBottomBarTabs"
@@ -61,7 +71,11 @@
       </div>
       <semester-view
         v-if="
-          loaded && !(isTablet && requirementsIsDisplayedMobile) && !showToolsPage && !isProfileOpen
+          loaded &&
+          !(isTablet && requirementsIsDisplayedMobile) &&
+          !showToolsPage &&
+          !isProfileOpen &&
+          !isCalendarOpen
         "
         ref="semesterview"
         :compact="compactVal"
@@ -72,6 +86,7 @@
         @compact-updated="compactUpdated"
         @openFall2025Giveaway="userClickedFall2025GiveawayProgress = true"
       />
+      <calendar-page v-if="loaded && isCalendarOpen && !showToolsPage && !isProfileOpen" />
       <tools-container class="toolsPage" v-if="showToolsPage" />
       <profile-editor
         class="profilePage"
@@ -135,6 +150,7 @@ import ScheduleGenerateModal from '@/components/ScheduleGenerate/ScheduleGenerat
 import Onboarding from '@/components/Modals/Onboarding/Onboarding.vue';
 import TourWindow from '@/components/Modals/TourWindow.vue';
 import ToolsContainer from '@/containers/Tools.vue';
+import CalendarPage from '@/containers/Calendar.vue';
 import ProfileEditor from '@/containers/Profile.vue';
 import featureFlagCheckers from '@/feature-flags';
 import GiveawayModal from '@/components/Modals/GiveawayModal.vue';
@@ -182,6 +198,7 @@ let listenerUnsubscriber = (): void => {};
 export default defineComponent({
   components: {
     BottomBar,
+    CalendarPage,
     NavBar,
     ScheduleGenerateSideBar,
     Onboarding,
@@ -218,6 +235,7 @@ export default defineComponent({
       showFall2025GiveawayModal: false,
       userClickedFall2025GiveawayProgress: false,
       isScheduleGenerateOpen: false,
+      isCalendarOpen: false,
       isScheduleGenerateModalOpen: false,
       coursesForGeneration: [] as CourseForFrontend[],
       reqsForGeneration: [] as Requirement[],
@@ -367,6 +385,7 @@ export default defineComponent({
       this.showToolsPage = false;
       this.isProfileOpen = false;
       this.isScheduleGenerateOpen = false;
+      this.isCalendarOpen = false;
       this.isShowCollectionOpen = true;
     },
 
@@ -375,6 +394,15 @@ export default defineComponent({
       this.isProfileOpen = false;
       this.isShowCollectionOpen = false;
       this.isScheduleGenerateOpen = false;
+      this.isCalendarOpen = false;
+    },
+
+    openCalendar() {
+      this.showToolsPage = false;
+      this.isProfileOpen = false;
+      this.isShowCollectionOpen = false;
+      this.isScheduleGenerateOpen = false;
+      this.isCalendarOpen = true;
     },
 
     openTools() {
@@ -385,6 +413,7 @@ export default defineComponent({
     openScheduleGenerate() {
       this.showToolsPage = false;
       this.isProfileOpen = false;
+      this.isCalendarOpen = false;
       this.isScheduleGenerateOpen = true;
       this.isShowCollectionOpen = false;
     },

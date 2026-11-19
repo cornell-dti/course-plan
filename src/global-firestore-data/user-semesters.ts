@@ -94,6 +94,27 @@ export const editSemester = (
   );
 };
 
+/**
+ * Saves the section a student picked on the Calendar tab for one component (LEC, DIS, LAB, …) of a
+ * course in the given semester of the current plan. Stored on the course as `sectionChoices`.
+ */
+export const setCourseSectionChoice = (
+  year: number,
+  season: FirestoreSemesterSeason,
+  courseUniqueID: number,
+  component: string,
+  section: string
+): void => {
+  editSemester(store.state.currentPlan, year, season, semester => ({
+    ...semester,
+    courses: semester.courses.map(course =>
+      course.uniqueID === courseUniqueID && 'lastRoster' in course
+        ? { ...course, sectionChoices: { ...course.sectionChoices, [component]: section } }
+        : course
+    ),
+  }));
+};
+
 export const editPlan = (name: string, updater: (oldPlan: Plan) => Plan): void => {
   editPlans(oldPlan => oldPlan.map(plan => (plan.name === name ? updater(plan) : plan)));
 };

@@ -26,6 +26,7 @@ export {
   editPlan,
   editSemesters,
   editSemester,
+  setCourseSectionChoice,
   addCollection,
   addCourseToCollections,
   addSemester,

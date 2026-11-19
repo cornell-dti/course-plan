@@ -25,6 +25,12 @@ type FirestoreSemesterCourseBase = {
 type FirestoreSemesterCornellCourse = FirestoreSemesterCourseBase & {
   readonly type: 'CornellCourse'; // Discrminator for the type of course; Default type
   readonly lastRoster: string;
+  /**
+   * Sections the student picked on the Calendar tab, keyed by roster component (e.g. LEC, DIS,
+   * LAB) with the roster section number as the value (e.g. '001'). Optional: a missing component
+   * means "use the first section", so older documents need no migration.
+   */
+  readonly sectionChoices?: { readonly [component: string]: string };
 };
 
 type FirestoreSemesterBlankCourse = FirestoreSemesterBase & {
@@ -186,6 +192,7 @@ interface CornellCourseRosterCourseFullDetail extends CornellCourseRosterCourse 
     readonly unitsMaximum: number;
     readonly classSections: readonly {
       readonly ssrComponent: string;
+      readonly section?: string; // e.g. '001'
       readonly meetings: readonly {
         readonly pattern: unknown;
         readonly timeStart: unknown;
