@@ -888,6 +888,11 @@ export default defineComponent({
       );
     },
     deleteCourse(courseCode: string, uniqueID: number) {
+      // Looked up before deleting, while the course is still in the semester.
+      const removedCourse = this.courses.find(course => course.uniqueID === uniqueID);
+      const isBlankCourse =
+        !!removedCourse && 'type' in removedCourse && removedCourse.type === 'BlankCourse';
+      // Update requirements menu
       deleteCourseFromSemester(
         store.state.currentPlan,
         this.year,
@@ -895,8 +900,17 @@ export default defineComponent({
         uniqueID,
         this.$gtag
       );
-      // Update requirements menu
-      capturePostHogEvent('course_removed', { course_code: courseCode, season: this.season });
+      // A blank course's code is whatever the student typed (it could be their email), and the
+      // privacy policy promises PostHog gets no personal details. So the code is sent only for a
+      // course found here that isn't blank: if the lookup misses, no code is sent.
+      capturePostHogEvent('course_removed', {
+        course_code:
+          removedCourse && 'code' in removedCourse && !isBlankCourse
+            ? removedCourse.code
+            : undefined,
+        is_blank_course: isBlankCourse,
+        season: this.season,
+      });
       this.openConfirmationModal(`Removed ${courseCode} from ${this.season} ${this.year}`);
 
       // Track semester update after deleting course
@@ -1062,7 +1076,8 @@ export default defineComponent({
 
       // Show confirmation
       this.openConfirmationModal(`Added course ${course.code} to ${this.season} ${this.year}`);
-      capturePostHogEvent('added_bcc', { course_code: course.code });
+      // No course code: it's free text the student typed, which could be personal (see deleteCourse).
+      capturePostHogEvent('added_bcc');
     },
     openDistributionModal(course: FirestoreSemesterBlankCourse) {
       this.currentBlankCourse = course;
