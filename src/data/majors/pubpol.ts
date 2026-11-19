@@ -17,7 +17,9 @@ const pubpolRequirements: readonly CollegeOrMajorRequirement[] = [
     description:
       'PUBPOL 2301 (Introduction to Public Policy); ECON 1110 (or AP Microeconomics score of 5 / IB HL Economics score of 7); ' +
       'one of GOVT 1111, GOVT 1313, GOVT 1817; one of PUBPOL 2250 or SOC 1101; ' +
-      'and one statistics course from ECON 3110, ECON 3130, PUBPOL 2101, or SOC 3010.',
+      'and one statistics course from ECON 3110, ECON 3130, PUBPOL 2101, or SOC 3010. ' +
+      'Students must receive a C- or better in all major requirements. S/U grades may not be used for any major requirement unless it is ' +
+      'the only grading option, in which case a grade of SX must be received. Each course may only meet one major requirement unless otherwise stated.',
     source: 'https://catalog.cornell.edu/programs/public-policy-ba/',
     checker: includesWithSubRequirements(
       ['PUBPOL 2301'],
@@ -95,14 +97,6 @@ const pubpolRequirements: readonly CollegeOrMajorRequirement[] = [
       'We do not check the 3-credit cap on special studies coursework or the limit on credits taken abroad.',
     fulfilledBy: 'credits',
     perSlotMinCount: [22],
-  },
-  {
-    name: 'Grade Requirement',
-    description:
-      'Students must receive a C- or better in all major requirements. S/U grades may not be used for any major requirement unless it is ' +
-      'the only grading option, in which case a grade of SX must be received. Each course may only meet one major requirement unless otherwise stated.',
-    source: 'https://catalog.cornell.edu/programs/public-policy-ba/',
-    fulfilledBy: 'self-check',
   },
 ];
 

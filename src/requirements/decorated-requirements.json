@@ -291533,7 +291533,7 @@
       "requirements": [
         {
           "name": "Public Policy Core Courses",
-          "description": "PUBPOL 1111, PUBPOL 2000 (or ECON 3030), PUBPOL 2101, PUBPOL 2301, PUBPOL 2350, PUBPOL 2370, PUBPOL 2830, and PUBPOL 3100.",
+          "description": "PUBPOL 1111, PUBPOL 2000 (or ECON 3030), PUBPOL 2101, PUBPOL 2301, PUBPOL 2350, PUBPOL 2370, PUBPOL 2830, and PUBPOL 3100. Required cumulative GPA: 2.0. Students must complete requirements with a letter grade whenever possible and receive a C- or higher. If a course is offered exclusively S/U (SX/UX), a grade of SX must be obtained. Each course may only count towards one requirement unless otherwise stated.",
           "source": "https://catalog.cornell.edu/programs/health-care-policy-major-bs/",
           "fulfilledBy": "courses",
           "perSlotMinCount": [
@@ -292105,12 +292105,6 @@
               375456
             ]
           ]
-        },
-        {
-          "name": "Grade Requirement",
-          "description": "Required cumulative GPA: 2.0. Students must complete requirements with a letter grade whenever possible and receive a C- or higher. If a course is offered exclusively S/U (SX/UX), a grade of SX must be obtained. Each course may only count towards one requirement unless otherwise stated.",
-          "source": "https://catalog.cornell.edu/programs/health-care-policy-major-bs/",
-          "fulfilledBy": "self-check"
         }
       ]
     },
@@ -293541,7 +293535,7 @@
       "requirements": [
         {
           "name": "Studio Sequence",
-          "description": "LA 1410, LA 1420, LA 2010, LA 2020, LA 3010, LA 3020, LA 4010, and LA 4020 (38 credits), taken in sequential order. Students must receive a grade of C- or higher to advance to the next studio in sequence.",
+          "description": "LA 1410, LA 1420, LA 2010, LA 2020, LA 3010, LA 3020, LA 4010, and LA 4020 (38 credits), taken in sequential order. Students must receive a grade of C- or higher to advance to the next studio in sequence. A student who receives a D or lower in any studio must meet with the Director of Undergraduate Studies and their faculty advisor. All major requirements must be taken for a letter grade.",
           "source": "https://catalog.cornell.edu/programs/landscape-architecture-bs/",
           "fulfilledBy": "courses",
           "perSlotMinCount": [
@@ -293668,12 +293662,6 @@
         {
           "name": "Directed Study Courses",
           "description": "Three courses totaling at least 9 credits in a focus area of interest within landscape architecture, defined by the student in consultation with their faculty advisor.",
-          "source": "https://catalog.cornell.edu/programs/landscape-architecture-bs/",
-          "fulfilledBy": "self-check"
-        },
-        {
-          "name": "Letter Grade Requirement",
-          "description": "All major requirements must be taken for a letter grade. A grade of C- or better must be earned in every studio to advance to the next studio; a student who receives a D or lower in any studio must meet with the Director of Undergraduate Studies and their faculty advisor.",
           "source": "https://catalog.cornell.edu/programs/landscape-architecture-bs/",
           "fulfilledBy": "self-check"
         }
@@ -294564,7 +294552,7 @@
         },
         {
           "name": "Credit Requirement",
-          "description": "A minimum of 30 credits is required to complete the NES major. Middle Eastern language courses not being used to fulfill the NES language requirement may count toward the major. A maximum of two independent studies can be applied to the major, and students may petition for a maximum of two non-cross-listed Cornell courses on Middle East-related topics. Up to 12 credits of departmentally approved coursework taken overseas or at another university may be applied to the major.",
+          "description": "A minimum of 30 credits is required to complete the NES major. Middle Eastern language courses not being used to fulfill the NES language requirement may count toward the major. A maximum of two independent studies can be applied to the major, and students may petition for a maximum of two non-cross-listed Cornell courses on Middle East-related topics. Up to 12 credits of departmentally approved coursework taken overseas or at another university may be applied to the major. All courses for the major must be taken for a letter grade and students must receive a grade of B- or better in order for a course to count toward the major. No course may be used to satisfy two requirements.",
           "source": "https://catalog.cornell.edu/programs/near-eastern-studies-ba/",
           "checkerWarning": "We do not check additional Near Eastern language courses, petitioned non-cross-listed courses, or transfer credit.",
           "fulfilledBy": "credits",
@@ -294919,12 +294907,6 @@
           "description": "Students must complete at least one course that fulfills each of the following three chronological periods: Before 600 CE; 600 CE to 1800 CE; 1800 CE to the present. NES 4560 cannot count toward this requirement. Students are encouraged to consult with their advisor if they have questions about courses that span multiple periods.",
           "source": "https://catalog.cornell.edu/programs/near-eastern-studies-ba/",
           "fulfilledBy": "self-check"
-        },
-        {
-          "name": "Letter Grade Requirement",
-          "description": "All courses for the major must be taken for a letter grade and students must receive a grade of B- or better in order for a course to count toward the major. No course may be used to satisfy two requirements.",
-          "source": "https://catalog.cornell.edu/programs/near-eastern-studies-ba/",
-          "fulfilledBy": "self-check"
         }
       ]
     },
@@ -294975,7 +294957,7 @@
         },
         {
           "name": "Eight Core Philosophy Courses",
-          "description": "A minimum of eight philosophy courses taken for a letter grade and a minimum of 24 total credit hours: 6 Philosophy courses at the 2000-level or higher (including PHIL 2200 and PHIL 2220), of which at least three must be at the 3000-level or higher, plus 2 Philosophy courses at any level. The eight courses may not include any First-Year Writing Seminar (PHIL 1110, PHIL 1111, PHIL 1112), any PHIL course with a catalog number X9XX (e.g. PHIL 2990, PHIL 4900, PHIL 4901), or more than four courses completed at other institutions. Students who matriculated at Cornell in fall 2024 or before may count one PHIL FWS toward the major. PHIL 2310 Introduction to Deductive Logic is recommended but not required.",
+          "description": "A minimum of eight philosophy courses taken for a letter grade and a minimum of 24 total credit hours: 6 Philosophy courses at the 2000-level or higher (including PHIL 2200 and PHIL 2220), of which at least three must be at the 3000-level or higher, plus 2 Philosophy courses at any level. The eight courses may not include any First-Year Writing Seminar (PHIL 1110, PHIL 1111, PHIL 1112), any PHIL course with a catalog number X9XX (e.g. PHIL 2990, PHIL 4900, PHIL 4901), or more than four courses completed at other institutions. Students who matriculated at Cornell in fall 2024 or before may count one PHIL FWS toward the major. PHIL 2310 Introduction to Deductive Logic is recommended but not required. All ten classes (30 credit hours) counted toward the major must be completed with grades of C or better.",
           "source": "https://catalog.cornell.edu/programs/philosophy-ba/",
           "checkerWarning": "We do not check the 24-credit minimum or the limit of four courses from other institutions.",
           "fulfilledBy": "courses",
@@ -295547,12 +295529,6 @@
               375149
             ]
           ]
-        },
-        {
-          "name": "Minimum Grade",
-          "description": "All ten classes (30 credit hours) counted toward the major must be completed with grades of C or better.",
-          "source": "https://catalog.cornell.edu/programs/philosophy-ba/",
-          "fulfilledBy": "self-check"
         }
       ]
     },
@@ -296310,7 +296286,7 @@
       "requirements": [
         {
           "name": "Program Prerequisites",
-          "description": "PUBPOL 2301 (Introduction to Public Policy); ECON 1110 (or AP Microeconomics score of 5 / IB HL Economics score of 7); one of GOVT 1111, GOVT 1313, GOVT 1817; one of PUBPOL 2250 or SOC 1101; and one statistics course from ECON 3110, ECON 3130, PUBPOL 2101, or SOC 3010.",
+          "description": "PUBPOL 2301 (Introduction to Public Policy); ECON 1110 (or AP Microeconomics score of 5 / IB HL Economics score of 7); one of GOVT 1111, GOVT 1313, GOVT 1817; one of PUBPOL 2250 or SOC 1101; and one statistics course from ECON 3110, ECON 3130, PUBPOL 2101, or SOC 3010. Students must receive a C- or better in all major requirements. S/U grades may not be used for any major requirement unless it is the only grading option, in which case a grade of SX must be received. Each course may only meet one major requirement unless otherwise stated.",
           "source": "https://catalog.cornell.edu/programs/public-policy-ba/",
           "fulfilledBy": "courses",
           "perSlotMinCount": [
@@ -296620,12 +296596,6 @@
               375456
             ]
           ]
-        },
-        {
-          "name": "Grade Requirement",
-          "description": "Students must receive a C- or better in all major requirements. S/U grades may not be used for any major requirement unless it is the only grading option, in which case a grade of SX must be received. Each course may only meet one major requirement unless otherwise stated.",
-          "source": "https://catalog.cornell.edu/programs/public-policy-ba/",
-          "fulfilledBy": "self-check"
         }
       ]
     },
@@ -297722,7 +297692,7 @@
       "requirements": [
         {
           "name": "Required Courses",
-          "description": "SOC 1101 (Introduction to Sociology), SOC 3750 (Classical Sociological Theory) or SOC 3190 (Contemporary Sociological Theory), and SOC 3010 (Statistics for Sociological Research).",
+          "description": "SOC 1101 (Introduction to Sociology), SOC 3750 (Classical Sociological Theory) or SOC 3190 (Contemporary Sociological Theory), and SOC 3010 (Statistics for Sociological Research). All courses toward the major must be taken for a letter grade, and students must earn a C- or higher in each course.",
           "source": "https://catalog.cornell.edu/programs/sociology-ba/",
           "fulfilledBy": "courses",
           "perSlotMinCount": [
@@ -298094,12 +298064,6 @@
               375191
             ]
           ]
-        },
-        {
-          "name": "Grade Requirement",
-          "description": "All courses toward the major must be taken for a letter grade, and students must earn a C- or higher in each course. The ten major courses must total a minimum of 30 credits.",
-          "source": "https://catalog.cornell.edu/programs/sociology-ba/",
-          "fulfilledBy": "self-check"
         }
       ]
     },
@@ -298112,7 +298076,7 @@
       "requirements": [
         {
           "name": "Linear Algebra",
-          "description": "MATH 2210, MATH 2240, MATH 2310, or MATH 2940.",
+          "description": "MATH 2210, MATH 2240, MATH 2310, or MATH 2940. All major requirements must be taken for a letter grade, and a grade of C- or better must be earned to meet major requirements. The core requirements total a minimum of 40 credits and the electives a minimum of 15 credits.",
           "source": "https://catalog.cornell.edu/programs/statistics-data-science-ba/",
           "fulfilledBy": "courses",
           "perSlotMinCount": [
@@ -298378,12 +298342,6 @@
               375216
             ]
           ]
-        },
-        {
-          "name": "Grade Requirement",
-          "description": "All major requirements must be taken for a letter grade, and a grade of C- or better must be earned to meet major requirements. The core requirements total a minimum of 40 credits and the electives a minimum of 15 credits.",
-          "source": "https://catalog.cornell.edu/programs/statistics-data-science-ba/",
-          "fulfilledBy": "self-check"
         }
       ]
     }

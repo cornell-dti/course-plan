@@ -53,7 +53,8 @@ const philosophyRequirements: readonly CollegeOrMajorRequirement[] = [
       'The eight courses may not include any First-Year Writing Seminar (PHIL 1110, PHIL 1111, PHIL 1112), ' +
       'any PHIL course with a catalog number X9XX (e.g. PHIL 2990, PHIL 4900, PHIL 4901), or more than four courses completed at other institutions. ' +
       'Students who matriculated at Cornell in fall 2024 or before may count one PHIL FWS toward the major. ' +
-      'PHIL 2310 Introduction to Deductive Logic is recommended but not required.',
+      'PHIL 2310 Introduction to Deductive Logic is recommended but not required. ' +
+      'All ten classes (30 credit hours) counted toward the major must be completed with grades of C or better.',
     source: 'https://catalog.cornell.edu/programs/philosophy-ba/',
     checker: [
       corePhilosophyCourseAtLevel(3),
@@ -78,13 +79,6 @@ const philosophyRequirements: readonly CollegeOrMajorRequirement[] = [
       'We only check PHIL courses. Courses from other departments must be approved by your advisor.',
     fulfilledBy: 'credits',
     perSlotMinCount: [6],
-  },
-  {
-    name: 'Minimum Grade',
-    description:
-      'All ten classes (30 credit hours) counted toward the major must be completed with grades of C or better.',
-    source: 'https://catalog.cornell.edu/programs/philosophy-ba/',
-    fulfilledBy: 'self-check',
   },
 ];
 

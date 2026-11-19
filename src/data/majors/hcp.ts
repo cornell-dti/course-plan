@@ -68,7 +68,9 @@ const hcpRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'Public Policy Core Courses',
     description:
-      'PUBPOL 1111, PUBPOL 2000 (or ECON 3030), PUBPOL 2101, PUBPOL 2301, PUBPOL 2350, PUBPOL 2370, PUBPOL 2830, and PUBPOL 3100.',
+      'PUBPOL 1111, PUBPOL 2000 (or ECON 3030), PUBPOL 2101, PUBPOL 2301, PUBPOL 2350, PUBPOL 2370, PUBPOL 2830, and PUBPOL 3100. ' +
+      'Required cumulative GPA: 2.0. Students must complete requirements with a letter grade whenever possible and receive a C- or higher. ' +
+      'If a course is offered exclusively S/U (SX/UX), a grade of SX must be obtained. Each course may only count towards one requirement unless otherwise stated.',
     source: 'https://catalog.cornell.edu/programs/health-care-policy-major-bs/',
     checker: includesWithSubRequirements(
       ['PUBPOL 1111'],
@@ -176,14 +178,6 @@ const hcpRequirements: readonly CollegeOrMajorRequirement[] = [
       'We do not check the 3-credit cap on special studies coursework, forbidden overlaps, or the limit on credits taken abroad.',
     fulfilledBy: 'credits',
     perSlotMinCount: [14],
-  },
-  {
-    name: 'Grade Requirement',
-    description:
-      'Required cumulative GPA: 2.0. Students must complete requirements with a letter grade whenever possible and receive a C- or higher. ' +
-      'If a course is offered exclusively S/U (SX/UX), a grade of SX must be obtained. Each course may only count towards one requirement unless otherwise stated.',
-    source: 'https://catalog.cornell.edu/programs/health-care-policy-major-bs/',
-    fulfilledBy: 'self-check',
   },
 ];
 

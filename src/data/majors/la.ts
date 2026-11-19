@@ -12,7 +12,9 @@ const laRequirements: readonly CollegeOrMajorRequirement[] = [
     name: 'Studio Sequence',
     description:
       'LA 1410, LA 1420, LA 2010, LA 2020, LA 3010, LA 3020, LA 4010, and LA 4020 (38 credits), taken in sequential order. ' +
-      'Students must receive a grade of C- or higher to advance to the next studio in sequence.',
+      'Students must receive a grade of C- or higher to advance to the next studio in sequence. ' +
+      'A student who receives a D or lower in any studio must meet with the Director of Undergraduate Studies and their faculty advisor. ' +
+      'All major requirements must be taken for a letter grade.',
     source: SOURCE,
     checker: includesWithSubRequirements(
       ['LA 1410'],
@@ -72,14 +74,6 @@ const laRequirements: readonly CollegeOrMajorRequirement[] = [
     name: 'Directed Study Courses',
     description:
       'Three courses totaling at least 9 credits in a focus area of interest within landscape architecture, defined by the student in consultation with their faculty advisor.',
-    source: SOURCE,
-    fulfilledBy: 'self-check',
-  },
-  {
-    name: 'Letter Grade Requirement',
-    description:
-      'All major requirements must be taken for a letter grade. A grade of C- or better must be earned in every studio to advance to the next studio; ' +
-      'a student who receives a D or lower in any studio must meet with the Director of Undergraduate Studies and their faculty advisor.',
     source: SOURCE,
     fulfilledBy: 'self-check',
   },

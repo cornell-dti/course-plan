@@ -25,7 +25,9 @@ const nesRequirements: readonly CollegeOrMajorRequirement[] = [
       'Middle Eastern language courses not being used to fulfill the NES language requirement may count toward the major. ' +
       'A maximum of two independent studies can be applied to the major, and students may petition for a maximum of two ' +
       'non-cross-listed Cornell courses on Middle East-related topics. Up to 12 credits of departmentally approved coursework ' +
-      'taken overseas or at another university may be applied to the major.',
+      'taken overseas or at another university may be applied to the major. ' +
+      'All courses for the major must be taken for a letter grade and students must receive a grade of B- or better ' +
+      'in order for a course to count toward the major. No course may be used to satisfy two requirements.',
     source: 'https://catalog.cornell.edu/programs/near-eastern-studies-ba/',
     checker: includesWithSingleRequirement('NES ****'),
     checkerWarning:
@@ -56,14 +58,6 @@ const nesRequirements: readonly CollegeOrMajorRequirement[] = [
       'Students must complete at least one course that fulfills each of the following three chronological periods: ' +
       'Before 600 CE; 600 CE to 1800 CE; 1800 CE to the present. NES 4560 cannot count toward this requirement. ' +
       'Students are encouraged to consult with their advisor if they have questions about courses that span multiple periods.',
-    source: 'https://catalog.cornell.edu/programs/near-eastern-studies-ba/',
-    fulfilledBy: 'self-check',
-  },
-  {
-    name: 'Letter Grade Requirement',
-    description:
-      'All courses for the major must be taken for a letter grade and students must receive a grade of B- or better ' +
-      'in order for a course to count toward the major. No course may be used to satisfy two requirements.',
     source: 'https://catalog.cornell.edu/programs/near-eastern-studies-ba/',
     fulfilledBy: 'self-check',
   },

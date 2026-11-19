@@ -7,7 +7,8 @@ const sociologyRequirements: readonly CollegeOrMajorRequirement[] = [
     name: 'Required Courses',
     description:
       'SOC 1101 (Introduction to Sociology), SOC 3750 (Classical Sociological Theory) or SOC 3190 (Contemporary Sociological Theory), ' +
-      'and SOC 3010 (Statistics for Sociological Research).',
+      'and SOC 3010 (Statistics for Sociological Research). ' +
+      'All courses toward the major must be taken for a letter grade, and students must earn a C- or higher in each course.',
     source: 'https://catalog.cornell.edu/programs/sociology-ba/',
     checker: includesWithSubRequirements(['SOC 1101'], ['SOC 3750', 'SOC 3190'], ['SOC 3010']),
     fulfilledBy: 'courses',
@@ -27,14 +28,6 @@ const sociologyRequirements: readonly CollegeOrMajorRequirement[] = [
     fulfilledBy: 'courses',
     perSlotMinCount: [3, 4],
     slotNames: ['3000-Level or Higher', 'Any Level'],
-  },
-  {
-    name: 'Grade Requirement',
-    description:
-      'All courses toward the major must be taken for a letter grade, and students must earn a C- or higher in each course. ' +
-      'The ten major courses must total a minimum of 30 credits.',
-    source: 'https://catalog.cornell.edu/programs/sociology-ba/',
-    fulfilledBy: 'self-check',
   },
 ];
 

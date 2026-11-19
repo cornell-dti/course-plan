@@ -50,7 +50,10 @@ const isStsciElective = (course: Course): boolean =>
 const stsciRequirements: readonly CollegeOrMajorRequirement[] = [
   {
     name: 'Linear Algebra',
-    description: 'MATH 2210, MATH 2240, MATH 2310, or MATH 2940.',
+    description:
+      'MATH 2210, MATH 2240, MATH 2310, or MATH 2940. ' +
+      'All major requirements must be taken for a letter grade, and a grade of C- or better must be earned to meet major requirements. ' +
+      'The core requirements total a minimum of 40 credits and the electives a minimum of 15 credits.',
     source: 'https://catalog.cornell.edu/programs/statistics-data-science-ba/',
     checker: includesWithSingleRequirement('MATH 2210', 'MATH 2240', 'MATH 2310', 'MATH 2940'),
     fulfilledBy: 'courses',
@@ -157,14 +160,6 @@ const stsciRequirements: readonly CollegeOrMajorRequirement[] = [
     fulfilledBy: 'courses',
     perSlotMinCount: [3, 2],
     slotNames: ['STSCI Elective', 'Elective'],
-  },
-  {
-    name: 'Grade Requirement',
-    description:
-      'All major requirements must be taken for a letter grade, and a grade of C- or better must be earned to meet major requirements. ' +
-      'The core requirements total a minimum of 40 credits and the electives a minimum of 15 credits.',
-    source: 'https://catalog.cornell.edu/programs/statistics-data-science-ba/',
-    fulfilledBy: 'self-check',
   },
 ];
 

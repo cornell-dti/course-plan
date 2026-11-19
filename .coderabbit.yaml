@@ -1,0 +1,57 @@
+# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
+language: en-US
+early_access: false
+
+reviews:
+  profile: chill
+  request_changes_workflow: false
+  high_level_summary: true
+  poem: false
+  review_status: true
+  collapse_walkthrough: true
+  sequence_diagrams: false
+
+  auto_review:
+    enabled: true
+    drafts: false
+    base_branches:
+      - ".*"
+    ignore_title_keywords:
+      - "WIP"
+      - "[skip review]"
+
+  path_filters:
+    - "!src/requirements/decorated-requirements.json"
+    - "!src/assets/courses/**"
+    - "!dist/**"
+    - "!package-lock.json"
+
+  path_instructions:
+    - path: "src/data/**/*.ts"
+      instructions: |
+        These files encode Cornell requirement data (majors, minors, colleges, grad).
+        Check that course codes, credit counts, and requirement descriptions are
+        internally consistent and match the linked source URLs where provided.
+        Flag duplicate or overlapping requirements and missing checker logic.
+    - path: "src/requirements/**/*.ts"
+      instructions: |
+        Requirement computation logic. Focus on correctness of course-to-requirement
+        matching, double-counting rules, and edge cases (cross-listed courses,
+        AP/IB exam credit, transfer credit).
+    - path: "src/components/**/*.vue"
+      instructions: |
+        Vue 3 components. Check accessibility (labels, alt text, keyboard support),
+        reactivity pitfalls, and consistency with existing component patterns.
+    - path: "scripts/**"
+      instructions: |
+        Scripts that may touch production Firestore. Flag anything destructive or
+        lacking a dry-run/confirmation path.
+
+  tools:
+    eslint:
+      enabled: true
+    github-checks:
+      enabled: true
+
+chat:
+  auto_reply: true
