@@ -9,8 +9,11 @@
     @left-button-clicked="backOrCancel"
     @right-button-clicked="addCourse"
   >
-    <div class="newCourse-text">Search Course Roster</div>
+    <div class="newCourse-text">
+      {{ selectedCourse === null ? 'Search Course Roster' : 'Selected Course' }}
+    </div>
     <course-selector
+      v-if="selectedCourse === null"
       search-box-class-name="newCourse-dropdown"
       :key="courseSelectorKey"
       :courseFilter="courseCanAppearInSearchResult"
@@ -20,6 +23,10 @@
       @on-select="setCourse"
       :allow-blank-card="false"
     />
+    <div v-else class="selected-course">
+      {{ selectedCourse.subject }} {{ selectedCourse.catalogNbr }}:
+      {{ selectedCourse.titleLong }}
+    </div>
     <div>
       <div class="newCourse-title">Add this class to the following semester</div>
       <div class="newCourse-semester-edit">
@@ -69,7 +76,7 @@ export default defineComponent({
       return `Add Course to ${this.subReqName}`;
     },
     leftButtonText(): string {
-      return 'Cancel';
+      return this.selectedCourse === null ? 'Cancel' : 'Back';
     },
     rightButtonText(): string {
       return 'Add';
@@ -98,7 +105,12 @@ export default defineComponent({
       this.closeCurrentModal();
     },
     backOrCancel() {
-      this.closeCurrentModal();
+      if (this.selectedCourse !== null) {
+        this.selectedCourse = null;
+        this.courseSelectorKey += 1;
+      } else {
+        this.closeCurrentModal();
+      }
     },
     updateSemProps(season: string, year: number) {
       this.season = season as FirestoreSemesterSeason;
@@ -143,6 +155,16 @@ export default defineComponent({
 
 .content-course {
   width: 27.75rem;
+}
+
+.selected-course {
+  font-style: normal;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 14px;
+  color: $black;
+  margin-bottom: 20px;
+  margin-top: 8px;
 }
 
 @media only screen and (max-width: $small-medium-breakpoint) {
