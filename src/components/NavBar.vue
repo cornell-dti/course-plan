@@ -267,9 +267,28 @@ $mobile-navbar-height: 4.5rem;
     background-position: center;
   }
 
+  // desktop rail: everything stacked on one centered axis (the mobile media query below lays
+  // the top row out horizontally instead)
+  &-top {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
   &-buttonWrapper {
     cursor: pointer;
     margin-bottom: 1.5rem;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+
+    // the icon is a background image on a bare button; drop the browser's button padding
+    .navbar-iconWrapper {
+      padding: 0;
+      flex-shrink: 0;
+    }
     &.active {
       .navbar-iconText {
         color: #0d7acb;
@@ -322,7 +341,11 @@ $mobile-navbar-height: 4.5rem;
   &-iconText {
     display: flex;
     justify-content: center;
+    width: 100%;
     color: #808080;
+    font-size: 12px;
+    line-height: 16px;
+    white-space: nowrap;
   }
 
   .hairlineWrapper {

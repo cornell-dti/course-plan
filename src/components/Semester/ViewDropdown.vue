@@ -27,8 +27,9 @@
         label="Compact"
         @click="$emit('click-compact', true)"
       />
-      <div class="dropdown-content--hline" />
+      <div v-if="showOrder" class="dropdown-content--hline" />
       <view-dropdown-option
+        v-if="showOrder"
         alt="order by newest"
         :selected="orderByNewest"
         :image="newestArrow"
@@ -36,6 +37,7 @@
         @click="onOrderClick(true)"
       />
       <view-dropdown-option
+        v-if="showOrder"
         alt="order by oldest"
         :selected="!orderByNewest"
         :image="oldestArrow"
@@ -63,6 +65,8 @@ export default defineComponent({
   components: { ViewDropdownOption },
   props: {
     compact: { type: Boolean, required: true },
+    // the canvas always reads oldest to newest, so it hides the order options
+    showOrder: { type: Boolean, default: true },
     dataIntroGroup: requiredStringProp,
     dataIntro: requiredStringProp,
     dataDisableInteraction: requiredStringProp,
