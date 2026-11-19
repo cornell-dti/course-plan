@@ -52,17 +52,18 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-@import '@/assets/scss/_variables.scss';
+@import '@/assets/scss/_tokens.scss';
 
 .requirement-checker-warning {
-  color: $warning;
-  margin-top: 0.25rem;
+  @include cp-notice(warn);
+  display: block;
+  margin-top: 8px;
 
   &-icon {
     float: left;
-    margin: 0.125rem 0.25rem 0 0;
-    width: 14px;
-    height: 14px;
+    margin: 1px 6px 0 0;
+    width: 12px;
+    height: 12px;
   }
 }
 </style>

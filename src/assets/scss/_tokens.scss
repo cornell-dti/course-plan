@@ -1,0 +1,310 @@
+// CoursePlan V2 design tokens, taken from the V2 prototype ("CoursePlan V2 Foundations" in Figma).
+// Used by the plan board and the requirements sidebar. Other pages still use _variables.scss.
+// DM Sans is loaded once in _global.scss; components opt in with the cp-font mixin.
+
+// brand
+$cp-brand: #167774; // filled buttons, avatar, step dots
+$cp-brand-hover: #105351;
+$cp-brand-active: #0b3d3b;
+$cp-link: #13807c; // links, selected rings, outline buttons
+$cp-link-strong: #105351;
+$cp-soft: #eaf6f5; // selected fills
+$cp-soft-hover: #dcf0ee;
+$cp-soft-press: #c8e7e4;
+$cp-focus: #a3d9d6;
+
+// neutrals
+$cp-ink: #3d3d3d; // text
+$cp-muted: #858585; // secondary text
+$cp-line: #e5e5e5; // borders
+$cp-line-strong: #c4c4c4;
+$cp-canvas: #f4f8f8; // page background
+$cp-subtle: #f8fbfb; // quiet surfaces, section headers
+$cp-hover: #eef3f3;
+$cp-press: #dde6e6;
+$cp-wash: #edf2f2;
+$cp-disabled: #e6e9e9;
+$cp-disabled-ink: #a2a9a9;
+
+// status
+$cp-success: #318663;
+$cp-success-bg: #f1fbf5;
+$cp-success-line: #a7e3c6;
+$cp-warn-ink: #8a5a00;
+$cp-warn-accent: #b4650f;
+$cp-warn-bg: #fff4e0;
+$cp-warn-line: #f4c77d;
+$cp-err: #b42318;
+$cp-err-bg: #fdecea;
+$cp-err-line: #f5c2bd;
+
+// elevation
+$cp-shadow-rest: 0 1px 1.5px 0 rgba(15, 23, 41, 0.06);
+$cp-shadow-drag: 0 16px 40px 0 rgba(15, 23, 41, 0.16);
+$cp-shadow-pop: 0 8px 24px 0 rgba(15, 23, 41, 0.12);
+$cp-shadow-ring: inset 0 0 0 1px #fff, 0 0 0 2px $cp-brand;
+
+// radius scale: 4 tiny marks; 6 small controls, chips, rows; 8 cards, menus, large controls;
+// 12 columns, panels, popovers; 14 modals
+$cp-r-xs: 4px;
+$cp-r-sm: 6px;
+$cp-r-md: 8px;
+$cp-r-lg: 12px;
+
+// sizes
+$cp-column-width: 274px;
+$cp-column-width-compact: 240px;
+$cp-sidebar-width: 360px;
+
+@mixin cp-font($weight: 400) {
+  font-family: 'DM Sans', 'ProximaNova', sans-serif;
+  font-weight: $weight;
+  font-variation-settings: 'opsz' 14;
+}
+
+// text styles: size / line-height / weight
+@mixin cp-text($size, $line, $weight: 400) {
+  @include cp-font($weight);
+  font-size: $size;
+  line-height: $line;
+}
+
+@mixin cp-focus-ring {
+  &:focus-visible {
+    outline: 2px solid $cp-brand;
+    outline-offset: 2px;
+    box-shadow: none;
+  }
+}
+
+// the global stylesheet fades every button on hover; V2 controls use fills instead
+@mixin cp-reset-button {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  &:hover {
+    opacity: 1;
+  }
+  &:focus {
+    outline: none;
+  }
+  @include cp-focus-ring;
+}
+
+// Buttons. Large: 8/16 padding, 14/20, r8. Small: 4/12 padding, 12/16, r6.
+@mixin cp-button($small: false) {
+  @include cp-reset-button;
+  @include cp-font(600);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  white-space: nowrap;
+  border: 1px solid transparent;
+  transition: background-color 100ms, border-color 100ms, color 100ms;
+  @if $small {
+    font-size: 12px;
+    line-height: 16px;
+    padding: 4px 12px;
+    border-radius: $cp-r-sm;
+  } @else {
+    font-size: 14px;
+    line-height: 20px;
+    padding: 8px 16px;
+    border-radius: $cp-r-md;
+  }
+  &:disabled {
+    cursor: not-allowed;
+  }
+}
+
+@mixin cp-button-primary($small: false) {
+  @include cp-button($small);
+  background: $cp-brand;
+  border-color: $cp-brand;
+  color: #fff;
+  &:hover {
+    background: $cp-brand-hover;
+    border-color: $cp-brand-hover;
+  }
+  &:active {
+    background: $cp-brand-active;
+    border-color: $cp-brand-active;
+  }
+  &:disabled {
+    background: $cp-disabled;
+    border-color: $cp-disabled;
+    color: $cp-disabled-ink;
+  }
+}
+
+@mixin cp-button-secondary($small: false) {
+  @include cp-button($small);
+  background: #fff;
+  border-color: $cp-line-strong;
+  color: $cp-ink;
+  &:hover {
+    background: $cp-hover;
+  }
+  &:active {
+    background: $cp-press;
+  }
+  &:disabled {
+    background: #fff;
+    border-color: $cp-disabled;
+    color: $cp-disabled-ink;
+  }
+}
+
+// 22px square icon button (card and column menus)
+@mixin cp-icon-button {
+  @include cp-reset-button;
+  width: 22px;
+  height: 22px;
+  border-radius: $cp-r-md;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $cp-muted;
+  &:hover {
+    background: $cp-hover;
+  }
+  &:active {
+    background: $cp-press;
+  }
+}
+
+// text link button
+@mixin cp-link($size: 12px, $line: 16px, $weight: 500) {
+  @include cp-reset-button;
+  @include cp-text($size, $line, $weight);
+  color: $cp-link;
+  &:hover {
+    color: $cp-link-strong;
+    text-decoration: underline;
+  }
+}
+
+// dashed "+ Add" button
+@mixin cp-dashed-button {
+  @include cp-reset-button;
+  @include cp-text(12px, 16px, 500);
+  width: 100%;
+  background: #fff;
+  border: 1px dashed $cp-line-strong;
+  border-radius: $cp-r-sm;
+  padding: 4px 12px;
+  color: $cp-muted;
+  transition: background-color 100ms, border-color 100ms, color 100ms;
+  &:hover {
+    border-color: $cp-link;
+    color: $cp-link;
+    background: $cp-soft-hover;
+  }
+  &:active {
+    background: $cp-soft-press;
+  }
+}
+
+// small pill. $kind: fill | urgent | done | info
+@mixin cp-pill($kind: info) {
+  @include cp-text(11px, 14px, 500);
+  border-radius: 999px;
+  padding: 2px 8px;
+  white-space: nowrap;
+  @if $kind == fill {
+    background: $cp-soft;
+    color: $cp-link;
+    font-weight: 600;
+  } @else if $kind == urgent {
+    background: #fdeaee;
+    color: #cc3d5a;
+    font-weight: 600;
+  } @else if $kind == done {
+    background: $cp-success-bg;
+    border: 1px solid $cp-success-line;
+    color: $cp-success;
+  } @else {
+    background: $cp-soft;
+    border: 1px solid $cp-focus;
+    color: $cp-link;
+  }
+}
+
+// a 14px chevron that points down when open and right when closed
+@mixin cp-chevron($open: true) {
+  transition: transform 200ms;
+  @if not $open {
+    transform: rotate(-90deg);
+  }
+}
+
+// text field / select trigger: white, 1px strong border, r8, brand focus
+@mixin cp-input {
+  @include cp-text(14px, 20px);
+  background: #fff;
+  border: 1px solid $cp-line-strong;
+  border-radius: $cp-r-md;
+  color: $cp-ink;
+  transition: border-color 100ms, box-shadow 100ms;
+  &:focus-within {
+    border-color: $cp-brand;
+    box-shadow: 0 0 0 3px rgba(22, 119, 116, 0.2);
+  }
+}
+
+// a chevron drawn with borders, for elements that have no icon of their own
+@mixin cp-css-chevron {
+  width: 7px;
+  height: 7px;
+  flex-shrink: 0;
+  border: solid $cp-muted;
+  border-width: 0 1.5px 1.5px 0;
+  transform: translateY(-2px) rotate(45deg);
+}
+
+// popover menu and its rows
+@mixin cp-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 6px;
+  background: #fff;
+  border: 1px solid $cp-line;
+  border-radius: $cp-r-md;
+  box-shadow: $cp-shadow-pop;
+}
+
+@mixin cp-menu-item {
+  @include cp-text(13px, 18px);
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  border-radius: $cp-r-sm;
+  color: $cp-ink;
+  cursor: pointer;
+  &:hover {
+    background: $cp-subtle;
+  }
+  &:active {
+    background: $cp-hover;
+  }
+}
+
+// inline notice (warning by default)
+@mixin cp-notice($level: warn) {
+  @include cp-text(11px, 14px);
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 8px;
+  border-radius: $cp-r-md;
+  @if $level == error {
+    background: $cp-err-bg;
+    color: $cp-err;
+  } @else {
+    background: $cp-warn-bg;
+    color: $cp-warn-ink;
+  }
+}

@@ -1,39 +1,37 @@
 <template>
   <button
     @click="$emit('on-toggle')"
-    class="dropdown row slightly-lower-opacity-on-hover"
-    aria-haspopup="true"
-    data-toggle="dropdown"
+    class="dropdown"
+    :class="{ 'dropdown--open': displayDescription, 'dropdown--completed': isCompleted }"
+    :aria-expanded="displayDescription"
     data-cyId="requirements-displayToggle"
   >
-    <div class="row depth-req">
-      <div class="btn">
-        <drop-down-arrow
-          :isFlipped="displayDescription"
-          :fillColor="isCompleted ? '#979797CC' : '#979797'"
-          :isSubReq="true"
-        />
-        <div class="requirement-name-container">
-          <p class="requirement-name-text">
-            <span>{{ requirementFulfillment.requirement.name }}</span>
-          </p>
-        </div>
-      </div>
-    </div>
-    <div class="col requirement-progress text-right">
-      {{ requirementFulfillmentProgress }}
-    </div>
+    <svg
+      class="dropdown-chevron"
+      :class="{ 'dropdown-chevron--closed': !displayDescription }"
+      width="14"
+      height="14"
+      viewBox="0 0 16 16"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.33"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M4 6l4 4 4-4" />
+    </svg>
+    <span class="requirement-name-text">{{ requirementFulfillment.requirement.name }}</span>
+    <span class="requirement-progress">{{ requirementFulfillmentProgress }}</span>
   </button>
 </template>
 
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
-import DropDownArrow from '@/components/DropDownArrow.vue';
 import { fulfillmentProgressString } from '@/requirements/requirement-frontend-utils';
 import featureFlagCheckers from '@/feature-flags';
 
 export default defineComponent({
-  components: { DropDownArrow },
   props: {
     requirementFulfillment: { type: Object as PropType<RequirementFulfillment>, required: true },
     isCompleted: { type: Boolean, required: true },
@@ -85,72 +83,67 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-@import '@/assets/scss/_variables.scss';
+@import '@/assets/scss/_tokens.scss';
 
+// V2 requirement row: chevron, name, progress on the right
 .dropdown {
-  background: none;
-  width: 100%;
-  border: none;
-  justify-content: space-between;
-  padding: 0;
-  align-items: center;
-  min-height: 2.25rem;
-}
-
-.btn {
-  padding: 0;
+  @include cp-reset-button;
+  @include cp-font;
+  width: calc(100% + 16px);
   display: flex;
   align-items: center;
-  justify-content: center;
-  &-2 {
-    padding-top: 0px;
-    margin: 0px;
-  }
-}
-.btn:focus,
-.btn:active {
-  outline: none !important;
-  box-shadow: none;
-}
-
-.row {
-  margin: 0;
-}
-.row > div {
-  padding: 0;
-}
-
-.depth-req {
-  justify-content: flex-start;
-  align-items: center;
-  div:first-child {
-    margin: 0px;
-  }
-}
-
-.text-right {
-  color: $lightPlaceholderGray;
-}
-
-.requirement-name-container {
+  gap: 8px;
+  margin: 0 -8px;
+  padding: 10px 8px;
+  border-radius: $cp-r-sm;
   text-align: left;
-  margin-left: 11px;
-  max-width: 11rem;
+  transition: background-color 100ms;
 
-  .requirement-name-text {
-    font-style: normal;
-    font-weight: normal;
-    font-size: 14px;
-    line-height: 14px;
-    color: $lightPlaceholderGray;
-    margin: 0;
+  &:hover {
+    background: $cp-hover;
+  }
+
+  &:active {
+    background: $cp-press;
+  }
+
+  &-chevron {
+    flex-shrink: 0;
+    color: $cp-muted;
+    transition: transform 200ms;
+
+    &--closed {
+      transform: rotate(-90deg);
+    }
+  }
+}
+
+.requirement-name-text {
+  @include cp-text(13px, 18px);
+  flex: 1;
+  min-width: 0;
+  color: $cp-ink;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  .dropdown--open & {
+    font-weight: 600;
+    white-space: normal;
+  }
+
+  .dropdown--completed & {
+    color: $cp-muted;
   }
 }
 
 .requirement-progress {
-  font-size: 14px;
-  line-height: 14px;
-  margin-top: auto;
-  margin-bottom: auto;
+  @include cp-text(12px, 16px);
+  color: $cp-muted;
+  white-space: nowrap;
+
+  .dropdown--completed & {
+    color: $cp-success;
+  }
 }
 </style>

@@ -117,45 +117,39 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-@import '@/assets/scss/_variables.scss';
+@import '@/assets/scss/_tokens.scss';
 
 .separator {
   height: 1px;
   width: 100%;
-  background-color: $inactiveGray;
+  background-color: $cp-line;
 }
 
 .draggable-requirements,
 .loading-requirements {
   &-wrapper {
-    margin-top: 0.6rem;
-    margin-bottom: 0.6rem;
+    margin: 8px 0;
   }
   &-heading {
     display: flex;
     justify-content: space-between;
-    margin-top: 0.75rem;
-    margin-bottom: 0.5rem;
+    align-items: center;
+    margin: 12px 0 8px;
     &-label {
-      font-size: 14px;
-      line-height: 17px;
-      color: $lightPlaceholderGray;
+      @include cp-text(12px, 16px, 500);
+      color: $cp-muted;
     }
     &-seeAll {
-      font-size: 14px;
-      line-height: 15px;
-      color: $yuxuanBlue;
-      cursor: pointer;
+      @include cp-link(12px, 16px, 500);
       white-space: nowrap;
     }
   }
 
+  // suggested courses: a two-up grid of compact cards to drag onto the board
   &-courses {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    margin-left: -0.2rem;
-    margin-bottom: 0.2rem;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
     width: 100%;
   }
 }
@@ -163,9 +157,7 @@ export default defineComponent({
 .requirements,
 .loading {
   &-courseWrapper {
-    padding: 0.2rem;
-    width: 10.25rem;
-    max-width: 50%;
+    min-width: 0;
   }
   &-course {
     touch-action: none;

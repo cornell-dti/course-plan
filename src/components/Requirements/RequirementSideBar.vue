@@ -4,8 +4,23 @@
       v-if="isMinimized && showToggleRequirementsBtn"
       class="requirement-sidebar-btn-open"
       @click="toggleMinimized"
+      aria-label="Show requirements"
+      title="Show requirements"
     >
-      →
+      <svg
+        width="14"
+        height="14"
+        viewBox="0 0 16 16"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.33"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+        style="transform: rotate(-90deg)"
+      >
+        <path d="M4 6l4 4 4-4" />
+      </svg>
     </button>
 
     <aside v-if="isMobile ? isDisplayingMobile : !isMinimized" class="requirements">
@@ -96,7 +111,27 @@
                 <requirement-debugger />
               </teleport-modal>
               <div v-if="showToggleRequirementsBtn" class="requirement-sidebar-header">
-                <button class="requirement-sidebar-btn-close" @click="toggleMinimized">←</button>
+                <button
+                  class="requirement-sidebar-btn-close"
+                  @click="toggleMinimized"
+                  aria-label="Hide requirements"
+                  title="Hide requirements"
+                >
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.33"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                    style="transform: rotate(90deg)"
+                  >
+                    <path d="M4 6l4 4 4-4" />
+                  </svg>
+                </button>
               </div>
               <div
                 class="req"
@@ -124,10 +159,22 @@
         <div class="fixed see-all-padding-y" v-if="shouldShowAllCourses">
           <div class="see-all-padding-x see-all-header pb-3">
             <span class="arrow-left">
-              <drop-down-arrow :isPointingLeft="true" :fillColor="'#32A0F2'" />
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 16 16"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.33"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M10 4L6 8l4 4" />
+              </svg>
             </span>
             <button class="btn back-button p-0" @click="backFromSeeAll">
-              GO BACK TO REQUIREMENTS
+              Back to requirements
             </button>
           </div>
           <div class="see-all-padding-x py-3">
@@ -192,7 +239,6 @@ import Confirmation from '@/components/Modals/Confirmation.vue';
 import TeleportModal from '@/components/Modals/TeleportModal.vue';
 import RequirementDebugger from '@/components/Requirements/RequirementDebugger.vue';
 import RequirementGroup from '@/components/Requirements/RequirementGroup.vue';
-import DropDownArrow from '@/components/DropDownArrow.vue';
 import MultiplePlansDropdown from './MultiplePlansDropdown.vue';
 import CollectionsSideBar from '../Modals/CollectionsSideBar.vue';
 import EditCollectionModal from '../Modals/EditCollectionModal.vue';
@@ -262,7 +308,6 @@ export default defineComponent({
     draggable,
     Course,
     Confirmation,
-    DropDownArrow,
     RequirementDebugger,
     RequirementGroup,
     TeleportModal,
@@ -578,193 +623,183 @@ export default defineComponent({
 
 <style scoped lang="scss">
 @import '@/assets/scss/_variables.scss';
+@import '@/assets/scss/_tokens.scss';
+
+// V2 requirements panel: white, 1px right border, 360px, DM Sans
 .requirement-sidebar-header {
   display: flex;
   justify-content: flex-end;
+  margin: -4px 0 4px;
 }
 
 @mixin requirement-sidebar-btn {
-  color: #7b7d7e;
-  background: white;
-  font-size: 2rem;
-  font-family: monospace;
+  @include cp-reset-button;
+  width: 28px;
+  height: 28px;
+  border-radius: $cp-r-sm;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $cp-muted;
+  background: #fff;
   z-index: 1;
 
   &:hover {
-    color: $yuxuanBlue;
-    opacity: 1;
+    background: $cp-hover;
+    color: $cp-ink;
+  }
+
+  &:active {
+    background: $cp-press;
   }
 }
 
 .multiple-plans {
-  height: 2.5rem;
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.multiple-plans-dropdown {
+  flex: 1;
+  min-width: 0;
 }
 
 .add-plan-button {
-  float: right;
-  background: $sangBlue;
-  border-radius: 3px;
-  min-height: 2.5rem;
-  min-width: 6.5rem;
-  color: $white;
-  border: none;
-  font-size: 16px;
+  @include cp-button-secondary;
+  gap: 8px;
+  padding-left: 12px;
+
+  &::first-letter {
+    color: $cp-muted;
+  }
 }
 
+// collapsed: a slim tab on the left edge
 .requirement-sidebar-btn-open {
   @include requirement-sidebar-btn;
   position: fixed;
-  top: 2rem;
-  box-shadow: 2px 0px 10px 0px #dddddd;
-  border-top-right-radius: 10px;
-  border-bottom-right-radius: 10px;
+  top: 16px;
+  width: 32px;
+  height: 40px;
+  border: 1px solid $cp-line;
+  border-left: none;
+  border-radius: 0 $cp-r-lg $cp-r-lg 0;
+  box-shadow: $cp-shadow-pop;
 }
 
 .requirement-sidebar-btn-close {
   @include requirement-sidebar-btn;
-  position: absolute;
-  line-height: 2rem;
-  top: auto;
-  margin-top: 1rem;
 }
 
 .requirement-debugger-toggler {
-  background: $medGray;
-  color: white;
+  @include cp-button-secondary(true);
+  margin-bottom: 12px;
 }
-.separator {
-  height: 1px;
-  width: 100%;
-  background-color: $inactiveGray;
-}
+
 .requirements-wrapper {
   width: 100%;
   height: 100%;
 }
+
 .requirements,
 .fixed {
+  @include cp-font;
   z-index: 1;
   height: 100%;
-  width: 25rem;
-  background-color: $white;
+  width: $cp-sidebar-width;
+  background-color: #fff;
+  color: $cp-ink;
 }
+
+.requirements {
+  border-right: 1px solid $cp-line;
+}
+
 .fixed {
   position: fixed;
   top: 0;
-  overflow-y: scroll;
+  overflow-y: auto;
   overflow-x: hidden;
+  border-right: 1px solid $cp-line;
 }
+
 .fixed,
 .see-all-padding {
-  padding: 1.625rem 1.5rem;
+  padding: 16px;
 }
+
 .see-all-padding-y {
-  padding: 1.625rem 0;
+  padding: 16px 0;
 }
+
 .see-all-padding-x {
-  padding: 0 1.625rem;
+  padding: 0 16px;
 }
+
 .see-all-header {
-  box-shadow: 0 4px 8px -8px gray;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  border-bottom: 1px solid $cp-line;
 }
+
 .see-all-pages {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 21.375rem;
+  margin-top: 8px;
 }
+
 .see-all-pageCount {
-  font-size: 16px;
-  line-height: 19px;
-  color: $primaryGray;
+  @include cp-text(12px, 16px);
+  color: $cp-muted;
 }
+
 .see-all-buttonWrapper {
   display: flex;
+  gap: 8px;
 }
+
 .see-all-button {
-  width: 4.75rem;
-  height: 2rem;
-  color: $sangBlue;
-  border-radius: 3px;
-  border: 1px solid $sangBlue;
-  background-color: $white;
-  display: flex;
-  justify-content: center;
-  margin-top: auto;
-  margin-bottom: auto;
-
-  &:first-child {
-    margin-right: 1rem;
-  }
-
-  &-left {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-  }
-
-  &-text {
-    margin-top: auto;
-    margin-bottom: auto;
-  }
+  @include cp-button-secondary(true);
 
   &--disabled {
-    opacity: 0.3;
-    border: 1px solid $sangBlue;
-    background-color: $disabledGray;
+    background: #fff;
+    border-color: $cp-disabled;
+    color: $cp-disabled-ink;
   }
 }
 
 h1.title {
-  font-style: normal;
-  font-weight: 550;
-  font-size: 22px;
-  line-height: 29px;
-  color: $black;
+  @include cp-text(18px, 24px, 700);
+  color: $cp-ink;
+  margin: 0;
 }
+
 .req {
-  margin-top: auto;
-  margin-bottom: auto;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 16px;
-  line-height: 19px;
-  &-name {
-    font-weight: 600;
-    font-size: 14px;
-    line-height: 14px;
-    align-self: center;
-  }
-  &-progress {
-    font-size: 12px;
-    line-height: 12px;
-  }
+  @include cp-text(13px, 18px);
 }
 
 .back-button {
-  color: $yuxuanBlue;
-  font-size: 0.9rem;
+  @include cp-link(12px, 16px, 600);
 }
 
 .arrow-left {
-  transform: rotate(90deg);
+  display: flex;
+  color: $cp-link;
 }
 
 .requirements-course {
-  width: 21.375rem;
+  width: 100%;
 }
 
 @media only screen and (max-width: $large-breakpoint) {
   .requirements,
   .fixed {
-    width: 21rem;
-  }
-  .see-all-pages {
-    width: 17rem;
-  }
-
-  .requirements-course {
-    width: 17rem;
+    width: 320px;
   }
 }
 
@@ -772,8 +807,8 @@ h1.title {
   .requirements {
     position: fixed;
     width: 100%;
-    padding-left: 0.5rem;
     top: 4.5rem;
+    border-right: none;
   }
 
   .fixed {
@@ -781,6 +816,7 @@ h1.title {
     left: 0rem;
     width: 100%;
     height: calc(100vh - 4.5rem);
+    border-right: none;
   }
 }
 </style>

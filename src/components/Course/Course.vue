@@ -10,6 +10,7 @@
         active: active,
       }"
       class="course"
+      :style="cssVars"
       :id="`course-${course.uniqueID}`"
     >
       <save-course-modal
@@ -32,20 +33,12 @@
         :class="{
           'course-color--active': active,
         }"
-      >
-        <img src="@/assets/images/dots/sixDots.svg" alt="" />
-      </div>
+      ></div>
       <div class="course-content" @click="courseOnClick()">
         <div class="course-main">
           <div class="course-top">
             <div class="course-left">
-              <div
-                class="course-code"
-                data-cyId="courseCode"
-                :style="{
-                  color: compact ? '#3d3d3d' : '#858585',
-                }"
-              >
+              <div class="course-code" data-cyId="courseCode">
                 {{ course.code }}
               </div>
               <course-caution
@@ -57,9 +50,15 @@
             <button
               v-if="!isReqCourse && isSemesterCourseCard"
               class="course-dotRow"
+              :class="{ 'course-dotRow--open': menuOpen }"
               @click="openMenu"
+              aria-label="Course options"
             >
-              <img src="@/assets/images/dots/threeDots.svg" alt="open menu for course card" />
+              <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true">
+                <circle cx="3.5" cy="8" r="1.1" fill="currentColor" />
+                <circle cx="8" cy="8" r="1.1" fill="currentColor" />
+                <circle cx="12.5" cy="8" r="1.1" fill="currentColor" />
+              </svg>
             </button>
             <button
               v-else-if="!isReqCourse && !isSemesterCourseCard && !isCourseConfirmationCard"
@@ -540,6 +539,7 @@ export default defineComponent({
 
 <style scoped lang="scss">
 @import '@/assets/scss/_variables.scss';
+@import '@/assets/scss/_tokens.scss';
 
 .course-container {
   position: relative;
@@ -572,83 +572,101 @@ export default defineComponent({
   }
 }
 
+// V2 course card: white, 1px border, 4px color bar on the left, code tinted with the course color.
+// Hover draws a 2px border in the course color. Height follows the content; the semester's
+// drop-area estimate lives in `../Semester/Semester.vue` (courseContainerHeight).
 .course {
-  box-shadow: 0px 0px 10px 4px rgba(0, 0, 0, 0.055);
+  @include cp-font;
+  --ink-color: color-mix(in srgb, var(--bg-color) 72%, black);
   position: relative;
   box-sizing: border-box;
-  border-radius: 0.5rem;
   display: flex;
   flex-direction: row;
-  background-color: $white;
-  // If modifying this, then adjust the note height calculations in `../Semester/Semester.vue`
-  height: 5.625rem;
+  gap: 8px;
+  min-height: 56px;
+  padding: 8px 12px 8px 8px;
+  background: #fff;
+  border: 1px solid $cp-line;
+  border-radius: $cp-r-md;
+  box-shadow: $cp-shadow-rest;
   cursor: grab;
   z-index: 1;
+  transition: box-shadow 150ms, border-color 150ms;
 
   &:hover {
-    background: $white;
+    border-color: var(--bg-color);
+    box-shadow: inset 0 0 0 1px var(--bg-color);
   }
 
   &:active:hover {
     touch-action: none;
     cursor: grabbing;
   }
-  &--min {
-    height: 2.125rem;
 
-    & .course-content {
-      padding: 0 0.5em;
-    }
+  &--min {
+    min-height: 36px;
+    padding-top: 6px;
+    padding-bottom: 6px;
+    align-items: center;
   }
 
   &-main {
     width: 100%;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
   }
 
   &-color {
-    width: $colored-grabber-width;
-    border-radius: 0.42rem 0 0 0.42rem;
+    width: 4px;
+    flex-shrink: 0;
+    align-self: stretch;
+    border-radius: 999px;
     background-color: var(--bg-color);
-    display: flex;
-    align-items: center;
-    justify-content: center;
   }
 
-  &-dotRow {
-    padding: 8px 0;
-    display: flex;
-    position: relative;
-
-    &:hover,
-    &:active,
-    &:focus {
-      cursor: pointer;
-    }
-  }
-
+  &-dotRow,
   &-trash {
-    padding: 8px 0;
-    display: flex;
+    @include cp-icon-button;
     position: relative;
+    flex-shrink: 0;
+    margin: -3px -6px -3px 0;
+  }
 
-    &:hover,
-    &:active,
-    &:focus {
-      cursor: pointer;
+  // the menu button shows on hover or keyboard focus, like the prototype
+  &-dotRow {
+    opacity: 0;
+    transition: opacity 150ms;
+
+    &--open {
+      opacity: 1;
+      background: $cp-wash;
     }
+  }
+
+  &:hover &-dotRow,
+  &:focus-within &-dotRow {
+    opacity: 1;
+  }
+
+  &-trash img {
+    width: 14px;
+    height: 14px;
   }
 
   &-content {
-    width: calc(100% - #{$colored-grabber-width});
-    padding: 0 1rem;
+    flex: 1;
+    min-width: 0;
     display: flex;
-    justify-content: flex-start;
     align-items: center;
   }
 
   &-left {
     display: flex;
     align-items: center;
+    gap: 4px;
+    min-width: 0;
   }
 
   &-top {
@@ -656,48 +674,53 @@ export default defineComponent({
     width: 100%;
     justify-content: space-between;
     align-items: center;
+    gap: 8px;
+    min-height: 16px;
   }
 
   &-code {
-    font-size: 14px;
-    line-height: 17px;
-    color: $primaryGray;
-  }
-
-  &-name {
-    font-size: 16px;
-    font-weight: bold;
-    line-height: 19px;
-    color: $primaryGray;
-    margin-top: 0.25rem;
-    margin-bottom: 0.25rem;
-
+    @include cp-text(12px, 16px, 500);
+    color: var(--ink-color);
+    font-variant-numeric: tabular-nums;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
 
+  &--min &-code {
+    @include cp-text(13px, 18px, 600);
+  }
+
+  &-name {
+    @include cp-text(14px, 18px, 600);
+    color: $cp-ink;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
   &-info {
-    font-size: 14px;
-    line-height: 17px;
-    color: $lightPlaceholderGray;
+    @include cp-text(11px, 14px);
+    color: $cp-muted;
     display: flex;
     align-items: center;
+    gap: 4px;
+    min-width: 0;
   }
-  port &-credits {
+
+  &-credits {
     white-space: nowrap;
   }
 
   &-semesters {
-    margin-left: 0.2rem;
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
 
     &:before {
-      margin-right: 0.2rem;
-      font-style: normal;
-      content: '|';
+      margin-right: 4px;
+      content: '·';
     }
   }
 
@@ -708,14 +731,16 @@ export default defineComponent({
   }
 }
 
+// a requirement conflict: amber border (warning tokens)
 .conflict {
-  border: 1px solid rgba($conflictWarning, 0.5);
-  border-radius: 8px;
-  box-shadow: 1px 1px 5px rgba($conflictWarning, 0.5);
+  border-color: $cp-warn-line;
+  box-shadow: inset 0 0 0 1px $cp-warn-line;
 }
 
+// selected (open in the bottom bar): 2px border in a darker shade of the course color
 .active {
-  border: 1px solid $yuxuanBlue;
+  border-color: var(--ink-color);
+  box-shadow: inset 0 0 0 1px var(--ink-color);
 }
 
 .rectangle {

@@ -1,5 +1,6 @@
 <template>
-  <div
+  <button
+    type="button"
     class="semester-addWrapper"
     :class="{
       'semester-addWrapper--compact': compact,
@@ -10,7 +11,7 @@
     <span class="semester-buttonText" :class="{ 'semester-buttonText--compact': compact }">
       {{ addCourseText }}
     </span>
-  </div>
+  </button>
 </template>
 
 <script lang="ts">
@@ -36,51 +37,30 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-@import '@/assets/scss/_variables.scss';
+@import '@/assets/scss/_tokens.scss';
 
-@mixin hover-button {
-  border-color: $yuxuanBlue;
-  background: rgba(0, 0, 0, 0.03);
-  color: $yuxuanBlue;
-  cursor: pointer;
-}
-
+// V2 "+ Course": a small dashed button under the semester's cards
 .semester {
   &-addWrapper {
-    margin-top: -5rem;
-    margin-bottom: 0.5rem;
-    height: 4.625rem;
-    border-radius: 0.5rem;
+    @include cp-dashed-button;
     display: flex;
-    justify-content: center;
     align-items: center;
-    border: 2px dashed $borderGray;
-    color: $medGray;
-    margin-left: 1.125rem;
-    margin-right: 1.125rem;
+    justify-content: center;
+    min-height: 26px;
 
     &--compact {
-      margin-top: -1.2rem;
-      height: 2rem;
+      min-height: 24px;
     }
 
-    &:hover,
-    &:active,
-    &:focus {
-      @include hover-button();
+    &:hover .semester-buttonText,
+    &:focus .semester-buttonText {
+      color: $cp-link;
     }
   }
 
   &-buttonText {
-    font-weight: 500;
-    font-size: 16px;
-    line-height: 20px;
-    color: $medGray;
-
-    &--compact {
-      font-size: 14px;
-      line-height: 17px;
-    }
+    @include cp-text(12px, 16px, 500);
+    color: $cp-muted;
   }
 }
 </style>

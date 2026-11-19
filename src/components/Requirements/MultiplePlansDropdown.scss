@@ -1,84 +1,132 @@
-@import '@/assets/scss/_variables.scss';
+@import '@/assets/scss/_tokens.scss';
 
+// V2 plans dropdown: a secondary-style trigger (edit pencil, plan name, chevron) and a
+// popover menu of the other plans
 .multiplePlans-dropdown {
+  @include cp-font;
+  position: relative;
   display: flex;
   flex-direction: column;
 
   &-placeholder {
-    height: 100%;
-    font-size: 16px;
-    font-weight: bold;
-    margin-left: 0.25rem;
     display: flex;
     align-items: center;
-
-    color: $lightPlaceholderGray;
-
     background: transparent;
+    color: $cp-ink;
 
     &.wrapper {
-      position: relative;
-      right: 0.25rem;
-      width: 90%;
-      height: 2.5rem;
-      border-radius: 2px;
-      border: 1px solid $lightPlaceholderGray;
+      gap: 4px;
+      height: 38px;
+      padding: 0 12px 0 4px;
+      background: #fff;
+      border: 1px solid $cp-line-strong;
+      border-radius: $cp-r-md;
       cursor: pointer;
+      transition: background-color 100ms;
+
+      &:hover {
+        background: $cp-hover;
+      }
+
+      &:active {
+        background: $cp-press;
+      }
+
+      button {
+        @include cp-reset-button;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 28px;
+        height: 28px;
+        border-radius: $cp-r-sm;
+
+        &:hover {
+          background: $cp-press;
+        }
+      }
     }
 
     &.plan {
-      padding-left: 0.5rem;
-      width: 100%;
+      @include cp-text(14px, 20px, 600);
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    // chevrons drawn with borders (the <img> has no src)
+    &.down-arrow,
+    &.up-arrow {
+      width: 7px;
+      height: 7px;
+      flex-shrink: 0;
+      font-size: 0;
+      overflow: hidden;
+      border: solid $cp-muted;
+      border-width: 0 1.5px 1.5px 0;
+      transition: transform 200ms;
     }
 
     &.down-arrow {
-      position: relative;
-      right: 7%;
-      width: 6.24px;
-      height: 6.24px;
-      border-left: 6.24px solid transparent;
-      border-right: 6.24px solid transparent;
-      border-top: 6.24px solid $lightPlaceholderGray;
+      transform: translateY(-2px) rotate(45deg);
     }
 
     &.up-arrow {
-      position: relative;
-      right: 7%;
-      width: 6.24px;
-      height: 6.24px;
-      border-left: 6.24px solid transparent;
-      border-right: 6.24px solid transparent;
-      border-top: 6.24px solid $lightPlaceholderGray;
-      transform: rotate(180deg);
+      transform: translateY(2px) rotate(-135deg);
     }
 
     &.editimg {
-      padding-left: 10px;
-      height: 15px;
+      width: 14px;
+      height: 14px;
+      opacity: 0.7;
     }
   }
 
   &-content {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
     z-index: 100;
-    max-height: 8rem;
-    border-radius: 2px;
-    &.item {
-      width: 90%;
-      border: 1px solid $lightPlaceholderGray;
-      z-index: 150;
-      background-color: white;
-      height: 2.5rem;
-      font-size: 16px;
-      line-height: 16px;
-      display: flex;
-      align-items: center;
-      color: $lightPlaceholderGray;
-      padding-left: 10px;
+    max-height: 260px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 6px;
+    background: #fff;
+    border: 1px solid $cp-line;
+    border-radius: $cp-r-md;
+    box-shadow: $cp-shadow-pop;
+
+    &:empty {
+      display: none;
     }
-    &.item:hover {
-      background-color: $searchBoxHoverGray;
-      opacity: 1;
+
+    &.item {
+      @include cp-text(13px, 18px);
+      position: static;
+      max-height: none;
+      overflow: visible;
+      display: block;
+      padding: 8px 12px;
+      background: transparent;
+      border: none;
+      border-radius: $cp-r-sm;
+      box-shadow: none;
+      color: $cp-ink;
       cursor: pointer;
+    }
+
+    &.item:hover {
+      background: $cp-subtle;
+      opacity: 1;
+    }
+
+    &.item:active {
+      background: $cp-hover;
     }
   }
 }

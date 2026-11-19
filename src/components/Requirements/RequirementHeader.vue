@@ -165,27 +165,28 @@
 
       <!--View more college requirements -->
       <button
-        class="btn row top view-more-dropdown"
+        class="view-more-dropdown"
         @click="toggleDetails()"
-        aria-haspopup="true"
-        data-toggle="dropdown"
+        :aria-expanded="displayDetails"
         data-cyId="requirements-viewMore"
       >
-        <div
-          class="col-1 p-0 btn"
-          :style="{ color: `#${getReqColor(req.groupName, onboardingData)}` }"
+        <svg
+          class="view-more-chevron"
+          :class="{ 'view-more-chevron--closed': !displayDetails }"
+          width="14"
+          height="14"
+          viewBox="0 0 16 16"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.33"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
         >
-          <drop-down-arrow
-            :isFlipped="displayDetails"
-            :fillColor="`#${getReqColor(req.groupName, onboardingData)}`"
-            :isHeader="true"
-          />
-        </div>
-        <div
-          class="req-name col p-0"
-          :style="{ color: `#${getReqColor(req.groupName, onboardingData)}` }"
-        >
-          {{ displayDetails ? 'Hide' : 'View' }} All {{ req.groupName }} Requirements
+          <path d="M4 6l4 4 4-4" />
+        </svg>
+        <div class="req-name">
+          {{ displayDetails ? 'Hide' : 'View' }} all {{ req.groupName.toLowerCase() }} requirements
         </div>
       </button>
     </div>
@@ -194,7 +195,6 @@
 
 <script lang="ts">
 import { PropType, defineComponent } from 'vue';
-import DropDownArrow from '@/components/DropDownArrow.vue';
 import ProgressBarCaution from '@/components/Requirements/ProgressBarCaution.vue';
 import {
   getCollegeFullName,
@@ -212,7 +212,7 @@ import {
 } from '@/requirements/requirement-frontend-computation';
 
 export default defineComponent({
-  components: { DropDownArrow, ProgressBarCaution },
+  components: { ProgressBarCaution },
   props: {
     reqIndex: { type: Number, required: true },
     displayDetails: { type: Boolean, required: true },
@@ -295,28 +295,53 @@ export default defineComponent({
 
 <style scoped lang="scss">
 @import '@/assets/scss/_variables.scss';
+@import '@/assets/scss/_tokens.scss';
 
+.requirementheader {
+  @include cp-font;
+}
+
+// section title, e.g. "Major Requirements"
+h1.top {
+  @include cp-text(14px, 20px, 600);
+  color: $cp-ink;
+  margin: 20px 0 12px;
+}
+
+// program tabs (college / majors / minors / grad); the active one keeps the group color
 .college,
 .major,
 .minor,
 .grad {
   display: flex;
-  padding-bottom: 25px;
+  gap: 4px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid $cp-line;
 
   &-title {
-    width: 100%;
+    flex: 1;
+    min-width: 0;
     display: flex;
     flex-direction: column;
-    text-align: center;
-    color: $lightPlaceholderGray;
-    padding-bottom: 6px;
+    align-items: center;
+    color: $cp-muted;
+    padding: 6px 8px;
+    margin-bottom: -1px;
 
     &-button {
-      border: none;
-      background: none;
+      @include cp-reset-button;
+      border-radius: $cp-r-sm $cp-r-sm 0 0;
       text-align: center;
-      display: flex;
-      align-items: center;
+      transition: background-color 100ms;
+
+      &:not(:disabled):hover {
+        background: $cp-hover;
+        color: $cp-ink;
+      }
+
+      &:disabled {
+        cursor: default;
+      }
 
       p {
         flex-direction: column;
@@ -324,148 +349,87 @@ export default defineComponent({
     }
 
     &-top {
-      text-align: center;
-      font-style: normal;
-      font-weight: normal;
-      font-size: 14px;
+      @include cp-text(13px, 18px, 500);
       margin: 0;
     }
 
     &-bottom {
-      text-align: center;
-      font-style: normal;
-      font-weight: normal;
-      font-size: 12px;
-      line-height: 15px;
+      @include cp-text(11px, 14px);
+      margin: 0;
     }
   }
-
-  &:hover {
-    background: rgba(255, 255, 255, 0.15);
-  }
-}
-
-.btn {
-  padding: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  &-2 {
-    padding-top: 0px;
-    margin: 0px;
-  }
-}
-
-.row {
-  margin: 0;
-}
-
-.row > div {
-  padding: 0;
 }
 
 .progress {
-  border-radius: 1rem;
-  height: 10px;
+  display: flex;
+  height: 6px;
+  border-radius: 999px;
+  background: $cp-wash;
+  overflow: hidden;
 
   &-bar {
+    border-radius: 999px;
+    transition: width 300ms ease-out;
+
     &--warning {
-      background-color: $conflictWarning;
+      background-color: $cp-warn-line;
     }
   }
 }
 
-.top {
-  margin: 1.5rem 0 1rem 0;
-
-  &-small {
-    margin: 0px;
-  }
-}
-
-.major {
-  font-style: normal;
-  font-weight: bold;
-  font-size: 14px;
-  line-height: 17px;
-  color: $darkGray;
-
-  &-college {
-    font-style: normal;
-    font-weight: normal;
-    font-size: 12px;
-    line-height: 15px;
-    color: $darkGray;
-  }
-}
-
-button.active {
-  color: $sangBlue;
-  border-bottom: solid 10px $sangBlue;
-  padding-bottom: 2px;
-  margin: 5px;
-}
-
 .progress-text {
-  margin: 0.3125rem 0 0 0;
-  font-size: 12px;
-  color: $darkGray;
+  @include cp-text(12px, 16px);
+  margin: 6px 0 0;
+  color: $cp-muted;
   display: flex;
+  align-items: center;
 
   &-credits {
-    font-weight: bold;
-    margin-right: 0.2rem;
-  }
-
-  &-text {
-    font-weight: normal;
-  }
-}
-
-button.view {
-  margin: 0.7rem 0 2rem 0;
-  min-height: 40px;
-  width: 100%;
-  font-weight: bold;
-  font-size: 14px;
-  line-height: 14px;
-  text-align: center;
-  color: white;
-  text-transform: uppercase;
-}
-
-.dropdown {
-  height: 5px;
-  width: 5px;
-}
-
-.button-dropdown {
-  background-color: transparent;
-  color: transparent;
-  outline-style: transparent;
-}
-
-.req {
-  &-name {
     font-weight: 600;
-    font-size: 14px;
-    line-height: 14px;
-    width: 100%;
-    text-align: left;
+    color: $cp-ink;
+    margin-right: 4px;
   }
 }
 
+// "View all … requirements": the V2 expand row
 .view-more-dropdown {
-  width: 100%;
+  @include cp-reset-button;
+  width: calc(100% + 16px);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 12px -8px 4px;
+  padding: 8px;
+  border-radius: $cp-r-sm;
+  color: $cp-ink;
+  text-align: left;
+  transition: background-color 100ms;
 
-  div:first-child {
-    justify-content: flex-start;
+  &:hover {
+    background: $cp-hover;
   }
+
+  &:active {
+    background: $cp-press;
+  }
+}
+
+.view-more-chevron {
+  flex-shrink: 0;
+  color: $cp-muted;
+  transition: transform 200ms;
+
+  &--closed {
+    transform: rotate(-90deg);
+  }
+}
+
+.req-name {
+  @include cp-text(13px, 18px, 600);
+  flex: 1;
 }
 
 .caution {
-  padding-top: 1px;
-  margin-right: 0.2rem;
+  margin-right: 4px;
 }
 </style>

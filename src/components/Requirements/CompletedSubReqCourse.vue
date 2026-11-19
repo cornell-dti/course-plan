@@ -138,46 +138,56 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-@import '@/assets/scss/_variables.scss';
+@import '@/assets/scss/_tokens.scss';
 
 .separator {
   height: 1px;
   width: 100%;
-  background-color: $inactiveGray;
+  background-color: $cp-line;
 }
 
 .completed {
   &-reqCourses {
     &-course {
       &-wrapper {
-        margin-top: 0.6rem;
-        margin-bottom: 0.6rem;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin: 8px 0;
       }
       &-heading {
         &-wrapper {
           display: flex;
-          flex-direction: row;
           justify-content: space-between;
-          margin-top: 0.6rem;
+          align-items: center;
+          margin-top: 4px;
         }
         &-course {
-          font-size: 14px;
-          line-height: 17px;
-          color: $lightPlaceholderGray;
+          @include cp-text(12px, 16px, 500);
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          color: $cp-muted;
+        }
+        &-check {
+          display: flex;
+          img {
+            width: 12px;
+            height: 12px;
+          }
         }
       }
       &-object {
         &-wrapper {
           display: flex;
-          flex-direction: row;
           justify-content: space-between;
+          align-items: center;
+          gap: 8px;
         }
         &-semester {
-          font-size: 14px;
-          line-height: 16px;
-          color: $lightPlaceholderGray;
-          margin-top: 0.6rem;
-          font-style: italic;
+          @include cp-text(11px, 14px);
+          color: $cp-muted;
+          white-space: nowrap;
         }
       }
     }
@@ -186,11 +196,7 @@ export default defineComponent({
 
 .reqCourse {
   &-button {
-    font-size: 14px;
-    line-height: 15px;
-    color: $yuxuanBlue;
-    padding: 0 0.2rem 0.4rem;
-    cursor: pointer;
+    @include cp-link(12px, 16px, 500);
   }
 }
 </style>

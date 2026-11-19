@@ -87,59 +87,75 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-@import '@/assets/scss/_variables.scss';
+@import '@/assets/scss/_tokens.scss';
 
+// V2 menu: white, 8px radius, popover shadow, 6px inset rows
 .semesterMenu {
-  background: $white;
-  border: 1px solid $lightGray;
-  box-sizing: border-box;
-  border-radius: 9px;
+  @include cp-font;
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 6px;
+  background: #fff;
+  border: 1px solid $cp-line;
+  border-radius: $cp-r-md;
+  box-shadow: $cp-shadow-pop;
+  animation: cp-in 160ms ease-out both;
 
   &-content {
     display: flex;
     flex-direction: row;
-    font-size: 14px;
-    color: #404040;
-    width: 12;
-    cursor: pointer;
+    width: 100%;
   }
   &-section {
+    @include cp-reset-button;
+    @include cp-text(13px, 18px);
     display: flex;
-    justify-content: space-between;
-    padding: 0.5rem 1rem;
-    position: relative;
     width: 100%;
-    &:hover,
-    &:active,
-    &:focus {
-      background-color: rgba(50, 160, 242, 0.15);
+    padding: 8px 12px;
+    border-radius: $cp-r-sm;
+    color: $cp-ink;
+    text-align: left;
+    &:hover {
+      background: $cp-subtle;
     }
-    &:first-child {
-      border-top-left-radius: 9px;
-      border-top-right-radius: 9px;
+    &:active {
+      background: $cp-hover;
     }
-    &:last-child {
-      border-bottom-left-radius: 9px;
-      border-bottom-right-radius: 9px;
+    &:last-child:hover {
+      background: $cp-err-bg;
+    }
+    &:last-child:active {
+      background: $cp-err-line;
     }
   }
   &-left {
     display: flex;
     align-items: center;
+    gap: 8px;
   }
   &-icon {
-    margin-right: 1rem;
-    &--color {
-      width: 16px;
-      height: 16px;
-    }
+    width: 14px;
+    height: 14px;
+    opacity: 0.7;
   }
   &-delete {
-    color: #eb6d6d;
+    color: $cp-err;
   }
   &-edit,
   &-clear {
-    color: black;
+    color: $cp-ink;
+  }
+}
+@keyframes cp-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
   }
 }
 </style>

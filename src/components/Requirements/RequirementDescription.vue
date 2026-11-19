@@ -31,9 +31,7 @@
   </div>
   <div v-else>
     {{ requirement.description }}
-    <a :style="{ color: `#${color}` }" :href="requirement.source" target="_blank">
-      <strong>Learn More</strong></a
-    >
+    <a class="learn-more" :href="requirement.source" target="_blank">Learn More</a>
   </div>
 </template>
 
@@ -76,22 +74,59 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-@import '@/assets/scss/_variables.scss';
+@import '@/assets/scss/_tokens.scss';
 
-.nested-requirement-choices {
-  margin: 0.5rem 0 0.5rem 1rem;
-  padding: 0 0.5rem;
-  border-left: 1px solid $inactiveGray;
-
-  .single-choice {
-    display: block;
+.learn-more {
+  @include cp-text(13px, 18px, 600);
+  color: $cp-link;
+  &:hover {
+    color: $cp-link-strong;
+    text-decoration: underline;
   }
 }
 
+// compound requirement: radio list of the ways to satisfy it
+.nested-requirement-choices {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 8px 0;
+
+  .single-choice {
+    @include cp-text(13px, 18px);
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin: 0;
+    padding: 8px 12px;
+    border: 1px solid $cp-line-strong;
+    border-radius: $cp-r-md;
+    background: #fff;
+    cursor: pointer;
+
+    &:hover {
+      background: $cp-hover;
+    }
+
+    &:has(input:checked) {
+      border-color: $cp-link;
+      background: $cp-soft;
+      color: $cp-link-strong;
+    }
+
+    input {
+      margin-top: 3px;
+      accent-color: $cp-brand;
+    }
+  }
+}
+
+// "What counts"-style summary box
 .progress-string {
-  background-color: $yuxuanBlueTransparent;
-  border-radius: 0.25rem;
-  padding: 0.5rem;
-  text-align: center;
+  @include cp-text(12px, 16px, 600);
+  background: $cp-subtle;
+  border: 1px solid $cp-line;
+  border-radius: $cp-r-md;
+  padding: 12px 16px;
 }
 </style>

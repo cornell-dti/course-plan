@@ -28,28 +28,32 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-@import '@/assets/scss/_variables.scss';
+@import '@/assets/scss/_tokens.scss';
 .dropdown-button {
-  padding: 0.5rem 1rem;
-  align-items: center;
+  @include cp-reset-button;
+  @include cp-text(13px, 18px);
   display: flex;
-  width: 100%;
-  flex-wrap: wrap;
+  align-items: center;
   justify-content: space-between;
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: $cp-r-sm;
+  color: $cp-ink;
+  text-align: left;
   &:hover {
-    background: $einBlueTransparent;
+    background: $cp-subtle;
+  }
+  &:active {
+    background: $cp-hover;
   }
   &-option {
-    color: $dropdownGray;
-    font-size: 1rem;
-    line-height: 1rem;
-    align-items: center;
     display: flex;
-    gap: 1rem;
+    align-items: center;
+    gap: 8px;
   }
   &-image {
-    min-width: 1rem;
-    max-width: 1rem;
+    width: 14px;
+    height: 14px;
   }
 }
 </style>

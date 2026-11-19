@@ -203,106 +203,64 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-@import '@/assets/scss/_variables.scss';
+@import '@/assets/scss/_tokens.scss';
 
 .separator {
   height: 1px;
   width: 100%;
-  background-color: $inactiveGray;
-  margin-top: 1rem;
+  background-color: $cp-line;
+  margin-top: 12px;
 }
 
 .top {
-  font-size: 14px;
-  line-height: 17px;
-  color: #757575;
-  margin: 0.75rem 0;
+  @include cp-text(12px, 16px, 500);
+  color: $cp-muted;
+  margin: 12px 0 8px;
 }
 
 .dropdown {
   &-select {
+    @include cp-input;
     display: flex;
-    flex-direction: row;
     align-items: center;
-    background: $white;
-    border: 0.5px solid $inactiveGray;
-    box-sizing: border-box;
-    border-radius: 2px;
     width: 100%;
-    font-size: 14px;
-    line-height: 17px;
-    color: $darkPlaceholderGray;
     position: relative;
-    min-height: 1.625rem;
+    padding: 0 12px 0 0;
+    cursor: pointer;
 
-    &:not(:first-child) {
-      margin-top: 0.5rem;
+    &:hover {
+      background: $cp-hover;
     }
 
     &-wrapper {
       position: relative;
-      margin-bottom: 1rem;
+      margin-bottom: 12px;
     }
   }
   &-placeholder {
-    height: 100%;
-    font-size: 14px;
-    line-height: 17px;
-    margin-left: 0.5rem;
     display: flex;
     align-items: center;
-    color: $lightPlaceholderGray;
     background: transparent;
-    cursor: pointer;
+    color: $cp-muted;
   }
   &-wrapper {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    height: 100%;
+    flex: 1;
+    padding: 8px 12px;
   }
   &-arrow {
-    border-left: 6.24px solid transparent;
-    border-right: 6.24px solid transparent;
-    border-top: 6.24px solid $inactiveGray;
-    background: transparent;
-    margin-right: 8.7px;
-    margin-left: 5px;
-    margin-top: auto;
-    margin-bottom: auto;
+    @include cp-css-chevron;
   }
   &-content {
+    @include cp-menu;
     z-index: 2;
     position: absolute;
     width: 100%;
-    background: $white;
-    box-shadow: -4px 4px 10px rgba(0, 0, 0, 0.25);
-    border-radius: 7px;
-    margin-top: 3px;
-    max-height: 9rem;
-    overflow-y: overlay;
+    margin-top: 4px;
+    max-height: 220px;
+    overflow-y: auto;
     &-item {
-      height: 2.25rem;
-      font-size: 14px;
-      line-height: 17px;
-      display: flex;
-      align-items: center;
-      color: $lightPlaceholderGray;
-      padding-left: 10px;
-      cursor: pointer;
-
-      &:first-child {
-        border-radius: 7px 7px 0px 0px;
-      }
-
-      &:last-child {
-        border-radius: 0px 0px 7px 7px;
-      }
+      @include cp-menu-item;
     }
-  }
-  &-content div:hover {
-    background: rgba(50, 160, 242, 0.15);
-    width: 100%;
   }
 }
 </style>

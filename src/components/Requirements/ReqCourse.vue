@@ -13,9 +13,7 @@
       class="reqcourse-color"
       :style="courseColorCSSvar"
       :class="{ 'reqcourse-color--min': compact }"
-    >
-      <img src="@/assets/images/dots/sixDots.svg" alt="" />
-    </div>
+    ></div>
     <div :class="{ 'reqcourse-content--min': compact }" class="reqcourse-content">
       <div :class="{ 'reqcourse-main--min': compact }" class="reqcourse-main">
         <div :class="{ 'reqcourse-top--min': compact }" class="reqcourse-top">
@@ -56,100 +54,74 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-@import '@/assets/scss/_variables.scss';
+@import '@/assets/scss/_tokens.scss';
 
+// a course counted toward a requirement: a small V2 course card
 .reqcourse {
-  width: 21.375rem;
-  border-radius: 0.5rem;
+  @include cp-font;
+  flex: 1;
+  min-width: 0;
   display: flex;
   flex-direction: row;
-  background-color: $white;
-  box-shadow: 0px 0px 10px 4px $boxShadowGray;
+  gap: 8px;
+  min-height: 56px;
+  padding: 8px 12px 8px 8px;
+  background: #fff;
+  border: 1px solid $cp-line;
+  border-radius: $cp-r-md;
+  box-shadow: $cp-shadow-rest;
   position: relative;
-  height: 5.625rem;
-
-  &:hover {
-    background: rgba(255, 255, 255, 0.15);
-  }
 
   &--min {
-    width: 10rem;
-    height: 2.125rem;
+    min-height: 36px;
+    padding-top: 6px;
+    padding-bottom: 6px;
   }
 
   &-main {
-    &--min {
-      display: flex;
-      align-items: center;
-      width: 100%;
-      justify-content: space-between;
-    }
+    width: 100%;
+    min-width: 0;
   }
 
   &-color {
-    width: 1.25rem;
-    height: 5.625rem;
-    border-radius: 0.42rem 0 0 0.42rem;
+    width: 4px;
+    flex-shrink: 0;
+    align-self: stretch;
+    border-radius: 999px;
     background-color: var(--bg-color);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    &--min {
-      height: 2.125rem;
-    }
   }
 
   &-content {
-    width: 18rem;
-    margin: 0 1rem;
+    flex: 1;
+    min-width: 0;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-
-    &--min {
-      width: 9.25rem;
-      margin-bottom: 0;
-      margin-top: 0;
-      margin-right: 0.5rem;
-      margin-left: 0.5rem;
-    }
   }
 
   &-top {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-
-    &--min {
-      display: flex;
-      justify-content: space-between;
-      width: 100%;
-    }
+    min-width: 0;
   }
 
   &-code {
-    font-size: 14px;
-    line-height: 17px;
-    color: $medGray;
-
-    &--min {
-      color: $primaryGray;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      margin-right: 0.5rem;
-    }
+    @include cp-text(13px, 18px, 600);
+    color: $cp-ink;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }
 
+// completed: the success surface, bordered in the requirement color
 .completedReqCourse {
-  border: 1px solid;
+  background: $cp-success-bg;
   border-color: var(--border-color);
+  padding-left: 12px;
 }
 
 .conflict {
-  border: 1px solid $conflictWarning;
-  border-radius: 0.5rem;
+  border-color: $cp-warn-line;
+  box-shadow: inset 0 0 0 1px $cp-warn-line;
 }
 </style>

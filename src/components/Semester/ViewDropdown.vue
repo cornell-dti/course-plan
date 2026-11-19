@@ -106,55 +106,51 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-@import '@/assets/scss/_variables.scss';
+@import '@/assets/scss/_tokens.scss';
 .dropdown {
   z-index: 2;
   position: relative;
-  float: right;
   &-button {
-    border: none;
-    display: flex;
-    align-items: center;
-    padding-bottom: 0.5rem;
+    @include cp-button-secondary;
+    gap: 8px;
+    padding-left: 12px;
     &--label {
-      :hover > & {
-        color: $viewLabelGray;
-      }
-      font-weight: 500;
-      font-size: 19px;
-      line-height: 19px;
-      color: $medGray;
+      color: $cp-ink;
     }
     &--image {
-      margin-right: 0.3rem;
-      width: 1rem;
+      width: 14px;
       content: url('@/assets/images/views/settings.svg');
-      :hover > & {
-        content: url('@/assets/images/views/settingsOnHover.svg');
-      }
     }
   }
   &-content {
-    display: flex;
-    flex-direction: column;
     position: absolute;
     right: 0;
-    border-radius: 8px;
-    min-height: 2.5rem;
-    min-width: 12rem;
-    align-items: center;
-    padding: 0.5rem 0rem;
-    background-color: $white;
-    border: 1px solid $borderGray;
-    box-sizing: border-box;
-    box-shadow: 0px 5px 8px 2px $boxShadowGray;
-    border-radius: 4px;
+    top: calc(100% + 4px);
+    min-width: 200px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 6px;
+    background: #fff;
+    border: 1px solid $cp-line;
+    border-radius: $cp-r-md;
+    box-shadow: $cp-shadow-pop;
+    animation: cp-in 160ms ease-out both;
     &--hline {
-      width: calc(100% - 2rem);
-      height: 0;
-      border: 0.5px solid $hlineGray;
-      margin: 0.5rem 0rem;
+      height: 1px;
+      margin: 2px 0;
+      background: $cp-line;
     }
+  }
+}
+@keyframes cp-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
   }
 }
 </style>

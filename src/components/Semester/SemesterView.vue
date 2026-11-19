@@ -227,126 +227,80 @@ export default defineComponent({
 
 <style scoped lang="scss">
 @import '@/assets/scss/_variables.scss';
+@import '@/assets/scss/_tokens.scss';
 
 .semesterView {
+  @include cp-font;
   width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 1.5rem 3rem 0;
+  padding: 16px 24px 0;
   position: relative;
   overflow-y: auto;
+  background: $cp-canvas;
+  color: $cp-ink;
 
   &-content {
     display: grid;
-    justify-items: center;
-    grid-template-columns: repeat(auto-fill, minmax(min($regular-semester-width, 100%), 1fr));
-    column-gap: 0.5rem;
-    margin: 0 -0.75rem;
+    justify-items: start;
+    align-items: start;
+    grid-template-columns: repeat(auto-fill, $cp-column-width);
+    gap: 32px;
 
     &--compact {
-      grid-template-columns: repeat(auto-fill, minmax(min($compact-semester-width, 100%), 1fr));
+      grid-template-columns: repeat(auto-fill, $cp-column-width-compact);
+      gap: 24px;
     }
   }
 
   &-addSemesterButton {
-    background: $sangBlue;
-    border-radius: 3px;
-    min-height: 2.5rem;
-    min-width: 9rem;
-    color: $white;
-    border: none;
-    font-size: 16px;
+    @include cp-button-secondary;
+    gap: 8px;
+    padding-left: 12px;
+
+    &::first-letter {
+      color: $cp-muted;
+    }
   }
 
   &-settings {
     display: flex;
     justify-content: flex-end;
-    margin-bottom: 1rem;
-    min-height: 2.25rem;
     align-items: center;
+    gap: 12px;
+    min-height: 38px;
+    margin-bottom: 16px;
 
     &--two {
       justify-content: space-between;
     }
   }
 
-  &-switch {
-    display: flex;
-    color: $medGray;
-    align-items: center;
-  }
-
-  &-switchText {
-    margin-right: 0.5rem;
-    font-size: 16px;
-    line-height: 19px;
-  }
-
-  &-switchImage {
-    width: 2.25rem;
-    height: 2.25rem;
-    background-repeat: no-repeat;
-    background-size: auto;
-    background-position: center;
-
-    &:not(:last-child) {
-      margin-right: 0.5rem;
-    }
-  }
-
-  &-twoColumn {
-    background-image: url('@/assets/images/views/twoColumn.svg');
-
-    &:hover,
-    &:focus,
-    &:active,
-    &--active {
-      cursor: pointer;
-      background-image: url('@/assets/images/views/twoColumnSelected.svg');
-    }
-  }
-
-  &-fourColumn {
-    background-image: url('@/assets/images/views/fourColumn.svg');
-
-    &:hover,
-    &:focus,
-    &:active,
-    &--active {
-      cursor: pointer;
-      background-image: url('@/assets/images/views/fourColumnSelected.svg');
-    }
-  }
-
   &-wrapper {
     display: flex;
-    justify-content: center;
-    margin-bottom: 1.5rem;
-    padding: 0 0.25rem;
+    align-items: flex-start;
   }
 
   &-builtBy {
-    color: $medGray;
+    @include cp-text(12px, 16px);
+    color: $cp-muted;
     text-align: right;
-    font-size: 15px;
-    padding: 8px 10px;
+    padding: 24px 0 16px;
 
     a {
-      color: $medGray;
+      color: $cp-muted;
 
       &:hover {
-        text-decoration: underline $medGray;
+        color: $cp-ink;
+        text-decoration: underline;
       }
     }
   }
 
-  &-emoji-text {
-    height: 14px;
-  }
-
   &-heart {
-    height: 18px;
+    height: 14px;
+    vertical-align: -2px;
   }
 }
 
@@ -374,34 +328,23 @@ export default defineComponent({
 @media only screen and (max-width: $medium-breakpoint) {
   .semesterView {
     margin-top: 5.5rem;
-    margin-left: 2.5rem;
-    margin-right: 1rem;
-
-    &-switch {
-      padding-right: 0.75rem;
-    }
+    padding: 16px;
 
     &-content {
-      width: 100%;
       justify-content: center;
-      grid-template-columns: repeat(auto-fill, minmax(min($compact-semester-width, 100%), 1fr));
+      grid-template-columns: repeat(auto-fill, $cp-column-width-compact);
     }
   }
 }
 
 @media only screen and (max-width: $small-breakpoint) {
   .semesterView {
-    margin-top: 5.5rem;
-    margin-left: 0;
-    margin-right: 0;
-
     &-content {
-      margin: 0;
+      grid-template-columns: 1fr;
     }
 
     &-wrapper {
-      flex: 1 1 auto;
-      padding: 0 2rem;
+      display: block;
     }
   }
 }

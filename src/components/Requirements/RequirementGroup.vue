@@ -16,7 +16,7 @@
     <div v-if="showMajorOrMinorRequirements">
       <!--Show more of completed requirements -->
       <div v-if="displayDetails || tourStep === 1">
-        <h2>Ongoing Requirements</h2>
+        <h2 class="ongoing">Ongoing Requirements</h2>
         <div class="separator"></div>
         <div
           v-for="(requirementFulfillment, id) in partitionedRequirementsProgress.ongoing"
@@ -36,33 +36,33 @@
           <div class="separator"></div>
         </div>
 
-        <div v-if="partitionedRequirementsProgress.completed.length > 0" class="row completed">
-          <h2 class="col specific">Completed Requirements</h2>
-          <div class="col-1 text-right">
-            <button
-              class="btn float-right"
-              :style="{ color: `#${getReqColor(req.groupName, onboardingData)}` }"
-            >
-              <!-- Toggle to display completed reqs -->
-              <p
-                class="toggle"
-                v-if="displayCompleted"
-                @click="turnCompleted(false)"
-                data-cyId="requirements-showCompleted"
-              >
-                HIDE
-              </p>
-              <p
-                class="toggle"
-                v-else
-                @click="turnCompleted(true)"
-                data-cyId="requirements-showCompleted"
-              >
-                SHOW
-              </p>
-            </button>
-          </div>
-        </div>
+        <!-- Toggle to display completed reqs -->
+        <button
+          v-if="partitionedRequirementsProgress.completed.length > 0"
+          class="completed"
+          :aria-expanded="displayCompleted"
+          @click="turnCompleted(!displayCompleted)"
+          data-cyId="requirements-showCompleted"
+        >
+          <svg
+            class="completed-chevron"
+            :class="{ 'completed-chevron--closed': !displayCompleted }"
+            width="14"
+            height="14"
+            viewBox="0 0 16 16"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.33"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M4 6l4 4 4-4" />
+          </svg>
+          <span class="completed-label"
+            >Completed ({{ partitionedRequirementsProgress.completed.length }})</span
+          >
+        </button>
 
         <!-- Completed requirements -->
         <div v-if="displayCompleted">
@@ -193,69 +193,59 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-@import '@/assets/scss/_variables.scss';
+@import '@/assets/scss/_tokens.scss';
 
-.btn {
-  padding: 0;
+.requirementview {
+  @include cp-font;
+}
+
+// small muted section label above the ongoing list
+.ongoing {
+  @include cp-text(12px, 16px, 500);
+  color: $cp-muted;
+  margin: 8px 0;
+}
+
+// "Completed (n)": the V2 expand row
+.completed {
+  @include cp-reset-button;
+  width: calc(100% + 16px);
   display: flex;
   align-items: center;
-  justify-content: center;
-  &-2 {
-    padding-top: 0px;
-    margin: 0px;
+  gap: 8px;
+  margin: 4px -8px 0;
+  padding: 8px;
+  border-radius: $cp-r-sm;
+  text-align: left;
+  transition: background-color 100ms;
+
+  &:hover {
+    background: $cp-hover;
+  }
+
+  &:active {
+    background: $cp-press;
+  }
+
+  &-label {
+    @include cp-text(12px, 16px, 500);
+    color: $cp-muted;
+  }
+
+  &-chevron {
+    flex-shrink: 0;
+    color: $cp-muted;
+    transition: transform 200ms;
+
+    &--closed {
+      transform: rotate(-90deg);
+    }
   }
 }
-.btn:focus,
-.btn:active {
-  outline: none !important;
-  box-shadow: none;
-}
-.row {
-  margin: 0;
-}
-.row > div {
-  padding: 0;
-}
-.specific {
-  padding-left: 0;
-  color: $darkGray;
-}
-button.active {
-  color: $sangBlue;
-  border-bottom: solid 10px $sangBlue;
-  padding-bottom: 2px;
-  margin: 5px;
-}
-button.view {
-  margin: 0.7rem 0 2rem 0;
-  min-height: 40px;
-  width: 100%;
-  font-weight: bold;
-  font-size: 14px;
-  line-height: 14px;
-  text-align: center;
-  color: $white;
-  text-transform: uppercase;
-}
-.toggle {
-  margin-top: auto;
-  margin-bottom: auto;
-  font-weight: bold;
-  font-size: 12px;
-  line-height: 12px;
-}
-.completed {
-  margin-top: 1rem;
-  &-ptext {
-    color: $lightPlaceholderGray;
-    font-size: 12px;
-    opacity: 0.8;
-    font-weight: normal;
-  }
-}
+
 .separator {
   height: 1px;
   width: 100%;
-  background-color: $inactiveGray;
+  background-color: $cp-line;
 }
 </style>

@@ -91,26 +91,54 @@
       + New Semester
     </button>
     <div class="semester-content">
-      <div class="semester-top" :class="{ 'semester-top--compact': compact }">
-        <div class="semester-left" :class="{ 'semester-left--compact': compact }">
-          <span class="semester-name" data-cyId="semesterName"
-            ><img class="season-emoji" :src="seasonImg[season]" alt="" /> {{ season }}
-            {{ year }}</span
+      <div
+        class="semester-top"
+        :class="{
+          'semester-top--compact': compact,
+          'semester-top--minimized': isSemesterMinimized,
+        }"
+      >
+        <div class="semester-label">
+          <span class="semester-number">Semester {{ semesterNumber }}</span>
+          <button
+            class="semester-dotRow"
+            @click="openSemesterMenu"
+            data-cyId="semesterMenu"
+            aria-label="Semester options"
           >
-          <span class="semester-credits">{{ creditString }}</span>
+            <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true">
+              <circle cx="3.5" cy="8" r="1.1" fill="currentColor" />
+              <circle cx="8" cy="8" r="1.1" fill="currentColor" />
+              <circle cx="12.5" cy="8" r="1.1" fill="currentColor" />
+            </svg>
+          </button>
         </div>
-        <div class="semester-right" :class="{ 'semester-right--compact': compact }">
-          <button class="semester-minimize" @click="minimizeSemester" data-cyId="minimizeSemester">
-            <img
-              v-if="!isSemesterMinimized"
-              src="@/assets/images/minimize.svg"
-              alt="minimze semester"
-            />
-            <img v-else src="@/assets/images/expand.svg" alt="expand semester" />
+        <div class="semester-title">
+          <button
+            class="semester-minimize"
+            @click="minimizeSemester"
+            data-cyId="minimizeSemester"
+            :aria-label="isSemesterMinimized ? 'Expand semester' : 'Collapse semester'"
+            :aria-expanded="!isSemesterMinimized"
+          >
+            <svg
+              class="semester-chevron"
+              :class="{ 'semester-chevron--closed': isSemesterMinimized }"
+              width="18"
+              height="18"
+              viewBox="0 0 16 16"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.33"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M4 6l4 4 4-4" />
+            </svg>
           </button>
-          <button class="semester-dotRow" @click="openSemesterMenu" data-cyId="semesterMenu">
-            <img src="@/assets/images/dots/threeDots.svg" alt="open menu for semester" />
-          </button>
+          <span class="semester-name" data-cyId="semesterName">{{ season }} {{ year }}</span>
+          <span class="semester-credits">{{ creditString }}</span>
         </div>
       </div>
       <div
@@ -124,7 +152,7 @@
           group="draggable-semester-courses"
           v-model="coursesForDraggable"
           item-key="uniqueID"
-          :componentData="{ style: { height: courseContainerHeight + 'rem' } }"
+          :componentData="{ style: { minHeight: courseContainerHeight + 'rem' } }"
           @start="onDragStart"
           @sort="onDropped"
           @end="onDragEnd"
@@ -207,12 +235,8 @@ import DistributionRequirementsModal from '@/components/Modals/NewCourse/Distrib
 import CourseConfirmationModal from '@/components/Modals/NewCourse/CourseConfirmationModal.vue';
 import ManualRequirementsModal from '@/components/Modals/NewCourse/ManualRequirementsModal.vue';
 
-import { clickOutside, isPlaceholderCourse } from '@/utilities';
+import { clickOutside, isPlaceholderCourse, SeasonOrdinal } from '@/utilities';
 
-import fall from '@/assets/images/fallEmoji.svg';
-import spring from '@/assets/images/springEmoji.svg';
-import winter from '@/assets/images/winterEmoji.svg';
-import summer from '@/assets/images/summerEmoji.svg';
 import {
   cornellCourseRosterCourseToFirebaseSemesterCourseWithGlobalData,
   editSemester,
@@ -280,12 +304,6 @@ export default defineComponent({
       isDeleteNoteOpen: false,
       noteCourseUniqueID: undefined as number | undefined,
 
-      seasonImg: {
-        Fall: fall,
-        Spring: spring,
-        Winter: winter,
-        Summer: summer,
-      },
       expandedNotes: new Map<number, boolean>(), // Track expanded state of notes by course uniqueID
       isNoteTransitioning: false,
       newNoteUniqueID: undefined as number | undefined,
@@ -348,6 +366,14 @@ export default defineComponent({
   },
 
   computed: {
+    // position in the plan counted from the earliest semester, whatever order the board shows
+    semesterNumber(): number {
+      const semesters: readonly FirestoreSemester[] = store.getters.getCurrentPlanSemesters;
+      const key = (year: number, season: FirestoreSemesterSeason) =>
+        year * 4 + SeasonOrdinal[season];
+      const mine = key(this.year, this.season);
+      return semesters.filter(s => key(s.year, s.season) < mine).length + 1;
+    },
     groupedRequirementFulfillmentReport(): readonly GroupedRequirementFulfillmentReport[] {
       return store.state.groupedRequirementFulfillmentReport;
     },
@@ -409,9 +435,10 @@ export default defineComponent({
         });
       },
     },
-    // Add space for a course if there is a "shadow" of it, decrease if it is from the current sem
+    // Add space for a course if there is a "shadow" of it, decrease if it is from the current sem.
+    // Used as a min-height: cards whose names wrap grow the column past it.
     courseContainerHeight(): number {
-      let factor = 6.1;
+      let factor = 4.25;
       let extraIncrementer = 0;
       if (this.isShadowCounter > 0) {
         extraIncrementer += 1;
@@ -420,7 +447,7 @@ export default defineComponent({
         extraIncrementer -= 1;
       }
       if (this.compact) {
-        factor = 2.6;
+        factor = 2.75;
       }
 
       const noteMarginBottom = 0.7; // ~0.7rem margin below a note
@@ -462,7 +489,12 @@ export default defineComponent({
         return acc;
       }, 0);
 
-      return (this.courses.length + 1 + extraIncrementer) * factor + extraNoteHeightRem;
+      // an empty semester still needs somewhere to drop a card
+      const minDropAreaRem = 2.5;
+      return Math.max(
+        Math.max(this.courses.length + extraIncrementer, 0) * factor + extraNoteHeightRem,
+        minDropAreaRem
+      );
     },
     creditString() {
       let credits = 0;
@@ -1004,106 +1036,138 @@ export default defineComponent({
 
 <style scoped lang="scss">
 @import '@/assets/scss/_variables.scss';
+@import '@/assets/scss/_tokens.scss';
 
 .semester {
-  width: $regular-semester-width;
+  @include cp-font;
+  width: $cp-column-width;
   box-sizing: border-box;
   position: relative;
-  border-radius: 11px;
-
-  &-addSemesterButton {
-    background: $sangBlue;
-    border-radius: 3px;
-    min-height: 2.5rem;
-    min-width: 9rem;
-    color: $white;
-    border: none;
-    position: absolute;
-    top: -3.3rem;
-    font-size: 16px;
-  }
-
-  &-content {
-    padding: 0.875rem 0;
-    border: 2px solid $borderGray;
-    border-radius: 11px;
-  }
 
   &--compact {
-    width: $compact-semester-width;
+    width: $cp-column-width-compact;
   }
 
-  &-confirmation {
-    top: 16px;
-    display: none;
+  &-addSemesterButton {
+    @include cp-button-secondary;
+    position: absolute;
+    top: -54px;
+    left: 0;
+    gap: 8px;
+    padding-left: 12px;
+    white-space: nowrap;
+
+    &::first-letter {
+      color: $cp-muted;
+    }
+  }
+
+  // the column card
+  &-content {
+    background: #fff;
+    border-radius: $cp-r-lg;
+    box-shadow: $cp-shadow-rest;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    transition: box-shadow 200ms;
+
+    &:hover {
+      box-shadow: $cp-shadow-pop;
+    }
   }
 
   &-top {
     display: flex;
-    justify-content: space-between;
-    color: $medGray;
-    margin-left: 1.125rem;
-    margin-right: 1.125rem;
-  }
-
-  &-left {
-    display: flex;
     flex-direction: column;
+    gap: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid $cp-line-strong;
 
-    &--compact {
-      justify-content: space-between;
+    &--minimized {
+      padding-bottom: 0;
+      border-bottom: none;
     }
   }
 
-  &-right {
+  &-label {
     display: flex;
-
-    &--compact {
-      margin-top: 0.25rem;
-    }
+    align-items: center;
+    justify-content: space-between;
+    height: 16px;
   }
 
-  &-minimize {
-    margin-right: 8px;
+  &-number {
+    @include cp-text(12px, 16px, 500);
+    color: $cp-muted;
   }
 
   &-dotRow {
-    padding: 15px 0;
-    display: flex;
+    @include cp-icon-button;
     position: relative;
-    &:hover,
-    &:active,
-    &:focus {
-      cursor: pointer;
+  }
+
+  &-title {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    min-width: 0;
+  }
+
+  &-minimize {
+    @include cp-reset-button;
+    display: flex;
+    margin-left: -2px;
+    border-radius: $cp-r-md;
+    color: $cp-muted;
+
+    &:hover {
+      background: $cp-hover;
     }
+
+    &:active {
+      background: $cp-press;
+    }
+  }
+
+  &-chevron {
+    transition: transform 200ms;
+
+    &--closed {
+      transform: rotate(-90deg);
+    }
+  }
+
+  &-name {
+    @include cp-text(18px, 24px, 700);
+    flex: 1;
+    min-width: 0;
+    color: $cp-ink;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &-credits {
+    @include cp-text(11px, 14px);
+    color: $cp-muted;
+    white-space: nowrap;
   }
 
   &-menu {
     position: absolute;
-    right: -3rem;
-    top: 2rem;
-    z-index: 1;
-  }
-
-  &-name {
-    font-size: 18px;
-    line-height: 18px;
-    margin-right: 0.5rem;
-    font-weight: bold;
-  }
-
-  &-icon {
-    width: 14px;
-    height: 14px;
-  }
-
-  &-credits {
-    font-size: 14px;
-    line-height: 17px;
+    right: 12px;
+    top: 36px;
+    z-index: 3;
   }
 
   &-courseWrapper {
-    margin: 0.5rem 0 0.5rem 0;
+    margin-bottom: 12px;
+  }
+
+  &--compact &-courseWrapper {
+    margin-bottom: 8px;
   }
 
   &-course {
@@ -1119,34 +1183,23 @@ export default defineComponent({
   &-hidden {
     display: none;
   }
+}
 
-  .season-emoji {
-    height: 18px;
-    margin-top: -4px;
-  }
-
-  .draggable-semester-courses {
-    padding-top: 5px;
-    padding-left: 1.125rem;
-    padding-right: 1.125rem;
-  }
+// vuedraggable's ghost (where a dragged card will land)
+:deep(.sortable-ghost) {
+  opacity: 0.4;
 }
 
 @media only screen and (max-width: $medium-breakpoint) {
   .semester {
-    width: $compact-semester-width;
-
-    &-menu {
-      right: 0rem;
-    }
+    width: $cp-column-width-compact;
   }
 }
 
 @media only screen and (max-width: $small-breakpoint) {
   .semester,
   .semester--compact {
-    width: calc(100vw - 4rem);
-    padding: 0;
+    width: calc(100vw - 2rem);
   }
 }
 </style>

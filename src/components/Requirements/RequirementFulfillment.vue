@@ -119,10 +119,15 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-@import '@/assets/scss/_variables.scss';
+@import '@/assets/scss/_tokens.scss';
 
+// expanded requirement: indented under the row's chevron
 .description {
-  color: $onboardingGray;
-  font-size: 14px;
+  @include cp-text(13px, 18px);
+  color: $cp-ink;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 4px 0 16px 22px;
 }
 </style>

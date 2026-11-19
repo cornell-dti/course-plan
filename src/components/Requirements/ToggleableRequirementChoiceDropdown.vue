@@ -76,103 +76,64 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-@import '@/assets/scss/_variables.scss';
+@import '@/assets/scss/_tokens.scss';
 
 .toggleable-requirements {
   &-select {
+    @include cp-input;
     display: flex;
-    flex-direction: row;
     align-items: center;
-    background: $white;
-    border: 0.5px solid $inactiveGray;
-    box-sizing: border-box;
-    border-radius: 2px;
     width: 100%;
-    font-size: 14px;
-    line-height: 17px;
-    color: $darkPlaceholderGray;
     position: relative;
-    min-height: 1.625rem;
-    margin: 0.75rem 0;
+    margin: 0 0 8px;
+    padding: 0 12px 0 0;
+    cursor: pointer;
 
-    &:not(:first-child) {
-      margin-top: 0.5rem;
+    &:hover {
+      background: $cp-hover;
     }
 
     &--disabled {
-      opacity: 0.3;
+      background: #fff;
+      border-color: $cp-disabled;
+      color: $cp-disabled-ink;
       pointer-events: none;
     }
 
     &-wrapper {
+      @include cp-text(13px, 18px);
       position: relative;
-      margin-bottom: 1rem;
+      color: $cp-ink;
     }
   }
   &-dropdown {
     &-placeholder {
-      height: 100%;
-      font-size: 14px;
-      line-height: 17px;
-      margin-left: 0.5rem;
       display: flex;
       align-items: center;
-      color: $lightPlaceholderGray;
       background: transparent;
-      cursor: pointer;
+      color: $cp-ink;
     }
     &-wrapper {
-      display: flex;
-      flex-direction: row;
-      width: 100%;
-      height: 100%;
+      flex: 1;
+      padding: 8px 12px;
     }
     &-innerPlaceholder {
-      margin-top: 5px;
-      margin-bottom: 5px;
+      margin: 4px 0;
       width: 100%;
     }
     &-arrow {
-      border-left: 6.24px solid transparent;
-      border-right: 6.24px solid transparent;
-      border-top: 6.24px solid $inactiveGray;
-      background: transparent;
-      margin-right: 8.7px;
-      margin-left: 5px;
-      margin-top: auto;
-      margin-bottom: auto;
+      @include cp-css-chevron;
     }
     &-content {
+      @include cp-menu;
       z-index: 2;
       position: absolute;
       width: 100%;
-      background: $white;
-      box-shadow: -4px 4px 10px rgba(0, 0, 0, 0.25);
-      border-radius: 7px;
-      margin-top: 3px;
+      margin-top: -4px;
       &-item {
-        height: 2.25rem;
-        font-size: 14px;
-        line-height: 17px;
-        display: flex;
-        align-items: center;
-        color: $lightPlaceholderGray;
-        padding-left: 10px;
-        cursor: pointer;
-
-        &:first-child {
-          border-radius: 7px 7px 0px 0px;
-        }
-
-        &:last-child {
-          border-radius: 0px 0px 7px 7px;
-        }
+        @include cp-menu-item;
       }
     }
-  }
-  &-dropdown-content div:hover {
-    background: rgba(50, 160, 242, 0.15);
-    width: 100%;
   }
 }
 </style>

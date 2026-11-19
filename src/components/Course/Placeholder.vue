@@ -1,8 +1,6 @@
 <template>
   <div :class="{ 'placeholder--min': compact }" class="placeholder">
-    <div class="placeholder-color">
-      <img src="@/assets/images/dots/sixDots.svg" alt="" />
-    </div>
+    <div class="placeholder-color"></div>
     <div class="placeholder-content" @click="openModal()">
       <div class="placeholder-name" :class="{ 'placeholder-name--min': compact }">
         {{ placeholderObj.name }}
@@ -36,58 +34,69 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-@import '@/assets/scss/_variables.scss';
+@import '@/assets/scss/_tokens.scss';
 
+// V2 open slot: laid out like a course card with a gray bar, on a quiet dashed surface.
+// Hover turns it white with a 2px dashed brand border (padding shrinks 1px to keep its size).
 .placeholder {
+  @include cp-font;
   box-sizing: border-box;
-  border-radius: 0.5rem;
+  position: relative;
   display: flex;
   flex-direction: row;
-  position: relative;
-  height: 5.625rem;
-
-  border-style: dashed;
-  border-color: $borderGray;
-  border-width: 2px 2px 2px 0;
-  border-radius: 0.5rem;
+  gap: 8px;
+  min-height: 56px;
+  padding: 8px 12px 8px 8px;
+  background: $cp-subtle;
+  border: 1px dashed $cp-line-strong;
+  border-radius: $cp-r-md;
+  cursor: grab;
+  transition: border-color 150ms, background-color 150ms;
 
   &:hover,
   &:active,
   &.focus {
-    border-color: $yuxuanBlue;
-    background: rgba(0, 0, 0, 0.03);
-    color: $yuxuanBlue;
-    cursor: grab;
+    padding: 7px 11px 7px 7px;
+    background: #fff;
+    border: 2px dashed $cp-brand;
   }
 
   &--min {
-    height: 2.125rem;
+    min-height: 36px;
+    padding-top: 6px;
+    padding-bottom: 6px;
+
+    &:hover,
+    &:active,
+    &.focus {
+      padding-top: 5px;
+      padding-bottom: 5px;
+    }
   }
 
   &-color {
-    background-color: $darkPlaceholderGray;
-    width: $colored-grabber-width;
-    border-radius: 0.42rem 0 0 0.42rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: -2px 0;
+    width: 4px;
+    flex-shrink: 0;
+    align-self: stretch;
+    border-radius: $cp-r-sm;
+    background: $cp-disabled;
   }
 
   &-content {
-    width: 100%;
+    flex: 1;
+    min-width: 0;
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: space-between;
+    gap: 8px;
   }
 
   &-name {
-    font-size: 16px;
-    font-weight: bold;
-    color: $lightPlaceholderGray;
+    @include cp-text(13px, 18px, 500);
+    color: $cp-ink;
 
     &--min {
-      font-size: 14px;
+      @include cp-text(12px, 16px, 500);
     }
   }
 }
