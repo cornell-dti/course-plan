@@ -174,6 +174,29 @@
                 </div>
               </template>
             </draggable>
+            <div class="py-3">
+              <div class="see-all-pages" v-if="numPages > 1">
+                <span class="see-all-pageCount">{{ pageText }}</span>
+                <div class="see-all-buttonWrapper">
+                  <button
+                    class="see-all-button"
+                    :class="{ 'see-all-button--disabled': !hasPrevPage }"
+                    :disabled="!hasPrevPage"
+                    @click="prevPage()"
+                  >
+                    <span class="see-all-button-text">Prev</span>
+                  </button>
+                  <button
+                    class="see-all-button"
+                    :class="{ 'see-all-button--disabled': !hasNextPage }"
+                    :disabled="!hasNextPage"
+                    @click="nextPage()"
+                  >
+                    <span class="see-all-button-text">Next</span>
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
