@@ -245,7 +245,19 @@ const getFullCourseJson = (courseCodeToDataAndOfferedMap: CourseCodeToDataAndOff
   return Object.fromEntries(Object.entries(json).sort(([a], [b]) => a.localeCompare(b)));
 };
 
+const writeRosterOfferings = (allCourses: AllCourses): AllCourses => {
+  const offerings = Object.fromEntries(
+    Object.entries(allCourses).map(([semester, courses]) => [
+      semester,
+      Array.from(new Set(courses.map(({ crseId }) => crseId))).sort((a, b) => a - b),
+    ])
+  );
+  writeFileSync('src/assets/courses/roster-offerings.json', `${JSON.stringify(offerings)}\n`);
+  return allCourses;
+};
+
 generateSemesterJSONs()
+  .then(writeRosterOfferings)
   .then(getCoursesWithLastOfferingData)
   .then(courseCodeToDataAndOfferedMap => {
     // Generate a single source of truth for all courses.

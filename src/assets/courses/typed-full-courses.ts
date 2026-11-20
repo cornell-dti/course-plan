@@ -1,4 +1,6 @@
 import json from './full-courses.json';
+import rosters from './rosters.json';
+import rosterOfferings from './roster-offerings.json';
 
 const fullCoursesJsonWithStringKey = (json as unknown) as Readonly<
   Record<string, readonly CornellCourseRosterCourse[]>
@@ -34,5 +36,17 @@ export const fullCoursesArray: readonly CornellCourseRosterCourse[] = Object.val
   fullCoursesJsonWithStringKey
 ).flat();
 
-export const specificRosterCoursesArray = (roster: string): readonly CornellCourseRosterCourse[] =>
-  fullCoursesArray.filter(course => course.roster === roster);
+const rosterCoursesCache = new Map<string, readonly CornellCourseRosterCourse[]>();
+
+export const specificRosterCoursesArray = (
+  roster: string
+): readonly CornellCourseRosterCourse[] => {
+  const offeredIds = (rosterOfferings as Readonly<Record<string, readonly number[]>>)[roster];
+  if (!rosters.includes(roster) || offeredIds == null) return fullCoursesArray;
+  const cached = rosterCoursesCache.get(roster);
+  if (cached) return cached;
+  const offered = new Set(offeredIds);
+  const courses = fullCoursesArray.filter(({ crseId }) => offered.has(crseId));
+  rosterCoursesCache.set(roster, courses);
+  return courses;
+};

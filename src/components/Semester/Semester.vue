@@ -11,6 +11,8 @@
     data-tooltipClass="tooltipCenter tourStep3"
   >
     <new-course-modal
+      :season="season"
+      :year="year"
       @close-course-modal="closeCourseModal"
       @select-course="selectCourse"
       v-if="isCourseModalOpen"
