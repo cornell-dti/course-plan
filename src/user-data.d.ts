@@ -61,6 +61,11 @@ type FirestoreSemestersData = {
   readonly plans: readonly Plan[];
   readonly semesters: readonly FirestoreSemester[];
   readonly orderByNewest: boolean;
+  /**
+   * The plan friends compare against by default. Optional: missing, or naming a plan that no
+   * longer exists, means the first plan.
+   */
+  readonly sharedPlanName?: string;
 };
 
 type FirestoreCollegeOrMajorOrMinor = { readonly acronym: string };

@@ -58,6 +58,7 @@ export type VuexStoreState = {
   incomingFriendRequests: readonly FirestoreFriendRequest[];
   outgoingFriendRequests: readonly FirestoreFriendRequest[];
   savedSchedules: readonly FirestoreSavedSchedule[];
+  sharedPlanName: string | null;
 };
 
 export class TypedVuexStore extends Store<VuexStoreState> {}
@@ -122,6 +123,7 @@ const store: TypedVuexStore = new TypedVuexStore({
     incomingFriendRequests: [],
     outgoingFriendRequests: [],
     savedSchedules: [],
+    sharedPlanName: null,
   },
   actions: {},
   getters: {
@@ -235,6 +237,9 @@ const store: TypedVuexStore = new TypedVuexStore({
     },
     setSavedSchedules(state: VuexStoreState, schedules: readonly FirestoreSavedSchedule[]) {
       state.savedSchedules = schedules;
+    },
+    setSharedPlanName(state: VuexStoreState, name: string | null) {
+      state.sharedPlanName = name;
     },
     setFA25Giveaway(
       state: VuexStoreState,
@@ -437,6 +442,7 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
       store.commit('setCurrentPlan', plan);
       store.commit('setSavedCourses', data.savedCourses); // Note: toggle this on and off to save collections progress after refresh
       const { orderByNewest } = data;
+      store.commit('setSharedPlanName', data.sharedPlanName ?? null);
       store.commit('setSemesters', plan.semesters);
       updateDoc(doc(fb.semestersCollection, simplifiedUser.email), {
         plans: data.plans,
@@ -516,9 +522,7 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
       emitOnLoadWhenLoaded();
     }
   );
-  const friendsUnsubscriber = featureFlagCheckers.isFriendsEnabled()
-    ? initializeFriendsListeners(simplifiedUser.email)
-    : undefined;
+  const friendsUnsubscriber = initializeFriendsListeners(simplifiedUser.email);
   const derivedDataComputationUnsubscriber = autoRecomputeDerivedData();
 
   const unsubscriber = () => {
@@ -528,7 +532,7 @@ export const initializeFirestoreListeners = (onLoad: () => void): (() => void) =
     overriddenFulfillmentChoiceUnsubscriber();
     uniqueIncrementerUnsubscriber();
     uniqueBlankCourseIncrementerUnsubscriber();
-    friendsUnsubscriber?.();
+    friendsUnsubscriber();
     derivedDataComputationUnsubscriber();
   };
   return unsubscriber;

@@ -1,4 +1,4 @@
-import { doc, updateDoc } from 'firebase/firestore';
+import { deleteField, doc, updateDoc } from 'firebase/firestore';
 
 import { VueGtag } from 'vue-gtag-next';
 import { semestersCollection } from '../firebase-config';
@@ -48,6 +48,15 @@ export const setOrderByNewest = (orderByNewest: boolean): void => {
   store.commit('setOrderByNewest', orderByNewest);
   updateDoc(doc(semestersCollection, store.state.currentFirebaseUser.email), {
     orderByNewest,
+  });
+};
+
+/** Sets the plan friends compare against. Pass null to fall back to the first plan. */
+export const setSharedPlanName = (name: string | null): void => {
+  if (name === store.state.sharedPlanName) return;
+  store.commit('setSharedPlanName', name);
+  updateDoc(doc(semestersCollection, store.state.currentFirebaseUser.email), {
+    sharedPlanName: name ?? deleteField(),
   });
 };
 
@@ -227,6 +236,7 @@ export const deletePlan = async (name: string, gtag?: VueGtag): Promise<void> =>
   if (store.state.plans.some(p => p.name === name)) {
     await editPlans(oldPlans => oldPlans.filter(p => p.name !== name));
   }
+  if (store.state.sharedPlanName === name) setSharedPlanName(null);
   store.commit('setCurrentPlan', store.state.plans[0]);
 };
 

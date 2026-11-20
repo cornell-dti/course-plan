@@ -27,6 +27,7 @@ export {
   editSemesters,
   editSemester,
   setCourseSectionChoice,
+  setSharedPlanName,
   addCollection,
   addCourseToCollections,
   addSemester,
@@ -57,6 +58,7 @@ export {
   cancelFriendRequest,
   removeFriend,
 } from './user-friends';
+export { loadFriendProfile, loadUserName } from './friend-profiles';
 export {
   saveSchedule,
   renameSchedule,

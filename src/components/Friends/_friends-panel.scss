@@ -1,0 +1,246 @@
+// Shared look for the Friends and Compare side panels (V2 prototype: 480px panel on the right).
+// Imported inside each panel's scoped style block, so these rules stay scoped to that panel.
+@import '@/assets/scss/_tokens.scss';
+
+.fp {
+  @include cp-font;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 20;
+  width: min(480px, 92vw);
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  color: $cp-ink;
+  border-left: 1px solid $cp-line;
+  box-shadow: -8px 0 24px 0 rgba(15, 23, 41, 0.1);
+  animation: fp-in 200ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+
+  &-head {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 24px;
+    border-bottom: 1px solid $cp-line;
+  }
+
+  &-headText {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  &-title {
+    @include cp-text(22px, 28px, 700);
+    margin: 0;
+  }
+
+  &-sub {
+    @include cp-text(13px, 18px);
+    color: $cp-muted;
+    margin: 0;
+  }
+
+  &-iconButton {
+    @include cp-reset-button;
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: $cp-r-sm;
+    color: $cp-muted;
+
+    &:hover {
+      background: $cp-hover;
+      color: $cp-ink;
+    }
+
+    &:active {
+      background: $cp-press;
+    }
+  }
+
+  &-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px 24px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    > * {
+      flex-shrink: 0;
+    }
+  }
+
+  &-status {
+    @include cp-text(13px, 18px, 500);
+    padding: 8px 12px;
+    border-radius: $cp-r-md;
+    background: $cp-success-bg;
+    border: 1px solid $cp-success-line;
+    color: $cp-success;
+
+    &--error {
+      background: $cp-err-bg;
+      border-color: $cp-err-line;
+      color: $cp-err;
+    }
+  }
+
+  &-section {
+    @include cp-text(14px, 20px, 600);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 4px 0 -4px;
+  }
+
+  &-count {
+    @include cp-text(11px, 14px, 500);
+    color: $cp-muted;
+    font-variant-numeric: tabular-nums;
+  }
+
+  &-hint {
+    @include cp-text(12px, 16px);
+    color: $cp-muted;
+    margin: 0;
+  }
+
+  &-empty {
+    @include cp-text(13px, 18px);
+    color: $cp-muted;
+    text-align: center;
+    padding: 32px 12px;
+    margin: 0;
+  }
+
+  &-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  // a person: card (friends, requests) or slim row (search results, sent requests)
+  &-card {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px;
+    background: #fff;
+    border: 1px solid $cp-line;
+    border-radius: $cp-r-md;
+    box-shadow: $cp-shadow-rest;
+  }
+
+  &-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  &-slim {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    background: #fff;
+    border: 1px solid $cp-line;
+    border-radius: $cp-r-md;
+  }
+
+  &-person {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &-name {
+    @include cp-text(14px, 20px, 600);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &-meta {
+    @include cp-text(11px, 14px);
+    color: $cp-muted;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &-avatar {
+    @include cp-text(13px, 16px, 600);
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: $cp-brand;
+    color: #fff;
+  }
+
+  &-actions {
+    display: flex;
+    gap: 8px;
+
+    > * {
+      flex: 1;
+    }
+  }
+
+  &-button {
+    @include cp-button-secondary(true);
+  }
+
+  &-primary {
+    @include cp-button-primary(true);
+  }
+
+  &-link {
+    @include cp-link(13px, 18px, 600);
+    white-space: nowrap;
+  }
+
+  &-cap {
+    @include cp-text(11px, 14px);
+    color: $cp-muted;
+  }
+
+  &-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 6px;
+  }
+
+  &-chip {
+    @include cp-text(12px, 16px, 500);
+    padding: 2px 10px;
+    border-radius: 999px;
+    background: $cp-success-bg;
+    color: $cp-success;
+    border: 1px solid $cp-success-line;
+  }
+}
+
+@keyframes fp-in {
+  from {
+    transform: translateX(24px);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}

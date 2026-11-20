@@ -192,3 +192,16 @@ describe('visibleHours', () => {
     ).toEqual({ startHour: 7, endHour: 21 });
   });
 });
+
+describe('layoutDay with a friend', () => {
+  it('does not flag overlaps with a friend’s class as conflicts', () => {
+    const laid = layoutDay([
+      event('a', 1, 600, 660),
+      { ...event('b', -1, 630, 700), friendName: 'J' },
+    ]);
+    expect(laid.map(e => [e.key, e.columns, e.conflict])).toEqual([
+      ['a', 2, false],
+      ['b', 2, false],
+    ]);
+  });
+});

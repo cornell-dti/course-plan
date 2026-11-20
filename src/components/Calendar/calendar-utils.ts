@@ -157,14 +157,20 @@ export type CalendarEvent = {
   readonly day: CalendarDay;
   readonly start: number;
   readonly end: number;
+  /** Set on a friend's class shown while comparing, e.g. 'Jerry'. Friend classes never conflict. */
+  readonly friendName?: string;
+  /** While comparing: whose class this is. */
+  readonly tone?: CompareTone;
 };
+
+export type CompareTone = 'you' | 'friend' | 'together';
 
 export type PositionedEvent = CalendarEvent & {
   /** Column within its overlap group, starting at 0. */
   readonly column: number;
   /** Number of columns in its overlap group. */
   readonly columns: number;
-  /** True when it overlaps a block from a different course. */
+  /** True when it overlaps a block from a different course of yours. */
   readonly conflict: boolean;
 };
 
@@ -194,6 +200,8 @@ export const layoutDay = (events: readonly CalendarEvent[]): PositionedEvent[] =
       const conflict = group.some(
         other =>
           other !== event &&
+          other.friendName == null &&
+          event.friendName == null &&
           other.courseUniqueID !== event.courseUniqueID &&
           other.start < event.end &&
           event.start < other.end

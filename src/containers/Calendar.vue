@@ -11,7 +11,21 @@
       <span class="calendar-semester" title="Only the current semester is shown for now">
         {{ semesterLabel }}
       </span>
-      <span v-if="semester" class="calendar-meta">
+      <div v-if="comparing" class="calendar-legend" role="group" aria-label="Highlight classes">
+        <button
+          v-for="chip in legend"
+          :key="chip.tone"
+          type="button"
+          class="calendar-legendChip"
+          :class="`calendar-legendChip--${chip.tone}`"
+          :aria-pressed="highlight === chip.tone"
+          @click="highlight = highlight === chip.tone ? null : chip.tone"
+        >
+          <i class="calendar-legendDot" />
+          {{ chip.label }}
+        </button>
+      </div>
+      <span v-else-if="semester" class="calendar-meta">
         {{ totalCredits }} credits · {{ courses.length }}
         {{ courses.length === 1 ? 'class' : 'classes' }}
       </span>
@@ -36,17 +50,51 @@
         section
       </span>
       <span v-if="isLoading" class="calendar-loading" role="status">Loading class times…</span>
+      <span class="calendar-grow" />
+      <button
+        type="button"
+        class="calendar-compare"
+        :class="{ 'calendar-compare--on': friendsOpen }"
+        :aria-pressed="friendsOpen"
+        data-cyId="calendar-compare"
+        @click="toggleFriends"
+      >
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 16 16"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.33"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <path
+            d="M10.67 14v-1.33A2.67 2.67 0 0 0 8 10H4a2.67 2.67 0 0 0-2.67 2.67V14M6 7.33A2.67 2.67 0 1 0 6 2a2.67 2.67 0 0 0 0 5.33ZM14.67 14v-1.33a2.67 2.67 0 0 0-2-2.58M10.67 2.09a2.67 2.67 0 0 1 0 5.17"
+          />
+        </svg>
+        Compare with a friend
+        <span
+          v-if="incomingRequestCount > 0"
+          class="calendar-badge"
+          :aria-label="`${incomingRequestCount} friend ${
+            incomingRequestCount === 1 ? 'request' : 'requests'
+          }`"
+          >{{ incomingRequestCount }}</span
+        >
+      </button>
     </div>
 
     <!-- no current semester in this plan -->
-    <div v-if="!semester" class="calendar-empty">
+    <div v-if="!semester && !hasFriendEvents" class="calendar-empty">
       <p class="calendar-emptyTitle">{{ semesterLabel }} isn't in {{ planName }} yet</p>
       <p class="calendar-emptyText">
         Add a {{ semesterLabel }} semester on the Plan tab, then come back to see your week.
       </p>
     </div>
 
-    <div v-else-if="courses.length === 0" class="calendar-empty">
+    <div v-else-if="courses.length === 0 && !hasFriendEvents" class="calendar-empty">
       <p class="calendar-emptyTitle">No classes in {{ semesterLabel }} yet</p>
       <p class="calendar-emptyText">
         Add classes to {{ semesterLabel }} on the Plan tab to see them here.
@@ -60,6 +108,8 @@
         :startHour="hours.startHour"
         :endHour="hours.endHour"
         :selectedUniqueId="selectedUniqueId"
+        :keepTones="keepTones"
+        :flashCode="calendarFlashCode"
         @select="select"
       />
 
@@ -102,6 +152,29 @@
       @close="selectedUniqueId = null"
       @pick="pickSection"
     />
+
+    <!-- kept mounted while a section panel covers them, so search and tab state survive -->
+    <friends-panel
+      v-if="friendsOpen && !comparing"
+      v-show="!selectedCourse"
+      @close="closeFriends"
+      @compare="startCompare"
+    />
+    <friend-compare-panel
+      v-if="friendsOpen && comparing"
+      v-show="!selectedCourse"
+      :key="comparing.email"
+      :profile="comparing"
+      :season="season"
+      :year="year"
+      :focus="compareFocus"
+      :flashCode="panelFlashCode"
+      @back="stopCompare"
+      @close="closeFriends"
+      @focus="compareFocus = $event"
+      @pick="flashOnCalendar"
+      @removed="stopCompare"
+    />
   </main>
 </template>
 
@@ -109,10 +182,15 @@
 import { defineComponent } from 'vue';
 import CalendarWeek from '@/components/Calendar/CalendarWeek.vue';
 import CalendarSectionPanel from '@/components/Calendar/CalendarSectionPanel.vue';
+import FriendsPanel from '@/components/Friends/FriendsPanel.vue';
+import FriendComparePanel, { CompareFocus } from '@/components/Friends/FriendComparePanel.vue';
+import { FriendProfile } from '@/global-firestore-data/friend-profiles';
 import {
   CalendarDay,
   CalendarEvent,
+  CompareTone,
   ComponentOptions,
+  CourseSection,
   PositionedEvent,
   WEEKDAYS,
   WEEKEND,
@@ -144,13 +222,32 @@ type UnscheduledItem = {
   readonly canPick: boolean;
 };
 
+/** Fixed colors while comparing, from the prototype: you blue, friend purple, together green. */
+const TONE_COLORS: Record<CompareTone, string> = {
+  you: '2f6fa3',
+  friend: '7b4fb0',
+  together: '318663',
+};
+
+/** Which tones each legend chip keeps at full strength. */
+const KEEP_TONES: Record<CompareTone, readonly CompareTone[]> = {
+  you: ['you', 'together'],
+  friend: ['friend', 'together'],
+  together: ['together'],
+};
+
+const FLASH_MS = 1200;
+
+const sectionKey = (code: string, section: CourseSection) =>
+  `${code}|${section.component}|${section.section}`;
+
 const isCornellCourse = (
   course: FirestoreSemesterCourse
 ): course is FirestoreSemesterCornellCourse =>
   'lastRoster' in course && (course as { type?: string }).type !== 'BlankCourse';
 
 export default defineComponent({
-  components: { CalendarWeek, CalendarSectionPanel },
+  components: { CalendarWeek, CalendarSectionPanel, FriendsPanel, FriendComparePanel },
   data() {
     return {
       season: getCurrentSeason(),
@@ -158,6 +255,13 @@ export default defineComponent({
       // keyed by course code; filled in as roster lookups finish
       roster: {} as Record<string, RosterState>,
       selectedUniqueId: null as number | null,
+      friendsOpen: false,
+      comparing: null as (FriendProfile & { plan: Plan }) | null,
+      compareFocus: null as CompareFocus | null,
+      highlight: null as CompareTone | null,
+      calendarFlashCode: null as string | null,
+      panelFlashCode: null as string | null,
+      flashTimer: 0,
     };
   },
   computed: {
@@ -188,18 +292,120 @@ export default defineComponent({
     },
     // the codes we need roster data for; watched to start lookups
     cornellCodes(): string[] {
-      return [...new Set(this.courses.filter(isCornellCourse).map(course => course.code))];
+      const codes = [...this.courses, ...this.friendCourses]
+        .filter(isCornellCourse)
+        .map(course => course.code);
+      return [...new Set(codes)];
     },
-    isLoading(): boolean {
-      return this.cornellCodes.some(code => this.roster[code]?.status === 'loading');
+    incomingRequestCount(): number {
+      return store.state.incomingFriendRequests.length;
     },
-    events(): CalendarEvent[] {
+    friendFirstName(): string {
+      return this.comparing ? this.comparing.name.split(' ')[0] : '';
+    },
+    // the compared friend's classes this semester, from the plan they share
+    friendCourses(): FirestoreSemesterCourse[] {
+      if (!this.comparing) return [];
+      const semester = this.comparing.plan.semesters.find(
+        s => s.season === this.season && s.year === this.year
+      );
+      return (semester?.courses ?? []).filter(
+        (course): course is FirestoreSemesterCourse => !isPlaceholderCourse(course)
+      );
+    },
+    /** Sections the friend is in, as `code|component|section`. */
+    friendSectionKeys(): Set<string> {
+      const keys = new Set<string>();
+      this.friendCourses.forEach(course => {
+        if (!isCornellCourse(course)) return;
+        const state = this.roster[course.code];
+        if (state?.status !== 'ready') return;
+        selectedSections(state.options, course.sectionChoices).forEach(section =>
+          keys.add(sectionKey(course.code, section))
+        );
+      });
+      return keys;
+    },
+    friendEvents(): CalendarEvent[] {
+      if (!this.comparing) return [];
+      const mine = this.mySectionKeys;
       const events: CalendarEvent[] = [];
+      this.friendCourses.forEach((course, index) => {
+        if (!isCornellCourse(course)) return;
+        const state = this.roster[course.code];
+        if (state?.status !== 'ready') return;
+        selectedSections(state.options, course.sectionChoices).forEach(section => {
+          // a section you are both in is drawn once, as yours, in the together color
+          if (mine.has(sectionKey(course.code, section))) return;
+          section.meetings.forEach((meeting, meetingIndex) =>
+            meeting.days.forEach(day =>
+              events.push({
+                key: `friend-${course.uniqueID}-${section.component}-${section.section}-${day}-${meetingIndex}`,
+                // negative so friend blocks never collide with your course IDs
+                courseUniqueID: -(index + 1),
+                code: course.code,
+                component: section.component,
+                section: section.section,
+                color: TONE_COLORS.friend,
+                day,
+                start: meeting.start,
+                end: meeting.end,
+                friendName: this.friendFirstName,
+                tone: 'friend',
+              })
+            )
+          );
+        });
+      });
+      return events;
+    },
+    hasFriendEvents(): boolean {
+      return this.friendEvents.length > 0;
+    },
+    mySectionKeys(): Set<string> {
+      const keys = new Set<string>();
       this.courses.forEach(course => {
         if (!isCornellCourse(course)) return;
         const state = this.roster[course.code];
         if (state?.status !== 'ready') return;
         selectedSections(state.options, course.sectionChoices).forEach(section =>
+          keys.add(sectionKey(course.code, section))
+        );
+      });
+      return keys;
+    },
+    legend(): { tone: CompareTone; label: string }[] {
+      return [
+        { tone: 'you', label: 'You' },
+        { tone: 'friend', label: this.friendFirstName },
+        { tone: 'together', label: 'Taking together' },
+      ];
+    },
+    keepTones(): readonly CompareTone[] | null {
+      if (!this.comparing) return null;
+      if (this.highlight) return KEEP_TONES[this.highlight];
+      return this.compareFocus === 'together' ? KEEP_TONES.together : null;
+    },
+    isLoading(): boolean {
+      return this.cornellCodes.some(code => this.roster[code]?.status === 'loading');
+    },
+    events(): CalendarEvent[] {
+      return [...this.myEvents, ...this.friendEvents];
+    },
+    myEvents(): CalendarEvent[] {
+      const events: CalendarEvent[] = [];
+      const comparing = this.comparing != null;
+      this.courses.forEach(course => {
+        if (!isCornellCourse(course)) return;
+        const state = this.roster[course.code];
+        if (state?.status !== 'ready') return;
+        selectedSections(state.options, course.sectionChoices).forEach(section => {
+          let tone: CompareTone | undefined;
+          if (comparing) {
+            tone = this.friendSectionKeys.has(sectionKey(course.code, section))
+              ? 'together'
+              : 'you';
+          }
           section.meetings.forEach((meeting, meetingIndex) =>
             meeting.days.forEach(day =>
               events.push({
@@ -208,14 +414,15 @@ export default defineComponent({
                 code: course.code,
                 component: section.component,
                 section: section.section,
-                color: course.color,
+                color: tone ? TONE_COLORS[tone] : course.color,
                 day,
                 start: meeting.start,
                 end: meeting.end,
+                tone,
               })
             )
-          )
-        );
+          );
+        });
       });
       return events;
     },
@@ -235,7 +442,7 @@ export default defineComponent({
       return new Set(this.positionedEvents.filter(e => e.conflict).map(e => e.courseUniqueID)).size;
     },
     unscheduled(): UnscheduledItem[] {
-      const placed = new Set(this.events.map(event => event.courseUniqueID));
+      const placed = new Set(this.myEvents.map(event => event.courseUniqueID));
       const items: UnscheduledItem[] = [];
       this.courses.forEach(course => {
         if (placed.has(course.uniqueID)) return;
@@ -304,7 +511,50 @@ export default defineComponent({
       this.roster = { ...this.roster, [code]: next };
     },
     select(uniqueID: number) {
+      // a friend's block: point at that course in the Compare panel instead
+      if (uniqueID < 0) {
+        const event = this.friendEvents.find(e => e.courseUniqueID === uniqueID);
+        if (event) this.flash('panelFlashCode', event.code);
+        return;
+      }
       this.selectedUniqueId = this.selectedUniqueId === uniqueID ? null : uniqueID;
+    },
+    toggleFriends() {
+      if (this.friendsOpen) this.closeFriends();
+      else {
+        this.selectedUniqueId = null;
+        this.friendsOpen = true;
+      }
+    },
+    closeFriends() {
+      this.friendsOpen = false;
+      this.stopCompare();
+    },
+    startCompare(profile: FriendProfile) {
+      if (profile.plan == null) return;
+      this.comparing = { ...profile, plan: profile.plan };
+      this.compareFocus = null;
+      this.highlight = null;
+    },
+    stopCompare() {
+      this.comparing = null;
+      this.compareFocus = null;
+      this.highlight = null;
+    },
+    flashOnCalendar(code: string) {
+      this.flash('calendarFlashCode', code);
+    },
+    /** Sets a flash code for long enough to play the pulse, then clears it so it can replay. */
+    flash(target: 'calendarFlashCode' | 'panelFlashCode', code: string) {
+      window.clearTimeout(this.flashTimer);
+      this.calendarFlashCode = null;
+      this.panelFlashCode = null;
+      this.$nextTick(() => {
+        this[target] = code;
+        this.flashTimer = window.setTimeout(() => {
+          this[target] = null;
+        }, FLASH_MS);
+      });
     },
     pickSection(component: string, section: string) {
       if (this.selectedCourse == null) return;
@@ -368,6 +618,83 @@ export default defineComponent({
     background: #fff;
     border: 1px solid $cp-line-strong;
     border-radius: $cp-r-md;
+  }
+
+  &-grow {
+    flex: 1;
+  }
+
+  &-compare {
+    @include cp-button-secondary;
+    gap: 8px;
+
+    &--on {
+      border-color: $cp-link;
+      background: $cp-soft;
+      color: $cp-link-strong;
+
+      &:hover {
+        background: $cp-soft-hover;
+      }
+    }
+  }
+
+  &-badge {
+    @include cp-text(11px, 14px, 600);
+    min-width: 18px;
+    padding: 1px 5px;
+    border-radius: 999px;
+    background: $cp-err;
+    color: #fff;
+    text-align: center;
+  }
+
+  &-legend {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+  }
+
+  &-legendChip {
+    @include cp-reset-button;
+    @include cp-text(13px, 18px);
+    --tone: #2f6fa3;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 30px;
+    padding: 0 12px;
+    color: $cp-ink;
+    background: #fff;
+    border: 1px solid $cp-line;
+    border-radius: 999px;
+    transition: background-color 150ms, border-color 150ms;
+
+    &--friend {
+      --tone: #7b4fb0;
+    }
+
+    &--together {
+      --tone: #318663;
+    }
+
+    &:hover {
+      border-color: $cp-line-strong;
+    }
+
+    &[aria-pressed='true'] {
+      font-weight: 600;
+      border-color: var(--tone);
+      background: color-mix(in srgb, var(--tone) 10%, white);
+    }
+  }
+
+  &-legendDot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--tone);
   }
 
   &-meta,

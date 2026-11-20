@@ -40,10 +40,15 @@
             'week-event--selected': event.courseUniqueID === selectedUniqueId,
             'week-event--conflict': event.conflict,
             'week-event--short': event.end - event.start < 45,
+            'week-event--friend': event.friendName != null,
+            'week-event--dim': isDimmed(event),
+            'week-event--flash': flashCode != null && event.code === flashCode,
           }"
           :style="eventStyle(event)"
           :aria-label="eventLabel(event)"
-          :aria-pressed="event.courseUniqueID === selectedUniqueId"
+          :aria-pressed="
+            event.friendName == null ? event.courseUniqueID === selectedUniqueId : undefined
+          "
           @click="$emit('select', event.courseUniqueID)"
         >
           <span class="week-eventBar" />
@@ -82,6 +87,7 @@
 import { PropType, defineComponent } from 'vue';
 import {
   CalendarDay,
+  CompareTone,
   DAY_LABELS,
   PositionedEvent,
   formatTime,
@@ -99,6 +105,10 @@ export default defineComponent({
     startHour: { type: Number, required: true },
     endHour: { type: Number, required: true },
     selectedUniqueId: { type: Number as PropType<number | null>, default: null },
+    /** While comparing: the tones to keep at full strength; the rest fade. Null keeps all. */
+    keepTones: { type: Array as PropType<readonly CompareTone[] | null>, default: null },
+    /** Briefly pulses the blocks of this course code. */
+    flashCode: { type: String as PropType<string | null>, default: null },
   },
   emits: {
     select: (uniqueID: number) => typeof uniqueID === 'number',
@@ -138,11 +148,20 @@ export default defineComponent({
     timeRange(event: PositionedEvent): string {
       return `${formatTime(event.start)}–${formatTime(event.end)}`;
     },
+    isDimmed(event: PositionedEvent): boolean {
+      return this.keepTones != null && event.tone != null && !this.keepTones.includes(event.tone);
+    },
     eventLabel(event: PositionedEvent): string {
+      if (event.friendName != null) {
+        return `${event.friendName}’s class: ${event.code} ${event.component}, ${
+          DAY_LABELS[event.day]
+        } ${this.timeRange(event)}. Show in panel`;
+      }
+      const together = event.tone === 'together' ? ' Taking together.' : '';
       const conflict = event.conflict ? ' Time conflict.' : '';
       return `${event.code} ${event.component} ${event.section}, ${
         DAY_LABELS[event.day]
-      } ${this.timeRange(event)}.${conflict} Choose a section`;
+      } ${this.timeRange(event)}.${together}${conflict} Choose a section`;
     },
     eventStyle(event: PositionedEvent): Record<string, string> {
       // overlapping events split the column side by side
@@ -232,7 +251,7 @@ export default defineComponent({
     background: color-mix(in srgb, var(--course-color) 12%, white);
     border: 1px solid color-mix(in srgb, var(--course-color) 30%, white);
     border-radius: $cp-r-sm;
-    transition: box-shadow 150ms, border-color 150ms;
+    transition: box-shadow 150ms, border-color 150ms, opacity 200ms;
 
     &:hover {
       z-index: 2;
@@ -253,6 +272,20 @@ export default defineComponent({
 
     &--short &Time {
       display: none;
+    }
+
+    // a friend's class while comparing: dashed so it reads as theirs, not yours
+    &--friend {
+      border-style: dashed;
+      border-color: var(--course-color);
+    }
+
+    &--dim {
+      opacity: 0.25;
+    }
+
+    &--flash {
+      animation: week-flash 1.2s ease-out;
     }
   }
 
@@ -294,6 +327,16 @@ export default defineComponent({
     top: 4px;
     right: 4px;
     color: $cp-warn-accent;
+  }
+}
+
+@keyframes week-flash {
+  0%,
+  40% {
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--course-color) 45%, white);
+  }
+  100% {
+    box-shadow: none;
   }
 }
 </style>

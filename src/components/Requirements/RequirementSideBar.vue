@@ -258,6 +258,7 @@ import {
   deleteCourseFromCollection,
   deleteCourseFromAllCollections,
   updateSawNewFeature,
+  setSharedPlanName,
 } from '@/global-firestore-data';
 import AddPlanModal from '@/components/Modals/MultiplePlans/AddPlanModal.vue';
 import CopyPlanModal from '../Modals/MultiplePlans/CopyPlanModal.vue';
@@ -514,6 +515,8 @@ export default defineComponent({
       const updater = (plan: Plan): Plan => ({ name, semesters: plan.semesters });
       if (toEdit !== undefined) {
         editPlan(oldname, updater);
+        // keep sharing the same plan under its new name
+        if (store.state.sharedPlanName === oldname) setSharedPlanName(name);
       }
       store.commit(
         'setCurrentPlan',

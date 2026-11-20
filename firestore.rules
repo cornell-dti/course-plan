@@ -92,6 +92,18 @@ service cloud.firestore {
       allow write: if me() == owner;
     }
 
+    // Friends can read your plans (to compare schedules) and your onboarding data (for the major
+    // and class year on friend cards). These are ADDITIVE: Firestore allows a read if any matching
+    // rule allows it, so paste these next to the existing owner rules for these collections in the
+    // console without changing those rules. Writes stay owner-only and are not granted here.
+    match /user-semesters/{owner} {
+      allow read: if isFriendOf(owner);
+    }
+
+    match /user-onboarding-data/{owner} {
+      allow read: if isFriendOf(owner);
+    }
+
     match /user-name/{owner} {
       // Any signed-in user can read names: sendFriendRequest checks that the receiver exists by
       // reading their user-name doc before they are friends.
