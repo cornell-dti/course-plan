@@ -1,7 +1,8 @@
 <template>
   <TeleportModal
     title="Add Course"
-    content-class="content-course"
+    :content-class="previewCourse ? 'content-course-preview' : 'content-course'"
+    :isSimpleModal="previewCourse !== null"
     :leftButtonText="leftButtonText"
     :rightButtonText="rightButtonText"
     :rightButtonIsDisabled="selectedCourse == null"
@@ -9,43 +10,55 @@
     @left-button-clicked="backOrCancel"
     @right-button-clicked="addItem"
   >
-    <div class="newCourse-text">
-      {{ selectedCourse === null ? 'Search Course Roster' : 'Selected Course' }}
-    </div>
-    <course-selector
-      v-if="selectedCourse === null"
-      search-box-class-name="newCourse-dropdown"
-      :key="courseSelectorKey"
-      placeholder='"CS 1110", "Multivariable Calculus", etc'
-      :autoFocus="true"
-      @on-escape="closeCurrentModal"
-      @on-select="selectCourse"
-      @on-add-blank-course="addBlankCourseCard"
-      data-cyId="newCourse-dropdown"
-      :courses-array="courseArrayBySem"
-      :allow-blank-card="true"
+    <CourseSearchPreview
+      v-if="previewCourse"
+      :course="previewCourse"
+      :color="previewColor"
+      @close="closePreview"
     />
-    <div v-else class="selected-course" data-cyId="newCourse-selectedCourse">
-      {{ selectedCourse.subject }} {{ selectedCourse.catalogNbr }}:
-      {{ selectedCourse.titleLong }}
-    </div>
-    <div v-if="selectedCourse != null">
-      <!-- if a course is selected -->
-      <selected-requirement-editor
+    <div v-show="previewCourse === null">
+      <div class="newCourse-text">
+        {{ selectedCourse === null ? 'Search Course Roster' : 'Selected Course' }}
+      </div>
+      <course-selector
+        ref="courseSelector"
+        v-if="selectedCourse === null"
+        search-box-class-name="newCourse-dropdown"
         :key="courseSelectorKey"
-        :editMode="editMode"
-        :selectedRequirementID="selectedRequirementID"
-        :automaticallyFulfilledRequirements="automaticallyFulfilledRequirements"
-        :relatedRequirements="relatedRequirements"
-        :potentialRequirements="selfCheckRequirements"
-        @on-selected-change="onSelectedChange"
-        @edit-mode="toggleEditMode"
+        placeholder='"CS 1110", "Multivariable Calculus", etc'
+        :autoFocus="true"
+        @on-escape="closeCurrentModal"
+        @on-preview="previewCourse = $event"
+        @on-select="selectCourse"
+        @on-add-blank-course="addBlankCourseCard"
+        data-cyId="newCourse-dropdown"
+        :courses-array="courseArrayBySem"
+        :allow-blank-card="true"
       />
-    </div>
+      <div v-else class="selected-course" data-cyId="newCourse-selectedCourse">
+        {{ selectedCourse.subject }} {{ selectedCourse.catalogNbr }}:
+        {{ selectedCourse.titleLong }}
+      </div>
+      <div v-if="selectedCourse != null">
+        <!-- if a course is selected -->
+        <selected-requirement-editor
+          :key="courseSelectorKey"
+          :editMode="editMode"
+          :selectedRequirementID="selectedRequirementID"
+          :automaticallyFulfilledRequirements="automaticallyFulfilledRequirements"
+          :relatedRequirements="relatedRequirements"
+          :potentialRequirements="selfCheckRequirements"
+          @on-selected-change="onSelectedChange"
+          @edit-mode="toggleEditMode"
+        />
+      </div>
 
-    <!-- Add a blank course card button in a fixed position at the bottom -->
-    <div class="blank-course-button-container" v-if="selectedCourse === null">
-      <button class="add-blank-course" @click="addBlankCourseCard">+ Add Blank Course Card</button>
+      <!-- Add a blank course card button in a fixed position at the bottom -->
+      <div class="blank-course-button-container" v-if="selectedCourse === null">
+        <button class="add-blank-course" @click="addBlankCourseCard">
+          + Add Blank Course Card
+        </button>
+      </div>
     </div>
   </TeleportModal>
 </template>
@@ -55,6 +68,7 @@ import { PropType, defineComponent } from 'vue';
 import SelectedRequirementEditor from '@/components/Modals/NewCourse/SelectedRequirementEditor.vue';
 import TeleportModal from '@/components/Modals/TeleportModal.vue';
 import CourseSelector from '@/components/Modals/NewCourse/CourseSelector.vue';
+import CourseSearchPreview from '@/components/Modals/NewCourse/CourseSearchPreview.vue';
 
 import store from '@/store';
 import {
@@ -82,7 +96,7 @@ export default defineComponent({
       default: '',
     },
   },
-  components: { CourseSelector, TeleportModal, SelectedRequirementEditor },
+  components: { CourseSearchPreview, CourseSelector, TeleportModal, SelectedRequirementEditor },
   emits: {
     'close-course-modal': () => true,
     'select-course': (course: CornellCourseRosterCourse) => typeof course === 'object',
@@ -92,6 +106,7 @@ export default defineComponent({
   },
   data() {
     return {
+      previewCourse: null as CornellCourseRosterCourse | null,
       selectedCourse: null as CornellCourseRosterCourse | null,
       selectedRequirementID: '',
       automaticallyFulfilledRequirements: [] as readonly string[],
@@ -104,6 +119,9 @@ export default defineComponent({
     };
   },
   computed: {
+    previewColor(): string {
+      return store.state.subjectColors[this.previewCourse?.subject ?? ''] ?? '25a2aa';
+    },
     leftButtonText(): string {
       if (this.selectedCourse == null && !this.editMode) return 'Cancel';
       return 'Back';
@@ -130,6 +148,12 @@ export default defineComponent({
     },
   },
   methods: {
+    async closePreview() {
+      this.previewCourse = null;
+      await this.$nextTick();
+      const selector = this.$refs.courseSelector as InstanceType<typeof CourseSelector>;
+      selector.restorePreviewContext();
+    },
     // Hannah's note: only call this function for user is adding a cornell course
     selectCourse(result: CornellCourseRosterCourse) {
       this.selectedCourse = result;

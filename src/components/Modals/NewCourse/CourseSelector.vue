@@ -5,12 +5,13 @@
       ref="dropdownInput"
       v-model="searchText"
       :placeholder="placeholder"
-      @keyup.esc="onEscape"
-      @keyup.enter="onEnter"
-      @keyup.up="changeFocus(currentFocus - 1)"
-      @keyup.down="changeFocus(currentFocus + 1)"
+      @keydown.esc.prevent.stop="onEscape"
+      @keydown.enter.prevent="onEnter"
+      @keydown.up.prevent="changeFocus(currentFocus < 0 ? matches.length - 1 : currentFocus - 1)"
+      @keydown.down.prevent="changeFocus(currentFocus + 1)"
+      @keydown.tab="focusPreviewButton"
     />
-    <div v-if="matches.length > 0" class="autocomplete-items">
+    <div v-if="matches.length > 0" ref="dropdownResults" class="autocomplete-items">
       <div
         v-for="(matchingCourse, index) in matches"
         :key="index"
@@ -18,20 +19,36 @@
         @click="selectCourse(matchingCourse)"
         data-cyId="newCourse-searchResult"
       >
-        <span
-          v-for="(part, idx) in highlightMatch(
-            matchingCourse.subject + ' ' + matchingCourse.catalogNbr
-          )"
-          :key="'code' + idx"
+        <div class="search-result-text">
+          <span
+            v-for="(part, idx) in highlightMatch(
+              matchingCourse.subject + ' ' + matchingCourse.catalogNbr
+            )"
+            :key="'code' + idx"
+          >
+            <strong v-if="part.match" v-text="part.text"></strong>
+            <span v-else v-text="part.text"></span>
+          </span>
+          :
+          <span
+            v-for="(part, idx) in highlightMatch(matchingCourse.titleLong)"
+            :key="'title' + idx"
+          >
+            <strong v-if="part.match" v-text="part.text"></strong>
+            <span v-else v-text="part.text"></span>
+          </span>
+        </div>
+        <button
+          type="button"
+          class="search-result-preview"
+          :aria-label="`Preview ${matchingCourse.subject} ${matchingCourse.catalogNbr}`"
+          :tabindex="index === Math.max(currentFocus, 0) ? 0 : -1"
+          @click.stop="previewCourse(matchingCourse)"
+          @keydown.esc.prevent.stop="onEscape"
+          data-cyId="course-search-preview"
         >
-          <strong v-if="part.match" v-text="part.text"></strong>
-          <span v-else v-text="part.text"></span>
-        </span>
-        :
-        <span v-for="(part, idx) in highlightMatch(matchingCourse.titleLong)" :key="'title' + idx">
-          <strong v-if="part.match" v-text="part.text"></strong>
-          <span v-else v-text="part.text"></span>
-        </span>
+          <span class="search-result-chevron" aria-hidden="true"></span>
+        </button>
       </div>
     </div>
     <!-- No results message with option to add blank course card -->
@@ -103,17 +120,27 @@ export default defineComponent({
   emits: {
     'on-escape': () => true,
     'on-select': (result: CornellCourseRosterCourse) => typeof result === 'object',
+    'on-preview': (result: CornellCourseRosterCourse) => typeof result === 'object',
     'on-add-blank-course': () => true,
   },
   data() {
     return {
       searchText: '',
       currentFocus: -1,
+      previewContext: { start: 0, end: 0, scrollTop: 0 },
     };
   },
   computed: {
     matches(): readonly CornellCourseRosterCourse[] {
       return getMatchingCourses(this.searchText.toUpperCase(), this.coursesArray);
+    },
+  },
+  watch: {
+    searchText() {
+      this.currentFocus = -1;
+    },
+    matches() {
+      if (this.currentFocus >= this.matches.length) this.currentFocus = -1;
     },
   },
   mounted() {
@@ -130,7 +157,41 @@ export default defineComponent({
     },
     changeFocus(newFocusIndex: number) {
       const wraparoundLimit = this.matches.length;
+      if (wraparoundLimit === 0) {
+        this.currentFocus = -1;
+        return;
+      }
       this.currentFocus = ((newFocusIndex % wraparoundLimit) + wraparoundLimit) % wraparoundLimit;
+      this.$nextTick(() => {
+        const results = this.$refs.dropdownResults as HTMLElement | undefined;
+        results?.children[this.currentFocus]?.scrollIntoView({ block: 'nearest' });
+      });
+    },
+    focusPreviewButton(event: KeyboardEvent) {
+      if (event.shiftKey || this.currentFocus < 0 || !this.matches[this.currentFocus]) return;
+      const results = this.$refs.dropdownResults as HTMLElement;
+      const button = results.children[this.currentFocus].querySelector('button');
+      if (button) {
+        event.preventDefault();
+        button.focus();
+      }
+    },
+    previewCourse(course: CornellCourseRosterCourse) {
+      const input = this.dropdownInputRef();
+      this.previewContext = {
+        start: input.selectionStart ?? 0,
+        end: input.selectionEnd ?? 0,
+        scrollTop: (this.$refs.dropdownResults as HTMLElement).scrollTop,
+      };
+      this.$emit('on-preview', course);
+    },
+    async restorePreviewContext() {
+      await this.$nextTick();
+      const input = this.dropdownInputRef();
+      input.focus({ preventScroll: true });
+      input.setSelectionRange(this.previewContext.start, this.previewContext.end);
+      const results = this.$refs.dropdownResults as HTMLElement | undefined;
+      if (results) results.scrollTop = this.previewContext.scrollTop;
     },
     selectCourse(result: CornellCourseRosterCourse) {
       this.$emit('on-select', result);
@@ -153,7 +214,8 @@ export default defineComponent({
       const searchText = this.searchText.trim();
       if (!searchText) return [{ text, match: false }];
 
-      const regex = new RegExp(`(${searchText})`, 'gi');
+      const escapedSearchText = searchText.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const regex = new RegExp(`(${escapedSearchText})`, 'gi');
       const parts = text.split(regex);
 
       return parts.map(part => ({
@@ -206,13 +268,67 @@ export default defineComponent({
   overflow-y: auto;
 
   .search-result {
-    padding: 10px;
+    position: relative;
+    padding: 10px 44px 10px 10px;
     cursor: pointer;
     background-color: $white;
 
     &:hover {
       background-color: $searchBoxHoverGray;
     }
+
+    &-preview {
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 40px;
+      height: 100%;
+      min-height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 0;
+      background: transparent;
+      color: $darkPlaceholderGray;
+      opacity: 0;
+
+      &:hover {
+        color: $emGreen;
+        opacity: 1;
+      }
+
+      &:focus-visible {
+        outline: 2px solid currentColor;
+        outline-offset: -3px;
+      }
+    }
+
+    &-chevron {
+      width: 14px;
+      height: 8px;
+      background-color: currentColor;
+      mask: url('@/assets/images/downarrow-white.svg') center / 14px 8px no-repeat;
+    }
+
+    &:hover .search-result-preview,
+    &:focus-within .search-result-preview,
+    &.autocomplete-active .search-result-preview {
+      opacity: 1;
+    }
+
+    &.autocomplete-active .search-result-preview {
+      color: $white;
+
+      &:hover {
+        opacity: 0.5;
+      }
+    }
+  }
+}
+
+@media (hover: none), (pointer: coarse) {
+  .autocomplete-items .search-result-preview {
+    opacity: 1;
   }
 }
 

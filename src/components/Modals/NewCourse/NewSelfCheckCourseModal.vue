@@ -1,7 +1,8 @@
 <template>
   <TeleportModal
     :title="modalTitle"
-    content-class="content-course"
+    :content-class="previewCourse ? 'content-course-preview' : 'content-course'"
+    :isSimpleModal="previewCourse !== null"
     :leftButtonText="leftButtonText"
     :rightButtonText="rightButtonText"
     :rightButtonIsDisabled="!canAddCourse"
@@ -9,33 +10,43 @@
     @left-button-clicked="backOrCancel"
     @right-button-clicked="addCourse"
   >
-    <div class="newCourse-text">
-      {{ selectedCourse === null ? 'Search Course Roster' : 'Selected Course' }}
-    </div>
-    <course-selector
-      v-if="selectedCourse === null"
-      search-box-class-name="newCourse-dropdown"
-      :key="courseSelectorKey"
-      :courseFilter="courseCanAppearInSearchResult"
-      placeholder='"CS 1110", "Multivariable Calculus", etc'
-      :autoFocus="true"
-      @on-escape="closeCurrentModal"
-      @on-select="setCourse"
-      :allow-blank-card="false"
+    <CourseSearchPreview
+      v-if="previewCourse"
+      :course="previewCourse"
+      :color="previewColor"
+      @close="closePreview"
     />
-    <div v-else class="selected-course">
-      {{ selectedCourse.subject }} {{ selectedCourse.catalogNbr }}:
-      {{ selectedCourse.titleLong }}
-    </div>
-    <div>
-      <div class="newCourse-title">Add this class to the following semester</div>
-      <div class="newCourse-semester-edit">
-        <select-semester
-          :season="season"
-          :year="year"
-          :isCourseModelSelectingSemester="true"
-          @updateSemProps="updateSemProps"
-        />
+    <div v-show="previewCourse === null">
+      <div class="newCourse-text">
+        {{ selectedCourse === null ? 'Search Course Roster' : 'Selected Course' }}
+      </div>
+      <course-selector
+        ref="courseSelector"
+        v-if="selectedCourse === null"
+        search-box-class-name="newCourse-dropdown"
+        :key="courseSelectorKey"
+        :courseFilter="courseCanAppearInSearchResult"
+        placeholder='"CS 1110", "Multivariable Calculus", etc'
+        :autoFocus="true"
+        @on-escape="closeCurrentModal"
+        @on-preview="previewCourse = $event"
+        @on-select="setCourse"
+        :allow-blank-card="false"
+      />
+      <div v-else class="selected-course">
+        {{ selectedCourse.subject }} {{ selectedCourse.catalogNbr }}:
+        {{ selectedCourse.titleLong }}
+      </div>
+      <div>
+        <div class="newCourse-title">Add this class to the following semester</div>
+        <div class="newCourse-semester-edit">
+          <select-semester
+            :season="season"
+            :year="year"
+            :isCourseModelSelectingSemester="true"
+            @updateSemProps="updateSemProps"
+          />
+        </div>
       </div>
     </div>
   </TeleportModal>
@@ -46,11 +57,12 @@ import { defineComponent } from 'vue';
 import TeleportModal from '@/components/Modals/TeleportModal.vue';
 import SelectSemester from '@/components/Modals/SelectSemester.vue';
 import CourseSelector from '@/components/Modals/NewCourse/CourseSelector.vue';
+import CourseSearchPreview from '@/components/Modals/NewCourse/CourseSearchPreview.vue';
 import store from '@/store';
 import { getFilterForRequirementFulfillment } from '@/requirements/requirement-frontend-utils';
 
 export default defineComponent({
-  components: { CourseSelector, TeleportModal, SelectSemester },
+  components: { CourseSearchPreview, CourseSelector, TeleportModal, SelectSemester },
   props: {
     subReqName: { type: String, required: true },
     requirementId: { type: String, required: true },
@@ -65,6 +77,7 @@ export default defineComponent({
   },
   data() {
     return {
+      previewCourse: null as CornellCourseRosterCourse | null,
       selectedCourse: null as CornellCourseRosterCourse | null,
       courseSelectorKey: 0,
       season: '' as FirestoreSemesterSeason,
@@ -72,6 +85,9 @@ export default defineComponent({
     };
   },
   computed: {
+    previewColor(): string {
+      return store.state.subjectColors[this.previewCourse?.subject ?? ''] ?? '25a2aa';
+    },
     modalTitle(): string {
       return `Add Course to ${this.subReqName}`;
     },
@@ -93,6 +109,12 @@ export default defineComponent({
     },
   },
   methods: {
+    async closePreview() {
+      this.previewCourse = null;
+      await this.$nextTick();
+      const selector = this.$refs.courseSelector as InstanceType<typeof CourseSelector>;
+      selector.restorePreviewContext();
+    },
     closeCurrentModal() {
       this.$emit('close-course-modal');
     },

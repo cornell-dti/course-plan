@@ -1,15 +1,10 @@
 import { reactive } from 'vue';
 import { VueGtag } from 'vue-gtag-next';
 import { GTagEvent } from '../../gtag';
-import { checkNotNull } from '../../utilities';
-import {
-  getCourseWithSeasonAndYear,
-  getCourse,
-  extractSubjectAndNumber,
-} from '../../global-firestore-data/courses';
+import { loadCourseDetails, loadCourseReviews } from '../../course-information';
+import { extractSubjectAndNumber } from '../../global-firestore-data/courses';
 
 import {
-  cornellCourseRosterCourseDetailedInformationToPartialBottomCourseInformation,
   firestoreSemesterCourseToBottomBarCourse,
   rosterIdentifierToSeasonAndYear,
   seasonAndYearToRosterIdentifier,
@@ -41,44 +36,6 @@ export const reportSubjectColorChange = (code: string, color: string): void => {
   );
 };
 
-const getDetailedInformationForBottomBar = async (
-  roster: string,
-  subject: string,
-  number: string
-) => {
-  const seasonAndYear = rosterIdentifierToSeasonAndYear(roster);
-  const course = await getCourseWithSeasonAndYear(
-    seasonAndYear.season,
-    seasonAndYear.year,
-    subject,
-    number
-  );
-  return cornellCourseRosterCourseDetailedInformationToPartialBottomCourseInformation(
-    checkNotNull(course)
-  );
-};
-
-const getReviews = (
-  subject: string,
-  number: string
-): Promise<{
-  classRating: number;
-  classDifficulty: number;
-  classWorkload: number;
-}> =>
-  fetch('https://www.cureviews.org/api/courses/get-by-info', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ subject: subject.toLowerCase(), number }),
-  }).then(
-    res =>
-      (res.ok && res.json().then(reviews => reviews.result)) || {
-        classRating: null,
-        classDifficulty: null,
-        classWorkload: null,
-      }
-  );
-
 export const addCourseToBottomBar = async (
   course: FirestoreSemesterCourse,
   season: string,
@@ -96,52 +53,31 @@ export const addCourseToBottomBar = async (
     }
   }
   const courseSubjectAndNumber = extractSubjectAndNumber(course.code);
-  const classRosterCourseData = await getCourse(
+  const { roster, information } = await loadCourseDetails(
     seasonAndYearToRosterIdentifier(season as FirestoreSemesterSeason, year),
     courseSubjectAndNumber.subject,
     courseSubjectAndNumber.number
   );
-  const seasonAndYear = rosterIdentifierToSeasonAndYear(classRosterCourseData.roster);
+  const seasonAndYear = rosterIdentifierToSeasonAndYear(roster);
 
   vueForBottomBar.bottomCourses = [
-    firestoreSemesterCourseToBottomBarCourse(course, seasonAndYear.season, seasonAndYear.year),
+    {
+      ...firestoreSemesterCourseToBottomBarCourse(course, seasonAndYear.season, seasonAndYear.year),
+      ...information,
+    },
     ...vueForBottomBar.bottomCourses,
   ];
-
   vueForBottomBar.bottomCourseFocus = 0;
 
-  const [subject, number] = course.code.split(' ');
-  Promise.all([
-    getReviews(subject, number).then(({ classRating, classDifficulty, classWorkload }) => {
+  loadCourseReviews(courseSubjectAndNumber.subject, courseSubjectAndNumber.number)
+    .then(reviews => {
       const bottomBarCourse = vueForBottomBar.bottomCourses.find(
         ({ uniqueID, code }) => uniqueID === course.uniqueID && code === course.code
       );
-      if (bottomBarCourse) {
-        bottomBarCourse.overallRating = classRating;
-        bottomBarCourse.difficulty = classDifficulty;
-        bottomBarCourse.workload = classWorkload;
-      }
-    }),
-    getDetailedInformationForBottomBar(
-      vueForBottomBar.bottomCourses[vueForBottomBar.bottomCourseFocus].currRoster,
-      subject,
-      number
-    ).then(({ description, prereqs, enrollment, lectureTimes, instructors, distributions }) => {
-      const bottomBarCourse = vueForBottomBar.bottomCourses.find(
-        ({ uniqueID, code }) => uniqueID === course.uniqueID && code === course.code
-      );
-      if (bottomBarCourse) {
-        Object.assign(bottomBarCourse, {
-          description,
-          prereqs,
-          enrollment,
-          lectureTimes,
-          instructors,
-          distributions,
-        });
-      }
-    }),
-  ]);
+      if (bottomBarCourse) Object.assign(bottomBarCourse, reviews);
+    })
+    // Keep the existing N/A presentation when the reviews service is unavailable.
+    .catch(() => undefined);
 };
 
 export const toggleBottomBar = (gtag?: VueGtag): void => {

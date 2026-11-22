@@ -1,7 +1,8 @@
 <template>
   <TeleportModal
     title="Distribution Requirements"
-    content-class="content-course"
+    :content-class="previewCourse ? 'content-course-preview' : 'content-course'"
+    :isSimpleModal="previewCourse !== null"
     leftButtonText="Back"
     rightButtonText="Next"
     :rightButtonIsDisabled="!isValid"
@@ -9,55 +10,65 @@
     @left-button-clicked="backToCourseModal"
     @right-button-clicked="saveCourse"
   >
-    <div class="distribution-form">
-      <div v-if="selectedCourse === null">
-        <div class="form-group">
-          <label class="form-label">Cornell Equivalent Course</label>
-          <course-selector
-            search-box-class-name="newCourse-dropdown"
-            :key="courseSelectorKey"
-            placeholder='"CS 1110", "Multivariable Calculus", etc'
-            :autoFocus="true"
-            @on-escape="closeCurrentModal"
-            @on-select="selectCourse"
-            :allow-blank-card="false"
-          />
-          <div class="manual-requirements">
-            <a href="#" class="manual-link" @click.prevent="addManualRequirements">
-              No equivalent course? Add requirements manually.
-            </a>
-          </div>
-        </div>
-      </div>
-
-      <div v-else>
-        <div class="form-group">
-          <div class="section-label">Selected Equivalent Course</div>
-          <div class="section-text">
-            {{ selectedCourse.subject }} {{ selectedCourse.catalogNbr }}:
-            {{ selectedCourse.titleLong }}
-          </div>
-        </div>
-
-        <div class="form-group" v-if="automaticallyFulfilledRequirements.length > 0">
-          <div class="section-label">
-            This class would automatically fulfill the following requirement(s):
-          </div>
-          <div class="requirements-list">
-            <div
-              v-for="(req, index) in automaticallyFulfilledRequirements"
-              :key="index"
-              class="requirement-item"
-            >
-              {{ req }}
+    <CourseSearchPreview
+      v-if="previewCourse"
+      :course="previewCourse"
+      :color="previewColor"
+      @close="closePreview"
+    />
+    <div v-show="previewCourse === null">
+      <div class="distribution-form">
+        <div v-if="selectedCourse === null">
+          <div class="form-group">
+            <label class="form-label">Cornell Equivalent Course</label>
+            <course-selector
+              ref="courseSelector"
+              search-box-class-name="newCourse-dropdown"
+              :key="courseSelectorKey"
+              placeholder='"CS 1110", "Multivariable Calculus", etc'
+              :autoFocus="true"
+              @on-escape="closeCurrentModal"
+              @on-preview="previewCourse = $event"
+              @on-select="selectCourse"
+              :allow-blank-card="false"
+            />
+            <div class="manual-requirements">
+              <a href="#" class="manual-link" @click.prevent="addManualRequirements">
+                No equivalent course? Add requirements manually.
+              </a>
             </div>
           </div>
         </div>
+
         <div v-else>
-          <div class="section-label">
-            <div class="requirement-item">
-              This class does not automatically fulfill any requirements. Instead, please add
-              requirements manually.
+          <div class="form-group">
+            <div class="section-label">Selected Equivalent Course</div>
+            <div class="section-text">
+              {{ selectedCourse.subject }} {{ selectedCourse.catalogNbr }}:
+              {{ selectedCourse.titleLong }}
+            </div>
+          </div>
+
+          <div class="form-group" v-if="automaticallyFulfilledRequirements.length > 0">
+            <div class="section-label">
+              This class would automatically fulfill the following requirement(s):
+            </div>
+            <div class="requirements-list">
+              <div
+                v-for="(req, index) in automaticallyFulfilledRequirements"
+                :key="index"
+                class="requirement-item"
+              >
+                {{ req }}
+              </div>
+            </div>
+          </div>
+          <div v-else>
+            <div class="section-label">
+              <div class="requirement-item">
+                This class does not automatically fulfill any requirements. Instead, please add
+                requirements manually.
+              </div>
             </div>
           </div>
         </div>
@@ -70,6 +81,7 @@
 import { defineComponent, PropType } from 'vue';
 import TeleportModal from '@/components/Modals/TeleportModal.vue';
 import CourseSelector from '@/components/Modals/NewCourse/CourseSelector.vue';
+import CourseSearchPreview from '@/components/Modals/NewCourse/CourseSearchPreview.vue';
 import store from '@/store';
 import {
   getRelatedUnfulfilledRequirements,
@@ -78,7 +90,7 @@ import {
 
 export default defineComponent({
   name: 'DistributionRequirementsModal',
-  components: { TeleportModal, CourseSelector },
+  components: { CourseSearchPreview, TeleportModal, CourseSelector },
   props: {
     course: {
       type: Object as PropType<FirestoreSemesterBlankCourse>,
@@ -97,6 +109,7 @@ export default defineComponent({
   },
   data() {
     return {
+      previewCourse: null as CornellCourseRosterCourse | null,
       selectedCourse: null as CornellCourseRosterCourse | null,
       selectedRequirementID: '' as string,
       courseSelectorKey: 0,
@@ -107,6 +120,9 @@ export default defineComponent({
     };
   },
   computed: {
+    previewColor(): string {
+      return store.state.subjectColors[this.previewCourse?.subject ?? ''] ?? '25a2aa';
+    },
     blankCourse(): FirestoreSemesterBlankCourse {
       return this.course as FirestoreSemesterBlankCourse;
     },
@@ -115,6 +131,12 @@ export default defineComponent({
     },
   },
   methods: {
+    async closePreview() {
+      this.previewCourse = null;
+      await this.$nextTick();
+      const selector = this.$refs.courseSelector as InstanceType<typeof CourseSelector>;
+      selector.restorePreviewContext();
+    },
     closeCurrentModal() {
       this.$emit('close-modal');
     },
